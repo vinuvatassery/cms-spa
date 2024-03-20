@@ -6,6 +6,7 @@ import {
   Output,
   EventEmitter,
   OnInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade } from '@cms/case-management/domain';
@@ -23,21 +24,59 @@ import { TodoFacade } from '@cms/productivity-tools/domain';
 export class TodoAndRemindersPageComponent implements OnInit {
   constructor(public todoFacade : TodoFacade,
     private route : ActivatedRoute,
-    private caseFacade : CaseFacade) {  }
+    private caseFacade : CaseFacade,
+    private cdr : ChangeDetectorRef) {  }
+    skeletonCounts = [
+      1, 2
+    ]
+    clientProfileHeaderLoader$=  this.caseFacade.clientProfileHeaderLoader$
   todoAndReminders$ = this.todoFacade.clientTodoAndReminders$;
   clientsReminderWithIn7Days!:any[]
   clientsReminderAfter7Days! :any[]
   clientsReminderAfter30Days! : any[]
   clientName = ""
-  ngOnInit(): void {
-    const id = this.route.snapshot.queryParamMap.get('id')
-    if(id){
-    this.caseFacade.clientProfileHeader$.subscribe(cp =>{      
-       this.clientName = cp?.clientFullName
-    })
-   this.caseFacade.loadClientProfileHeader(+id);
-    this.todoFacade.todoAndRemindersByClient(id);
+  id:string | null =""
+  showLoader = true
+  showDataLoader = true
 
+  @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
+  @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
+  @Output() editTodoItemEvent = new EventEmitter()
+  @Output() onDeleteReminderAlertGridClicked = new EventEmitter();
+  @Output() onEditReminderClickedEvent = new EventEmitter()
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe((params :any) =>{
+      this.id = params.get('id')
+      if(this.id){
+        this.todoFacade.clientTodoAndRemindersLoader$.subscribe(res =>{
+            this.showDataLoader = res
+            this.cdr.detectChanges()
+          
+        })
+        this.caseFacade.clientProfileHeaderLoader$.subscribe(res =>{
+          this.showLoader = res;
+          this.cdr.detectChanges()
+        })
+        this.caseFacade.clientProfileHeader$.subscribe(cp =>{  
+           this.clientName = cp?.clientFullName
+        })
+       this.caseFacade.loadClientProfileHeaderWithOutLoader(+this.id);
+        this.todoFacade.todoAndRemindersByClient(this.id);   
+      }
+     })
+  
+}
+onMarkAlertDoneGrid(event:any){
+  this.onMarkAlertAsDoneGridClicked.emit(event)
+}
+
+onDeleteAlertGrid(event:any){
+ this.onDeleteAlertGridClicked.emit(event)
+}
+
+loadReminders(){
+  if(this.id){
+  this.todoFacade.todoAndRemindersByClient(this.id);
   }
 }
   /** Output properties **/
@@ -52,4 +91,21 @@ export class TodoAndRemindersPageComponent implements OnInit {
     this.isShowTodoReminders = !this.isShowTodoReminders;
   }
 
+  onDeleteReminderAlertGrid(event:any){
+    this.onDeleteReminderAlertGridClicked.emit({
+      alertId:event,
+      type:'delete'
+    })
+  }
+  editTodoItem(event:any){
+
+  this.editTodoItemEvent.emit(event)
+  }
+
+  onEditReminderClicked(event:any){
+   this.onEditReminderClickedEvent.emit({
+    alertId : event, 
+    type : 'edit'
+   })
+  }
 }

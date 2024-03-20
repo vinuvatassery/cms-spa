@@ -1,0 +1,83 @@
+<section class="k-dialog-body" [formGroup]="memberForm">
+    <p class="text-muted">
+        Adds a user to the distribution list for the selected role
+    </p>
+    <div class="flex-row">
+
+        <div class="flex-col">
+            <kendo-floatinglabel text="Group Name">
+                <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="groupName">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col flex-col-6">
+            <kendo-formfield>
+
+            <kendo-floatinglabel text="First Name">
+                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"    formControlName="firstName">
+                </kendo-textbox>
+
+                <!-- <kendo-autocomplete
+                formControlName="firstName"
+                autofocusfield
+                [fillMode]="formUiStyle.dropDownFillMode" 
+                [data]="userDataList"  
+                valueField ="firstName"  
+                [value]="selectedFirstName"
+                (valueChange)="onItemSelected($event)" 
+                [filterable]="true"  
+                placeholder="Search First Name"
+                [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }" 
+                > 
+                </kendo-autocomplete> -->
+            </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!memberForm.controls['firstName'].valid">
+                First Name is required
+            </kendo-formerror>
+        </kendo-formfield>
+        </div>
+        
+        <div class="flex-col flex-col-6">
+            <kendo-formfield>
+
+            <kendo-floatinglabel text="Last Name">
+                <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="lastName">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!memberForm.controls['lastName'].valid">
+                Last Name is required
+            </kendo-formerror>
+        </kendo-formfield>
+
+        </div>
+        <div class="flex-col">
+            <kendo-formfield>
+            <kendo-floatinglabel text="Email Address">
+                <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="email">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+            <kendo-formerror *ngIf="isSubmitted && !memberForm.controls['email'].valid && !memberForm.controls['email'].value">
+                Email Address is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="isSubmitted && !memberForm.controls['email'].valid && memberForm.controls['email'].value">
+                Invalid Email Address
+            </kendo-formerror>
+        </kendo-formfield>
+        </div>
+
+
+    </div>
+</section>
+
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancelClick()">
+                Cancel
+            </button>
+            <button kendoButton [primary]="true" aria-label="Add" (click)="save()">
+                {{ isEditMode ? 'Update' : 'Add' }}
+            </button>
+        </div>
+    </div>
+</kendo-dialog-actions>

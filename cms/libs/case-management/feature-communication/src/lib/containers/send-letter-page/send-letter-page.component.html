@@ -1,107 +1,35 @@
 <section class="app-l-mainTittle" kendoTooltip>
-  <h2>{{title}}  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'Email' : 'Letter'}}</h2>
-  <p class="mt-1 mb-3">
-    If there is an issue with this {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'email' : 'letter'}} template, please contact your
-    Administrator. Make edits as needed, then click “Send {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'email' : 'to print'}}” once the
-    letter is complete.
-  </p>
+
   <div class="flex-row">
     <div class="flex-col mb-2 k-editor-height">
-      <case-management-letter-editor
-        [dataEvent]="getLetterEditorValue"
-        (editorValue)="handleLetterEditor($event)"
-      ></case-management-letter-editor>
-    </div>
-    <div class="flex-col text-right">
-      <button
-        kendoButton
-        [primary]="true"
-        look="outline"
-        (click)="onOpenPrintPreviewClicked()"
-        attr.aria-label="Preview  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'Email' : 'Letter'}}"
-      >
-        Preview  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'EMAIL' : 'LETTER'}}
-      </button>
-      <button
-        kendoButton
-        [primary]="true"
-        class="ml-2"
-        (click)="onOpenPrintClicked()"
-        attr.aria-label="{{(paperless$ | async)?.paperlessFlag === 'Y' ? 'Send Email' : 'Send To Print'}}"
-      >
-       {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
-      </button>
-    </div>
-  </div>
-</section>
+  
+       <div *ngIf="paperlessFlag == 'N'">
+      <case-management-send-letter [mailingAddress$]="mailingAddress$" 
+      [communicationLetterTypeCode]="letterCommunicationTypeCode" 
+      [templateLoadType] = "templateLoadType"
+      [informationalText]="informationalText"
+      [templateHeader]="templateHeader"
+      [notificationGroup]="screenName"
+       (loadInitialData)="loadMailingAddress()" [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId"
+      [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
+      kendoTooltip></case-management-send-letter>
+       </div>
 
-<!-- Preview Letter Modal Html-->
-<kendo-dialog
-  *ngIf="isOpenedPrintPreview"
-  (close)="onClosePrintPreviewClicked()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np"
-  title="Preview {{paperlessFlag === 'Y' ? 'Email' : 'Letter'}}"
->
-  <case-management-preview-letter [paperlessFlag]="paperlessFlag"></case-management-preview-letter>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          (click)="onClosePrintPreviewClicked()"
-          aria-label="Close"
-        >
-        CLOSE 
-        </button>
-        <button
-          kendoButton
-          [primary]="true"
-          (click)="onOpenPrintClicked()"
-          attr.aria-label="{{paperlessFlag === 'Y' ? 'Send Email' : 'Send To Print'}}"
-        >
-        {{paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
-        </button>
+      <div *ngIf="paperlessFlag == 'Y'">
+      <case-management-send-email [ddlEmails$]="emailAddress$" [communicationEmailTypeCode]="emailCommunicationTypeCode"
+      [templateLoadType] = "templateLoadType"
+      [informationalText]="informationalText"
+      [templateHeader]="templateHeader"
+      [emailSubject] ="emailSubject"
+      [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName"
+      [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
+      [toEmail]="toEmail"  (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
       </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog>
 
-<!-- Print approval letter? Modal Html-->
-<kendo-dialog
-  *ngIf="isOpenedPrint"
-  (close)="onClosePrintClicked()"
-  class="app-c-modal app-c-modal-np"
-  [class.app-c-modal-md] = "isDisenrollmentPage"
-  [class.app-c-modal-md] = "!isDisenrollmentPage"
-  title= {{confirmTitle}} 
->
-<section class="k-dialog-body">
-  <p *ngIf="isDisenrollmentPage" class="text-muted mb-2">
-    {{printModelText}}
-  </p>
+    </div>
+   
+  </div> 
 </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          (click)="onClosePrintClicked()"
-          aria-label="cancel print"
-        >
-          Cancel
-        </button>
-        <button kendoButton [primary]="true" attr.aria-label="{{paperlessFlag === 'Y' ? 'Email' : 'Print'}}"   (click)="onClosePrintClicked()">
-          {{paperlessFlag === 'Y' ? 'EMAIL' : 'PRINT'}}
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog>
-
 
 <!-- Status Period Detail Modal -->
 <ng-template #disenrollment_letter_later>

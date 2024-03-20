@@ -13,15 +13,15 @@ import { UserManagementFacade } from '@cms/system-config/domain';
 @Injectable({ providedIn: 'root' })
 export class DrugPharmacyFacade {
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {      
-    
+  {
+
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.snackbarService.manageSnackBar(type,subtitle)
-    this.hideLoader();   
+    this.hideLoader();
   }
 
   hideLoader()
@@ -158,7 +158,7 @@ export class DrugPharmacyFacade {
         },
       });
     }
-  } 
+  }
 
   loadDrugsPurchased(): void {
     this.drugDataService.loadDrugsPurchased().subscribe({
@@ -174,7 +174,7 @@ export class DrugPharmacyFacade {
   }
 
  updatePharmacyPriority(pharmacyPriority: any): Observable<any> {
-       
+
     return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
   }
   updateDrugPharamcyPriority(clientId :any,pharmacyPriority: any,isShowHistoricalData?:boolean){
@@ -194,9 +194,9 @@ export class DrugPharmacyFacade {
        this.loggingService.logException(err);
        resolve(false);
      },
-   }); 
+   });
    })
-    
+
   }
 
   searchPharmacies(searchText: string) {
@@ -209,7 +209,7 @@ export class DrugPharmacyFacade {
         this.pharmaciesSubject.next(response);
         this.searchLoaderVisibilitySubject.next(false);
       },
-      error: (err) => {  
+      error: (err) => {
         this.searchLoaderVisibilitySubject.next(false);
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
@@ -233,12 +233,13 @@ export class DrugPharmacyFacade {
     });
   }
 
-  addClientPharmacy(clientId: number, vendorId: string,vendorAddressId:string,isShowHistoricalData?:boolean) {
-  
+  addClientPharmacy(clientId: number, vendorId: string, vendorAddressId:string, isShowHistoricalData?:boolean, isReactivate = false) {
+
     const model = {
       vendorId: vendorId ,
-      VendorAddressId:vendorAddressId, 
-      IsUpdatePriorityCode:false  
+      VendorAddressId:vendorAddressId,
+      IsUpdatePriorityCode:false,
+      isReactivate: isReactivate
     };
 
     this.loaderService.show();
@@ -264,7 +265,7 @@ export class DrugPharmacyFacade {
   editClientPharmacy(clientId: number, clientPharmacyId: string, vendorId?: string,vendorAddressId?:string) {
     const model = {
       vendorId: vendorId,
-      vendorAddressId:vendorAddressId     
+      vendorAddressId:vendorAddressId
     };
     this.loaderService.show();
     return this.drugDataService.editClientPharmacy(clientId, clientPharmacyId, model).subscribe({
@@ -291,7 +292,7 @@ export class DrugPharmacyFacade {
       return this.drugDataService.removeClientPharmacy(clientId, clientPharmacyId).subscribe({
         next: (response) => {
           if (response === true) {
-         
+
             this.loadClientPharmacyList(clientId,false,isShowHistoricalData);
             this.removePharmacyResponseSubject.next(true);
             resolve(true);
@@ -308,15 +309,15 @@ export class DrugPharmacyFacade {
         },
       });
     })
-    
+
   }
- 
+
   addDrugPharmacy(clientId: number, vendorId: string,vendorAddressId:string,priorityCode?:string,isShowHistoricalData?:boolean) {
    return new Promise((resolve,reject) =>{
     const model = {
       vendorId: vendorId,
       vendorAddressId:vendorAddressId,
-      PriorityCode:priorityCode,   
+      PriorityCode:priorityCode,
       IsUpdatePriorityCode:priorityCode != "" ? true : false
     };
 
@@ -324,7 +325,7 @@ export class DrugPharmacyFacade {
     return this.drugDataService.addClientPharmacy(clientId, model).subscribe({
       next: (response) => {
         if (response === true) {
-         
+
           this.loadClientPharmacyList(clientId, true,isShowHistoricalData);
           this.addPharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Added Successfully');
@@ -341,10 +342,10 @@ export class DrugPharmacyFacade {
       },
     });
    })
- 
+
   }
 
- 
+
   getDrugPurchasedList(clientId: number, skip: any, pageSize: any, sortBy: any, sortType: any, filters:any,isPermiumWithinLastTwelveMonthsData:boolean) {
     this.loaderService.show();
     this.drugDataService.getDrugPurchasedList(clientId,skip,pageSize, sortBy, sortType, filters ,isPermiumWithinLastTwelveMonthsData).subscribe({
@@ -354,7 +355,7 @@ export class DrugPharmacyFacade {
           total:response.totalCount,
         };
        this.drugPurchaseSubject.next(gridView);
-       this.loadDrugsDistinctUserIdsAndProfilePhoto(response.items);       
+       this.loadDrugsDistinctUserIdsAndProfilePhoto(response.items);
         this.loaderService.hide();
       },
       error: (err) => {
@@ -377,9 +378,9 @@ export class DrugPharmacyFacade {
         },
       });
     }
-  } 
+  }
 
-  updatedMakePharmaciesPrimary(clientPharmacyId: string){    
+  updatedMakePharmaciesPrimary(clientPharmacyId: string){
     this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Primary Pharmacy Updated Successfully');
   }
   reActivatePharmacies(clientPharmacyId: string,pharmacy: any,isShowHistoricalData?:boolean){
@@ -398,7 +399,7 @@ export class DrugPharmacyFacade {
       },
     });
   }
-  deactivePharmacies(clientPharmacyId: string,pharmacy: any,isShowHistoricalData?:boolean){ 
+  deactivePharmacies(clientPharmacyId: string,pharmacy: any,isShowHistoricalData?:boolean){
     return new Promise((resolve,reject) =>{
       this.loaderService.show();
       this.drugDataService.activeDrugPharmacy(clientPharmacyId,pharmacy).subscribe({
@@ -419,6 +420,6 @@ export class DrugPharmacyFacade {
        },
      });
     })
-    
+
   }
 }

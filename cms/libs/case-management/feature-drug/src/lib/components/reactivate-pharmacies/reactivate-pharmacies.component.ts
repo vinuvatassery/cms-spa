@@ -30,6 +30,6 @@ export class ReactivatePharmaciesComponent {
     this.closeReactivatePharmacies.emit();
   }
   onReactivateClick()
-  { this.drugPharmacyFacade.addClientPharmacy(this.clientPharmacyDetails.clientId,this.clientPharmacyDetails?.vendorId,this.clientPharmacyDetails?.vendorAddressId,this.isShowHistoricalData);
+  { this.drugPharmacyFacade.addClientPharmacy(this.clientPharmacyDetails.clientId,this.clientPharmacyDetails?.vendorId,this.clientPharmacyDetails?.vendorAddressId,this.isShowHistoricalData, true);
   }
 }

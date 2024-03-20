@@ -1,8 +1,9 @@
 
-  <kendo-dialog-titlebar  (close)="onCloseNewLetterClicked()">Send New Letter </kendo-dialog-titlebar>
+ <kendo-dialog-titlebar  (close)="onCloseNewLetterClicked()">{{templateHeader}}</kendo-dialog-titlebar>
   <section class="k-dialog-body" >
     <p class="text-muted mb-1">
-      Select an existing template or draft a custom letter.
+     {{informationalText}} 
+     
     </p>
     <div class="flex-row pb-2">
       <div class="flex-col">
@@ -13,6 +14,7 @@
               textField="description"
               valueField="documentTemplateId"
               [(ngModel)]="documentTemplate"
+              [disabled]="templateDrpDisable"
               (valueChange)="handleDdlLetterValueChange($event)"
             >
             </kendo-dropdownlist>
@@ -73,7 +75,7 @@
         </button>
       </div>
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" (click)="onCloseNewLetterClicked()"
+        <button kendoButton [primary]="true" look="outline" (click)="onCloseNewLetterClicked()" *ngIf="cancelDisplay"
           aria-label="Cancel">
           Cancel
         </button>
@@ -135,7 +137,7 @@
 <kendo-dialog *ngIf="isShowSendLetterToPrintPopupClicked" (close)="onConfirmSendLetterToPrintDialogClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Send Letter to Print?">
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">The action cannot be undone</p>
+    <p class="text-muted mb-2">This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal</p>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between  ">
@@ -147,7 +149,7 @@
       <div class="justify-content-end align-items-center">
         <button kendoButton [primary]="true" (click)="onSendLetterToPrintDialogClicked('Print')"
           aria-label="Print">
-          Print
+          SEND TO PRINT
         </button>
       </div>
     </div>

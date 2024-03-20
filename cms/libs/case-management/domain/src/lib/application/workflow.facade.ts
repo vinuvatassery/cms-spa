@@ -92,7 +92,8 @@ export class WorkflowFacade {
   currentWorkflowMaster!: WorkflowMaster[];
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   sessionData!: SessionData;
-
+  sendLetterEmailFlag!:string;
+  caseStatus!:string;
   /**Constructor */
   constructor(
     private readonly workflowService: WorkflowDataService,

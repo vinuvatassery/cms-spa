@@ -291,7 +291,10 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
        this.save().subscribe((response: any) => {
          if (response) {
            this.loaderService.hide();
-           this.workFlowFacade.handleSendNewsLetterpopup(statusResponse)
+           //this.workFlowFacade.handleSendNewsLetterpopup(statusResponse)
+           this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
          }
        })
      });
