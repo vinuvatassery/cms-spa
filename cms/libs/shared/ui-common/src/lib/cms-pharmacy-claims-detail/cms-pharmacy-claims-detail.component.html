@@ -328,7 +328,7 @@
                     Prescription</button>
 
             </div>
-            <div class="mt-4" *ngIf="vendorId&&clientId">
+            <div class="mt-4" *ngIf="vendorId&&clientId" id="isRecentClaimShow">
                 <h5 class="text-upper"><span *ngIf="!isEdit">RECENT PRESCRIPTIONS FOR THIS CLIENT AND PHARMACY PANEL </span><span  *ngIf="isEdit">RECENT PURCHASES FOR THIS CLIENT & PHARMACY </span> </h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <common-cms-pharmacy-claims-recent-claims
