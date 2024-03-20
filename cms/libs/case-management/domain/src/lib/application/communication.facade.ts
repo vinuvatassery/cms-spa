@@ -157,8 +157,9 @@ export class CommunicationFacade {
     return formData;
   }
 
-  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
+  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any) {
     const formData = new FormData();
+    formData.append('templateTypeCode', templateTypeCode ?? '');
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
     formData.append('typeCode', draftTemplate?.typeCode ?? '');
     formData.append('languageCode', draftTemplate?.languageCode ?? '');
@@ -183,8 +184,9 @@ export class CommunicationFacade {
     return formData;
   }
 
-  createFormDataForEmail(data: { subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
+  createFormDataForEmail(data: {templateTypeCode:string, subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
     const formData = new FormData();
+    formData.append('templateTypeCode', data?.templateTypeCode ?? '');
     formData.append('requestSubject', data?.subject ?? '');
     formData.append('loginUserId', data?.userId ?? '');
     formData.append('clientCaseId', data?.caseId ?? '');

@@ -43,6 +43,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() isContinueDraftClicked!: boolean;
   @Input() isNewNotificationClicked!: boolean;
   @Input() notificationDraftId!: string;
+  @Input() templateLoadType!: string;
+  @Input() informationalText!:string;
+  @Input() templateHeader !:string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -101,6 +104,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   documentTemplate!: any;
   selectedTemplateContent !:any;
   updatedTemplateContent !: any;
+  currentTemplate!:any;
+  templateDrpDisable : boolean = false;
+  cancelDisplay:boolean = true;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -124,10 +130,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    if(this.templateLoadType === undefined){
+      this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+    }
     this.getLoggedInUserProfile();
+    this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
-    if (this.communicationEmailTypeCode) {
-      if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.communicationEmailTypeCode) {
+    if (this.templateLoadType) {
+      if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.templateLoadType) {
         if (this.isContinueDraftClicked) {
           this.loadClientAndVendorDraftEmailTemplates();
         } else if (this.isNewNotificationClicked) {
@@ -154,6 +164,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           } else {
             this.loadEmailTemplates();
           }
+         
           this.loaderService.hide();
         },
         error: (err: any) => {
@@ -175,6 +186,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.hideLoader();
+
   }
 
   hideLoader() {
@@ -190,15 +202,28 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   private loadEmailTemplates() {
-    if (this.communicationEmailTypeCode == undefined)
+    if (this.templateLoadType == undefined)
       return;
     this.loaderService.show();
-    const channelTypeCode = CommunicationEvents.Email;
-    this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.communicationEmailTypeCode ?? '')
+    if(this.templateLoadType === null || this.templateLoadType === undefined || this.templateLoadType ===''){
+      this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+    }
+    this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.templateLoadType ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {
             this.ddlTemplates = data;
+            this.currentTemplate = this.ddlTemplates.filter((x:any)=>x.templateTypeCode === this.communicationEmailTypeCode )
+            if(this.currentTemplate .length>0){
+            this.documentTemplate = {'description': this.currentTemplate[0].description,'documentTemplateId':this.currentTemplate[0].documentTemplateId};
+            this.handleDdlEmailValueChange(this.currentTemplate[0]);
+            }
+            if(this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
+              ||this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail){
+              //this.getDrafterTemplate();
+              this.templateDrpDisable = true;
+              this.cancelDisplay = false;
+            }
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -301,7 +326,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.selectedTemplate.templateContent = this.updatedTemplateContent;
-      if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail) {
+      if (this.templateLoadType == CommunicationEventTypeCode.CerAuthorizationEmail) {
         this.initiateAdobeEsignProcess(this.selectedTemplate, CommunicationEvents.SendEmail);
       } else {
         this.initiateSendEmailProcess(this.selectedTemplate);
@@ -331,9 +356,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     return emailRecipients;
   }
 
-  private getEmailPayload(selectedTemplate: any) {
+  private getEmailPayload(selectedTemplate: any, templateTypeCode:string='') {
 
     return {
+      templateTypeCode: templateTypeCode,
       subject: this.emailSubject,
       toEmail: this.selectedToEmail,
       ccEmail: this.getSelectedEmails(this.selectedCCEmail,"CC"),
@@ -353,7 +379,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
      if (!this.selectedTemplate.documentTemplateId) {
       this.selectedTemplate.documentTemplateId = this.selectedTemplate.notificationTemplateId
     }
-    const emailData = this.getEmailPayload(selectedTemplate);
+    let templateTypeCode = this.getApiTemplateTypeCode();
+    const emailData = this.getEmailPayload(selectedTemplate,templateTypeCode);    
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     this.communicationFacade.initiateSendEmailRequest(emailFormData)
       .subscribe({
@@ -372,6 +399,19 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
+  }
+
+  getApiTemplateTypeCode() :string{
+    let templateTypeCode ='';
+    switch(this.communicationEmailTypeCode){
+      case CommunicationEventTypeCode.PendingNoticeEmail :
+        templateTypeCode = CommunicationEventTypeCode.PendingEmailSent;
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeEmail :
+        templateTypeCode = CommunicationEventTypeCode.RejectionEmailSent;
+        break;
+    }
+    return templateTypeCode;
   }
 
   onSendEmailConfirmationClicked() {
@@ -406,7 +446,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.selectedEmail = [];
               this.selectedEmail.push(this.toEmail[0]?.trim());
               this.selectedToEmail = this.selectedEmail;
+              if(this.emailSubject == ''){
               this.emailSubject = data.description;
+              }
               const ccEmails = data.cc?.map((item: any)=> item.email);
               this.ccEmail = ccEmails;
               if (data?.bccEmail?.length > 0) {
@@ -654,5 +696,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   editorValueChange(event: any){
         this.updatedTemplateContent = event;
   }
+
 }
 
