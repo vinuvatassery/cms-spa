@@ -16,6 +16,7 @@ import { DeactivateNotificationCategoryComponent } from './components/deactivate
 import { ReactivateNotificationCategoryComponent } from './components/reactivate-notification-category/reactivate-notification-category.component';
 import { RemoveNotificationCategoryComponent } from './components/remove-notifcation-category/remove-notification-category.component';
 import { DistributionDetailComponent } from './components/distribution-detail/distribution-detail.component';
+import { SubEventDetailComponent } from './components/sub-event-detail/sub-event-detail.component';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { DistributionDetailComponent } from './components/distribution-detail/di
     NotiificationCategoryDetailComponent,
     DeactivateNotificationCategoryComponent,
     ReactivateNotificationCategoryComponent,
-    RemoveNotificationCategoryComponent
+    RemoveNotificationCategoryComponent,
+    SubEventDetailComponent
   ],
   exports: [
     InterfaceSupportPageComponent,
@@ -51,7 +53,8 @@ import { DistributionDetailComponent } from './components/distribution-detail/di
     NotiificationCategoryDetailComponent,
     DeactivateNotificationCategoryComponent,
     ReactivateNotificationCategoryComponent,
-    RemoveNotificationCategoryComponent
+    RemoveNotificationCategoryComponent,
+    SubEventDetailComponent
   ],
 })
 export class SystemInterfaceFeatureInterfaceSupportModule {}

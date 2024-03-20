@@ -38,6 +38,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   @Input() notificationCategoryGridLists$: any;
   @Input() selectedGroup: any;
   @Input() eventLov$: any;
+  @Input() subEventLov$: any;
   @Input() notificationCategoryListDataLoader$: any;
   @Input() addnotificationCategory$: any;
   @Input() notificationCategoryReactivate$: any;
@@ -49,6 +50,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   @Output() reactivateConfimEvent = new EventEmitter<string>();
   @Output() deleteConfimedEvent = new EventEmitter<string>();
   @Output() editNotificationCategoryEvent = new EventEmitter<string>();
+  @Output() loadSubEventByParentIdEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -64,6 +66,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   reactivateButtonEmitted = false;
   deleteButtonEmitted = false;
   eventNotificationGroupId!: any;
+  eventId!: any;
   deactivebuttonEmitted = false;
   reletebuttonEmitted = false;
   editButtonEmitted = false;
@@ -102,7 +105,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       text: 'Re-activate',
       icon: 'done',
       click: (data: any): void => {
-        if (!this.reactivateButtonEmitted  && data.eventNotificationGroupId) {
+        if (!this.reactivateButtonEmitted && data.eventNotificationGroupId) {
           this.reactivateButtonEmitted = true;
           this.onOpenNotificationCategoryReactivateClicked(data.eventNotificationGroupId);
         }
@@ -113,7 +116,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.deleteButtonEmitted  && data.eventNotificationGroupId) {
+        if (!this.deleteButtonEmitted && data.eventNotificationGroupId) {
           this.deleteButtonEmitted = true;
           this.onOpenNotificationCategoryDeleteClicked(data.eventNotificationGroupId);
         }
@@ -309,7 +312,6 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   }
   onCloseNotificationCategoryDeleteConfirmationClicked() {
     this.isNotificationCategoryDeleteConfirmationPopupShow = false;
-
   }
 
   addNotificationCategory(data: any): void {
@@ -386,4 +388,8 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
     this.onCloseNotificationCategoryDeleteClicked()
   }
 
+  getSubEventByParentId(event: any) {
+    this.loadSubEventByParentIdEvent.emit(event);
+  }
+  
 }
