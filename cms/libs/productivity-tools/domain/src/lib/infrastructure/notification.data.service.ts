@@ -41,4 +41,8 @@ export class NotificationDataService {
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications-viewed`, notifications
     );
   }
+  SnoozeReminder(reminderId:any,duration:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/snooze-reminder/${reminderId}/${duration}`,null);
+  }
 }

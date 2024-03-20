@@ -48,4 +48,7 @@ export class LayoutComponent {
     this.notificationFacade.loadNotificationsAndReminders();
   }
   
+  onSnoozeReminder(event:any){ 
+    this.notificationFacade.SnoozeReminder(event.reminderId,event.duration);
+  }
 }
