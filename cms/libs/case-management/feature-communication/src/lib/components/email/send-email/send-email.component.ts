@@ -14,7 +14,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserDataService } from '@cms/system-config/domain';
@@ -46,6 +46,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() templateLoadType!: string;
   @Input() informationalText!:string;
   @Input() templateHeader !:string;
+  @Input() triggerFrom !: string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -107,6 +108,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   currentTemplate!:any;
   templateDrpDisable : boolean = false;
   cancelDisplay:boolean = true;
+  loadTemplate$ = this.communicationFacade.loadTemplate$;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -121,18 +123,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef,
-    private readonly route: ActivatedRoute,
     private readonly workflowFacade: WorkflowFacade,
-    private formBuilder: FormBuilder,
     private readonly userDataService: UserDataService,
-    private readonly esignFacade: EsignFacade,
-    private dialogService: DialogService,) { }
+    private readonly esignFacade: EsignFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    if(this.templateLoadType === undefined){
-      this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
-    }
+    this.loadTemplate();   
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
@@ -179,6 +176,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.emailSubscription$.unsubscribe();
   }
 
+  private loadTemplate(){
+    this.loadTemplate$.subscribe((response:any)=>{
+      if(response){
+        this.loadEmailTemplates();
+      }
+    });
+  }
+
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -219,8 +224,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.handleDdlEmailValueChange(this.currentTemplate[0]);
             }
             if(this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
-              ||this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail){
-              //this.getDrafterTemplate();
+              ||this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail){
               this.templateDrpDisable = true;
               this.cancelDisplay = false;
             }
@@ -401,14 +406,17 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       });
   }
 
-  getApiTemplateTypeCode() :string{
-    let templateTypeCode ='';
-    switch(this.communicationEmailTypeCode){
-      case CommunicationEventTypeCode.PendingNoticeEmail :
+  getApiTemplateTypeCode(): string {
+    let templateTypeCode = '';
+    switch (this.communicationEmailTypeCode) {
+      case CommunicationEventTypeCode.PendingNoticeEmail:
         templateTypeCode = CommunicationEventTypeCode.PendingEmailSent;
         break;
-      case CommunicationEventTypeCode.RejectionNoticeEmail :
+      case CommunicationEventTypeCode.RejectionNoticeEmail:
         templateTypeCode = CommunicationEventTypeCode.RejectionEmailSent;
+        break;
+      case CommunicationEventTypeCode.ApprovalNoticeEmail:
+        templateTypeCode = CommunicationEventTypeCode.ApprovalEmailSent;
         break;
     }
     return templateTypeCode;
@@ -458,6 +466,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.selectedCCEmail = this.ccEmail;
               this.defaultCCEmail = data.cc;
               this.showToEmailLoader = false;
+              if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
+                || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
+                || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail)
+                && this.triggerFrom === WorkflowTypeCode.NewCase) {
+                this.getDraftedTemplate();
+              }
               this.ref.detectChanges();
             }
             this.loaderService.hide();
@@ -497,6 +511,16 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       }
       this.ref.detectChanges();
     }
+  }
+
+  getDraftedTemplate(){
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationEmailTypeCode).subscribe((response:any)=>{
+      if(response.length>0){
+        this.selectedTemplateContent =response[0].requestBody;
+        this.updatedTemplateContent = response[0].requestBody; 
+        this.ref.detectChanges();
+      }
+    });
   }
 
   openNewEmailClicked() {

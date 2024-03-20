@@ -2,13 +2,14 @@
 import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 /** Facades **/
-import { ClientEligibilityFacade, AcceptedApplication, GroupCode, CaseStatusCode, EligibilityRequestType, CaseFacade } from '@cms/case-management/domain';
+import { ClientEligibilityFacade, AcceptedApplication, GroupCode, CaseStatusCode, EligibilityRequestType, CaseFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade, UserManagementFacade, UserDefaultRoles } from '@cms/system-config/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-accept-application',
@@ -52,7 +53,8 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
     private readonly configurationProvider : ConfigurationProvider,
     private readonly loginUserFacade : UserManagementFacade,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly workflowFacade: WorkflowFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -121,6 +123,8 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
             'Eligibility added successfully.'
           );
           this.loaderService.hide();
+          this.workflowFacade.sendLetterEmailFlag = StatusFlag.Yes;
+          this.workflowFacade.caseStatus = CaseStatusCode.accept;
           this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
             queryParamsHandling: "preserve"
           });
