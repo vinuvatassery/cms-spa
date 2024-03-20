@@ -10,7 +10,7 @@ import {  SnackBarNotificationType } from '@cms/shared/util-core';
 })
 export class NotificationAndReminderPageComponent {
   notificationList$ = this.notificationFacade.notificationList$;
-  
+  alert$ = this.notificationFacade.alert$;
   constructor(
     private reminderFacade: ReminderFacade,
     public notificationFacade: NotificationFacade, 

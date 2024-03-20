@@ -7,7 +7,7 @@ import { HubEventTypes, LoaderService, LoggingService, NotificationSnackbarServi
 /** Services **/
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 import { NotificationDataService } from '../infrastructure/notification.data.service';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationFacade {
@@ -15,7 +15,10 @@ export class NotificationFacade {
   signalrGeneralNotifications$!: Observable<any>;
   private notificationAndReminderListSubject = new Subject<any>();
   notificationList$ = this.notificationAndReminderListSubject.asObservable();
- 
+  private alertSearchLoaderVisibilitySubject = new Subject<boolean>;
+  alertSearchLoaderVisibility$= this.alertSearchLoaderVisibilitySubject.asObservable();
+  public alertSubject = new BehaviorSubject<any>([]);
+  alert$ = this.alertSubject.asObservable();
   /** Constructor **/
   constructor(
     private readonly notificationDataService: NotificationDataService,
@@ -59,4 +62,25 @@ export class NotificationFacade {
        
     return this.notificationDataService.viewNotifictaions(notifictaions);
   }
+  loadNotificatioBySearchText(text : string): void {
+    this.alertSearchLoaderVisibilitySubject.next(true);
+    if(text){
+      this.notificationDataService.SearchNotifications(text).subscribe({
+        next: (caseBySearchTextResponse) => {
+          caseBySearchTextResponse?.forEach((alert:any) => {
+            alert.alertNames =  `${alert.alertDesc ?? ''} ${alert.alertDesc ?? ''} ${alert.alertId?? ''}`;
+          });
+          this.alertSubject.next(caseBySearchTextResponse);
+          this.alertSearchLoaderVisibilitySubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      });
+    }
+    else{
+      this.alertSubject.next(null);
+      this.alertSearchLoaderVisibilitySubject.next(false);
+    }
+  } 
 }

@@ -1,6 +1,8 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Output, Input, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { NotificationFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { inputRules } from '@progress/kendo-angular-editor';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { BehaviorSubject, Subject } from 'rxjs';
 @Component({
@@ -12,11 +14,18 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class NotificationListComponent {
   @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
   @Input() notificationList$: any;
+  @Input() alert$:any
   alertsData:any = {};
+  @Input()searchNotification$ : any;
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
   notificationaAndReminderDataSubject = new Subject<any>();
   gridDataResult!: GridDataResult;
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
+  @Output() loadNotificationtEvent = new EventEmitter<any>();
+  state: any;
+  @Input() sortType: any;
+  @Input() sort: any;
+  @Input() sortValue: any;
     /** Lifecycle hooks **/
     ngOnInit(): void {
       this.loadNotificationsAndReminders();
@@ -25,9 +34,13 @@ export class NotificationListComponent {
         this.cdr.detectChanges();
         this.loadNotificationsAndReminders;
       });
+      this.notificationList$?.subscribe((data: any) => {
+        this.loadNotificationsAndReminders() 
+      });
     }
     constructor(
-      private cdr : ChangeDetectorRef
+      private cdr : ChangeDetectorRef,
+      private notificationFacade: NotificationFacade
     ) {}
   // data: Array<any> = [{}];
   public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -63,5 +76,13 @@ export class NotificationListComponent {
       }
       this.notificationaAndReminderDataSubject.next(this.gridDataResult);
     });
+  }
+  loadAlertBySearchText(searchText: any ) {
+    if (!searchText || searchText.length == 0) {
+      return;
+    }
+    searchText = searchText.replace("/", "-");
+    searchText = searchText.replace("/", "-");
+  this.notificationFacade.loadNotificatioBySearchText(searchText);
   }
 }

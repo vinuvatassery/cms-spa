@@ -41,4 +41,7 @@ export class NotificationDataService {
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications-viewed`, notifications
     );
   }
+  SearchNotifications(text: string){  
+    return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/search/${text}`);
+  }
 }
