@@ -45,24 +45,19 @@ export class AlertBannerComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public deleteToDoDialog: any;
   isToDODeleteActionOpen = false;
+  isEditReminderActionOpen = false;
   selectedAlertId:string="";
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
+  @Output() onEditReminderClicked = new EventEmitter<any>()
+  @Output()  onDeleteReminderClicked =  new EventEmitter<any>()
   public popoverAlertActions = [
-    {
-      buttonType:"btn-h-primary",
-      text: "Done",
-      icon: "done",
-      id:"done",
-      click: (): void => {
-      },
-    },
     {
       buttonType:"btn-h-primary",
       text: "Edit",
       icon: "edit",
       id:"edit",
       click: (): void => {
-        
+      
       },
     },
     {
@@ -89,7 +84,10 @@ export class AlertBannerComponent implements OnInit {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-        
+          this.selectedAlertId = this.topAlert.alertId;
+          if(this.topAlert.alertTypeCode == 'REMINDER'){
+          this.onEditReminderClicked.emit(this.selectedAlertId)
+          }
       },
     },
     {
@@ -97,11 +95,16 @@ export class AlertBannerComponent implements OnInit {
       text: "Delete",
       icon: "delete",
       click: (): void => {
+        this.selectedAlertId = this.topAlert.alertId;
+        if(this.topAlert.alertTypeCode == 'REMINDER'){
+          this.onDeleteReminderClicked.emit(this.selectedAlertId)
+          }else{
         if (!this.isToDODeleteActionOpen) {
           this.isToDODeleteActionOpen = true;
-          this.selectedAlertId = this.topAlert.alertId;
+        
           this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
         } 
+      }
       },
     },
   ];
@@ -203,14 +206,21 @@ export class AlertBannerComponent implements OnInit {
     if(item.id == 'done'){ 
       this.onMarkAlertAsDoneClick.emit(gridItem.alertId);
     }else if(item.id == 'edit'){ 
-
+      this.selectedAlertId = gridItem.alertId;
+      if(this.topAlert.alertTypeCode == 'REMINDER'){
+      this.onEditReminderClicked.emit(this.selectedAlertId)
+      }
     }
     else if(item.id == 'del'){
+      this.selectedAlertId = gridItem.alertId;
+      if(this.topAlert.alertTypeCode == 'REMINDER'){
+        this.onDeleteReminderClicked.emit(this.selectedAlertId)
+        }else{
       if (!this.isToDODeleteActionOpen) {
         this.isToDODeleteActionOpen = true;
-        this.selectedAlertId = gridItem.alertId;
         this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
       } 
+    }
     }
   }
   
