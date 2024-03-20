@@ -155,10 +155,10 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  rxRefundInfoSortValue = 'prescriptionFillDate';
  rxRefundInfoSortType = 'desc';
  rxRefundInfoFilter:any[]=[]
-  filter!: any;  
+  filter!: any;
   paymentTypeData :any[] =[];
   selectedPaymentType: any = '';
-  
+
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
@@ -172,7 +172,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
-  
+
 rxRefundInformationfilterChange(filter: CompositeFilterDescriptor): void {
   this.rxfilterData = filter;
 }
@@ -186,7 +186,7 @@ rxRefundInfoDataStateChange(stateData: any, index:any): void {
   this.rxRefundInfoFilter = stateData?.filter?.filters;
   if(this.rxRefundInfoFilter){
  if(this.rxRefundInfoFilter?.length ==0){
-  this.selectedVendorRefundsList[index].prescriptionFillItems  =  
+  this.selectedVendorRefundsList[index].prescriptionFillItems  =
   this.allSelectedVendorRefundsList[index].prescriptionFillItems
   this.selectedVendorRefundsList[index].prescriptionFillItems =
   this.sortPrescriptions(this.selectedVendorRefundsList[index].prescriptionFillItems)
@@ -200,7 +200,7 @@ rxRefundInfoDataStateChange(stateData: any, index:any): void {
         this.selectedVendorRefundsList[index].prescriptionFillItems);
   }else{
     if(this.selectedVendorRefundsList[index].prescriptionFillItems){
-    this.selectedVendorRefundsList[index].prescriptionFillItems =  this.filterWithOperators(fil,  this.selectedVendorRefundsList[index].prescriptionFillItems, 
+    this.selectedVendorRefundsList[index].prescriptionFillItems =  this.filterWithOperators(fil,  this.selectedVendorRefundsList[index].prescriptionFillItems,
       this.selectedVendorRefundsList[index].prescriptionFillItems);
     }
   }
@@ -224,11 +224,11 @@ sortPrescriptions(source:any[]){
 
   filterWithOperators(fil:any, source:any[], destination:any[]){
     switch(fil.operator){
-      case 'startswith': 
+      case 'startswith':
        destination =
       source.filter((x:any) => x[fil.field]?.toLowerCase().startsWith(fil.value?.toLowerCase()))
       break;
-      case 'eq': 
+      case 'eq':
       destination = source.filter((x:any) => x[fil.field]?.toString().toLowerCase() == fil.value?.toString().toLowerCase())
       break;
      case 'endswith':
@@ -245,7 +245,7 @@ sortPrescriptions(source:any[]){
         } else {
           destination = source.filter((x:any) => x[fil.field]?.toString() >= fil.value)
         }
-        break;        
+        break;
       case 'gt':
         if(fil.field == 'prescriptionFillDate'){
           destination = source.filter((x:any) => new Date([fil.field]?.toString()) > (new Date(fil.value)))
@@ -265,7 +265,7 @@ sortPrescriptions(source:any[]){
           destination = source.filter((x:any) => new Date(x[fil.field]?.toString())< new Date((fil.value)))
         } else {
           destination = source.filter((x:any) => x[fil.field]?.toString() < fil.value)
-        }          
+        }
       break;
     }
     return destination;
@@ -327,7 +327,7 @@ if(this.isEdit){
     this.initForm()
   })
   this.onInputChange(this.vendorName);
-  
+
   this.financialVendorRefundFacade.insurancevendorsSubject.next([this.selectedVendor])
    }
 
@@ -381,7 +381,7 @@ if(this.isEdit){
       this.vendorId = vendors[0].vendorId
       this.initForm()
     });
-    this.existingRxRefundClaim$.subscribe((res:any)=>{ 
+    this.existingRxRefundClaim$.subscribe((res:any)=>{
        this.rxPaymentReqIds = [res.prescriptionFillItems.map((x:any)=> x.refundedPrescriptionFillId).join(',')]
 
       this.getSelectedVendorRefundsList(res,"EDIT");
@@ -449,7 +449,7 @@ if(this.isEdit){
         this.refundForm.controls['insVendor'].disable();
       this.insurancePremiumPaymentReqIds =  [...this.insClaims.selectedInsuranceClaims]
     }
-  
+
     if(this.selectedRefundType === ServiceTypeCode.tpa ){
       this.refundForm.controls['tpaVendor'].disable();
       const param ={
@@ -818,7 +818,7 @@ addTpa(event:any){
 
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
     if(operation === "ADD"){
-      this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>      
+      this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>
       JSON.stringify(
         {
           indexCode : item.indexCode,
@@ -1009,7 +1009,8 @@ addNewRefundRx() {
           rxqtype : obj.rxqtype,
           pharmacyNpi : obj.PharmacyNpi,
           ndc : obj.ndc,
-          paymentTypeCode : obj.paymentTypeCode
+          paymentTypeCode : obj.paymentTypeCode,
+          batchId : obj.batchId ?? this.selectedVendorRefundsList[0].batchId,
         }));
       let refundRxData = {
         ...this.refundRXForm.value,
