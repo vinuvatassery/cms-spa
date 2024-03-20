@@ -43,7 +43,7 @@ export class TemplateManagementFacade {
   public sortLayoutTemplatesGrid: SortDescriptor[] = [{
     field: this.sortValueLayoutTemplates,
   }];
-
+ 
   /** Private properties **/
   private templateSubject = new BehaviorSubject<Template[]>([]);
   private clientNotificationDefaultsListsSubject = new BehaviorSubject<any>([]);
@@ -51,6 +51,7 @@ export class TemplateManagementFacade {
   private letterTemplatesListsSubject = new BehaviorSubject<any>([]); 
   private smsTextTemplatesListsSubject = new BehaviorSubject<any>([]); 
   private templatesListSubject = new BehaviorSubject<any>([]);
+  private layoutTemplatesListSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   templates$ = this.templateSubject.asObservable();
@@ -59,6 +60,7 @@ export class TemplateManagementFacade {
  letterTemplatesLists$ = this.letterTemplatesListsSubject.asObservable();
   smsTextTemplatesLists$ = this.smsTextTemplatesListsSubject.asObservable();
   templatesList$ = this.templatesListSubject.asObservable();
+  layoutTemplatesList$ = this.layoutTemplatesListSubject.asObservable();
 
   /** Constructor **/
   constructor(
@@ -152,6 +154,18 @@ export class TemplateManagementFacade {
       .subscribe({
         next: (response) => {
           this.smsTextTemplatesListsSubject.next(response);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+  loadLayoutTemplateLists() {
+    this.templateDataService
+      .loadLayoutTemplatesListsService()
+      .subscribe({
+        next: (response) => {
+          this.layoutTemplatesListSubject.next(response);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

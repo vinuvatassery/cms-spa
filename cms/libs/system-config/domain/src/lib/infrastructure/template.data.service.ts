@@ -65,9 +65,9 @@ export class TemplateDataService {
         id: 1,
         templateName: 'templateName',
         program: 'CAREAssist',
-        Scenario:'Scenario',
-        scenarioDescription:'scenarioDescription',
-        defaultMethod:'defaultMethod',
+        Scenario: 'Scenario',
+        scenarioDescription: 'scenarioDescription',
+        defaultMethod: 'defaultMethod',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
@@ -76,9 +76,9 @@ export class TemplateDataService {
         id: 2,
         templateName: 'templateName',
         program: 'CAREAssist',
-        Scenario:'Scenario',
-        scenarioDescription:'scenarioDescription',
-        defaultMethod:'defaultMethod',
+        Scenario: 'Scenario',
+        scenarioDescription: 'scenarioDescription',
+        defaultMethod: 'defaultMethod',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
@@ -87,9 +87,9 @@ export class TemplateDataService {
         id: 3,
         templateName: 'templateName',
         program: 'CAREAssist',
-        Scenario:'Scenario',
-        scenarioDescription:'scenarioDescription',
-        defaultMethod:'defaultMethod',
+        Scenario: 'Scenario',
+        scenarioDescription: 'scenarioDescription',
+        defaultMethod: 'defaultMethod',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
@@ -199,6 +199,42 @@ export class TemplateDataService {
         description:
           'Used when a client’s application is approved and they selected to go paperless',
 
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+    ]);
+  }
+
+  loadLayoutTemplatesListsService() {
+    return of([
+      {
+        id: 1,
+        layoutName: 'layoutName',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+        templateType: 'Email',
+
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 2,
+        layoutName: 'layoutName',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+        templateType: 'Email',
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 3,
+        layoutName: 'layoutName',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+        templateType: 'Letterhead',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
