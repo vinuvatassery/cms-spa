@@ -35,7 +35,7 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Attachment Type (attachment upload optional)">
-        <kendo-combobox formControlName="attachmentType" [fillMode]="formUiStyle.dropDownFillMode" [data]="eventAttachmentTypeLov$ | async"
+        <kendo-combobox formControlName="attachmentType" [fillMode]="formUiStyle.dropDownFillMode" [data]="eventAttachmentTypeList"
         textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
         </kendo-combobox>
       </kendo-floatinglabel>

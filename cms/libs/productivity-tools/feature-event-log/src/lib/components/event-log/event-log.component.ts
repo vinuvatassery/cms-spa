@@ -18,7 +18,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DocumentFacade } from '@cms/shared/util-core';
-import { Lov, LovFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
@@ -36,13 +36,13 @@ export class EventLogComponent implements OnInit {
   eventFilterCardBtn!: ElementRef;
   /** Output properties **/
   @Output() closeAction = new EventEmitter();
-  @Input() eventAttachmentTypeLov$!: Observable<Lov[]>;
+  @Input() eventAttachmentTypeLov$!: any;
   @Input() entityType: any;
   @Input() entityId: any;
   @Input() clientCaseEligibilityId: any;
 
   /** Public properties **/
-
+  eventAttachmentTypeList : any;
   clientId = 0;
   parentEventLogId: any;
   eventList: any = [];
@@ -107,11 +107,15 @@ export class EventLogComponent implements OnInit {
       this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
       this.entityId = this.clientId.toString();
     };
-    this.eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$
     this.loadEvents();
     this.subscribeEvents();
     this.getEventList();
     this.lovFacade.getEventAttachmentTypeLov();
+    this.eventAttachmentTypeLov$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+       this.eventAttachmentTypeList = response;
+      }
+    });
   }
 
   /** Private methods **/
@@ -373,7 +377,7 @@ export class EventLogComponent implements OnInit {
       logic: 'and',
     };
     this.filterDataQueryArray.push(object);
-    
+
   }
 
   downloadAttachment(eventLogAttachmentId: any, filePath: string){
@@ -381,7 +385,7 @@ export class EventLogComponent implements OnInit {
     let fileNmae = pathSplitArray[pathSplitArray.length-1];
     this.documentFacade.viewOrDownloadEventFile(true, eventLogAttachmentId, fileNmae);
   }
- 
+
   @HostListener('document:keydown', ['$event'])
   public keydown(event: KeyboardEvent): void {
     if (event) {
