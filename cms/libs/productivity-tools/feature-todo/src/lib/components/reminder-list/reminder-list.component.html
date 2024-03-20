@@ -60,11 +60,12 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #reminderDetailsTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">{{reminderCrudText}} Reminder {{remainderIsFor? 'For ' + remainderIsFor :''}} </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">{{reminderCrudText}} Reminder </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
   [isEdit]="isEdit" 
   [isDelete]="isDelete"
   [alertId] = "selectedAlertId"
+  [isFromNotificationPanel]="true"
   (onGetTodoItem)="onGetTodoItemData($event)"
   [getTodo$]="getTodo$"
   [entityTypeCodeSubject$]="entityTypeCodeSubject$"

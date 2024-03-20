@@ -15,17 +15,12 @@ export class TodoItemComponent implements OnInit {
   isDueWithIn30Days = false;
   isDueAfter30Days = false;
   @Input() todoAndReminders$! : Observable<any>
-  @Output() loadReminders = new EventEmitter()
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
   selectedAlertId =""
-  isToDODetailsActionOpen = false
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
   @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
   isToDODeleteActionOpen = false;
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
-  deleteToDoDialog!:any
-  @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
-  deleteToDODialogTemplate!: TemplateRef<any>;
   public todoActions = [
     {
       buttonType: 'btn-h-primary',
@@ -49,8 +44,7 @@ export class TodoItemComponent implements OnInit {
     },
   ];
 
-  constructor(   private cdr : ChangeDetectorRef,
-    private dialogService : DialogService) {
+  constructor(   private cdr : ChangeDetectorRef) {
   
     
   }
@@ -58,7 +52,7 @@ export class TodoItemComponent implements OnInit {
     this.todoAndReminders$.subscribe((clientsTodoReminders :any) =>{
       const clientsTodo  = 
       clientsTodoReminders.filter((x:any) => x.alertTypeCode =="TODO")
-   
+   console.log(clientsTodo)
       if(this.nDays=="DUE WITHIN 7 DAYS"){
            this.items = 
            clientsTodo.filter((x:any)=> new Date(x.alertDueDate) >= new Date() && new Date(x.alertDueDate) <= this.addDays(new Date(), 7) )
@@ -82,35 +76,22 @@ export class TodoItemComponent implements OnInit {
     return date;
   }
 
-  loadReminder(){
-this.loadReminders.emit()
-  }
-
   onToDoActionClicked(item: any,gridItem: any){ 
     if(item.id == 'done'){
       this.selectedAlertId = gridItem.alertId;
        this.onDoneTodoItem();
     }else if(item.id == 'edit'){ 
-      if (!this.isToDODetailsActionOpen) {
         this.selectedAlertId = gridItem.alertId;
           this.onOpenTodoDetailsClicked();
-        }
     }
     else if(item.id == 'del'){ 
-      if (!this.isToDODeleteActionOpen) {
-          this.isToDODeleteActionOpen = true;
           this.selectedAlertId = gridItem.alertId;
-          this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
-        }
+         this.onDeleteAlertGridClicked.emit(this.selectedAlertId);
+
     }
   }
 
-  onOpenDeleteToDoClicked(template: TemplateRef<unknown>): void {
-    this.deleteToDoDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
+
   
   onDoneTodoItem(){
     this.onMarkAlertAsDoneGridClicked.emit(this.selectedAlertId);
@@ -120,21 +101,6 @@ this.loadReminders.emit()
     this.isModalTodoDetailsOpenClicked.emit(this.selectedAlertId);
   }
 
-  onCloseDeleteToDoClicked(result: any) {
-    if (result) {
-      this.isToDODeleteActionOpen = false;
-      this.deleteToDoDialog.close();
-    }
-  }
-
-  onDeleteToDOClicked(result: any) 
-  {
-    if (result) {
-      this.isToDODeleteActionOpen = false;
-      this.deleteToDoDialog.close();
-      this.onDeleteAlertGridClicked.emit(this.selectedAlertId);
-    }
-  }
 
   /** Public properties **/
   data: Array<any> = [{}];
