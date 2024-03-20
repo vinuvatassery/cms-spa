@@ -34,6 +34,8 @@ export class AlertBannerComponent implements OnInit {
   public duration =this.configurationProvider.appSettings.snackbarAnimationDuration;
   showMoreAlert = false;
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
+  alertText:string='';
+  DueDate="";
   topAlert:any;
   moreItems="";
   secondaryAlertList!:any[];
@@ -101,7 +103,8 @@ export class AlertBannerComponent implements OnInit {
           this.isToDODeleteActionOpen = true;
           this.selectedAlertId = this.topAlert.alertId;
           this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
-        } 
+        }
+        //this.onDeleteAlertClick.emit(this.topAlert.alertId);
       },
     },
   ];
@@ -114,57 +117,60 @@ export class AlertBannerComponent implements OnInit {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {  
-    this.isLoadAlertListEvent.emit(this.entityId)
-    this.loadTodoAlertBannerData(); 
+  ngOnInit(): void {
+    this.loadTodoAlertBannerData();
     this.alertList$.subscribe((data: any) => {
-      this.loadTodoAlertBannerData(); 
-      });
-  } 
-  ngDestroy(): void {
-    //this.alertList$.unsubscribe();
+      this.loadTodoAlertBannerData();
+    });
   }  
   private loadTodoAlertBannerData(){
-        this.alertList$.subscribe((data: any) => {
-          if(data==true){
-            this.isLoadAlertListEvent.emit(this.entityId)
-          }
+      let alertType=this.alertTypeCode;
+      let alertDueDate =this.intl.formatDate(
+        new Date(), this.configurationProvider?.appSettings?.dateFormat)
+      var xfilter=[
+        {"filters":[{"field":"entityId","operator":"eq","value":this.entityId},
+        {"field":"entityTypeCode","operator":"eq","value":this.entityType},
+        {"field":"alertTypeCode","operator":"eq","value":this.alertTypeCode},
+        {"field":"alertDueDate","operator":"gte","value":alertDueDate}],
+        "logic":"and"}]; 
+      const gridDataRefinerValue = {
+        skipCount: 0,
+        maxResultCount: 10,
+        sorting: 'alertDueDate',
+        sortType: 'asc',
+        filter:JSON.stringify(xfilter),
+      }; 
+        this.isLoadAlertListEvent.emit({gridDataRefinerValue, alertType})
+        this.alertList$.subscribe((data: any) => { 
           if(data?.total > 0 ){
-            this.topAlert=data.data[0]; 
+            this.topAlert=data.data[0];
+            this.alertText=data.data[0].alertName;
+            this.DueDate=this.DueOn(data.data[0].alertDueDate);
             this.moreItems = (data?.total-1) < 1 ? "" : (data?.total-1) + "+ More Items";
             this.makePopoverAlertBanner(data);
             this.cdr.detectChanges();
-          }else{ 
+          }else{
+            this.alertText = '';
             this.cdr.detectChanges();
           }
         });
   } 
-  public DueOn(alertItem:any):any{
+  public DueOn(alertDueDate:any):any{
     let dateNow = new Date();
-    let dueDate = new Date(alertItem.alertDueDate); 
+    let dueDate = new Date(alertDueDate); 
          if (dueDate.toLocaleDateString() == dateNow.toLocaleDateString()) {
-             return alertItem.alertTypeCode != 'TODO' ?  '(Due '+AlertDueOn.Today+')' : AlertDueOn.Today;
+             return AlertDueOn.Today;
           } else if(!(dueDate.toLocaleDateString() < dateNow.toLocaleDateString()) && 
             (dueDate.toLocaleDateString() <= this.addDays(dateNow,1).toLocaleDateString())) {
-             return alertItem.alertTypeCode != 'TODO' ?  '(Due in 1 day)' : AlertDueOn.Tomorrow;
-           }else if(dueDate.toLocaleDateString() > dateNow.toLocaleDateString()){
-            return alertItem.alertTypeCode != 'TODO' ?  '(Due in '+this.differenceInDays(dueDate,dateNow)+ ' days)' :
-            (this.intl.formatDate(new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
-           }else if (dueDate.toLocaleDateString() < dateNow.toLocaleDateString()){
-            return alertItem.alertTypeCode != 'TODO' ?  '(Overdue)' : '';
+             return AlertDueOn.Tomorrow;
            }
            return (this.intl.formatDate(
-           new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
+           new Date(alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
   }
   private addDays(date: Date, days: number): Date {
     let result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
-  }
-  private differenceInDays(date1: Date, date2: Date): number {
-    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    const diffInTime = date2.getTime() - date1.getTime();
-    return Math.round(diffInTime / oneDay);
   }
   todoItemCrossedDueDate(alertDueDate:any):boolean{
     let isCrossedDueDate = false;
@@ -183,8 +189,8 @@ export class AlertBannerComponent implements OnInit {
     this.secondaryAlertList.splice(0); 
     let defaultCount = 3;
     if(alertData.total > 1){
-      let popOverBannerCount = (alertData.data.length - 1) >= defaultCount ? defaultCount : (alertData.data.length-1);
-      for (let index = 1; index <= popOverBannerCount; index++) { 
+      let popOverBannerCount = alertData.data.length > defaultCount ? defaultCount : alertData.data.length;
+      for (let index = 1; index < popOverBannerCount; index++) { 
         this.secondaryAlertList.push(alertData.data[index])
       }
     } 

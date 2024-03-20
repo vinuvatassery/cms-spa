@@ -1,6 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
-import { DialogService } from '@progress/kendo-angular-dialog';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -15,42 +14,7 @@ export class TodoItemComponent implements OnInit {
   isDueWithIn30Days = false;
   isDueAfter30Days = false;
   @Input() todoAndReminders$! : Observable<any>
-  @Output() loadReminders = new EventEmitter()
-  reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
-  selectedAlertId =""
-  isToDODetailsActionOpen = false
-  @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
-  @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
-  isToDODeleteActionOpen = false;
-  @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
-  deleteToDoDialog!:any
-  @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
-  deleteToDODialogTemplate!: TemplateRef<any>;
-  public todoActions = [
-    {
-      buttonType: 'btn-h-primary',
-      id:'done',
-      text: 'Done',
-      icon: 'done',
-      click: (): void => {
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      id:'edit',
-      text: 'Edit',
-      icon: 'edit',
-    },
-    {
-      buttonType: 'btn-h-danger',
-      id:'del',
-      text: 'Delete',
-      icon: 'delete',
-    },
-  ];
-
-  constructor(   private cdr : ChangeDetectorRef,
-    private dialogService : DialogService) {
+  constructor(   private cdr : ChangeDetectorRef) {
   
     
   }
@@ -78,62 +42,11 @@ export class TodoItemComponent implements OnInit {
   }
 
   addDays(date: Date, days: any): Date {
+    console.log('adding ' + days + ' days');
+    console.log(date);
     date.setDate(date.getDate() + parseInt(days));
+    console.log(date);
     return date;
-  }
-
-  loadReminder(){
-this.loadReminders.emit()
-  }
-
-  onToDoActionClicked(item: any,gridItem: any){ 
-    if(item.id == 'done'){
-      this.selectedAlertId = gridItem.alertId;
-       this.onDoneTodoItem();
-    }else if(item.id == 'edit'){ 
-      if (!this.isToDODetailsActionOpen) {
-        this.selectedAlertId = gridItem.alertId;
-          this.onOpenTodoDetailsClicked();
-        }
-    }
-    else if(item.id == 'del'){ 
-      if (!this.isToDODeleteActionOpen) {
-          this.isToDODeleteActionOpen = true;
-          this.selectedAlertId = gridItem.alertId;
-          this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
-        }
-    }
-  }
-
-  onOpenDeleteToDoClicked(template: TemplateRef<unknown>): void {
-    this.deleteToDoDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
-  
-  onDoneTodoItem(){
-    this.onMarkAlertAsDoneGridClicked.emit(this.selectedAlertId);
-  }
-
-  onOpenTodoDetailsClicked() {
-    this.isModalTodoDetailsOpenClicked.emit(this.selectedAlertId);
-  }
-
-  onCloseDeleteToDoClicked(result: any) {
-    if (result) {
-      this.isToDODeleteActionOpen = false;
-      this.deleteToDoDialog.close();
-    }
-  }
-
-  onDeleteToDOClicked(result: any) 
-  {
-    if (result) {
-      this.isToDODeleteActionOpen = false;
-      this.deleteToDoDialog.close();
-      this.onDeleteAlertGridClicked.emit(this.selectedAlertId);
-    }
   }
 
   /** Public properties **/
@@ -165,5 +78,3 @@ this.loadReminders.emit()
   ];
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
 }
-
-

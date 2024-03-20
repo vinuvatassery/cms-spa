@@ -91,7 +91,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       text: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
-        if (!this.deactivateButtonEmitted && data.eventNotificationGroupId) {
+        if (!this.deactivateButtonEmitted) {
           this.deactivateButtonEmitted = true;
           this.onOpenNotificationCategoryDeactivateClicked(data.eventNotificationGroupId);
         }
@@ -102,7 +102,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       text: 'Re-activate',
       icon: 'done',
       click: (data: any): void => {
-        if (!this.reactivateButtonEmitted  && data.eventNotificationGroupId) {
+        if (!this.reactivateButtonEmitted) {
           this.reactivateButtonEmitted = true;
           this.onOpenNotificationCategoryReactivateClicked(data.eventNotificationGroupId);
         }
@@ -113,7 +113,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.deleteButtonEmitted  && data.eventNotificationGroupId) {
+        if (!this.deleteButtonEmitted) {
           this.deleteButtonEmitted = true;
           this.onOpenNotificationCategoryDeleteClicked(data.eventNotificationGroupId);
         }

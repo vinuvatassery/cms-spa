@@ -49,7 +49,6 @@ export class TodoDetailComponent implements OnInit {
   @Output() getTodoItemsLov = new EventEmitter();
   @Input() searchProviderSubject! : Subject<any>
   @Input() clientSubject! : Subject<any>
-  @Output() onDeleteAlertClicked = new EventEmitter()
   showClientSearchInputLoader = false
   placeholderText =""
   vendorPlaceHolderText = "Search for Vendor Name or TIN";
@@ -253,7 +252,8 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     const payload ={
       alertName :  this.todoDetailsForm.controls['title'].value,
       alertDueDate : dueDate,
-      alertEndDate : endDate,  
+      alertEndDate : endDate,
+      alertId :    this.alertId,
       alertDesc : this.todoDetailsForm.controls['alertDesc'].value,
       entityTypeCode : entityTypeCode,
       entityId :entityId ,
@@ -263,22 +263,12 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     }
 
     if(!this.isEdit){
-      
       this.onTodoItemCreateClick.emit(payload)
     }
     else{
-      const editPayload ={
-        ...payload,
-        alertId :    this.alertId,
-      }
-    this.onUpdateTodoItemClick.emit(editPayload);
+    this.onUpdateTodoItemClick.emit(payload);
     }
   }
-
-  
-  delete(){
-    this.onDeleteAlertClicked.emit(this.alertId)
-   }
 
   endDateValidation(){
     const endDate = this.todoDetailsForm.controls['endDate'].value;
@@ -289,5 +279,4 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       return;
     }
   }
-
 }

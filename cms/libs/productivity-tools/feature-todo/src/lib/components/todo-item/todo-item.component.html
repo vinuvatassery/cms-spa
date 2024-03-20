@@ -14,33 +14,8 @@
         <p>{{item.alertDesc}}</p>
         <p>{{item.alertDueDate  | date:'MM/dd/yyyy'}}</p>
       </div>
-      <kendo-dropdownbutton 
-      *ngIf="item.customAlertFlag && item.customAlertFlag=='Y'"
-      title="More option" 
-      [data]="todoActions"
-      (itemClick)="onToDoActionClicked($event,item)"
-      (click)="$event.stopPropagation()" look="bare" aria-label="More option"
-     class="small-i-btn app-dropdown-action more_action_wid" [popupSettings]="{
-        popupClass: reminderActionPopupClass,
-        animate: true
-      }">
-  <span *ngIf="item.customAlertFlag == 'Y'" class="material-icons" aria-label="More option"> more_vert    </span>
-      <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-        <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-          aria-hidden="false" (click)="dataItem.click">
-          <span class="material-icons" aria-hidden="true">{{dataItem.icon}}</span>
-          <label> {{ dataItem.text }} </label>
-        </button>
-      </ng-template>
-    </kendo-dropdownbutton>
     </div>
- 
   </div>
 </ng-container>
 
 </div>
-
-<ng-template #deleteToDODialogTemplate>   
-  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
-</ng-template>
-

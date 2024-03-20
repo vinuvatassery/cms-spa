@@ -1,6 +1,6 @@
 /** Angular **/
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
@@ -54,8 +54,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     private loaderService: LoaderService,
     private readonly cdr: ChangeDetectorRef,
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider,
-    private readonly router: Router,
+    private readonly configProvider: ConfigurationProvider
   ) { }
 
   /** Lifecycle Hooks */
@@ -313,9 +312,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.save().subscribe((response: any) => {
         if (response) {
           this.loaderService.hide();
-          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
+          this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
         }
       })
     });

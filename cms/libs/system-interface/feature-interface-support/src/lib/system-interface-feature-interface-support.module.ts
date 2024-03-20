@@ -15,7 +15,6 @@ import { NotiificationCategoryDetailComponent } from './components/notification-
 import { DeactivateNotificationCategoryComponent } from './components/deactivate-notification-category/deactivate-notification-category.component';
 import { ReactivateNotificationCategoryComponent } from './components/reactivate-notification-category/reactivate-notification-category.component';
 import { RemoveNotificationCategoryComponent } from './components/remove-notifcation-category/remove-notification-category.component';
-import { DistributionDetailComponent } from './components/distribution-detail/distribution-detail.component';
 
 @NgModule({
   imports: [
@@ -28,7 +27,6 @@ import { DistributionDetailComponent } from './components/distribution-detail/di
     InterfaceSupportPageComponent,
     SupportGroupComponent,
     DistributionListsComponent,
-    DistributionDetailComponent,
     NotificationCategoryComponent,
     SupportGroupDetailComponent,
     DeactivateSupportGroupComponent,

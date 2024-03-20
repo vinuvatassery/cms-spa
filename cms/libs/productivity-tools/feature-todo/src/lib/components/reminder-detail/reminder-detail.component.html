@@ -1,6 +1,5 @@
 <section class="k-dialog-body" [formGroup]="clientReminderForm" kendoTooltip>
-  <p class="text-muted" *ngIf="!isDelete">All fields are required unless otherwise stated.</p>
-  <p class="text-muted" *ngIf="isDelete"> The reminder will be permanently deleted. You can add another reminder at any time.</p>
+  <p class="text-muted">All fields are required unless otherwise stated.</p>
   <section>
     <div class="flex-row">
       <div class="flex-col flex-col-6">
@@ -10,12 +9,12 @@
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="dueDate"
             formatPlaceholder="formatPattern"
-            [min]="currentDate" 
+         
             placeholder=""
           >
           </kendo-datepicker>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!clientReminderForm.controls['dueDate'].valid && isSubmitted">Due Date is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!clientReminderForm.controls['dueDate'].valid">Due Date is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Time (Optional)">
@@ -43,9 +42,9 @@
             </kendo-textarea-suffix>
           </kendo-textarea>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid && isSubmitted">Description is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid">Description is required.</kendo-formerror>
       </div>
-      <div class="flex-col mt-3 field_with_info" *ngIf="isShowEntityTypeCode">
+      <div class="flex-col mt-3 field_with_info" *ngIf="isShow">
         <kendo-floatinglabel text="Link Reminder To">
           <kendo-dropdownlist aria-label="Link Reminder To"
            [fillMode]="formUiStyle.dropDownFillMode" 
@@ -60,7 +59,7 @@
 
       <span class="material-icons" aria-hidden="true" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
       </div>
-      <div class="flex-col mt-3" *ngIf="isShowEntityTypeCode && showVendorSearch">
+      <div class="flex-col mt-3" *ngIf="isShow && showVendorSearch">
         <div class="autoSelect-search mat-form-no-b-space">
           <div class="global-search">
             <span
@@ -97,7 +96,7 @@
           </div>
         </div>
       </div>
-        <div class="flex-col mt-3" *ngIf="isShowEntityTypeCode && showClientSearch"  >
+        <div class="flex-col mt-3" *ngIf="isShow && showClientSearch"  >
           <div class="global-search mat-form-no-b-space">
             <span
               class="material-icons global-search-icon"
@@ -139,7 +138,7 @@
         </div>
       
       </div>
-      <div class="flex-col mb-1 mt-2" *ngIf="!isDelete">
+      <div class="flex-col mb-1 mt-2">
         <span class="app-checkboxwidtext-wrapper">
           <input
             type="checkbox"
@@ -154,21 +153,6 @@
         </span>
       </div>
     
-      <div class="flex-col mb-1 mt-2" *ngIf="isDelete">
-        <span class="app-checkboxwidtext-wrapper">
-          <input
-            type="checkbox"
-            id="deleteFromOutlookCalender"
-            kendoCheckBox
-            aria-labelledby="deleteFromOutlookCalender"
-            formControlName="deleteFromOutlookCalender"
-          />
-          <label class="k-checkbox-label" for="deleteFromOutlookCalender"
-            >Delete event from Outlook Calendar</label
-          >
-        </span>
-      </div>
-
   </section>
 </section>
 <kendo-dialog-actions kendoTooltip>
@@ -182,14 +166,8 @@
     >
       Cancel
     </button>
-    <button *ngIf="!isDelete" kendoButton [primary]="true" (click)="save()"  
-    aria-label="Create" >
-      {{isEdit ? 'Update': 'Create'}} 
+    <button kendoButton [primary]="true" (click)="save()"  aria-label="Create" >
+      Create
     </button>
-    <div>
-      <button *ngIf="isDelete"  kendoButton aria-label="Delete"
-       class="k-danger-link" (click)="delete()">  Delete     </button>
-    </div>
-
   </div>
 </kendo-dialog-actions>

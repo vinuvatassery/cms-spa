@@ -16,7 +16,7 @@ vendorProfile:any
 @Output() loadSpecialHandlingEvent =  new EventEmitter();
 @Output() updateRecentlyViewedEvent = new EventEmitter();
 @Input()  alertList$ :any;
-@Output() isLoadAlertBannerContainerEvent = new EventEmitter<any>();
+@Output() isLoadAlertListContainerEvent = new EventEmitter<any>();
 @Output() onMarkAlertAsDoneEvent = new EventEmitter<any>();
 @Output() onDeleteAlertEvent = new EventEmitter<any>();
 notificationReminderDialog : any;
@@ -114,9 +114,9 @@ notificationReminderDialog : any;
       cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
     });  
   } 
-  isLoadAlertBannerEvent(entityId: any)
+  isLoadAlertListEvent(gridDataRefinerValue: any,alertType: any)
   {
-    this.isLoadAlertBannerContainerEvent.emit(entityId)
+    this.isLoadAlertListContainerEvent.emit({gridDataRefinerValue, alertType})
   }
   onMarkAlertAsDoneClick(event:any){
     this.onMarkAlertAsDoneEvent.emit(event);

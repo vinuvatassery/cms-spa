@@ -1,6 +1,6 @@
 /** Angular **/
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription, first } from 'rxjs';
 /** Internal Libraries **/
@@ -27,7 +27,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   private loadSessionSubscription!: Subscription;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
-  saveForLaterClickSubscription !: Subscription;
   clientHivVerification: any;
   isNotUploaded = true;
   alreadyUploaded = false;
@@ -41,13 +40,11 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     private route: ActivatedRoute, private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
-    private readonly router: Router,
 ) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
     this.buildForm();
-    this.addSaveForLaterSubscription();
     this.addSaveSubscription();
     this.loadSessionData();
     this.verificationFacade.hivVerificationSave$.subscribe(data=>{
@@ -106,27 +103,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
       },
-    });
-  }
-
-  private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
-      this.validateForm();
-      if (this.hivVerificationForm.valid) {
-        this.save().subscribe((response: any) => {
-          if (response) {
-            this.loaderService.hide();
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-        })
-      }
-      else {
-        this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-          queryParamsHandling: "preserve"
-        });
-      }
     });
   }
 

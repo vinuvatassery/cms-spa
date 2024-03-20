@@ -48,9 +48,6 @@ export class CaseFacade {
   private casesSubject = new Subject<any>();
   private clientProfileSubject = new Subject<any>();
   private clientProfileHeaderSubject = new Subject<any>();
-  private clientProfileDataSubject = new Subject<any>();
-  private clientProfileDataLoaderSubject = new Subject<any>();
-  private clientProfileHeaderLoaderSubject = new Subject<any>();
   private activeSessionLoaderVisibleSubject = new BehaviorSubject<boolean>(
     false
   );
@@ -89,9 +86,6 @@ export class CaseFacade {
   getCaseHistory$ = this.getCaseHistorySubject.asObservable();
   clientProfile$ = this.clientProfileSubject.asObservable();
   clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable();
-  clientProfileData$ = this.clientProfileDataSubject.asObservable();
-  clientProfileDataLoader$ = this.clientProfileDataLoaderSubject.asObservable()
-  clientProfileHeaderLoader$ = this.clientProfileHeaderLoaderSubject.asObservable()
   clientProfileImpInfo$ = this.clientProfileImpInfoSubject.asObservable();
   activeSessionLoaderVisible$ =
     this.activeSessionLoaderVisibleSubject.asObservable();
@@ -379,40 +373,6 @@ export class CaseFacade {
           this.createActiveSession(activeSession);
         }
       },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      },
-    });
-  }
-
-  loadClientProfileHeaderWithOutLoader(clientId: number): void {
-    this.caseDataService.loadClientProfileHeader(clientId).subscribe({
-      next: (clientProfileResponse) => {
-        this.clientProfileHeaderLoaderSubject.next(true)
-
-        this.clientProfileHeaderSubject.next(clientProfileResponse);
-        if (clientProfileResponse) {
-          const activeSession = {
-            clientCaseId: clientProfileResponse?.clientCaseId,
-            clientId: clientProfileResponse?.clientId,
-          };
-        this.clientProfileHeaderLoaderSubject.next(false)
-
-        }
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      },
-    });
-  }
-
-  loadClientProfileWithOutLoader(clientCaseEligibilityId: string): void {
-    this.caseDataService.loadClientProfile(clientCaseEligibilityId).subscribe({
-      next: (clientProfileResponse: any) => {
-        this.clientProfileDataLoaderSubject.next(true)
-        this.clientProfileDataSubject.next(clientProfileResponse);
-        this.clientProfileDataLoaderSubject.next(false)
-          },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },

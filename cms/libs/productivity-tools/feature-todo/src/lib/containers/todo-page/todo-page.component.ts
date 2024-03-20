@@ -40,10 +40,6 @@ export class TodoPageComponent implements OnInit {
   selectedAlertId! :any
   createTodo$ = this.todoFacade.curdAlert$
   pageSizes = this.todoFacade.gridPageSizes;
-  isToDODeleteActionOpen = false
-  deleteToDoDialog:any
-  @ViewChild('deleteToDOTemplate', { read: TemplateRef })
-  deleteTodoTemplate!: TemplateRef<any>;
   /** Constructor **/
   constructor(private dialogService: DialogService, 
     public todoFacade: TodoFacade,
@@ -79,7 +75,7 @@ export class TodoPageComponent implements OnInit {
    this.selectedAlertId = alertId
     this.todoDetailsDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np mnl',
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np mnl',
     });
     this.isToDODetailsActionOpen = true;
   }
@@ -108,37 +104,4 @@ export class TodoPageComponent implements OnInit {
   onGetTodoItem($event:any){
     this.todoFacade.getTodoItem($event);
   }
-
-  
-  onCloseDeleteToDoClicked(result: any) {
-    if (result) {
-      this.deleteToDoDialog.close();
-    }
-  }
-  onDeleteToDOClicked(result: any) 
-  {
-    if (result) {
-      this.deleteToDoDialog.close();
-      this.onDeleteAlertGrid(this.selectedAlertId);
-    }
-  }
-
-onDeleteAlertClicked(event:any){
-    if (!this.isToDODeleteActionOpen) {
-        this.isToDODeleteActionOpen = true;
-        this.selectedAlertId = event;
-        this.onDeleteToDoClicked(this.deleteTodoTemplate);
-      }
-    }
-
-    onDeleteToDoClicked(template: TemplateRef<unknown>): void {
-      this.deleteToDoDialog = this.dialogService.open({
-        content: template,
-        cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-      });
-    }
-
-    
-  
-
 }

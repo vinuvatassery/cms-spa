@@ -438,13 +438,10 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
       this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId).subscribe({
         next: (casesResponse: any) => {
           this.loaderService.hide();
-          this.workflowFacade.caseStatus = this.currentStatusCode;
           if (this.sendLetterFlag == StatusFlag.Yes) {
-            this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
             this.workflowFacade.saveForLater(true);
           }
           else {
-            this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
             this.workflowFacade.saveForLater(false);
           }
           this.isShowSaveLaterPopup = false;

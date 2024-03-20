@@ -1,19 +1,9 @@
 <div class="app-c-fab-sidePanel sidePanel-todo-reminders" kendoTooltip>
   <!-- Side Panel Header -->
   <div class="sidePanel_header">
-    <div class="sidePanel_header-left"  
-    >
-    <kendo-skeleton  *ngIf="showLoader"
-    shape="text"
-    animation="pulse"
-    width="30%"
-  ></kendo-skeleton>
-   
-      <h3 *ngIf="!showLoader">{{clientName}}’s To-Do & Reminders</h3>
-    
+    <div class="sidePanel_header-left">
+      <h3>{{clientName}}’s To-Do & Reminders</h3>
     </div>
-   
-
     <div class="sidePanel_header-right max-w-small">
       <button
         kendoButton
@@ -27,70 +17,26 @@
       </button>
     </div>
   </div>
-  <div  class="sidePanel_body todo-list">
+  <div class="sidePanel_body todo-list">
     <section>
       <p class="due-main-heading text-red-dark">DUE WITHIN 7 DAYS</p>
-      <productivity-tools-todo-item 
-       [nDays]="'DUE WITHIN 7 DAYS'"
-      [todoAndReminders$]="todoAndReminders$" 
-      (isModalTodoDetailsOpenClicked)="editTodoItem($event)"
-      (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
-      (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
-      ></productivity-tools-todo-item>
-      <productivity-tools-reminder-item 
-                    [nDays]="'DUE WITHIN 7 DAYS'"
-                    [todoAndReminders$]="todoAndReminders$"
-                    (onEditReminderClickedEvent)="onEditReminderClicked($event)"
-                    (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
-                       ></productivity-tools-reminder-item>
-
+      <productivity-tools-todo-item  [nDays]="'DUE WITHIN 7 DAYS'"
+      [todoAndReminders$]="todoAndReminders$"></productivity-tools-todo-item>
+      <productivity-tools-reminder-item [nDays]="'DUE WITHIN 7 DAYS'"
+                    [todoAndReminders$]="todoAndReminders$"></productivity-tools-reminder-item>
     </section>
-    <div *ngIf="showDataLoader">
-      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
-      class="reminder-list-skeleton-loader"></kendo-skeleton>
-    </div>
     <section class="pt-2">
       <p class="due-main-heading text-canyon-dark">DUE WITHIN 30 DAYS</p>
-      <productivity-tools-reminder-item  
-           [nDays]="'DUE WITHIN 30 DAYS'"
-            [todoAndReminders$]="todoAndReminders$"
-            (onEditReminderClickedEvent)="onEditReminderClicked($event)"
-            (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
-            ></productivity-tools-reminder-item>
-      <productivity-tools-todo-item 
-      [nDays]="'DUE WITHIN 30 DAYS'"
-       [todoAndReminders$]="todoAndReminders$"
-       (isModalTodoDetailsOpenClicked)="editTodoItem($event)"     
-       (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
-       (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"></productivity-tools-todo-item>
-
-      </section>
-      <div *ngIf="showDataLoader">
-        <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
-        class="reminder-list-skeleton-loader"></kendo-skeleton>
-      </div>
+      <productivity-tools-reminder-item  [nDays]="'DUE WITHIN 30 DAYS'"
+            [todoAndReminders$]="todoAndReminders$"></productivity-tools-reminder-item>
+      <productivity-tools-todo-item [nDays]="'DUE WITHIN 30 DAYS'"
+       [todoAndReminders$]="todoAndReminders$"></productivity-tools-todo-item>
+    </section>
     <section class="pt-2">
       <p class="due-main-heading">DUE LATER</p>
-      <productivity-tools-reminder-item 
-      [nDays]="'DUE LATER'"
-      [todoAndReminders$]="todoAndReminders$"
-      (onEditReminderClickedEvent)="onEditReminderClicked($event)"
-      (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
-      ></productivity-tools-reminder-item>
-      <productivity-tools-todo-item  
-      [nDays]="'DUE LATER'"
-       [todoAndReminders$]="todoAndReminders$"
-       (isModalTodoDetailsOpenClicked)="editTodoItem($event)"
-       (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
-       (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
-       ></productivity-tools-todo-item>
+      <productivity-tools-reminder-item [nDays]="'DUE LATER'"
+      [todoAndReminders$]="todoAndReminders$"></productivity-tools-reminder-item>
+      <productivity-tools-todo-item  [nDays]="'DUE LATER'" [todoAndReminders$]="todoAndReminders$"></productivity-tools-todo-item>
     </section>
-    <div *ngIf="showDataLoader">
-      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
-      class="reminder-list-skeleton-loader"></kendo-skeleton>
-    </div>
-  
   </div>
- 
 </div>
-

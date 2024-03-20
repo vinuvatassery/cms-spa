@@ -66,9 +66,5 @@ export class TodoDataService {
    todoAndReminderByClient(clientId:any){  
     return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/clients/${clientId}`, null);
   }
-
-  loadAlertsBanner(payload:any) {
-    return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/banner/${payload}`);
-  }
 }
 

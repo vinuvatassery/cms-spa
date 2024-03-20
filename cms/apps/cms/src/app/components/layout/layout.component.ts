@@ -1,6 +1,5 @@
 /** Angular **/
 import { Component, HostListener } from '@angular/core';
-import { NotificationFacade } from '@cms/productivity-tools/domain';
 import { ReminderNotificationSnackbarService } from '@cms/shared/util-core';
 import { UserDataService } from '@cms/system-config/domain';
 
@@ -10,10 +9,7 @@ import { UserDataService } from '@cms/system-config/domain';
 })
 export class LayoutComponent {
   commonReminderSnackbar$   = this.reminderNotificationSnackbarService.snackbar$
-  notificationList$ = this.notificationFacade.notificationList$;
-  constructor(private readonly userDataService: UserDataService,
-    public notificationFacade: NotificationFacade, 
-    private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService) {}
+  constructor(private readonly userDataService: UserDataService, private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService) {}
 
   /** Public properties **/
   isSideMenuToggled = false;
@@ -43,9 +39,4 @@ export class LayoutComponent {
   onLoadEvent(event: any) {
     this.sizeChange(event);
   }
-
-  onloadReminderAndNotificationsGrid(){
-    this.notificationFacade.loadNotificationsAndReminders();
-  }
-  
 }

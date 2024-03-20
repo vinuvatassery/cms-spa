@@ -10,7 +10,7 @@
     <span class="material-icons" aria-hidden="true" aria-label="Notifications"
       >notifications</span
     >
-    <span class="notification-badge">{{unViewedCount ? unViewedCount : 0}}</span>
+    <span class="notification-badge">0</span>
     <common-signalr-status></common-signalr-status>
   </button>
   <kendo-popup
@@ -37,27 +37,57 @@
         <!-- List Item Repeatable -->
         <li
           class="card-list_items"
-          *ngFor="let message of alertsData?.items.slice(0, 3)"
-          [ngClass]="message.recentViewedFlag === 'N'  ? 'card-list_items unread-item' : 'inherit'"
-       
+          *ngFor="let message of notifications"
           aria-label="notification menu item"
         >
           <div class="card-type-icon">
-            <span *ngIf="message.alertTypeCode === 'NOTIFICATION'"
+            <span
               class="material-icons"
               aria-label="notifications"
               aria-hidden="true"
-              >notifications</span>
-
-              <span *ngIf="message.alertTypeCode === 'REMINDER'"
-              class="material-icons"
-              aria-label="alarm"
-              aria-hidden="true"
-              >alarm</span>
+              >notifications</span
+            >
           </div>
           <div class="card-list_details">
-            <p [innerHTML]="sanitizeHtml(message.alertDesc)"></p>
-            <p class="text-muted">{{message?.alertDueDate | date:'MM-dd-YYYY'}}</p>
+            <p [innerHTML]="sanitizeHtml(message)"></p>
+            <p class="text-muted">10-10-2021</p>
+          </div>
+          <kendo-dropdownbutton
+            [data]="data"
+            
+            title="More option"
+            look="bare"
+            aria-label="more actions"
+            class="small-i-btn app-dropdown-action more_action_wid"
+            [popupSettings]="{ popupClass: popupClass1, animate: true }"
+          >
+          <span class="material-icons" aria-label="More option"> more_vert    </span>
+          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+            <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+              <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+              <label>   {{ dataItem.text }} </label>
+          </button>          
+            </ng-template>
+          </kendo-dropdownbutton>
+        </li>
+        <li
+          class="card-list_items unread-item"
+          aria-label="notification menu item"
+        >
+          <div class="card-type-icon">
+            <span
+              class="material-icons"
+              aria-label="notification reminder"
+              aria-hidden="true"
+              >alarm</span
+            >
+          </div>
+          <div class="card-list_details">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing Lorem ipsum
+              dolor
+            </p>
+            <p class="text-muted">10-10-2021</p>
           </div>
           <kendo-dropdownbutton
             [data]="dataTwo"
@@ -67,18 +97,81 @@
             aria-label="more actions"
             class="small-i-btn app-dropdown-action more_action_wid"
             [popupSettings]="{ popupClass: popupClass1, animate: true }"
-            (itemClick)="onActionClicked($event,message)"
           >
-          <span *ngIf="message.alertTypeCode == 'REMINDER'"
-           class="material-icons" aria-label="More option"> more_vert    </span>
-          <ng-template class="app-dropdown-action-list"
-           kendoDropDownButtonItemTemplate let-dataItem>
+          <span class="material-icons" aria-label="More option"> more_vert    </span>
+          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
             <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
               <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
               <label>   {{ dataItem.text }} </label>
-          </button>          
+          </button>             
             </ng-template>
           </kendo-dropdownbutton>
+        </li>
+        <li class="card-list_items" aria-label="notification menu item">
+          <div class="card-type-icon">
+            <span
+              class="material-icons"
+              aria-label="notification reminder"
+              aria-hidden="true"
+              >alarm</span
+            >
+          </div>
+          <div class="card-list_details">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing Lorem ipsum
+            </p>
+            <p class="text-muted">10-10-2021</p>
+          </div>
+          <kendo-dropdownbutton
+          [data]="dataTwo"
+          
+          title="More option"
+          look="bare"
+          aria-label="more actions"
+          class="small-i-btn app-dropdown-action more_action_wid"
+          [popupSettings]="{ popupClass: popupClass1, animate: true }"
+        >
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
+        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+          <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+            <label>   {{ dataItem.text }} </label>
+        </button>           
+          </ng-template>
+        </kendo-dropdownbutton>
+        </li>
+        <li class="card-list_items" aria-label="notification menu item">
+          <div class="card-type-icon">
+            <span
+              class="material-icons"
+              aria-label="notifications"
+              aria-hidden="true"
+              >notifications</span
+            >
+          </div>
+          <div class="card-list_details">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing Lorem ipsum
+            </p>
+            <p class="text-muted">10-10-2021</p>
+          </div>
+          <kendo-dropdownbutton
+          [data]="data"
+          
+          title="More option"
+          look="bare"
+          aria-label="more actions"
+          class="small-i-btn app-dropdown-action more_action_wid"
+          [popupSettings]="{ popupClass: popupClass1, animate: true }"
+        >
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
+        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+          <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+            <label>   {{ dataItem.text }} </label>
+        </button>        
+          </ng-template>
+        </kendo-dropdownbutton>
         </li>
       </ul>
       <!-- Notification Footer Buttons -->
@@ -115,13 +208,8 @@
 <!-- Create New Reminder Popup -->
 <ng-template #NewReminderTemplate>
   <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
-    {{crudText}} Reminder {{reminderFor? 'For ' + reminderFor :''}} </kendo-dialog-titlebar>
+    Create New Reminder {{reminderFor? 'For ' + reminderFor :''}} </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
-  [isEdit]="isEdit" 
-  [isDelete]="isDelete"
-  [alertId] = "selectedAlertId"
-  (onGetTodoItem)="onGetTodoItemData($event)"
-  [getTodo$]="getTodo$"
    [entityTypeCodeSubject$]="entityTypeCodeSubject$"
     (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"
     [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"

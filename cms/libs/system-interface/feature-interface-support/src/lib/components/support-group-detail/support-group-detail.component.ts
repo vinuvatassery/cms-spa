@@ -61,7 +61,7 @@ export class SupportGroupDetailComponent implements OnInit {
     this.notiificationGroupForm = this.formBuilder.group({
       groupCode: [{ value: this.notiificationGroup?.groupCode, disabled: false }, [Validators.required]],
       groupName: [this.notiificationGroup?.groupName, [Validators.required, Validators.maxLength(200)]],
-      groupDesc: [this.notiificationGroup?.groupDesc, [Validators.required, Validators.maxLength(500)]],
+      groupDesc: [this.notiificationGroup?.groupName, [Validators.required, Validators.maxLength(500)]],
     });
   }
   buildForm() {

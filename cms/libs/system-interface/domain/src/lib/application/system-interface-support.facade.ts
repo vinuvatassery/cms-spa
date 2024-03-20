@@ -5,7 +5,6 @@ import { SnackBarNotificationType, NotificationSource, LoaderService, Configurat
 import { IntlService } from '@progress/kendo-angular-intl';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { SystemInterfaceSupportStatus } from '../enums/system-interface-support-status';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceSupportFacade {
@@ -30,6 +29,7 @@ export class SystemInterfaceSupportFacade {
 
   private supportGroupSubject = new Subject<any>();
   public supportGroup$ = this.supportGroupSubject.asObservable();
+
 
   private addSupportGroupSubject = new Subject<any>();
   addSupportGroup$ = this.addSupportGroupSubject.asObservable();
@@ -60,18 +60,11 @@ export class SystemInterfaceSupportFacade {
   distributionListDataLoader$ = this.distributionListDataLoaderSubject.asObservable();
   //----------------------------------------
 
-  private editDistributionListUserSubject = new Subject<boolean>();
-  editDistributionListUser$ = this.editDistributionListUserSubject.asObservable();
 
   // Notification Category 
-  private changeStatusDistributionListUserSubject = new Subject<boolean>();
-  changeStatusDistributionListUser$ = this.changeStatusDistributionListUserSubject.asObservable();
 
   private notificationCategorySubject = new Subject<any>();
   public notificationCategories$ = this.notificationCategorySubject.asObservable();
-  private deleteDistributionListUserSubject = new Subject<boolean>();
-  deleteDistributionListUser$ = this.deleteDistributionListUserSubject.asObservable();
-  //----------------------------------------
 
   private addnotificationCategorySubject = new Subject<any>();
   addnotificationCategory$ = this.addnotificationCategorySubject.asObservable();
@@ -93,7 +86,6 @@ export class SystemInterfaceSupportFacade {
 
   private eventLovSubject = new BehaviorSubject<any[]>([]);
   eventLov$ = this.eventLovSubject.asObservable();
-
 
 
 
@@ -144,6 +136,7 @@ export class SystemInterfaceSupportFacade {
       },
     });
   }
+
 
   addSupportGroup(notificationGroup: any) {
     this.loaderService.show();
@@ -236,6 +229,8 @@ export class SystemInterfaceSupportFacade {
     }
   }
 
+
+
   // Notification Catergory 
 
   loadNotificationCategory(paginationParameters: any) {
@@ -294,7 +289,7 @@ export class SystemInterfaceSupportFacade {
     });
   }
 
-  changeNotificationCategoryStatus(eventNotificationGroupId: any, status: boolean) {
+ changeNotificationCategoryStatus(eventNotificationGroupId: any, status: boolean) {
     this.showLoader();
     this.systemInterfaceSupportService.changeNotificationCategoryStatus(eventNotificationGroupId, status)
       .subscribe({
@@ -330,9 +325,9 @@ export class SystemInterfaceSupportFacade {
       });
   }
 
-  loadEventLov() {
-    this.systemInterfaceSupportService.getEventLovList().subscribe({
-      next: (response) => {
+  loadEventLov(groupCode: string) {
+    this.systemInterfaceSupportService.getEventLovList(groupCode).subscribe({
+      next: (response) => {        
         this.eventLovSubject.next(response);
       },
 
@@ -342,99 +337,6 @@ export class SystemInterfaceSupportFacade {
       },
     });
   }
+  
 
-  // distribution list-------------------------------------------------------
-
-  addDistributionListUser(dto: any, isEditMode: boolean): Observable<any> {
-    if (!isEditMode) {
-      return this.systemInterfaceSupportService.addDistributionListUser(dto).pipe(
-        tap((response: any) => {
-          this.addDistributionListUserSubject.next(response);
-        }),
-      );
-    } else {
-      return this.systemInterfaceSupportService.editDistributionListUser(dto).pipe(
-        tap((response: any) => {
-          this.addDistributionListUserSubject.next(response);
-        }),
-      );
-    }
-  }
-
-  loadDistributionGroup(paginationParameters: any) {
-    this.distributionListDataLoaderSubject.next(true);
-    this.systemInterfaceSupportService.getDistributionList(paginationParameters).subscribe({
-      next: (dataResponse: any) => {
-        const gridView: any = {
-          data: dataResponse['items'],
-          total: dataResponse?.totalCount,
-        };
-        this.distributionListsSubject.next(gridView);
-        this.distributionListDataLoaderSubject.next(false);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.distributionListDataLoaderSubject.next(false);
-        this.hideLoader();
-      },
-    });
-  }
-
-  editDistributionListUser(memberData: any) {
-    this.loaderService.show();
-    const notificationGroupId = memberData.notificationGroupId;
-    return this.systemInterfaceSupportService.editDistributionListUser(memberData).subscribe({
-      next: (response) => {
-        if (response === true) {
-          this.editDistributionListUserSubject.next(true);
-          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Support Group updated successfully');
-        }
-        this.loaderService.hide();
-      },
-      error: (err) => {
-        this.hideLoader();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        this.loggingService.logException(err);
-      },
-    });
-  }
-
-  changeDistributionListUserStatus(notificationGroupId: any, status: boolean) {
-    this.showLoader();
-    this.systemInterfaceSupportService.changeDistributionListUserStatus(notificationGroupId, status)
-      .subscribe({
-        next: (removeResponse) => {
-          if (removeResponse ?? false) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, status ? 'Member reactivated successfully.' : 'Member deactivated successfully.')
-          }
-          this.changeStatusDistributionListUserSubject.next(true);
-        },
-        error: (err) => {
-          this.hideLoader();
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-        },
-      });
-  }
-
-  deleteDistributionListUser(notificationGroupId: string): void {
-    this.showLoader();
-    this.systemInterfaceSupportService.deleteDistributionListUser(notificationGroupId)
-      .subscribe({
-        next: (removeResponse) => {
-          if (removeResponse ?? false) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Member successfully deleted!');
-          }
-          this.deleteDistributionListUserSubject.next(true);
-        },
-        error: (err) => {
-          this.hideLoader();
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-        },
-      });
-  }
-  // ------------------------------------------------------------------------
-
-  getStatusArray(): string[]{
-    return Object.values(SystemInterfaceSupportStatus)
-  }
 }

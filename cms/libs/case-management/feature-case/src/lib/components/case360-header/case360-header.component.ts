@@ -46,7 +46,7 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   @Input() clientProfileHeader$!: Observable<any>;
   @Input() userDetail$!: any;  
   @Input()  alertList$ :any;
-  @Output() isLoadAlertBannerContainerEvent = new EventEmitter<any>();
+  @Output() isLoadAlertListContainerEvent = new EventEmitter<any>();
   @Output() onMarkAlertAsDoneEvent = new EventEmitter<any>();
   @Output() onDeleteAlertEvent = new EventEmitter<any>();
 
@@ -215,9 +215,9 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }
 }
-isLoadAlertListEvent(entityId: any)
+isLoadAlertListEvent(gridDataRefinerValue: any,alertType: any)
 {
-  this.isLoadAlertBannerContainerEvent.emit(entityId)
+  this.isLoadAlertListContainerEvent.emit({gridDataRefinerValue, alertType})
 }
 onMarkAlertAsDoneClick(event:any){
   this.onMarkAlertAsDoneEvent.emit(event);

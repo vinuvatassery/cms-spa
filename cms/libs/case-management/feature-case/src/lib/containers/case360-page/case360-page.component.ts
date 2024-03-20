@@ -74,7 +74,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   drugs_button_grp = false;
   mng_button_grp = false;
   selectedTabName = 'clinfo';
-  alertList$ = this.todoFacade.bannerAlertList$;
+  alertList$ = this.todoFacade.todoGrid$;
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -317,8 +317,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       }
     })
   }
-  getbannerAlertList(entityId:any){ 
-    this.todoFacade.loadAlertsBanner(entityId);
+  getVendorAlertList(event:any,alertType:any){
+    this.todoFacade.loadAlerts(event.gridDataRefinerValue,alertType.alertType);
   }
   onMarkAlertAsDone(event:any){
     this.todoFacade.markAlertAsDone(event);
