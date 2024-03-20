@@ -150,10 +150,10 @@ export class VendorHeaderToolsComponent {
         const contactWithValidEmail = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.emailAddress && contact.emailAddress.trim());
         this.toEmail = [];
         if (preferredContact) {
-          this.toEmail = [preferredContact.emailAddress.trim()];
+          this.toEmail = [];
           this.sendActions[1].isVisible = true;
         } else if (contactWithValidEmail) {
-          this.toEmail = [contactWithValidEmail.emailAddress.trim()];
+          this.toEmail = [];
           this.sendActions[1].isVisible = true;
         }
       }
