@@ -20,26 +20,13 @@
 
             </div>
             <div class="flex-col">
-                  <kendo-floatinglabel text="Program This is For">
-                        <kendo-dropdownlist aria-label="Program This is For" [fillMode]="formUiStyle.dropDownFillMode">
+                  <kendo-floatinglabel text="Template Layout Type">
+                        <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode">
                         </kendo-dropdownlist>
                   </kendo-floatinglabel>
             </div>
 
-            <div class="flex-col">
-                  <kendo-floatinglabel text="Module This is For">
-                        <kendo-multiselect aria-label="Module This is For" placeholder="Module This is For"
-                              [checkboxes]="true" [autoClose]="false" [fillMode]="formUiStyle.dropDownFillMode"
-                              [data]="listItems" [(ngModel)]="value"></kendo-multiselect>
-                  </kendo-floatinglabel>
-            </div>
-            <div class="flex-col">
-                  <kendo-floatinglabel text="Roles That Can Use This Template">
-                        <kendo-multiselect aria-label="Module This is For" placeholder="Module This is For"
-                              [checkboxes]="true" [autoClose]="false" [fillMode]="formUiStyle.dropDownFillMode"
-                              [data]="listItems" [(ngModel)]="value"></kendo-multiselect>
-                  </kendo-floatinglabel>
-            </div> 
+   
       </div>
 
       <!-- editors  -->
