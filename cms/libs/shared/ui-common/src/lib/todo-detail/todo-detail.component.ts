@@ -220,15 +220,15 @@ export class TodoDetailComponent implements OnInit {
     this.tareaCustomTodoCharactersCount = event.length;
     this.tareaCustomTodoCounter = `${this.tareaCustomTodoCharactersCount}/${this.tareaCustomTodoMaxLength}`;
   }
-  closeTodoDetailsClicked() {
-    this.isModalTodoDetailsCloseClicked.emit(true);
+  closeTodoDetailsClicked(event:any) {
+    this.isModalTodoDetailsCloseClicked.emit(event);
   }
 
   CreateToDoItem(){
     this.createTodo$.subscribe(res =>{
       if(res){
       this.loadToDoSearch()
-      this.closeTodoDetailsClicked()
+      this.closeTodoDetailsClicked(true)
       }
     })
     let entityTypeCode ='';
