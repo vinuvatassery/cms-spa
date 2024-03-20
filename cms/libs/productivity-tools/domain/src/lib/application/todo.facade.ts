@@ -23,6 +23,7 @@ export class TodoFacade {
   private todoGetSubject = new Subject<any>();
   private loadAlertGridSubject = new Subject<any>();
   private clientTodoAndRemindersSubject = new Subject<any>();
+  private bannerAlertListSubject = new Subject<any>();
   private clientTodoAndRemindersLoaderSubject = new Subject<any>();
   /** Public properties **/
   todo$ = this.todoSubject.asObservable();
@@ -34,7 +35,7 @@ export class TodoFacade {
   signalrReminders$!: Observable<any>;
   clientTodoAndReminders$ = this.clientTodoAndRemindersSubject.asObservable()
   clientTodoAndRemindersLoader$ = this.clientTodoAndRemindersLoaderSubject.asObservable()
- 
+  bannerAlertList$ =  this.bannerAlertListSubject.asObservable();
    public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   /** Constructor **/
   constructor(
@@ -162,6 +163,7 @@ export class TodoFacade {
             this.curdAlertSubject.next(true);
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
             this.loadAlertGridSubject.next(true);
+            this.bannerAlertListSubject.next(true);
           },
           error: (err) => {
             this.loaderService.hide()
@@ -180,6 +182,7 @@ export class TodoFacade {
           this.curdAlertSubject.next(true);
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
           this.loadAlertGridSubject.next(true);
+          this.bannerAlertListSubject.next(true);
         },
         error: (err) => {
           this.loaderService.hide()
@@ -202,7 +205,24 @@ export class TodoFacade {
       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
     },
   })
-
 }
+
+  loadAlertsBanner(payload:any): void {
+    this.loaderService.show();
+    this.todoDataService.loadAlertsBanner(payload).subscribe({
+      next: (todoGridResponse: any) => {
+        const bannerList: any = {
+          data: todoGridResponse.items,
+          total:todoGridResponse.totalCount,
+        }; 
+        this.loaderService.hide() 
+        this.bannerAlertListSubject.next(bannerList);
+      },
+      error: (err) => {
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
   
 }
