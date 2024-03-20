@@ -193,18 +193,18 @@ rxRefundInfoDataStateChange(stateData: any, index:any): void {
   return;
  }
   this.rxRefundInfoFilter.forEach((element,ind) => {
-    element.filters.forEach((fil:any) => {
-
-     if(ind ==0){
-      this.selectedVendorRefundsList[index].prescriptionFillItems =   this.filterWithOperators(fil, this.allSelectedVendorRefundsList[index].prescriptionFillItems,
+    let rowNum = 0;
+    element.filters.forEach((fil:any) => {    
+    if(ind == 0 && rowNum == 0){
+      this.selectedVendorRefundsList[index].prescriptionFillItems =   this.filterWithOperators(fil, this.allSelectedVendorRefundsList[index].prescriptionFillItems, 
         this.selectedVendorRefundsList[index].prescriptionFillItems);
-
   }else{
     if(this.selectedVendorRefundsList[index].prescriptionFillItems){
     this.selectedVendorRefundsList[index].prescriptionFillItems =  this.filterWithOperators(fil,  this.selectedVendorRefundsList[index].prescriptionFillItems,
       this.selectedVendorRefundsList[index].prescriptionFillItems);
     }
   }
+  rowNum++;
 })
 
   });
@@ -241,7 +241,7 @@ sortPrescriptions(source:any[]){
       break;
       case 'gte':
         if(fil.field == 'prescriptionFillDate'){
-          destination = source.filter((x:any) => new Date([fil.field]?.toString()) >= (new Date(fil.value)))
+          destination =source.filter(x => (new Date(x.prescriptionFillDate)) >= fil.value)
         } else {
           destination = source.filter((x:any) => x[fil.field]?.toString() >= fil.value)
         }
@@ -255,7 +255,7 @@ sortPrescriptions(source:any[]){
         break;
       case 'lte':
         if(fil.field == 'prescriptionFillDate'){
-          destination = source.filter((x:any) => new Date(x[fil.field]?.toString())<= new Date((fil.value)))
+          destination = source.filter(x => (new Date(x.prescriptionFillDate)) <= fil.value)
         } else {
           destination = source.filter((x:any) => x[fil.field]?.toString() <= fil.value)
         }
