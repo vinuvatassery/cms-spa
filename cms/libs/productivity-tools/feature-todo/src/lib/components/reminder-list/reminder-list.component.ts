@@ -74,8 +74,12 @@ export class ReminderListComponent implements  OnInit{
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
   notificationList$ = this.notificationFacade.notificationList$;
+  getTodo$ = this.Todofacade.getTodo$
   todoItemList: any[] = [];
   selectedAlertId:string="";
+  isEdit = false;
+  isDelete = false;
+  reminderCrudText ="Create New"
   public toDoGridState!: State;
 
   public reminderActions = [
@@ -115,6 +119,10 @@ export class ReminderListComponent implements  OnInit{
     private financialRefundFacade : FinancialVendorRefundFacade
   ) {}
   ngOnInit(): void {
+  this.InitializeData()
+  }
+
+  InitializeData(){
     this.toDoGridState = {
       skip: 0,
       take: 10,
@@ -125,6 +133,7 @@ export class ReminderListComponent implements  OnInit{
       this.loadTodoGrid();
     });
   }
+
   /** Internal event methods **/
   onReminderDoneClicked() { 
     this.ReminderEventClicked.emit();
@@ -132,13 +141,29 @@ export class ReminderListComponent implements  OnInit{
   onloadReminderAndNotificationsGrid(){
     this.notificationFacade.loadNotificationsAndReminders();
   }
+
+  onGetTodoItemData(event:any){
+    this.Todofacade.getTodoItem(event);
+  }
+
   onNewReminderClosed(result: any) {
+    this.remainderIsFor = ''
+    this.newReminderDetailsDialog.close();
+    this.isEdit = false;
+    this.isDelete = false;
+    this.reminderCrudText ="Create New"
     if (result) {
-      this.remainderIsFor = ''
-      this.newReminderDetailsDialog.close();
+    
+      this.onloadReminderAndNotificationsGrid();
     }
   }
 
+  onDeleteReminderAlert(event:any){
+    this.isDelete = true;
+    this.reminderCrudText ="Delete"
+    this.selectedAlertId = event;
+    this.onNewReminderOpenClicked(this.reminderDetailsTemplate)
+  }
   getReminderDetailsLov(){
     this.lovFacade.getEntityTypeCodeLov()
   }
@@ -255,6 +280,14 @@ export class ReminderListComponent implements  OnInit{
           this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
         }
     }
+  }
+
+
+  onEditReminder(event:any){
+    this.isEdit = true;
+    this.reminderCrudText ="Edit"
+    this.selectedAlertId = event;
+    this.onNewReminderOpenClicked(this.reminderDetailsTemplate)
   }
  
   onOpenTodoDetailsClicked() {

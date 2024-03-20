@@ -74,7 +74,10 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
             this.showRemindersList = true
         }
         this.todoFacade.curdAlert$.subscribe(res =>{
+          if(this.clientId){
           this.todoFacade.todoAndRemindersByClient(this.clientId)
+          }
+
         })
       }
       closeAction()
@@ -111,12 +114,16 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
         this.isDelete = false;
         if (result) {
           this.isToDODetailsActionOpen = false;
+          if(this.clientId){
           this.todoFacade.todoAndRemindersByClient(this.clientId)
+          }
           this.todoDetailsDialog.close();
         }
       }
       loadTodoList(){
+        if(this.clientId){
         this.todoFacade.todoAndRemindersByClient(this.clientId)
+        }
        }
        searchProvider(data:any){
         this.financialVendorFacade.searchAllProvider(data);

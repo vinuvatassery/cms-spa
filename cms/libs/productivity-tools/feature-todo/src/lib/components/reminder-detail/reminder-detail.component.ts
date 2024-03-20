@@ -161,6 +161,7 @@ export class ReminderDetailComponent implements OnInit {
           this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
           this.entityTypeCode= res.entityTypeCode
           this.entityId = res.entityId
+          this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
          if(res.entityTypeCode !=='CLIENT'){
           this.showVendorSearch = true;
           this.showClientSearch = false;
@@ -251,7 +252,6 @@ export class ReminderDetailComponent implements OnInit {
         entityId :this.entityId ,
         customAlertFlag : 'Y',
         type :'REMINDER',
-        alertId : this.alertId,
         alertFrequencyCode :'NEVER',
         alertName :  'REMINDER',
         AddToOutlookFlag :  this.clientReminderForm.controls['addToOutlookCalender'].value ? "Y" : "N"
@@ -268,8 +268,12 @@ export class ReminderDetailComponent implements OnInit {
 
       }  
      }else{
-      if(this.isEdit){
-        this.todoFacade.updateAlertItem(payload)
+      if(this.isEdit){      
+        const editPayload ={
+          ...payload,
+          alertId : this.alertId,
+        }
+        this.todoFacade.updateAlertItem(editPayload)
       }else{
         this.todoFacade.createAlertItem(payload)
 
