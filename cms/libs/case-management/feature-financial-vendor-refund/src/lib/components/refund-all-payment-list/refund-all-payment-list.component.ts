@@ -296,7 +296,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.sortType = 'desc'
     this.state = {
       skip: 0,
-      take: 10,
+      take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
 
