@@ -897,18 +897,26 @@ addTpa(event:any){
    if (control === 'qtyRefunded') {
      inValid= isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0) ? true : false;
      dataItem.qtyRefundedValid = !inValid;
+     dataItem.qtyRefundedGtRxQty = inValid = dataItem.qtyRefunded > dataItem.rxqty;     
    }
    if (control === 'daySupplyRefunded') {
      inValid = isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0) ? true : false;
      dataItem.daySupplyRefundedValid = !inValid;
      let rxRatio = dataItem.rxqty / dataItem.daySupply;
      let refundRatio = dataItem.qtyRefunded / dataItem.daySupplyRefunded;
-     if (!isNaN(refundRatio) && isFinite(refundRatio) && refundRatio > 0)
-     {
-       inValid = !(rxRatio >= refundRatio);
-       dataItem.daySupplyRefundedRatioValid = inValid;
-     } else {
+     
+     if (dataItem.daySupplyRefunded > dataItem.daySupply) {
+       dataItem.daySpyRfdGtDaySpy = inValid = true;
        dataItem.daySupplyRefundedRatioValid = false;
+     }
+     else {
+       dataItem.daySpyRfdGtDaySpy = false;
+       if (!isNaN(refundRatio) && isFinite(refundRatio) && refundRatio > 0) {
+         inValid = !(rxRatio >= refundRatio);
+         dataItem.daySupplyRefundedRatioValid = inValid;
+       } else {
+         dataItem.daySupplyRefundedRatioValid = false;
+       }
      }
    }
    if (control === 'refundedAmount') {

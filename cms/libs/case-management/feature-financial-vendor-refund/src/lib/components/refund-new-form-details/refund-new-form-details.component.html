@@ -548,6 +548,7 @@
                                     >
                                   </kendo-numerictextbox>
                                   <kendo-formerror *ngIf="isAddClicked && !dataItem.qtyRefundedValid">Qty Refunded is required</kendo-formerror>
+                                  <kendo-formerror *ngIf="isAddClicked && dataItem.qtyRefundedGtRxQty">Qty Refunded cannot be more than the Rx Qty</kendo-formerror>                                                                      
                               </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="daySupplyRefunded" 
@@ -569,8 +570,8 @@
                                   </kendo-numerictextbox>
                                   
                                   <kendo-formerror *ngIf="isAddClicked && !dataItem.daySupplyRefundedValid">Days Supply Refunded is required</kendo-formerror>
-                                  <kendo-formerror *ngIf="isAddClicked && dataItem.daySupplyRefundedRatioValid">Days Supply Refunded cannot be more than the RX supply per Rx qty</kendo-formerror>
-                                  
+                                  <kendo-formerror *ngIf="isAddClicked && dataItem.daySpyRfdGtDaySpy">Days supply cannot be more than the Rx supply</kendo-formerror>
+                                  <kendo-formerror *ngIf="isAddClicked && dataItem.daySupplyRefundedRatioValid">Days Supply Refunded cannot be more than the RX supply per Rx qty</kendo-formerror>                                                                  
                                 </ng-template>
                                 </kendo-grid-column>
                             <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150" [sticky]="true">
