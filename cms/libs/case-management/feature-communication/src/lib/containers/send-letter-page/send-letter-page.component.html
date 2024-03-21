@@ -4,26 +4,23 @@
     <div class="flex-col mb-2 k-editor-height">
   
        <div *ngIf="paperlessFlag == 'N'">
-      <case-management-send-letter [mailingAddress$]="mailingAddress$" 
-      [communicationLetterTypeCode]="letterCommunicationTypeCode" 
-      [templateLoadType] = "templateLoadType"
-      [informationalText]="informationalText"
-      [templateHeader]="templateHeader"
-      [notificationGroup]="screenName"
-       (loadInitialData)="loadMailingAddress()" [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId"
-      [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
-      kendoTooltip></case-management-send-letter>
+      <case-management-send-letter [mailingAddress$]="mailingAddress$"
+        [communicationLetterTypeCode]="letterCommunicationTypeCode" [templateLoadType]="templateLoadType"
+        [informationalText]="informationalText" [templateHeader]="templateHeader" [notificationGroup]="screenName"
+        [triggerFrom]="triggerFrom" (loadInitialData)="loadMailingAddress()" [entityId]="clientId"
+        [clientCaseEligibilityId]="clientCaseEligibilityId" [isNewNotificationClicked]="isNewNotificationClicked"
+        [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
+        kendoTooltip></case-management-send-letter>
        </div>
 
       <div *ngIf="paperlessFlag == 'Y'">
       <case-management-send-email [ddlEmails$]="emailAddress$" [communicationEmailTypeCode]="emailCommunicationTypeCode"
-      [templateLoadType] = "templateLoadType"
-      [informationalText]="informationalText"
-      [templateHeader]="templateHeader"
-      [emailSubject] ="emailSubject"
-      [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName"
-      [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
-      [toEmail]="toEmail"  (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
+        [templateLoadType]="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
+        [emailSubject]="emailSubject" [triggerFrom]="triggerFrom" [entityId]="clientId"
+        [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName"
+        [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked"
+        [notificationDraftId]="notificationDraftId" [toEmail]="toEmail" (loadInitialData)="loadEmailAddress()"
+        kendoTooltip></case-management-send-email>
       </div>
 
     </div>

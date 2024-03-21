@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component ,Input, TemplateRef, ViewChild,} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component ,EventEmitter,Input, Output, TemplateRef, ViewChild,} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -28,7 +28,6 @@ export class VendorHeaderToolsComponent {
   isSendNewEmailOpened = false;
   isNewSMSTextOpened = false;
   private todoDetailsDialog : any;
-  private newReminderDetailsDialog : any;
   screenName = ScreenType.VendorProfile;
   vendorProfile:any
   emailScreenName = ScreenType.VendorEmail;
@@ -57,7 +56,7 @@ export class VendorHeaderToolsComponent {
   notificationGroup!: string;
   isNewNotificationClicked: boolean = false;
   isContinueDraftClicked: boolean = false;
-
+@Output() openAddReminderEvent = new EventEmitter()
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -241,17 +240,7 @@ export class VendorHeaderToolsComponent {
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onNewReminderClosed(result: any) {
-    if(result){
-      this.newReminderDetailsDialog.close()
-    }}
-
-    onNewReminderClicked(template: TemplateRef<unknown>): void {
-      this.newReminderDetailsDialog = this.dialogService.open({
-        content: template,
-        cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-      });
-    }
+ 
     onSendNewLetterClicked(template: TemplateRef<unknown>): void {
       this.isSendNewLetterDialog = this.dialogService.open({
         content: template,
@@ -327,4 +316,9 @@ export class VendorHeaderToolsComponent {
       this.onDraftNotificationCloseClicked(CommunicationEvents.Close);
       this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.sendNewEmailDialog);
     }
+
+    onNewReminderClicked(){
+   this.openAddReminderEvent.emit()
+    }
+    
 }

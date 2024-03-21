@@ -115,13 +115,14 @@
 <!-- Create New Reminder Popup -->
 <ng-template #NewReminderTemplate>
   <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
-    {{crudText}} Reminder {{reminderFor? 'For ' + reminderFor :''}} </kendo-dialog-titlebar>
+    {{crudText}} Reminder  </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
   [isEdit]="isEdit" 
   [isDelete]="isDelete"
   [alertId] = "selectedAlertId"
   (onGetTodoItem)="onGetTodoItemData($event)"
   [getTodo$]="getTodo$"
+  [isFromNotificationPanel]="true"
    [entityTypeCodeSubject$]="entityTypeCodeSubject$"
     (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"
     [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"

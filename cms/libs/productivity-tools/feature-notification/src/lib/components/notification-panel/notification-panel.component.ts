@@ -51,6 +51,7 @@ export class NotificationPanelComponent implements OnInit {
   notificationaAndReminderDataSubject = new Subject<any>();
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
   @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
+  @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   @Input() notificationList$: any;
   reminderFor = '';
   notifications: any = [];
@@ -89,14 +90,42 @@ export class NotificationPanelComponent implements OnInit {
       buttonType: 'btn-h-primary',
       text: 'Edit Reminder',
       icon: 'edit',
+      id:'edit',
       click: (): void => {
       },
     },
-
+    {
+      buttonType: 'btn-h-primary',
+      text: '1 Day Snooze',
+      icon: 'snooze',
+      id:'1daysnooze',
+      click: (): void => {
+         
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: '3 Days Snooze',
+      icon: 'snooze',
+      id:'3daysnooze',
+      click: (): void => {
+        
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: '7 Days Snooze',
+      icon: 'snooze',
+      id:'7daysnooze',
+      click: (): void => {
+        
+      },
+    }, 
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Reminder',
       icon: 'delete',
+      id:'delete',
       click: (): void => {
       },
     },
@@ -301,7 +330,27 @@ export class NotificationPanelComponent implements OnInit {
        if (!this.isReminderOpenClicked) {
         this.onNewReminderOpenClicked(this.NewReminderTemplate)
          }
-     }
-    
+     } 
+     if(item.id == '1daysnooze' ){
+      const snoozeReminder={
+        reminderId:gridItem.alertId,
+        duration: 1
+      }
+      this.onSnoozeReminderEvent.emit(snoozeReminder);
+    }
+    if(item.id == '3daysnooze'){ 
+      const snoozeReminder={
+        reminderId:gridItem.alertId,
+        duration: 3
+      }
+      this.onSnoozeReminderEvent.emit(snoozeReminder);
+    }
+    if(item.id == '7daysnooze'){ 
+      const snoozeReminder={
+        reminderId:gridItem.alertId,
+        duration: 7
+      }
+      this.onSnoozeReminderEvent.emit(snoozeReminder);
+    }
    }
 }

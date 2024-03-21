@@ -7,7 +7,7 @@ import { HubEventTypes, LoaderService, LoggingService, NotificationSnackbarServi
 /** Services **/
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 import { NotificationDataService } from '../infrastructure/notification.data.service';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationFacade {
@@ -15,7 +15,8 @@ export class NotificationFacade {
   signalrGeneralNotifications$!: Observable<any>;
   private notificationAndReminderListSubject = new Subject<any>();
   notificationList$ = this.notificationAndReminderListSubject.asObservable();
- 
+  private alertSearchLoaderVisibilitySubject = new Subject<boolean>;
+  alertSearchLoaderVisibility$= this.alertSearchLoaderVisibilitySubject.asObservable();
   /** Constructor **/
   constructor(
     private readonly notificationDataService: NotificationDataService,
@@ -58,5 +59,42 @@ export class NotificationFacade {
   viewNotifications(notifictaions: any[]): Observable<any> {
        
     return this.notificationDataService.viewNotifictaions(notifictaions);
+  }
+  loadNotificatioBySearchText(text : string): void {
+    this.alertSearchLoaderVisibilitySubject.next(true);
+    if(text){
+      this.notificationDataService.searchNotifications(text).subscribe({
+        next: (caseBySearchTextResponse) => {
+          caseBySearchTextResponse?.forEach((alert:any) => {
+            alert.alertNames =  `${alert?.alertDesc ?? ''} ${alert?.alertDesc ?? ''} ${alert?.alertId?? ''}`;
+          });
+          this.notificationAndReminderListSubject.next(caseBySearchTextResponse);
+          this.alertSearchLoaderVisibilitySubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      });
+    }
+    else{
+      this.notificationAndReminderListSubject.next(null);
+      this.alertSearchLoaderVisibilitySubject.next(false);
+    }
+  } 
+  
+  SnoozeReminder(reminderId:any, duration:any){
+    this.loaderService.show()
+    this.notificationDataService.SnoozeReminder(reminderId,duration).subscribe({
+      next: (snoozeResponse: any) => {
+        this.loaderService.hide() 
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , snoozeResponse.message);
+        this.loadNotificationsAndReminders();
+      },
+      error: (err) => {
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        
+      },
+    })
   }
 }

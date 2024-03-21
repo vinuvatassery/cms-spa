@@ -10,6 +10,7 @@ import { CommunicationEvents } from '../enums/communication-event.enum';
 import { LoggingService } from '@cms/shared/util-core';
 import { SmsNotification } from '../entities/sms-notification';
 import { DocumentDataService } from '../infrastructure/document.data.service';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CommunicationFacade {
@@ -19,6 +20,7 @@ export class CommunicationFacade {
   private ddlEditorVariablesSubject = new BehaviorSubject<any>([]);
   private ddlLetterTemplatesSubject = new BehaviorSubject<any>([]);
   private ddlEmailsSubject = new BehaviorSubject<any>([]);
+  loadTemplateSubject = new Subject<any>();
 
   /** Public properties **/
   clientVariables$ = this.clientVariablesSubject.asObservable();
@@ -26,6 +28,7 @@ export class CommunicationFacade {
   ddlEditorVariables$ = this.ddlEditorVariablesSubject.asObservable();
   ddlLetterTemplates$ = this.ddlLetterTemplatesSubject.asObservable();
   ddlEmails$ = this.ddlEmailsSubject.asObservable();
+  loadTemplate$ = this.loadTemplateSubject.asObservable();
 
   /** Constructor**/
   constructor(private readonly emailDataService: EmailDataService, private readonly loggingService: LoggingService,

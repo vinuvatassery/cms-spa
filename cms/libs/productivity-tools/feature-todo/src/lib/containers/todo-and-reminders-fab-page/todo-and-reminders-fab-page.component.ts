@@ -46,11 +46,12 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     todoList!: TodoListComponent;
     @ViewChild('newReminderTemplate', { read: TemplateRef })
     newReminderTemplate!: TemplateRef<any>;
-    @ViewChild('deleteToDOTemplate', { read: TemplateRef })
-    deleteTodoTemplate!: TemplateRef<any>;
+    @ViewChild('deleteTodoTemplate', { read: TemplateRef })
+    deleteTodoTemplateRef!: TemplateRef<any>;
     deleteToDoDialog!:any
     isToDODeleteActionOpen = false
     reminderDialog :any
+    crudText ="Create New"
     constructor( private route: ActivatedRoute,
       public readonly todoFacade: TodoFacade,
       public lovFacade : LovFacade,
@@ -117,8 +118,9 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
           if(this.clientId){
           this.todoFacade.todoAndRemindersByClient(this.clientId)
           }
-          this.todoDetailsDialog.close();
         }
+        this.todoDetailsDialog.close();
+
       }
       loadTodoList(){
         if(this.clientId){
@@ -147,6 +149,12 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
 
       onReminderOpenClicked(event:any) {
         this.selectedAlertId = event.alertId;
+        if(event.type =='edit'){
+          this.crudText ="Edit"
+        }
+        if(event.type =='delete'){
+          this.crudText ="Delete"
+        }
         this.isEdit = event.type == 'edit'
         this.isDelete = event.type == 'delete'
         this.reminderDialog = this.dialogService.open({
@@ -159,13 +167,14 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     onNewReminderClosed(){
       this.isDelete = false;
       this.isEdit = false;
+      this.crudText ="Create New"
      this.reminderDialog.close()
     }
 
     onDeleteToDoClicked(event:any): void {
       this.selectedAlertId = event;
       this.deleteToDoDialog = this.dialogService.open({
-        content: this.deleteTodoTemplate,
+        content: this.deleteTodoTemplateRef,
         cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
       });
     }

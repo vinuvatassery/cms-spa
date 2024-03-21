@@ -64,6 +64,7 @@ export class WorkflowFacade {
   private discardChangesClickedSubject = new Subject<boolean>();
   private cancelApplicationClickedSubject = new Subject<boolean>();
   /** Public properties **/
+  showSplitButtonSubject = new Subject<boolean>();
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
   routes$ = this.routesSubject.asObservable();
@@ -83,6 +84,7 @@ export class WorkflowFacade {
   discardChangesClicked$ = this.discardChangesClickedSubject.asObservable();
   cancelApplicationClicked$ =
     this.cancelApplicationClickedSubject.asObservable();
+  showSplitButton$ = this.showSplitButtonSubject.asObservable();
   clientId: number | undefined;
   clientCaseId: string | undefined;
   clientCaseEligibilityId: string | undefined;
@@ -94,6 +96,7 @@ export class WorkflowFacade {
   sessionData!: SessionData;
   sendLetterEmailFlag!:string;
   caseStatus!:string;
+
   /**Constructor */
   constructor(
     private readonly workflowService: WorkflowDataService,
