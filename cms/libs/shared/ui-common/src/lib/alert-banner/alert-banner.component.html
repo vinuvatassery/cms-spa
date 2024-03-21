@@ -1,15 +1,15 @@
-<section *ngIf="alertText">
+<section *ngIf="topAlert">
   <div class="flex-row align-items-end">
     <div class="flex-col flex-col-10">
       <div [ngClass]="todoItemCrossedDueDate(null) ? 'info-banners red-banner hover-link' : 'info-banners canyon-banner hover-link'">
 
         <div class="flex-col info-banners p-0">
           <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
-          <span class="text-bold">{{alertText}}</span>
-          <span class="text-normal">{{DueDate}}</span>
+          <span class="text-bold">{{topAlert.alertTypeCode =='REMINDER'? topAlert.alertDesc : topAlert.alertName}} </span>
+          <span class="text-normal">{{DueOn(topAlert)}}</span>
         </div>
 
-        <div class="">
+        <div class="" *ngIf="topAlert.alertTypeCode != 'NOTIFICATION' || topAlert.customAlertFlag !='Y'">
           <kendo-dropdownbutton  title="More option" [data]="bannerAlertActions" look="bare"
             aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
           popupClass: reminderActionPopupClass,
@@ -45,10 +45,10 @@
  <div class="flex-col info-banners p-0">
    <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
    <span class="text-bold">{{alertItem.alertName}} </span>
-   <span class="text-normal">{{DueOn(alertItem.alertDueDate)}}</span>
+   <span class="text-normal">{{DueOn(alertItem)}}</span>
  </div>
 
- <div class="">
+ <div class="" *ngIf="alertItem.alertTypeCode != 'NOTIFICATION' || alertItem.customAlertFlag !='Y'">
    <kendo-dropdownbutton  title="More option" [data]="popoverAlertActions" look="bare"
      aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
    popupClass: reminderActionPopupClass, animate: true}" (itemClick)="onToDoActionClicked($event,alertItem)">

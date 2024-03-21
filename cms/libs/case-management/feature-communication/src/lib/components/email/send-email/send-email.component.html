@@ -1,8 +1,8 @@
  
-<kendo-dialog-titlebar  (close)="onCloseSendEmailClicked()">Send New Email </kendo-dialog-titlebar>
+<kendo-dialog-titlebar  (close)="onCloseSendEmailClicked()"> {{templateHeader}} </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
-      Select an existing template or draft a custom email.
+      {{informationalText}}
     </p>
     <div class="flex-row pb-2">
       <div class="flex-col">
@@ -13,6 +13,7 @@
             textField="description"
             valueField="documentTemplateId"
             [(ngModel)]="documentTemplate"
+            [disabled]="templateDrpDisable"
             (valueChange)="handleDdlEmailValueChange($event)"
           >
           </kendo-dropdownlist>
@@ -131,6 +132,7 @@
           look="outline"
           (click)="onCloseSendEmailClicked()"
           aria-label="Cancel"
+          *ngIf ="cancelDisplay"
         >
           Cancel
         </button>
@@ -222,7 +224,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Send Email?"
 >  <section class="k-dialog-body">
-  <p class="text-muted mb-2">The action cannot be undone</p>
+  <p class="text-muted mb-2">This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal</p>
 </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -242,9 +244,9 @@
           kendoButton
           [primary]="true"
           (click)="onSendEmailConfirmationDialogClicked('Print')"
-          aria-label="OK"
+          aria-label="Send Email"
         >
-          OK
+        SEND EMAIL
         </button>
       </div>
     </div>

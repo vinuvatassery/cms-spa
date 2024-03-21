@@ -28,6 +28,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   private loadSessionSubscription !: Subscription;
   private showSendNewsLetterSubscription !: Subscription;
   private showCancelApplicationSubscription !: Subscription;
+  private showSplitButtonSubscription !: Subscription
   private showConfirmationPopupSubscription !: Subscription; public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
@@ -102,6 +103,8 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   currentSession = this.workflowFacade.currentSession;
   isWorkflowReady$ = this.workflowFacade.workflowReady$;
   isSaveButtonEnabled$ = this.workflowFacade.isSaveButtonEnabled$;
+  showSplitButton$ = this.workflowFacade.showSplitButton$;
+  showButton:boolean = true;
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
@@ -131,6 +134,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.addSessionChangeSubscription();
     this.showCancelApplicationPopup();
     this.resetReadOnlyView();
+    this.showSplitButtonSubscriptionInitializer();
   }
 
   ngOnDestroy(): void {
@@ -140,6 +144,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.unloadWorkflowSession();
     this.showSendNewsLetterSubscription.unsubscribe();
     this.showCancelApplicationSubscription.unsubscribe();
+    this.showSplitButtonSubscription.unsubscribe();
   }
 
   addSessionChangeSubscription() {
@@ -156,6 +161,13 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  showSplitButtonSubscriptionInitializer(){
+    this.showSplitButtonSubscription =this.showSplitButtonSubscription = this. showSplitButton$.subscribe((show:boolean)=>{
+      this.showButton = show;
+    })
+  }
+
   cancelCase() {
     this.loaderService.show()
     this.caseFacade.updateCaseStatus(this.clientCaseId, CaseStatusCode.canceled,this.clientCaseEligibilityId).subscribe({
@@ -438,10 +450,13 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
       this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId).subscribe({
         next: (casesResponse: any) => {
           this.loaderService.hide();
+          this.workflowFacade.caseStatus = this.currentStatusCode;
           if (this.sendLetterFlag == StatusFlag.Yes) {
+            this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
             this.workflowFacade.saveForLater(true);
           }
           else {
+            this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
             this.workflowFacade.saveForLater(false);
           }
           this.isShowSaveLaterPopup = false;

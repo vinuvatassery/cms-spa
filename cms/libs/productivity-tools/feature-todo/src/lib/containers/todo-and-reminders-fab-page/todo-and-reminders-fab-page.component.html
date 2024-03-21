@@ -53,7 +53,7 @@
 
   <ng-template #newReminderTemplate>
     <kendo-dialog-titlebar 
-    (close)="onNewReminderClosed()">{{ isEdit? 'Edit Reminder' : 'Add New Reminder'}}
+    (close)="onNewReminderClosed()">{{crudText}} Reminder
      </kendo-dialog-titlebar>
     <productivity-tools-reminder-detail  
      [isEdit]="isEdit" 
@@ -66,7 +66,7 @@
   </ng-template>
   
   
-  <ng-template #deleteToDOTemplate>   
+  <ng-template #deleteTodoTemplate>   
     <productivity-tools-delete-todo-confirmation
       (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onConfirmDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
   </ng-template>

@@ -45,27 +45,29 @@ export class FinancialVendorProfileComponent implements OnInit {
   providerLissortValue = this.financialVendorFacade.sortValue;
   providerLissortType = this.financialVendorFacade.sortType;
   providerLissort = this.financialVendorFacade.sort;
+  getTodo$ = this.todoFacade.getTodo$
   financialClinicProviderProfile$ = this.financialVendorFacade.financialClinicProviderProfileSubject;
   filter: any = [];
   isClinicalVendor = false;
   vendorName: any;
-
-
+  newReminderDetailsDialog!:any
+  @ViewChild('NewReminderTemplate', { read: TemplateRef })
+  reminderTemplate!: TemplateRef<any>;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
-
+  isEdit = false;
+  isDelete = false;
   providerDetailsDialog: any
-
+  selectedAlertId=""
  ddlStates$ = this.contactFacade.ddlStates$;
  isEditForm = false
  vendorProfilePanel$ = this.financialVendorFacade.providePanelSubject$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
-
+  crudText ="Create New"
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   hasDrugCreateUpdatePermission = false;
   vendorProfileId: any;
-  alertList$ = this.todoFacade.todoGrid$;
-
+  alertList$ = this.todoFacade.bannerAlertList$;
   constructor(
     private activeRoute: ActivatedRoute,
     private financialVendorFacade: FinancialVendorFacade,
@@ -235,13 +237,50 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.financialVendorFacade.addVendorRecentlyViewed(vendorId);
   }
 
-  getVendorAlertList(event:any,alertType:any){
-    this.todoFacade.loadAlerts(event.gridDataRefinerValue,alertType.alertType);
+  getbannerAlertList(entityId:any){
+    this.todoFacade.loadAlertsBanner(entityId);
   }
   onMarkAlertAsDone(event:any){
     this.todoFacade.markAlertAsDone(event);
   }
   onDeleteAlert(event:any){
     this.todoFacade.deleteAlert(event);
+  }
+
+  onNewReminderClosed(result: any) {
+    if(result){
+      this.todoFacade.loadAlertsBanner(this.vendorId)
+    }
+    this.isEdit = false;
+    this.isDelete = false;
+    this.crudText ='Create New'
+    this.newReminderDetailsDialog.close()
+  
+  }
+
+  onNewReminderClicked(): void {
+    this.newReminderDetailsDialog = this.dialogService.open({
+      content: this.reminderTemplate,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  openAddReminderClicked(){
+     this.onNewReminderClicked()
+  }
+  openEditReminderClicked(event:any){
+    this.isEdit = true;
+    this.selectedAlertId = event
+    this.crudText ='Edit'
+    this.todoFacade.getTodoItem(event)
+    this.onNewReminderClicked()
+  }
+
+  openDeleteReminderClicked(event:any){
+    this.isDelete = true;
+    this.crudText ='Delete'
+    this.selectedAlertId = event;
+    this.todoFacade.getTodoItem(event)
+    this.onNewReminderClicked()
   }
 }

@@ -225,4 +225,8 @@ export class SystemInterfaceSupportService {
   }
   // ----------------------------------------
 
+  getSubEventsByParentId(eventId: any) {
+    return this.http.get<any[]>(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/events/${eventId}/sub-events`);
+  }
+
 }

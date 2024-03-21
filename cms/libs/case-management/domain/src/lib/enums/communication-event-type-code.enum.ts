@@ -34,5 +34,16 @@ export enum CommunicationEventTypeCode {
     SMS="Sms",
     HIVVerificationEmail="HIV_VERIFICATION_EMAIL",
     HIVVerificationAttachmentTypeCode="HIV_VERIFICATION_FORM",
-    PendingNoticeLetter = 'PENDING_NOTICE_LETTER'
+    PendingNoticeLetter = 'PENDING_NOTICE_LETTER',
+    PendingLetterSent = 'PENDING_LETTER_SENT' ,
+    PendingNoticeEmail = 'PENDING_NOTICE_EMAIL',
+    PendingEmailSent = 'PENDING_EMAIL_SENT',
+    RejectionNoticeLetter = 'REJECTION_NOTICE_LETTER',
+    RejectionLetterSent = 'REJECTION_LETTER_SENT',
+    RejectionNoticeEmail = 'REJECTION_NOTICE_EMAIL',
+    RejectionEmailSent = 'REJECTION_EMAIL_SENT',
+    ApprovalNoticeLetter = 'APPROVAL_NOTICE_LETTER',
+    ApprovalLetterSent = 'APPROVAL_NOTICE_SENT',
+    ApprovalNoticeEmail = 'APPROVAL_NOTICE_EMAIL',
+    ApprovalEmailSent = 'APPROVAL_EMAIL_SENT'
   }

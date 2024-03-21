@@ -34,8 +34,6 @@ export class AlertBannerComponent implements OnInit {
   public duration =this.configurationProvider.appSettings.snackbarAnimationDuration;
   showMoreAlert = false;
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
-  alertText:string='';
-  DueDate="";
   topAlert:any;
   moreItems="";
   secondaryAlertList!:any[];
@@ -47,24 +45,19 @@ export class AlertBannerComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public deleteToDoDialog: any;
   isToDODeleteActionOpen = false;
+  isEditReminderActionOpen = false;
   selectedAlertId:string="";
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
+  @Output() onEditReminderClicked = new EventEmitter<any>()
+  @Output()  onDeleteReminderClicked =  new EventEmitter<any>()
   public popoverAlertActions = [
-    {
-      buttonType:"btn-h-primary",
-      text: "Done",
-      icon: "done",
-      id:"done",
-      click: (): void => {
-      },
-    },
     {
       buttonType:"btn-h-primary",
       text: "Edit",
       icon: "edit",
       id:"edit",
       click: (): void => {
-        
+      
       },
     },
     {
@@ -91,7 +84,10 @@ export class AlertBannerComponent implements OnInit {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-        
+          this.selectedAlertId = this.topAlert.alertId;
+          if(this.topAlert.alertTypeCode == 'REMINDER'){
+          this.onEditReminderClicked.emit(this.selectedAlertId)
+          }
       },
     },
     {
@@ -99,12 +95,16 @@ export class AlertBannerComponent implements OnInit {
       text: "Delete",
       icon: "delete",
       click: (): void => {
+        this.selectedAlertId = this.topAlert.alertId;
+        if(this.topAlert.alertTypeCode == 'REMINDER'){
+          this.onDeleteReminderClicked.emit(this.selectedAlertId)
+          }else{
         if (!this.isToDODeleteActionOpen) {
           this.isToDODeleteActionOpen = true;
-          this.selectedAlertId = this.topAlert.alertId;
+        
           this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
-        }
-        //this.onDeleteAlertClick.emit(this.topAlert.alertId);
+        } 
+      }
       },
     },
   ];
@@ -117,60 +117,57 @@ export class AlertBannerComponent implements OnInit {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
-    this.loadTodoAlertBannerData();
+  ngOnInit(): void {  
+    this.isLoadAlertListEvent.emit(this.entityId)
+    this.loadTodoAlertBannerData(); 
     this.alertList$.subscribe((data: any) => {
-      this.loadTodoAlertBannerData();
-    });
+      this.loadTodoAlertBannerData(); 
+      });
+  } 
+  ngDestroy(): void {
+    //this.alertList$.unsubscribe();
   }  
   private loadTodoAlertBannerData(){
-      let alertType=this.alertTypeCode;
-      let alertDueDate =this.intl.formatDate(
-        new Date(), this.configurationProvider?.appSettings?.dateFormat)
-      var xfilter=[
-        {"filters":[{"field":"entityId","operator":"eq","value":this.entityId},
-        {"field":"entityTypeCode","operator":"eq","value":this.entityType},
-        {"field":"alertTypeCode","operator":"eq","value":this.alertTypeCode},
-        {"field":"alertDueDate","operator":"gte","value":alertDueDate}],
-        "logic":"and"}]; 
-      const gridDataRefinerValue = {
-        skipCount: 0,
-        maxResultCount: 10,
-        sorting: 'alertDueDate',
-        sortType: 'asc',
-        filter:JSON.stringify(xfilter),
-      }; 
-        this.isLoadAlertListEvent.emit({gridDataRefinerValue, alertType})
-        this.alertList$.subscribe((data: any) => { 
+        this.alertList$.subscribe((data: any) => {
+          if(data==true){
+            this.isLoadAlertListEvent.emit(this.entityId)
+          }
           if(data?.total > 0 ){
-            this.topAlert=data.data[0];
-            this.alertText=data.data[0].alertName;
-            this.DueDate=this.DueOn(data.data[0].alertDueDate);
+            this.topAlert=data.data[0]; 
             this.moreItems = (data?.total-1) < 1 ? "" : (data?.total-1) + "+ More Items";
             this.makePopoverAlertBanner(data);
             this.cdr.detectChanges();
-          }else{
-            this.alertText = '';
+          }else{ 
             this.cdr.detectChanges();
           }
         });
   } 
-  public DueOn(alertDueDate:any):any{
+  public DueOn(alertItem:any):any{
     let dateNow = new Date();
-    let dueDate = new Date(alertDueDate); 
+    let dueDate = new Date(alertItem.alertDueDate); 
          if (dueDate.toLocaleDateString() == dateNow.toLocaleDateString()) {
-             return AlertDueOn.Today;
+             return alertItem.alertTypeCode != 'TODO' ?  '(Due '+AlertDueOn.Today+')' : AlertDueOn.Today;
           } else if(!(dueDate.toLocaleDateString() < dateNow.toLocaleDateString()) && 
             (dueDate.toLocaleDateString() <= this.addDays(dateNow,1).toLocaleDateString())) {
-             return AlertDueOn.Tomorrow;
+             return alertItem.alertTypeCode != 'TODO' ?  '(Due in 1 day)' : AlertDueOn.Tomorrow;
+           }else if(dueDate.toLocaleDateString() > dateNow.toLocaleDateString()){
+            return alertItem.alertTypeCode != 'TODO' ?  '(Due in '+this.differenceInDays(dueDate,dateNow)+ ' days)' :
+            (this.intl.formatDate(new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
+           }else if (dueDate.toLocaleDateString() < dateNow.toLocaleDateString()){
+            return alertItem.alertTypeCode != 'TODO' ?  '(Overdue)' : '';
            }
            return (this.intl.formatDate(
-           new Date(alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
+           new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
   }
   private addDays(date: Date, days: number): Date {
     let result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
+  }
+  private differenceInDays(date1: Date, date2: Date): number {
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const diffInTime = date2.getTime() - date1.getTime();
+    return Math.round(diffInTime / oneDay);
   }
   todoItemCrossedDueDate(alertDueDate:any):boolean{
     let isCrossedDueDate = false;
@@ -189,8 +186,8 @@ export class AlertBannerComponent implements OnInit {
     this.secondaryAlertList.splice(0); 
     let defaultCount = 3;
     if(alertData.total > 1){
-      let popOverBannerCount = alertData.data.length > defaultCount ? defaultCount : alertData.data.length;
-      for (let index = 1; index < popOverBannerCount; index++) { 
+      let popOverBannerCount = (alertData.data.length - 1) >= defaultCount ? defaultCount : (alertData.data.length-1);
+      for (let index = 1; index <= popOverBannerCount; index++) { 
         this.secondaryAlertList.push(alertData.data[index])
       }
     } 
@@ -209,14 +206,21 @@ export class AlertBannerComponent implements OnInit {
     if(item.id == 'done'){ 
       this.onMarkAlertAsDoneClick.emit(gridItem.alertId);
     }else if(item.id == 'edit'){ 
-
+      this.selectedAlertId = gridItem.alertId;
+      if(this.topAlert.alertTypeCode == 'REMINDER'){
+      this.onEditReminderClicked.emit(this.selectedAlertId)
+      }
     }
     else if(item.id == 'del'){
+      this.selectedAlertId = gridItem.alertId;
+      if(this.topAlert.alertTypeCode == 'REMINDER'){
+        this.onDeleteReminderClicked.emit(this.selectedAlertId)
+        }else{
       if (!this.isToDODeleteActionOpen) {
         this.isToDODeleteActionOpen = true;
-        this.selectedAlertId = gridItem.alertId;
         this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
       } 
+    }
     }
   }
   

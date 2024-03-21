@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { VendorHeaderToolsComponent } from '../vendor-header-tools/vendor-header-tools.component';
 
 @Component({
   selector: 'cms-vendor-profile-header',
@@ -16,12 +17,18 @@ vendorProfile:any
 @Output() loadSpecialHandlingEvent =  new EventEmitter();
 @Output() updateRecentlyViewedEvent = new EventEmitter();
 @Input()  alertList$ :any;
-@Output() isLoadAlertListContainerEvent = new EventEmitter<any>();
+@Output() isLoadAlertBannerContainerEvent = new EventEmitter<any>();
 @Output() onMarkAlertAsDoneEvent = new EventEmitter<any>();
 @Output() onDeleteAlertEvent = new EventEmitter<any>();
 notificationReminderDialog : any;
+@ViewChild('vendorHeaderTools', { static: false })
+vendorHeaderTools!: VendorHeaderToolsComponent;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   showMoreAlert = false;
+  newReminderDetailsDialog!:any
+  @Output() openAddReminderEvent = new EventEmitter()
+  @Output() openEditReminderEvent = new EventEmitter()
+  @Output() openDeleteReminderEvent = new EventEmitter()
   public list = [
     {
       item: 'a'
@@ -114,14 +121,26 @@ notificationReminderDialog : any;
       cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
     });  
   } 
-  isLoadAlertListEvent(gridDataRefinerValue: any,alertType: any)
+  isLoadAlertBannerEvent(entityId: any)
   {
-    this.isLoadAlertListContainerEvent.emit({gridDataRefinerValue, alertType})
+    this.isLoadAlertBannerContainerEvent.emit(entityId)
   }
   onMarkAlertAsDoneClick(event:any){
     this.onMarkAlertAsDoneEvent.emit(event);
   }
   onDeleteAlertClick(event:any){
     this.onDeleteAlertEvent.emit(event);
+  }
+
+  openAddReminder(){
+   this.openAddReminderEvent.emit()
+  }
+
+  onEditReminder(event:any){
+    this.openEditReminderEvent.emit(event)
+  }
+
+  onDeleteReminder(event:any){
+    this.openDeleteReminderEvent.emit(event)
   }
 }

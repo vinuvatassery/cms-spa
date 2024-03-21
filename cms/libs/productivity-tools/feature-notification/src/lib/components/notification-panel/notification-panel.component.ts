@@ -51,6 +51,7 @@ export class NotificationPanelComponent implements OnInit {
   notificationaAndReminderDataSubject = new Subject<any>();
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
   @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
+  @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   @Input() notificationList$: any;
   reminderFor = '';
   notifications: any = [];
@@ -59,12 +60,18 @@ export class NotificationPanelComponent implements OnInit {
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
   isNotificationPopupOpened = false;
   unViewedCount : number = 0;
+  selectedAlertId =""
   isNewReminderOpened = false;
   isNotificationsAndRemindersOpened = false;
   private newReminderDetailsDialog: any;
   private notificationReminderDialog: any;
   private deleteReminderDialog: any;
   gridDataResult!: GridDataResult;
+  isEdit= false
+  isDelete = false
+  isReminderOpenClicked = false
+  getTodo$ = this.todoFacade.getTodo$
+  crudText ="Create New"
   public data = [
     {
       buttonType: 'btn-h-primary',
@@ -81,19 +88,45 @@ export class NotificationPanelComponent implements OnInit {
   public dataTwo = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Remainder',
+      text: 'Edit Reminder',
       icon: 'edit',
+      id:'edit',
       click: (): void => {
-        this.onNewReminderOpenClicked(this.NewReminderTemplate);
       },
     },
-
+    {
+      buttonType: 'btn-h-primary',
+      text: '1 Day Snooze',
+      icon: 'snooze',
+      id:'1daysnooze',
+      click: (): void => {
+         
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: '3 Days Snooze',
+      icon: 'snooze',
+      id:'3daysnooze',
+      click: (): void => {
+        
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: '7 Days Snooze',
+      icon: 'snooze',
+      id:'7daysnooze',
+      click: (): void => {
+        
+      },
+    }, 
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Remainder',
+      text: 'Delete Reminder',
       icon: 'delete',
+      id:'delete',
       click: (): void => {
-        this.onDeleteReminderOpenClicked(this.deleteReminderTemplate);
       },
     },
   ];
@@ -173,8 +206,15 @@ export class NotificationPanelComponent implements OnInit {
   onNewReminderClosed(result: any) {
     if (result) {
       this.reminderFor ='';
-      this.newReminderDetailsDialog.close();
+      this.isDelete = false;
+      this.isEdit = false;
+      this.crudText ="Create New"
+      this.isLoadReminderAndNotificationEvent.emit(true)
     }
+    this.isReminderOpenClicked = false
+
+    this.newReminderDetailsDialog.close();
+
   }
 
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
@@ -270,4 +310,47 @@ export class NotificationPanelComponent implements OnInit {
         }
       });
   }
+
+  onGetTodoItemData(event:any){
+    this.todoFacade.getTodoItem(event)
+  }
+
+  onActionClicked(item: any,gridItem: any){ 
+    this.selectedAlertId = gridItem.alertId
+    if(item.text == 'Edit Reminder'){ 
+      this.isEdit=true
+      this.crudText = 'Edit'
+       if (!this.isReminderOpenClicked) {
+           this.onNewReminderOpenClicked(this.NewReminderTemplate)
+         }
+     }
+     if(item.text == 'Delete Reminder'){
+      this.isDelete= true 
+      this.crudText = 'Delete'
+       if (!this.isReminderOpenClicked) {
+        this.onNewReminderOpenClicked(this.NewReminderTemplate)
+         }
+     } 
+     if(item.id == '1daysnooze' ){
+      const snoozeReminder={
+        reminderId:gridItem.alertId,
+        duration: 1
+      }
+      this.onSnoozeReminderEvent.emit(snoozeReminder);
+    }
+    if(item.id == '3daysnooze'){ 
+      const snoozeReminder={
+        reminderId:gridItem.alertId,
+        duration: 3
+      }
+      this.onSnoozeReminderEvent.emit(snoozeReminder);
+    }
+    if(item.id == '7daysnooze'){ 
+      const snoozeReminder={
+        reminderId:gridItem.alertId,
+        duration: 7
+      }
+      this.onSnoozeReminderEvent.emit(snoozeReminder);
+    }
+   }
 }

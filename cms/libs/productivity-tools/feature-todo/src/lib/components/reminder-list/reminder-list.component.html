@@ -4,7 +4,7 @@
     <div class="input-search">
       <span class="material-icons" aria-label="search reminder" aria-hidden="true">search</span>
       <kendo-floatinglabel text="Search Reminders">
-        <kendo-textbox aria-label="search reminder" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+        <kendo-textbox aria-label="search reminder" [clearButton]="true"   [formControl]="searchTerm"  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <button kendoButton [primary]="true" (click)="onNewReminderOpenClicked(reminderDetailsTemplate)"
@@ -17,6 +17,8 @@
     <productivity-tools-reminder-item 
     (isLoadReminderAndNotificationEvent)="onloadReminderAndNotificationsGrid()"
     [notificationList$]="notificationList$"
+    (onEditReminderClickedEvent)="onEditReminder($event)"
+    (onDeleteAlertGridClicked)="onDeleteReminderAlert($event)"
     (reminderDetailsClickedEvent)="onNewReminderOpenClicked(reminderDetailsTemplate)"
     (deleteReminderOpenClickedEvent)="onDeleteReminderOpenClicked(deleteReminderTemplate)"
     ></productivity-tools-reminder-item>
@@ -33,7 +35,8 @@
         <p class="due-item-heading">{{todoItem?.entityName}} - {{todoItem?.alertName}}</p>
         <div class="due-item-details">
           <span>{{todoItem.isToday ? 'Today' : todoItem.isTomorrow ? 'Tomorrow' : (todoItem?.alertDueDate | date : 'MM/dd/YYYY')}}</span>
-          <kendo-dropdownbutton  title="More option" [data]="reminderActions" (itemClick)="onToDoActionClicked($event,todoItem)"  (click)="$event.stopPropagation()" look="bare" aria-label="More option"
+          <kendo-dropdownbutton  title="More option" [data]="reminderActions"
+           (itemClick)="onToDoActionClicked($event,todoItem)"  (click)="$event.stopPropagation()" look="bare" aria-label="More option"
            class="small-i-btn app-dropdown-action more_action_wid" [popupSettings]="{
               popupClass: reminderActionPopupClass,
               animate: true
@@ -57,8 +60,14 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #reminderDetailsTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">Create New Reminder {{remainderIsFor? 'For' + remainderIsFor :''}} </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">{{reminderCrudText}} Reminder </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
+  [isEdit]="isEdit" 
+  [isDelete]="isDelete"
+  [alertId] = "selectedAlertId"
+  [isFromNotificationPanel]="true"
+  (onGetTodoItem)="onGetTodoItemData($event)"
+  [getTodo$]="getTodo$"
   [entityTypeCodeSubject$]="entityTypeCodeSubject$"
     (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"
     [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"

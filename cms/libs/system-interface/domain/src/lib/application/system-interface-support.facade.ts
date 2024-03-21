@@ -94,7 +94,8 @@ export class SystemInterfaceSupportFacade {
   private eventLovSubject = new BehaviorSubject<any[]>([]);
   eventLov$ = this.eventLovSubject.asObservable();
 
-
+  private subEventLovSubject = new Subject<any>;
+  subEventLov$ = this.subEventLovSubject.asObservable();
 
 
 
@@ -436,5 +437,21 @@ export class SystemInterfaceSupportFacade {
 
   getStatusArray(): string[]{
     return Object.values(SystemInterfaceSupportStatus)
+  }
+
+  loadSubEventsByParentId(eventId: any) {
+    this.systemInterfaceSupportService.getSubEventsByParentId(eventId).subscribe({
+      next: (response) => {
+        this.subEventLovSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
+  getSubEventsByParentId(eventId: any) {
+    return this.systemInterfaceSupportService.getSubEventsByParentId(eventId);
   }
 }

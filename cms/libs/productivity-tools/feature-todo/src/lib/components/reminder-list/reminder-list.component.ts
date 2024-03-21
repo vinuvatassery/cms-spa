@@ -25,6 +25,7 @@ import { FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms
 import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
@@ -74,8 +75,13 @@ export class ReminderListComponent implements  OnInit{
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
   notificationList$ = this.notificationFacade.notificationList$;
+  getTodo$ = this.Todofacade.getTodo$
   todoItemList: any[] = [];
   selectedAlertId:string="";
+  isEdit = false;
+  isDelete = false;
+  searchTerm = new FormControl();
+  reminderCrudText ="Create New"
   public toDoGridState!: State;
 
   public reminderActions = [
@@ -115,6 +121,13 @@ export class ReminderListComponent implements  OnInit{
     private financialRefundFacade : FinancialVendorRefundFacade
   ) {}
   ngOnInit(): void {
+  this.InitializeData()
+  this.searchTerm.valueChanges.subscribe((value) =>{
+    this.onListenSearchTerm(value?.trim());
+})
+  }
+
+  InitializeData(){
     this.toDoGridState = {
       skip: 0,
       take: 10,
@@ -125,6 +138,7 @@ export class ReminderListComponent implements  OnInit{
       this.loadTodoGrid();
     });
   }
+
   /** Internal event methods **/
   onReminderDoneClicked() { 
     this.ReminderEventClicked.emit();
@@ -132,13 +146,29 @@ export class ReminderListComponent implements  OnInit{
   onloadReminderAndNotificationsGrid(){
     this.notificationFacade.loadNotificationsAndReminders();
   }
+
+  onGetTodoItemData(event:any){
+    this.Todofacade.getTodoItem(event);
+  }
+
   onNewReminderClosed(result: any) {
+    this.remainderIsFor = ''
+    this.newReminderDetailsDialog.close();
+    this.isEdit = false;
+    this.isDelete = false;
+    this.reminderCrudText ="Create New"
     if (result) {
-      this.remainderIsFor = ''
-      this.newReminderDetailsDialog.close();
+    
+      this.onloadReminderAndNotificationsGrid();
     }
   }
 
+  onDeleteReminderAlert(event:any){
+    this.isDelete = true;
+    this.reminderCrudText ="Delete"
+    this.selectedAlertId = event;
+    this.onNewReminderOpenClicked(this.reminderDetailsTemplate)
+  }
   getReminderDetailsLov(){
     this.lovFacade.getEntityTypeCodeLov()
   }
@@ -256,6 +286,14 @@ export class ReminderListComponent implements  OnInit{
         }
     }
   }
+
+
+  onEditReminder(event:any){
+    this.isEdit = true;
+    this.reminderCrudText ="Edit"
+    this.selectedAlertId = event;
+    this.onNewReminderOpenClicked(this.reminderDetailsTemplate)
+  }
  
   onOpenTodoDetailsClicked() {
     this.isModalTodoDetailsOpenClicked.emit(this.selectedAlertId);
@@ -322,7 +360,14 @@ export class ReminderListComponent implements  OnInit{
     }
   }
 
-
+  onListenSearchTerm(searchedValue:any){
+    if(searchedValue){
+      this.notificationFacade.loadNotificatioBySearchText(searchedValue);
+    }else {
+      this.onloadReminderAndNotificationsGrid();
+    }
+    
+  }
   remainderFor(event:any){
     this.remainderIsFor = event
   }

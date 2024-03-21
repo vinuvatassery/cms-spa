@@ -6,7 +6,7 @@ import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pair
 /** Internal Libraries **/
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CompletionChecklist, SmokingCessation} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag,YesNoFlag } from '@cms/shared/ui-common';
 
@@ -54,6 +54,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     private loaderService: LoaderService,
     private loggingService: LoggingService,
     private changeDetector: ChangeDetectorRef,
+    private readonly router: Router,
   ) {
   }
 
@@ -266,12 +267,16 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+        this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+          queryParamsHandling: "preserve"
+        });
       }
     });
   }

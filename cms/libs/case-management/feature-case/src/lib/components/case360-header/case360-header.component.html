@@ -88,7 +88,7 @@
   *ngIf="loadedClientHeader?.clientCaseEligibilityCerId && loadedClientHeader?.caseStatus!=='DISENROLLED'"
   ></case-management-case360-header-notifications>
   <common-alert-banner *ngIf="loadedClientHeader?.clientId" [alertList$]="alertList$" [entityId]="loadedClientHeader?.clientId" 
-  [entityType]='"CLIENT"' [alertTypeCode]='"TODO"' (isLoadAlertListEvent) = "isLoadAlertListEvent($event,$event)" 
+  [entityType]='"CLIENT"' [alertTypeCode]='"TODO"' (isLoadAlertListEvent) = "isLoadAlertListEvent($event)" 
   (onMarkAlertAsDoneClick)="onMarkAlertAsDoneClick($event)" (onDeleteAlertClick)="onDeleteAlertClick($event)"></common-alert-banner>
 </div>
 

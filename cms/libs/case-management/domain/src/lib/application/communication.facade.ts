@@ -10,6 +10,7 @@ import { CommunicationEvents } from '../enums/communication-event.enum';
 import { LoggingService } from '@cms/shared/util-core';
 import { SmsNotification } from '../entities/sms-notification';
 import { DocumentDataService } from '../infrastructure/document.data.service';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CommunicationFacade {
@@ -19,6 +20,7 @@ export class CommunicationFacade {
   private ddlEditorVariablesSubject = new BehaviorSubject<any>([]);
   private ddlLetterTemplatesSubject = new BehaviorSubject<any>([]);
   private ddlEmailsSubject = new BehaviorSubject<any>([]);
+  loadTemplateSubject = new Subject<any>();
 
   /** Public properties **/
   clientVariables$ = this.clientVariablesSubject.asObservable();
@@ -26,6 +28,7 @@ export class CommunicationFacade {
   ddlEditorVariables$ = this.ddlEditorVariablesSubject.asObservable();
   ddlLetterTemplates$ = this.ddlLetterTemplatesSubject.asObservable();
   ddlEmails$ = this.ddlEmailsSubject.asObservable();
+  loadTemplate$ = this.loadTemplateSubject.asObservable();
 
   /** Constructor**/
   constructor(private readonly emailDataService: EmailDataService, private readonly loggingService: LoggingService,
@@ -157,8 +160,9 @@ export class CommunicationFacade {
     return formData;
   }
 
-  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
+  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any) {
     const formData = new FormData();
+    formData.append('templateTypeCode', templateTypeCode ?? '');
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
     formData.append('typeCode', draftTemplate?.typeCode ?? '');
     formData.append('languageCode', draftTemplate?.languageCode ?? '');
@@ -194,8 +198,9 @@ export class CommunicationFacade {
     return formData;
   }
 
-  createFormDataForEmail(data: { subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
+  createFormDataForEmail(data: {templateTypeCode:string, subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
     const formData = new FormData();
+    formData.append('templateTypeCode', data?.templateTypeCode ?? '');
     formData.append('requestSubject', data?.subject ?? '');
     formData.append('loginUserId', data?.userId ?? '');
     formData.append('clientCaseId', data?.caseId ?? '');

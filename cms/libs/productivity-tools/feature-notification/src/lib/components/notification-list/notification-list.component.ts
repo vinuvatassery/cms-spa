@@ -1,6 +1,8 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Output, Input, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { FormControl } from '@angular/forms';
+import { NotificationFacade } from '@cms/productivity-tools/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { BehaviorSubject, Subject } from 'rxjs';
 @Component({
@@ -13,21 +15,31 @@ export class NotificationListComponent {
   @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
   @Input() notificationList$: any;
   alertsData:any = {};
+  @Input()searchNotification$ : any;
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
   notificationaAndReminderDataSubject = new Subject<any>();
   gridDataResult!: GridDataResult;
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
+  @Output() loadNotificationtEvent = new EventEmitter<any>();
+  @Output() searchTermTextEvent = new EventEmitter<any>();
+  searchTerm = new FormControl();
     /** Lifecycle hooks **/
     ngOnInit(): void {
       this.loadNotificationsAndReminders();
       this.notificationList$.subscribe((data: any) => {
-        this.alertsData.items =  data.items.filter((item:any) => item.alertTypeCode == 'NOTIFICATION');
+        this.alertsData.items =data?.items ?  data?.items?.filter((item:any) => item.alertTypeCode == 'NOTIFICATION').sort((a : any, b : any) => {
+          const dateA = new Date(a.alertDueDate).getTime();
+          const dateB = new Date(b.alertDueDate).getTime();
+          return dateA - dateB}) : []; // Sorting by alertDueDate in ascending order;
         this.cdr.detectChanges();
-        this.loadNotificationsAndReminders;
       });
+      this.searchTerm.valueChanges.subscribe((value) =>{
+          this.searchTermTextEvent.emit(value?.trim());
+      })
     }
     constructor(
-      private cdr : ChangeDetectorRef
+      private cdr : ChangeDetectorRef,
+      private notificationFacade: NotificationFacade
     ) {}
   // data: Array<any> = [{}];
   public formUiStyle : UIFormStyle = new UIFormStyle();

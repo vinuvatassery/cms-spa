@@ -75,7 +75,9 @@ onDeleteAlertGrid(event:any){
 }
 
 loadReminders(){
+  if(this.id){
   this.todoFacade.todoAndRemindersByClient(this.id);
+  }
 }
   /** Output properties **/
   @Output() closeAction = new EventEmitter();
