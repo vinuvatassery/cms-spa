@@ -83,4 +83,20 @@ export class NotificationFacade {
       this.alertSearchLoaderVisibilitySubject.next(false);
     }
   } 
+  
+  SnoozeReminder(reminderId:any, duration:any){
+    this.loaderService.show()
+    this.notificationDataService.SnoozeReminder(reminderId,duration).subscribe({
+      next: (snoozeResponse: any) => {
+        this.loaderService.hide() 
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , snoozeResponse.message);
+        this.loadNotificationsAndReminders();
+      },
+      error: (err) => {
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        
+      },
+    })
+  }
 }

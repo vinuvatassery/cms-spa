@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, OnInit, Output, ChangeDetectionStrategy, EventEmitter, Input } from '@angular/core';
-import { Validators, FormGroup, FormControl } from '@angular/forms';
+import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CaseFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
@@ -16,6 +16,7 @@ import { Observable, Subject } from 'rxjs';
 })
 export class ReminderDetailComponent implements OnInit {
   currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+  currentTime = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes());
   showClientSearchInputLoader = false
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
@@ -63,20 +64,23 @@ export class ReminderDetailComponent implements OnInit {
   PharmacyPlaceHolderText = "Search Pharmacy Name, TIN"
   dateFormat = this.configurationProvider.appSettings.dateFormat;
  isSubmitted = false
+ @Input() isFromNotificationPanel = false;
   constructor(private readonly todoFacade: TodoFacade, 
     private router : Router,
     private route : ActivatedRoute,
     private readonly caseFacade: CaseFacade,
     private configurationProvider: ConfigurationProvider,
     private financialVendorFacade : FinancialVendorFacade,
-    public intl: IntlService) { }
+    public intl: IntlService,
+    public formBuilder: FormBuilder) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     if(this.isEdit ||  this.isDelete){
       this.onGetTodoItem.emit(this.alertId);
     }
-  
+
+   if(!this.isFromNotificationPanel){
     if(this.router.url.includes('vendors')){
       const vid = this.route.snapshot.queryParamMap.get('v_id')
       const tabcode = this.route.snapshot.queryParamMap.get('tab_code')
@@ -101,6 +105,7 @@ export class ReminderDetailComponent implements OnInit {
      this.caseFacade.loadClientProfileHeaderWithOutLoader(+id);
     }
   }
+}
      if(!this.entityTypeCode){
       this.isShowEntityTypeCode = true
       this.getReminderDetailsLov.emit()
@@ -124,96 +129,85 @@ export class ReminderDetailComponent implements OnInit {
     this.tareaReminderCounter = `${this.tareaReminderCharachtersCount}/${this.tareaRemindermaxLength}`;
   }
   private buildForm() {
-    this.clientReminderForm = new FormGroup({
-      dueDate: new FormControl(''),
-      time: new FormControl(''),
-      description: new FormControl(''),
-      linkTo: new FormControl(''),
-      vendorId : new FormControl({}),
-      clientId :new FormControl({}),
-      addToOutlookCalender: new FormControl(''),
+
+    this.clientReminderForm = this.formBuilder.group({
+      dueDate: [null,Validators.required],
+      time: [null],
+      description: ['',Validators.required],
+      linkTo: [''],
+      vendorId :[null],
+      clientId :[null],
+      addToOutlookCalender: [false],
     });
-
-    if(this.isDelete){
-      this.getTodo$.subscribe((res:any) =>{
-        if (this.isDelete && res) {
-          this.clientReminderForm.patchValue({
-            description: res.alertDesc,
-            addToOutlookCalender: res.addToOutlookFlag =="Y"
-          })
-          this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
-          this.clientReminderForm.controls['time'].disable()
-          this.clientReminderForm.controls['description'].disable()
-          this.clientReminderForm.controls['addToOutlookCalender'].disable()
-          this.clientReminderForm.controls['dueDate'].disable()
-          this.isShowEntityTypeCode = false;
-        }
-
-      });
-
-    }else if(this.isEdit){
-      this.getTodo$.subscribe((res:any) =>{
-        if (this.isEdit && res) {
-          this.clientReminderForm.patchValue({
-            description: res.alertDesc,
-            addToOutlookCalender: res.addToOutlookFlag =="Y"
-          })
-          this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
-          this.entityTypeCode= res.entityTypeCode
-          this.entityId = res.entityId
-          this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
-         if(res.entityTypeCode !=='CLIENT'){
-          this.showVendorSearch = true;
-          this.showClientSearch = false;
-          this.placeholderText = this.vendorPlaceHolderText;
-          this.searchProviderSubject.next([
-            { providerName : res.providerName,
-              tin : res.tin,
-              providerId: res.entityId
-            }
-          ])
-          this.clientReminderForm.controls["vendorId"].setValue({
-            providerName : res.providerName,
-            tin : res.tin,
-            providerId: res.entityId
-          })
-     
-        }else{
-          this.showVendorSearch = false;
-          this.showClientSearch = true;
-          this.placeholderText = this.clientPlaceHolderText;
-  
-          this.clientSubject.next([{
-            clientFullName : res.clientFullName,
-            dob : res.dob,
-            ssn: res.ssn,
-            clientId : res.entityId
-          }])
-          this.clientReminderForm.controls["clientId"].setValue({
-            clientFullName : res.clientFullName,
-            dob : res.dob,
-            ssn: res.ssn,
-            clientId : res.entityId
-          })
-        
-        }   
-      
-      }
-      });
+   // this.clientReminderForm.controls["time"].setValue( new Date(2011, 0, 1, 9, 0, 0))
+   
+   this.getTodo$.subscribe((res:any) =>{
+    if(res){
+      const repeatTime = res.repeatTime?.split(':')
+      this.clientReminderForm.patchValue({
+        description: res.alertDesc,
+        addToOutlookCalender: res.addToOutlookFlag =="Y",
+        time : repeatTime? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), repeatTime[0], repeatTime[1]) : null
+      })
     }
+      if(this.isDelete && res){
+        this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
+        this.clientReminderForm.controls['time'].disable()
+        this.clientReminderForm.controls['description'].disable()
+        this.clientReminderForm.controls['addToOutlookCalender'].disable()
+        this.clientReminderForm.controls['dueDate'].disable()
+        this.isShowEntityTypeCode = false;
+      }
+
+     if(this.isEdit && res){
+      this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
+      this.entityTypeCode= res.entityTypeCode
+      this.entityId = res.entityId
+      this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
+     if(res.entityTypeCode !=='CLIENT'){
+      this.showVendorSearch = true;
+      this.showClientSearch = false;
+      this.placeholderText = this.vendorPlaceHolderText;
+      this.searchProviderSubject.next([
+        { providerName : res.providerName,
+          tin : res.tin,
+          providerId: res.entityId
+        }
+      ])
+      this.clientReminderForm.controls["vendorId"].setValue({
+        providerName : res.providerName,
+        tin : res.tin,
+        providerId: res.entityId
+      })
+ 
+    }else{
+      this.showVendorSearch = false;
+      this.showClientSearch = true;
+      this.placeholderText = this.clientPlaceHolderText;
+
+      this.clientSubject.next([{
+        clientFullName : res.clientFullName,
+        dob : res.dob,
+        ssn: res.ssn,
+        clientId : res.entityId
+      }])
+      this.clientReminderForm.controls["clientId"].setValue({
+        clientFullName : res.clientFullName,
+        dob : res.dob,
+        ssn: res.ssn,
+        clientId : res.entityId
+      })
+     }
+   }
+  })
+  
   }
  
   onCloseReminderClicked() 
   {
     this.isModalNewReminderCloseClicked.emit();
   }
-  setValidators() {
-    this.clientReminderForm.markAllAsTouched();
-    this.clientReminderForm.controls['dueDate'].setValidators([Validators.required,]);
-    this.clientReminderForm.controls['dueDate'].updateValueAndValidity();
-    this.clientReminderForm.controls['description'].setValidators([Validators.required,]);
-    this.clientReminderForm.controls['description'].updateValueAndValidity();
-  }
+
   dateValidate(event: Event) {
     this.dateValidator = false;
     const signedDate = this.clientReminderForm.controls['dueDate'].value;
@@ -228,58 +222,72 @@ export class ReminderDetailComponent implements OnInit {
     }
   }
 
-  public save() {
-    this.isSubmitted = true;
+  afterCrudOperationAddSubscription(){
     this.todoFacade.curdAlert$.subscribe(res =>{
       if(res){    
       this.loadReminderItems.emit()
       this.isModalNewReminderCloseClicked.emit(true)
       }
     })
-    if(this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value =='CLIENT'){
+  }
+
+  setLinkToAndEntity(){
+    if(this.isShowEntityTypeCode && this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value =='CLIENT'){
       this.entityTypeCode = 'CLIENT'
       this.entityId =  this.clientReminderForm.controls['clientId'].value.clientId?.toString()
-    }else   if(this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value =='VENDOR'){
+    }else   if( this.isShowEntityTypeCode && this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value !=='VENDOR'){
       this.entityTypeCode = 'VENDOR'
       this.entityId =  this.clientReminderForm.controls['vendorId'].value.providerId?.toString()
     }
+  }
+
+  prepareCommonPayload(){
    const dueDate = new Date(this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat));
-    if (this.clientReminderForm.valid) {
-      const payload ={
-        alertDueDate :  dueDate,
-        alertDesc : this.clientReminderForm.controls['description'].value,
-        entityTypeCode : this.entityTypeCode,
-        entityId :this.entityId ,
-        customAlertFlag : 'Y',
-        type :'REMINDER',
-        alertFrequencyCode :'NEVER',
-        alertName :  'REMINDER',
-        AddToOutlookFlag :  this.clientReminderForm.controls['addToOutlookCalender'].value ? "Y" : "N"
-      }
-     if(this.clientReminderForm.controls['time'].value){
-     let payloadWithRepeat ={
-        ... payload,
-        repeatTime : new Date(this.clientReminderForm.controls['time'].value).getHours()+":"+new Date(this.clientReminderForm.controls['time'].value).getMinutes()
-      }
-      if(this.isEdit){
-        this.todoFacade.updateAlertItem(payloadWithRepeat)
-      }else{
-        this.todoFacade.createAlertItem(payloadWithRepeat)
+    return {
+      alertDueDate :  dueDate,
+      alertDesc : this.clientReminderForm.controls['description'].value,
+      entityTypeCode : this.entityTypeCode,
+      entityId :this.entityId ,
+      customAlertFlag : 'Y',
+      type :'REMINDER',
+      alertFrequencyCode :'NEVER',
+      alertName :  'REMINDER',
+      AddToOutlookFlag :  this.clientReminderForm.controls['addToOutlookCalender'].value ? "Y" : "N"
+    }
+  }
 
-      }  
+  prepareRepeatPayload(){
+    if(this.isEdit){
+    return {
+      ...this.prepareCommonPayload(),
+      repeatTime : new Date(this.clientReminderForm.controls['time'].value).getHours()+":"+new Date(this.clientReminderForm.controls['time'].value).getMinutes(),
+      alertId : this.alertId,
+    } 
+  }else{
+    return {
+      ...this.prepareCommonPayload(),
+      repeatTime : new Date(this.clientReminderForm.controls['time'].value).getHours()+":"+new Date(this.clientReminderForm.controls['time'].value).getMinutes(),
+    } 
+  }
+  }
+
+  public save() {
+    this.isSubmitted = true;
+    this.afterCrudOperationAddSubscription();
+    this.setLinkToAndEntity();
+   this.clientReminderForm.markAllAsTouched();
+   if (this.clientReminderForm.valid) {
+    if(this.isEdit)
+    if(this.clientReminderForm.controls['time'].value){
+      this.todoFacade.updateAlertItem(this.prepareRepeatPayload()) 
      }else{
-      if(this.isEdit){      
-        const editPayload ={
-          ...payload,
-          alertId : this.alertId,
-        }
-        this.todoFacade.updateAlertItem(editPayload)
-      }else{
-        this.todoFacade.createAlertItem(payload)
-
-      } 
-     }
-    
+      this.todoFacade.updateAlertItem({
+        ...this.prepareCommonPayload(),
+        alertId : this.alertId,
+      }) 
+     }     
+    }else{
+      this.todoFacade.createAlertItem(this.prepareCommonPayload())
     }
   }
 
@@ -351,5 +359,25 @@ export class ReminderDetailComponent implements OnInit {
     this.searchClientName.emit(clientSearchText)
   }
 
-  
+  dueDateValidation(){
+    const dueDate = this.clientReminderForm.controls['dueDate'].value;
+    console.log(dueDate)
+    console.log(new Date())
+    if ( this.clientReminderForm.controls['dueDate'].value && dueDate < new Date()) {
+      this.clientReminderForm.controls['dueDate'].setErrors({ 'incorrect': true });
+    
+      return;
+    }
+  }
+
+  timeValidation(){
+    const time = this.clientReminderForm.controls['time'].value;
+    console.log(time)
+    console.log(new Date())
+    if ( this.clientReminderForm.controls['time'].value && time < new Date()) {
+      this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
+    
+      return;
+    }
+  }
 }

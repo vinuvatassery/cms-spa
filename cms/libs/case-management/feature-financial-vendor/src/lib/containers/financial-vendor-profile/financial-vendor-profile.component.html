@@ -6,6 +6,9 @@
 [vendorProfile$]="vendorProfile$"
 [vendorProfileSpecialHandling$]="vendorProfileSpecialHandling$"
 (loadSpecialHandlingEvent)="loadSpecialHandling()"
+(openAddReminderEvent)="openAddReminderClicked()"
+(openEditReminderEvent)="openEditReminderClicked($event)"
+(openDeleteReminderEvent)="openDeleteReminderClicked($event)"
 (updateRecentlyViewedEvent)="updateRecentlyViewedEvent($event)"></cms-vendor-profile-header>
 
 <section class="vendor-profile-tabs">
@@ -168,3 +171,17 @@
         [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
 </ng-template>
 
+
+<!-- Create New Reminder Popup -->
+<ng-template #NewReminderTemplate>
+  <kendo-dialog-titlebar 
+  (close)="onNewReminderClosed($event)"
+
+  >{{crudText}} Reminder for {{vendorName}} </kendo-dialog-titlebar>
+  <productivity-tools-reminder-detail 
+  [isEdit]="isEdit"
+  [isDelete]="isDelete"
+  [alertId]="selectedAlertId"
+  [getTodo$]="getTodo$"
+    (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
+</ng-template>

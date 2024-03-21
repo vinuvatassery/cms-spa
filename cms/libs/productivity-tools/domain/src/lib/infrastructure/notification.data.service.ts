@@ -44,4 +44,9 @@ export class NotificationDataService {
   SearchNotifications(text: string){  
     return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/search/${text}`);
   }
+
+  SnoozeReminder(reminderId:any,duration:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/snooze-reminder/${reminderId}/${duration}`,null);
+  }
 }

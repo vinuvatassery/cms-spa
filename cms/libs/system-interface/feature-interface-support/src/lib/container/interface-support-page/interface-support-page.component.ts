@@ -42,6 +42,7 @@ export class InterfaceSupportPageComponent {
   notificationCategoryRemove$ = this.systemInterfaceSupportFacade.notificationCategoryRemove$;
   notificationCategoryListDataLoader$ = this.systemInterfaceSupportFacade.notificationCategoryListDataLoader$
   eventLov$ = this.systemInterfaceSupportFacade.eventLov$;
+  subEventLov$ = this.systemInterfaceSupportFacade.subEventLov$;
 
   constructor(
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
@@ -100,6 +101,8 @@ export class InterfaceSupportPageComponent {
   handleDeleteNotificationCategory(event: any) {
     this.systemInterfaceSupportFacade.deleteNotificationCategory(event, false);
   }
-
-  
+  loadSubEventByParentId(event: any) {
+    this.systemInterfaceSupportFacade.loadSubEventsByParentId(event);
   }
+
+}
