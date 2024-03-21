@@ -68,9 +68,9 @@ export class NotificationFacade {
       this.notificationDataService.SearchNotifications(text).subscribe({
         next: (caseBySearchTextResponse) => {
           caseBySearchTextResponse?.forEach((alert:any) => {
-            alert.alertNames =  `${alert.alertDesc ?? ''} ${alert.alertDesc ?? ''} ${alert.alertId?? ''}`;
+            alert.alertNames =  `${alert?.alertDesc ?? ''} ${alert?.alertDesc ?? ''} ${alert?.alertId?? ''}`;
           });
-          this.alertSubject.next(caseBySearchTextResponse);
+          this.notificationAndReminderListSubject.next(caseBySearchTextResponse);
           this.alertSearchLoaderVisibilitySubject.next(false);
         },
         error: (err) => {
@@ -79,7 +79,7 @@ export class NotificationFacade {
       });
     }
     else{
-      this.alertSubject.next(null);
+      this.notificationAndReminderListSubject.next(null);
       this.alertSearchLoaderVisibilitySubject.next(false);
     }
   } 

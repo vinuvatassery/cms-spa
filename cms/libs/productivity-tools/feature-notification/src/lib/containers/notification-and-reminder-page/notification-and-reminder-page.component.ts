@@ -25,4 +25,12 @@ export class NotificationAndReminderPageComponent {
   onloadReminderAndNotificationsGrid(){
     this.notificationFacade.loadNotificationsAndReminders();
   }
+  onListenSearchTerm(searchedValue:any){
+    if(searchedValue){
+      this.notificationFacade.loadNotificatioBySearchText(searchedValue);
+    }else {
+      this.onloadReminderAndNotificationsGrid();
+    }
+    
+  }
 }
