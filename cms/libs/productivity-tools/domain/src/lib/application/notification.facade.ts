@@ -65,9 +65,6 @@ export class NotificationFacade {
     if(text){
       this.notificationDataService.searchNotifications(text).subscribe({
         next: (caseBySearchTextResponse) => {
-          caseBySearchTextResponse?.forEach((alert:any) => {
-            alert.alertNames =  `${alert?.alertDesc ?? ''} ${alert?.alertDesc ?? ''} ${alert?.alertId?? ''}`;
-          });
           this.notificationAndReminderListSubject.next(caseBySearchTextResponse);
           this.alertSearchLoaderVisibilitySubject.next(false);
         },
