@@ -18,6 +18,8 @@ import { NotificationService } from '@progress/kendo-angular-notification';
 /** Providers **/
 import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
 import { SnackBar } from '@cms/shared/ui-common';
+import { TodoFacade } from '@cms/productivity-tools/domain';
+import { SignalrEventHandlerService } from '@cms/shared/util-common';
 @Component({
   selector: 'productivity-tools-reminder-notification-snack-bar',
   templateUrl: './reminder-notification-snack-bar.component.html',
@@ -57,10 +59,14 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     },
   ];
 
+  reminderSnackBar$ = this.signalrEventHandlerService.reminderSnackBar$
+  alertText =""
   /** Constructor **/
   constructor(
     private readonly notificationService: NotificationService,
     private configurationProvider: ConfigurationProvider,
+    private todoFacade : TodoFacade,
+    private readonly signalrEventHandlerService: SignalrEventHandlerService,
     private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
   ) {}
 
@@ -71,10 +77,16 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   }
 
   reminderSnackBarSubscribe() {
-    this.reminderNotificationSnackbarService.manageSnackBar(ReminderSnackBarNotificationType.LIGHT, '')
+    this.reminderSnackBar$.subscribe((res:any) =>{
+      this.snackbarMessage = res;
+    this.reminderNotificationSnackbarService
+    .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, res.alertText)
+
+    })
     this.reminderNotificationSnackbarService.snackbar$.subscribe({
       next: (res) => {
         if (res) {          
+          this.alertText = res.subtitle;
           this.snackbarMessage = res;
           this.notificationService.show({
             content: this.alertTemplate,

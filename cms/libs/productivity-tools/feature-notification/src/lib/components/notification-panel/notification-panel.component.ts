@@ -47,6 +47,7 @@ export class NotificationPanelComponent implements OnInit {
   clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
+  searchProviderSubject = this.financialVendorFacade.searchProviderSubject
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   notificationaAndReminderDataSubject = new Subject<any>();
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
