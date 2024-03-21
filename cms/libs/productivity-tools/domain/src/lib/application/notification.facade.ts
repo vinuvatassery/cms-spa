@@ -17,8 +17,6 @@ export class NotificationFacade {
   notificationList$ = this.notificationAndReminderListSubject.asObservable();
   private alertSearchLoaderVisibilitySubject = new Subject<boolean>;
   alertSearchLoaderVisibility$= this.alertSearchLoaderVisibilitySubject.asObservable();
-  public alertSubject = new BehaviorSubject<any>([]);
-  alert$ = this.alertSubject.asObservable();
   /** Constructor **/
   constructor(
     private readonly notificationDataService: NotificationDataService,
@@ -65,7 +63,7 @@ export class NotificationFacade {
   loadNotificatioBySearchText(text : string): void {
     this.alertSearchLoaderVisibilitySubject.next(true);
     if(text){
-      this.notificationDataService.SearchNotifications(text).subscribe({
+      this.notificationDataService.searchNotifications(text).subscribe({
         next: (caseBySearchTextResponse) => {
           caseBySearchTextResponse?.forEach((alert:any) => {
             alert.alertNames =  `${alert?.alertDesc ?? ''} ${alert?.alertDesc ?? ''} ${alert?.alertId?? ''}`;

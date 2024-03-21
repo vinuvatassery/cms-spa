@@ -22,10 +22,6 @@ export class NotificationListComponent {
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
   @Output() loadNotificationtEvent = new EventEmitter<any>();
   @Output() searchTermTextEvent = new EventEmitter<any>();
-  state: any;
-  @Input() sortType: any;
-  @Input() sort: any;
-  @Input() sortValue: any;
   searchTerm = new FormControl();
     /** Lifecycle hooks **/
     ngOnInit(): void {
