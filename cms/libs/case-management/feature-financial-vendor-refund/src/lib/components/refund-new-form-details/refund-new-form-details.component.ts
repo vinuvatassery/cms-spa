@@ -907,6 +907,7 @@ addTpa(event:any){
      
      if (dataItem.daySupplyRefunded > dataItem.daySupply) {
        dataItem.daySpyRfdGtDaySpy = inValid = true;
+       dataItem.daySupplyRefundedRatioValid = false;
      }
      else {
        dataItem.daySpyRfdGtDaySpy = false;
