@@ -138,8 +138,8 @@ export class ReminderDetailComponent implements OnInit {
       vendorId :[null],
       clientId :[null],
       addToOutlookCalender: [false],
+      deleteFromOutlookCalender :[false]
     });
-   // this.clientReminderForm.controls["time"].setValue( new Date(2011, 0, 1, 9, 0, 0))
    
    this.getTodo$.subscribe((res:any) =>{
     if(res){
@@ -277,7 +277,7 @@ export class ReminderDetailComponent implements OnInit {
     this.setLinkToAndEntity();
    this.clientReminderForm.markAllAsTouched();
    if (this.clientReminderForm.valid) {
-    if(this.isEdit)
+    if(this.isEdit){
     if(this.clientReminderForm.controls['time'].value){
       this.todoFacade.updateAlertItem(this.prepareRepeatPayload()) 
      }else{
@@ -285,7 +285,8 @@ export class ReminderDetailComponent implements OnInit {
         ...this.prepareCommonPayload(),
         alertId : this.alertId,
       }) 
-     }     
+     }  
+    }   
     }else{
       this.todoFacade.createAlertItem(this.prepareCommonPayload())
     }
