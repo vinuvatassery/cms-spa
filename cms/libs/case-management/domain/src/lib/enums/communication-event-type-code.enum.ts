@@ -37,5 +37,9 @@ export enum CommunicationEventTypeCode {
     RejectionNoticeLetter = 'REJECTION_NOTICE_LETTER',
     RejectionLetterSent = 'REJECTION_LETTER_SENT',
     RejectionNoticeEmail = 'REJECTION_NOTICE_EMAIL',
-    RejectionEmailSent = 'REJECTION_EMAIL_SENT'
+    RejectionEmailSent = 'REJECTION_EMAIL_SENT',
+    ApprovalNoticeLetter = 'APPROVAL_NOTICE_LETTER',
+    ApprovalLetterSent = 'APPROVAL_NOTICE_SENT',
+    ApprovalNoticeEmail = 'APPROVAL_NOTICE_EMAIL',
+    ApprovalEmailSent = 'APPROVAL_EMAIL_SENT'
   }

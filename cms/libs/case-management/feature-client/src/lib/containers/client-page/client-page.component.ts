@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   ElementRef,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import {

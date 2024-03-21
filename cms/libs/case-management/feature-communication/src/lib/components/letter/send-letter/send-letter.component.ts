@@ -12,7 +12,7 @@ import {
 
 
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 
@@ -41,6 +41,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   @Input() templateLoadType!: string;
   @Input() informationalText!:string
   @Input() templateHeader !:string;
+  @Input() triggerFrom !: string;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
@@ -92,11 +93,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   currentTemplate!:any;
   templateDrpDisable: boolean = false;
   cancelDisplay:boolean = true;
+  loadTemplate$ = this.communicationFacade.loadTemplate$;
+  draftedTemplate:any='';
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    if(this.templateLoadType === undefined){
-      this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
-    }
+    this.loadTemplate();
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
     if (this.templateLoadType != CommunicationEventTypeCode.CerAuthorizationLetter) {
@@ -151,6 +152,14 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
     },
   });
+  }
+
+  private loadTemplate(){
+    this.loadTemplate$.subscribe((response:any)=>{
+      if(response){
+        this.loadDropdownLetterTemplates();
+      }
+    });
   }
 
   private loadMailCodes() {
@@ -319,14 +328,17 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       });
   }
 
-  getApiTemplateTypeCode() :string{
-    let templateTypeCode ='';
-    switch(this.communicationLetterTypeCode){
-      case CommunicationEventTypeCode.PendingNoticeLetter :
+  getApiTemplateTypeCode(): string {
+    let templateTypeCode = '';
+    switch (this.communicationLetterTypeCode) {
+      case CommunicationEventTypeCode.PendingNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.PendingLetterSent;
         break;
-      case CommunicationEventTypeCode.RejectionNoticeLetter :
+      case CommunicationEventTypeCode.RejectionNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.RejectionLetterSent;
+        break;
+      case CommunicationEventTypeCode.ApprovalNoticeLetter:
+        templateTypeCode = CommunicationEventTypeCode.ApprovalLetterSent;
         break;
     }
     return templateTypeCode;
@@ -381,32 +393,45 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.isShowSendLetterToPrintPopupClicked = false;
   }
 
-  private loadDropdownLetterTemplates() {
-    this.loaderService.show();
-    this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.templateLoadType)
-    .subscribe({
-      next: (data: any) =>{
-        if (data) {
-          this.ddlTemplates = data;
-          this.currentTemplate = this.ddlTemplates.filter((x:any)=>x.templateTypeCode === this.communicationLetterTypeCode )
-          if(this.currentTemplate .length>0){
-          this.documentTemplate = {'description': this.currentTemplate[0].description,'documentTemplateId':this.currentTemplate[0].documentTemplateId};
-          this.handleDdlLetterValueChange(this.currentTemplate[0]);
-          }
-          if(this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
-            || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter){
-            this.templateDrpDisable = true;
-            this.cancelDisplay = false;
-          }
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      this.loggingService.logException(err);
-    },
-  });
+  private loadDropdownLetterTemplates() { 
+    if (this.notificationGroup !== undefined && this.templateLoadType !== undefined) {
+      this.loaderService.show();
+      this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.templateLoadType)
+        .subscribe({
+          next: (data: any) => {
+            if (data) {
+              this.ddlTemplates = data;
+              this.currentTemplate = this.ddlTemplates.filter((x: any) => x.templateTypeCode === this.communicationLetterTypeCode)
+              if (this.currentTemplate.length > 0) {
+                this.documentTemplate = { 'description': this.currentTemplate[0].description, 'documentTemplateId': this.currentTemplate[0].documentTemplateId };
+                this.handleDdlLetterValueChange(this.currentTemplate[0]);
+              }
+              if (this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter) {
+                this.templateDrpDisable = true;
+                this.cancelDisplay = false;                
+              }
+            }
+            this.loaderService.hide();
+          },
+          error: (err: any) => {
+            this.loaderService.hide();
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            this.loggingService.logException(err);
+          },
+        });
+    }
+  }
+
+  getDraftedTemplate(){
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationLetterTypeCode).subscribe((response:any)=>{
+      if(response.length>0){
+        this.selectedTemplateContent =response[0].requestBody;
+        this.updatedTemplateContent = response[0].requestBody; 
+        this.ref.detectChanges();
+      }
+    });
   }
 
   handleDdlLetterValueChange(event: any) {
@@ -421,6 +446,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
               this.updatedTemplateContent = data.templateContent;
               this.isOpenLetterTemplate = true;
               this.loadMailingAddress();
+              if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter)
+                && this.triggerFrom === WorkflowTypeCode.NewCase) {
+                this.getDraftedTemplate();
+              }
               this.ref.detectChanges();
             }
             this.loaderService.hide();
@@ -516,19 +546,23 @@ loadMailingAddress() {
   }
 }
 
-getFileNameFromTypeCode(typeCode: string): string {
-  switch (typeCode) {
-    case CommunicationEventTypeCode.ClientLetter:
-      return "Client Letter_"+ this.entityId +".zip";
-    case CommunicationEventTypeCode.VendorLetter:
-      return "Vendor Letter+"+ this.entityId +".zip"; 
-    case CommunicationEventTypeCode.CerAuthorizationLetter:
-      return "CER Authorization Letter.zip";
-    case CommunicationEventTypeCode.PendingNoticeLetter:
-      return "Pending Notice Letter.zip";
-    default:
-      throw new Error('Invalid type code');
-  }
+  getFileNameFromTypeCode(typeCode: string): string {
+    switch (typeCode) {
+      case CommunicationEventTypeCode.ClientLetter:
+        return "Client Letter_" + this.entityId + ".zip";
+      case CommunicationEventTypeCode.VendorLetter:
+        return "Vendor Letter+" + this.entityId + ".zip";
+      case CommunicationEventTypeCode.CerAuthorizationLetter:
+        return "CER Authorization Letter.zip";
+      case CommunicationEventTypeCode.PendingNoticeLetter:
+        return "Pending Notice Letter.zip";
+      case CommunicationEventTypeCode.RejectionNoticeLetter:
+        return "Rejection Notice Letter.zip";
+      case CommunicationEventTypeCode.ApprovalNoticeLetter:
+        return "Approval Notice Letter.zip";
+      default:
+        throw new Error('Invalid type code');
+    }
 }
 
 editorValueChange(event: any){

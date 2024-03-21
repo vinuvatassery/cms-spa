@@ -22,7 +22,7 @@
         </button>
 
         <div class="breadcrumb-right app-c-split-button">
-          <kendo-splitbutton [data]="saveForLaterData" class="app-c-split-button app-dropdown-action"
+          <kendo-splitbutton [data]="saveForLaterData" class="app-c-split-button app-dropdown-action" *ngIf ="showButton"
             buttonClass="k-split-button" [tabindex]="0"  [disabled]="!(isSaveButtonEnabled$ | async)"
             [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }" aria-label="Save & Continue">
             <div class="btn-inner-block" (click)="onSaveAndContinueClicked()">
