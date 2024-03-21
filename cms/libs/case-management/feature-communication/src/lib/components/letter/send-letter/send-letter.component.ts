@@ -109,6 +109,15 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.isNewLetterClicked =  this.notificationGroup ? true : false;
   }
 
+  getProfileName(): any {
+    if (this.communicationLetterTypeCode.includes('VENDOR'))
+      return 'Vendor';
+    else if (this.communicationLetterTypeCode.includes('CLIENT'))
+      return 'Client';
+    else
+      return this.communicationLetterTypeCode;
+  }
+
   ngOnDestroy(): void {
     this.clientAddressSubscription.unsubscribe();
   }

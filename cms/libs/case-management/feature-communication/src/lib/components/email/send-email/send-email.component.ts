@@ -168,6 +168,15 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.selectedToEmails = emails;
   }
 
+  getProfileName(): any {
+    if (this.communicationEmailTypeCode.includes('VENDOR'))
+      return 'Vendor';
+    else if (this.communicationEmailTypeCode.includes('CLIENT'))
+      return 'Client';
+    else
+      return this.communicationEmailTypeCode;
+  }
+
   loadClientAndVendorDraftEmailTemplates() {
     this.loaderService.show();
     this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationEmailTypeCode)
@@ -346,9 +355,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
      emailList?.forEach((recipient:any) => {
       let defaultItem: any;
       if(emailType=="CC"){
-         defaultItem = this.defaultCCEmail.find((item: any) => recipient.includes(item?.email?.trim()));
+         defaultItem = this.defaultCCEmail?.find((item: any) => recipient.includes(item?.email?.trim()));
       }else{
-        defaultItem = this.defaultBCCEmail.find((item: any) => recipient.includes(item?.email?.trim()));
+        defaultItem = this.defaultBCCEmail?.find((item: any) => recipient.includes(item?.email?.trim()));
       }
       if(defaultItem!=null){
         emailRecipients.push(defaultItem)
