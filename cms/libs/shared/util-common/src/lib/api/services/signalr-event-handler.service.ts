@@ -7,13 +7,16 @@ import { map } from 'rxjs/internal/operators/map';
 import { HubEventTypes, HubMethods, HubNames } from '@cms/shared/util-core';
 /** Services **/
 import { SignalrService } from '@cms/shared/util-signalr';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SignalrEventHandlerService {
   /** Private  properties **/
-
+  private reminderSnackBarSubject = new Subject<any>();
+  /** Public properties **/
+  reminderSnackBar$ = this.reminderSnackBarSubject.asObservable();
   /** Constructor **/
   constructor(private readonly signalrService: SignalrService) {
     this.registerHubMethodHandlers();
@@ -44,8 +47,13 @@ export class SignalrEventHandlerService {
   /** Public methods **/
   signalrNotificationsObservable(eventType: HubEventTypes) {
     return this.signalrService.signalrEvents$?.pipe(
-      filter((event) => event.payload.eventType === eventType),
+      //filter((event) => event.payload.eventType === eventType),
       map((event) => {
+        console.log(event)
+        const payload = event.payload;
+        if(payload.eventType == 'REMINDER'){
+
+        }
         // Send an acknowledgment to update the status of the message (if Ack enabled).
         if (event.payload.isAckEnabled) {
           this.sendAckMessage(event.payload.messageId, true);
