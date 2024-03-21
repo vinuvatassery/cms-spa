@@ -276,8 +276,9 @@ export class ReminderDetailComponent implements OnInit {
     this.afterCrudOperationAddSubscription();
     this.setLinkToAndEntity();
    this.clientReminderForm.markAllAsTouched();
+   if(this.isEdit){
    if (this.clientReminderForm.valid) {
-    if(this.isEdit){
+   
     if(this.clientReminderForm.controls['time'].value){
       this.todoFacade.updateAlertItem(this.prepareRepeatPayload()) 
      }else{
@@ -286,8 +287,9 @@ export class ReminderDetailComponent implements OnInit {
         alertId : this.alertId,
       }) 
      }  
-    }   
-    }else{
+    }
+  }   
+    else{
       this.todoFacade.createAlertItem(this.prepareCommonPayload())
     }
   }
