@@ -46,7 +46,6 @@ export class NotiificationCategoryDetailComponent implements OnInit {
   isLoading = false;
   isValidateForm = false;
   notiificationCategory!: any;
-  eventList: string[] = ['This is event 1', 'This is event 2', 'This is event 3'];
   showEventList: boolean = false;
   isloading: boolean = false;
   constructor(private formBuilder: FormBuilder,
@@ -98,7 +97,7 @@ export class NotiificationCategoryDetailComponent implements OnInit {
     ).subscribe((response: any[]) => {
       const eventListString = response
         .sort((a, b) => a.eventDesc.localeCompare(b.eventDesc))
-        .map(event => `- ${event?.eventDesc ?? ''}`)
+        .map(event => `${event?.eventDesc ?? ''}`)
         .join('\n');
 
       this.notiificationCategoryForm.controls['eventListInput'].setValue(eventListString);

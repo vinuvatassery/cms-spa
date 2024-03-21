@@ -268,10 +268,18 @@ export class SystemInterfaceSupportFacade {
           this.addnotificationCategorySubject.next(true);
         },
         error: (err) => {
+          const errorCode = err?.error?.error?.code;
+          const errorMessage = err?.error?.error?.message;
+
+          if (errorCode && errorCode.includes('DUPLICATE_NOTIFICATION_CATEGORY_EXISTS')) {
+              this.showHideSnackBar(SnackBarNotificationType.WARNING, errorMessage);
+          } else {
+              this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          }
+
           this.loaderService.hide();
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
           this.loggingService.logException(err);
-        },
+      },
       }
     );
   }
@@ -288,8 +296,16 @@ export class SystemInterfaceSupportFacade {
         this.loaderService.hide();
       },
       error: (err) => {
-        this.hideLoader();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        const errorCode = err?.error?.error?.code;
+        const errorMessage = err?.error?.error?.message;
+
+        if (errorCode && errorCode.includes('DUPLICATE_NOTIFICATION_CATEGORY_EXISTS')) {
+            this.showHideSnackBar(SnackBarNotificationType.WARNING, errorMessage);
+        } else {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        }
+
+        this.loaderService.hide();
         this.loggingService.logException(err);
       },
     });
@@ -435,7 +451,7 @@ export class SystemInterfaceSupportFacade {
   }
   // ------------------------------------------------------------------------
 
-  getStatusArray(): string[]{
+  getStatusArray(): string[] {
     return Object.values(SystemInterfaceSupportStatus)
   }
 
