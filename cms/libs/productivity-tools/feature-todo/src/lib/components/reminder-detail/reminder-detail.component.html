@@ -12,10 +12,16 @@
             formatPlaceholder="formatPattern"
             [min]="currentDate" 
             placeholder=""
+            (keyup)="dueDateValidation()"
+            (valueChange)="dueDateValidation()"
           >
           </kendo-datepicker>
+          <kendo-formerror *ngIf="clientReminderForm.controls['dueDate'].hasError('incorrect')">
+            Due date cannot be before the Current Date.</kendo-formerror>
+        <kendo-formerror *ngIf="clientReminderForm.hasError('required','dueDate') && isSubmitted">
+          Due Date is required.</kendo-formerror>
+
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!clientReminderForm.controls['dueDate'].valid && isSubmitted">Due Date is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Time (Optional)">
@@ -23,7 +29,12 @@
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="time"
             formatPlaceholder="formatPattern"
+            [min]="currentTime"
+            (keyup)="timeValidation()"
+            (valueChange)="timeValidation()"
           ></kendo-timepicker>
+          <kendo-formerror *ngIf="clientReminderForm.controls['time'].hasError('incorrect')">
+            Time cannot be before the current time.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
@@ -43,7 +54,8 @@
             </kendo-textarea-suffix>
           </kendo-textarea>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid && isSubmitted">Description is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid && isSubmitted">
+          Description is required.</kendo-formerror>
       </div>
       <div class="flex-col mt-3 field_with_info" *ngIf="isShowEntityTypeCode">
         <kendo-floatinglabel text="Link Reminder To">

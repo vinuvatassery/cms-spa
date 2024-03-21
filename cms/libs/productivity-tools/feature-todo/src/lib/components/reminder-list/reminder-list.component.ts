@@ -25,6 +25,7 @@ import { FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms
 import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
@@ -79,6 +80,7 @@ export class ReminderListComponent implements  OnInit{
   selectedAlertId:string="";
   isEdit = false;
   isDelete = false;
+  searchTerm = new FormControl();
   reminderCrudText ="Create New"
   public toDoGridState!: State;
 
@@ -120,6 +122,9 @@ export class ReminderListComponent implements  OnInit{
   ) {}
   ngOnInit(): void {
   this.InitializeData()
+  this.searchTerm.valueChanges.subscribe((value) =>{
+    this.onListenSearchTerm(value?.trim());
+})
   }
 
   InitializeData(){
@@ -355,7 +360,14 @@ export class ReminderListComponent implements  OnInit{
     }
   }
 
-
+  onListenSearchTerm(searchedValue:any){
+    if(searchedValue){
+      this.notificationFacade.loadNotificatioBySearchText(searchedValue);
+    }else {
+      this.onloadReminderAndNotificationsGrid();
+    }
+    
+  }
   remainderFor(event:any){
     this.remainderIsFor = event
   }

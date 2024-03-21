@@ -4,7 +4,7 @@
     <div class="input-search">
       <span class="material-icons" aria-label="search reminder" aria-hidden="true">search</span>
       <kendo-floatinglabel text="Search Reminders">
-        <kendo-textbox aria-label="search reminder" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+        <kendo-textbox aria-label="search reminder" [clearButton]="true"   [formControl]="searchTerm"  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <button kendoButton [primary]="true" (click)="onNewReminderOpenClicked(reminderDetailsTemplate)"
@@ -60,11 +60,12 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #reminderDetailsTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">{{reminderCrudText}} Reminder {{remainderIsFor? 'For ' + remainderIsFor :''}} </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">{{reminderCrudText}} Reminder </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
   [isEdit]="isEdit" 
   [isDelete]="isDelete"
   [alertId] = "selectedAlertId"
+  [isFromNotificationPanel]="true"
   (onGetTodoItem)="onGetTodoItemData($event)"
   [getTodo$]="getTodo$"
   [entityTypeCodeSubject$]="entityTypeCodeSubject$"

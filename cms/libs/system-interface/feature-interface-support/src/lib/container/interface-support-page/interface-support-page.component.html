@@ -60,6 +60,7 @@
                               [sort]="sortNotificationCategoryList" [selectedGroup]="selectedGroup"
                               (loadNotificationCategoryListEvent)="loadNotificationCategory($event)"
                               [eventLov$]="eventLov$"
+                              [subEventLov$]="subEventLov$"
                               [addnotificationCategory$]="addnotificationCategory$"
                               (addNotificationCategoryEvent) ="handleAddNotificationCategory($event)"
                               [notificationCategoryReactivate$]="notificationCategoryReactivate$" 
@@ -69,6 +70,7 @@
                               (reactivateConfimEvent)="handleReactivateNotificationCategory($event)"
                               (deleteConfimedEvent)="handleDeleteNotificationCategory($event)"
                               (editNotificationCategoryEvent) ="handleEditNotificationCategory($event)"
+                              (loadSubEventByParentIdEvent)="loadSubEventByParentId($event)"
                               ></system-interface-notification-category>
                   </div>
 

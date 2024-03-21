@@ -10,7 +10,6 @@ import {  SnackBarNotificationType } from '@cms/shared/util-core';
 })
 export class NotificationAndReminderPageComponent {
   notificationList$ = this.notificationFacade.notificationList$;
-  
   constructor(
     private reminderFacade: ReminderFacade,
     public notificationFacade: NotificationFacade, 
@@ -24,5 +23,13 @@ export class NotificationAndReminderPageComponent {
   }
   onloadReminderAndNotificationsGrid(){
     this.notificationFacade.loadNotificationsAndReminders();
+  }
+  onListenSearchTerm(searchedValue:any){
+    if(searchedValue){
+      this.notificationFacade.loadNotificatioBySearchText(searchedValue);
+    }else {
+      this.onloadReminderAndNotificationsGrid();
+    }
+    
   }
 }

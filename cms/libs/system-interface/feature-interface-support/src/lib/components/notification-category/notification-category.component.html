@@ -19,11 +19,12 @@
             </kendo-grid-column>
 
             <kendo-grid-column field="activeFlag" title="Status" [width]="100">
-                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                        let-filterService="filterService">
                         <kendo-dropdownlist [data]="['Active', 'Inactive']" [(ngModel)]="statusFilter"
-                          (valueChange)="dropdownFilterChange('activeFlag',$event, filterService)">
+                              (valueChange)="dropdownFilterChange('activeFlag',$event, filterService)">
                         </kendo-dropdownlist>
-                      </ng-template>
+                  </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                         let-filterService="filterService">
                         <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
@@ -33,8 +34,8 @@
                   </ng-template>
             </kendo-grid-column>
 
-            <kendo-grid-column field="eventNotificationGroupId" title="Option" [sticky]="true" [columnMenu]="false"
-                  [width]="50" class="text-center">
+            <kendo-grid-column field="eventNotificationGroupId" title="Option" [columnMenu]="false" [width]="50"
+                  class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <kendo-dropdownbutton [data]="gridMoreActionsNotification"
                               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -45,7 +46,7 @@
                                     let-buttondataItem let-eventNotificationgroupId="eventNotificationGroupId">
                                     <ng-container>
                                           <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                                          [disabled]="(dataItem.activeFlag === 'Inactive' && buttondataItem.text === 'Deactivate') || (dataItem.activeFlag === 'Active' && buttondataItem.text === 'Re-activate')"
+                                                [disabled]="(dataItem.activeFlag === 'Inactive' && buttondataItem.text === 'Deactivate') || (dataItem.activeFlag === 'Active' && buttondataItem.text === 'Re-activate')"
                                                 [class]="buttondataItem.buttonType" aria-hidden="false"
                                                 (click)="buttondataItem.click(dataItem)">
                                                 <span class="material-icons"
@@ -56,6 +57,12 @@
                         </kendo-dropdownbutton>
                   </ng-template>
             </kendo-grid-column>
+
+            <div *kendoGridDetailTemplate="let dataItem">
+                  <sub-event-detail [eventId]="dataItem.eventId"> </sub-event-detail>
+            </div>
+
+
             <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
                   let-currentPage="currentPage">
                   <div class="grid-custom-paginationtemplates d-flex">
@@ -97,12 +104,15 @@
 </div>
 <kendo-dialog *ngIf="isNotificationCategoryDetailPopup" (close)="onCloseNotificationCategoryDetailPopupClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar>{{ isEditNotificationCategory ? 'Edit Notification Category' : 'Add Notification Category' }}</kendo-dialog-titlebar>
-      <notification-category-detail  [isEditNotificationCategory]="isEditNotificationCategory" 
-      (close)="onCloseNotificationCategoryDetailPopupClicked()" [eventLov]="eventLov$"
-      [selectedGroup]="selectedGroup" [selectedNotificationCategory]="selectedNotificationCategory"
-      (editNotificationCategoryEvent)="editNotificationCategory($event)"
-      (addNotificationCategoryEvent)="addNotificationCategory($event)"></notification-category-detail>
+      <kendo-dialog-titlebar>{{ isEditNotificationCategory ? 'Edit Notification Category' : 'Add Notification Category'
+            }}</kendo-dialog-titlebar>
+      <notification-category-detail [isEditNotificationCategory]="isEditNotificationCategory"
+            (close)="onCloseNotificationCategoryDetailPopupClicked()" [eventLov]="eventLov$"
+            [subEventLov$]="subEventLov$" [selectedGroup]="selectedGroup"
+            [selectedNotificationCategory]="selectedNotificationCategory"
+            (editNotificationCategoryEvent)="editNotificationCategory($event)"
+            (loadSubEventByParentIdEvent)="getSubEventByParentId($event)"
+            (addNotificationCategoryEvent)="addNotificationCategory($event)"></notification-category-detail>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isNotificationCategoryDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
@@ -121,6 +131,7 @@
 
 <kendo-dialog *ngIf="isNotificationCategoryDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar (close)="onCloseNotificationCategoryDeleteClicked()"> Delete?</kendo-dialog-titlebar>
-      <remove-notification-category (close)="onCloseNotificationCategoryDeleteClicked()" (deleteConfimEvent)="handleNotificationCategoryDelete($event)"></remove-notification-category>
+      <remove-notification-category (close)="onCloseNotificationCategoryDeleteClicked()"
+            (deleteConfimEvent)="handleNotificationCategoryDelete($event)"></remove-notification-category>
 
 </kendo-dialog>
