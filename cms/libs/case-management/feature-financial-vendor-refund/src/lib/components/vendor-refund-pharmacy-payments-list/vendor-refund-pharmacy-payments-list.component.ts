@@ -78,6 +78,10 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   deliveryMethodLovData: any[] = [];
   selectedDeliveryMethod: any = '';
 
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentStatusLovData :any[] = [];
+  selectedPaymentStatus: any = ''
+
 
   constructor(
     public financialVendorRefundFacade:FinancialVendorRefundFacade,
@@ -94,6 +98,8 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
     this.loadFinancialRecentRefundListGrid();   
     this.lovFacade.getDeliveryMethodLovs(); 
     this.getDeliveryMethodLovs();
+    this.lovFacade.getPaymentStatusLov();
+    this.getPaymentStatusLovs();
   }
 
   selectedKeysChange(selection: any) {
@@ -186,10 +192,6 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   }
 
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
-    if(field == "paymentTypeDesc") this.selectedPaymentRequestType = value;
-    if(field == "paymentMethodDesc") this.selectedPaymentMethod = value;
-    if(field == "rxqtype") this.selectedDeliveryMethod = value;
-
     filterService.filter({
         filters: [{
           field: field,
@@ -224,8 +226,26 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
     });
   }
 
-  onPaymentListGirdFilter(filterData: any){
-    this.state.filter = filterData;
+  onPaymentListGridFilterChange(filterdata: any){
+    const paymentMethodDesc = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'paymentMethodDesc'); });
+    const paymentTypeDesc = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'paymentTypeDesc'); });
+    const rxqtype = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'rxqtype'); });
+    const paymentStatusDesc = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'paymentStatusDesc'); });
+
+    if(!paymentMethodDesc) this.selectedPaymentMethod = '';
+    if(!paymentTypeDesc) this.selectedPaymentRequestType = '';
+    if(!rxqtype) this.selectedDeliveryMethod = ''
+    if(!paymentStatusDesc) this.selectedPaymentStatus = ''
+    
+    this.state.filter = filterdata;
+  }
+
+  getPaymentStatusLovs() {
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        this.paymentStatusLovData = data;
+      }
+    });
   }
 
 }
