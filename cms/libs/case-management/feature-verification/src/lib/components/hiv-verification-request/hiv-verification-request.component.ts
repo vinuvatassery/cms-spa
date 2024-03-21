@@ -17,10 +17,13 @@ import { VerificationFacade,
   ScreenType,
   CommunicationEventTypeCode,
   CommunicationFacade,
-  EsignFacade} from '@cms/case-management/domain';
+  EsignFacade, 
+  EsignStatusCode} from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { filter } from 'rxjs';
+import { UserDataService } from '@cms/system-config/domain';
 
 
 @Component({
@@ -35,6 +38,14 @@ export class HivVerificationRequestComponent implements OnInit{
   @Input() clientId!: number;
   @Input() clientCaseId!: any;
   @Input() clientCaseEligibilityId!: any;
+  @Input() healthCareProviderExists!: any;
+  @Input() providerEmail!: any;
+  @Input() emailSentDate!: any;
+  @Input() loginUserName!: any;
+  @Input() isSendEmailFailed!: boolean;
+  @Input() errorMessage!: any;
+  @Input() isSendEmailClicked!: boolean;
+  @Input() loginUserId!: any;
   clientHivDocumentsList$: any;
   @Output() openRemoveAttachmentConfirmationEvent : EventEmitter<string> = new EventEmitter();
   @Output() onAttachmentConfirmationEvent = new EventEmitter();
@@ -105,6 +116,7 @@ export class HivVerificationRequestComponent implements OnInit{
   selectedAttachedFile: any[] = [];
   emailSubject!: string;
   notificationTemplateId: any;
+  defaultOption!: any;
 
   constructor( private verificationFacade: VerificationFacade,
     private readonly cdr: ChangeDetectorRef,
@@ -112,14 +124,21 @@ export class HivVerificationRequestComponent implements OnInit{
     public readonly clientDocumentFacade:ClientDocumentFacade,
     private readonly workflowFacade: WorkflowFacade,
     private readonly communicationFacade: CommunicationFacade,
-    private readonly esignFacade: EsignFacade,){}
+    private readonly esignFacade: EsignFacade,
+    private readonly userDataService: UserDataService,
+){}
   /** Internal event methods **/
   ngOnInit(): void {
-      this.loadHivVerificationEmail();
     this.providerValue$.subscribe(data=>{
       this.userId = this.hivVerificationForm.controls["userId"].value;
       this.providerOption = data;
       if(data=== ProviderOption.HealthCareProvider){
+        if(this.emailSentDate || this.isSendEmailFailed){
+          this.healthCareProviderExists = true;
+          this.providerEmail = this.isEmailFieldVisible ? this.providerEmail : this.providerEmail[0];
+        }
+        if(this.healthCareProviderExists){
+          this.loadHivVerificationEmail();
         if(this.hivVerificationForm.controls["providerEmailAddress"].value !== null && this.hivVerificationForm.controls["providerEmailAddress"].value !== ''){
           this.isSendRequest = true;
           this.sentDate = new Date(this.intl.formatDate(this.hivVerificationForm.controls["verificationStatusDate"].value, this.dateFormat))
@@ -132,6 +151,7 @@ export class HivVerificationRequestComponent implements OnInit{
           this.isEmailFieldVisible = false;
         }
       }
+    }
       else{
         this.isEmailFieldVisible = false;
         this.isSendRequest = false;
@@ -177,17 +197,22 @@ export class HivVerificationRequestComponent implements OnInit{
       }
     });
   }
+
+  
   onSendRequestClicked() {
     if (this.providerOption ===ProviderOption.HealthCareProvider) {
       this.hivVerificationForm.markAllAsTouched();
-      this.hivVerificationForm.controls["providerEmailAddress"].setValidators([Validators.required, Validators.email])
+      this.hivVerificationForm.controls["providerEmailAddress"].setValidators([Validators.required, Validators.email]);
       this.hivVerificationForm.controls["providerEmailAddress"].updateValueAndValidity();
     }
-    if(this.hivVerificationForm.controls["providerEmailAddress"].valid){
-
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const isValid = emailPattern.test(this.hivVerificationForm.controls["providerEmailAddress"].value);
+    if(isValid){
       this.isSendRequest = true;
       this.populateModel();
       this.save();
+    }else{
+      this.hivVerificationForm.controls['providerEmailAddress'].setErrors({ 'invalidEmail': true });
     }
   }
 
@@ -197,6 +222,7 @@ export class HivVerificationRequestComponent implements OnInit{
     this.isResendRequest = true;
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
   }
+  
   handleFileSelected(e: SelectEvent) {
     this.hivVerificationAttachment = undefined;
     this.hivVerificationAttachment = e.files[0].rawFile;
@@ -282,6 +308,7 @@ export class HivVerificationRequestComponent implements OnInit{
       .subscribe({
         next: (data: any) => {
           if (data) {
+            this.loadPendingEsignRequestInfo();
             this.saveHivVerificationData();
             this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'HIV Verification sent successfully!');
             this.cdr.detectChanges();
@@ -346,13 +373,15 @@ export class HivVerificationRequestComponent implements OnInit{
   }
 
   saveHivVerificationData(){
-  this.verificationFacade.save( this.clientHivVerification).subscribe({
+    this.verificationFacade.showLoader();
+    this.verificationFacade.save( this.clientHivVerification).subscribe({
     next:(data)=>{
-      this.isResendRequest = false;
-      this.verificationFacade.hivVerificationSaveSubject.next(true);
-      this.sentDate =  this.clientHivVerification.verificationStatusDate;
-      this.verificationFacade.hideLoader();
-      this.cdr.detectChanges();
+      if(data){
+        this.isResendRequest = false;
+        this.verificationFacade.hivVerificationSaveSubject.next(true);
+        this.verificationFacade.hideLoader();
+        this.cdr.detectChanges();
+      }
     },
     error:(error)=>{
       if (error) {
@@ -364,5 +393,48 @@ export class HivVerificationRequestComponent implements OnInit{
       }
     }
   });
+}
+
+loadPendingEsignRequestInfo(){
+  this.verificationFacade.showLoader();
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
+    .subscribe({
+      next: (data: any) =>{
+        if (data?.esignRequestId != null) {
+          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.InProgress){
+            this.isSendEmailClicked=true;
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.providerEmail = data?.to.map((x: any)=>x);
+            this.getLoggedInUserProfile();
+          }
+          else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
+            this.isSendEmailClicked=true;
+            this.providerEmail = data?.to.map((x: any)=>x);
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.getLoggedInUserProfile();
+          }else if(data?.esignRequestStatusCode == EsignStatusCode.Failed){
+            this.providerEmail = data?.to.map((x: any)=>x);
+            this.isSendEmailFailed = true;
+            this.errorMessage = data?.errorMessage;
+          }
+            this.cdr.detectChanges();
+          }
+          this.verificationFacade.hideLoader();
+    },
+    error: (err: any) => {
+      this.verificationFacade.hideLoader();
+      this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+    },
+  });
+}
+
+getLoggedInUserProfile(){
+  this.verificationFacade.showLoader();
+  this.userDataService.getProfile$.subscribe((profile:any)=>{
+    if(profile?.length>0){
+     this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
+    }
+  })
+  this.verificationFacade.hideLoader();
 }
 }
