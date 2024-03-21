@@ -200,17 +200,19 @@ export class VendorRefundInsurancePremiumListComponent
   dataStateChange(stateData: any): void {    
 
     this.tempStateData = stateData;  
-     this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+    this.state = this.tempStateData;
+    console.log(this.selectedInsuranceClaims)
+    console.log(stateData?.filter?.filters)
+    if(this.selectedInsuranceClaims.length >0){
+      if( stateData?.filter?.filters.length >0){
+        this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+        return ;
+      }
+   
+    }
+    this.loadRefundClaimsListGrid()
   }
 
-  // updating the pagination infor based on dropdown selection
-  pageSelectionChange(data: any) {
-     
-    this.state.take = data.value;
-    this.state.skip = 0;
-    this.defaultpageSize = this.state.take ?? this.defaultpageSize;
-    this.loadRefundClaimsListGrid();
-  }
 
   private loadRefundClaimsListGrid(): void {
      

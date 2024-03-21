@@ -166,7 +166,7 @@
           <label class="mr-1" for="RefundInsPremiumRowsPerPage">Rows Per Page</label>
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
             [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RefundInsPremiumRowsPerPage"
-            [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+            [(value)]="state.take" ></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
