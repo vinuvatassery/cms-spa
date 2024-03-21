@@ -40,7 +40,7 @@ cardsRequestChart: any;
         },
         valueAxis: {
           title: {
-              text: 'Numbers of Cards Requests' // Add title for y-axis
+              text: 'Number of Cards Requests' // Add title for y-axis
           }
       },
         tooltip: {
