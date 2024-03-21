@@ -182,6 +182,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Claim',
+      disabled: ![PaymentStatusCode.Denied].includes(dataItem.paymentStatusCode),
       icon: 'edit',
       click: (data: any): void => {
         if (!this.isAddEditClaimMoreClose) {
