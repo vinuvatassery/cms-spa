@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, Output, ChangeDetectionStrategy, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, ChangeDetectionStrategy, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
 import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CaseFacade, FinancialVendorFacade } from '@cms/case-management/domain';
@@ -72,7 +72,8 @@ export class ReminderDetailComponent implements OnInit {
     private configurationProvider: ConfigurationProvider,
     private financialVendorFacade : FinancialVendorFacade,
     public intl: IntlService,
-    public formBuilder: FormBuilder) { }
+    public formBuilder: FormBuilder,
+    public cdr : ChangeDetectorRef) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -179,7 +180,9 @@ export class ReminderDetailComponent implements OnInit {
         tin : res.tin,
         providerId: res.entityId
       })
- 
+      this.clientReminderForm.controls['vendorId'].updateValueAndValidity();
+      this.cdr.detectChanges();
+     console.log(this.clientReminderForm)
     }else{
       this.showVendorSearch = false;
       this.showClientSearch = true;
@@ -271,14 +274,7 @@ export class ReminderDetailComponent implements OnInit {
   }
   }
 
-  public save() {
-    this.isSubmitted = true;
-    this.afterCrudOperationAddSubscription();
-    this.setLinkToAndEntity();
-   this.clientReminderForm.markAllAsTouched();
-   if(this.isEdit){
-   if (this.clientReminderForm.valid) {
-   
+  updateReminder(){
     if(this.clientReminderForm.controls['time'].value){
       this.todoFacade.updateAlertItem(this.prepareRepeatPayload()) 
      }else{
@@ -287,10 +283,30 @@ export class ReminderDetailComponent implements OnInit {
         alertId : this.alertId,
       }) 
      }  
-    }
-  }   
-    else{
-      this.todoFacade.createAlertItem(this.prepareCommonPayload())
+  }
+  
+  addReminder(){
+      if(this.clientReminderForm.controls['time'].value){
+        this.todoFacade.createAlertItem(this.prepareRepeatPayload()) 
+       }else{
+        this.todoFacade.createAlertItem(this.prepareCommonPayload()) 
+       }  
+      }
+  
+
+  public save() {
+    this.isSubmitted = true;
+    this.afterCrudOperationAddSubscription();
+    this.setLinkToAndEntity();
+    this.timeValidation();
+    this.dueDateValidation();
+   this.clientReminderForm.markAllAsTouched();
+   if (this.clientReminderForm.valid) {
+   if(this.isEdit){
+    this.updateReminder()
+   }else{
+     this.addReminder()
+   }
     }
   }
 
@@ -319,6 +335,7 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   providerSelectionChange(event : any){  
+    console.log(event)
     this.remainderFor.emit(event.providerName)
   }
   clientSelectionChange(event:any){
@@ -375,8 +392,6 @@ export class ReminderDetailComponent implements OnInit {
 
   timeValidation(){
     const time = this.clientReminderForm.controls['time'].value;
-    console.log(time)
-    console.log(new Date())
     if ( this.clientReminderForm.controls['time'].value && time < new Date()) {
       this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
     
