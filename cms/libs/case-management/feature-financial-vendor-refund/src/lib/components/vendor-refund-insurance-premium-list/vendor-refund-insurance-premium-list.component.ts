@@ -70,6 +70,9 @@ export class VendorRefundInsurancePremiumListComponent
   paymentStatusCode = null;
   sortColumn = 'clientId';
   sortDir = 'Ascending';
+  prevFilter ="";
+  prevSkip:number|any=0;
+  prevTake =0;
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -198,19 +201,32 @@ export class VendorRefundInsurancePremiumListComponent
   }
 
   dataStateChange(stateData: any): void {    
-
+    
     this.tempStateData = stateData;  
     this.state = this.tempStateData;
     console.log(this.selectedInsuranceClaims)
     console.log(stateData?.filter?.filters)
+     if(this.state.skip != this.prevSkip){
+      this.prevSkip= this.state?.skip
+      this.loadRefundClaimsListGrid()
+      return;
+     }
+
     if(this.selectedInsuranceClaims.length >0){
-      if( stateData?.filter?.filters.length >0){
+      if( stateData?.filter?.filters.length >0 ){
+      if(!this.prevFilter){
+        this.prevFilter = stateData?.filter?.filters;
         this.openResetDialog(this.filterResetConfirmationDialogTemplate);
-        return ;
+
+        }else{
+          if(JSON.stringify(this.prevFilter) !== JSON.stringify(stateData?.filter?.filters)){
+            this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+            return;
+          }
+        }
+        //this.openResetDialog(this.filterResetConfirmationDialogTemplate);
       }
-   
     }
-    this.loadRefundClaimsListGrid()
   }
 
 
@@ -309,6 +325,7 @@ export class VendorRefundInsurancePremiumListComponent
 
   resetFilterClicked(action: any) {
     if (action) {
+
       this.filterResetDialog.close();
       this.loadRefundClaimsListGrid();
 
