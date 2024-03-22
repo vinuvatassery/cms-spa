@@ -65,6 +65,9 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
       {
         x.refundAmountError = "Refund amount is required"
         return
+      }else if(x.refundAmountError)
+      {
+        return
       }
       else
       {

@@ -285,7 +285,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: 10,
       sort: this.sort,
     };
 

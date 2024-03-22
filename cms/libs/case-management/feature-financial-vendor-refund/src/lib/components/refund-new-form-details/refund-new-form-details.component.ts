@@ -1,7 +1,7 @@
 import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, ServiceTypeCode } from '@cms/case-management/domain';
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, PaymentMethodCode, ServiceTypeCode } from '@cms/case-management/domain';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, Subscription, debounceTime, takeUntil } from 'rxjs';
@@ -1026,8 +1026,9 @@ addNewRefundRx() {
         clientId  : this.clientId,
         clientCaseEligibilityId   : this.clientCaseEligibilityId ?? selectedpharmacyClaims[0].clientCaseEligibilityId,
         refundType : this.selectedRefundType,
-        isSpotsPaymentCheck: this.isSpotsPayment,
-        pharmacyRefundedItems:selectedpharmacyClaimsDto
+        isSpotsPaymentCheck: selectedpharmacyClaims[0].paymentMethodCode == PaymentMethodCode.SPOTS ?  true : false,
+        pharmacyRefundedItems:selectedpharmacyClaimsDto,
+        vendorAddressId: this.vendorAddressId
       };
       if(this.isEdit == false){
         this.financialVendorRefundFacade.showLoader();
