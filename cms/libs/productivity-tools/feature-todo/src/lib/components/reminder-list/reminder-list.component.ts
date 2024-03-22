@@ -74,7 +74,7 @@ export class ReminderListComponent implements  OnInit{
   clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
-  searchProviderSubject = this.financialVendorFacade.searchProviderSubject
+  searchProviderSubject = this.financialVendorFacade.searchProviderSubject;
   notificationList$ = this.notificationFacade.notificationList$;
   getTodo$ = this.Todofacade.getTodo$
   todoItemList: any[] = [];
