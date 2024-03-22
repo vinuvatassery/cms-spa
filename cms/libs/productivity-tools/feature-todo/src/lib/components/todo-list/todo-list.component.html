@@ -94,7 +94,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="alertDueDate" title="" [width]="40" class="text-center" [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-        <kendo-dropdownbutton [data]="moreactions" *ngIf="dataItem.customAlertFlag && dataItem.customAlertFlag=='Y'" 
+        <kendo-dropdownbutton [data]="moreactions" *ngIf="(dataItem.alertFrequencyCode == alertFrequencyTypes.Never)&&(dataItem.customAlertFlag && dataItem.customAlertFlag=='Y')" 
           title="More option" aria-label="more actions"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }"
