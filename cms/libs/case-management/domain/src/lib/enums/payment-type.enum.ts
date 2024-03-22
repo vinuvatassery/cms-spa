@@ -1,7 +1,7 @@
 export enum PaymentType {
     Individual = "INDIVIDUAL",
-    Coinsurance = "COINSURANCE",
-    Copayment = "COPAYMENT",
+    Coinsurance = "CO_INSURANCE",
+    Copayment = "CO_PAYMENT",
     Deductible = "DEDUCTIBLE",
-    FullPay= "FULL PAY",
+    FullPay= "FULL_PAY",
 }
