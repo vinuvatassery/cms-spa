@@ -26,11 +26,13 @@ export class ReminderDetailComponent implements OnInit {
   caseSearched$ = this.caseFacade.caseSearched$;
   search$ = this.todoFacade.search$;
   tareaRemindermaxLength = 200;
+  selectedMedicalProvider!:any
   tareaReminderCharachtersCount!: number;
   tareaReminderCounter!: string;
   tareaReminderDescription = '';
   isShowEntityTypeCode = false;
   dateValidator = false;
+
   @Input() entityTypeCodeSubject$! : Observable<any>
   @Input() providerSearchResult$!:Observable<any>
   @Input() medicalProviderSearchLoaderVisibility$! : Observable<any>
@@ -141,7 +143,7 @@ export class ReminderDetailComponent implements OnInit {
       addToOutlookCalender: [false],
       deleteFromOutlookCalender :[false]
     });
-   
+   if(this.isDelete || this.isEdit){
    this.getTodo$.subscribe((res:any) =>{
     if(res){
       const repeatTime = res.repeatTime?.split(':')
@@ -169,6 +171,10 @@ export class ReminderDetailComponent implements OnInit {
       this.showVendorSearch = true;
       this.showClientSearch = false;
       this.placeholderText = this.vendorPlaceHolderText;
+      this.selectedMedicalProvider =   { providerName : res.providerName,
+        tin : res.tin,
+        providerId: res.entityId
+      };
       this.searchProviderSubject.next([
         { providerName : res.providerName,
           tin : res.tin,
@@ -203,7 +209,7 @@ export class ReminderDetailComponent implements OnInit {
      }
    }
   })
-  
+}
   }
  
   onCloseReminderClicked() 
@@ -380,10 +386,9 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   dueDateValidation(){
-    const dueDate = this.clientReminderForm.controls['dueDate'].value;
-    console.log(dueDate)
-    console.log(new Date())
-    if ( this.clientReminderForm.controls['dueDate'].value && dueDate < new Date()) {
+    const dueDate = new Date(this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat));
+    const todayDate =  new Date(this.intl.formatDate(new Date(), this.dateFormat));
+    if ( this.clientReminderForm.controls['dueDate'].value && dueDate < todayDate) {
       this.clientReminderForm.controls['dueDate'].setErrors({ 'incorrect': true });
     
       return;
@@ -391,8 +396,10 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   timeValidation(){
-    const time = this.clientReminderForm.controls['time'].value;
-    if ( this.clientReminderForm.controls['time'].value && time < new Date()) {
+    const timeInMinutes = new Date(this.clientReminderForm.controls['time'].value).getMinutes();
+    const timeInHours = new Date(this.clientReminderForm.controls['time'].value).getHours();
+    
+    if ( this.clientReminderForm.controls['time'].value && timeInMinutes < new Date().getMinutes() && timeInHours <  new Date().getMinutes() ) {
       this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
     
       return;
