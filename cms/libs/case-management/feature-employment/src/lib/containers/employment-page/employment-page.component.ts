@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, CompletionStatusFacade, EmploymentFacade, NavigationType, CompletionChecklist } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, EmploymentFacade, NavigationType, CompletionChecklist, WorkflowTypeCode } from '@cms/case-management/domain';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -37,6 +37,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   hasAdditionalEmployersFlag!: string;
   hasAdditionalEmployersFlagRequired: boolean = false;
   currentDate = new Date();
+  workflowTypeCode:any;
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private checkBoxSubscription!: Subscription;
@@ -88,6 +89,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   // loading case details like session id, eligibility id , clientid and clientcaseid
   loadCase() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId);
     this.workflowFacade.sessionDataSubject$
       .pipe(first((sessionData) => sessionData.sessionData != null))
@@ -313,9 +315,17 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.save().subscribe((response: any) => {
         if (response) {
           this.loaderService.hide();
-          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
+          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
+          else
+          {
+            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
         }
       })
     });

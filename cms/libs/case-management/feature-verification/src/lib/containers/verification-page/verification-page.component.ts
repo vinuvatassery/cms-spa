@@ -4,13 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription, first } from 'rxjs';
 /** Internal Libraries **/
-import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, EsignStatusCode } from '@cms/case-management/domain';
+import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, EsignStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { UserDataService } from '@cms/system-config/domain';
-
-
 
 @Component({
   selector: 'case-management-verification-page',
@@ -43,6 +41,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   errorMessage!: string;
   isSendEmailFailed: boolean = false;
   isSendEmailClicked: boolean = false;
+  workflowTypeCode:any;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
@@ -130,16 +129,32 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
+            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+            else
+            {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
           }
         })
       }
       else {
-        this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-          queryParamsHandling: "preserve"
-        });
+        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
+        else
+        {
+          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
       }
     });
   }
@@ -147,6 +162,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   private loadSessionData() {
     this.verificationFacade.showLoader();
     this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {

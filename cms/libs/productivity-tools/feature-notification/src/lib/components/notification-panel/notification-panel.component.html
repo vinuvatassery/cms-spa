@@ -57,7 +57,7 @@
           </div>
           <div class="card-list_details">
             <p [innerHTML]="sanitizeHtml(message.alertDesc)"></p>
-            <p class="text-muted">{{message?.alertDueDate | date:'MM-dd-YYYY'}}</p>
+            <p class="text-muted">{{message?.alertDueDate | date:'MM/dd/YYYY'}}</p>
           </div>
           <kendo-dropdownbutton
             [data]="dataTwo"
@@ -123,6 +123,7 @@
   (onGetTodoItem)="onGetTodoItemData($event)"
   [getTodo$]="getTodo$"
   [isFromNotificationPanel]="true"
+  [searchProviderSubject]="searchProviderSubject"
    [entityTypeCodeSubject$]="entityTypeCodeSubject$"
     (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"
     [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"

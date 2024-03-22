@@ -237,6 +237,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.saveDraftEsignLetterRequest(this.selectedTemplate);
     }else{
       this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
+      this.isShowSaveForLaterPopupClicked = false;
     }
   }
 
@@ -409,7 +410,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
               }
               if (this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter) {
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter) {
                 this.templateDrpDisable = true;
                 this.cancelDisplay = false;                
               }
@@ -448,7 +450,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
               this.isOpenLetterTemplate = true;
               this.loadMailingAddress();
               if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter)
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter)
                 && this.triggerFrom === WorkflowTypeCode.NewCase) {
                 this.getDraftedTemplate();
               }
@@ -568,10 +572,12 @@ loadMailingAddress() {
         return "Rejection Notice Letter.zip";
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
         return "Approval Notice Letter.zip";
+      case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
+        return "Disenrollment Notice Letter.zip";
       default:
         throw new Error('Invalid type code');
     }
-}
+  }
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;

@@ -90,6 +90,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   totalIncome:any = 0;
   //address$ = this.contactFacade.address$;
   paperlessFlag:String | null= null;
+  workflowTypeCode:any;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -180,6 +181,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadQueryParams()
   {
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.isCerForm = this.route.snapshot.queryParams['wtc'] === WorkflowTypeCode.CaseEligibilityReview;
   }
   public onBlur() {
@@ -474,16 +476,32 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
+            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
               this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
                 queryParamsHandling: "preserve"
               });
+            }
+            else
+            {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
           }
         })
       }
       else {
-        this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-          queryParamsHandling: "preserve"          
-        });
+        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
+        else
+        {
+          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
       }
       this.cdr.detectChanges();
     });

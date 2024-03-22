@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input,Output, EventEmitter, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
-import {CaseFacade,CaseStatusCode, CommunicationEventTypeCode, ContactFacade, WorkflowFacade} from '@cms/case-management/domain';
+import { ActivatedRoute, Router } from '@angular/router';
+import {CaseFacade,CaseStatusCode, CommunicationEventTypeCode, ContactFacade, WorkflowFacade, WorkflowTypeCode} from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { first } from 'rxjs';
@@ -26,13 +26,19 @@ export class RejectApplicationComponent implements OnInit {
   informationalText: any
   templateHeader: any
   emailSubject: any
+  workflowTypeCode:any;
   constructor(private readonly caseFacade: CaseFacade,private readonly loaderService: LoaderService,
-    private readonly contactFacade: ContactFacade, private readonly router: Router,private readonly workflowFacade: WorkflowFacade) {}
+    private readonly contactFacade: ContactFacade, private readonly router: Router,private readonly workflowFacade: WorkflowFacade,
+    private readonly route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.contactFacade.loadClientPaperLessStatus(this.clientId,this.clientCaseEligibilityId);
+    this.loadSessionData();
   }
 
+  private loadSessionData() {   
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
+  }
   updateCaseStatus()
   {
     this.loaderService.show();
@@ -45,9 +51,17 @@ export class RejectApplicationComponent implements OnInit {
           'Case status updated successfully.'
         );
         this.isCloseDenyModal.emit(true);
-        this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-          queryParamsHandling: "preserve"
-        });
+        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
+        else
+        {
+          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
         this.loaderService.hide();
       },
       error: (err) => {
