@@ -26,7 +26,7 @@
       <div class="card-list_details">
         <p> {{message.alertDesc}}</p>
         <a (click)="onNavigationClicked(message)">{{message.entityName}}</a>
-        <p class="text-muted">{{message?.alertDueDate | date:'MM-dd-YYYY'}}</p>
+        <p class="text-muted">{{message?.alertDueDate | date:'MM/dd/YYYY'}}</p>
       </div>
   </ul>
 </section>
