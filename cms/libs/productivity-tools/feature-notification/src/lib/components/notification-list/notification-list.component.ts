@@ -40,19 +40,24 @@ export class NotificationListComponent {
           return dateA - dateB}) : []; // Sorting by alertDueDate in ascending order;
         this.cdr.detectChanges();
       });
-      this.searchTerm.valueChanges.subscribe((value) =>{
-        let tempDate= new Date(value);
-        if (!isNaN(tempDate.getTime()))
+      this.searchTerm.valueChanges.subscribe((value) => {
+        const containsOnlyNumbers = /^\d+$/.test(value);
+        const tempDate = new Date(value);
+        const isDateFormat = !isNaN(tempDate.getTime());
+        if (containsOnlyNumbers) 
+        { 
+            this.searchTermTextEvent.emit(value);
+        } 
+        else if (isDateFormat) 
         {
-          let formattedDate =  this.intl.formatDate(tempDate,this.dateFormat);
-          this.searchTermTextEvent.emit(formattedDate);
+            const formattedDate = this.intl.formatDate(tempDate, this.dateFormat);
+            this.searchTermTextEvent.emit(formattedDate);
         }
-        else
-        {
-          this.searchTermTextEvent.emit(value?.trim());
+       else 
+       {
+            this.searchTermTextEvent.emit(value?.trim());
         }
-            
-      })
+    });
     }
     constructor(
       private cdr : ChangeDetectorRef,

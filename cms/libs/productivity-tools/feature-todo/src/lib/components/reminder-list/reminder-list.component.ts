@@ -127,18 +127,23 @@ export class ReminderListComponent implements  OnInit{
   ) {}
   ngOnInit(): void {
   this.InitializeData()
-  this.searchTerm.valueChanges.subscribe((value) =>{
-    let tempDate= new Date(value);
-    if (!isNaN(tempDate.getTime()))
-    {
-      let formattedDate =  this.intl.formatDate(tempDate,this.dateFormat);
+  this.searchTerm.valueChanges.subscribe((value) => {
+  const containsOnlyNumbers = /^\d+$/.test(value);
+  const tempDate = new Date(value);
+  const isDateFormat = !isNaN(tempDate.getTime());
+  if (containsOnlyNumbers) 
+  { 
+      this.onListenSearchTerm(value);
+  } 
+  else if (isDateFormat) 
+  {
+      const formattedDate = this.intl.formatDate(tempDate, this.dateFormat);
       this.onListenSearchTerm(formattedDate);
-    }
-    else
-    {
+  }
+ else 
+ {
       this.onListenSearchTerm(value?.trim());
-    }
-})
+  }});
   }
 
   InitializeData(){
