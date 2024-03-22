@@ -678,8 +678,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.ccEmail = data;
             this.selectedCCEmail = data?.map((item: any)=> item.email);
+            this.ccEmail = this.selectedCCEmail;
             this.ref.detectChanges();
           }
           this.loaderService.hide();
