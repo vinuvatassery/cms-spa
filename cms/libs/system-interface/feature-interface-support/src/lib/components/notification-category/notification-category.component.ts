@@ -320,11 +320,10 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       .subscribe((response: any) => {
         if (response ?? false) {
           this.loadNotificationCategoryListGrid();
+          this.onCloseNotificationCategoryDetailPopupClicked();
         }
 
       })
-
-    this.onCloseNotificationCategoryDetailPopupClicked();
   }
 
   editNotificationCategory(data: any): void {
@@ -334,11 +333,11 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       .subscribe((response: any) => {
         if (response ?? false) {
           this.loadNotificationCategoryListGrid()
+          this.onCloseNotificationCategoryDetailPopupClicked();
           this.cdr.detectChanges();
         }
 
       })
-    this.onCloseNotificationCategoryDetailPopupClicked();
   }
 
   handleNotificationCategoryDeactive(isDeactivate: any) {

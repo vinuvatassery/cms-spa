@@ -39,7 +39,8 @@ import {
   CompletionChecklist,
   NavigationType,
   PronounCode,
-  TransGenderCode
+  TransGenderCode,
+  WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 
@@ -80,6 +81,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   isCerForm = false;
   prevClientCaseEligibilityId!: string;
   nform!: FormGroup;
+  workflowTypeCode:any;
   /** Constructor **/
   constructor(
     private workFlowFacade: WorkflowFacade,
@@ -151,6 +153,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.applicantInfo = new ApplicantInfo();
     this.applicantInfo.clientPronounList = [];
     this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.workFlowFacade.loadWorkFlowSessionData(this.sessionId);
     this.loadSessionSubscription = this.workFlowFacade.sessionDataSubject$
       .pipe(first((sessionData) => sessionData.sessionData != null))
@@ -1584,14 +1587,28 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.checkValidations()) {
             this.saveAndUpdate().subscribe((response: any) => {
               if (response) {
-                this.loaderService.hide();          
-                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
+                this.loaderService.hide();
+                if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+                  this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                    queryParamsHandling: "preserve"
+                  });
+                }
+                else
+                {
+                  this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                    queryParamsHandling: "preserve"
+                  });
+                }
               }
             });
-          } else {
-             this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+          } else if(this.workflowTypeCode === WorkflowTypeCode.NewCase){
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
+          else
+          {
+            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
               queryParamsHandling: "preserve"
             });
           }

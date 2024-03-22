@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators,AbstractControl, ValidationErrors, V
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CompletionChecklist, SmokingCessation} from '@cms/case-management/domain';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CompletionChecklist, SmokingCessation, WorkflowTypeCode} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -45,7 +45,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   isDisabled = true;
   prevClientCaseEligibilityId! : any;
   isCerForm = false;
-
+  workflowTypeCode:any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
     private workflowFacade: WorkflowFacade,
@@ -86,6 +86,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   loadSessionData() {
 
     this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
@@ -267,16 +268,32 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
+            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+            else
+            {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
           }
         })
       }
       else {
-        this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-          queryParamsHandling: "preserve"
-        });
+        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
+        else
+        {
+          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
       }
     });
   }

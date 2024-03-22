@@ -37,7 +37,7 @@ export class SubEventDetailComponent implements OnInit {
             next: (response) => {
                 const eventListString = response
                 .sort((a, b) => a.eventDesc.localeCompare(b.eventDesc))
-                .map(event => `- ${event?.eventDesc ?? ''}`)
+                .map(event => `${event?.eventDesc ?? ''}`)
                 .join('\n');
               this.subEventListsSubject.next(response);
               this.isLoading = false;

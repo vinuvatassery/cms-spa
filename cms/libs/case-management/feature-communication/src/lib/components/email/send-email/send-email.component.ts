@@ -225,7 +225,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             }
             if(this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
               ||this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
-              || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail){
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail){
               this.templateDrpDisable = true;
               this.cancelDisplay = false;
             }
@@ -466,9 +467,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.selectedCCEmail = this.ccEmail;
               this.defaultCCEmail = data.cc;
               this.showToEmailLoader = false;
-              if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
-                || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
-                || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail)
+              if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
+                || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
+                || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail
+                || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail)
                 && this.triggerFrom === WorkflowTypeCode.NewCase) {
                 this.getDraftedTemplate();
               }

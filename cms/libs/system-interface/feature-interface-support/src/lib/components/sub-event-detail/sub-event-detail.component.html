@@ -1,7 +1,7 @@
 <div *ngIf="(subEventLists$ | async) as subEventLists; else loading">
     <ul *ngIf="subEventLists?.length; else noRecords">
       <li *ngFor="let event of subEventLists">
-        - {{ event?.eventDesc }}
+       {{ event?.eventDesc }}
       </li>
     </ul>
     <ng-template #noRecords>
