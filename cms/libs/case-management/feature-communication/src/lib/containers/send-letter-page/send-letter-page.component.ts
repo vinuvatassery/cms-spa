@@ -56,7 +56,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
   isNewNotificationClicked: boolean = false;
   isContinueDraftClicked:boolean = false;
   notificationDraftId:string = ''
-  paperlessFlag = 'N'
+  paperlessFlag: any = '';
   emailAddress$ = this.contactFacade.emailAddress$; 
   toEmail: Array<string> = [];
   informationalText :any = null;
@@ -210,57 +210,72 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
       });
   }
 
-  setValues()
-  { 
+  setValues() {
     if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes && this.workflowFacade.caseStatus === CaseStatusCode.incomplete) {
-      if (this.paperlessFlag === StatusFlag.Yes) {            
+      if (this.paperlessFlag === StatusFlag.Yes) {
         this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
         this.emailCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeEmail;
         this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''SEND EMAIL'' once the email is complete."
         this.templateHeader = 'Send Pending Email';
-        this.emailSubject ='';
+        this.emailSubject = '';
       }
       else {
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
         this.letterCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeLetter;
         this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the letter is complete."
         this.templateHeader = 'Send Pending Letter';
-        this.emailSubject ='';          
+        this.emailSubject = '';
       }
-     
+
     }
     else if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes && this.workflowFacade.caseStatus === CaseStatusCode.reject) {
-        if (this.paperlessFlag === StatusFlag.Yes) {
-          this.templateLoadType = CommunicationEventTypeCode.RejectionNoticeEmail;
-          this.emailCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeEmail;              
-          this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
-          this.templateHeader = 'Send Denial Email';
-          this.emailSubject ="CAREAssist Denial Notice";
-        }
-        else{
-          this.templateLoadType = CommunicationEventTypeCode.RejectionNoticeLetter;
-          this.letterCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeLetter;
-          this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
-          this.templateHeader = 'Send Denial Letter';
-          this.emailSubject ='';
-        }
+      if (this.paperlessFlag === StatusFlag.Yes) {
+        this.templateLoadType = CommunicationEventTypeCode.RejectionNoticeEmail;
+        this.emailCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeEmail;
+        this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
+        this.templateHeader = 'Send Denial Email';
+        this.emailSubject = "CAREAssist Denial Notice";
       }
-      else if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes && this.workflowFacade.caseStatus === CaseStatusCode.accept) {
-        if (this.paperlessFlag === StatusFlag.Yes) {
-          this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
-          this.emailCommunicationTypeCode = CommunicationEventTypeCode.ApprovalNoticeEmail;              
-          this.informationalText = ""
-          this.templateHeader = 'Send Approval Email';
-          this.emailSubject ="CareAssist Approval Notice";
-        }
-        else{
-          this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
-          this.letterCommunicationTypeCode = CommunicationEventTypeCode.ApprovalNoticeLetter;
-          this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the letter is complete."
-          this.templateHeader = 'Send Approval Letter';
-          this.emailSubject ='';
-        }
+      else {
+        this.templateLoadType = CommunicationEventTypeCode.RejectionNoticeLetter;
+        this.letterCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeLetter;
+        this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
+        this.templateHeader = 'Send Denial Letter';
+        this.emailSubject = '';
       }
+    }
+    else if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes && this.workflowFacade.caseStatus === CaseStatusCode.accept) {
+      if (this.paperlessFlag === StatusFlag.Yes) {
+        this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        this.emailCommunicationTypeCode = CommunicationEventTypeCode.ApprovalNoticeEmail;
+        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
+        this.templateHeader = 'Send Approval Email';
+        this.emailSubject = "CareAssist Approval Notice";
+      }
+      else {
+        this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        this.letterCommunicationTypeCode = CommunicationEventTypeCode.ApprovalNoticeLetter;
+        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
+        this.templateHeader = 'Send Approval Letter';
+        this.emailSubject = '';
+      }
+    }
+    else if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes && this.workflowFacade.caseStatus === CaseStatusCode.disenrolled) {
+      if (this.paperlessFlag === StatusFlag.Yes) {
+        this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
+        this.emailCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
+        this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
+        this.templateHeader = 'Send Disenrollment Email';
+        this.emailSubject = "CAREAssist Disenrollment Notice";
+      }
+      else {
+        this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
+        this.letterCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
+        this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
+        this.templateHeader = 'Send Disenrollment Letter';
+        this.emailSubject = '';
+      }
+    }
   }
   
   loadMailingAddress() {
