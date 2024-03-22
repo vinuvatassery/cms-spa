@@ -70,5 +70,10 @@ export class TodoDataService {
   loadAlertsBanner(payload:any) {
     return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/banner/${payload}`);
   }
+
+  dismissAlert(alertId:any){
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/dismiss/${alertId}`,null);
+
+  }
 }
 

@@ -5,14 +5,16 @@ import { ProductivityToolsFeatureFabsMenuRoutingModule } from './productivity-to
 import { ReminderNotificationSnackBarComponent } from './containers/reminder-notification-snack-bar/reminder-notification-snack-bar.component';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { ProductivityToolsDomainModule } from '@cms/productivity-tools/domain';
-
+import { ProductivityToolsFeatureTodoModule } from '@cms/productivity-tools/feature-todo';
 @NgModule({
   imports: [
     CommonModule,
     ProductivityToolsDomainModule,
     SharedUiTpaModule,
     SharedUiCommonModule,
-    ProductivityToolsFeatureFabsMenuRoutingModule
+    ProductivityToolsFeatureFabsMenuRoutingModule,
+    ProductivityToolsFeatureTodoModule,
+    
   ],
   declarations: [
     ReminderNotificationSnackBarComponent

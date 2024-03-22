@@ -44,7 +44,7 @@
 <div style="width: 330px;" [ngClass]="todoItemCrossedDueDate(alertItem.alertDueDate)? 'info-banners red-banner hover-link mt-1' : 'info-banners canyon-banner hover-link mt-1'">
  <div class="flex-col info-banners p-0">
    <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
-   <span class="text-bold">{{alertItem.alertName}} </span>
+   <span class="text-bold">{{alertItem.alertTypeCode == 'REMINDER'? alertItem.alertDesc : alertItem.alertName}} </span>
    <span class="text-normal">{{DueOn(alertItem)}}</span>
  </div>
 
