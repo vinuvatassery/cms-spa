@@ -8,6 +8,7 @@ import { FinancialPremiumsFacade } from '@cms/case-management/domain';
 })
 export class FinancialPremiumsSendReportComponent {
   @Output() sendReportCloseClickedEvent = new EventEmitter();
+  @Output() sendReportClickedEvent = new EventEmitter();
 
   @Input() selectedSendReportList!: any;
   @Input() sendReportCount: number = 0;
@@ -22,7 +23,6 @@ export class FinancialPremiumsSendReportComponent {
   }
 
   onSendReportClicked(){
-    this.financialPremiumsFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Report sent! An event has been logged.')
-    this.closeSendReportClicked();
+    this.sendReportClickedEvent.emit(true);
   }
 }

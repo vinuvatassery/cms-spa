@@ -14,7 +14,6 @@ import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
-
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsFacade {
 
@@ -143,6 +142,9 @@ export class FinancialPremiumsFacade {
   private premiumActionResponseSubject = new Subject<any>();
   premiumActionResponse$ =this.premiumActionResponseSubject.asObservable();
 
+  private insuranceReportsResponseSubject = new Subject<any>();
+  insuranceReportsResponse$ =this.insuranceReportsResponseSubject.asObservable();
+
   private existingCoverageDatesSubject = new Subject<any>();
   existingCoverageDates$ =this.existingCoverageDatesSubject.asObservable();
 
@@ -270,7 +272,7 @@ export class FinancialPremiumsFacade {
         },
       });
     }
-  } 
+  }
 
   loadBatchName(batchId: string){
     this.financialPremiumsDataService.loadBatchName(batchId).subscribe({
@@ -454,7 +456,7 @@ loadPremiumProcessListDistinctUserIdsAndProfilePhoto(data: any[]) {
       },
     });
   }
-} 
+}
 
 batchPremium(batchPremiums: BatchPremium, claimsType: string) {
   this.showLoader();
@@ -718,4 +720,26 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
         },
       });
     }
+
+    SendInsuranceVendorReports(vendorPayment: any){
+      this.showLoader();
+      this.financialPremiumsDataService.sendInsuranceVendorReports(vendorPayment)
+      .subscribe({
+        next: (response: any) => {
+          this.insuranceReportsResponseSubject.next(true);
+          this.hideLoader();
+          if(response.status==1){
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+          }else{
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, response?.message);
+          }
+
+        },
+        error: (err: any) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
 }
