@@ -46,8 +46,10 @@ export class NotificationFacade {
   }
 
   loadNotificationsAndReminders(): void {
+    this.loaderService.show();
     this.notificationDataService.loadNotificationsAndReminders().subscribe({
       next: (todoGridResponse: any) => {
+        this.loaderService.hide();
         this.notificationAndReminderListSubject.next(todoGridResponse);
       },
       error: (err) => {
@@ -61,14 +63,17 @@ export class NotificationFacade {
     return this.notificationDataService.viewNotifictaions(notifictaions);
   }
   loadNotificatioBySearchText(text : string): void {
+    this.loaderService.show()
     this.alertSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.notificationDataService.searchNotifications(text).subscribe({
         next: (caseBySearchTextResponse) => {
+          this.loaderService.hide();
           this.notificationAndReminderListSubject.next(caseBySearchTextResponse);
           this.alertSearchLoaderVisibilitySubject.next(false);
         },
         error: (err) => {
+          this.loaderService.hide();
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       });

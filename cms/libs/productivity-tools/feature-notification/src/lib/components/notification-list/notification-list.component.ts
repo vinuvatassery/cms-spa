@@ -6,7 +6,9 @@ import { FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms
 import { NotificationFacade } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { GridDataResult } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
 import { BehaviorSubject, Subject } from 'rxjs';
 @Component({
   selector: 'productivity-tools-notification-list',
@@ -27,6 +29,7 @@ export class NotificationListComponent {
   @Output() searchTermTextEvent = new EventEmitter<any>();
   searchTerm = new FormControl();
   tabCode= 'MEDICAL_CLINIC'
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
     /** Lifecycle hooks **/
     ngOnInit(): void {
       this.loadNotificationsAndReminders();
@@ -38,12 +41,24 @@ export class NotificationListComponent {
         this.cdr.detectChanges();
       });
       this.searchTerm.valueChanges.subscribe((value) =>{
+        let tempDate= new Date(value);
+        if (!isNaN(tempDate.getTime()))
+        {
+          let formattedDate =  this.intl.formatDate(tempDate,this.dateFormat);
+          this.searchTermTextEvent.emit(formattedDate);
+        }
+        else
+        {
           this.searchTermTextEvent.emit(value?.trim());
+        }
+            
       })
     }
     constructor(
       private cdr : ChangeDetectorRef,
       private readonly router: Router,
+      private readonly configurationProvider: ConfigurationProvider,
+      public readonly  intl: IntlService,
       private notificationFacade: NotificationFacade
     ) {}
   // data: Array<any> = [{}];

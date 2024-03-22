@@ -16,7 +16,7 @@ import { SnackBar, ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** Facades **/ 
-import { LoaderService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { AlertTypeCode, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -26,6 +26,7 @@ import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { FormControl } from '@angular/forms';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
@@ -46,6 +47,7 @@ export class ReminderListComponent implements  OnInit{
    @Input()todoGrid$ : any;
   @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   sort: SortDescriptor[] = [{
     field: this.sortColumn,
     dir: 'asc',
@@ -116,6 +118,8 @@ export class ReminderListComponent implements  OnInit{
   private readonly router: Router,
     private cdr : ChangeDetectorRef,
     private lovFacade : LovFacade,
+    private readonly configurationProvider: ConfigurationProvider,
+    public readonly  intl: IntlService,
     private financialVendorFacade : FinancialVendorFacade,
     public notificationFacade: NotificationFacade, 
     private financialRefundFacade : FinancialVendorRefundFacade
@@ -123,7 +127,16 @@ export class ReminderListComponent implements  OnInit{
   ngOnInit(): void {
   this.InitializeData()
   this.searchTerm.valueChanges.subscribe((value) =>{
-    this.onListenSearchTerm(value?.trim());
+    let tempDate= new Date(value);
+    if (!isNaN(tempDate.getTime()))
+    {
+      let formattedDate =  this.intl.formatDate(tempDate,this.dateFormat);
+      this.onListenSearchTerm(formattedDate);
+    }
+    else
+    {
+      this.onListenSearchTerm(value?.trim());
+    }
 })
   }
 
