@@ -14,7 +14,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserDataService } from '@cms/system-config/domain';
@@ -127,7 +127,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly ref: ChangeDetectorRef,
     private readonly workflowFacade: WorkflowFacade,
     private readonly userDataService: UserDataService,
-    private readonly esignFacade: EsignFacade) { }
+    private readonly esignFacade: EsignFacade,
     private dialogService: DialogService,
     private readonly vendorContactFacade: VendorContactsFacade) { }
 
@@ -139,6 +139,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.updateOpenSendEmailFlag();
     this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
       this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+      if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.templateLoadType) {
           if (this.isContinueDraftClicked) {
             this.loadClientAndVendorDraftEmailTemplates();
           } else if (this.isNewNotificationClicked) {
@@ -150,8 +151,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         else {
           this.loadDraftEsignRequest();
         }
-      }
-    });
+      });
     this.vendorContactFacade.loadMailCodes(this.entityId);
   }
 
@@ -506,7 +506,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.ref.detectChanges();
             }
             this.loaderService.hide();
-          },
+          }},
           error: (err: any) => {
             this.loaderService.hide();
             this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

@@ -158,14 +158,14 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   handleDdlMailCodesChange(mailCode: any) {
     this.mailingAddress = mailCode;
+  }
+
   private loadTemplate(){
     this.loadTemplate$.subscribe((response:any)=>{
       if(response){
         this.loadDropdownLetterTemplates();
       }
     });
-  }
-
   }
 
   private loadClientMailingAddress() {
