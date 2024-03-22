@@ -83,6 +83,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   communicationLetterTypeCode!: string;
   communicationEmailTypeCode!: string;
   emailSubject!: string;
+  templateLoadType!:any;
+  informationalText :any = null;
+  templateHeader : string='';
 
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
@@ -107,7 +110,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   /** Lifecycle hooks **/
   ngOnInit(): void
   {
-    this.getNotificationTypeCode();
     this.loadUserContactInfo(this.clientId, this.clientCaseEligibilityId);
     this.buildForm();
     this.addApplicationSignatureDetailsSubscription();
@@ -117,9 +119,31 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   }
 
   getNotificationTypeCode() {
-    this.communicationLetterTypeCode = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationLetter :  CommunicationEventTypeCode.ApplicationAuthorizationLetter;
-    this.communicationEmailTypeCode = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail :  CommunicationEventTypeCode.ApplicationAuthorizationEmail;
-    this.emailSubject = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail: CommunicationEventTypeCode.ApplicationAuthorizationEmail;
+    if(this.isCerForm){
+      if(this.paperlessFlag == StatusFlag.Yes){
+        this.templateLoadType = this.communicationEmailTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+        this.templateHeader = 'CER Authorization Email';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
+      }else{
+        this.templateLoadType = this.communicationLetterTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
+        this.templateHeader = 'CER Authorization Letter';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
+      }
+    }else{
+      if(this.paperlessFlag == StatusFlag.Yes){
+        this.templateLoadType = this.communicationEmailTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
+        this.templateHeader = 'Application Authorization Email';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
+      }else{
+        this.templateLoadType = this.communicationLetterTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetter;
+        this.templateHeader = 'Application Authorization Letter';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -140,6 +164,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
                 if(data?.email?.email !== null){
                   this.toEmail.push(data?.email?.email.trim());
                 }
+                this.getNotificationTypeCode();
               }
               this.loadPendingEsignRequestInfo();
             }
@@ -159,7 +184,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       if(profile?.length>0){
        this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
       }
-    })
+    });
     this.loaderService.hide();
   }
 

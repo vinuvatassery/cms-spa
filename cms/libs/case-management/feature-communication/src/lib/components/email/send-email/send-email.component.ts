@@ -129,7 +129,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadTemplate();   
+    this.loadTemplate();
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
@@ -160,7 +160,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           } else {
             this.loadEmailTemplates();
           }
-         
+
           this.loaderService.hide();
         },
         error: (err: any) => {
@@ -384,7 +384,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.selectedTemplate.documentTemplateId = this.selectedTemplate.notificationTemplateId
     }
     let templateTypeCode = this.getApiTemplateTypeCode();
-    const emailData = this.getEmailPayload(selectedTemplate,templateTypeCode);    
+    const emailData = this.getEmailPayload(selectedTemplate,templateTypeCode);
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     this.communicationFacade.initiateSendEmailRequest(emailFormData)
       .subscribe({
@@ -516,7 +516,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationEmailTypeCode).subscribe((response:any)=>{
       if(response.length>0){
         this.selectedTemplateContent =response[0].requestBody;
-        this.updatedTemplateContent = response[0].requestBody; 
+        this.updatedTemplateContent = response[0].requestBody;
         this.ref.detectChanges();
       }
     });

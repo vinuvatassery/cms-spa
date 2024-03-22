@@ -200,6 +200,9 @@
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   [communicationLetterTypeCode] = "communicationLetterTypeCode"
   (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"
+  [templateLoadType]="templateLoadType"
+  [informationalText]="informationalText"
+  [templateHeader]="templateHeader"
   kendoTooltip
 >
 </case-management-send-letter>
@@ -217,6 +220,9 @@
   (isSendEmailSuccess)="updateSendEmailSuccessStatus($event)"
   [emailSubject] = "emailSubject"
   [communicationEmailTypeCode] = "communicationEmailTypeCode"
+  [templateLoadType]="templateLoadType"
+  [informationalText]="informationalText"
+  [templateHeader]="templateHeader"
   kendoTooltip
 ></case-management-send-email>
 </ng-template>
