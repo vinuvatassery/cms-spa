@@ -38,9 +38,10 @@ export class SystemInterfaceDashboardFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'startDate'
-  public sortType = 'asc'
+  public sortType = 'desc'
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
+    dir: 'desc'
   }];
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
     if (type === SnackBarNotificationType.ERROR) {

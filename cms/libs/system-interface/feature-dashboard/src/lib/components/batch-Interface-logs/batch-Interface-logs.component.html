@@ -38,7 +38,7 @@
               (change)="handleShowHistoricalClick()" 
             />
             <label class="k-checkbox-label" for="StatusshowHistorical"
-              >Show activities within the last {{textToDisplay}} </label
+              >Show Activity for the last  {{textToDisplay}} </label
             >
           </span>
         </div>
@@ -74,18 +74,18 @@
             </kendo-dropdownlist>
        </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="startDate" title="Process Start Date" [width]="180">
+        <kendo-grid-column field="startDate" title="Process Start Date" [width]="180" [sortable]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a'}}
-        </ng-template>
-       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <common-grid-cell-date-range-filter
-          [field]="'startDate'"
-          [filter]="filter"
-          [filterService]="filterService"
-        >
-        </common-grid-cell-date-range-filter>
-  </ng-template>
+            {{ dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a' }}
+          </ng-template>
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <common-grid-cell-date-range-filter
+              [field]="'startDate'"
+              [filter]="filter"
+              [filterService]="filterService"
+            >
+            </common-grid-cell-date-range-filter>
+          </ng-template>
         </kendo-grid-column>
 
 <kendo-grid-column field="endDate" title="File Receive Date" [width]="180">

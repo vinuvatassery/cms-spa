@@ -28,7 +28,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // UI Variables
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+defaultPageSize=20;
   // Input Variables
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -159,7 +159,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
-      this.state?.take ?? 0,
+      this.state.take=this.defaultPageSize,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
@@ -175,7 +175,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.sortType = "desc"
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take:this.defaultPageSize,
       sort: this.sort,
     };
 
@@ -218,7 +218,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     }];
     this.state = {
       skip: this.skipCount$ ?? 0,
-      take: this.pageSizes[0]?.value,
+      take: this.defaultPageSize,
       sort: sort,
       filter: this.filterData,
     };

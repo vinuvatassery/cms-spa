@@ -26,7 +26,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Input() pageSizes: any;
-  @Input() sortValue: any;
+  @Input()sortValue : any;
   @Input() sortType: any;
   @Input() sort: any;
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
@@ -47,7 +47,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   selectedStatus = '';
   showDateSearchWarning = false;
   columnChangeDesc = 'Default Columns';
-
+  defaultPageSize=20;
   dateColumns = ['startDate', 'endDate'];
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   /** Public properties **/
@@ -76,7 +76,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   ]
   lovsList!: any[];
   gridColumns: any = {
-    startDate: 'Start Date',
+    startDate: 'Process Start Date',
     endDate: 'End Date',
     interfaceTypeDesc: 'Interface',
     processTypeDesc: 'Process',
@@ -86,7 +86,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   searchColumnList: { columnName: string; columnDesc: string }[] = [
     {
       columnName: 'startDate',
-      columnDesc: 'Start Date',
+      columnDesc: 'Process Start Date',
     },
     {
       columnName: 'endDate',
@@ -101,9 +101,9 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
 
   selectedSearchColumn: string = '';
   private searchSubject = new Subject<string>();
-  sortColumn = 'StartDate';
-  sortColumnDesc = 'StartDate';
-  sortDir = 'Ascending';
+  sortColumn = 'Process Start Date';
+  sortColumnDesc = 'Process Start Date';
+  sortDir = 'Descending';
   interfaceExceptionFilter = '';
   interfaceProcessBatchFilter = '';
   statusFilter = '';
@@ -125,7 +125,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.sortType = 'desc';
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.defaultPageSize,
       sort: this.sort,
     };
     this.loadActivityListGrid();
@@ -135,17 +135,19 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(): void {
-
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
     this.initializePaging();
   }
   private initializePaging() {
     const sort: SortDescriptor[] = [{
-      field: 'creationTime',
+      field: 'startDate',
       dir: 'desc'
     }];
     this.state = {
       skip: this.skipCount$ ?? 0,
-      take: this.pageSizes[0]?.value,
+      take: this.defaultPageSize,
       sort: sort,
       filter: this.filterData,
     };
@@ -189,7 +191,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   loadActivityListGrid() {
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
-      this.state?.take ?? 0,
+      this.state?.take ?? this.defaultPageSize,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
@@ -197,7 +199,6 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
 
   public dataStateChange(stateData: any): void {
-
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -294,12 +295,13 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   defaultGridState() {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take:this.defaultPageSize,
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
     };
   }
   resetGrid() {
+    debugger
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
@@ -346,9 +348,9 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
   }
 
-  textToDisplay = "Last 2 Weeks";
+  textToDisplay = "2 Weeks";
   getHistoryByInterfaceType(data: string) {
-    this.textToDisplay = (data === "RAMSELL") ? "Last 2 Weeks" : "Last 12 Months";
+    this.textToDisplay = (data === "RAMSELL") ? "2 weeks" : "12 months";
   }
 
 }
