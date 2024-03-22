@@ -20,6 +20,7 @@ import { Observable, Subscription } from 'rxjs';
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UserDataService } from '@cms/system-config/domain';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-send-letter',
@@ -56,7 +57,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly workflowFacade: WorkflowFacade,
     private readonly contactFacade: ContactFacade,
     private readonly vendorContactFacade: VendorContactsFacade,
-    private readonly userDataService: UserDataService,) { }
+    private readonly userDataService: UserDataService,
+    private readonly router: Router) { }
 
   /** Public properties **/
 
@@ -317,9 +319,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             downloadLink.click();
             this.onCloseNewLetterClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
           }
           this.loaderService.hide();
+          this.navigateConditionally();
         },
         error: (err: any) => {
           this.loaderService.hide();
@@ -327,6 +329,19 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         },
       });
+  }
+
+  navigateConditionally(){
+    switch (this.communicationLetterTypeCode) {
+      case CommunicationEventTypeCode.PendingNoticeLetter:
+        this.router.navigate([`/case-management/cases/`]);
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeLetter:
+      case CommunicationEventTypeCode.ApprovalNoticeLetter:
+      case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
+        this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
+        break;
+    }
   }
 
   getApiTemplateTypeCode(): string {
