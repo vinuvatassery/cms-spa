@@ -8,7 +8,7 @@ import { BatchInterfaceLogsPageComponent } from './containers/batch-interface-lo
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'dashboard',
     component: SystemInterfaceDashboardPageComponent,
   },
   {
@@ -19,6 +19,7 @@ const routes: Routes = [
     path: 'batch-interface-logs',
     component: BatchInterfaceLogsPageComponent,
   },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 ];
 
 @NgModule({

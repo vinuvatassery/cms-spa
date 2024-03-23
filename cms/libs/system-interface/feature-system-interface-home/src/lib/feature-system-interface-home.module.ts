@@ -4,14 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'dashboard',
+    path: '',
     loadChildren: () =>
       import('@cms/system-interface/feature-dashboard').then(
         (m) => m.SystemInterfaceFeatureDashboardModule
-      ),
-      data: {
-        title: 'System Interface Dashboard',
-      },
+      )     
   },
   {
     path: 'support',
@@ -20,11 +17,7 @@ const routes: Routes = [
         (m) => m.SystemInterfaceFeatureInterfaceSupportModule
       ),
   },
-  {
-    path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full',
-  },
+
 ];
 @NgModule({
   imports: [CommonModule, RouterModule.forChild(routes)],
