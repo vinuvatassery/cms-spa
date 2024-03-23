@@ -40,7 +40,6 @@ defaultPageSize=20;
   @Input() activityEventLogList$: any;
   @Input() lovsList$: any;
   @Input() skipCount$: any;
-  @Input() supportGroupProfilePhoto$: any;
   // Flags
   displayAll = true;
   columnsReordered = false;

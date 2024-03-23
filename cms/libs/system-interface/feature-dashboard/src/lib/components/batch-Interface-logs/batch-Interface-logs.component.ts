@@ -135,9 +135,6 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(): void {
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
     this.initializePaging();
   }
   private initializePaging() {
@@ -300,8 +297,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
       filter: { logic: 'and', filters: [] },
     };
   }
-  resetGrid() {
-    debugger
+  resetGrid() {    
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
