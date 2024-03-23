@@ -1,0 +1,55 @@
+
+<div class="flex-space-bw today_glanse_title">  <h5>TODAY AT A GLANCE</h5>  <h3 class="mr-1">You are assigned {{todayGlance ?? 0}} clients</h3></div>
+  <div class="flex-row dashboard-page-wrapper">
+    <section class="flex-col">
+      <div class="dash-top-cards-wrapper">
+        <div class="dash-info-card yellow_card" (click)="todoitemsNavigate()">
+          <p>TO DO ITEMS</p>
+          <div class="justify-content-between">
+            <span class="material-icons">playlist_add_check</span>
+            <h3>0</h3>
+          </div>
+        </div>
+        <div class="dash-info-card red_card" (click)="pendingApprovalsNavigate()">
+          <p>PENDING APPROVALS</p>
+          <div class="justify-content-between">
+            <span class="material-icons">
+              assignment_turned_in
+            </span>
+            <h3>0</h3>
+          </div>
+        </div>
+        <div class="dash-info-card green_card" (click)="directMessagesNavigate()">
+          <p>DIRECT MESSAGES</p>
+          <div class="justify-content-between">
+            <span class="material-icons">
+              send
+            </span>
+            <h3>0</h3>
+          </div>
+        </div>
+        <div class="dash-info-card blue_card" (click)="remindersNavigate()">
+          <p>REMINDERS TODAY</p>
+          <div class="justify-content-between">
+            <span class="material-icons">
+              alarm
+            </span>
+
+            <h3>0</h3>
+          </div>
+        </div>
+        <div class="dash-info-card purple_card" (click)="notificationsNavigate()">
+          <p>NEW NOTIFICATIONS</p>
+          <div class="justify-content-between">
+            <span class="material-icons">
+              notifications_active
+            </span>
+            <h3>0</h3>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+</div>

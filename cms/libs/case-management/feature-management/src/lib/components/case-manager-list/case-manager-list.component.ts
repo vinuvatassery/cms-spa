@@ -6,18 +6,21 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { first, Subject } from 'rxjs';
+import { first, Subject, Subscription } from 'rxjs';
 import { CaseFacade } from '@cms/case-management/domain';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-case-manager-list',
   templateUrl: './case-manager-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseManagerListComponent implements OnChanges {
+export class CaseManagerListComponent implements OnChanges, OnDestroy {
   /******* output events */
   @Output() loadCasemanagersGridEvent = new EventEmitter<any>();
   @Output() deleteCasemanagersGridEvent = new EventEmitter<string>();
@@ -43,13 +46,13 @@ export class CaseManagerListComponent implements OnChanges {
   @Input() updateDatesCaseManager$: any;
   @Input() isCerForm: any;
   @Input() showCaseListRequired$: any;
+  @Input() caseManagersProfilePhoto$!: any;
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
   selectedCustomCaseManagerName!: string;
   editformVisibleSubject = new Subject<boolean>();
   editformVisible$ = this.editformVisibleSubject.asObservable();
-
   existingCaseManagerData!: any;
   isOpenedCaseManagerSearch = false;
   editButtonEmitted = false;
@@ -74,6 +77,8 @@ export class CaseManagerListComponent implements OnChanges {
   assignmentStartDate!: Date;
   assignmentEndDate: any;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  caseManagerProfileSubject = new Subject();
+  caseManagerProfileSubscription = new Subscription();
   public newAppActions = [
     {
       buttonType: 'btn-h-danger',
@@ -188,13 +193,18 @@ export class CaseManagerListComponent implements OnChanges {
       },
     },
   ];
-constructor(private caseFacade: CaseFacade){}
+constructor(private caseFacade: CaseFacade,){}
   /** Lifecycle hooks **/
   ngOnInit(): void {
     if (!this.isCerForm) {
       this.newAppActions = this.newAppActions.filter(x=>x.buttonName != 'unAssignMngr');
     }
+  } 
+
+  ngOnDestroy(): void {
+    this.caseManagerProfileSubscription?.unsubscribe();
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,

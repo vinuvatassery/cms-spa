@@ -89,7 +89,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
     this.dataExportParameters = event
     const batchId = this.activatedRoute.snapshot.queryParams['bid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
-    this.financialPremiumsFacade.loadBatchLogListGrid(this.premiumType, batchId, params);
+    this.financialPremiumsFacade.loadBatchLogListGrid(event.isReconciled, this.premiumType, batchId, params);
   }
 
 
@@ -101,7 +101,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
 
   exportPremiumBatchesGridData(){
 
-    const data = this.dataExportParameters
+    const data = this.dataExportParameters;
     if(data){
     const  filter = JSON.stringify(data?.filter);
 
@@ -116,7 +116,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
       const batchId = this.activatedRoute.snapshot.queryParams['bid'];
       const fileName = (this.premiumType[0].toUpperCase() + this.premiumType.substr(1).toLowerCase())  +' Premium Batch Payments'
 
-      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`premium/${this.premiumType}/payment-batches/${batchId}/payments` , fileName)
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`premium/${this.premiumType}/payment-batches/${batchId}/payments?isReconciled=${data.isReconciled}` , fileName)
     }
   }
 

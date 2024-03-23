@@ -22,7 +22,7 @@ export class FinancialPremiumsSendReportComponent {
   }
 
   onSendReportClicked(){
-    this.financialPremiumsFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Report sent!')
+    this.financialPremiumsFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Report sent! An event has been logged.')
     this.closeSendReportClicked();
   }
 }

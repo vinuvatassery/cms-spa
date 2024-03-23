@@ -61,8 +61,15 @@
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="eligibilityStatus" title="{{title$ | async}}" [width]="160">
-        <ng-template kendoGridFilterMenuTemplate
+    <kendo-grid-column field="eligibilityStatus" title="{{title$ | async}}" [width]="160" [style]="{ 'padding':'0px 0px' }">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span style="display: block; padding: 14px 12px;"
+          [style.backgroundColor]="getGridCellColor(dataItem.eligibilityStatus)"
+        >
+          {{ dataItem.eligibilityStatus }}
+        </span>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate
           let-column="column"
           let-filter="filter"
           let-filterService="filterService">
@@ -142,8 +149,8 @@
           [filterService]="filterService">
         </common-grid-cell-date-range-filter>
       </ng-template>
-    </kendo-grid-column>    
-    <kendo-grid-column field="caseManagerName" title="Case Manager" [width]="150"> 
+    </kendo-grid-column>
+    <kendo-grid-column field="caseManagerName" title="Case Manager" [width]="150">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.caseManagerName" kendoButton look="flat" class="card-link-button" *ngIf="dataItem?.assignedCmId"
           kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
@@ -176,7 +183,7 @@
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
       </ng-template> </kendo-grid-column>
-    <kendo-grid-column field="caseWorkerName" title="Case Worker" [width]="150"> 
+    <kendo-grid-column field="caseWorkerName" title="Case Worker" [width]="150">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button  [attr.aria-label]="dataItem.caseWorkerName" kendoButton look="flat" class="card-link-button" *ngIf="dataItem?.assignedCwId"
           kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
@@ -204,14 +211,13 @@
     <kendo-grid-column title="Options" [sortable]="false" [width]="70" class="text-center"
       [sticky]="true" [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="gridActions"  title="More Options"
-          *ngIf="dataItem.eligibilityEndDate > todayDate && dataItem.eligibilityStatus !== 'DISENROLLED' && dataItem.clientCaseEligibilityCerId !== null && dataItem.clientCaseEligibilityId"
+        <kendo-dropdownbutton [data]="gridActions"  title="More Options" [disabled]="!(dataItem.eligibilityEndDate > todayDate && dataItem.eligibilityStatus !== 'DISENROLLED' && dataItem.clientCaseEligibilityCerId !== null && dataItem.clientCaseEligibilityId)"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
           <span class="material-icons" aria-label="More option"> more_vert    </span>
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
-              aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="false">
+              aria-hidden="false" (click)="buttondataItem.click(dataItem)" >
               {{ buttondataItem.text }}
             </button>
           </ng-template>

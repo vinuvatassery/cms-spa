@@ -1,11 +1,11 @@
 <div class="flex-row mt-2">
   <div class="flex-col flex-space-bw align-items-center">
     <h5 class="title-md mb-0 text-capital">Email Addresses</h5>
-    <div>  
-    <span class="app-checkboxwidtext-wrapper"> 
+    <div>
+    <span class="app-checkboxwidtext-wrapper">
       <input type="checkbox"
-      kendoCheckBox aria-labelledby="historyCheckBoxEmail"      
-      (click)="onhistorychkBoxChanged()" 
+      kendoCheckBox aria-labelledby="historyCheckBoxEmail"
+      (click)="onhistorychkBoxChanged()"
       id="historyCheckBoxEmail"
       name="historyCheckBoxEmail"
       [checked]="historychkBoxChecked"
@@ -19,14 +19,14 @@
   <div class="flex-col mt-1">
     <div class="app-c-table">
       <kendo-grid [data]="gridEmailData$ | async"
-      [pageSize]="state.take" 
-      [pageable]="true" 
-      [sortable]="true" 
+      [pageSize]="state.take"
+      [pageable]="true"
+      [sortable]="true"
       [skip]="state.skip"
       [groupable]="false"
       [reorderable]="true"
       [loading]="loader"
-      [resizable]="true" 
+      [resizable]="true"
       [columnMenu]="{ filter: true }"
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)">
@@ -55,8 +55,8 @@
           [width]="180"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.detailMsgFlag === 'Y' ? 'Yes' : 'No'}}  
-         </ng-template>   
+          {{dataItem.detailMsgFlag === 'Y' ? 'Yes' : 'No'}}
+         </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
           field="paperlessFlag"
@@ -64,41 +64,27 @@
           [width]="150"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.paperlessFlag === 'Y' ? 'Yes' : 'No'}} 
-      </ng-template>   
+        {{dataItem.paperlessFlag === 'Y' ? 'Yes' : 'No'}}
+      </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
           field="effectiveDate"
           title="Effective Date"
-          [width]="140" 
+          [width]="140"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
-         </ng-template>   
+          {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
+         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center">
+        <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" [filterable]="false" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem >
-            <button *ngIf="dataItem?.creatorId"
-              kendoButton
-              [primary]="true"
-              class="avatar-sm-btn c-default"
-              kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered"
-              showOn="hover"
-              [attr.aria-label]="dataItem.creatorId"
-            >
-            <common-user-photo-icon  [userId]="dataItem?.creatorId"></common-user-photo-icon>
-            </button>
-            <kendo-popover
-              #onUserProfileDetailsHovered
-              width="330"
-              position="left"
-            >
-              <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card  [userId]="dataItem?.creatorId"     
-                [reassign]=false  ></common-user-profile-card>
-              </ng-template>
-            </kendo-popover>
+            <common-user-photo-icon
+            [userId]="dataItem.creatorId"
+            [userFirstName]="dataItem.userFirstName"
+            [userLastName]="dataItem.userLastName"
+            [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+            [linkType]="'profileIcon'"
+            [userPhotos$]="clientEmailProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
@@ -110,7 +96,7 @@
         >
         <ng-template kendoGridCellTemplate let-clientEmail let-clientEmailId="field">
           <kendo-dropdownbutton
-            [data]="gridOption" 
+            [data]="gridOption"
             title="More option"
             class="TableActionPopup app-dropdown-action more_action_wid"
             buttonClass="k-icon-button"
@@ -120,46 +106,46 @@
           <span class="material-icons" aria-label="More option"> more_vert    </span>
             <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientEmailId="clientEmailId">
               <button kendoButton  [hidden]="(clientEmail.isDeleted === true && (dataItem.buttonName==='deactivate' || dataItem.buttonName ==='preferred'))
-              ||(clientEmail.preferredFlag === 'Y' && dataItem.buttonName ==='preferred')" 
-              look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
+              ||(clientEmail.preferredFlag === 'Y' && dataItem.buttonName ==='preferred')"
+              look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false"
               (click)="dataItem.click(clientEmail?.clientEmailId)" [disabled]="(isReadOnly$ | async) ? true : false">
                 <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                 <label>   {{ dataItem.text }} </label>
-            </button> 
+            </button>
             </ng-template>
           </kendo-dropdownbutton>
         </ng-template>
-      
+
         </kendo-grid-column>
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
-        <div class="grid-custom-paginationtemplates d-flex"> 
-          <div class="d-flex align-items-center"> 
-            <label class="mr-1" for="EmailRowsPerPage">Rows Per Page</label> 
+        <div class="grid-custom-paginationtemplates d-flex">
+          <div class="d-flex align-items-center">
+            <label class="mr-1" for="EmailRowsPerPage">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
                   [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="EmailRowsPerPage" [(value)]="state.take"
                   (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages> 
-  
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+
           </div>
-          <div class="d-flex"> 
-            <kendo-pager-input></kendo-pager-input> 
-            <kendo-pager-prev-buttons></kendo-pager-prev-buttons> 
+          <div class="d-flex">
+            <kendo-pager-input></kendo-pager-input>
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
             <kendo-pager-next-buttons></kendo-pager-next-buttons>
-          </div> 
+          </div>
         </div>
-      </ng-template> 
-            <!-- grid Loader Template -->  
+      </ng-template>
+            <!-- grid Loader Template -->
             <ng-template kendoGridLoadingTemplate>
               <common-grid-loader-component></common-grid-loader-component>
              </ng-template>
-             <!-- grid No data Template -->  
+             <!-- grid No data Template -->
              <ng-template kendoGridNoRecordsTemplate>
                <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
                </div>
                <p>There is no data to display.</p>
-             </ng-template> 
+             </ng-template>
       </kendo-grid>
     </div>
   </div>
@@ -187,11 +173,11 @@
     isEditEmailAddress ? 'Edit Email Address' : 'Add Email Address'
   }}</kendo-dialog-titlebar>
   <case-management-email-detail
-    [isEditValue]="isEditEmailAddress"   
+    [isEditValue]="isEditEmailAddress"
     [selectedEmailData]="selectedEmailData"
     [paperlessFlag]="paperlessFlag"
-    (addClientEmailEvent)="addClientEmailHandle($event)"     
-    (deactivateClientEmailEvent)="onDeactivateEmailAddressClicked($event)"  
+    (addClientEmailEvent)="addClientEmailHandle($event)"
+    (deactivateClientEmailEvent)="onDeactivateEmailAddressClicked($event)"
     (formEmailCloseEvent)="onEmailAddressDetailClosed()"
   ></case-management-email-detail>
 </kendo-dialog>
@@ -212,11 +198,11 @@
 <!-- Delete Modal -->
 <kendo-dialog
   *ngIf="isOpenedDeleteConfirm"
- 
+
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
 <kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Delete Email Address? </kendo-dialog-titlebar>
- <case-management-delete-email-confirmation 
+ <case-management-delete-email-confirmation
  (deleteConfimEvent)="handleAcceptEmailRemove($event)"
  >
  </case-management-delete-email-confirmation>

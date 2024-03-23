@@ -38,6 +38,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   currentDate = new Date();
   emailSentDate?:any = null;
   invalidSignatureDate$ = new BehaviorSubject(false);
+  invalidApplicantSignatureDate$ = new BehaviorSubject(false);
   showCopyOfSignedApplicationRequiredValidation = new BehaviorSubject(false);
   showCopyOfSignedApplicationSizeValidation = new BehaviorSubject(false);
   documentTypeCode!: string;
@@ -75,6 +76,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   isSendEmailFailed: boolean = false;
   signedClietDocumentId!: string;
   paperlessFlag: any;
+  minApplicantSignedDate: any = '01/01/1900';
   communicationLetterTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
   communicationEmailTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
   emailSubject: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
@@ -253,6 +255,10 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     const isLargeFile = (this.uploadedCopyOfSignedApplication?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
     if (applicationSignedDate?.value > new Date()) {
       this.invalidSignatureDate$.next(true);
+      isValid = false;
+    }
+    if (applicationSignedDate?.value < new Date(this.minApplicantSignedDate)) {
+      this.invalidApplicantSignatureDate$.next(true);
       isValid = false;
     }
     if (!this.uploadedCopyOfSignedApplication && !this.copyOfSignedApplication) {
@@ -439,6 +445,11 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
     }
     else if (signedDate > todayDate) {
+      this.currentDate = signedDate;
+      this.cerDateValidator = true;
+      this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
+      this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+    }else if (signedDate < new Date(this.minApplicantSignedDate)) {
       this.currentDate = signedDate;
       this.cerDateValidator = true;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);

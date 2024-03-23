@@ -103,7 +103,7 @@
                         Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}}  </span>
                         <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
                         <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
-                        <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+                        <span class="sort-items">{{columnChangeDesc}}</span>
                         <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
                         <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
                               <a>Set to Default</a>
@@ -132,10 +132,9 @@
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
                         [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true" filterable="menu" [filter]="state.filter"
-                        [data]="reconcilePaymentGridPagedResult" 
-                        (cellClick)="onRowSelection(grid, $event)">
-                       
-                        <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
+                        [data]="reconcilePaymentGridPagedResult"   (columnReorder)="onColumnReorder($event)"  (columnVisibilityChange)="columnChange($event)"
+                        (cellClick)="onRowSelection(grid, $event)" field="add">    
+                        <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments" [sticky]="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <button [attr.aria-label]="dataItem?.batchName" kendoButton look="flat" 
                                                 class="card-link-button"  (click)="onBatchNumberClick(dataItem)">
@@ -153,7 +152,7 @@
                                         </ng-template>
                         </kendo-grid-column>
 
-                        <kendo-grid-column field="vendorName" [title]="providerTitle" [width]="160">
+                        <kendo-grid-column field="vendorName" title="Insurance Vendor" [width]="160" [sticky]="loadType !=  loadTypeAllPayments">
                         <ng-template kendoGridCellTemplate let-dataItem>
                               <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"
                                           class="card-link-button" (click)="onProviderNameClick(dataItem.paymentRequestId)" >

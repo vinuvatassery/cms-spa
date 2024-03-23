@@ -10,6 +10,7 @@ import { BillingAddressDataService } from '../../infrastructure/financial-manage
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { map, catchError } from 'rxjs/operators';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class BillingAddressFacade {
@@ -26,6 +27,7 @@ export class BillingAddressFacade {
 
   billingAddressData$ = this.billingAddressDataSubject.asObservable();
   searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
+  paymentAddressProfilePhotoSubject = new Subject();
 
 
   /** Private properties **/
@@ -58,7 +60,8 @@ export class BillingAddressFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade
   ) { }
 
   /** Public methods **/
@@ -84,10 +87,6 @@ export class BillingAddressFacade {
         this.hideLoader();
       },
     });
-
-
-
-
   }
 
   loadPaymentsAddressListGrid(paymentAddressListParams:any) {
@@ -106,6 +105,7 @@ export class BillingAddressFacade {
               total: dataResponse['totalCount'],
             };
             this.billingAddressDataSubject.next(gridView);
+            this.loadVendorAddressDistinctUserIdsAndProfilePhoto(dataResponse['items']);
           }
           this.searchLoaderVisibilitySubject.next(false);
           this.hideLoader();
@@ -117,6 +117,20 @@ export class BillingAddressFacade {
         },
       });
   }
+
+  loadVendorAddressDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.paymentAddressProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   deactivateAddress(addressId: string): Observable<any> {
     this.loaderService.show();

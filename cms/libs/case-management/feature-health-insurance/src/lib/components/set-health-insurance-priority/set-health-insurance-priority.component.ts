@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, Output, ChangeDetectionStrategy, Input, ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, ChangeDetectionStrategy, Input, ChangeDetectorRef, EventEmitter, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -11,12 +11,13 @@ import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { HealthInsurancePolicyFacade, PriorityCode } from '@cms/case-management/domain';
 import { SnackBarNotificationType, NotificationSnackbarService, NotificationSource } from '@cms/shared/util-core';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-set-health-insurance-priority',
   templateUrl: './set-health-insurance-priority.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetHealthInsurancePriorityComponent implements OnInit {
+export class SetHealthInsurancePriorityComponent implements OnInit,OnDestroy {
 
   @Input() insuranceStatus:any;
   @Input() caseEligibilityId: any;
@@ -32,6 +33,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   form: FormGroup;
   formSubmitted!: boolean;
+  policySubscription!: Subscription;
   /** Constructor **/
   constructor(
     private readonly lovFacade: LovFacade,
@@ -48,37 +50,18 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   ngOnInit(): void {
     this.loadDdlMedicalHealthPlanPriority();
     this.insurancePolicyFacade.showLoader();
-    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId, this.insuranceStatus)
-      .subscribe({
-        next: (data: any) => {
-          if (data.length === 0) {
-            this.isCloseInsuranceModal.emit();
-          }
-          else {
-            this.gridList = data;
-            this.gridList.forEach((row: any) => {
-              this.form.addControl(
-                row.clientInsurancePolicyId,
-                new FormControl(row.priorityCode, Validators.required)
-              );
-            });
-          }
-          this.insurancePolicyFacade.hideLoader();
-          this.cdr.detectChanges();
-        },
-        error: (error: any) => {
-          this.insurancePolicyFacade.hideLoader();
-          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
-        }
-      });
+    this.getPolicySubscription();
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId,this.insuranceStatus);
   }
 
+  ngOnDestroy(): void {
+    this.policySubscription.unsubscribe();
+  }
   /** Private methods **/
   private loadDdlMedicalHealthPlanPriority() {
     this.lovFacade.getCaseCodeLovs();
   }
   public onChangePriority(value: any, insurance: any): void {
-    
     if (value === PriorityCode.Primary) {
       if (insurance.canPayForMedicationFlag === "N") {
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'Primary insurance always consists of insurance that pays for medications.', NotificationSource.UI)
@@ -97,6 +80,25 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
+  }
+
+  getPolicySubscription() {
+    this.policySubscription = this.insurancePolicyFacade.currentEligibilityPolicies$.subscribe((policies: any) => {
+      if (policies.length === 0) {
+        this.isCloseInsuranceModal.emit();
+      }
+      else {
+        this.gridList = policies;
+        this.gridList.forEach((row: any) => {
+          this.form.addControl(
+            row.clientInsurancePolicyId,
+            new FormControl(row.priorityCode, Validators.required)
+          );
+        });
+      }
+      this.cdr.detectChanges();
+      this.insurancePolicyFacade.hideLoader();
+    });
   }
 
   insuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {

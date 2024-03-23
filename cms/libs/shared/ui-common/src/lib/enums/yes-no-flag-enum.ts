@@ -1,5 +1,6 @@
 export enum YesNoFlag {
     Yes = 'Yes',
-    No = 'No'
+    No = 'No',
+    DidNotAnswer = 'Did Not Answer'
 }
 

@@ -1,8 +1,7 @@
-<kendo-dialog-titlebar (close)="closeRemovePremiumsClicked()"> {{directRemoveClicked ? 'Remove Premium?':'Remove Premiums?'}}  </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeRemovePremiumsClicked()"> {{directRemoveClicked ? 'Remove Premium?':'Remove Premium(s)?'}}  </kendo-dialog-titlebar>
 <section *ngIf="directRemoveClicked" class="k-dialog-body mb-2">
 
-  <p class="text-muted mb-1">The premium will be removed from the process queue. </p>
-  <p class="text-muted mb-2"> Premiums to be removed: {{removePremiumsCount}}  </p>
+  <p class="text-muted mb-1">The premium will be removed from the process queue.</p>
 
 </section>
 <section *ngIf="!directRemoveClicked" class="k-dialog-body mb-2">

@@ -132,6 +132,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   specialCharAdded!: boolean;
   informativeText!: string;
   minServiceDate: Date = new Date(2000, 1, 1);
+  dataLoaded = false;
 
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -576,8 +577,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   isControlValid(controlName: string, index: any) {
-    let control = this.addClaimServicesForm.at(index) as FormGroup;
-    return control.controls[controlName].status == 'INVALID' && !control.controls[controlName].value;
+    let form = this.addClaimServicesForm.at(index) as FormGroup;
+    let control = form.controls[controlName];
+    if(control){
+      return control?.errors?.['required'] && control.touched;
+    }
+    return false;
   }
 
   isAmountDueValid(index: any) {
@@ -615,7 +620,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    if (startDate != "" && endDate != "" && startDate > endDate) {
+    if (startDate != "" && startDate != null && endDate != null && endDate != "" && startDate > endDate) {
       serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
       return true;
     }
@@ -923,7 +928,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             this.isRecentClaimShow = true;
             this.clientName = val.clientName;
             this.vendorName = val.vendorName;
-
+            this.dataLoaded = true;
           }
           this.claimForm.controls['parentReasonForException'].setValue(val.exceptionReasonCode);
           this.claimForm.controls['parentExceptionFlag'].setValue(val.exceptionFlag);
@@ -1127,7 +1132,15 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 duplicatePaymentObject:any = {};
   getExceptionFormValue(controlName: string, index: any)
   {
-    return this.addExceptionForm.at(index).get(controlName)?.value
+    let formValue = this.addExceptionForm.at(index).get(controlName)?.value;
+    const ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
+    if(formValue && (controlName == 'bridgeUppExceptionFlag' || controlName == 'bridgeUppExceptionFlagText')){
+      ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': true});
+    }else{
+      ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': null});
+      ctpCodeIsvalid?.controls['cptCode'].updateValueAndValidity();
+    }
+    return formValue;
   }
   public onPrintDenialLetterOpen() {
     this.isPrintDenailLetterClicked = true;

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, OnInit, Component, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, VendorContactsFacade } from '@cms/case-management/domain';
+import { AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, VendorContactsFacade } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
-import { StatusFlag } from '@cms/shared/ui-common';
 type NewType = LovFacade;
 
 @Component({
@@ -277,7 +277,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
 
  isAlphaNumeric(event: number) {
     return (
-      (event >= 48 && event <= 57) || // Numbers (0-9)
+      //(event >= 48 && event <= 57) || // Numbers (0-9)
       (event >= 65 && event <= 90) || // Uppercase letters (A-Z)
       (event >= 97 && event <= 122) || // Lowercase letters (a-z)
       event === 32 // Space

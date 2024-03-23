@@ -28,15 +28,13 @@
     </kendo-grid-column>
     <kendo-grid-column field="by" title="Record Created By" [width]="75" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <button  [attr.aria-label]="dataItem.creatorId"  kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                [popover]="onUserProfileDetailsHovered" showOn="hover" >
-                <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-            </button>
-            <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                <ng-template kendoPopoverBodyTemplate>
-                    <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-                </ng-template>
-            </kendo-popover>
+            <common-user-photo-icon  
+            [userId]="dataItem.creatorId" 
+            [userFirstName]="dataItem.userFirstName"
+            [userLastName]="dataItem.userLastName"
+            [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+            [linkType]="'profileIcon'"
+            [userPhotos$]="statusFplHistoryPhotoSubject"></common-user-photo-icon>
         </ng-template>
     </kendo-grid-column>
     <!-- grid Loader Template -->

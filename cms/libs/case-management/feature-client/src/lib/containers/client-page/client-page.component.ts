@@ -34,21 +34,20 @@ import {
   ClientCaseEligibilityFlag,
   ClientCaseEligibilityAndFlag,
   CaseFacade,
-  YesNoFlag,
   ControlPrefix,
-  MaterialFormat,
   CompletionChecklist,
   NavigationType,
   PronounCode,
   TransGenderCode
 } from '@cms/case-management/domain';
+import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
+
 import {
   LoaderService,
   LoggingService,
   SnackBarNotificationType,
   ConfigurationProvider,
 } from '@cms/shared/util-core';
-import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-client-page',

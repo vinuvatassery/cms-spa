@@ -8,6 +8,7 @@ import {
   Input,
   TemplateRef,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 /** External libraries **/
 import { DialItemAnimation } from '@progress/kendo-angular-buttons';
@@ -16,15 +17,17 @@ import {
   CaseFacade,
   ClientFacade
 } from '@cms/case-management/domain';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject } from '@microsoft/signalr';
 @Component({
   selector: 'case-management-case360-header',
   templateUrl: './case360-header.component.html',
   styleUrls: ['./case360-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Case360HeaderComponent implements OnInit {
+export class Case360HeaderComponent implements OnInit, OnDestroy {
   /** Public properties **/
   @Input() loadedClientHeader: any;
   @Input() caseWorkerId: any;
@@ -40,6 +43,8 @@ export class Case360HeaderComponent implements OnInit {
   @Output() loadChangeGroupEvent = new EventEmitter<string>();
   @Output() updateChangeGroupEvent = new EventEmitter<any>();
   @Output() createCerSessionEvent = new EventEmitter<string>();
+  @Input() clientProfileHeader$!: Observable<any>;
+  @Input() userDetail$!: any;  
 
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
@@ -48,17 +53,24 @@ export class Case360HeaderComponent implements OnInit {
   groupChangeTitle!: string;
   private statusPeriodDialog: any;
   private statusGroupDialog: any;
+  isUserProfilePhotoExist: boolean = false;
+  userprofileHeaderPhotoSubject = new Subject();
+  userFirstName!: string;
+  userLastName!: string;
+  assignedToVisibility$ = new BehaviorSubject<boolean>(false);
+  groupUpdatedSubscription = new Subscription();
+  // userDetailSubscription = new Subscription();
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
     private readonly caseFacade: CaseFacade,
     private dialogService: DialogService,
     private cdr: ChangeDetectorRef,
-    private clientFacade: ClientFacade
+    private clientFacade: ClientFacade,
+    private readonly userManagementFacade: UserManagementFacade
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadClientProfileInfoEvent.emit();
     this.clientEligibilityFacade.eligibilityPeriodPopupOpen$.subscribe(
       (response) => {
         this.isStatusPeriodDetailOpened = response;
@@ -69,9 +81,14 @@ export class Case360HeaderComponent implements OnInit {
       if(data){
         this.loadClientProfileInfoEvent.emit();
       }
-    })
+    });
+    this.loadDistinctUserIdsAndProfilePhoto();
   }
 
+  ngOnDestroy(): void {
+    this.groupUpdatedSubscription?.unsubscribe();
+    // this.userDetailSubscription?.unsubscribe();
+  }
   /** Internal event methods **/
   onStatusPeriodDetailClosed(): void {
     this.isStatusPeriodDetailOpened = false;
@@ -126,7 +143,7 @@ export class Case360HeaderComponent implements OnInit {
   }
 
   addGroupUpdatedSubscription() {
-    this.groupUpdated$.subscribe((value: boolean) => {
+    this.groupUpdatedSubscription = this.groupUpdated$.subscribe((value: boolean) => {
       if (value) {
         this.isGroupDetailOpened$.next(false);
         this.loadClientProfileInfoEvent.emit();
@@ -175,4 +192,25 @@ export class Case360HeaderComponent implements OnInit {
       this.createCerSessionEvent.emit();
     }
   }
+
+  loadDistinctUserIdsAndProfilePhoto() {
+    this.userManagementFacade.usersById$.subscribe(
+      (response) => {
+        this.userFirstName = response.firstName;
+        this.userLastName = response.lastName;
+        this.isUserProfilePhotoExist = response.isUserProfilePhotoExist;
+        this.assignedToVisibility$.next(true);
+      });
+    if(this.caseWorkerId){
+      this.userManagementFacade.getProfilePhotosByUserIds(this.caseWorkerId)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userprofileHeaderPhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+}
 }

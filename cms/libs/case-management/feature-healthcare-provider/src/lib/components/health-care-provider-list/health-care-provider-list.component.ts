@@ -30,6 +30,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   @Input() searchProviderLoaded$: any;
   @Input() healthCareProvideReactivate$: any;
   @Input() showAddNewProvider$ : any
+  @Input() healthCareProviderProfilePhoto$!: any;
 
   @Output() deleteConfimedEvent =  new EventEmitter<string>();
   @Output() deactivateConfimEvent =  new EventEmitter<string>();
@@ -73,6 +74,9 @@ export class HealthCareProviderListComponent implements  OnChanges {
   clinicForm: FormGroup;
   hasClinicCreateUpdatePermission = false;
   selectedClinicType : string = this.vendorTypes.Clinic;
+  healthCareProviderSubject = new Subject();
+  healthCareProviderSubscription = new Subscription();
+
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -138,6 +142,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
     this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Service_Provider_Medical_Dental_Provider_Create_Update']);
     this.hasClinicCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Clinic_Create_Update']);
   }
+
   ngOnChanges(): void {
     this.state = {
     skip: 0,
@@ -146,8 +151,6 @@ export class HealthCareProviderListComponent implements  OnChanges {
     };
       this.loadHealthCareProvidersList()
   }
-
-
 
    // updating the pagination infor based on dropdown selection
 pageselectionchange(data: any) {

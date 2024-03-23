@@ -39,19 +39,13 @@
         <tr>
           <td>Case Manager</td>
           <td >
-            <button
-            kendoButton
-            [primary]="true"
-            class="avatar-sm-btn c-default"
-            kendoPopoverAnchor
-            [popover]="onCaseManagerDetailsHovered"
-            showOn="hover"
-            [attr.aria-label]="clientProfile?.caseManagerId" 
-
-            *ngIf="clientProfile?.caseManagerId"
-          >
-          <common-user-photo-icon  [userId]="clientProfile?.caseManagerId"></common-user-photo-icon>  
-          </button>
+            <common-user-photo-icon 
+            [userId]="clientProfile?.caseManagerId" 
+            [userFirstName]="clientProfile?.caseManagerFirstName"
+            [userLastName]="clientProfile?.caseManagerLastName"
+            [userProfilePhotoExists]="clientProfile?.isCaseManagerProfilePhotoExist"
+            [linkType]="'profileIcon'"
+            [userPhotos$]="userManagerprofilePhoto$"></common-user-photo-icon>
           </td>
         </tr>
         <tr>
@@ -141,20 +135,15 @@
       </table>
       <!-- Last Updated by -->
       <p class="mt-1 mb1">
-        <span class="badge-dot-info bdi-left"></span> Last Updated on {{clientProfile?.lastModificationTime | date:'MM/dd/yyyy'}}
+        <span class="badge-dot-info bdi-left"></span> Last Updated on {{(clientProfile?.lastModificationTime ?? clientProfile?.creationTime) | date:'MM/dd/yyyy'}}
         by
-        <button
-        kendoButton
-        [primary]="true"
-        class="avatar-sm-btn c-default"
-        kendoPopoverAnchor
-        [popover]="onUserProfileDetailsHovered"
-        showOn="hover" 
-        [attr.aria-label]="clientProfile?.caseManagerId" 
-
-      >
-      <common-user-photo-icon  [userId]="clientProfile?.caseManagerId"></common-user-photo-icon>  
-      </button>
+        <common-user-photo-icon 
+        [userId]="clientProfile?.creatorId" 
+        [userFirstName]="clientProfile?.userFirstName"
+        [userLastName]="clientProfile?.userLastName"
+        [userProfilePhotoExists]="clientProfile?.isUserProfilePhotoExist"
+        [linkType]="'profileIcon'"
+        [userPhotos$]="userLastModifierProfilePhoto$"></common-user-photo-icon>
       </p>
     </div>
   </div>

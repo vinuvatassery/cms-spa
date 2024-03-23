@@ -13,6 +13,8 @@
                                     <span class="app-checkboxwidtext-wrapper">
                                           <label *ngIf="(returnResultFinalPrintList[currentIndex].checkNbr != null && returnResultFinalPrintList[currentIndex].warrantNumberChange === false  && returnResultFinalPrintList[currentIndex].printFlag ==='Y')" 
                                           style="padding-right: 15px;" class="k-checkbox-label" for="Printauthorization"><b>Reconciled & Printed</b></label>
+                                          <label *ngIf="(this.items?.print && returnResultFinalPrintList[currentIndex].printFlag ==='Y')" 
+                                          style="padding-right: 15px;" class="k-checkbox-label" for="Printauthorization"><b>Printed</b></label>
                                           <input type="checkbox" *ngIf ="returnResultFinalPrintList[currentIndex].acceptsReportsFlag === 'Y'" [checked]="item.isPrintAdviceLetter" (change)="onCheckboxChange($event, item)" kendoCheckBox aria-labelledby="Printauthorization" id="Printauthorization" />
                                           <label class="k-checkbox-label" *ngIf ="returnResultFinalPrintList[currentIndex].acceptsReportsFlag === 'Y'"  for="Printauthorization">Print letter</label>
                                     </span>

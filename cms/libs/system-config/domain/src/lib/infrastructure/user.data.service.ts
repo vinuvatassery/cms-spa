@@ -88,6 +88,12 @@ export class UserDataService {
   reassignCase(caseReassignData : any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/reassign`, caseReassignData);
   }
+
+  getUserProfilePhotos(userIds : string) { 
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+      `/system-config/users/${userIds}/profile-photos`);  
+  }
   
   loadUsers(): Observable<User[]> {
     return of([

@@ -140,7 +140,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     const dto = {
       insuranceProviderId: formValues.insuranceCarrierName,
       insurancePlanName: formValues.insurancePlanName,
-      healthInsuranceTypeCode: (!this.isDentalPlan) ? formValues.insuranceType : null,
+      healthInsuranceTypeCode: (!this.isDentalPlan) ? formValues.insuranceType : 'N/A',
       startDate: formValues.startDate,
       termDate: formValues.termDate,
       canPayForMedicationFlag: formValues.canPayForMedicationFlag ? StatusFlag.Yes : StatusFlag.No,

@@ -7,7 +7,7 @@
     <div class="flex-row">
       <div class="flex-col ">
         <kendo-floatinglabel text="Date Payment Reconciled">
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="dd-MM-yyyy"
             formatPlaceholder="formatPattern" formControlName="datePaymentReconciled" aria-label="Date Payment Reconciled"
             (select)="dateValidate('RECONCILED')" (keyup)="dateValidate('RECONCILED')" placeholder=""
             (valueChange)="startDateOnChange()">
@@ -22,10 +22,10 @@
       </div>
       <div class="flex-col ">
         <kendo-floatinglabel text="Date Payment Sent">
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="dd-MM-yyyy"
             formatPlaceholder="formatPattern" formControlName="datePaymentSent" aria-label="Date Payment Sent"
             (select)="dateValidate('PAYMENT_SENT')" (keyup)="dateValidate('PAYMENT_SENT')"
-            format="MM-dd-yyyy" (blur)="endDateOnChange()" [min]="endDateMin" (focus)="changeMinDate()" placeholder="">
+            (blur)="endDateOnChange()" [min]="endDateMin" (focus)="changeMinDate()" placeholder="">
           </kendo-datepicker>
           <kendo-formerror
             *ngIf="!premiumPaymentForm.controls['datePaymentSent'].valid && datePaymentSentValidator">Future dates not
@@ -68,7 +68,7 @@
               <span class="counter">{{ tAreaCessationCounter }}</span>
             </kendo-textarea-suffix>
           </kendo-textarea>
-         
+
         </kendo-floatinglabel>
       </div>
     </div>

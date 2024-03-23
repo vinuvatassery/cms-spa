@@ -11,10 +11,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialPremiumsFacade, GridFilterParam, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade, GridFilterParam, InsurancePremiumDetails, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   ColumnVisibilityChangeEvent,
@@ -27,7 +27,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { BehaviorSubject, Subject, debounceTime, first } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, debounceTime, first } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-premiums-all-payments-list',
@@ -61,6 +61,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() unBatchPremiumEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
+  paymentStatusCode="PAYMENT_STATUS_CODE"
   gridColumns: any = {
     itemNumber: 'Item #',
     batchNumber: 'Batch #',
@@ -77,14 +78,21 @@ export class FinancialPremiumsAllPaymentsListComponent
     by: 'By',
   };
 
+  vendorId: any;
+  clientId: any;
+  clientName: any = "";
+  paymentRequestId:any
+  premiumId!: string;
+  private editPremiumsFormDialog: any;
+  @Output() loadPremiumEvent = new EventEmitter<string>();
+  @Output() updatePremiumEvent = new EventEmitter<any>();
+  @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
+  @Input() insuranceCoverageDates$: any;
+
   searchColumnList: { columnName: string; columnDesc: string }[] = [
     {
       columnName: 'ALL',
       columnDesc: 'All Columns',
-    },
-    {
-      columnName: 'itemNumber',
-      columnDesc: 'Item #',
     },
     {
       columnName: 'batchNumber',
@@ -93,48 +101,11 @@ export class FinancialPremiumsAllPaymentsListComponent
     {
       columnName: 'providerName',
       columnDesc: 'Insurance Vendor',
-    },
-    {
-      columnName: 'itemsCountInBatch',
-      columnDesc: 'Item Count',
-    },
-    {
-      columnName: 'totalDue',
-      columnDesc: 'Total Amount',
-    },
-    {
-      columnName: 'acceptsReportsFlag',
-      columnDesc: 'Accepts reports',
-    },
-    {
-      columnName: 'paymentRequestedDate',
-      columnDesc: 'Date Payment Requested',
-    },
-    {
-      columnName: 'paymentSentDate',
-      columnDesc: 'Date Payment Sent',
-    },
-    {
-      columnName: 'paymentMethodDesc',
-      columnDesc: 'Payment Method',
-    },
-    {
-      columnName: 'paymentStatusDesc',
-      columnDesc: 'Payment Status',
-    },
-    {
-      columnName: 'pcaCode',
-      columnDesc: 'PCA',
-    },
-    {
-      columnName: 'mailCode',
-      columnDesc: 'Mail Code',
-    },
-    {
-      columnName: 'by',
-      columnDesc: 'By',
-    },
+    }
   ];
+
+  @ViewChild('editPremiumsDialogTemplate', { read: TemplateRef })
+  editPremiumsDialogTemplate!: TemplateRef<any>;
 
   //searching
   private searchSubject = new Subject<string>();
@@ -208,6 +179,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   showExportLoader = false;
   @Input() unbatchPremiums$ :any
   @Input() exportButtonShow$: any;
+  @Input() premiumAllPaymentsPremium$!: any;
   @Output() deletePaymentEvent = new EventEmitter();
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
@@ -229,6 +201,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   selectedCount: number = 0;
   printAuthorizationDialog: any;
   previewText = false;
+  allPaymentsPremiumSubject = new Subject();
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -289,6 +262,7 @@ export class FinancialPremiumsAllPaymentsListComponent
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
           this.isEditBatchClosed = true;
+          this.onEditPremiumsClick(data?.insurancePremiumId, data?.vendorId, data?.clientId, data.clientFullName, data?.paymentRequestId);
         }
       },
     },
@@ -362,22 +336,21 @@ deletePremiumPayment(paymentId: string) {
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {}
 
   ngOnInit(): void {
     this.addSearchSubjectSubscription();
     this.getVedndorTypeCodeLov();
     this.getPaymentMethodLov();
-    this.getPaymentStatusLov();
     this.financialPremiumsAllPaymentsGridLists$.subscribe((response:any) =>{
       this.totalGridRecordsCount = response?.acceptsReportsCount;
+      this.paymentStauses = response?.lovs[this.paymentStatusCode]
       if(this.selectAll){
       this.markAsChecked(response.data);
       }
       this.financialPremiumsAllPaymentsGridLists = response;
     })
-
-
   }
 
   ngOnChanges(): void {
@@ -525,7 +498,7 @@ deletePremiumPayment(paymentId: string) {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
-    this.sortColumnDesc = this.gridColumns[this.sortValue]; 
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.updateGridFilterDateFormat(stateData, false);
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
@@ -538,7 +511,7 @@ deletePremiumPayment(paymentId: string) {
     if((stateData.filter?.filters.length > 0) && (stateData.filter?.filters.slice(-1)[0].filters.length>1)){
       this.isFiltered = true;
       stateData.filter?.filters.slice(-1)[0].filters?.forEach((element: any) => {
-        if ((element.field == "paymentRequestedDate" || element.field == "paymentSentDate")) { 
+        if ((element.field == "paymentRequestedDate" || element.field == "paymentSentDate")) {
           if(isDisplayFormat){
             element.value = new Date(element.value)
           }else{
@@ -547,8 +520,8 @@ deletePremiumPayment(paymentId: string) {
               this.configProvider?.appSettings?.dateFormat
             );
           }
-        } 
-      }); 
+        }
+      });
       for (const filter of stateData.filter.filters) {
         filterList.push(this.gridColumns[filter.filters[0].field]);
       }
@@ -1023,5 +996,55 @@ if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
     }
   }
 }
+}
+onitemNumberClick(dataItem: any) {
+  this.route.navigate(
+    [`/financial-management/premiums/${this.premiumsType}/batch/items`],
+    { queryParams:
+      {
+        bid: dataItem?.batchId,
+        pid: dataItem.paymentRequestId,
+        eid: dataItem.vendorId,
+      }
+    }
+  );
+}
+
+onEditPremiumsClick(premiumId: string, vendorId: any, clientId: any, clientName: any, paymentRequestId: any) {
+  this.vendorId = vendorId;
+  this.clientId = clientId;
+  this.clientName = clientName;
+  this.premiumId = premiumId;
+  this.paymentRequestId = paymentRequestId;
+  this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
+}
+
+onClickOpenEditPremiumsFromModal(template: TemplateRef<unknown>): void {
+  this.editPremiumsFormDialog = this.dialogService.open({
+    content: template,
+    cssClass: 'app-c-modal app-c-modal-96full add_premiums_modal',
+  });
+}
+
+modalCloseEditPremiumsFormModal(result: any) {
+  if (result && this.editPremiumsFormDialog) {
+    this.isEditBatchClosed = false;
+    this.editPremiumsFormDialog.close();
+  }
+}
+
+  loadPremium(premiumId: string) {
+    this.loadPremiumEvent.emit(premiumId);
+  }
+
+  updatePremium(data: any) {
+    this.updatePremiumEvent.emit(data);
+  }
+
+
+paymentClickHandler(dataItem: any) {
+  this.route.navigate(['financial-management/premiums/medical/batch/items'], {
+    queryParams: { bid:  dataItem.batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId,vid:dataItem.vendorId },
+  });
 }
 }

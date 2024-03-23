@@ -6,7 +6,7 @@
   [insuranceStatus]="this.tabId"
   (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
   (deleteInsurancePlan)="deleteInsurancePolicy($event)"
-
+  (getPoliciesEventEmitter)="getPolicies($event)"
   [closeDeleteModal]="closeDeleteModal"
   (loadHistoricalPlan)="loadHistoricalData($event)"></case-management-medical-insurance-status-list>
 </div>
@@ -37,6 +37,7 @@
   [clientId]="clientId"
   [insuranceStatus]="this.tabId"
   (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
+  (getPoliciesEventEmitter)="getPolicies($event)"
   (deleteInsurancePlan)="deleteInsurancePolicy($event)"
   [closeDeleteModal]="closeDeleteModal"
   (loadHistoricalPlan)="loadHistoricalData($event)"></case-management-medical-insurance-status-list>
@@ -48,6 +49,7 @@
   [clientId]="clientId"
   [tabStatus]="this.tabId" 
   (loadPremiumPaymentEvent)="loadPremiumPaymentEventHandle($event)"
+  [healthInsuranceProfilePhoto$]="healthInsuranceProfilePhoto$"
   ></case-management-medical-payment-list>
 </div>
 
@@ -57,5 +59,6 @@
   [clientId]="clientId"
   [tabStatus]="this.tabId" 
   (loadPremiumPaymentEvent)="loadPremiumPaymentEventHandle($event)"
+  [healthInsuranceProfilePhoto$]="healthInsuranceProfilePhoto$"
   ></case-management-medical-payment-list>
 </div>

@@ -5,9 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType, GridFilterParam } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-health-insurance-page',
@@ -35,6 +36,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   isInsuranceAvailable: boolean = false;
   isCerForm = false;
   prevClientCaseEligibilityId!: string;
+  insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
+  premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
+  priorityCodeType$ = this.lovFacade.priorityCodeType$;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -50,7 +54,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
-    private readonly router: Router
+    private readonly router: Router,
+    private lovFacade: LovFacade
   ) { }
 
   /** Lifecycle Hooks **/
@@ -63,6 +68,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
     this.addHealthInsuranceStatusSubscription();
+    this.loadHealthInsuranceLovs();
   }
 
   ngOnDestroy(): void {
@@ -83,6 +89,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.HideLoader();
+  }
+
+  private loadHealthInsuranceLovs() {
+    this.lovFacade.getHealthInsuranceTypeLovs();
+    this.lovFacade.getPremiumFrequencyLovs();
+    this.lovFacade.getCaseCodeLovs();
   }
 
   ShowLoader() {
@@ -297,7 +309,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           }
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -356,7 +368,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.showTable = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -385,24 +397,16 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
     let typeParam = { type: 'INSURANCE', insuranceStatusType: 'ALL' }
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sortColumn: gridDataRefinerValue.sortColumn,
-      sortType: gridDataRefinerValue.sortType,
-    };
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pagesize ?? gridDataRefinerValue.maxResultCount, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
       typeParam,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sortColumn,
-      gridDataRefiner.sortType
+      gridFilterParam
     );
   }
 
-  delteInsurancePolicy(insurancePolicyId: any) {
+  deleteInsurancePolicy(insurancePolicyId: any) {
     if (insurancePolicyId != undefined) {
       this.ShowLoader();
       this.closeDeleteModal = false;
@@ -411,7 +415,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -438,13 +442,14 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
           this.loadHealthInsuranceHandle(gridDataRefinerValue);
           this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy removed successfully");
           this.HideLoader();
+          this.insurancePolicyFacade.triggerPriorityPopupSubject.next(true);
           this.ref.detectChanges();
         },
         error: (error: any) => {
@@ -499,6 +504,10 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.ref.detectChanges();
     return this.insuranceFlagForm.valid;
   }
+
+  getPolicies(event:any){
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.clientCaseEligibilityId, InsuranceStatusType.healthInsurance);
+   }
 }
 
 

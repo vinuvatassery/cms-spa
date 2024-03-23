@@ -18,6 +18,7 @@
   "instrumentationKey": "d208c057-65ff-4fa0-9e47-b4d35712daa4",
   "dateFormat":"yyyy-MM-dd",
   "displaydateFormat":"MM/dd/yyyy",
+  "dateFormatUS":"MM-dd-yyyy",
   "genericErrorMessage":"Some thing went wrong in user interface, please contact system admin",
   "oidc": {
     "sendAccessToken": true,

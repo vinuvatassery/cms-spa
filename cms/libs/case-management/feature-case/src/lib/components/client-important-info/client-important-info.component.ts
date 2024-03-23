@@ -17,8 +17,12 @@ export class ClientImportantInfoComponent implements OnInit{
 
          /** Lifecycle hooks **/
     ngOnInit(): void 
-    {
+    {      
        this.loadClientImpInfoEvent.emit()  
+    }
+
+    showClientNotesHeader(clientNotes:any){
+      return clientNotes.some((notes:any) => notes !="")
     }
 
     clientArrayObjectValidator(object : any)

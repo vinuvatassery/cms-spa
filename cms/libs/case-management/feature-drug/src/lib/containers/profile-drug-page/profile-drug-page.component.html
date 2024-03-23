@@ -11,7 +11,22 @@
 
 <div class="block-section mt-1"  *ngIf="((tabId$ | async)===clientProfileTabs.DRUGS_PURCHASED) || tabId === clientProfileTabs.DRUGS_PURCHASED">
   <case-management-drugs-purchased-list
-    [clientId]="profileClientId"></case-management-drugs-purchased-list>
+  (addPharmacyClaimEvent)="addPharmacyClaim($event)"
+  (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+  (searchPharmaciesEvent)="searchPharmacies($event)"
+  (searchClientsEvent)="searchClients($event)"
+  (searchDrugEvent)="searchDrug($event)"
+  (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+  (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
+  [clientId]="profileClientId"
+  [clientCaseEligibilityId] ="clientCaseEligibilityId">
+</case-management-drugs-purchased-list>
 </div>
+
+<ng-template #pcaExceptionDialogTemplate>
+  <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
+      (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
+      (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
+  </common-financial-pca-chosen-alert>
 
 

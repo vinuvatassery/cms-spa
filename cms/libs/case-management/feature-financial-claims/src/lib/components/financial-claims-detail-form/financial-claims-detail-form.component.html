@@ -47,7 +47,7 @@
                                 </kendo-combobox-column>
 
                             </kendo-multicolumncombobox>
-                            <kendo-formerror *ngIf="(!claimForm.controls['medicalProvider'].valid) && isSubmitted">Provider is required
+                            <kendo-formerror *ngIf="(claimForm.controls['medicalProvider'].errors?.['required'] && claimForm.controls['medicalProvider'].touched)">Provider is required
                             </kendo-formerror>
                             <div *ngIf="getParentExceptionFormValue('providerNotEligibleExceptionFlag')">
                                 <kendo-formerror class="align-items-center"> <span class="material-icons mr-1" >info</span> Provider not eligible.
@@ -91,7 +91,7 @@
                             </span>
                             <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField="clientFullName"
                                 valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                                placeholder="Search Clients"
+                                placeholder="Search for Client"
                                 [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                 [filterable]="true" formControlName="client"
                                 (filterChange)="loadClientBySearchText($event)"
@@ -123,7 +123,7 @@
                             </kendo-multicolumncombobox>
                             <div class="flex-row">
                                 <div class="flex-col">
-                                    <kendo-formerror *ngIf="(!claimForm.controls['client'].valid) && isSubmitted" >
+                                    <kendo-formerror *ngIf="(claimForm.controls['client'].errors?.['required'] && claimForm.controls['client'].touched)" >
 
                                     Client is required
                                 </kendo-formerror>
@@ -145,7 +145,7 @@
                                 formControlName="invoiceId" [maxlength]="20" (keypress)="restrictSpecialChar($event)">
                             </kendo-textbox>
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="(!claimForm.controls['invoiceId'].valid) && isSubmitted"
+                        <kendo-formerror *ngIf="(claimForm.controls['invoiceId'].errors?.['required'] && claimForm.controls['invoiceId'].touched)"
                             >
                             Invoice ID is required
                         </kendo-formerror>
@@ -191,7 +191,7 @@
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
-                                                    *ngIf="(isControlValid('serviceStartDate', i) && isSubmitted)"
+                                                    *ngIf="(isControlValid('serviceStartDate', i) == true)"
                                                    > Service Start Date is required
                                                 </kendo-formerror>
                                             </div>
@@ -206,10 +206,10 @@
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
-                                                    *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted)">  Service End Date is required
+                                                    *ngIf="(isControlValid('serviceEndDate', i))">  Service End Date is required
                                                 </kendo-formerror>
                                                 <kendo-formerror *ngIf="(isStartEndDateError(i))" >
-                                                    Service End Date cannot be before Service Start Date
+                                                    Service End date must be equal to or greater than start date
                                                 </kendo-formerror>
                                             </div>
                                             <div class="ml-2">
@@ -247,7 +247,7 @@
                                                     </kendo-textarea>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
-                                                    *ngIf="(isControlValid('reasonForException',i) && isSubmitted)"
+                                                    *ngIf="(isControlValid('reasonForException',i))"
                                                      > Reason For Exception is required
                                                 </kendo-formerror>
                                             </div>
@@ -271,7 +271,7 @@
                                                     </kendo-dropdownlist>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
-                                                    *ngIf="(isControlValid('paymentType', i) && isSubmitted)"
+                                                    *ngIf="(isControlValid('paymentType', i))"
                                                      >Payment Type is required
                                                 </kendo-formerror>
 
@@ -292,7 +292,7 @@
                                                         </ng-template>
                                                     </kendo-autocomplete>
                                                     <kendo-formerror
-                                                        *ngIf="((isControlValid('cptCode', i) || isControlValid('cptCodeId', i)) && isSubmitted)" > CPT Code is required
+                                                        *ngIf="((isControlValid('cptCode', i) || isControlValid('cptCodeId', i)))" > CPT Code is required
                                                     </kendo-formerror>
                                                 </kendo-floatinglabel>
                                             </div>
@@ -330,7 +330,7 @@
                                                     </kendo-textarea>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
-                                                    *ngIf="(isControlValid('reasonForException',i) && isSubmitted)">  Reason For Exception is required
+                                                    *ngIf="(isControlValid('reasonForException',i))">  Reason For Exception is required
                                                 </kendo-formerror>
                                             </div>
                                         </div>
@@ -348,7 +348,7 @@
                                                     </kendo-textarea>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
-                                                    *ngIf="(isControlValid('serviceDescription',i) && isSubmitted)"
+                                                    *ngIf="(isControlValid('serviceDescription',i))"
                                                     > Service Description is required
                                                 </kendo-formerror>
                                             </div>
@@ -359,13 +359,13 @@
                                                 <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
                                                     <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                                     <kendo-numerictextbox aria-label="Service Cost" [spinners]="false"
-                                                        [fillMode]="formUiStyle.inputFillMode" format="#.00"
+                                                        [fillMode]="formUiStyle.inputFillMode" format="n2"
                                                         [maxlength]="15"
                                                         formControlName="serviceCost">
                                                     </kendo-numerictextbox>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
-                                                    *ngIf="(isControlValid('serviceCost',i) && isSubmitted)"
+                                                    *ngIf="(isControlValid('serviceCost',i))"
                                                      >Service Cost is required
                                                 </kendo-formerror>
                                             </div>
@@ -374,12 +374,12 @@
                                                     <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                                     <kendo-numerictextbox aria-label="Amount Due" [spinners]="false"
                                                         [fillMode]="formUiStyle.inputFillMode"
-                                                        formControlName="amountDue" format="#.00"
+                                                        formControlName="amountDue" format="n2"
                                                         [maxlength]="15"
                                                         (blur)="onAmountDueChange(i)">
                                                     </kendo-numerictextbox>
                                                 </kendo-floatinglabel>
-                                                <kendo-formerror *ngIf="(isControlValid('amountDue',i) && isSubmitted)"
+                                                <kendo-formerror *ngIf="(isControlValid('amountDue',i))"
                                                      >Amount Due is required
                                                 </kendo-formerror>
                                                 <kendo-formerror *ngIf="isAmountDueValid(i)"
@@ -420,7 +420,7 @@
                                                     </kendo-textarea>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
-                                                    *ngIf="(isControlValid('reasonForException',i) && isSubmitted)"
+                                                    *ngIf="(isControlValid('reasonForException',i))"
                                                      >Reason For Exception is required
                                                 </kendo-formerror>
                                             </div>
@@ -489,7 +489,7 @@
     <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
         (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
         (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
-    </common-financial-pca-chosen-alert>
+    </common-financial-pca-chosen-alert>-
 </ng-template>
 
 

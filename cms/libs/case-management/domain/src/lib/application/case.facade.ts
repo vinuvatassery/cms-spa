@@ -26,6 +26,7 @@ import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
 import { SearchHeaderType } from '../enums/search-header-type.enum';
 import { GridColumnFilter} from '../enums/grid-column-filter.enum';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -62,6 +63,7 @@ export class CaseFacade {
   private myClientsSubject = new Subject<any>();
   private recentClientsSubject = new Subject<any>();
   private allClientsSubject = new Subject<any>();
+
 
   /** Public properties **/
   myClients$ = this.myClientsSubject.asObservable();
@@ -110,6 +112,9 @@ export class CaseFacade {
     },
   ];
   activeSession!: ActiveSessions[];
+  userManagerprofilePhotoSubject = new Subject();
+  userLastModifierProfilePhotoSubject = new Subject();
+  clientCustomName:string= '';
   constructor(
     private readonly caseDataService: CaseDataService,
     private readonly loggingService: LoggingService,
@@ -117,7 +122,8 @@ export class CaseFacade {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {}
 
   showLoader() {
@@ -313,8 +319,12 @@ export class CaseFacade {
   loadClientProfile(clientCaseEligibilityId: string): void {
     this.showLoader();
     this.caseDataService.loadClientProfile(clientCaseEligibilityId).subscribe({
-      next: (clientProfileResponse) => {
+      next: (clientProfileResponse: any) => {
         this.clientProfileSubject.next(clientProfileResponse);
+        const caseManagerId = clientProfileResponse?.caseManagerId;
+        const lastmodifierId = clientProfileResponse?.lastModifierId ?? clientProfileResponse?.creatorId;
+        this.loadCaseManagerProfilePhoto(caseManagerId);
+        this.loadLastModifierProfilePhoto(lastmodifierId);
         this.hideLoader();
       },
       error: (err) => {
@@ -323,16 +333,45 @@ export class CaseFacade {
     });
   }
 
+  loadCaseManagerProfilePhoto(caseManagerId: string) {
+    if(caseManagerId){
+      this.userManagementFacade.getProfilePhotosByUserIds(caseManagerId)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userManagerprofilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+
+  loadLastModifierProfilePhoto(lastmodifierId: string){
+    if(lastmodifierId){
+      this.userManagementFacade.getProfilePhotosByUserIds(lastmodifierId)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userLastModifierProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+
   loadClientProfileHeader(clientId: number): void {
     this.showLoader();
+    this.clientCustomName = '';
     this.caseDataService.loadClientProfileHeader(clientId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileHeaderSubject.next(clientProfileResponse);
+        this.clientCustomName = clientProfileResponse?.clientFullName + ' ' + clientProfileResponse?.clientId + ' ' + clientProfileResponse?.ssn + ' ' + clientProfileResponse?.dob
         this.hideLoader();
         if (clientProfileResponse) {
           const activeSession = {
             clientCaseId: clientProfileResponse?.clientCaseId,
             clientId: clientProfileResponse?.clientId,
+            sessionId: clientProfileResponse?.workflowSessionId
           };
           this.createActiveSession(activeSession);
         }
@@ -392,6 +431,7 @@ export class CaseFacade {
             else{
               this.recentClientsSubject.next(gridView);
             }
+
           }
           this.searchLoaderVisibilitySubject.next(false);
         },

@@ -1,0 +1,34 @@
+
+      <div class="dash-header-with-filters">
+            <h5>SLOTS ALLOCATION</h5>
+        
+      </div>
+
+      <div class="dashboard-cards-container">
+            <kendo-chart style="height: 120px;" [categoryAxis]="{ categories: categories }">
+                  <kendo-chart-series-defaults type="bar">
+                        <kendo-chart-series-defaults-labels format="d">
+                        </kendo-chart-series-defaults-labels>
+                  </kendo-chart-series-defaults>
+
+                  <kendo-chart-series>
+
+                        <kendo-chart-series-item [data]="purchaseData" color="#0087E0"> </kendo-chart-series-item>
+
+                  </kendo-chart-series>
+            </kendo-chart>
+            <div class=" slots-bottom-section">
+                  <div>
+                        <h2>150</h2>
+                        <p>TOTAL SLOTS ASSIGNED</p>
+                  </div>
+                  <div>
+                        <h2>150</h2>
+                        <p>AVAILABLE SLOTS</p>
+                  </div>
+                  <div>
+                        <h2>150</h2>
+                        <p>CLIENTS IN WAITLIST</p>
+                  </div>
+            </div>
+      </div>

@@ -82,8 +82,8 @@ export class NavigationMenuFacade {
     });
   }
 
-  getPendingApprovalPaymentCount(userLevel:any) {
-    this.navigationMenuService.getPendingApprovalPaymentCount(userLevel)
+  getPendingApprovalPaymentCount(data:any) {
+    this.navigationMenuService.getPendingApprovalPaymentCount(data)
     .subscribe(
       {
         next: (count: any) => {

@@ -33,7 +33,7 @@ export class BreadCrumbComponent {
         this.items = [
           {
             text: 'Home',
-            title: 'dashboard',
+            title: 'Home',
           },
           ...this.items,
         ];
@@ -90,9 +90,10 @@ export class BreadCrumbComponent {
     let isValidTitleExist = label !== null && label !== undefined && label !== '';
     if ((isValidTitleExist) || !isInValidRoutePath) {
 
+      const breadcrumbText = isValidTitleExist ? label : this.formatText(routePath);
       breadcrumbs.push({
-        text: isValidTitleExist ? label : this.formatText(routePath),
-        title: url.replace('#', ''),
+        text: breadcrumbText,
+        title: breadcrumbText,
       });
     }
   }

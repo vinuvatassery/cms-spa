@@ -8,7 +8,9 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 
@@ -34,6 +36,9 @@ export class FinancialClaimsProviderInfoComponent {
   vendorProfile: any
   showAddressValidationLoader$= new BehaviorSubject(false);
   @Input() paymentMethodCode$ : Observable<any> | undefined;
+  specialhandlingCounter!: string;
+  specialHandlingCharachtersCount!: number;
+  specialHandlingMaxLength = 100;
   profileForm = this.formBuilder.group({
     tin: [''],
     address: this.formBuilder.group({
@@ -44,7 +49,7 @@ export class FinancialClaimsProviderInfoComponent {
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
       zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
-      specialHandlingDesc: [''],
+      specialHandlingDesc: ['', Validators.maxLength(100)],
       mailCode: [{ value: '', disabled: true }]
     }),
     contacts: new FormArray([])
@@ -169,6 +174,7 @@ export class FinancialClaimsProviderInfoComponent {
 
       }
     });
+    this.specialhandlingCounter = `${this.vendorProfile.address.specialHandlingDesc?.length?  this.vendorProfile.address.specialHandlingDesc?.length : 0 }/${this.specialHandlingMaxLength}`;
     this.createContactsFormArray()
   }
 
@@ -299,6 +305,11 @@ export class FinancialClaimsProviderInfoComponent {
       this.profileForm.controls['tin'].setErrors({ 'incorrect': true });
       this.accountingNumberValidated = false;
     }
+  }
+
+  onspecialHandlingTextAreaValueChange(event: any): void {
+    this.specialHandlingCharachtersCount = event.length;
+    this.specialhandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingMaxLength}`;
   }
 
 }

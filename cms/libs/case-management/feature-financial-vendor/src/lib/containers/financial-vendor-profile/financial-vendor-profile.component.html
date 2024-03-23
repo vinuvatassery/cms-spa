@@ -1,7 +1,8 @@
 <cms-vendor-profile-header
-[vendorProfile$]="vendorProfile$ | async"
+[vendorProfile$]="vendorProfile$"
 [vendorProfileSpecialHandling$]="vendorProfileSpecialHandling$"
-(loadSpecialHandlingEvent)="loadSpecialHandling()"></cms-vendor-profile-header>
+(loadSpecialHandlingEvent)="loadSpecialHandling()"
+(updateRecentlyViewedEvent)="updateRecentlyViewedEvent($event)"></cms-vendor-profile-header>
 
 <section class="vendor-profile-tabs">
   <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab" [keepTabContent]="true">
@@ -17,7 +18,7 @@
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="{{tabCode !== financeManagementTabs.Manufacturers ? 'Payment Addresses' : 'Addresses and Contacts'}}">     
+    <kendo-tabstrip-tab title="{{tabCode !== financeManagementTabs.Manufacturers ? 'Payment Addresses' : 'Addresses and Contacts'}}">
       <ng-template kendoTabContent>
         <div class="block-section">
 
@@ -94,7 +95,7 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId" 
+            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId"
             (loadInvoiceServiceEvent)="loadInvoiceServices($event)" [vendorName]="vendorName" [vendorTypeCode]="vendorTypeCode"></cms-invoices>
           </div>
         </div>
@@ -112,7 +113,7 @@
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Provider" *ngIf="(tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider) && isClinicalVendor " >
+    <kendo-tabstrip-tab title="Provider" *ngIf="(tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider)" >
       <ng-template kendoTabContent>
         <div class="block-section">
 
@@ -127,7 +128,9 @@
           [vendorTypeCode]="vendorTypeCode"
           [removeprovider$]="removeprovider$"
           [addProviderNew$]="addProviderNew$"
+          [vendorName]="vendorName"
           (onProviderNameClickEvent)="onProviderNameClick($event)"
+          [financialClinicProviderProfile$]="financialClinicProviderProfile$"
           ></cms-financial-clinic-provider-list>
           </div>
         </div>
@@ -137,7 +140,7 @@
 
 </section>
 
-<div class="app-c-fab-container" kendoTooltip position="left">
+<div class="app-c-fab-container" position="left">
   <kendo-floatingactionbutton class="app-c-fab" title="Event Log" aria-label="Event Log" #myFab (click)="handleShowEventLogClicked()">
     <ng-template kendoFloatingActionButtonTemplate>
       <span class="material-icons" aria-label="Event Log" >assignment</span>
@@ -160,4 +163,4 @@
         [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
         [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
 </ng-template>
- 
+

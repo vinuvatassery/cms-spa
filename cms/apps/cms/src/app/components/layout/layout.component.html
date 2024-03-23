@@ -1,6 +1,6 @@
 
 <common-loader-component></common-loader-component>
-
+<a href="#main-content" class="skip_content">Skip to main content</a>
 <h1 hidden>CMS</h1>
 <header class="app-l-header" kendoTooltip>
   <div class="header_menu-left_most_section"  >
@@ -21,7 +21,7 @@
   </div>
 </header>
 
-<section class="app-l-container" [ngClass]="{'mobile_menu-opened': isOpenMobileMenu}"  kendoRippleContainer>
+<section class="app-l-container" id="main-content" [ngClass]="{'mobile_menu-opened': isOpenMobileMenu}"  kendoRippleContainer>
   <section
     mode="side"
     #sidenav

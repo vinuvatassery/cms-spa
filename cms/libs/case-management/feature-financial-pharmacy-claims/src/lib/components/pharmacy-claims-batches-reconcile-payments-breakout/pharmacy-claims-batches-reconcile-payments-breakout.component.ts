@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { ColumnComponent, ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-reconcile-payments-breakout',
@@ -28,6 +28,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   @Input() paymentStatus$:any
   @Input() reconcilePaymentBreakoutLoaderList$:any;
   @Input() deliveryMethodLov$:any;
+  @Input() pharmacyBreakoutProfilePhoto$!: any;
+  @Input() claimsType: any;
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
   vendorId:any;
   clientId:any;
@@ -44,7 +46,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
   paymentRequestType:any
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
@@ -80,8 +82,14 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   selectedDeliveryMethod: string | null = null;
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
-  claimsType:any;
-  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade, private readonly financialClaimsFacade: FinancialClaimsFacade) { }
+  
+  pharmacyBreakoutSubscription = new Subscription();
+  pharmacyBreakoutProfilePhotoSubject = new Subject();
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
+  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade, private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly userManagementFacade: UserManagementFacade,private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade) { }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
@@ -275,19 +283,22 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     this.state.columnName = '';
   }
 
-  clientRecentClaimsModalClicked (template: TemplateRef<unknown>, data:any): void {
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown> ,
+    data:any): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
-      animation:{
+      animation: {
         direction: 'up',
-        type:'slide',
-        duration: 200
-      }
+        type: 'slide',
+        duration: 200,
+      },
     });
-    this.vendorId=data.vendorId;
-    this.clientId=data.clientId;
-    this.clientName=data.clientName;
+
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientName;
   }
 
   closeRecentClaimsModal(result: any){
@@ -296,9 +307,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     }
   }
 
-  onClientClicked(clientId: any) {
+   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
-    this.closeRecentClaimsModal(true);
+    this.addClientRecentClaimsDialog.close();
   }
 
   dropdownFilterChange(
@@ -321,4 +332,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     });
   }
 
+  loadRecentClaimListEventHandler(data : any){
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+  }
+  
 }

@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDataService, UserDefaultRoles } from '@cms/system-config/domain';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserDataService, UserDefaultRoles, UserManagementFacade } from '@cms/system-config/domain';
 import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';
@@ -43,21 +43,39 @@ updateDatesCaseManager$ = this.updateDatesCaseManagerSubject.asObservable();
 public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'
-
+caseManagersProfilePhotoSubject = new Subject();
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
     dir: 'asc' 
   }];
-showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
-    
+  showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
+
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+
+  public sortValueGeneralAPproval = 'batch';
+  public sortGeneralList: SortDescriptor[] = [{
+    field: this.sortValueGeneralAPproval,
+  }];
+
+  public sortValueApprovalPaymentsAPproval = 'batch';
+  public sortApprovalPaymentsList: SortDescriptor[] = [{
+    field: this.sortValueApprovalPaymentsAPproval,
+  }];
+  public sortValueImportedClaimsAPproval = 'batch';
+  public sortImportedClaimsList: SortDescriptor[] = [{
+    field: this.sortValueImportedClaimsAPproval,
+  }];
+  
     /** Constructor **/
- constructor(private readonly userDataService: UserDataService,
+constructor(private readonly userDataService: UserDataService,
   private readonly caseManagerDataService: CaseManagerDataService,
       private readonly loaderService: LoaderService,
       private readonly loggingService : LoggingService ,
       private readonly notificationSnackbarService : NotificationSnackbarService,
-      private readonly workflowFacade: WorkflowFacade 
-      ,private configurationProvider : ConfigurationProvider ) {}
+      private readonly workflowFacade: WorkflowFacade,
+      private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
+      private configurationProvider : ConfigurationProvider,
+      private readonly userManagementFacade: UserManagementFacade, ) {}
 
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -70,7 +88,16 @@ showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
         this.hideLoader();   
   }
-    
+  
+  NotifyShowHideSnackBar(type: ReminderSnackBarNotificationType, subtitle: any) {
+    if (type == ReminderSnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.reminderNotificationSnackbarService.manageSnackBar(type, subtitle)
+    this.hideLoader();
+  }
+
   showLoader()
   {
     this.loaderService.show();
@@ -82,8 +109,8 @@ showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
   }
 
   searchUsersByRole(text : string): void {
-     this.userDataService.searchUsersByRole(UserDefaultRoles.CACaseManager ,text).subscribe({
-       next: (getManagerUsersResponse) => {
+    this.userDataService.searchUsersByRole(UserDefaultRoles.CACaseManager ,text).subscribe({
+      next: (getManagerUsersResponse) => {
         Object.values(getManagerUsersResponse).forEach((key) => {   
           key.fullCustomName = key.fullName +' '+ key.pOrNbr  + ' '+ key.phoneNbr
         });
@@ -121,7 +148,8 @@ showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
           this.showAddNewManagerButtonSubject.next(true);
         }
         this.workflowFacade.updateChecklist(workFlowdata);
-        this.getCaseManagersSubject.next(gridView);      
+        this.getCaseManagersSubject.next(gridView);  
+        this.loadCaseManagersDistinctUserIdsAndProfilePhoto(getCaseManagersResponse["items"]);    
         this.hideLoader();  
         }      
      },
@@ -130,6 +158,20 @@ showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
        },
      });
  }
+
+ loadCaseManagersDistinctUserIdsAndProfilePhoto(data: any[]) {
+  const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+  if(distinctUserIds){
+    this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          this.caseManagersProfilePhotoSubject.next(data);
+        }
+      },
+    });
+  }
+}
 
     getCaseManagerStatus(clientCaseId : string): void {
       this.showLoader()

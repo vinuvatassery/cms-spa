@@ -16,7 +16,7 @@
         </ng-template>
       </kendo-grid-column>
     
-      <kendo-grid-column title="Vendor Name" field="VendorName" [width]="160">
+      <kendo-grid-column title="Provider Name" field="VendorName" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
             <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button"
             (click)="onProviderNameClick(dataItem.paymentRequestId)">
@@ -34,7 +34,7 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column title="Service Start Date" field="serviceStartDate" [width]="180"> 
+      <kendo-grid-column title="Service Date Range" field="serviceStartDate" [width]="180"> 
           <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.serviceStartDate| date: 'MM/dd/yyyy' }} - {{ dataItem.serviceEndDate| date: 'MM/dd/yyyy' }}
     </ng-template>
@@ -126,15 +126,13 @@
 
       <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false" [filterable]="false" >
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-            <common-user-photo-icon [userId]="dataItem?.creatorId"></common-user-photo-icon>
-          </button>
-          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-            <ng-template kendoPopoverBodyTemplate>
-              <common-user-profile-card [userId]="dataItem?.creatorId"></common-user-profile-card>
-            </ng-template>
-          </kendo-popover>
+          <common-user-photo-icon  
+          [userId]="dataItem.creatorId" 
+          [userFirstName]="dataItem.userFirstName"
+          [userLastName]="dataItem.userLastName"
+          [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+          [linkType]="'profileIcon'"
+          [userPhotos$]="tpaVendorRefundProfilePhoto$"></common-user-photo-icon>
         </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
     

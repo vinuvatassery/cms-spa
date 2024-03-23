@@ -1,3 +1,14 @@
+<div class="table-sorted-info">
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
+  <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+  <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
+  <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+  <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+    <a>Set to Default</a>
+  </button>
+</div>
+
 <div class="app-c-table">
   <kendo-grid
     [reorderable]="true"
@@ -130,15 +141,13 @@
     </kendo-grid-column>
     <kendo-grid-column [sortable]="false" [filterable]="false" field="by" title="By" [width]="70" class="text-center" >
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem?.by">
-          <common-user-photo-icon [userId]="dataItem?.by"></common-user-photo-icon>
-        </button>
-        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-          <ng-template kendoPopoverBodyTemplate>
-            <common-user-profile-card [userId]="dataItem?.by" [reassign]=false></common-user-profile-card>
-          </ng-template>
-        </kendo-popover>
+        <common-user-photo-icon  
+        [userId]="dataItem.by" 
+        [userFirstName]="dataItem.userFirstName"
+        [userLastName]="dataItem.userLastName"
+        [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+        [linkType]="'profileIcon'"
+        [userPhotos$]=" claimsRecentClaimsProfilePhoto$"></common-user-photo-icon>
       </ng-template>
     </kendo-grid-column>
     <!-- Pagination Template -->

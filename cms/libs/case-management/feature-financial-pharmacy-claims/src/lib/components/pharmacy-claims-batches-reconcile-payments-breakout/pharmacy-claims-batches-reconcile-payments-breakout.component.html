@@ -249,15 +249,13 @@
                   </kendo-grid-column>  
                   <kendo-grid-column field="creatorId" title="By" [filterable]="false" [sortable]="false" [width]="70" class="text-center" >
                         <ng-template kendoGridCellTemplate let-dataItem>
-                          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                            [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-                            <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-                          </button>
-                          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                            <ng-template kendoPopoverBodyTemplate>
-                              <common-user-profile-card [userId]="dataItem?.creatorId" [reassign]=false></common-user-profile-card>
-                            </ng-template>
-                          </kendo-popover>
+                        <common-user-photo-icon  
+                        [userId]="dataItem.creatorId" 
+                        [userFirstName]="dataItem.userFirstName"
+                        [userLastName]="dataItem.userLastName"
+                        [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+                        [linkType]="'profileIcon'"
+                        [userPhotos$]="pharmacyBreakoutProfilePhoto$"></common-user-photo-icon>
                         </ng-template>
                       </kendo-grid-column>
                                
@@ -297,8 +295,13 @@
 <ng-template #clientRecentClaimsDialog>
       <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
       <section class="k-dialog-body">
-        <cms-pharmacy-claims-recent-claims-list
-          (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
+        <common-cms-pharmacy-claims-recent-claims [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
+          (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)" [recentClaimsGridLists$]="recentClaimsGridLists$"
+          [pageSizes]="pageSizes" [sortType]="sortType" [sortValueRecentClaimList]="sortValueRecentClaimList"
+          [sortRecentClaimList]="sortRecentClaimList" [gridSkipCount]="gridSkipCount" [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$">    
+        </common-cms-pharmacy-claims-recent-claims>
+
+        
       </section>
       <kendo-dialog-actions>
         <div class="justify-content-between" >

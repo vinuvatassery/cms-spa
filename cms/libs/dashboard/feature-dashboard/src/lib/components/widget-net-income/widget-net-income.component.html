@@ -1,0 +1,20 @@
+
+      <div class="dash-header-with-filters">
+            <h5>NET INCOME</h5>
+            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" value="Last Year" rounded="medium"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="data">
+                  </kendo-dropdownlist></div>
+      </div>
+      <div class="dashboard-cards-container">
+            <kendo-chart  class="dash_chart" *ngIf="netIncome" [series]="netIncome?.chartData?.series"
+                  [legend]="netIncome?.chartData?.legend" [valueAxis]="netIncome?.chartData?.valueAxis" 
+                  [categoryAxis]="netIncome?.chartData?.categoryAxis"  >
+                  <kendo-chart-tooltip  >
+
+                        <ng-template kendoChartSeriesTooltipTemplate let-value="value" let-category="category"
+                              let-series="series">
+                           {{series.name}} - {{ category }} : {{ value }}$
+                        </ng-template>
+                  </kendo-chart-tooltip>
+            </kendo-chart>
+      </div>

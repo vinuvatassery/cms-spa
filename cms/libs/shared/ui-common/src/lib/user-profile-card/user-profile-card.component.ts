@@ -21,6 +21,7 @@ export class UserProfileCardComponent implements OnInit {
   @Input() sendEmail?: boolean = false;
   @Input() clientName: any;
   @Input() clientCaseId: any;
+  @Input() userProfilePhotoExists: any;
   userImage$ = this.userManagementFacade.userImage$;
   userById$ = this.userManagementFacade.usersById$;
   caseOwners$ = this.userManagementFacade.usersByRole$;
@@ -37,7 +38,9 @@ export class UserProfileCardComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    if(this.userProfilePhotoExists){
     this.loadProfilePhoto();
+    }
     this.loadProfileData();
     this.loadUsersByRole();
     this.hasReassignPermission = this.userManagementFacade.hasPermission([
@@ -70,7 +73,7 @@ export class UserProfileCardComponent implements OnInit {
     this.userManagementFacade.reassignCase(data).subscribe({
       next: (response: any) => {
         this.userManagementFacade.hideLoader();
-        this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message, 'Case re-assigned!');
+        this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response[1].message, response[0].message);
         this.businessLogicPopupClose();
       },
       error: (err: any) => {

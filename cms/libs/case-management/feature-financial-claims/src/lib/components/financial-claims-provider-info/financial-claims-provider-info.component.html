@@ -176,10 +176,12 @@
                             <td>
                                 <div class="flex-col flex-col-6">
 
-                                    <kendo-textarea aria-label="Special Handling" [fillMode]="formUiStyle.inputFillMode"
-                                        formControlName="specialHandlingDesc" [rows]="3" resize="none">
+                                    <kendo-textarea aria-label="Special Handling" [fillMode]="formUiStyle.inputFillMode" [maxlength]="specialHandlingMaxLength"
+                                        formControlName="specialHandlingDesc" [rows]="3" resize="none"  (valueChange)="onspecialHandlingTextAreaValueChange($event)">
                                     </kendo-textarea>
-
+                                    <kendo-textarea-suffix class="justify-content-end">
+                                        <span class="counter">{{ specialhandlingCounter }}</span>
+                                      </kendo-textarea-suffix>
                                 </div>
                             </td>
                         </tr>

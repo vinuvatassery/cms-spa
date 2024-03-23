@@ -35,7 +35,7 @@ export class PharmacyClaimsPageComponent implements OnInit {
    sortValuePharmacyClaimsPayments = this.financialPharmacyClaimsFacade.sortValuePharmacyClaimsPayments;
    sortPaymentsList = this.financialPharmacyClaimsFacade.sortPaymentsList;
 
-
+   unbatchClaim$ = this.financialPharmacyClaimsFacade.unbatchClaims$;
    state!: State;
   pharmacyClaimsProcessGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessData$;
   pharmacyClaimsProcessLoader$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessLoader$;
@@ -73,6 +73,8 @@ export class PharmacyClaimsPageComponent implements OnInit {
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
   letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
+  pharmacyClaimsProcessListProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessListProfilePhotoSubject;
+  pharmacyClaimnsAllPaymentsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyClaimnsAllPaymentsProfilePhotoSubject;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
     private lovFacade: LovFacade, private readonly router: Router,
@@ -213,7 +215,7 @@ export class PharmacyClaimsPageComponent implements OnInit {
   }
 
   onPcaAlertCloseClicked(result: any) {
-    if (result) {
+    if (result  && this.pcaExceptionDialogService) {
       this.pcaExceptionDialogService.close();
     }
   }
@@ -295,4 +297,9 @@ export class PharmacyClaimsPageComponent implements OnInit {
       this.providerDetailsDialog.close();
     }
   }
+
+  unBatchClaimClick(event: any) {
+    this.financialPharmacyClaimsFacade.unbatchPremiums(event.paymentId)
+ }
+
 }

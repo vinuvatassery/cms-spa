@@ -1,5 +1,5 @@
 /** Angular libraries **/
-import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit, OnDestroy, EventEmitter, Output, ChangeDetectorRef } from '@angular/core'; 
 import { Router } from '@angular/router';
 
 /** External libraries **/
@@ -10,7 +10,7 @@ import { Subject, Subscription, debounceTime } from 'rxjs';
 /** Facade **/
 import { FinancialVendorProviderTabCode, GridFilterParam, InvoiceFacade } from '@cms/case-management/domain';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 
@@ -112,13 +112,16 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   selectedSearchColumn='';
   private searchSubject = new Subject<string>();
   @Input() exportButtonShow$ =    this.documentFacade.exportButtonShow$
+  invoiceListSubject = new Subject();
+  invoiceListSubscription = new Subscription();
+  invoiceListProfilePhoto$ = this.invoiceFacade.invoiceListProfilePhotoSubject;
 
    /** Constructor **/
    constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router,
     private readonly lovFacade: LovFacade,
     private documentFacade:DocumentFacade,
     private readonly configProvider: ConfigurationProvider,
-    private readonly intl: IntlService) {}
+    private readonly intl: IntlService,) {}
 
   ngOnInit(): void {
     this.claimStatusSubscription();
@@ -137,7 +140,6 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe((data:boolean)=>{
       this.isInvoiceGridLoaderShow = data;
     })
-
   }
 
   ngOnChanges(): void {
@@ -152,6 +154,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.isInvoiceLoadingSubscription.unsubscribe();
     this.paymentStatusLovSubscription.unsubscribe();
+    this.invoiceListSubscription?.unsubscribe();
   }
 
   claimStatusSubscription(){

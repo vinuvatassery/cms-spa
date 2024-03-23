@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -8,6 +8,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { DrugDataService } from '../infrastructure/drug.data.service';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ClientPharmacy, Pharmacy} from '../entities/client-pharmacy';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class DrugPharmacyFacade {
@@ -71,12 +72,15 @@ export class DrugPharmacyFacade {
     field: this.sortValue,
     dir: 'asc'
   }];
+  pharmacyPurchaseProfileSubject = new Subject();
+  pharmacyProfilePhotoSubject = new Subject();
   /** Constructor**/
   constructor(private readonly drugDataService: DrugDataService,
     private loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService) { }
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade) { }
 
   /** Public methods **/
   loadPharmacies(): void {
@@ -121,6 +125,7 @@ export class DrugPharmacyFacade {
         if(isTriggerPriorityPopup === true && pharmacies?.length > 1){
           this.triggerPriorityPopupSubject.next(true);
         }
+        this.loadPharmacyDistinctUserIdsAndProfilePhoto(pharmacies);
       },
       error: (err) => {
         this.loaderService.hide();
@@ -132,14 +137,28 @@ export class DrugPharmacyFacade {
 
   loadPharmacieslist(): void {
     this.drugDataService.loadtPharmacies().subscribe({
-      next: (pharmacieslistResponse) => {
-        this.pharmaciesListSubject.next(pharmacieslistResponse);
+      next: (pharmacieslistResponse: any) => {
+        this.pharmaciesListSubject.next(pharmacieslistResponse)
       },
       error: (err) => {
         console.error('err', err);
       },
     });
   }
+
+  loadPharmacyDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadDrugsPurchased(): void {
     this.drugDataService.loadDrugsPurchased().subscribe({
@@ -335,7 +354,7 @@ export class DrugPharmacyFacade {
           total:response.totalCount,
         };
        this.drugPurchaseSubject.next(gridView);
-        
+       this.loadDrugsDistinctUserIdsAndProfilePhoto(response.items);       
         this.loaderService.hide();
       },
       error: (err) => {
@@ -345,6 +364,21 @@ export class DrugPharmacyFacade {
       },
     });
   }
+
+  loadDrugsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyPurchaseProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   updatedMakePharmaciesPrimary(clientPharmacyId: string){    
     this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Primary Pharmacy Updated Successfully');
   }

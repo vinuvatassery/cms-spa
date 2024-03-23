@@ -11,7 +11,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import {  ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
@@ -19,16 +19,17 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { BehaviorSubject, Observable, Subject, Subscription, debounceTime } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { LovFacade } from '@cms/system-config/domain';
-import { LoadTypes, GridFilterParam } from '@cms/case-management/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LoadTypes, GridFilterParam, VendorFacade, FinancialVendorFacade, FinancialPharmacyClaimsFacade, DrugsFacade, PaymentStatusCode } from '@cms/case-management/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'cms-pharmacy-claims-all-payments-list',
-  templateUrl: './pharmacy-claims-all-payments-list.component.html', 
+  templateUrl: './pharmacy-claims-all-payments-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges{
@@ -41,7 +42,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isPharmacyClaimsAllPaymentsGridLoaderShow = false;
-  
+
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -51,11 +52,35 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   @Input() exportLoader$!: Observable<boolean>;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
+  @Input() addPharmacyClaim$: any;
+  @Input() editPharmacyClaim$: any;
+  @Input() getPharmacyClaim$: any;
+  @Input() searchPharmacies$: any;
+  @Input() searchClients$: any;
+  @Input() searchDrugs$: any;
+  @Input() searchPharmaciesLoader$: any;
+  @Input() searchClientLoader$: any;
+  @Input() searchDrugsLoader$: any;
+  @Input() paymentRequestType$ : any
+  @Input() deliveryMethodLov$ :any
+
   @Output() exportGridEvent$ = new EventEmitter<any>();
   @Output() loadPharmacyClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
+  @Output() searchPharmaciesEvent = new EventEmitter<any>();
+  @Output() searchClientsEvent = new EventEmitter<any>();
+  @Output() searchDrugEvent = new EventEmitter<any>();
+  @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
+  @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
+  @Output() getPharmacyClaimEvent = new EventEmitter<any>();
+  @Input() pharmacyClaimnsAllPaymentsProfilePhoto$!: any;
+  @Output() unBatchClaimsEvent = new EventEmitter<any>();
+  @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
+  unBatchClaimsDialogTemplate!: TemplateRef<any>;
   public state!: State;
+  @Input() unbatchClaim$ :any
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -98,6 +123,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  pharmacyClaimsAllPaymentsGridLists: any = [];
  currentPageRecords: any = [];
  selectedAllPaymentsList!: any;
+ isBulkUnBatchOpened =false;
  isPageCountChanged: boolean = false;
  isPageChanged: boolean = false;
  unCheckedProcessRequest:any=[];
@@ -110,42 +136,58 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  clientId: any;
  claimsType: any;
  clientName: any;
+ UnBatchDialog: any;
  gridLoaderSubject = new BehaviorSubject(false);
  allPaymentsPrintAdviceLetterPagedList: any;
+ manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
+ sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+ sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+ gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
+ recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
+ pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
+ addDrug$ = this.drugsFacade.addDrug$
+ fromDrugPurchased:any = false;
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
   itemNbr:'Item #',
   batchName: 'Batch #',
   pharmacyName: 'Pharmacy Name',
   paymentMethodCode: 'Payment Method',
+  paymentMethodDesc: 'Payment Method',
   clientFullName: 'Client Name',
   insuranceName: 'Name on Primary Insurance Card',
   clientId: 'Client ID',
   amountPaid: 'Amount Paid',
+  amountDue: 'Total Amount Paid',
   indexCode: 'Index Code',
+  pcaCode: 'PCA Code',
+  objectCode:'Object Code',
   paymentStatus: 'Payment Status',
   warrantNumber: 'Warrant Number',
   creationTime: 'Entry Date'
 };
-
+selected: any;
+isUnBatchClaimsClosed = false;
 searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'ALL', columnDesc: 'All Columns' },
   { columnName: 'batchName', columnDesc: 'Batch #' },
   { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
   { columnName: 'clientFullName', columnDesc: 'Client Name' },
   { columnName: 'clientId', columnDesc: 'Client ID' },
-  { columnName: 'creationTime', columnDesc: 'Entry Date' },
+  { columnName: 'warrantNumber', columnDesc: 'Warrant Number' },
 ];
-   
-  public allPaymentsGridActions = [
+
+  public allPaymentsGridActions(dataItem:any) {
+   return [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Claim',
-      icon: 'edit', 
+      disabled: ![PaymentStatusCode.Denied].includes(dataItem.paymentStatusCode),
+      icon: 'edit',
       click: (data: any): void => {
         if (!this.isAddEditClaimMoreClose) {
           this.isAddEditClaimMoreClose = true;
-          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog, data.paymentRequestId);
         }
       },
     },
@@ -153,15 +195,24 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Claim',
-      icon: 'undo', 
-      click: (data: any): void => {        
-      },
+      icon: 'undo',
+      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+      click: (data: any): void => {
+        if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+        {
+        if (!this.isUnBatchClaimsClosed) {
+          this.isUnBatchClaimsClosed = true;
+          this.selected = data;
+          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+        }
+      }
+    }
     },
- 
+
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Claim',
-      icon: 'delete', 
+      icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteBatchMoreOptionClosed) {
           this.isDeleteBatchMoreOptionClosed = true;
@@ -170,7 +221,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       },
     },
   ];
-
+  }
 
   public bulkMore = [
     {
@@ -179,7 +230,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
-      },  
+      },
     },
 
     {
@@ -189,22 +240,32 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
         this.isPrintAuthorizationClicked = true;
-          
+
         },
     },
   ];
-  
-  constructor(private route: Router, 
+
+  constructor(private route: Router,
     private dialogService: DialogService,
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider) {}
+    private readonly configProvider: ConfigurationProvider,
+    private readonly vendorFacade : VendorFacade,
+    private readonly financialVendorFacade : FinancialVendorFacade,
+    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade,
+    private readonly drugsFacade: DrugsFacade,
+    private readonly userManagementFacade: UserManagementFacade,) {}
 
   ngOnInit(): void {
     this.sortType = 'asc';
     this.addSearchSubjectSubscription();
     this.pharmacyClaimsAllPaymentsSubscription();
+    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (data: any) => {
+        this.financialVendorFacade.manufacturerListSubject.next(data);
+      }      
+    });
   }
 
   pharmacyClaimsAllPaymentsSubscription() {
@@ -217,6 +278,52 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     })
   }
 
+  updatePharmacyClaim(data: any) {
+    this.updatePharmacyClaimEvent.emit(data);
+    this.editPharmacyClaim$.pipe(first((editResponse: any ) => editResponse != null))
+    .subscribe((editResponse: any) =>
+    {
+      if(editResponse)
+      {
+        this.loadPharmacyClaimsAllPaymentsListGrid();
+        this.modalCloseAddEditClaimsFormModal(true)
+      }
+  
+    })
+  }
+
+  searchPharmacies(searchText: any) {
+    this.searchPharmaciesEvent.emit(searchText);
+  }
+  searchClients(searchText: any) {
+    this.searchClientsEvent.emit(searchText);
+  }
+  searchDrug(searchText: string) {
+    this.searchDrugEvent.emit(searchText);
+  }
+
+  getCoPaymentRequestTypeLov() {
+    this.getCoPaymentRequestTypeLovEvent.emit();
+  }
+  getDrugUnitTypeLov() {
+    this.getDrugUnitTypeLovEvent.emit();
+  }
+  addDrugEventHandler(event: any) {
+    this.drugsFacade.addDrugData(event);
+  }
+  searchClientsDataEventHandler(client: any) {
+    this.financialPharmacyClaimsFacade.searchClientsDataSubject.next(client);
+  }
+  searchPharmacyDataEventHandler(vendor: any) {
+    this.financialPharmacyClaimsFacade.searchPharmaciesDataSubject.next(vendor)
+  }
+  loadManufacturerEvent(event: any) {
+    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (data: any) => {
+        this.financialVendorFacade.manufacturerListSubject.next(data);
+      }
+    });
+  }
 
   ngOnChanges(): void {
     this.sortType = 'asc';
@@ -228,6 +335,14 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
     this.loadPharmacyClaimsAllPaymentsListGrid();
   }
+
+  onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
+    this.UnBatchDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
 
   resetGrid(){
     this.defaultGridState();
@@ -299,8 +414,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     const isClientId = (['clientId']).includes(this.selectedSearchColumn);
     const isEntryDate = (['creationTime']).includes(this.selectedSearchColumn);
     if(isClientId){
-      operator = 'eq';
-      data = !isNaN(data) && !isNaN(parseFloat(data)) ? data: '0';
+      operator = 'contains';
     }else if(isEntryDate){
       operator = 'eq';
       data = this.isValidDate(data) ? this.intl.formatDate(
@@ -415,12 +529,12 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.filterData = filter;
   }
 
-  navToReconcilePayments(event : any){  
+  navToReconcilePayments(event : any){
     this.route.navigate(['/financial-management/pharmacy-claims/payments/reconcile-payments'],
      { queryParams :{loadType: LoadTypes.allPayments}});
   }
-  
- 
+
+
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({
       content: template,
@@ -429,7 +543,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   }
 
   onPreviewSubmitPaymentCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.PreviewSubmitPaymentDialog.close();
     }
   }
@@ -456,9 +570,9 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     });
   }
 
- 
+
   onPrintAuthorizationCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.printAuthorizationDialog.close();
     }
   }
@@ -467,11 +581,11 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.addClientRecentClaimsDialog.close();
   }
 
-  
+
   clientRecentClaimsModalClicked(
     template: TemplateRef<unknown> ,data:any
   ): void {
-    
+
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
@@ -492,7 +606,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     }
   }
 
-  
+
   onViewProviderDetailClicked(template: TemplateRef<unknown>): void {
     this.providerDetailsDialog = this.dialogService.open({
       content: template,
@@ -510,7 +624,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     }
   }
 
-  
+
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
@@ -524,7 +638,11 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     }
   }
 
-  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>, paymentRequestId: any): void {
+    if(paymentRequestId !== '00000000-0000-0000-0000-000000000000')
+    {
+    this.getPharmacyClaimEvent.emit(paymentRequestId);
+    }
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-96full add_claims_modal',
@@ -745,7 +863,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
         this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.filter((item:any) => item.selected));
       }
   }
-  
+
   pageNumberAndCountChangedInSelectAll() {
     //If selecte all header checked and either the page count or the page number changed
     if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
@@ -763,7 +881,33 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       }
     }
   }
-    onProviderNameClick(event: any) {
-      this.onProviderNameClickEvent.emit(event);
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
+  }
+
+  loadRecentClaimListEventHandler(data: any) {
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+  }
+
+    onUnBatchPaymentCloseClicked(result: any) {
+      if (result) {
+          this.handleUnbatchClaims();
+          this.unBatchClaimsEvent.emit({
+            paymentId : this.selected.paymentRequestId,
+          })
+      }
+      this.isBulkUnBatchOpened = false;
+      this.isUnBatchClaimsClosed = false;
+      this.UnBatchDialog.close();
+    }
+
+    handleUnbatchClaims() {
+      this.unbatchClaim$
+        .pipe(first((unbatchResponse: any) => unbatchResponse != null))
+        .subscribe((unbatchResponse: any) => {
+          if (unbatchResponse ?? false) {
+            this.loadPharmacyClaimsAllPaymentsListGrid();
+          }
+        });
     }
 }

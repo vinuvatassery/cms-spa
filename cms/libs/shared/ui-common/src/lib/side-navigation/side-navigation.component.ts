@@ -1,16 +1,26 @@
 /** Angular **/
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 /** Internal Library **/
-import { NavigationMenu, NavigationMenuFacade, UserManagementFacade, UserDefaultRoles, UserLevel } from '@cms/system-config/domain';
+import {
+  NavigationMenu,
+  NavigationMenuFacade,
+  UserManagementFacade,
+  UserDefaultRoles,
+  UserLevel,
+} from '@cms/system-config/domain';
 import { MenuBadge } from '../enums/menu-badge.enum';
+import { ApprovalLimitPermissionCode } from '../enums/approval-limit-permission-code.enum';
+import { PendingApprovalPaymentTypeCode } from '../enums/pending-approval-payment-type-code.enum';
+
 
 @Component({
   selector: 'cms-side-navigation',
   templateUrl: './side-navigation.component.html',
   styleUrls: ['./side-navigation.component.scss'],
 })
-export class SideNavigationComponent implements OnInit {
+export class SideNavigationComponent implements OnInit, OnDestroy {
   /** Public properties **/
   isProductivityMenuActivated = false;
   subMenuExpandStatus: boolean[] = [];
@@ -18,12 +28,12 @@ export class SideNavigationComponent implements OnInit {
   pcaReassignmentCount$ = this.navigationMenuFacade.pcaReassignmentCount$;
   //add menu badges on this variable
   menuBadges = [
-    { key: "TO_DO_ITEMS", value: 5 },
-    { key: "DIRECT_MESSAGES", value: 10 },
+    { key: 'TO_DO_ITEMS', value: 5 },
+    { key: 'DIRECT_MESSAGES', value: 10 },
     { key: MenuBadge.productivityTools, value: 0 },
     { key: MenuBadge.financialManagement, value: 0 },
     { key: MenuBadge.fundsAndPcas, value: 0 },
-    { key: MenuBadge.pendingApprovals, value: 0 }
+    { key: MenuBadge.pendingApprovals, value: 0 },
   ];
   userLevel = 0;
 
@@ -33,127 +43,288 @@ export class SideNavigationComponent implements OnInit {
 
   pendingApprovalCount = 0;
   directMessageCount = 0;
-  toDoItemsCount = 0
+  toDoItemsCount = 0;
 
-  productivityToolsCount = 0
-
-
+  productivityToolsCount = 0;
+  selected: any = {};
+  menuSubscription!: Subscription;
+  menuItems: NavigationMenu[] = [];
+  permissionLevels:any[]=[];
   /** Constructor **/
-  constructor(private readonly router: Router,
-    private readonly navigationMenuFacade: NavigationMenuFacade,private userManagementFacade: UserManagementFacade) { }
+  constructor(
+    private readonly router: Router,
+    private readonly navigationMenuFacade: NavigationMenuFacade,
+    private userManagementFacade: UserManagementFacade
+  ) {}
 
   /** Lifecycle events **/
   ngOnInit(): void {
     this.navigationMenuFacade.getNavigationMenu();
     this.getUserRole();
     this.getMenuCount();
+    this.addMenuSubscription();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.navigationMenuFacade.pcaReassignmentCount$.subscribe().unsubscribe();
+    this.menuSubscription.unsubscribe();
   }
 
   /** Internal event methods **/
   onSubMenuClicked(index: number) {
-    this.subMenuExpandStatus[index] = !(this.subMenuExpandStatus[index] ?? false);
+    this.subMenuExpandStatus[index] = !(
+      this.subMenuExpandStatus[index] ?? false
+    );
   }
 
   getBadge(key: string) {
-    return this.menuBadges.find(i => i.key === key)?.value ?? 0;
+    return this.menuBadges.find((i) => i.key === key)?.value ?? 0;
   }
 
-  isShowBadge(key: string){
-    return (this.menuBadges.find(i => i.key === key)?.value ?? 0) > 0 ;
+  isShowBadge(key: string) {
+    return (this.menuBadges.find((i) => i.key === key)?.value ?? 0) > 0;
   }
 
-  onMenuClick(menu: any) {
-    if (menu?.url) {
-      if (menu?.target === '_blank') {
-        window.open(menu?.url, '_blank');
+  onMenuClick(menu: NavigationMenu, $event: any) {
+    if (menu.subMenus.length > 0 && !menu.parentId) {
+      $event ? $event.stopPropagation() : null;
+    } else {
+      this.clearActiveMenu();
+      if (menu?.url) {
+        if (menu?.target === '_blank') {
+          window.open(menu?.url, '_blank');
+        } else {
+          this.router.navigate([menu?.url]);
+        }
       }
-      else {
-        this.router.navigate([menu?.url]);
-      }
+      this.activateMenu(menu);
     }
   }
 
-  isMenuHeadingVisible = (menus: NavigationMenu[], filterText: string) => menus?.findIndex((menu: any) =>
-    menu.name?.toLowerCase()?.indexOf(filterText?.toLowerCase()) !== -1) !== -1;
+  private activateMenuBasedOnRouter() {
+    const currentUrl = this.router.url;
 
-    /** Private Methods */
+    // Find the menu corresponding to the current URL
+    const menuToActivate = this.findMenuByUrl(currentUrl);
 
-    private getMenuCount(){
-      this.getPcaAssignmentMenuCount();
-      this.getPendingApprovalMenuCount();
-
+    if (menuToActivate) {
+      this.activateMenu(menuToActivate);
     }
+  }
 
-    private getPcaAssignmentMenuCount(){
-      this.navigationMenuFacade.pcaReassignmentCount();
-      this.subscribeToReassignPcaCount();
-    }
+  private findMenuByUrl(url: string) {
+    const foundMenu = this.findMenuRecursive(this.menuItems, url);
+    return foundMenu;
+  }
 
-    private setBadgeValue(key: string, value: number){
-      let menuIndex = this.menuBadges.findIndex(x => x.key == key);
-      (this.menuBadges[menuIndex]?? null).value = value;
-    }
-
-    private subscribeToReassignPcaCount(){
-      this.navigationMenuFacade.pcaReassignmentCount$.subscribe((count) => {
-        this.setBadgeValue(MenuBadge.financialManagement, count);
-        this.setBadgeValue(MenuBadge.fundsAndPcas, count);
-      });
-    }
-
-    getUserRole(){
-      if(this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL2)){
-        this.userLevel = UserLevel.Level2Value;
+  private findMenuRecursive(
+    menus: NavigationMenu[],
+    url: string
+  ): NavigationMenu | undefined {
+    for (const menu of menus) {
+      if (menu.url === url) {
+        return menu; // Found the menu with the matching URL
       }
-      else if(this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL1)){
-        this.userLevel = UserLevel.Level1Value;
+
+      if (menu.subMenus?.length) {
+        const foundSubMenu = this.findMenuRecursive(menu.subMenus, url);
+        if (foundSubMenu) {
+          return foundSubMenu; // Found the menu in a submenu
+        }
       }
     }
 
-    private getPendingApprovalMenuCount(){
-      this.navigationMenuFacade.getPendingApprovalPaymentCount(this.userLevel);
-      this.navigationMenuFacade.getPendingApprovalGeneralCount();
-      this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
-      this.subscribeToPendingApprovalCount();
+    return undefined; // Menu not found
+  }
+
+  private activateMenu(menu: NavigationMenu) {
+    // Activate the main menu
+    menu.isActive = true;
+
+    // Activate the parent menus if it's a submenu
+    let parentMenu = menu;
+    while (parentMenu.parentId) {
+      parentMenu = this.findMenuById(parentMenu.parentId) || parentMenu;
+      parentMenu.isActive = true;
+    }
+  }
+  private clearActiveMenu() {
+    const activeMenus = this.menuItems.filter((menu) => menu.isActive === true);
+    activeMenus.forEach((menu) => {
+      menu.isActive = false;
+      if (menu.subMenus.length > 0) {
+        const submenu = menu.subMenus;
+        submenu.forEach((submenu) => {
+          submenu.isActive = false;
+          if (submenu.subMenus.length > 0) {
+            const submenus = submenu.subMenus;
+            submenus.forEach((supSubmenus) => {
+              supSubmenus.isActive = false;
+            });
+          }
+        });
+      }
+    });
+  }
+
+  private findMenuById(menuId: string) {
+    const foundMenu = this.findMenuByIdRecursive(this.menuItems, menuId);
+    return foundMenu;
+  }
+  private addMenuSubscription() {
+    this.menuSubscription = this.menus$.subscribe((menus) => {
+      this.menuItems = menus;
+      this.activateMenuBasedOnRouter();
+    });
+  }
+
+  private findMenuByIdRecursive(
+    menus: NavigationMenu[],
+    menuId: string
+  ): NavigationMenu | undefined {
+    for (const menu of menus) {
+      if (menu.menuId === menuId) {
+        return menu; // Found the menu with the matching ID
+      }
+
+      if (menu.subMenus?.length) {
+        const foundSubMenu = this.findMenuByIdRecursive(menu.subMenus, menuId);
+        if (foundSubMenu) {
+          return foundSubMenu; // Found the menu in a submenu
+        }
+      }
     }
 
-    private subscribeToPendingApprovalCount(){
-      this.navigationMenuFacade.pendingApprovalPaymentCount$.subscribe({
-        next: (paymentCount)=>{
-          if(paymentCount){
-            this.paymentCount = paymentCount;
-            this.setProductivityToolsCount();
-          }
-        }
-      });
-      this.navigationMenuFacade.pendingApprovalGeneralCount$.subscribe({
-        next: (generalCount)=>{
-          if(generalCount){
-            this.generalCount = generalCount;
-            this.setProductivityToolsCount();
-          }
-        }
-      });
-      this.navigationMenuFacade.pendingApprovalImportedClaimCount$.subscribe({
-        next: (importedClaimCount)=>{
-          if(importedClaimCount){
-            this.importedClaimCount = importedClaimCount;
-            this.setProductivityToolsCount();
-          }
-        }
-      });  
-    }
+    return undefined; // Menu not found
+  }
 
-    private setProductivityToolsCount(){
-      this.pendingApprovalCount = this.paymentCount + this.generalCount + this.importedClaimCount;
-      this.productivityToolsCount = this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount;
-      this.setBadgeValue(MenuBadge.pendingApprovals, 
-        this.pendingApprovalCount);
-        this.setBadgeValue(MenuBadge.productivityTools, 
-          this.productivityToolsCount);
+  isMenuHeadingVisible = (menus: NavigationMenu[], filterText: string) =>
+    menus?.findIndex(
+      (menu: any) =>
+        menu.name?.toLowerCase()?.indexOf(filterText?.toLowerCase()) !== -1
+    ) !== -1;
+
+  /** Private Methods */
+
+  private getMenuCount() {
+    this.getPcaAssignmentMenuCount();
+    this.getPendingApprovalMenuCount();
+  }
+
+  private getPcaAssignmentMenuCount() {
+    this.navigationMenuFacade.pcaReassignmentCount();
+    this.subscribeToReassignPcaCount();
+  }
+
+  private setBadgeValue(key: string, value: number) {
+    let menuIndex = this.menuBadges.findIndex((x) => x.key == key);
+    (this.menuBadges[menuIndex] ?? null).value = value;
+  }
+
+  private subscribeToReassignPcaCount() {
+    this.navigationMenuFacade.pcaReassignmentCount$.subscribe((count) => {
+      this.setBadgeValue(MenuBadge.financialManagement, count);
+      this.setBadgeValue(MenuBadge.fundsAndPcas, count);
+    });
+  }
+
+  getUserRole() {
+    if (
+      this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL2)
+    ) {
+      this.userLevel = UserLevel.Level2Value;
+    } else if (
+      this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL1)
+    ) {
+      this.userLevel = UserLevel.Level1Value;
     }
+  }
+
+  private getPendingApprovalMenuCount() {
+    this.loadPendingApprovalPaymentLevel();
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
+    this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
+    this.subscribeToPendingApprovalCount();
+  }
+
+  private subscribeToPendingApprovalCount() {
+    this.navigationMenuFacade.pendingApprovalPaymentCount$.subscribe({
+      next: (paymentCount) => {
+        if (paymentCount) {
+          this.paymentCount = paymentCount;
+          this.setProductivityToolsCount();
+        }
+      },
+    });
+    this.navigationMenuFacade.pendingApprovalGeneralCount$.subscribe({
+      next: (generalCount) => {
+        if (generalCount) {
+          this.generalCount = generalCount;
+          this.setProductivityToolsCount();
+        }
+      },
+    });
+    this.navigationMenuFacade.pendingApprovalImportedClaimCount$.subscribe({
+      next: (importedClaimCount) => {
+        if (importedClaimCount) {
+          this.importedClaimCount = importedClaimCount;
+          this.setProductivityToolsCount();
+        }
+      },
+    });
+  }
+
+  private setProductivityToolsCount() {
+    this.pendingApprovalCount =
+      this.paymentCount + this.generalCount + this.importedClaimCount;
+    this.productivityToolsCount =
+      this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount;
+    this.setBadgeValue(MenuBadge.pendingApprovals, this.pendingApprovalCount);
+    this.setBadgeValue(
+      MenuBadge.productivityTools,
+      this.productivityToolsCount
+    );
+  }
+
+  
+  loadPendingApprovalPaymentLevel() {
+    this.permissionLevels=[];
+        let level = this.setPermissionLevel(ApprovalLimitPermissionCode.InsurancePremiumPermissionCode);
+        this.addItemToArray(PendingApprovalPaymentTypeCode.InsurancePremium,level);       
+
+        level = this.setPermissionLevel(ApprovalLimitPermissionCode.MedicalClaimPermissionCode);
+        this.addItemToArray(PendingApprovalPaymentTypeCode.TpaClaim,level);
+
+        level = this.setPermissionLevel(ApprovalLimitPermissionCode.PharmacyPermissionCode);
+        this.addItemToArray(PendingApprovalPaymentTypeCode.PharmacyClaim,level);
+
+        this.navigationMenuFacade.getPendingApprovalPaymentCount(
+          this.permissionLevels
+        );
+  }
+  
+  addItemToArray(serviceTypeCode:string,level:number)
+  {
+    let object = {
+      serviceTypeCode : serviceTypeCode,
+      level : level
+    };
+    this.permissionLevels.push(object);
+  }
+  setPermissionLevel(ifPermission : any)
+  {
+    if(this.userManagementFacade.hasPermission([ifPermission]))
+    {
+      return UserLevel.Level1Value;
+    }
+    let maxApprovalAmount = this.userManagementFacade.getUserMaxApprovalAmount(ifPermission);
+    if(maxApprovalAmount != undefined && maxApprovalAmount > 0)
+    {
+      return UserLevel.Level1Value;
+    }
+    else
+    {
+      return UserLevel.Level2Value;
+    }
+  }
 }

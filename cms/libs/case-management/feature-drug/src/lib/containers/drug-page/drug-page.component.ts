@@ -5,13 +5,13 @@ import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoi
 /** Facades **/
 import {
   DrugPharmacyFacade, WorkflowFacade, PrescriptionDrugFacade, PrescriptionDrug,
-  CompletionChecklist, NavigationType, YesNoFlag
+  CompletionChecklist, NavigationType
 } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
-import { StatusFlag } from '@cms/shared/ui-common';
+import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-drug-page',
@@ -111,10 +111,11 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
             this.prescriptionDrugForm.patchValue(response);
             if(response?.prescriptionDrugsForHivCode === 'YES'){
               this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(false);
-              this.showPharmacySection = true;
+              this.showPharmacySection = true;              
             }else {
               this.showPharmacySection = false;
               this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(true);
+              this.updateWorkflowCount('pharmacy', true);
             }
             this.adjustAttributeChanged(response?.prescriptionDrugsForHivCode === 'YES');
             this.changeDetector.detectChanges();
@@ -163,6 +164,15 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     if (completedDataPoints.length > 0) {
+      if(this.isPharmacyAdded){
+        completedDataPoints = completedDataPoints.map(dp => {
+          if(dp.dataPointName === 'isClientNotUsingAnyPharmacy'){
+            return { ...dp, status: StatusFlag.Yes };
+          }
+
+          return dp;
+        });
+      }
       this.workflowFacade.updateChecklist(completedDataPoints);
     }
   }
@@ -188,6 +198,15 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     if (completedDataPoints.length > 0) {
+      if(this.isPharmacyAdded){
+        completedDataPoints = completedDataPoints.map(dp => {
+          if(dp.dataPointName === 'isClientNotUsingAnyPharmacy'){
+            return { ...dp, status: StatusFlag.Yes };
+          }
+
+          return dp;
+        });
+      }
       this.workflowFacade.updateChecklist(completedDataPoints);
     }
   }
@@ -320,6 +339,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.isPharmacyAdded = pharmacyFound;
         this.updateWorkflowCount('pharmacy', pharmacyFound);
+        this.updateWorkflowCount('isClientNotUsingAnyPharmacy', pharmacyFound);
         this.loaderService.hide();
       },
       error: (err) => {
@@ -329,6 +349,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           err
         );
         this.updateWorkflowCount('pharmacy', false);
+        this.updateWorkflowCount('isClientNotUsingAnyPharmacy', false);
       },
     });
   }
@@ -414,7 +435,6 @@ onCheckClientPharmacies(event:any){
 
    this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.valueChanges
       .subscribe((value: any) => {
-
         this.showPharmacySection = value ? false : true;
         if(value){
           this.showPharmacyRequiredValidation$.next(false);

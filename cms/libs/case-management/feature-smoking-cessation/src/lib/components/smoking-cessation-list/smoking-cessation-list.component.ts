@@ -3,6 +3,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {ClientNoteTypeCode, SmokingCessationFacade, CaseFacade} from '@cms/case-management/domain';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'case-management-smoking-cessation-list',
   templateUrl: './smoking-cessation-list.component.html', 
@@ -21,12 +23,14 @@ export class SmokingCessationListComponent implements OnInit {
   smokingForm: FormGroup;
   isShowHistorical: boolean=false;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  smokingCessationProfilrPhotoSubject = new Subject();
    /** Constructor**/
    constructor(
     private readonly smokingCessationFacade : SmokingCessationFacade,
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
     private readonly caseFacade: CaseFacade,
+    private readonly userManagementFacade: UserManagementFacade
   ) { 
     this.smokingForm = this.formBuilder.group({smokingCessationNote: ['']});
   }
@@ -43,6 +47,9 @@ export class SmokingCessationListComponent implements OnInit {
       next: (data:any) =>{
         this.gridSmokingData=data;
         this.smokingCessationFacade.hideLoader();
+        if(this.gridSmokingData?.length > 0){
+          this.loadDistinctUserIdsAndProfilePhoto(this.gridSmokingData);
+        }
         this.cdr.detectChanges();
       },
       error: (error:any) =>{
@@ -50,6 +57,22 @@ export class SmokingCessationListComponent implements OnInit {
       }
     });
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.smokingCessationProfilrPhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+}
+
   onIsShowHistoricalChange(){
     this.loadGridData();
   }

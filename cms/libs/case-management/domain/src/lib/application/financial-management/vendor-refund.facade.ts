@@ -9,6 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialVendorRefundDataService } from '../../infrastructure/financial-management/vendor-refund.data.service';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundFacade {
@@ -16,7 +17,7 @@ export class FinancialVendorRefundFacade {
   selectedRefundsTab = 1
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
 
   public sortValueRefundInformationGrid = 'creationTime';
   public sortValueEntryInformationGrid = 'entryDate';
@@ -56,7 +57,7 @@ export class FinancialVendorRefundFacade {
   }];
 
 
-  public sortValueClientClaims = 'clientId';
+  public sortValueClientClaims = 'EntryDate';
   public sortClientClaimsList: SortDescriptor[] = [{
     field: this.sortValueClientClaims,
   }];
@@ -144,6 +145,14 @@ export class FinancialVendorRefundFacade {
   insurancevendors$ = this.insurancevendorsSubject.asObservable();
   public vendorsSubject = new Subject<any>;
   vendors$ = this.vendorsSubject.asObservable();
+  vendorRefundListProfilePhotoSubject = new Subject();
+  allRefundProfilePhotoSubject = new Subject();
+  vendorRefundBatchClaimsSubject = new Subject();
+  vendorRefundFormProfileSubject = new Subject();
+  vendorRefundTPAProfileSubject = new Subject();
+  tpaVendorRefundProfilePhotoSubject = new Subject();
+  vendorRefundPaymentListProfilePhotoSubject = new Subject();
+  pharmacyClaimsListProfileSubject = new Subject();
 
   /** Private properties **/
 
@@ -175,7 +184,8 @@ export class FinancialVendorRefundFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
@@ -252,12 +262,27 @@ export class FinancialVendorRefundFacade {
           total: dataResponse['totalCount']
         };
         this.vendorRefundAllPaymentsDataSubject.next(gridView);
+        this.loadRefundDistinctUserIdsAndProfilePhoto(dataResponse['items']);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
   }
+
+  loadRefundDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.allRefundProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadBatchLogListGrid(loadBatchLogListRequestDto : any, batchId : string){
     this.financialVendorRefundDataService.loadBatchLogListService(loadBatchLogListRequestDto,batchId).subscribe({
@@ -267,6 +292,7 @@ export class FinancialVendorRefundFacade {
           total: dataResponse['totalCount']
         };
         this.batchLogDataSubject.next(gridView);
+        this.loadVendorBatchDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.hideLoader();
       },
       error: (err) => {
@@ -274,6 +300,20 @@ export class FinancialVendorRefundFacade {
         this.hideLoader();
       },
     });
+  }
+
+  loadVendorBatchDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundBatchClaimsSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
   loadVendorRefundBatchListGrid(loadBatchListRequestDto : any){
@@ -336,11 +376,26 @@ this.loaderService.show();
             acceptsCombinedPaymentsCount: dataResponse['acceptsCombinedPaymentsQueryCount'],
           };
         this.financialTpaDataSubject.next(gridView);
+        this.loadTPADistinctUserIdsAndProfilePhoto(dataResponse['items']);
       }},
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.tpaVendorRefundProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
   loadTPARefundLists(ClaimsPageAndSortedRequestDto:any){
@@ -357,12 +412,27 @@ this.loaderService.show();
             acceptsCombinedPaymentsCount: dataResponse['acceptsCombinedPaymentsQueryCount'],
           };
         this.financialTpasDataSubject.next(gridView);
+        this.loadTPADistinctUserIdsAndProfilePhoto(dataResponse['items']);
       }},
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
+
+  loadTPADistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundTPAProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadInsurancevendorBySearchText(searchText: string,clientId:number) {
 
@@ -426,8 +496,9 @@ this.loaderService.show();
 
   loadClientClaimsListGrid(){
     this.financialVendorRefundDataService.loadClientClaimsListService().subscribe({
-      next: (dataResponse) => {
+      next: (dataResponse: any) => {
         this.clientClaimsListDataSubject.next(dataResponse);
+        this.loadClientClaimsDistinctUserIdsAndProfilePhoto(dataResponse?.data);
         this.hideLoader();
       },
       error: (err) => {
@@ -436,6 +507,20 @@ this.loaderService.show();
       },
     });
   }
+
+  loadClientClaimsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundPaymentListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadPharmacyPaymentsListGrid(){
     this.financialVendorRefundDataService.loadPharmacyPaymentsListService().subscribe({
@@ -465,6 +550,7 @@ this.loaderService.show();
           total: dataResponse["totalCount"]
         };
         this.vendorRefundProcessDataSubject.next(gridView);
+        this.loadVendorRefundDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
         this.hideLoader();
       },
       error: (err) => {
@@ -473,6 +559,20 @@ this.loaderService.show();
       },
     });
   }
+
+  loadVendorRefundDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   deleteRefunds(paymentRequestIds: string[]) {
     this.showLoader();
@@ -657,6 +757,7 @@ this.loaderService.show();
           vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
         });
         this.pharmaciesSubject.next(response);
+        this.loadVendorFormDistinctUserIdsAndProfilePhoto(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
       },
       error: (err) => {
@@ -665,8 +766,22 @@ this.loaderService.show();
       }
     });
   }
+
+  loadVendorFormDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundFormProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+
   loadRefundClaimsListGrid(ClaimsPageAndSortedRequestDto:any) {
-    this.showLoader();
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
     this.financialVendorRefundDataService. loadRefundClaimsService(ClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
@@ -677,6 +792,7 @@ this.loaderService.show();
             total: dataResponse['totalCount'],
           };
           this.clientClaimsListDataSubject.next(gridView);
+          this.loadclientClaimsListDistinceUserProfilePhoto(dataResponse['items']);
           this.hideLoader();
         }
       },
@@ -686,6 +802,21 @@ this.loaderService.show();
       },
     });
   }
+
+  loadclientClaimsListDistinceUserProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyClaimsListProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   loadFinancialRecentRefundListGrid(RefundPageAndSortedRequestDto:any) {
     this.showLoader();
     RefundPageAndSortedRequestDto.filter = JSON.stringify(RefundPageAndSortedRequestDto.filter);
@@ -716,16 +847,31 @@ this.loaderService.show();
   public loadPharmacyRefundEditList(paymentRequestId: string){
     return this.financialVendorRefundDataService.loadPharmacyRefundEditList(paymentRequestId)
     .subscribe({
-      next: (dataResponse) => {
+      next: (dataResponse: any) => {
         this.existingRxRefundClaimSubject.next(dataResponse);
         if (dataResponse) {
           this.existingRxRefundClaimSubject.next(dataResponse);
         }
+        this.loadRefundFormDistinctUserIdsAndProfilePhoto(dataResponse?.prescriptionFillItems);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.hideLoader();
       },
     });
+  }
+
+  loadRefundFormDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.by))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundFormProfileSubject.next(data);
+          }
+        },
+      });
+    }
   }
 }

@@ -40,7 +40,7 @@
             </div>
             <div class="flex-col flex-col-4" *ngIf="!isViewGridOptionClicked">
                   <label>Remaining</label>
-                  <p>$ {{pcaReassignmentByFundSource.remainingAmount  | kendoNumber: 'n2' }}</p>
+                  <p [ngClass]="pcaReassignmentByFundSource?.remainingAmount < 0 ? 'red-text-color' : 'green-text-color'"> $ {{pcaReassignmentByFundSource.remainingAmount  | kendoNumber: 'n2' }}</p>
             </div>
             <div class="flex-col flex-col-5" *ngIf="isViewGridOptionClicked">
                   <label> Remaining Amount </label>

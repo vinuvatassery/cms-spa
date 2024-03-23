@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ClientProfileTabs, HealthInsurancePolicyFacade, ClientFacade } from '@cms/case-management/domain';
+import { ClientProfileTabs, HealthInsurancePolicyFacade, ClientFacade, GridFilterParam } from '@cms/case-management/domain';
 import { filter, Subject, Subscription } from 'rxjs';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -21,7 +21,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly loaderService: LoaderService,
     private readonly ref: ChangeDetectorRef,
-    private readonly clientFacade: ClientFacade
+    private readonly clientFacade: ClientFacade,    
   ) { }
 
   tabChangeSubscription$ = new Subscription();
@@ -37,6 +37,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
   closeDeleteModal: boolean = false;
   isHistoricalDataLoad:boolean = false;
+  healthInsuranceProfilePhoto$ = this.insurancePolicyFacade.healthInsuranceProfilePhotoSubject;
 
   ngOnInit(): void {
     this.routeChangeSubscription();
@@ -118,12 +119,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
     let typeParam ={type:'INSURANCEDEPENDENTS',insuranceStatusType:this.tabId};
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sortColumn: gridDataRefinerValue.sortColumn,
-      sortType: gridDataRefinerValue.sortType,
-    };
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
     if(gridDataRefinerValue?.loadHistoricalData !== undefined){
       this.isHistoricalDataLoad = gridDataRefinerValue.loadHistoricalData;
     }
@@ -131,12 +127,10 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       this.clientId,
       this.isHistoricalDataLoad? null: this.clientCaseEligibilityId,
       typeParam,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sortColumn,
-      gridDataRefiner.sortType
+      gridFilterParam
     );
   }
+
   deleteInsurancePolicy(insurancePolicyId: any, priority:any = null) {
     if (insurancePolicyId != undefined) {
       this.loaderService.show();
@@ -146,7 +140,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -163,11 +157,12 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       })
     }
   }
+
   loadHistoricalData(isLoadHistoricalData:boolean){
     this.isHistoricalDataLoad =isLoadHistoricalData;
     const gridDataRefinerValue = {
       skipCount: this.insurancePolicyFacade.skipCount,
-      pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+      pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
       sortColumn: 'creationTime',
       sortType: 'asc',
       loadHistoricalData:isLoadHistoricalData
@@ -181,7 +176,10 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   loadPremiumPaymentEventHandle(gridDataRefinerValue: any) {
     this.insurancePolicyFacade.loadPremiumPayments(this.clientId, this.clientCaseId, this.clientCaseEligibilityId, gridDataRefinerValue);
   }
-
+  
+  getPolicies(event:any){
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.clientCaseEligibilityId,this.tabId);
+   }
 }
 
 

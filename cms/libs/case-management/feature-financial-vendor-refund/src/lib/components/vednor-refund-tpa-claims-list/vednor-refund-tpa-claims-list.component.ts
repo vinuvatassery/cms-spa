@@ -1,10 +1,12 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
@@ -12,9 +14,9 @@ import {
 } from '@angular/core';
 import { FinancialClaimsFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService, GridComponent, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -27,7 +29,7 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './vednor-refund-tpa-claims-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
+export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('filterResetConfirmationDialogTemplate', { read: TemplateRef })
   filterResetConfirmationDialogTemplate!: TemplateRef<any>;
   paymentStatusLovSubscription!:Subscription;
@@ -70,11 +72,25 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
   paymentStatuses$ = this.lovFacade.paymentStatus$;
   @Output() claimsCount = new EventEmitter<any>();
   cliams:any[]=[];
+  vendorRefundTPAProfileSubject = new Subject();
+  vendorTPAClaimsListSubscription = new Subscription();
+  vendorRefundTPAProfile$ = this.financialVendorRefundFacade.vendorRefundTPAProfileSubject;
+
   tpaGridData!: any;
+  public selectableSettings: SelectableSettings;
+  public checkboxOnly = true;
+  public mode: SelectableMode = 'multiple';
+  public drag = false;
   constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, 
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
-    private dialogService: DialogService,   private readonly lovFacade : LovFacade){
- 
+    private dialogService: DialogService,   private readonly lovFacade : LovFacade,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef){
+      this.selectableSettings = {
+        checkboxOnly: this.checkboxOnly,
+        mode: this.mode,
+        drag: this.drag,
+      };
   }
  
  
@@ -86,12 +102,13 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
     this.selectedTpaClaims =  (this.tpaPaymentReqIds && this.tpaPaymentReqIds.length >0)?
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
-    this.tpaData$.subscribe((res:any)=>{
-       this.tpaGridData = res.data
+    this.vendorTPAClaimsListSubscription = this.tpaData$.subscribe((res:any)=>{
+      this.tpaGridData = res.data
       this.claimsCount.emit(this.selectedTpaClaims.length)
-      this.tpaData$.subscribe((res:any)=>{
-        this.cliams=res.data;
-      })
+      this.cliams=res.data;
+      if(this.cliams){
+        
+      }
   })
   }
 
@@ -123,7 +140,6 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
   }
  
   dataStateChange(stateData: any): void {
-   
   this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -232,6 +248,7 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
  
   ngOnDestroy(): void {
     this.paymentStatusLovSubscription.unsubscribe();
+    this.vendorTPAClaimsListSubscription?.unsubscribe();
   }
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
     filterService.filter({
@@ -246,5 +263,5 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
       this.paymentStatusCode = value;
     }
   }
- 
+  
 }

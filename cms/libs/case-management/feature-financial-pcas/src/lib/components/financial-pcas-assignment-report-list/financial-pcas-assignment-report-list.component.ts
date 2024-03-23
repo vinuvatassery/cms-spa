@@ -79,8 +79,12 @@ export class FinancialPcasAssignmentReportListComponent
       columnDesc: 'PCA',
     },
     {
-      columnName: 'ay',
-      columnDesc: 'AY',
+      columnName: 'objectName',
+      columnDesc: 'Object',
+    },
+    {
+      columnName: 'objectCode',
+      columnDesc: 'Object Code',
     },
   ];
 
@@ -93,7 +97,7 @@ export class FinancialPcasAssignmentReportListComponent
   //sorting
   sortColumn = 'pcaCode';
   sortColumnDesc = 'PCA #';
-  sortDir = 'Descending';
+  sortDir = 'Ascending';
 
   //filtering
   filteredBy = '';
@@ -107,6 +111,9 @@ export class FinancialPcasAssignmentReportListComponent
   columnChangeDesc = 'Default Columns';
 
   dateColumns = ['openDate', 'closeDate'];
+
+   //subscriptions
+  objectCodesSubscription : any;
 
   /** Constructor **/
   constructor(
@@ -124,25 +131,25 @@ export class FinancialPcasAssignmentReportListComponent
   }
 
   ngOnChanges(): void {
-    this.sortType = 'desc';
     this.initializePCAGrid();
     this.loadFinancialPcaReportListGrid();
   }
 
   ngOnDestroy(): void {
     this.searchSubject.complete();
+    this.objectCodesSubscription.unsubscribe();
   }
 
   private loadObjectCodes() {
     this.pcaAssignmentsFacade.loadObjectCodes();
-    this.pcaAssignmentsFacade.objectCodesData$.subscribe({
+    this.objectCodesSubscription = this.pcaAssignmentsFacade.objectCodesData$.subscribe({
       next: (data: any) => {
 
         this.objectCodesData = data.map(
           (el: any) =>
-            (el.ledgerName = el.ledgerName
-              .substring(0, el.ledgerName.lastIndexOf(' - '))
-              .trim())
+          (el.ledgerName = el.ledgerName
+            .substring(0, el.ledgerName.lastIndexOf(' - '))
+            .trim())
         );
       },
     });
@@ -169,7 +176,7 @@ export class FinancialPcasAssignmentReportListComponent
 
   performSearch(data: any) {
     this.defaultGridState();
-    let operator = [ ...this.dateColumns].includes(
+    const operator = [ ...this.dateColumns].includes(
       this.selectedSearchColumn
     )
       ? 'eq'
@@ -182,7 +189,7 @@ export class FinancialPcasAssignmentReportListComponent
       return;
     }
     if(this.selectedSearchColumn ==  PcaAssignmentReport.Ay){
-      let matches = data.match(/(\d+)/);
+      const matches = data.match(/(\d+)/);
       data = matches[0];
     }
     this.filterData = {
@@ -207,9 +214,9 @@ export class FinancialPcasAssignmentReportListComponent
 
   restGrid() {
     this.sortValue = 'pcaCode';
-    this.sortType = 'desc';
+    this.sortType = 'asc';
     this.sortColumn = 'pcaCode';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.initializePCAGrid();
     this.filter = [];
     this.searchText = '';
@@ -247,9 +254,9 @@ export class FinancialPcasAssignmentReportListComponent
     if (!this.filteredByColumnDesc.includes('Object')) this.selectedObjectCode = '';
     if(stateData?.filter?.filters.length > 0)
     {
-      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       if(stateFilter.field === PcaAssignmentReport.Ay){
-        let matches = stateFilter.value.match(/(\d+)/);
+        const matches = stateFilter.value.match(/(\d+)/);
         stateFilter.value = matches[0];
       }
     }
@@ -309,7 +316,7 @@ export class FinancialPcasAssignmentReportListComponent
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'pcaCode', dir: 'desc' }],
+      sort: [{ field: 'pcaCode', dir: 'asc' }],
     };
   }
 
@@ -319,7 +326,6 @@ export class FinancialPcasAssignmentReportListComponent
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
-
       JSON.stringify(this.filter)
     );
     this.loadFinancialPcaReportListEvent.emit(param);

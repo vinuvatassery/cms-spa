@@ -1,15 +1,15 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 
 /** External **/
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 /** Facades **/
 import { HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
@@ -35,12 +35,16 @@ export class MedicalPaymentListComponent implements OnInit {
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
   @Input() tabStatus: any;
+  @Input() healthInsuranceProfilePhoto$!: any;
   isReadOnly$ = this.caseFacade.isCaseReadOnly$;
   showTwelveMonthRecordFlag:boolean = true;
   carrierContactInfo!: any;
   sort!: any;
   /** Private **/
   private triggeredPremiumPaymentSubscription!: Subscription;
+  insurancePremiumProfilePhotoSubject = new Subject();
+  insurancePremiumProfilePhotoSubscription = new Subscription();
+  //insurancePremiumProfilePhoto$ = this.insurancePolicyFacade.insurancePremiumProfilePhotoSubject;
 
   /** Constructor **/
 
@@ -57,11 +61,11 @@ export class MedicalPaymentListComponent implements OnInit {
     };
     this.loadPremiumPaymentData();
     this.registerTriggeredPremiumPaymentSubscription();
-    
   }
 
   ngOnDestroy(): void {
     this.triggeredPremiumPaymentSubscription.unsubscribe();
+    this.insurancePremiumProfilePhotoSubscription?.unsubscribe();
   }
   /** Private methods **/
 

@@ -26,21 +26,24 @@ export class NavigationMenuService {
     )
   }
 
-  getPendingApprovalPaymentCount(userLevel:any) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/count?level=${userLevel}`
-    );
+  getPendingApprovalPaymentCount(data:any) {
+    const request =
+    {
+      PaymentRequests : data
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/payments/count`,request);
   }
 
   getPendingApprovalGeneralCount() {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/count`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/general/count`
     );
   }
 
   getPendingApprovalImportedClaimCount() {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/count`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/count`
     );
   }
 }

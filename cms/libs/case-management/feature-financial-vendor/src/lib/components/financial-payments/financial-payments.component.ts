@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { GridFilterParam, PaymentsFacade, PremiumType } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -6,7 +6,7 @@ import { ColumnVisibilityChangeEvent, FilterService } from '@progress/kendo-angu
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
 @Component({
   selector: 'cms-financial-payments',
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPaymentComponent {
+export class FinancialPaymentComponent implements OnDestroy {
   /** Input Properties **/
   @Input() vendorId!: string;
   formUiStyle: UIFormStyle = new UIFormStyle();
@@ -73,6 +73,9 @@ export class FinancialPaymentComponent {
   showDateSearchWarning = false;
   showNumberSearchWarning = false;
   private searchSubject = new Subject<string>();
+  paymentBatchesProfilePhotoSubscription = new Subscription();
+  paymentBatchesProfilePhotoSubject = new Subject();
+  paymentBatchesProfilePhoto$ = this.paymentsFacade.paymentBatchesProfilePhotoSubject;
 
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
@@ -80,7 +83,8 @@ export class FinancialPaymentComponent {
     private lovFacade :  LovFacade,
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
-    private route: Router) { }
+    private route: Router,
+) { }
     
   ngOnInit(): void {
     this.loadPaymentsListGrid();
@@ -300,5 +304,6 @@ export class FinancialPaymentComponent {
 
   ngOnDestroy(): void {
     this.batchStatusLovSubscription.unsubscribe();
+    this.paymentBatchesProfilePhotoSubscription?.unsubscribe();
   }
 }

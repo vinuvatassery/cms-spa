@@ -2,7 +2,8 @@
 
     <section class="k-dialog-body">
         <p class="text-muted mb-2">
-            All fields are required unless otherwise stated.
+          {{tabCode === financialVendorProviderTabCode.Pharmacy ? "Add a payment or physical address and contacts for that address. All fields are required unless otherwise stated"
+          : "All fields are required unless otherwise stated."}}
         </p>
         <div class="flex-row">
             <div class="flex-col">

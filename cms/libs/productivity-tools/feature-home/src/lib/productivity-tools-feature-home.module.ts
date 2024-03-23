@@ -9,6 +9,9 @@ const routes: Routes = [
       import('@cms/productivity-tools/feature-todo').then(
         (m) => m.ProductivityToolsFeatureTodoModule
       ),
+      data: {
+        title: 'To Do Items',
+      },
   },
   {
     path: 'direct-message',

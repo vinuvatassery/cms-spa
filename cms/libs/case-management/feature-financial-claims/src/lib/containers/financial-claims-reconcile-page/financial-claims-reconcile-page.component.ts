@@ -145,7 +145,7 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
     }
   }
   warrantNumberChange(data:any){
-    this.financialClaimsFacade.CheckWarrantNumber(data.batchId,data.checkNbr,data.vendorId);   
+    this.financialClaimsFacade.CheckWarrantNumber(data.batchId,data.checkNbr,data.vendorId,this.claimsType);   
   }
   loadEachLetterTemplate(event:any){
     this.financialClaimsFacade.loadEachLetterTemplate(this.claimsType, event);  

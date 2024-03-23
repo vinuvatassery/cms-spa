@@ -9,7 +9,8 @@ import {
   Output,
   TemplateRef,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -17,18 +18,18 @@ import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, debounceTime, first } from 'rxjs';
+import { Observable, Subject, Subscription, debounceTime, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FinancialClaimsFacade, GridFilterParam, PaymentDetail, PaymentPanel, PaymentStatusCode } from '@cms/case-management/domain';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-batch-list-detail-items',
   templateUrl: './financial-claims-batch-list-detail-items.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnChanges {
+export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnChanges, OnDestroy {
  
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -55,6 +56,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Input() updateProviderPanelSubject$:any
   @Input() ddlStates$ :any
   @Input() paymentMethodCode$ :any
+  @Input() claimsServiceProfile$!: any;
   paymentPanelDetails:any;
   public state!: State;
   sortColumn: string='creationTime';
@@ -77,7 +79,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   serviceGridColumnName = ''; 
   @Input() exportButtonShow$:any
   columnChangeDesc = 'Default Columns'
-  selectedSearchColumn='creationTime';
+  selectedSearchColumn='ALL';
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   addClientRecentClaimsDialog: any;
   vendorId: any;
@@ -93,6 +95,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
   isDeleteClaimClosed = false
   gridColumns : {[key: string]: string} = {
+            ALL: 'All Columns',
             clientFullName: 'Client Name',
             nameOnInsuranceCard: 'Name on Primary Insurance Card',
             paymentStatus: 'Payment Status',
@@ -122,12 +125,15 @@ deletemodelbody =
   numberSearchColumnName =""
   paymentRequestId: any;
   selected: any;
+  claimsServiceProfileSubject = new Subject();
+  batchItemsGridListSubjecription = new Subscription();
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
     public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef,
     private lovFacade :  LovFacade,
-    private readonly financialClaimsFacade: FinancialClaimsFacade,) {
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly userManagementFacade: UserManagementFacade) {
       this.searchColumnList = []
     }
   
@@ -135,18 +141,9 @@ deletemodelbody =
     this.serviceGridColumnName = this.claimsType.charAt(0).toUpperCase() + this.claimsType.slice(1);
     this.gridColumns['serviceDesc'] = `${this.serviceGridColumnName} Service`;
     this.searchColumnList = [
-      { columnName: 'clientFullName',  columnDesc: 'Client Name'},
-      { columnName: "nameOnInsuranceCard",columnDesc: "Name on Primary Insurance Card"},
+      { columnName: 'ALL', columnDesc: 'All Columns' },
       { columnName: "clientId",columnDesc: "Client ID" },
-      { columnName: "serviceStartDate",columnDesc: "Service Date" },
-      { columnName: "invoiceNbr",columnDesc: "Invoice ID" },
-      { columnName: "cptCode",columnDesc: "CPT Code" },
-      { columnName: "serviceDesc",columnDesc: this.serviceGridColumnName+' Service' },
-      { columnName: "serviceCost",columnDesc: "Service Cost" },
-      { columnName: "amountDue",columnDesc: "Client Co-Pay" },
-      { columnName: "paymentStatus",columnDesc: "Payment Status" },
-      { columnName: "creationTime",columnDesc: "Entry Date" },
-      { columnName: "By",columnDesc: "creatorId" }
+      { columnName: 'clientFullName',  columnDesc: 'Client Name'},
     ]
     this.initializeGridState();
     this.loadBatchLogItemsListGrid(); 
@@ -199,6 +196,19 @@ deletemodelbody =
         this.backToBatchLog(null);
       }
     })
+    this.addPaymentServiceListSubscription();
+  }
+
+  addPaymentServiceListSubscription() {
+    this.batchItemsGridListSubjecription = this.batchItemsGridLists$.subscribe((service: any)=>{
+      if(service?.data){
+        
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.batchItemsGridListSubjecription.unsubscribe();
   }
   
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
@@ -239,17 +249,14 @@ deletemodelbody =
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = (['serviceStartDate','creationTime','clientId','invoiceNbr','serviceCost','amountDue']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
-
-
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedSearchColumn ?? 'creationTime',
-              operator: operator,
+              field: this.selectedSearchColumn ?? 'all',
+              operator: 'contains',
               value: data,
             },
           ],

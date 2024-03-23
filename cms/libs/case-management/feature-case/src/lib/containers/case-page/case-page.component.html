@@ -42,6 +42,8 @@
               [searchLoaderVisibility$]="searchLoaderVisibility$"
               [parentModule]="moduleCode.CLIENTS"
               [module]="moduleCode.MY_CLIENTS"
+              [caseStatus]="caseStatus"
+              [group]="group"
               (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
@@ -76,13 +78,21 @@
               [searchLoaderVisibility$]="searchLoaderVisibility$"
               [module]="moduleCode.ALL_CLIENTS"
               [parentModule]="moduleCode.CLIENTS"
+              [caseStatus]="caseStatus"
+              [group]="group"
+              [healthInsuranceType]="healthInsuranceType"
+              [fplPercentage]="fplPercentage"
+              [filterOperator]="filterOperator"
               (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
         </kendo-tabstrip-tab>
+        {{selectedTab}}
         <kendo-tabstrip-tab title="CER Tracking" [selected]="selectedTab === caseScreenTab.CER_TRACKING">
           <ng-template kendoTabContent>
-            <case-management-cer-tracking-page></case-management-cer-tracking-page>
+            <case-management-cer-tracking-page
+            [caseStatus]="caseStatus"
+            ></case-management-cer-tracking-page>
           </ng-template>
         </kendo-tabstrip-tab>
       </kendo-tabstrip>

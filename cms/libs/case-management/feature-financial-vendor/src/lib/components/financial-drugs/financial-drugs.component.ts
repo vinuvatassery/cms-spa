@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DrugCategoryCode, DrugsFacade, FinancialVendorTypeCode, VendorFacade, FinancialVendorFacade } from '@cms/case-management/domain';
+import { DrugCategoryCode, DrugsFacade, VendorFacade, FinancialVendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
