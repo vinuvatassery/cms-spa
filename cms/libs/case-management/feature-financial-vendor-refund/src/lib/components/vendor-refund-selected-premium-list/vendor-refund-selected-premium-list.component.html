@@ -1,5 +1,5 @@
 <div class="flex-row" *ngFor="let item of financialPremiumsRefundGridLists;let i = index">
-                
+
     <div class="flex-col flex-col-6" *ngIf="i===0">
         <div class="flex-row">
             <div class="flex-col flex-col-4 align-items-center justify-content-start">
@@ -51,7 +51,7 @@
                 </table>
                 </div>
             </div>
-        
+
     </div>
 </div>
 <div class="flex-row  mb-3">
@@ -63,16 +63,18 @@
 
 <div class="app-c-table">
   <kendo-grid
-   [resizable]="true" 
+   [resizable]="true"
    [groupable]="false" [reorderable]="true"
-  [columnMenu]="{ filter: true }" [data]="insuranceRefundInformation$ | async"
-  [loading]="(refundInformationLoader$ | async) === true" 
+  [columnMenu]="{ filter: true }"
+   [data]="insuranceRefundInformation$ | async"
+  [loading]="(refundInformationLoader$ | async) === true"
   [sortable]="true"
-  [columnMenu]="{ filter: true }" 
-
+  [columnMenu]="{ filter: true }"
+  [skip]="state.skip" 
   [sort]="state.sort"
   [filter]="state.filter"
-  (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" 
+  (dataStateChange)="dataStateChange($event)" 
+  (filterChange)="filterChange($event)"
   >
   <kendo-grid-column field="coverageStartDate" title="Coverage Dates" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -88,7 +90,7 @@
           </common-grid-cell-date-range-filter>
         </ng-template>
       <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-          Total
+          Totals
       </ng-template>
   </kendo-grid-column>
   <kendo-grid-column field="warantNumber" title="Original Warrant #" [width]="160">
@@ -106,35 +108,38 @@
           <span class="tableamountview"> <strong>$</strong> {{totalAmountPaid | kendoNumber:'n2' }} </span>
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid | kendoNumber:'n2'}}</span>     
-      </ng-template> 
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid | kendoNumber:'n2'}}</span>
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-      <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq">
-        <kendo-filter-eq-operator></kendo-filter-eq-operator>
-        <kendo-filter-gt-operator></kendo-filter-gt-operator>
-        <kendo-filter-gte-operator></kendo-filter-gte-operator>
-        <kendo-filter-lt-operator></kendo-filter-lt-operator>
-        <kendo-filter-lte-operator></kendo-filter-lte-operator>
-      </kendo-grid-numeric-filter-menu>
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                   <kendo-filter-contains-operator></kendo-filter-contains-operator>
+             </kendo-grid-string-filter-menu>
+         </ng-template>
      </ng-template>
 
   </kendo-grid-column>
-  <kendo-grid-column field="paymentMethodDescription" title="Payment Method" [width]="140"> </kendo-grid-column>
+  <kendo-grid-column field="paymentMethodDescription" title="Payment Method" [width]="140">
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+    <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+        <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+        <kendo-filter-contains-operator></kendo-filter-contains-operator>
+    </kendo-grid-string-filter-menu>
+    </ng-template>
+ </kendo-grid-column>
   <kendo-grid-column field="paymentStatusDescription" title="Payment Status" [width]="130">
-    <ng-template kendoGridFilterMenuTemplate
-    let-column="column"
-    let-filter="filter"
-    let-filterService="filterService" >
-        <kendo-dropdownlist
-        [data]="paymentStatusType"
-        textField="lovDesc"
-        valueField="lovCode"
-        [(ngModel)]="paymentStatusCode"
-        (valueChange)="dropdownFilterChange('paymentStatusCode',$event, filterService)">
-      </kendo-dropdownlist>
-    </ng-template>   
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+    <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+        <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+        <kendo-filter-contains-operator></kendo-filter-contains-operator>
+    </kendo-grid-string-filter-menu>
+    </ng-template>
 </kendo-grid-column>
-  <kendo-grid-column field="Pca" title="PCA" [width]="120"> 
+  <kendo-grid-column field="pca" title="PCA" [width]="120">
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
              <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
@@ -144,7 +149,7 @@
          </kendo-grid-string-filter-menu>
      </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column field="mailCode" title="Mail Code" [width]="120"> 
+  <kendo-grid-column field="mailCode" title="Mail Code" [width]="120">
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
              <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
@@ -163,10 +168,10 @@
         placeholder="refund amount"  [maxlength]="12"
         [fillMode]="formUiStyle.inputFillMode"
         id ="refundAmount{{rowIndex}}"
-        class="input-icon-right" 
+        class="input-icon-right"
          [spinners]="false"
-        [fillMode]="formUiStyle.inputFillMode" 
-        format="c2" 
+        [fillMode]="formUiStyle.inputFillMode"
+        format="c2"
         [min]="0"
         [decimals]="2"
         [maxlength]="15"
@@ -180,7 +185,7 @@
           <span class="tableamountview"> <strong>$</strong> {{totalRefundAmount | kendoNumber:'n2'}} </span>
       </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column field="creatorId" title="By" [width]="75" class="text-center" [sticky]="true">
+  <kendo-grid-column field="creatorId" title="By"  [sortable]="false" [width]="75" class="text-center" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
           <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered" showOn="hover"
@@ -211,17 +216,17 @@
         <div class="flex-col"  [formGroup]="refundForm" >
             <div class="flex-row">
                 <div class="flex-col flex-col-3">
-                    <kendo-floatinglabel text=" VP">
+                    <kendo-floatinglabel text="Voucher Payable">
                         <kendo-textbox aria-label="VP"  [fillMode]="formUiStyle.inputFillMode"
                         formControlName="vp" >
                         </kendo-textbox>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm?.hasError('required','vp') && isSubmitted">VP is required.
+                    <kendo-formerror *ngIf="refundForm?.hasError('required','vp') && isSubmitted">Voucher Payable is required.
                     </kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-3">
                     <kendo-floatinglabel text="Credit #">
-                        <kendo-textbox aria-label="Credit #" 
+                        <kendo-textbox aria-label="Credit #"
                             [fillMode]="formUiStyle.inputFillMode"  formControlName="creditNumber" >
                         </kendo-textbox>
                     </kendo-floatinglabel>
@@ -242,9 +247,9 @@
             <div class="flex-row">
                 <div class="flex-col flex-col-3">
                     <kendo-floatinglabel text="Deposit Date (Optional)">
-                       
+
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                        formatPlaceholder="formatPattern" placeholder="" 
+                        formatPlaceholder="formatPattern" placeholder=""
                          formControlName="depositDate"
                         >
                   </kendo-datepicker>
@@ -267,9 +272,9 @@
         </div>
     </div>
 
-        <h5 class="text-upper">Recent Premiums for this client</h5>
-  
+        <h5 class="text-upper">INSURANCE PREMIUMS FOR {{clientName}}</h5>
+
             <cms-financial-premiums-recent-premiums-list [vendorId]=""  [clientId]="clientId" [premiumsType]=""
             (onProviderNameClickEvent)="onProviderNameClick($event)" [isFromAddRefundPanel]="true"
             ></cms-financial-premiums-recent-premiums-list>
-       
+

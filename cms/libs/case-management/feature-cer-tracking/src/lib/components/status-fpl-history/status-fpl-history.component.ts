@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { StatusPeriodFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 import { Subject } from 'rxjs/internal/Subject';
 
 @Component({
@@ -13,8 +14,10 @@ export class StatusFplHistoryComponent implements OnInit {
 
   statusFplHistory$: any = new Subject<any>();
   loader: boolean = false;
-
-  constructor(private statusPeriodFacade: StatusPeriodFacade) {
+  statusFplProfilePhotoSubject = new Subject();
+  constructor(private statusPeriodFacade: StatusPeriodFacade,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -28,6 +31,9 @@ export class StatusFplHistoryComponent implements OnInit {
       next: (data) => {
         this.statusFplHistory$.next(data);
         this.loader = false;
+        if(data){
+          this.loadDistinctUserIdsAndProfilePhoto(data);
+        }
       },
       error: (err) => {
         this.loader = false;
@@ -35,5 +41,20 @@ export class StatusFplHistoryComponent implements OnInit {
       },
     });
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.statusFplProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
 
 }

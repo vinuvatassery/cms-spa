@@ -4,7 +4,12 @@ $size: 4rem;
 
 /* sorry for the scrambled mess */
 
-
+.skip_content{
+  position: fixed;
+  left: -200px;
+  top: -200px;
+  z-index: -1;
+}
 .forbidden_wrapper {
   height: calc(100vh - 60px);
   display: flex;

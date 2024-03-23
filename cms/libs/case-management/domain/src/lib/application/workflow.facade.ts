@@ -127,7 +127,7 @@ export class WorkflowFacade {
     this.saveAndContinueClickedSubject.next(navigationType);
   }
 
-  saveForLater(data: boolean) {    
+  saveForLater(data: boolean) {
     this.saveForLaterClickedSubject.next(data);
   }
 
@@ -194,7 +194,7 @@ export class WorkflowFacade {
     }
 
     this.workflowService.createNewSession(this.sessionData).subscribe({
-      next: (sessionResp: any) => {        
+      next: (sessionResp: any) => {
         if(sessionResp?.statusCode === "ACCEPT")
         {
           this.showHideSnackBar(SnackBarNotificationType.WARNING, "CER Complete");
@@ -249,12 +249,12 @@ export class WorkflowFacade {
 
 
   loadWorkFlowMaster(sessionId : string) {
-    
+
     this.showLoader();
     this.workflowService
-      .loadWorkflow(sessionId)    
+      .loadWorkflow(sessionId)
       .subscribe({
-        next: (session) => {       
+        next: (session) => {
           this.routesDataSubject.next(session?.workFlowProgress);
                    this.hideLoader();
         },
@@ -324,7 +324,7 @@ export class WorkflowFacade {
     );
   }
 
-  updateNonequenceNavigation(currentWorkflow: WorkFlowProgress) {    
+  updateNonequenceNavigation(currentWorkflow: WorkFlowProgress) {
     let previousRoute = this.deepCopy(
       this.currentSession?.workFlowProgress
     )?.filter((wf: WorkFlowProgress) => wf?.currentFlag == StatusFlag.Yes)[0];
@@ -505,9 +505,9 @@ export class WorkflowFacade {
           const index = completionChecklist.findIndex((i: any) => i.dataPointName === chk.dataPointName);
           if (index !== -1) {
             completionChecklist.splice(index, 1);
-          }         
+          }
         });
-      }      
+      }
     }
   }
 
@@ -766,7 +766,7 @@ export class WorkflowFacade {
     if (showHideValue) {
       this.showSendEmailLetterPopup(true);
     } else {
-      this.router.navigate([`/case-management/cases`]);
+      this.router.navigate([`/case-management/cases/case360/${this.clientId}`]);
     }
   }
 }

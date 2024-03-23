@@ -28,6 +28,7 @@ export class RefundBatchPageComponent implements OnInit {
   batchLogGridLists$ = this.financialVendorRefundFacade.batchLogData$;
   batchesLogGridExportParameters = null
   batchId = null
+  vendorRefundBatchClaims$ = this.financialVendorRefundFacade.vendorRefundBatchClaimsSubject;
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private documentFacade: DocumentFacade,
@@ -98,24 +99,46 @@ export class RefundBatchPageComponent implements OnInit {
   }
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
+  //provider panel
+  @ViewChild('premiumProviderDetailsTemplate', { read: TemplateRef })
+  premiumProviderDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('tpaProviderDetailsTemplate', { read: TemplateRef })
+  tpaProviderDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('pharmacyProviderDetailsTemplate', { read: TemplateRef })
+  pharmacyProviderDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
   providerDetailsDialog: any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
-  paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+
+  //provider panel
+
   onProviderNameClick(event: any) {
-    this.paymentRequestId = event
+    if (event.type == 'TPA') {
+      this.processProviderPanel(event, this.tpaProviderDetailsTemplate)
+    }
+    if (event.type == 'INSURANCE_PREMIUM') {
+      this.processProviderPanel(event, this.premiumProviderDetailsTemplate)
+    }
+    if (event.type == 'PHARMACY') {
+      this.processProviderPanel(event, this.pharmacyProviderDetailsTemplate)
+    }
+  }
+
+  processProviderPanel(event: any, templateType: any){
+    this.paymentRequestId = event.paymentRequestId
     this.providerDetailsDialog = this.dialogService.open({
-      content: this.providerDetailsTemplate,
-      animation: {
+      content: templateType,
+      animation:{
         direction: 'left',
         type: 'slide',
       },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-
   }
+
   onCloseViewProviderDetailClicked(result: any) {
     if (result) {
       this.providerDetailsDialog.close();

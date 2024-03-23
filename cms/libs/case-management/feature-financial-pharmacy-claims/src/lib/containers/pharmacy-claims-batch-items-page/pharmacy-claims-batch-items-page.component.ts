@@ -28,6 +28,7 @@ export class PharmacyClaimsBatchItemsPageComponent {
    updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
    ddlStates$ = this.contactFacade.ddlStates$;
    paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+   pharmacyBatchListDetailProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyBatchListDetailProfilePhotoSubject;
   constructor( 
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
     private dialogService: DialogService,

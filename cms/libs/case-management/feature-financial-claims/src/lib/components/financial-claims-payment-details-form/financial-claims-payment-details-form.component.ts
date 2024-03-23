@@ -1,7 +1,7 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  Output, 
+  Output,
   EventEmitter,
   Input,
   OnInit,
@@ -16,10 +16,10 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-claims-payment-details-form',
-  templateUrl: './financial-claims-payment-details-form.component.html', 
+  templateUrl: './financial-claims-payment-details-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
- export class FinancialClaimsPaymentDetailsFormComponent implements OnInit, OnDestroy {  
+ export class FinancialClaimsPaymentDetailsFormComponent implements OnInit, OnDestroy {
 
   public formUiStyle: UIFormStyle = new UIFormStyle()
   public currentDate = new Date();
@@ -43,12 +43,12 @@ import { Subscription } from 'rxjs';
   constructor(private formBuilder: FormBuilder, public intl: IntlService,
     private configurationProvider: ConfigurationProvider,
     private readonly cd: ChangeDetectorRef){
-    
+
   }
- 
+
   ngOnInit():void{
     this.buildPremiumPaymentForm();
-    this.paymentPanelLoadSubscription();   
+    this.paymentPanelLoadSubscription();
   }
 
   ngOnDestroy(): void {
@@ -109,7 +109,6 @@ import { Subscription } from 'rxjs';
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].markAllAsTouched();
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValidators([Validators.required]);
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].updateValueAndValidity();
-      this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
       this.paymentDateIsGreaterThanReconciledDate = false;
     }
     else if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value !== null) {
@@ -172,8 +171,8 @@ import { Subscription } from 'rxjs';
     this.paymentPanel.CheckRequestId = this.paymentPanelDetails.checkRequestId;
     this.paymentPanel.PaymentRequestBatchId = this.paymentPanelDetails.paymentRequestBatchId;
     this.paymentPanel.PaymentRequestId = this.paymentPanelDetails.paymentRequestId;
-    this.paymentPanel.paymentReconciledDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
-    this.paymentPanel.paymentSentDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
+    this.paymentPanel.paymentReconciledDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat);
+    this.paymentPanel.paymentSentDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentSent'].value, this.dateFormat);
     this.paymentPanel.amountPaid = this.medicalClaimPaymentForm.controls['paymentAmount'].value
     this.paymentPanel.checkNbr = this.medicalClaimPaymentForm.controls['warrantNumber'].value
     this.paymentPanel.notes = this.medicalClaimPaymentForm.controls['note'].value
@@ -182,20 +181,20 @@ import { Subscription } from 'rxjs';
 
   buildPremiumPaymentForm(){
     this.medicalClaimPaymentForm = this.formBuilder.group({
-      datePaymentReconciled: [null],
-      datePaymentSent: [null],
+      datePaymentReconciled: [null, [Validators.required]],
+      datePaymentSent: [null, [Validators.required]],
       paymentAmount: [null],
-      warrantNumber: [null],      
+      warrantNumber: [null],
       note: [null],
 
     });
-    
+
   }
   isModalValid : any = true;
-  save(){   
+  save(){
     this.validateModel();
     if(this.medicalClaimPaymentForm.valid){
-      this.populatePaymentPanelModel();    
+      this.populatePaymentPanelModel();
       this.closePaymentDetailFormClickedEvent.emit(true);
       this.updatePaymentPanel.emit(this.paymentPanel);
     }

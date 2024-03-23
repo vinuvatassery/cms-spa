@@ -23,7 +23,7 @@
             [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
             (valueChange)="onHealthInsuranceTypeChanged()" formControlName="insuranceType" textField="lovDesc"
             valueField="lovCode"  [valuePrimitive]="true"
-            [loading] = "(insuranceTypeList$ | async)?.length===0" >
+            [loading] = "(insuranceTypeList$ | async) === null" >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
@@ -279,7 +279,7 @@
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_INSURANCE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'copyInsurance')"
-          (handleFileRemoveEvent)="handleFileRemoved($event,'copyInsurance')"
+          (handleFileRemoveEvent)="handleFileRemoved($event,'copyInsurance',true)"
           (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
           [isDownloadShow]="true">
           </common-document-upload>

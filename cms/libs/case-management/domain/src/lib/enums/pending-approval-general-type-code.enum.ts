@@ -1,7 +1,7 @@
 export enum PendingApprovalGeneralTypeCode {
-  GeneralExceptions = 'GENERAL_EXCEPTIONS',
-  GeneralCaseReassignment = 'GENERAL_CASE_REASSIGNMENT',
-  GeneralAddToMasterList = 'GENERAL_ADD_TO_MASTER_LIST',
+  ClaimException = 'CLAIM_EXCEPTION',
+  CaseReassignment = 'CASE_REASSIGNMENT',
+  MasterList = 'MASTER_LIST',
   DentalClinic = 'DENTAL_CLINIC',
   MedicalClinic = 'MEDICAL_CLINIC',
   DentalProvider = 'DENTAL_PROVIDER',

@@ -11,22 +11,22 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import {
-  ApprovalFacade,
   PendingApprovalGeneralFacade,
   PendingApprovalGeneralTypeCode,
   PendingApprovalPaymentFacade,
-  UserRoleType,
   FinancialVendorFacade,
   ContactFacade,
   DrugsFacade,
   InsurancePlanFacade,
   ImportedClaimFacade,
+  CaseManagerFacade,
+  ApprovalLimitPermissionCode,
+  PendingApprovalPaymentTypeCode,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
   ReminderSnackBarNotificationType,
   DocumentFacade,
-  ApiType,
 } from '@cms/shared/util-core';
 import {
   NavigationMenuFacade,
@@ -57,8 +57,8 @@ export class ApprovalPageComponent implements OnInit {
 
   sortValue = this.pendingApprovalGeneralFacade.sortValue;
   sort = this.pendingApprovalGeneralFacade.sort;
-  sortValueGeneralAPproval = this.approvalFacade.sortValueGeneralAPproval;
-  sortGeneralList = this.approvalFacade.sortGeneralList;
+  sortValueGeneralAPproval = this.caseManagerFacade.sortValueGeneralAPproval;
+  sortGeneralList = this.caseManagerFacade.sortGeneralList;
   sortApprovalPaymentsList = this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
   sortValueApprovalPaymentsApproval = this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
   sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
@@ -90,6 +90,7 @@ export class ApprovalPageComponent implements OnInit {
   possibleMatchData$ = this.importedClaimFacade.possibleMatchData$;
   submitImportedClaims$ = this.importedClaimFacade.submitImportedClaims$;
   savePossibleMatchData$ = this.importedClaimFacade.savePossibleMatchData$;
+  approvalPaymentProfilePhoto$ = this.pendingApprovalPaymentFacade.approvalPaymentProfilePhotoSubject
 
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
@@ -111,9 +112,10 @@ export class ApprovalPageComponent implements OnInit {
   insuranceVendorForm: FormGroup;
   insuranceProviderForm: FormGroup;
   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
+  permissionLevels:any[]=[];
   /** Constructor **/
   constructor(
-    private readonly approvalFacade: ApprovalFacade,
+    private readonly caseManagerFacade: CaseManagerFacade,
     private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
     private pendingApprovalPaymentFacade: PendingApprovalPaymentFacade,
     private userManagementFacade: UserManagementFacade,
@@ -140,7 +142,7 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUserRole();
+    this.loadPendingApprovalPaymentLevel();
     this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
     this.loadTabCount();
     this.contactFacade.loadDdlStates();
@@ -176,17 +178,16 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalSubmit$.subscribe((response: any) => {
       if (response) {
         this.navigationMenuFacade.getPendingApprovalPaymentCount(
-          this.userLevel
+          this.permissionLevels
         );
       }
       this.cd.detectChanges();
     });
   }
+  permissionServiceAndLevelArray:any[]=[];
 
   loadTabCount(){
-    this.navigationMenuFacade.getPendingApprovalPaymentCount(
-      this.userLevel
-    );
+    this.loadPendingApprovalPaymentLevel();
     this.navigationMenuFacade.getPendingApprovalGeneralCount();
     this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
     this.pendingApprovalPaymentCount$.subscribe((response: any) => {
@@ -195,6 +196,8 @@ export class ApprovalPageComponent implements OnInit {
       }
       this.cd.detectChanges();
     });
+    
+    this.cd.detectChanges();
 
     this.pendingApprovalGeneralCount$.subscribe((response: any) => {
       if (response) {
@@ -214,23 +217,55 @@ export class ApprovalPageComponent implements OnInit {
   loadApprovalsGeneralGrid(event: any): void {
     this.pendingApprovalGeneralFacade.loadApprovalsGeneral();
   }
-
-  getUserRole() {
+  
+  loadPendingApprovalPaymentLevel() {
     this.userDataService.getProfile$.subscribe((profile: any) => {
       if (profile?.length > 0) {
-        if (this.userManagementFacade.hasRole(UserRoleType.Level2)) {
-          this.userLevel = UserLevel.Level2Value;
-        } else if (this.userManagementFacade.hasRole(UserRoleType.Level1)) {
-          this.userLevel = UserLevel.Level1Value;
-        }
+        this.permissionLevels=[];
+        this.pendingApprovalPaymentCount = 0;
+        let level = this.setPermissionLevel(ApprovalLimitPermissionCode.InsurancePremiumPermissionCode);
+        this.addItemToArray(PendingApprovalPaymentTypeCode.InsurancePremium,level);       
+
+        level = this.setPermissionLevel(ApprovalLimitPermissionCode.MedicalClaimPermissionCode);
+        this.addItemToArray(PendingApprovalPaymentTypeCode.TpaClaim,level);
+
+        level = this.setPermissionLevel(ApprovalLimitPermissionCode.PharmacyPermissionCode);
+        this.addItemToArray(PendingApprovalPaymentTypeCode.PharmacyClaim,level);
+
         this.navigationMenuFacade.getPendingApprovalPaymentCount(
-          this.userLevel
+          this.permissionLevels
         );
       }
     });
   }
+  
+  addItemToArray(serviceTypeCode:string,level:number)
+  {
+    let object = {
+      serviceTypeCode : serviceTypeCode,
+      level : level
+    };
+    this.permissionLevels.push(object);
+  }
+  setPermissionLevel(ifPermission : any)
+  {
+    if(this.userManagementFacade.hasPermission([ifPermission]))
+    {
+      return UserLevel.Level1Value;
+    }
+    let maxApprovalAmount = this.userManagementFacade.getUserMaxApprovalAmount(ifPermission);
+    if(maxApprovalAmount != undefined && maxApprovalAmount > 0)
+    {
+      return UserLevel.Level1Value;
+    }
+    else
+    {
+      return UserLevel.Level2Value;
+    }
+  }
 
   loadApprovalsPaymentsGrid(gridDataValue: any): void {
+    this.userLevel = gridDataValue.level;
     if (
       !gridDataValue.selectedPaymentType ||
       gridDataValue.selectedPaymentType.length == 0
@@ -241,7 +276,7 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentGrid(
       gridDataValue,
       gridDataValue.selectedPaymentType,
-      this.userLevel
+      gridDataValue.level
     );
   }
 
@@ -251,7 +286,7 @@ export class ApprovalPageComponent implements OnInit {
     this.importedClaimFacade.loadImportedClaimsLists(gridDataValue);
   }
   notificationTriger() {
-    this.approvalFacade.NotifyShowHideSnackBar(
+    this.caseManagerFacade.NotifyShowHideSnackBar(
       ReminderSnackBarNotificationType.LIGHT,
       ' Generic reminder displays at 9AM on the day of the reminder Generic reminder displays at 9AM on the day of the reminder'
     );
@@ -308,8 +343,7 @@ export class ApprovalPageComponent implements OnInit {
       this.documentFacade.getExportFile(
         approvalPageAndSortedRequest,
         `payment-batches?serviceType=${data.selectedPaymentType}&level=${this.userLevel}`,
-        fileName,
-        ApiType.ProductivityToolsApi
+        fileName
       );
     }
   }
@@ -331,8 +365,7 @@ export class ApprovalPageComponent implements OnInit {
       this.documentFacade.getExportFile(
         approvalPageAndSortedRequest,
         `imported-claims`,
-        fileName,
-        ApiType.ProductivityToolsApi
+        fileName
       );
     }
   }
@@ -516,6 +549,11 @@ export class ApprovalPageComponent implements OnInit {
       nameOnCheck:[''],
       nameOnEnvelop:[''],
       tin:[''],
+      addressline1:[''],
+      addressline2:[''],
+      city:[''],
+      state:[''],
+      zip:[''],
       mailCode:[''],
       paymentMethod:[''],
       acceptsCombinedPayments:[''],

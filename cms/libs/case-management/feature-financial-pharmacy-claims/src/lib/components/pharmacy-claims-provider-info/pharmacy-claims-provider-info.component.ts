@@ -51,7 +51,8 @@ export class PharmacyClaimsProviderInfoComponent {
   })
   @Input() paymentRequestId:any
   isSubmitted: boolean = false
- 
+  prefferedVendorEmails! : any[]
+  prefferedVendorPhones! : any[]
   constructor(  
     private readonly changeDetectorRef: ChangeDetectorRef,
      public formBuilder: FormBuilder,
@@ -114,7 +115,6 @@ createEmailsFormArray(contact: any): FormArray {
  
   if(contact.emails && contact.emails.length===0){
      emails.push(this.formBuilder.group({
-      emailAddress: ['',Validators.required],
       vendorContactEmailId: null,
       vendorContactId: contact.vendorContactId
     }));
@@ -122,7 +122,6 @@ createEmailsFormArray(contact: any): FormArray {
   else{
   contact.emails.forEach((email: any) => {
     return emails.push(this.formBuilder.group({
-      emailAddress: [email.emailAddress,Validators.required],
       vendorContactEmailId: email.vendorContactEmailId
     }));
   })
@@ -155,6 +154,18 @@ createPhonesFormArray(contact: any): FormArray {
       this.changeDetectorRef.markForCheck()
       this.vendorProfile = res;
       this.isEditProvider = false
+      this.prefferedVendorEmails = []
+      this.prefferedVendorPhones = []
+      this.vendorProfile.address.contacts?.forEach((contact :any)=>{
+         if(contact){
+          if(contact.email &&  contact.email.length >0){
+            this.prefferedVendorEmails.push(contact.emails.filter((e :any) => e.preferredFlag =='Y'))
+          }
+          if(contact.phones &&  contact.phones.length >0){
+             this.prefferedVendorPhones.push(contact.phones.filter((e :any) => e.preferredFlag =='Y'))
+          }
+         }
+     })   
     })
 
     this.getProviderPanelEvent.emit(this.paymentRequestId)

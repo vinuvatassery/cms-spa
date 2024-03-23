@@ -22,14 +22,14 @@ export class ImportedClaimService {
       Filter: JSON.stringify(data.filter),
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/claims-data`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/claims-data`,
       importedClaimsRequestDto
     );
   }
 
   submitImportedClaimsServices(claims: any) {
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/submit`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/submit`,
       claims
     );
   }
@@ -37,7 +37,7 @@ export class ImportedClaimService {
 
   loadPossibleMatch(event:any) {
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match`,event
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/possible-match`,event
     );
   }
 
@@ -53,27 +53,27 @@ export class ImportedClaimService {
       EntityTypeCode : requests.entityTypeCode
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match/`,savePossibleMatchDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/possible-match/`,savePossibleMatchDto
     );
   }
 
   makeExceptionForExceedBenefits(exceptionObject: any){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/make-exception/`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/make-exception/`,
       exceptionObject
     );
   }
 
   updateClientPolicy(importedclaimDto : any){
     return this.http.put<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/client-policy`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/client-policy`,
       importedclaimDto
     );
   }
 
   loadClientBySearchText(text: string) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/SearchText=${text}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/SearchText=${text}`
     );
   }
 }

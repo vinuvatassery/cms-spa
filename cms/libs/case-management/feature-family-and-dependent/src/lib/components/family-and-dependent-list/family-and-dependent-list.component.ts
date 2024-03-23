@@ -1,7 +1,7 @@
 /** Angular **/
 import {
   Component,  OnInit,  ChangeDetectionStrategy,  Input,
-   OnChanges, EventEmitter,  Output,ChangeDetectorRef} from '@angular/core';
+   OnChanges, EventEmitter,  Output,ChangeDetectorRef, OnDestroy} from '@angular/core';
 import {  Router ,ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -11,7 +11,8 @@ import { DependentTypeCode, ScreenType, FamilyAndDependentFacade, CaseFacade } f
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
 import {  State } from '@progress/kendo-data-query';
-import { first } from 'rxjs';
+import { Subscription, first } from 'rxjs';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-family-and-dependent-list',
@@ -41,6 +42,7 @@ CAClient = DependentTypeCode.CAClient;
   @Input() timeFormat : any;
   @Input()  existdependentStatus$ : any;
   @Input() isCerForm: boolean = false;
+  @Input() dependentProfilePhoto$!: any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
   @Output() GetExistclientDependentEvent = new EventEmitter<any>();
@@ -53,7 +55,7 @@ CAClient = DependentTypeCode.CAClient;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
     /**Constructor */
     constructor( private router: Router , private activatedRoute : ActivatedRoute,
-      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef,private caseFacade: CaseFacade) { }
+      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef,private caseFacade: CaseFacade,) { }
 
     isEditFamilyMember!: boolean;
     isAddOrEditFamilyDependentDisplay!: boolean;
@@ -72,6 +74,7 @@ CAClient = DependentTypeCode.CAClient;
     deleteRequest$ = this.deleteRequestSubject.asObservable();
     isDependentAvailable:boolean=true;
     public  state!: State
+    userDependentSubacription= new Subscription();
   public actions = [
     {
       buttonType:"btn-h-primary",

@@ -1,28 +1,31 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-vendor-refund-pharmacy-payments-list',
   templateUrl: './vendor-refund-pharmacy-payments-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChanges {
+export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChanges, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isClaimsLoaderShow = false;
   /** Constructor **/
@@ -60,14 +63,43 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   gridVendorsRefundDataSubject = new Subject<any>();
   gridVendorsRefundData$ = this.gridVendorsRefundDataSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  vendorRefundPaymentListSubject = new Subject();;
+  pharmacyPurchaseProfileSubscription = new Subscription();
+  vendorRefundPaymentListProfilePhoto$ = this.financialVendorRefundFacade.vendorRefundPaymentListProfilePhotoSubject
   @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
+  selectedPaymentRequestType: any = '';
+  selectedPaymentMethod: any = '';
+  paymentRequestTypeData :any[] =[];
+  paymentRequestType$ = this.lovFacade.paymentRequestType$;
+  paymentType$ = this.lovFacade.paymentMethodType$;
+  paymentTypeData :any[] =[];
+
+  deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
+  deliveryMethodLovData: any[] = [];
+  selectedDeliveryMethod: any = '';
+
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentStatusLovData :any[] = [];
+  selectedPaymentStatus: any = ''
+
+
   constructor(
-    public financialVendorRefundFacade:FinancialVendorRefundFacade
+    public financialVendorRefundFacade:FinancialVendorRefundFacade,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef,
+    private lovFacade: LovFacade,
   ) { }
 
   ngOnInit(): void {
-    this.loadFinancialRecentRefundListGrid();
+    this.lovFacade.getCoPaymentRequestTypeLov();
+    this.lovFacade.getPaymentMethodLov();
+    this.getPaymentRequestTypeLov();
+    this.getPaymentTypeLov();
+    this.loadFinancialRecentRefundListGrid();   
+    this.lovFacade.getDeliveryMethodLovs(); 
+    this.getDeliveryMethodLovs();
+    this.lovFacade.getPaymentStatusLov();
+    this.getPaymentStatusLovs();
   }
 
   selectedKeysChange(selection: any) {
@@ -106,11 +138,19 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   }
 
   gridDataHandle() {
-    this.clientclaimsData$.subscribe((data: GridDataResult) => {
+    this.pharmacyPurchaseProfileSubscription = this.clientclaimsData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.clientClaimsListDataSubject.next(this.gridDataResult);
+      if(this.gridDataResult?.data){
+        
+      }
     });
   }
+
+  ngOnDestroy(): void {
+    this.pharmacyPurchaseProfileSubscription?.unsubscribe();
+  }
+  
   private loadFinancialRecentRefundListGrid(): void {
     this.loadRefundProcess(
       this.vendorId,
@@ -150,4 +190,62 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event.paymentRequestId)
   }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovDesc
+      }],
+        logic: "or"
+    });
+  }
+
+  getPaymentRequestTypeLov(){
+    this.paymentRequestType$.subscribe({
+        next: (data: any) => {
+          this.paymentRequestTypeData=data;
+        }
+      });
+  }
+
+  getPaymentTypeLov(){
+    this.paymentType$.subscribe({
+        next: (data: any) => {
+          this.paymentTypeData=data;
+        }
+      });
+  }
+
+  getDeliveryMethodLovs() {
+    this.deliveryMethodLov$.subscribe({
+      next: (data: any) => {
+        this.deliveryMethodLovData = data;
+      }
+    });
+  }
+
+  onPaymentListGridFilterChange(filterdata: any){
+    const paymentMethodDesc = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'paymentMethodDesc'); });
+    const paymentTypeDesc = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'paymentTypeDesc'); });
+    const rxqtype = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'rxqtype'); });
+    const paymentStatusDesc = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'paymentStatusDesc'); });
+
+    if(!paymentMethodDesc) this.selectedPaymentMethod = '';
+    if(!paymentTypeDesc) this.selectedPaymentRequestType = '';
+    if(!rxqtype) this.selectedDeliveryMethod = ''
+    if(!paymentStatusDesc) this.selectedPaymentStatus = ''
+    
+    this.state.filter = filterdata;
+  }
+
+  getPaymentStatusLovs() {
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        this.paymentStatusLovData = data;
+      }
+    });
+  }
+
 }

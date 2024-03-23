@@ -92,6 +92,9 @@
         formControlName="zip" (blur)="validateAddress()">   </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror>Zip is required.</kendo-formerror>
+      <kendo-formerror *ngIf="addressForm.controls['zip'].errors">
+        Special characters are not allowed.
+      </kendo-formerror>
     </kendo-formfield>
     </div>
     <div class="flex-col" *ngIf="showAddressValidationLoader$ | async">

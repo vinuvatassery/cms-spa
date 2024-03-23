@@ -6,7 +6,12 @@
         <kendo-grid-column field="deliveryMethodCode" title="Unit" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="dispensingQty" title="RX Qty." [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="daySupply" title="RX Days Supply" [width]="160">   </kendo-grid-column>
-        <kendo-grid-column field="ndc" title="NDC Code" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="ndc" title="NDC Code" [width]="140">  
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.ndc | ndcCode}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="paymentTypeCode" title="Payment Type" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="brandName" title="Brand Name" [width]="180">   </kendo-grid-column>
         <kendo-grid-column field="drugName" title="Drug Name" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="140" >

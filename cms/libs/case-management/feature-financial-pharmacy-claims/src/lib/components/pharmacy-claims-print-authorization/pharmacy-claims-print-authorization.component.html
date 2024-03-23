@@ -13,6 +13,8 @@
                                     <span class="app-checkboxwidtext-wrapper">
                                           <label *ngIf="(returnResultFinalPrintList[currentIndex]?.checkNbr != null && returnResultFinalPrintList[currentIndex]?.warrantNumberChange === false  && returnResultFinalPrintList[currentIndex]?.printFlag ==='Y')" 
                                           style="padding-right: 15px;" class="k-checkbox-label" for="Printauthorization"><b>Reconciled & Printed</b></label>
+                                          <label *ngIf="(this.items?.print && returnResultFinalPrintList[currentIndex].printFlag ==='Y')" 
+                                          style="padding-right: 15px;" class="k-checkbox-label" for="Printauthorization"><b>Printed</b></label>
                                           <input type="checkbox" [checked]="item.isPrintAdviceLetter" (change)="onCheckboxChange($event, item)" kendoCheckBox aria-labelledby="Printauthorization" id="Printauthorization" />
                                           <label class="k-checkbox-label" for="Printauthorization">Print letter</label>
                                     </span>
@@ -24,10 +26,17 @@
                         </common-grid-loader-component>
                         <div class="flex-row align-items-end" *ngIf="letterContent">
                               <div class="flex-col flex-col-3">
-                                    <kendo-floatinglabel text="Account Number">
-                                          <kendo-textbox [fillMode]="formUiStyle.inputFillMode"  
-                                          [(ngModel)]="last4OfVisaCard" (valueChange)="onAccountNumberChange($event)">
-                                          </kendo-textbox>
+                                    <kendo-floatinglabel text="Account Number (Last 4 numbers)">
+                                          <kendo-maskedtextbox  
+                                          aria-label="Account Number (Last 4 numbers)"                                                                                  
+                                          mask="XXXX - XXXX - XXXX - 0000"
+                                          [fillMode]="formUiStyle.inputFillMode" 
+                                          [maxlength]="4"
+                                          [maskOnFocus]="true"
+                                          [maskValidation]="false"
+                                          [(ngModel)]="last4OfVisaCard" 
+                                          (valueChange)="onAccountNumberChange($event)">
+                                          </kendo-maskedtextbox >
                                     </kendo-floatinglabel>
                               </div>
                               <div class="flex-col flex-col-3">
@@ -42,8 +51,8 @@
                                     <div class="grey-cards-banner">For a total amount of
                                           <strong>$ {{item.totalBatchAmount}}</strong> may be charged to the CAREAssist VISA
                                           ending in
-                                          <strong *ngIf="last4OfVisaCard"> {{last4OfVisaCard}} </strong> 
-                                          <strong *ngIf="!last4OfVisaCard"> #XXXX </strong>, expiration date
+                                          <strong *ngIf="last4OfVisaCard"> {{last4OfVisaCard}}</strong> 
+                                          <strong *ngIf="!last4OfVisaCard"> #XXXX</strong>, expiration date
                                           <strong *ngIf="cardExpirationMonth">{{cardExpirationMonth}}/{{cardExpirationYear}}</strong>
                                           <strong *ngIf="!cardExpirationMonth">MM/YY</strong>.
                                     </div>

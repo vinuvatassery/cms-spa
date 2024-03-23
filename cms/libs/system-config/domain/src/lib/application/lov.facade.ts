@@ -54,6 +54,7 @@ export class LovFacade {
   private lovCaseStatusSubject = new BehaviorSubject<Lov[]>([]);
   private lovGroupSubject = new BehaviorSubject<Lov[]>([]);
   private lovCaseStatusTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovHealthInsuranceTypeSubject = new BehaviorSubject<Lov[]>([]);
   private lovPriorityCodeSubject = new BehaviorSubject<Lov[]>([]);
   private lovPrioritySubject = new BehaviorSubject<Lov[]>([]);
   private lovOtherEthnicitySubject = new BehaviorSubject<Lov[]>([]);
@@ -126,6 +127,7 @@ export class LovFacade {
   caseStatusLov$ = this.lovCaseStatusSubject.asObservable();
   groupLov$ = this.lovGroupSubject.asObservable();
   caseStatusType$ = this.lovCaseStatusTypeSubject.asObservable();
+  healthinsuranceType$ = this.lovHealthInsuranceTypeSubject.asObservable();
   priorityCodeType$ = this.lovPriorityCodeSubject.asObservable();
   pharmacyPrioritylov$ = this.lovPrioritySubject.asObservable();
   otherEthnicitylov$ = this.lovOtherEthnicitySubject.asObservable();
@@ -466,6 +468,22 @@ export class LovFacade {
           item.lovDesc = item.lovDesc.toUpperCase();
         });
         this.lovCaseStatusSubject.next(filteredLov);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  gethealthInsuranceTypeLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).subscribe({
+      next: (lovResponse) => {
+        this.lovHealthInsuranceTypeSubject.next(lovResponse);
+        //const acceptedCaseStatusCodes = Object.values(AcceptedCaseStatusCode)
+        const filteredLov = lovResponse.filter((item: any) => item.lovCode)
+        // filteredLov.forEach((item: any) => {
+        //   item.lovDesc = item.lovDesc.toUpperCase();
+        // });
+        this.lovHealthInsuranceTypeSubject.next(filteredLov);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)

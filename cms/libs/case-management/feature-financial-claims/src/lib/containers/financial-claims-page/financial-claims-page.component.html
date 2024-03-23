@@ -20,7 +20,8 @@
                                 [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsProcessGridData()"
-                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-process-list>
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                [medicalClaimsProfilePhoto$]="medicalClaimsProfilePhoto$"></cms-financial-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -52,7 +53,8 @@
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"
                                 (loadTemplateEvent) = "loadEachLetterTemplate($event)"
                                 [letterContentList$]="letterContentList$"
-                                [letterContentLoader$]="letterContentLoader$"></cms-financial-claims-all-payments-list>
+                                [letterContentLoader$]="letterContentLoader$"
+                                [dentalClaimAllPaymentClaimsProfilePhoto$]="dentalClaimAllPaymentClaimsProfilePhoto$"></cms-financial-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

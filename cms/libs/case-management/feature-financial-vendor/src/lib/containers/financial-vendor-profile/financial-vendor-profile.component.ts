@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, InvoiceFacade } from '@cms/case-management/domain';
+import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, InvoiceFacade } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -42,6 +43,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   providerLissortValue = this.financialVendorFacade.sortValue;
   providerLissortType = this.financialVendorFacade.sortType;
   providerLissort = this.financialVendorFacade.sort;
+  financialClinicProviderProfile$ = this.financialVendorFacade.financialClinicProviderProfileSubject;
   filter: any = [];
   isClinicalVendor = false;
   vendorName: any;
@@ -224,4 +226,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     }
   }
 
+  updateRecentlyViewedEvent(vendorId:any){
+    this.financialVendorFacade.addVendorRecentlyViewed(vendorId);
+  }
 }

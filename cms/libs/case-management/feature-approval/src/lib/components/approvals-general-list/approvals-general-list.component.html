@@ -7,7 +7,7 @@
       <kendo-panelbar-item
         *ngIf="getTitle(item.approvalTypeCode, item.subTypeCode)"
         [expanded]="item.isExpanded && item.status === approveStatus &&  item.approvalTypeCode ===
-        pendingApprovalGeneralTypeCode.GeneralExceptions"
+        pendingApprovalGeneralTypeCode.ClaimException"
       >
         <ng-template kendoPanelBarItemTitle>
           <div class="flex-row rw-100" (click)="$event.stopPropagation()">
@@ -40,7 +40,7 @@
                   </ng-template>
                 </kendo-popover>
               </p>
-              <div *ngIf="(item.approvalTypeCode == pendingApprovalGeneralTypeCode.GeneralAddToMasterList ||
+              <div *ngIf="(item.approvalTypeCode == pendingApprovalGeneralTypeCode.MasterList ||
                           item.subTypeCode == subTypeConst.InsuranceVendor ||
                           item.subTypeCode == subTypeConst.MedicalProvider ||
                           item.subTypeCode == subTypeConst.DentalProvider  ||
@@ -81,7 +81,7 @@
                 *ngIf="
                   item.status == approveStatus &&
                   item.approvalTypeCode ==
-                    pendingApprovalGeneralTypeCode.GeneralAddToMasterList
+                    pendingApprovalGeneralTypeCode.MasterList
                 "
               >
                 <i>The user will be notified of your changes.</i>
@@ -118,7 +118,7 @@
                 *ngIf="
                   item.status == approveStatus &&
                   item.approvalTypeCode ==
-                    pendingApprovalGeneralTypeCode.GeneralCaseReassignment
+                    pendingApprovalGeneralTypeCode.CaseReassignment
                 "
               >
                 <kendo-floatinglabel text="New Case Worker">
@@ -157,7 +157,7 @@
           >
             <ng-template
               ngSwitchCase="{{
-                pendingApprovalGeneralTypeCode.GeneralCaseReassignment
+                pendingApprovalGeneralTypeCode.CaseReassignment
               }}"
             >
               <productivity-tools-approvals-general-list-detail-reassignment
@@ -170,7 +170,7 @@
             </ng-template>
             <ng-template
               ngSwitchCase="{{
-                pendingApprovalGeneralTypeCode.GeneralAddToMasterList
+                pendingApprovalGeneralTypeCode.MasterList
               }}"
             >
               <productivity-tools-approvals-general-list-detail-addtomasterlist
@@ -183,7 +183,7 @@
             </ng-template>
             <ng-template
               ngSwitchCase="{{
-                pendingApprovalGeneralTypeCode.GeneralExceptions
+                pendingApprovalGeneralTypeCode.ClaimException
               }}"
             >
               <productivity-tools-approvals-general-list-detail-exceptions

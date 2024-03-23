@@ -168,9 +168,9 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
 
   amountValidate()
   {
-    const pcaAmmounnt = this.pcaReassignmentByFundSource.pcaAmount;
+    const pcaRemainingAmmounnt = this.pcaReassignmentByFundSource.remainingAmount;
     const reassignmentAmount = this.pcaReassignmentForm.controls['assignmentAmount'].value;
-    if (reassignmentAmount > pcaAmmounnt && reassignmentAmount) 
+   if(reassignmentAmount > pcaRemainingAmmounnt)
     {
       this.pcaReassignmentForm.controls['assignmentAmount'].setErrors({ 'incorrect': true });
     }
@@ -195,7 +195,6 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
     this.pcaReassignmentForm.controls['assignmentAmount'].enable();
    }
   }
- 
 }
 
  

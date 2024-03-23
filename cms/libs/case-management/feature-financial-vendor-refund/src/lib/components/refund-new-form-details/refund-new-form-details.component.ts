@@ -1,14 +1,15 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain';
-import { LovFacade } from '@cms/system-config/domain';
+import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, PaymentMethodCode, ServiceTypeCode } from '@cms/case-management/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { Subject, Subscription, debounceTime, takeUntil } from 'rxjs';
 import {  VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { FilterService } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -16,6 +17,7 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
+  isAddClicked = false;
   selectedRefundType : any;
   public refundType  :any[]=[]
   @Input() isEdit = false
@@ -27,6 +29,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  @Input() vendorAddressId :any
    selectedProvider:any;
   isRefundGridClaimShow = false;
+  isClientSelected = false
   isShowReasonForException = false;
   showServicesListForm: boolean =false;
   selectedMedicalProvider: any;
@@ -51,10 +54,14 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  paymentType$ = this.lovFacade.paymentRequestType$;
   serviceTypes$ = this.lovFacade.serviceType$
   onEditInitiallydontShowPremiumselection = false;
-  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
-  providerDetailsTemplate!: TemplateRef<any>;
+  isconfirmclicked=false;
+  @ViewChild('premiumProviderDetailsTemplate', { read: TemplateRef })
+  premiumProviderDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('pharmacyProviderDetailsTemplate', { read: TemplateRef })
+  pharmacyProviderDetailsTemplate!: TemplateRef<any>;
 
   @ViewChild('tpaProviderDetailsTemplate', { read: TemplateRef })
   tpaProviderDetailsTemplate!: TemplateRef<any>;
@@ -114,6 +121,8 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   tpaPaymentReqIds :any[] =[]
   rxPaymentReqIds :any[] =[]
   selectedVendorRefundsList: any[] = [];
+  allSelectedVendorRefundsList: any[] = [];
+  rxstate!:State;
   creditMaskFormat: string = '000000-000';
 
  @Input() serviceType=''
@@ -138,18 +147,135 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   selectedTpaRequests: any[]=[];
   selectedRxVendorRefundList: any;
   tpaRefundGridLists: any[]=[]
+  vendorRefundProfileSubject = new Subject();
+  pharmacySearchResultSubscription = new Subscription();
+  vendorRefundFormProfile$ = this.financialVendorRefundFacade.vendorRefundFormProfileSubject;
+  rxfilterData: any;
+ rxRefundInfoSort : SortDescriptor[] = [{ field: 'PcaCode', dir: 'asc' }];
+ rxRefundInfoSortValue = 'prescriptionFillDate';
+ rxRefundInfoSortType = 'desc';
+ rxRefundInfoFilter:any[]=[]
+  filter!: any;
+  paymentTypeData :any[] =[];
+  selectedPaymentType: any = '';
+
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
     public financialVendorFacade :FinancialVendorFacade,
     private dialogService: DialogService,
-    private formBuilder: FormBuilder) {}
+    private formBuilder: FormBuilder,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef) {}
   ngOnDestroy(): void {
 
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
+
+rxRefundInformationfilterChange(filter: CompositeFilterDescriptor): void {
+  this.rxfilterData = filter;
+}
+
+
+rxRefundInfoDataStateChange(stateData: any, index:any): void {
+  this.rxRefundInfoSort = stateData.sort;
+  this.rxRefundInfoSortValue = stateData.sort[0]?.field ?? this.sortValue;
+  this.rxRefundInfoSortType = stateData.sort[0]?.dir ?? 'asc';
+  this.rxstate = stateData;
+  this.rxRefundInfoFilter = stateData?.filter?.filters;
+  if(this.rxRefundInfoFilter){
+ if(this.rxRefundInfoFilter?.length ==0){
+  this.selectedVendorRefundsList[index].prescriptionFillItems  =
+  this.allSelectedVendorRefundsList[index].prescriptionFillItems
+  this.selectedVendorRefundsList[index].prescriptionFillItems =
+  this.sortPrescriptions(this.selectedVendorRefundsList[index].prescriptionFillItems)
+  return;
+ }
+  this.rxRefundInfoFilter.forEach((element,ind) => {
+    let rowNum = 0;
+    element.filters.forEach((fil:any) => {    
+    if(ind == 0 && rowNum == 0){
+      this.selectedVendorRefundsList[index].prescriptionFillItems =   this.filterWithOperators(fil, this.allSelectedVendorRefundsList[index].prescriptionFillItems, 
+        this.selectedVendorRefundsList[index].prescriptionFillItems);
+  }else{
+    if(this.selectedVendorRefundsList[index].prescriptionFillItems){
+    this.selectedVendorRefundsList[index].prescriptionFillItems =  this.filterWithOperators(fil,  this.selectedVendorRefundsList[index].prescriptionFillItems,
+      this.selectedVendorRefundsList[index].prescriptionFillItems);
+    }
+  }
+  rowNum++;
+})
+
+  });
+}
+  this.selectedVendorRefundsList[index].prescriptionFillItems =
+  this.sortPrescriptions(this.selectedVendorRefundsList[index].prescriptionFillItems)
+}
+
+sortPrescriptions(source:any[]){
+  if(this.rxRefundInfoSortType == 'asc'){
+ return  source.sort((a, b) => (a[this.rxRefundInfoSortValue] < b[this.rxRefundInfoSortValue] ? -1 : 1));
+  }else{
+   return source.sort((a, b) => (a[this.rxRefundInfoSortValue] > b[this.rxRefundInfoSortValue] ? -1 : 1));
+  }
+}
+
+
+  filterWithOperators(fil:any, source:any[], destination:any[]){
+    switch(fil.operator){
+      case 'startswith':
+       destination =
+      source.filter((x:any) => x[fil.field]?.toLowerCase().startsWith(fil.value?.toLowerCase()))
+      break;
+      case 'eq':
+      destination = source.filter((x:any) => x[fil.field]?.toString().toLowerCase() == fil.value?.toString().toLowerCase())
+      break;
+     case 'endswith':
+      destination =
+      source.filter((x:any) => x[fil.field]?.toLowerCase().endsWith(fil.value?.toLowerCase()))
+      break;
+      case 'contains':
+        destination =
+        source.filter((x:any) => x[fil.field]?.toString()?.toLowerCase().includes(fil.value?.toLowerCase()))
+      break;
+      case 'gte':
+        if(fil.field == 'prescriptionFillDate'){
+          destination =source.filter(x => (new Date(x.prescriptionFillDate)) >= fil.value)
+        } else {
+          destination = source.filter((x:any) => x[fil.field]?.toString() >= fil.value)
+        }
+        break;
+      case 'gt':
+        if(fil.field == 'prescriptionFillDate'){
+          destination = source.filter((x:any) => new Date([fil.field]?.toString()) > (new Date(fil.value)))
+        } else {
+          destination = source.filter((x:any) => x[fil.field]?.toString() > fil.value)
+        }
+        break;
+      case 'lte':
+        if(fil.field == 'prescriptionFillDate'){
+          destination = source.filter(x => (new Date(x.prescriptionFillDate)) <= fil.value)
+        } else {
+          destination = source.filter((x:any) => x[fil.field]?.toString() <= fil.value)
+        }
+        break;
+      case 'lt':
+        if(fil.field == 'prescriptionFillDate'){
+          destination = source.filter((x:any) => new Date(x[fil.field]?.toString())< new Date((fil.value)))
+        } else {
+          destination = source.filter((x:any) => x[fil.field]?.toString() < fil.value)
+        }
+      break;
+    }
+    return destination;
+  }
   ngOnInit(): void {
+
+    this.rxstate = {
+      skip: 0,
+      sort: this.rxRefundInfoSort
+    };
 
     this.subscribeLoadRefundClaimDataForRx();
     this.financialVendorRefundFacade.premiumsListData$.subscribe((res:any)=>{
@@ -158,6 +284,8 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
     })
     this.lovFacade.getRefundTypeLov();
     this.lovFacade.getServiceTypeLov();
+    this.lovFacade.getCoPaymentRequestTypeLov();
+    this.getPaymentTypeLov();
      this.initForm()
     this.lovFacade.refundType$.subscribe((res:any[]) =>{
 
@@ -167,7 +295,8 @@ if(this.isEdit){
   console.log(this.tpaRefundGridLists)
   this.disableFeildsOnConfirmSelection = true
   this.selectedRefundType = this.serviceType
-  this.onEditInitiallydontShowPremiumselection = true
+  this.onEditInitiallydontShowPremiumselection = true;
+  this.isClientSelected = true;
   this.selectedClient={
     clientId: this.clientId,
     clientNames :this.clientName
@@ -239,13 +368,11 @@ if(this.isEdit){
   this.refundForm.controls['tpaVendor'].disable();
   this.searchTpaVendors(this.vendorName)
   }
-
-
-
 }
   }
+
   subscribeLoadRefundClaimDataForRx(){
-    this.pharmacySearchResult$.subscribe((res:any)=>{
+    this.pharmacySearchResultSubscription = this.pharmacySearchResult$.subscribe((res:any)=>{
       this.pharmaciesList = res;
             const vendors = res.filter((x:any) =>{
         return x.vendorAddressId ==  this.vendorAddressId
@@ -254,11 +381,13 @@ if(this.isEdit){
       this.vendorId = vendors[0].vendorId
       this.initForm()
     });
-
     this.existingRxRefundClaim$.subscribe((res:any)=>{
+       this.rxPaymentReqIds = [res.prescriptionFillItems.map((x:any)=> x.refundedPrescriptionFillId).join(',')]
+
       this.getSelectedVendorRefundsList(res,"EDIT");
     })
   }
+
   loadPaymentRequestData(){
     this.financialVendorRefundFacade.loadPharmacyRefundEditList(this.inspaymentRequestId);
   }
@@ -302,58 +431,66 @@ if(this.isEdit){
 }
 
   selectionChange(event: any){
-    this.isConfirmationClicked = false
+    this.isConfirmationClicked = false;
+    this.claimsCount = 0;
+    this.pharmacyClaimsPaymentReqIds = [];
     this.vendorId=null;
     this.vendorAddressId=null;
     this.selectedProvider=null;
   }
   confirmationClicked (){
+    this.isconfirmclicked=true;
+    if(this.claimsCount != 0){
       this.inputConfirmationClicked = true;
-    this.disableFeildsOnConfirmSelection = true
-
-    if(this.selectedRefundType=== ServiceTypeCode.insurancePremium
-    && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
-    ){
-      this.refundForm.controls['insVendor'].disable();
-    this.insurancePremiumPaymentReqIds =  [...this.insClaims.selectedInsuranceClaims]
-  }
-
-  if(this.selectedRefundType === ServiceTypeCode.tpa ){
-    this.refundForm.controls['tpaVendor'].disable();
-    const param ={
-      paymentRequestIds: this.selectedTpaRequests,
+      this.disableFeildsOnConfirmSelection = true
+      if(this.selectedRefundType=== ServiceTypeCode.insurancePremium
+      && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
+      ){
+        this.refundForm.controls['insVendor'].disable();
+      this.insurancePremiumPaymentReqIds =  [...this.insClaims.selectedInsuranceClaims]
     }
-      this.financialVendorRefundFacade.getTpaRefundInformation(param)
-  }
-   if (this.selectedRefundType === ServiceTypeCode.pharmacy || this.selectedRefundType === 'RX' || this.selectedRefundType === 'PHARMACY'){
-    this.refundForm.controls['rxVendor'].disable();
-    if(!this.isEdit){
-      this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
-    }else{
-      this.rxClaims.selectedPharmacyClaims.forEach(element => {
-        const data = (this.selectedVendorRefundsList[0].prescriptionFillItems).find((obj:any) =>{
-          return obj.refundedPrescriptionFillId ==  element.perscriptionFillId
+
+    if(this.selectedRefundType === ServiceTypeCode.tpa ){
+      this.refundForm.controls['tpaVendor'].disable();
+      const param ={
+        paymentRequestIds: this.selectedTpaRequests,
+      }
+        this.financialVendorRefundFacade.getTpaRefundInformation(param)
+    }
+     if (this.selectedRefundType === ServiceTypeCode.pharmacy || this.selectedRefundType === 'RX' || this.selectedRefundType === 'PHARMACY'){
+      this.refundForm.controls['rxVendor'].disable();
+      if(!this.isEdit){
+        this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
+      }else{
+        this.rxClaims.selectedPharmacyClaims.forEach(element => {
+          const data = (this.selectedVendorRefundsList[0].prescriptionFillItems).find((obj:any) =>{
+            return obj.refundedPrescriptionFillId ==  element.perscriptionFillId
+          });
+          if(data){
+            element.daySupplyRefunded=data.daySupplyRefunded;
+            element.qtyRefunded =data.qtyRefunded;
+            element.qtyRefundedValid=data.qtyRefunded;
+            element.refundedAmount=data.refundedAmount;
+            element.refundedAmountValid=data.refundedAmountValid;
+            element.refundedPrescriptionFillId=data.refundedPrescriptionFillId;
+          };
         });
-        if(data){
-          element.daySupplyRefunded=data.daySupplyRefunded;
-          element.qtyRefunded =data.qtyRefunded;
-          element.qtyRefundedValid=data.qtyRefunded;
-          element.refundedAmount=data.refundedAmount;
-          element.refundedAmountValid=data.refundedAmountValid;
-          element.refundedPrescriptionFillId=data.refundedPrescriptionFillId;
-        };
-      });
-      this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
-     }
+        this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
+       }
+    }
+    this.onEditInitiallydontShowPremiumselection = true
+    this.isConfirmationClicked = true
+    }
 
   }
-
-  this.isConfirmationClicked = true
-}
 
 onSelectedClaimsChangeEvent(event:any[]){
   this.selectedInsRequests = event
   this.insurancePremiumPaymentReqIds = event
+  if(this.isEdit && this.selectedRefundType=== ServiceTypeCode.insurancePremium && this.onEditInitiallydontShowPremiumselection)
+  {
+    this.confirmationClicked();
+  }
 }
 
 onSelectedTpaClaimsChangeEvent(event:any[]){
@@ -388,10 +525,11 @@ onSelectedRxClaimsChangeEvent(event:any){
       let response :any[] =[]
       response = res.data
       if(this.tpaRefundGridLists && this.tpaRefundGridLists.length>0){
-        this.tpaRefundGridLists.forEach(element => {
+        const tpaList =  [... this.tpaRefundGridLists];
+        tpaList.forEach((element,ind) => {
           let index =  response.findIndex(x=> x.paymentRequestId == element.paymentRequestId)
-          if(index>=0)
-           response.splice(index)
+          if(index<=0)
+           this.tpaRefundGridLists.splice(index);
       })
       this.tpaRefundGridLists =  this.tpaRefundGridLists.concat(response)
       }else{
@@ -399,9 +537,9 @@ onSelectedRxClaimsChangeEvent(event:any){
       }
       this.tpaRefundGridLists = [...this.tpaRefundGridLists]
       this.tpaRefundGridLists.forEach(x=>{
-        x.serviceStartDate =new Date(x.serviceStartDate);
-        x.serviceEndDate =new Date(x.serviceEndDate);
-        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate) : new Date()
+        x.serviceStartDate = x.serviceStartDate ? new Date(x.serviceStartDate) : null;
+        x.serviceEndDate = x.serviceEndDate ? new Date(x.serviceEndDate) : null;
+        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate): null;
         x.totalAmount = x.tpaInvoice.reduce((accumulator : number, obj : any) => accumulator + obj.serviceCost, 0);
       })
       this.claimsCount = this.tpaRefundGridLists.length
@@ -427,7 +565,6 @@ onSelectedRxClaimsChangeEvent(event:any){
 
 onCloseViewProviderDetailClicked(result: any){
   if(result){
-    this.modalCloseAddEditRefundFormModal.emit(false);
     this.providerDetailsDialog.close();
   }
 }
@@ -437,17 +574,29 @@ getProviderPanel(event:any){
   this.financialVendorFacade.getProviderPanel(event)
 }
 
+
 onInsurancePremiumProviderCick(event:any){
   this.paymentRequestId = event
   this.providerDetailsDialog = this.dialogService.open({
-    content: this.providerDetailsTemplate,
+    content: this.premiumProviderDetailsTemplate,
     animation:{
       direction: 'left',
       type: 'slide',
     },
     cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
   });
+}
 
+onPharmacyPremiumProviderCick(event:any){
+  this.paymentRequestId = event
+  this.providerDetailsDialog = this.dialogService.open({
+    content: this.pharmacyProviderDetailsTemplate,
+    animation:{
+      direction: 'left',
+      type: 'slide',
+    },
+    cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+  });
 }
 
 onTpaProviderClick(event:any){
@@ -471,7 +620,8 @@ OnEditProviderProfileClick(){
   this.lovFacade.getPaymentMethodLov()
 }
 
-onAddRefundClick(){
+  onAddRefundClick() {
+    this.isAddClicked = true;
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
   }
@@ -510,6 +660,7 @@ addTpa(event:any){
     this.isRefundGridClaimShow = true;
     if(this.selectedRefundType == ServiceTypeCode.pharmacy){
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
+    this.pharmacyClaimsPaymentReqIds = this.rxPaymentReqIds
     }
   }
 
@@ -545,7 +696,10 @@ addTpa(event:any){
     this.financialVendorRefundFacade.loadClientBySearchText(clientSearchText)
   }
   onClientValueChange(client: any) {
+    this.isClientSelected = false;
+    this.selectedRefundType = null;
     if (client != undefined) {
+      this.isClientSelected = true
       this.clientCaseEligibilityId = client.clientCaseEligibilityId;
       this.clientId = client.clientId;
       this.financialVendorRefundFacade.loadInsurancevendorBySearchText("",this.clientId);
@@ -556,6 +710,8 @@ addTpa(event:any){
     }
     else{
       this.clientId=null;
+      this.claimsCount = 0;
+      this.pharmacyClaimsPaymentReqIds = [];
     }
   }
   searchPharmacy(searchText: any , ) {;
@@ -565,10 +721,14 @@ addTpa(event:any){
         this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
+    this.isClientSelected = true;
     this.vendorAddressId=null;
     if($event==undefined){
       this.vendorAddressId=null;
+      this.claimsCount = 0;
+      this.pharmacyClaimsPaymentReqIds = [];
     }
+    this.isConfirmationClicked = false;
     this.vendorId=$event?.vendorId;
     this.vendorAddressId = $event?.vendorAddressId;
     this.vendorName = $event?.vendorName;
@@ -587,7 +747,7 @@ addTpa(event:any){
       voucherPayable: [''],
       creditNumber: [''],
       warantNumber: ['', Validators.required],
-      depositDate: ['', Validators.required],
+      depositDate: [''],
       refundNote:['']
     });
   }
@@ -648,6 +808,14 @@ addTpa(event:any){
 
   }
 
+  onDeleteSelectedPharmacyClick(index:any){
+    this.selectedVendorRefundsList.splice(index,1)
+    if(this.selectedVendorRefundsList.length <=0){
+      this.selectDiffPayments()
+      this.pharmacyClaimsPaymentReqIds = []
+    }
+  }
+
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
     if(operation === "ADD"){
       this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>
@@ -658,6 +826,7 @@ addTpa(event:any){
           grantNo : item.grantNo,
           warrantNbr : item.warrantNbr,
           paymentStatusCode : item.paymentStatusCode,
+          paymentMethodCode : item.paymentMethodCode,
           prescriptionFillItems : []
         })))).map((str:any) => JSON.parse(str));
         listData = listData.map((obj : any) =>
@@ -668,7 +837,8 @@ addTpa(event:any){
             daySupplyRefunded : obj.daySupplyRefunded ?? null,
             daySupplyRefundedValid : false,
             refundedAmount : obj.refundedAmount ?? null,
-            refundedAmountValid : false
+            refundedAmountValid : false,
+            paymentType : obj?.paymentType
           }));
         this.selectedVendorRefundsList.forEach((element : any) => {
           element.prescriptionFillItems = listData.filter(
@@ -716,6 +886,7 @@ addTpa(event:any){
       })
     }
     }
+    this.allSelectedVendorRefundsList = JSON.parse(JSON.stringify(this.selectedVendorRefundsList))
 
    this.isConfirmationClicked = true;
  }
@@ -724,15 +895,32 @@ addTpa(event:any){
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-     inValid == isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
+     inValid= isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0) ? true : false;
      dataItem.qtyRefundedValid = !inValid;
+     dataItem.qtyRefundedGtRxQty = inValid = dataItem.qtyRefunded > dataItem.rxqty;     
    }
    if (control === 'daySupplyRefunded') {
-     inValid == isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+     inValid = isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0) ? true : false;
      dataItem.daySupplyRefundedValid = !inValid;
+     let rxRatio = dataItem.rxqty / dataItem.daySupply;
+     let refundRatio = dataItem.qtyRefunded / dataItem.daySupplyRefunded;
+     
+     if (dataItem.daySupplyRefunded > dataItem.daySupply) {
+       dataItem.daySpyRfdGtDaySpy = inValid = true;
+       dataItem.daySupplyRefundedRatioValid = false;
+     }
+     else {
+       dataItem.daySpyRfdGtDaySpy = false;
+       if (!isNaN(refundRatio) && isFinite(refundRatio) && refundRatio > 0) {
+         inValid = !(rxRatio >= refundRatio);
+         dataItem.daySupplyRefundedRatioValid = inValid;
+       } else {
+         dataItem.daySupplyRefundedRatioValid = false;
+       }
+     }
    }
    if (control === 'refundedAmount') {
-     inValid == isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
+    inValid = isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0) ? true : false;
      dataItem.refundedAmountValid = !inValid;
    }
    if (inValid) {
@@ -759,7 +947,7 @@ addTpa(event:any){
   voucherPayable: [''],
   creditNumber: [''],
   warantNumber: ['', Validators.required],
-  depositDate:['', Validators.required],
+  depositDate:[''],
   refundNote:[''],
 })
 markGridFormTouched(){
@@ -769,12 +957,48 @@ markGridFormTouched(){
 }
 addNewRefundRx() {
     this.isRefundRxSubmitted = true;
-    this.refundRXForm.markAsTouched();
+    this.refundRXForm.markAllAsTouched();
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
 
+    this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []).forEach((x: any)=>{
+
+      if(!x.qtyRefunded)
+      {
+        x.qtyRefundedValid = false
+        return
+      }
+      else
+      {
+        x.qtyRefundedValid = true
+      }
+
+      if(!x.daySupplyRefunded)
+      {
+        x.daySupplyRefundedValid = false
+        return
+      }
+      else
+      {
+        x.daySupplyRefundedValid = true
+      }
+      if(!x.refundedAmount)
+      {
+        x.refundedAmountValid = false
+        return
+      }
+      else
+      {
+        x.refundedAmountValid = true
+      }
+    })
+    this.cdr.detectChanges()
+
     let selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []);
-    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
+
+
+    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> !(x.qtyRefunded) || (!x.daySupplyRefunded)
+     || (!x.refundedAmount))
     if ((this.refundRXForm.invalid && !this.isEdit) || InValidSelectedRefundPharmacyClaimInput.length >0) {
       return;
     } else {
@@ -792,7 +1016,9 @@ addNewRefundRx() {
           creditNumber : obj.creditNumber,
           rxqtype : obj.rxqtype,
           pharmacyNpi : obj.PharmacyNpi,
-          ndc : obj.ndc
+          ndc : obj.ndc,
+          paymentTypeCode : obj.paymentTypeCode,
+          batchId : obj.batchId ?? this.selectedVendorRefundsList[0].batchId,
         }));
       let refundRxData = {
         ...this.refundRXForm.value,
@@ -800,8 +1026,9 @@ addNewRefundRx() {
         clientId  : this.clientId,
         clientCaseEligibilityId   : this.clientCaseEligibilityId ?? selectedpharmacyClaims[0].clientCaseEligibilityId,
         refundType : this.selectedRefundType,
-        isSpotsPaymentCheck: this.isSpotsPayment,
-        pharmacyRefundedItems:selectedpharmacyClaimsDto
+        isSpotsPaymentCheck: selectedpharmacyClaims[0].paymentMethodCode == PaymentMethodCode.SPOTS ?  true : false,
+        pharmacyRefundedItems:selectedpharmacyClaimsDto,
+        vendorAddressId: this.vendorAddressId
       };
       if(this.isEdit == false){
         this.financialVendorRefundFacade.showLoader();
@@ -810,7 +1037,7 @@ addNewRefundRx() {
           this.financialVendorRefundFacade.hideLoader();
           this.closeAddEditRefundFormModalClicked(true)
           this.financialVendorRefundFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,
-            'Pharmacy Refund Added Successfuly')
+            'Refund added! An event has been logged')
         },
         error: (error: any) => {
           if (error) {
@@ -840,6 +1067,22 @@ addNewRefundRx() {
     }
 
 }
+validateFormat(cardnumber: any): string {
+  const sanitizedValue = cardnumber.replace(/[^\d]/g, '');
+  const regex = /^(\d{0,6})(\d{0,3})/;
+  const matches = sanitizedValue.match(regex);
+
+  if (matches) {
+    return `${matches[1]}${matches[1] && matches[2] ? '-' : ''}${matches[2]}`;
+  }
+
+  return sanitizedValue;
+}
+validateCreditNumber(event: any): void {
+  const inputValue = event.target.value;
+  const formattedValue = this.validateFormat(inputValue);
+  event.target.value = formattedValue;
+}
 onRefundNoteValueChange(event: any) {
   this.refundNoteValueLength = event.length
 }
@@ -848,8 +1091,48 @@ onSpotsPaymentChange(check: any) {
 }
 
 selectedRxClaimsChangeEvent(event:any){
-  this.pharmacyClaimsPaymentReqIds = event
-  this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
+  if (this.claimsCount!=0){
+  if( event != null){
+  this.claimsCount = event.length;
+  this.rxPaymentReqIds = event;
+  }
+}
+}
+validatePayable(validatePayable: any): string {
+  const sanitizedValue = validatePayable.replace(/[^a-zA-Z\d]/g, '');
+  const regex = /^([a-zA-Z]{2,3}\d{0,6})(\d{0,3})/;
+  const matches = sanitizedValue.match(regex);
+
+  if (matches) {
+    return `${matches[1]}${matches[1] && matches[2] ? '-' : ''}${matches[2]}`;
+  }
+
+  return sanitizedValue;
 }
 
+validateVoucherPayable(event: any): void {
+  const inputValue = event.target.value;
+  const formattedValue = this.validatePayable(inputValue);
+  event.target.value = formattedValue
+}
+
+  getPaymentTypeLov(){
+    this.paymentType$.subscribe({
+        next: (data: any) => {
+          this.paymentTypeData=data;
+        }
+      });
+  }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    this.selectedPaymentType = value;
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovDesc
+      }],
+        logic: "or"
+    });
+  }
 }

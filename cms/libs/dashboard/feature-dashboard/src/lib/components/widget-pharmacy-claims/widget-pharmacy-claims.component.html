@@ -1,0 +1,43 @@
+<div class="dash-header-with-filters">
+  <h5>PHARMACY CLAIMS</h5>
+  <div *ngIf="!isEditDashboard">
+    <kendo-dropdownlist size="small" value="Claims Count" rounded="medium" class="mr-1"
+      [fillMode]="formUiStyle.inputFillMode" [data]="dataCount" (valueChange)="dataCountChange($event)">
+    </kendo-dropdownlist>
+
+    <kendo-dropdownlist size="small" value="This Month" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
+      [data]="dataMonth" (valueChange)="dataMonthChange($event)">
+    </kendo-dropdownlist>
+  </div>
+</div>
+
+<common-dashboard-loader-panel *ngIf="!((this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value ?? -1) >= 0)
+ && !((this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value ?? -1) >= 0) && !isEditDashboard" ></common-dashboard-loader-panel>
+<div class="dashboard-cards-container" *ngIf="this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value >= 0 || this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value >= 0">
+
+  <kendo-chart class="dash_chart"    >
+    <ng-template kendoChartDonutCenterTemplate>
+      <h3 *ngIf="selectedDataCount == 'Claim Count'">{{claimCount}}</h3>
+      <h3 *ngIf="selectedDataCount !== 'Claim Count'"><strong>$</strong> {{claimAmount}}</h3>
+    </ng-template>
+    <kendo-chart-legend [item]="pharmacyClaims?.chartData?.legend"  [margin]="10"     [markers]="markers" [labels]="labels">
+      <kendo-chart-legend-item class="mt-1" margin="10"   ></kendo-chart-legend-item>
+    </kendo-chart-legend>
+
+    <kendo-chart-area background="none"></kendo-chart-area>
+    <kendo-chart-tooltip>
+      <ng-template kendoChartSeriesTooltipTemplate let-value="value" let-category="category" let-series="series">
+        {{ category }}: {{value}} {{selectedDataCount == 'Claim Count'? '':'$'}}
+      </ng-template>
+    </kendo-chart-tooltip>
+    <kendo-chart-series>
+      <kendo-chart-series-item  [autoFit]="true" *ngFor="let series of pharmacyClaims?.chartData?.series; let outermost = last;"
+        [type]="series.type" [startAngle]="-10" [data]="series.data" field="value" categoryField="category"
+        colorField="color">
+      
+      </kendo-chart-series-item>
+    </kendo-chart-series>
+  </kendo-chart>
+
+
+</div>

@@ -87,7 +87,7 @@
                         <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
                             [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="40">
                         </kendo-textbox>
-                        <kendo-formerror *ngIf="!getPersonControl(i, 'firstName')?.valid
+                        <kendo-formerror *ngIf="!getPersonControl(i, 'lastName')?.valid
                      && isViewContentEditable==false">Last name is required.</kendo-formerror>
                     </kendo-floatinglabel>
                 </div>
@@ -96,9 +96,10 @@
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Date of birth"
                             format="MM-dd-yyyy" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern"
                             formControlName="dob">
-                            <kendo-formerror *ngIf="getPersonControl(i, 'dob')?.valid
-                     && isViewContentEditable==false">Date of birth is required.</kendo-formerror>
                         </kendo-datepicker>
+                        <kendo-formerror *ngIf="!getPersonControl(i, 'dob')?.valid
+                         && isViewContentEditable==false">Date of birth is required.</kendo-formerror>
+                       
                     </kendo-floatinglabel>
                 </div>
             </div>

@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, FinancialVendorTypeCode, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
+import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode, StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
+
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService } from '@cms/shared/util-core';
-import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'productivity-tools-approvals-edit-items',
   templateUrl: './approvals-edit-items.component.html',
@@ -201,6 +202,21 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       );
       this.insuranceVendorForm.controls['tin'].setValue(
         this.selectedMasterData?.tin
+      );
+      this.insuranceVendorForm.controls['addressline1'].setValue(
+        this.selectedMasterData?.address1
+      );
+      this.insuranceVendorForm.controls['addressline2'].setValue(
+        this.selectedMasterData?.address2
+      );
+      this.insuranceVendorForm.controls['city'].setValue(
+        this.selectedMasterData?.cityCode
+      );
+      this.insuranceVendorForm.controls['state'].setValue(
+        this.selectedMasterData?.stateCode
+      );
+      this.insuranceVendorForm.controls['zip'].setValue(
+        this.selectedMasterData?.zip
       );
       this.insuranceVendorForm.controls['mailCode'].setValue(
         this.selectedMasterData?.mailCode
@@ -466,6 +482,18 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       this.insuranceVendorForm.controls['mailCode'].setValidators(Validators.required)
       this.insuranceVendorForm.controls['mailCode'].updateValueAndValidity();
 
+      this.insuranceVendorForm.controls['addressline1'].setValidators(Validators.required)
+      this.insuranceVendorForm.controls['addressline1'].updateValueAndValidity();
+      
+      this.insuranceVendorForm.controls['city'].setValidators(Validators.required)
+      this.insuranceVendorForm.controls['city'].updateValueAndValidity();
+
+      this.insuranceVendorForm.controls['state'].setValidators(Validators.required)
+      this.insuranceVendorForm.controls['state'].updateValueAndValidity();
+
+      this.insuranceVendorForm.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')])
+      this.insuranceVendorForm.controls['zip'].updateValueAndValidity();
+
       this.insuranceVendorForm.controls['paymentMethod'].setValidators(Validators.required)
       this.insuranceVendorForm.controls['paymentMethod'].updateValueAndValidity();
 
@@ -696,6 +724,11 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
           vendorId: this.selectedMasterData.vendorId,
           tin: this.insuranceVendorForm?.controls['tin'].value,
           address: {
+            address1 : this.insuranceVendorForm?.controls['addressline1']?.value,
+            address2 : this.insuranceVendorForm?.controls['addressline2']?.value,
+            cityCode : this.insuranceVendorForm?.controls['city']?.value,
+            stateCode : this.insuranceVendorForm?.controls['state']?.value,
+            zip : this.insuranceVendorForm?.controls['zip']?.value,
             vendorAddressId: this.selectedMasterData.vendorAddressId,
             nameOnCheck: this.insuranceVendorForm?.controls['nameOnCheck']?.value,
             MailCode: this.insuranceVendorForm.controls['mailCode'].value,

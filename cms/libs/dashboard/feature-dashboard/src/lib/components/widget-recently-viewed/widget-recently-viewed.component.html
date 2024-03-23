@@ -1,0 +1,50 @@
+
+  <div class="dash-header-with-filters">
+    <h5>RECENTLY VIEWED</h5>
+  </div>
+
+  <common-dashboard-loader-panel *ngIf="!gridData && !vendorGridData && !isEditDashboard">
+  </common-dashboard-loader-panel>
+<div  *ngIf="gridData || vendorGridData">
+  <p> <strong>CLIENTS</strong>  </p>
+    <div class="app-c-drag-row-table recently-view">
+    <kendo-grid [data]="gridData" >
+      <kendo-grid-column field="clientName" [width]="100"> </kendo-grid-column>
+      <kendo-grid-column field="clientId" [width]="100"> </kendo-grid-column>
+      <kendo-grid-column field="dateOfBirth" [width]="100"> 
+       
+        <ng-template kendoGridCellTemplate  let-dataItem>
+          {{dataItem.dateOfBirth  | date: 'MM/dd/yyyy'}}
+          
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="caseStatusCode"  [width]="100"> </kendo-grid-column>
+      <kendo-grid-column [width]="60">
+        <ng-template kendoGridCellTemplate  let-dataItem>
+          <button kendoButton themeColor="base" (click)="onCaseClicked(dataItem)">
+            <span class="material-icons"> chevron_right </span>
+        </button> 
+          
+        </ng-template>
+      </kendo-grid-column>
+    </kendo-grid>
+
+  <p> <strong>VENDORS</strong> </p>
+  <kendo-grid [data]="vendorGridData" >
+    <kendo-grid-column field="vendorName" [width]="195"> </kendo-grid-column>
+    <kendo-grid-column field="tin" [width]="180">
+      <ng-template kendoGridCellTemplate  let-dataItem>
+       {{dataItem.tin | tin}}
+      </ng-template>  
+    </kendo-grid-column>
+       <kendo-grid-column [width]="60">
+      <ng-template kendoGridCellTemplate  let-dataItem>
+        <button kendoButton themeColor="base" (click)="onVendorClicked(dataItem)">
+          <span class="material-icons"> chevron_right </span>
+      </button> 
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+</div>
+</div>
+

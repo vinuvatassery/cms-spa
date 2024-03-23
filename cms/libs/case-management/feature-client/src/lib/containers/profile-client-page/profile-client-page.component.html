@@ -2,7 +2,8 @@
   <case-management-client-read-only-view [clientProfile]="loadedClient$ | async"
     [clientId]="profileClientId" [clientCaseEligibilityId]="clientCaseEligibilityId"
     [clientCaseId]="clientCaseId" (loadReadOnlyClientInfoEvent)="loadReadOnlyClientInfoEventHandler()"
-    [ramsellInfo]="ramSellInfo"
+    [ramsellInfo]="ramSellInfo" [clientProfile$]="clientProfile$" [userManagerprofilePhoto$]="userManagerprofilePhoto$"
+    [userLastModifierProfilePhoto$]="userLastModifierProfilePhoto$"
     (onUpdateApplicantInfo)="loadReadOnlyClientInfoEventHandler()"></case-management-client-read-only-view>
   <case-management-special-handling [clientId]="profileClientId" (UpdateApplicantInfo)="loadApplicantInfo()" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientCaseId]="clientCaseId">
   </case-management-special-handling>

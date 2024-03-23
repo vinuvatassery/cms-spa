@@ -215,11 +215,14 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   {    
     this.remainingAmountValidate = false
     this.dateValidate()
-    if(this.openDateError === true)
+    this.openDateValidate()
+    this.closeDateValidate()
+    if(this.openDateError === true || this.ispcaOpenDateDependency || this.isAssignmentpcaCloseDateGreater || this.openDateAfterCloseDate || this.isAssignmentpcaOpenDateGreater
+      || this.ispcaCloseDateGreater || this.ispcaOpenDateGreater || this.closeDateIsBeforeOpen)
     {
       return
     }
-    if(this.originalRemainingBalance < this.pcaAssignmentForm?.controls["amount"]?.value)
+    if(this.originalRemainingBalance < this.pcaAssignmentForm?.controls["amount"]?.value && ! this.pcaAssignmentForm.controls['unlimited'].value)
     {
     this.pcaAssignmentForm?.controls["amount"].setErrors({'incorrect': true});
     this.remainingAmountValidate = true
@@ -414,6 +417,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     )
     this.pcaAssignmentForm.controls['amount'].reset()
     this.pcaAssignmentForm.controls['amount'].disable();
+    this.remainingAmountValidate= false
    }
    else
    {

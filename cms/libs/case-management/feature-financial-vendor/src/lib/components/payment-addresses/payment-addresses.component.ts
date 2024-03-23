@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { PaymentsFacade, BillingAddressFacade, VendorContactsFacade, ContactResponse, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { StatusFlag } from '@cms/shared/ui-common';
 
 
 @Component({
@@ -17,7 +17,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaymentAddressesComponent {
+export class PaymentAddressesComponent{
   @ViewChild(GridComponent) gridConfig!: GridComponent;
   @Input() vendorId: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -61,6 +61,8 @@ export class PaymentAddressesComponent {
   searchValue = "";
   columnName: any = "";
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  paymentAddressProfilePhoto$ = this.paymentBillingFacade.paymentAddressProfilePhotoSubject;
+
   column:any =
   {
     mailCode: 'Mail Code',
@@ -153,9 +155,8 @@ filter: any = [];
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
     public readonly  intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider)
+    private readonly configurationProvider: ConfigurationProvider,)
     { }
-
 
   ngOnInit(): void {
     this.lovFacade.getVendorPaymentRunDatesLovs();
@@ -173,8 +174,8 @@ filter: any = [];
     this.getTabCode();
     this.loadPaymentsAddressListGrid();
     this.checkMailCode();
-  
   }
+
 
   private checkMailCode() {
     this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
@@ -223,9 +224,6 @@ filter: any = [];
     this.paymentBillingFacade.loadPaymentsAddressListGrid(paymentAddressListParams);
   }
 
-
-
-
   clickOpenAddEditPaymentAddressDetails() {
     this.addEditTitleText = 'Add Payment Address'
     this.manufacturerAddEditTitleText = 'Add Address'
@@ -269,8 +267,6 @@ filter: any = [];
   clickOpenDeactivatePaymentAddressDetails() {
     this.isPaymentAddressDeactivateShow = true;
   }
-
-
 
   clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeactivateShow = false;

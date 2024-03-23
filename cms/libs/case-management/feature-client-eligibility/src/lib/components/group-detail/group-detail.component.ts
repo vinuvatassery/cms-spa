@@ -132,9 +132,11 @@ export class GroupDetailComponent implements OnInit {
     if(this.groupList && this.groupList.length === 1 && this.isScheduledGroup)
     {
       this.isShowDelete = false;
+      this.groupForm.controls['groupStartDate'].disable();
     }
     else{
       this.isShowDelete = true;
+      this.groupForm.controls['groupStartDate'].enable();
     }
   }
 }

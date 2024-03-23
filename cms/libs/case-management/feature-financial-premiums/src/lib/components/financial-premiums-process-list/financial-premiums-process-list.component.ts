@@ -217,6 +217,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
           this.directRemoveClicked = true;
           this.onSinglePremiumRemove(data);
           this.onRemovePremiumsOpenClicked(this.removePremiumsConfirmationDialogTemplate);
+          this.cdr.detectChanges();
         }
       },
     },
@@ -233,6 +234,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   @Input() paymentMethodCode$: any
   @Input() paymentStatusCode$: any
   @Input() healthInsuranceTypeLov$: any
+  @Input() premiumProcessListProfilePhoto$!: any;
   paymentMethodFilter = '';
   paymentTypeFilter = '';
   paymentStatusFilter = '';
@@ -300,6 +302,8 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     });
     this.ref.detectChanges();
   }
+
+
 
   pageNumberAndCountChangedInSelectAll() {
     //If selecte all header checked and either the page count or the page number changed
@@ -465,7 +469,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
             {
               field: this.selectedColumn ?? 'clientFullName',
               operator: operator,
-              value: data,
+              value: this.searchValue,
             },
           ],
           logic: 'and',
@@ -701,7 +705,6 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
 
   getSelectedReportCount(selectedSendReportList: []) {
     this.sendReportCount = selectedSendReportList.length;
-    this.cdr.detectChanges();
   }
 
   selectionChange(dataItem: any, selected: boolean) {
@@ -905,9 +908,10 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   }
 
   selectedKeysChange(selection: any) {
+    this.selectedProcessClaims = selection;
     this.selectedSendReportList = selection;
     this.checkedAndUncheckedRecordsFromSelectAll = [];
-    this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': selection.paymentRequestId, 'vendorAddressId': selection.vendorAddressId });
+    this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': selection?.paymentRequestId, 'vendorAddressId': selection?.vendorId });
     this.selectedSendReportList = { 'SelectedSendReports': this.checkedAndUncheckedRecordsFromSelectAll };
     this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
   }

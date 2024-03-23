@@ -7,16 +7,16 @@
     <p> No data found</p>
   </div>
   <div class="flex-row" *ngIf="infoObjectValidator(clientProfileImpInfo$)">
-   <ng-container *ngIf="clientProfileImpInfo$?.clientNotes.length>0">
-    <ng-container  *ngFor="let note of clientProfileImpInfo$?.clientNotes">
-    <div class="flex-col" *ngIf="note">
-      <h5>Case Worker Notes</h5>
+   <div  class="flex-col" *ngIf="clientProfileImpInfo$?.clientNotes.length>0">
+    <ng-container  *ngFor="let note of clientProfileImpInfo$?.clientNotes; let i = index">
+    <ng-container *ngIf="note">
+      <h5 *ngIf="showClientNotesHeader(clientProfileImpInfo$?.clientNotes) && i == 0"> Case Worker Notes</h5>
       <ul aria-label="case worker notes menu" class="user-bullet-list">
         <li aria-label="case worker notes menu item">{{note}}</li>
       </ul>
-    </div>
+    </ng-container>
   </ng-container>
-  </ng-container>
+</div>
     <div class="flex-col" *ngIf="clientProfileImpInfo$?.preferredContact || clientProfileImpInfo$?.preferredEmail">
       <h5>Preferred Contact</h5>
       <ul aria-label="preferred contact menu" class="user-bullet-list">

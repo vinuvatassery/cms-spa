@@ -21,7 +21,7 @@ aria-label="Assignment"> Assignment</button>
                         </kendo-floatinglabel>
                   </div>
                   <div class="flex-col flex-col-9">
-                              <form [formGroup]="pcaAssignmentGroupForm">                              
+                              <form [formGroup]="pcaAssignmentGroupForm">
                                     <kendo-floatinglabel text="Group">
                                     <kendo-multiselect
                                     class="fixed-height-input"
@@ -31,42 +31,41 @@ aria-label="Assignment"> Assignment</button>
                                     aria-label="to address"
                                     [textField]="'groupCodeDesc'"
                                     [valueField]="'groupCodeId'"
-                                    formControlName="groupCodes" 
+                                    formControlName="groupCodes"
                                     (valueChange)="groupChange($event,'false')"
                                     (removeTag)="groupChange($event,'true')"
                                     ></kendo-multiselect>
                                     <kendo-formerror *ngIf="!groupCodesValid">Group is required.</kendo-formerror>
                                     </kendo-floatinglabel>
-                              </form>               
+                              </form>
                    </div>
-                 
+
 </section>
 
       <div>
       <kendo-grid [resizable]="true"  [kendoGridBinding]="financialPcaAssignmentGridLists$"  [loading]="isFinancialPcaAssignmentGridLoaderShow"
-       [rowReorderable]="true" (rowReorder)="onPriorityChange($event)">               
+       [rowReorderable]="true" (rowReorder)="onPriorityChange($event)">
              <kendo-grid-rowreorder-column [width]="40"></kendo-grid-rowreorder-column>
-     
+
           <kendo-grid-column field="priority" title="Priority" [width]="70" [columnMenu]="false" [sortable]="false">
           </kendo-grid-column>
             <kendo-grid-column field="pca" title="PCA" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="groupCodeDesc" title="Group(s)" [width]="180"> </kendo-grid-column>
             <kendo-grid-column field="openDate" title="Open Date" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        {{dataItem.openDate | date:'MM/dd/YYYY'}}
+                        {{dataItem.openDate | date:'MM/dd/yyyy'}}
                       </ng-template>
             </kendo-grid-column>
             <kendo-grid-column field="closeDate" title="Close Date" [width]="120">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        {{dataItem.closeDate | date:'MM/dd/YYYY'}}
+                        {{dataItem.closeDate | date:'MM/dd/yyyy'}}
                       </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="totalAmount" title="Total Amount" [width]="180"> 
+            <kendo-grid-column field="totalAmount" title="Total Amount" [width]="180">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount | kendoNumber: 'n2'}}</span>
                   </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="amountSpent" title="Amount Used" [width]="140">  
+            <kendo-grid-column field="amountSpent" title="Amount Used" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpent | kendoNumber: 'n2'}}</span>
                   </ng-template>
@@ -79,21 +78,21 @@ aria-label="Assignment"> Assignment</button>
                   <kendo-grid-column field="unlimitedFlag" title="Unlimited" [width]="100"> <ng-template
                         kendoGridCellTemplate let-dataItem>
                         <span class="app-checkboxwidtext-wrapper">
-                              <input 
+                              <input
                                 type="checkbox"
                                 kendoCheckBox
                                 id="unlimited"
-                                aria-label="unlimited"                            
+                                aria-label="unlimited"
                                 disabled
                                 [checked]="isUnlimitedFlag(dataItem.unlimitedFlag)"
                               />
-                           
+
                             </span>
                   </ng-template> </kendo-grid-column>
 
             <kendo-grid-column field="Option"  title="Options"  [sticky]="true" [columnMenu]="false" [width]="100" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                    <kendo-dropdownbutton [data]="gridMoreActions" 
+                    <kendo-dropdownbutton [data]="gridMoreActions"
                       class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                       aria-label="more actions" title="More option"
                       [popupSettings]="{ popupClass: popupClassAction, animate: true }">

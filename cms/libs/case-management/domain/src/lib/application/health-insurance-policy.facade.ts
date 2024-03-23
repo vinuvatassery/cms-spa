@@ -9,6 +9,7 @@ import { HealthInsurancePolicy } from '../entities/health-insurance-policy';
 import { HealthInsurancePolicyDataService } from '../infrastructure/health-insurance-policy.data.service';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { WorkflowFacade } from './workflow.facade';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 
 @Injectable({ providedIn: 'root' })
@@ -29,6 +30,7 @@ export class HealthInsurancePolicyFacade {
   triggeredPremiumPaymentSaveSubject = new BehaviorSubject<boolean>(false);
   triggeredCoPaySaveSubject = new BehaviorSubject<boolean>(false);
   private clientmaxmumbalanceSubject = new Subject<any>();
+  private currentEligibilityPoliciesSubject = new Subject<any>();
   /** Public properties **/
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -50,7 +52,11 @@ export class HealthInsurancePolicyFacade {
   triggeredPremiumPaymentSave$ = this.triggeredPremiumPaymentSaveSubject.asObservable();
   triggeredCoPaySave$ = this.triggeredCoPaySaveSubject.asObservable();
   clientmaxmumbalance$ = this.clientmaxmumbalanceSubject.asObservable();
-
+  currentEligibilityPolicies$ = this.currentEligibilityPoliciesSubject.asObservable();
+  coPaymentProfilePhotoSubject = new Subject();
+  medicalHealthProfilePhotoSubject = new Subject();
+  insurancePremiumProfilePhotoSubject = new Subject();
+  healthInsuranceProfilePhotoSubject = new Subject();
   public dateFields: Array<string> = [
     'startDate',
     'endDate',
@@ -63,12 +69,12 @@ export class HealthInsurancePolicyFacade {
     'creationTime'
   ];
 
-  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: any = null) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
       this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.notificationSnackbarService.manageSnackBar(type, subtitle, source)
     this.hideLoader();
 
   }
@@ -78,7 +84,8 @@ export class HealthInsurancePolicyFacade {
     private loggingService: LoggingService, private readonly loaderService: LoaderService,
     private healthInsurancePolicyService: HealthInsurancePolicyDataService,
     private configurationProvider: ConfigurationProvider,
-    private readonly workflowFacade:WorkflowFacade) { }
+    private readonly workflowFacade:WorkflowFacade,
+    private readonly userManagementFacade: UserManagementFacade) { }
 
   /** Public methods **/
   showLoader() {
@@ -160,7 +167,14 @@ export class HealthInsurancePolicyFacade {
   }
 
   getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any,insuranceStatus:string) {
-    return this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId,insuranceStatus);
+     this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId,insuranceStatus).subscribe({
+      next: (healthInsurancePolicyResponse) => {
+        this.currentEligibilityPoliciesSubject.next(healthInsurancePolicyResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
   }
 
   deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
@@ -203,18 +217,33 @@ export class HealthInsurancePolicyFacade {
   
   loadMedicalPremiumPayments() {
     this.healthInsurancePolicyService.loadMedicalPremiumPayments().subscribe({
-      next: (medicalPremiumPaymentsResponse) => {
+      next: (medicalPremiumPaymentsResponse: any) => {
         this.medicalPremiumPaymentsSubject.next(medicalPremiumPaymentsResponse);
+        this.loadMedicalPremiumDistinctUserIdsAndProfilePhoto(medicalPremiumPaymentsResponse?.data);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
+
+  loadMedicalPremiumDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.insurancePremiumProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+}
   
-  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,typeParam:any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,typeParam:any, gridFilterParam: any): void {
     this.showLoader();
-    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, typeParam, skipCount, pageSize,sortBy,sortType).subscribe({
+    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, typeParam, gridFilterParam).subscribe({
       next: (medicalHealthPlansResponse: any) => {
         this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
         if (medicalHealthPlansResponse) {
@@ -234,6 +263,7 @@ export class HealthInsurancePolicyFacade {
             this.triggerPriorityPopupSubject.next(false);
           }
           this.medicalHealthPlansSubject.next(gridView);
+          this.loadMedicalHealthDistinctUserIdsAndProfilePhoto(medicalHealthPlansResponse['clientInsurancePolicies']);
         }
         this.hideLoader();
       },
@@ -242,6 +272,21 @@ export class HealthInsurancePolicyFacade {
       },
     });
   }
+
+  loadMedicalHealthDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.medicalHealthProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+
   private updateWorkflowCount(dataPointName:string, isCompleted:boolean){
     const dataPoint: CompletionChecklist[] = [{
       dataPointName: dataPointName,
@@ -280,18 +325,31 @@ export class HealthInsurancePolicyFacade {
           total: coPaysAndDeductiblesResponse['totalCount'],
         };
         this.coPaysAndDeductiblesSubject.next(gridView);
+        this.loadCoPaymentDistinctUserIdsAndProfilePhoto(coPaysAndDeductiblesResponse['items']);
         this.hideLoader();
       },
       error: (err: any) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
-
     });
-
   }
+
+  loadCoPaymentDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.coPaymentProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   loadPremiumPayments(clientId: any, clientCaseId: any, clientCaseEligibilityId: any, gridDataRefinerValue: any) {
     this.showLoader()
-    
     this.healthInsurancePolicyService.loadPaymentRequest(clientId, clientCaseId, clientCaseEligibilityId, gridDataRefinerValue).subscribe({
       next: (premiumPaymentsResponse: any) => {
         const gridView = {
@@ -299,6 +357,7 @@ export class HealthInsurancePolicyFacade {
           total: premiumPaymentsResponse['totalCount'],
         };
         this.premiumPaymentsSubject.next(gridView);
+        this.healthInsuranceDistinctUserIdProfilePhotos(premiumPaymentsResponse['items']);
         this.hideLoader();
       },
       error: (err: any) => {
@@ -306,6 +365,21 @@ export class HealthInsurancePolicyFacade {
       },
     });
   }
+
+  healthInsuranceDistinctUserIdProfilePhotos(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.healthInsuranceProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+}
+
   savePaymentRequest(paymentRequest:any){
     return this.healthInsurancePolicyService.savePaymentRequest(paymentRequest);
   }

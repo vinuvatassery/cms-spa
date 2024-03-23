@@ -3,6 +3,8 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } 
 /** Facades **/
 import { ContactFacade, CaseFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'case-management-friend-or-family-list',
@@ -28,6 +30,8 @@ export class FriendOrFamilyListComponent implements OnInit {
   allList:any[]=[];
   showHistoricalDataFlag = false
   selectedContact!:any;
+  userAlternateGridPhotosSubject = new Subject<any>();
+  familyFriendsProfilePhoto$ = this.contactFacade.familyFriendsProfilePhotoSubject;
 
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -69,7 +73,8 @@ export class FriendOrFamilyListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly contactFacade: ContactFacade,  private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade) {}
+  constructor(private readonly contactFacade: ContactFacade,  private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade,
+    private readonly userManagementFacade: UserManagementFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -131,6 +136,7 @@ export class FriendOrFamilyListComponent implements OnInit {
     else{
       this.gridView= this.allList.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
     }
+    this.contactFacade.loadFamilyAndFriendsDistinctUserIdsAndProfilePhoto(this.gridView);
     this.cdr.detectChanges();
   }
   public rowClass = (args:any) => ({

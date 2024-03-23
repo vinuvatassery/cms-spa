@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
@@ -7,12 +7,14 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   templateUrl: './vendor-profile-header.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VendorProfileHeaderComponent {
+export class VendorProfileHeaderComponent implements OnInit {
 @Input() vendorProfileSpecialHandling$ : any
 @Input() vendorProfile$ : any
+vendorProfile:any
 @Input() clientCaseEligibilityId!: any;
 @Input() clientId!: any;
 @Output() loadSpecialHandlingEvent =  new EventEmitter();
+@Output() updateRecentlyViewedEvent = new EventEmitter();
 notificationReminderDialog : any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   showMoreAlert = false;
@@ -73,6 +75,14 @@ notificationReminderDialog : any;
     private dialogService: DialogService) {
 
   }
+  ngOnInit(): void {
+    this.vendorProfile$.subscribe((vendorProfile :any) =>{
+      this.vendorProfile = vendorProfile
+      this.updateRecentlyViewedEvent.emit(vendorProfile.vendorId)
+    });
+   
+  }
+
 
   onBackClicked()
   {

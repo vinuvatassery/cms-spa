@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CaseDetailPageComponent, CaseSummaryComponent } from '@cms/case-management/feature-case';
 
 const routes: Routes = [
+
   {
     path: 'approval',
     loadChildren: () =>

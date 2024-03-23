@@ -100,29 +100,16 @@
           </ng-template>
 
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center" 
-        [sticky]="true" [sortable]="false">
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center"
+        [sticky]="true" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button
-              kendoButton
-              [primary]="true"
-              class="avatar-sm-btn c-default"
-              kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered"
-              showOn="hover"
-              [attr.aria-label]="dataItem.creatorId"
-            >
-            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
-            </button>
-            <kendo-popover
-              #onUserProfileDetailsHovered
-              width="330"
-              position="left"
-            >
-              <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-              </ng-template>
-            </kendo-popover>
+            <common-user-photo-icon
+            [userId]="dataItem?.creatorId"
+            [userFirstName]="dataItem?.userFirstName"
+            [userLastName]="dataItem?.userLastName"
+            [userProfilePhotoExists]="dataItem?.isUserProfilePhotoExist"
+            [linkType]="'profileIcon'"
+            [userPhotos$]="incomeListProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!isClientProfileTab"
@@ -136,7 +123,7 @@
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton
               [data]="actionsmore"
-              
+
               title="More option"
               class="TableActionPopup more_action_wid"
               buttonClass="k-icon-button"
@@ -233,7 +220,7 @@
           [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
         >
         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-          <div class="proof_income-more"> 
+          <div class="proof_income-more">
               <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
               class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
            </span>
@@ -268,26 +255,13 @@
         </kendo-grid-column>
         <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="80" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button
-              kendoButton
-              [primary]="true"
-              class="avatar-sm-btn c-default"
-              kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered"
-              showOn="hover"
-              [attr.aria-label]="dataItem.creatorId"
-            >
-            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
-            </button>
-            <kendo-popover
-              #onUserProfileDetailsHovered
-              width="330"
-              position="left"
-            >
-              <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-              </ng-template>
-            </kendo-popover>
+            <common-user-photo-icon
+            [userId]="dataItem?.creatorId"
+            [userFirstName]="dataItem?.userFirstName"
+            [userLastName]="dataItem?.userLastName"
+            [userProfilePhotoExists]="dataItem?.isUserProfilePhotoExist"
+            [linkType]="'profileIcon'"
+            [userPhotos$]="dependantProofProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
          <!-- grid Loader Template -->

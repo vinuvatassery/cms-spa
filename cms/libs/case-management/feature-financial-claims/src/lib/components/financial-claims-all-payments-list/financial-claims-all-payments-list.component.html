@@ -1,6 +1,6 @@
 <!-- Table Top Filter, Search and Export -->
 
-<p class="mt-2"> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
+<p class="mt-2"> Click "BULK" to execute bulk actions for this batch. Click on a row to view that claim.</p>
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
@@ -230,15 +230,13 @@
 
       <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center" >
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor *ngIf="dataItem.creatorId"
-            [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-            <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-          </button>
-          <kendo-popover #onUserProfileDetailsHovered width="330" position="left" >
-            <ng-template kendoPopoverBodyTemplate>
-              <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-            </ng-template>
-          </kendo-popover>
+          <common-user-photo-icon  
+          [userId]="dataItem.creatorId" 
+          [userFirstName]="dataItem.userFirstName"
+          [userLastName]="dataItem.userLastName"
+          [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+          [linkType]="'profileIcon'"
+          [userPhotos$]="dentalClaimAllPaymentClaimsProfilePhoto$"></common-user-photo-icon>
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="Option" title="Options" [reorderable]="false" [draggable]="false" [columnMenu]="false" [sortable]="false" [width]="70" class="text-center">

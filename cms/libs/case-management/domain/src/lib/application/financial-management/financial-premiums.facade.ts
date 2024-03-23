@@ -12,6 +12,7 @@ import { InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from
 import { GridFilterParam } from '../../entities/grid-filter-param';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 
 @Injectable({ providedIn: 'root' })
@@ -168,6 +169,9 @@ export class FinancialPremiumsFacade {
 
   private letterContentLoaderSubject = new Subject<any>();
   letterContentLoader$ = this.letterContentLoaderSubject.asObservable();
+
+  premiumProcessListProfilePhotoSubject = new Subject();
+  premiumAllPaymentsPremiumSubject = new Subject();
   /** Private properties **/
 
   /** Public properties **/
@@ -198,7 +202,8 @@ export class FinancialPremiumsFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
@@ -239,9 +244,11 @@ export class FinancialPremiumsFacade {
           const gridView = {
             data: dataResponse["items"],
             total: dataResponse["totalCount"],
+            lovs: dataResponse["lovs"],
             acceptsReportsCount: dataResponse['acceptReportsFlagQueryCount'],
           };
           this.financialPremiumsAllPaymentsDataSubject.next(gridView);
+          this.loadPremiumAllPaymentDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
           this.financialPremiumPaymentLoaderSubject.next(false);
         },
         error: (err) => {
@@ -250,6 +257,20 @@ export class FinancialPremiumsFacade {
         },
       });
   }
+
+  loadPremiumAllPaymentDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.premiumAllPaymentsPremiumSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadBatchName(batchId: string){
     this.financialPremiumsDataService.loadBatchName(batchId).subscribe({
@@ -262,9 +283,9 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadBatchLogListGrid(premiumType : string ,batchId : string,paginationParameters : any){
+  loadBatchLogListGrid(isReconciled: boolean, premiumType : string ,batchId : string, paginationParameters : any){
     this.paymentByBatchGridLoaderSubject.next(true);
-    this.financialPremiumsDataService.loadBatchLogListService(premiumType ,batchId ,paginationParameters ).subscribe({
+    this.financialPremiumsDataService.loadBatchLogListService(isReconciled, premiumType ,batchId ,paginationParameters ).subscribe({
       next: (dataResponse : any) => {
         const gridView = {
           data: dataResponse['items'],
@@ -381,8 +402,8 @@ export class FinancialPremiumsFacade {
       });
     }
 
-  loadPremiumPrintAdviceLetterData(printAdviceLetterData: any, premiumType: any) {
-    return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(printAdviceLetterData, premiumType);
+  loadPremiumPrintAdviceLetterData(isReconciled: boolean, printAdviceLetterData: any, premiumType: any) {
+    return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(isReconciled, printAdviceLetterData, premiumType);
   }
 
   reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any, premiumType:any) {
@@ -413,12 +434,27 @@ loadMedicalPremiumList(
           acceptsReportsQueryCount: dataResponse['acceptsReportsQueryCount'],
         };
       this.financialPremiumsProcessDataSubject.next(gridView);
+      this.loadPremiumProcessListDistinctUserIdsAndProfilePhoto(dataResponse['items']);
     }},
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
     },
   });
 }
+
+loadPremiumProcessListDistinctUserIdsAndProfilePhoto(data: any[]) {
+  const distinctUserIds = Array.from(new Set(data?.map(user => user.createdId))).join(',');
+  if(distinctUserIds){
+    this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          this.premiumProcessListProfilePhotoSubject.next(data);
+        }
+      },
+    });
+  }
+} 
 
 batchPremium(batchPremiums: BatchPremium, claimsType: string) {
   this.showLoader();
@@ -655,9 +691,9 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
       return this.financialPremiumsDataService.removeSelectedPremiums(selectedPremiumPayments, premiumsType);
     }
 
-    checkWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    checkWarrantNumber(batchId:any,warrantNumber:any,vendorId:any,premiumType:any){
       this.warrantNumberChangeLoaderSubject.next(true);
-      this.financialPremiumsDataService.checkWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+      this.financialPremiumsDataService.checkWarrantNumber(batchId,warrantNumber,vendorId,premiumType).subscribe({
         next: (dataResponse:any) => {
           this.warrantNumberChangeSubject.next(dataResponse);
           this.warrantNumberChangeLoaderSubject.next(false);

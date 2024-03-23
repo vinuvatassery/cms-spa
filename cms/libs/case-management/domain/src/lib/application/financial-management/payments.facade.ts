@@ -11,6 +11,7 @@ import { PaymentsDataService } from '../../infrastructure/financial-management/p
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { PaymentDetail } from '../../entities/financial-management/Payment-details';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsFacade {
@@ -37,6 +38,7 @@ export class PaymentsFacade {
   paymentPanelData$ = this.paymentPanelSubject.asObservable();
   paymentDetails$ = this.paymentDetailsSubject.asObservable();
   updatePaymentPanelResponse$ = this.updatePaymentPanelResponseSubject.asObservable();
+  paymentBatchesProfilePhotoSubject = new Subject();
   /** Private properties **/
 
   /** Public properties **/
@@ -66,7 +68,8 @@ export class PaymentsFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
@@ -79,6 +82,7 @@ export class PaymentsFacade {
           total: dataResponse?.totalCount,
         };
         this.paymentBatchesSubject.next(gridView);
+        this.loadPaymentsDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.paymentBatchLoaderSubject.next(false);
       },
       error: (err) => {
@@ -87,6 +91,20 @@ export class PaymentsFacade {
       },
     });
   }
+
+  loadPaymentsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.paymentBatchesProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadPaymentBatchSubList(batchId: string, paginationParameters: State) {
     return this.paymentsDataService.loadPaymentBatchSubListService(batchId, paginationParameters);

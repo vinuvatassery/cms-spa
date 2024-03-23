@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 /** Internal Libraries **/
@@ -33,7 +33,11 @@ export class CasePageComponent implements OnInit {
   searchLoaderVisibility$ = this.caseFacade.searchLoaderVisibility$;
   totalClientsCount!:number | null;
   moduleCode:any = ModuleCode;
-
+  caseStatus: string = '';
+  healthInsuranceType ='';
+  fplPercentage = -1;
+  filterOperator = '';
+  group :string = ''
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
@@ -56,7 +60,8 @@ export class CasePageComponent implements OnInit {
       private readonly loginUserFacade : UserManagementFacade,
       private readonly lovFacade : LovFacade,
       private readonly  cdr :ChangeDetectorRef,
-      private reminderFacade: ReminderFacade
+      private reminderFacade: ReminderFacade,
+      private route: ActivatedRoute,
     ) {}
 
   /** Lifecycle hooks **/
@@ -64,6 +69,7 @@ export class CasePageComponent implements OnInit {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.loadColumnDroplist();
     this.loadCases();
+    this.loadQueryParams();
   }
 
   /** Private methods **/
@@ -77,6 +83,29 @@ export class CasePageComponent implements OnInit {
       this.lovFacade.getCaseOriginLovs();
   }
 
+  /** Private Query String values **/
+  loadQueryParams()
+  {   
+      switch(this.route.snapshot.queryParams['tab']){
+        case CaseScreenTab.MY_CASES.toString():
+          this.selectedTab = CaseScreenTab.MY_CASES;
+          break;
+        case CaseScreenTab.CER_TRACKING.toString():
+          this.selectedTab = CaseScreenTab.CER_TRACKING;
+          break;
+        case CaseScreenTab.ALL.toString():
+          this.selectedTab = CaseScreenTab.ALL;
+          break;
+        default:
+          this.selectedTab = CaseScreenTab.MY_CASES;
+          break;
+      } 
+    this.caseStatus = this.route.snapshot.queryParams['casestatus'];
+    this.healthInsuranceType = this.route.snapshot.queryParams['healthInsuranceType'];
+    this.fplPercentage = this.route.snapshot.queryParams['fplPercentage']; 
+    this.filterOperator = this.route.snapshot.queryParams['filterOperator'];
+    this.group = this.route.snapshot.queryParams['group']
+  }
   /** Getters **/
   get caseScreenTab(): typeof CaseScreenTab {
     return CaseScreenTab;
@@ -142,21 +171,22 @@ export class CasePageComponent implements OnInit {
 
   loadCasesListEventHandler(gridDataRefinerValue : any)
   {
-    const gridDataRefiner =
-    {
-      caseScreenType: this.selectedTab,
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount : gridDataRefinerValue.pagesize,
-      sort : gridDataRefinerValue.sortColumn,
-      sortType : gridDataRefinerValue.sortType,
-      columnName : gridDataRefinerValue.columnName,
-      filter : gridDataRefinerValue.filter,
-      totalClientsCount : this.totalClientsCount,
-      beforeDate: gridDataRefinerValue.beforeDate,
-      afterDate: gridDataRefinerValue.afterDate
-    }
-    this.pageSizes = this.caseFacade.gridPageSizes;
-    this.loadCaseList(gridDataRefiner);
+      const gridDataRefiner =
+      {
+        caseScreenType: this.selectedTab,
+        skipcount: gridDataRefinerValue.skipCount,
+        maxResultCount : gridDataRefinerValue.pagesize,
+        sort : gridDataRefinerValue.sortColumn,
+        sortType : gridDataRefinerValue.sortType,
+        columnName : gridDataRefinerValue.columnName,
+        filter : gridDataRefinerValue.filter,
+        totalClientsCount : this.totalClientsCount,
+        beforeDate: gridDataRefinerValue.beforeDate,
+        afterDate: gridDataRefinerValue.afterDate
+      }
+      this.pageSizes = this.caseFacade.gridPageSizes;
+      this.loadCaseList(gridDataRefiner);
+
   }
 
   loadColumnDroplist()

@@ -3,7 +3,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 	/** Internal Libraries **/
 import { FinancialPremiumsFacade } from '@cms/case-management/domain';
 /** External Libraries **/
-import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService, NotificationSource } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { Subscription } from 'rxjs';
 
@@ -90,12 +90,12 @@ export class FinancialPremiumsPrintAuthorizationComponent {
       }
   }
 
-  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any, secondaryText:any = null) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
-      this.loggingService.logException(err);
+      this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type, subtitle);
+    this.notificationSnackbarService.manageSnackBar(type,secondaryText, NotificationSource.UI, subtitle)
     this.hideLoader();
   }
 
@@ -105,7 +105,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
    
    loadPrintLetterContent(request:any) {
     this.loaderService.show();
-    this.financialPremiumsFacade.loadPremiumPrintAdviceLetterData(request, this.premiumsType)
+    this.financialPremiumsFacade.loadPremiumPrintAdviceLetterData(request.isReconciled,request, this.premiumsType)
       .subscribe({
         next: (data: any[]) => {
           if (data.length > 0) {
@@ -197,6 +197,11 @@ export class FinancialPremiumsPrintAuthorizationComponent {
             window.open(fileUrl, "_blank");
             this.ref.detectChanges();
           }
+          if(this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter){
+            this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.Yes;
+          }else{
+            this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.No;
+          }
           if(this.currentIndex == this.returnResultFinalPrintList.length - 1){
             this.onClosePrintAdviceLetterClicked();
             }else{
@@ -256,7 +261,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
                 this.onItemChange(event);
             }
         this.ref.detectChanges();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled! Events have been logged");
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!","Events have been logged");
         },
         error: (err: Error) => {
           this.loaderService.hide();

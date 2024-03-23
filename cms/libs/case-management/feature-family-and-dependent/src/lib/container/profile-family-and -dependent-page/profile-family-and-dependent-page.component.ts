@@ -23,6 +23,7 @@ export class ProfileFamilyAndDependentPageComponent implements OnInit{
   sort  = this.familyAndDependentFacade.sort;
   eligibilityPeriodData: any = [];
   historyStatus: boolean = false;
+  dependentProfilePhoto$ = this.familyAndDependentFacade.dependentProfilePhotoSubject;
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,

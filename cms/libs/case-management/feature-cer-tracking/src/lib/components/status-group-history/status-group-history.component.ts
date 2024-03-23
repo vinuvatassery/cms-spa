@@ -1,9 +1,10 @@
 
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subject } from 'rxjs/internal/Subject';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-status-group-history',
   templateUrl: './status-group-history.component.html',
@@ -23,10 +24,13 @@ export class StatusGroupHistoryComponent implements OnInit {
   loader: boolean = false;
   private statusGroupDialog: any;
   private deleteStatusGroupDialog: any;
+  statusFplHistoryPhotoSubject = new Subject();
   constructor(
     private statusPeriodFacade: StatusPeriodFacade,
     private caseFacade: CaseFacade,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -41,6 +45,9 @@ export class StatusGroupHistoryComponent implements OnInit {
         this.statusGroupHistorySubject.next(data);
         this.groupList = data;
         this.loader = false;
+        if(data){
+          this.loadDistinctUserIdsAndProfilePhoto(data);
+        }
       },
       error: (err) => {
         this.loader = false;
@@ -48,6 +55,21 @@ export class StatusGroupHistoryComponent implements OnInit {
       },
     });
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.statusFplHistoryPhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
 
   loadEligibilityChangeModal(event: any, template: TemplateRef<unknown>): void{
     this.caseFacade.loadEligibilityChangeGroups(this.eligibilityId);

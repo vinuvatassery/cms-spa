@@ -10,6 +10,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { InsuranceProviderDataService } from '../../infrastructure/financial-management/insurance-provider.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class InsuranceProviderFacade {
@@ -34,6 +35,7 @@ export class InsuranceProviderFacade {
   providerClientsData$ = this.providerClientsDataSubject.asObservable();
   insuranceProviderData$ = this.insuranceProviderDataSubject.asObservable();
   gridLoaderVisibility$ = this.gridLoaderVisibilitySubject.asObservable();
+  insursnceProviderProfilePhotoSubject = new Subject();
 
 
   /** Private properties **/
@@ -66,14 +68,16 @@ export class InsuranceProviderFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
   loadInsuranceProviderListGrid(){
     this.insuranceProviderDataService.loadInsuranceProviderListService().subscribe({
-      next: (dataResponse) => {
+      next: (dataResponse: any) => {
         this.insuranceProviderDataSubject.next(dataResponse);
+        this.loadInsuranceProviderDistinctUserIdsAndProfilePhoto(dataResponse?.data);
         this.hideLoader();
       },
       error: (err) => {
@@ -81,9 +85,22 @@ export class InsuranceProviderFacade {
         this.hideLoader();
       },
     });
-
-
   }
+
+  loadInsuranceProviderDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.insursnceProviderProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   loadProviderClientsListGrid(
     providerId:any,
     tabCode:any,

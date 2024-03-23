@@ -68,31 +68,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     {
       columnName: 'batchName',
       columnDesc: 'Batch #',
-    },
-    {
-      columnName: "sendBackNotes",
-      columnDesc: "Send Back Notes"
-    },
-    {
-      columnName: 'totalPharmacy',
-      columnDesc: '# of Pharmacies',
-    },
-    {
-      columnName: 'totalClaims',
-      columnDesc: '# of Claims',
-    },
-    {
-      columnName: 'totalReconciled',
-      columnDesc: '# of Pmts Reconciled',
-    },
-    {
-      columnName: 'totalAmountPaid',
-      columnDesc: 'Total Amt. Paid',
-    },
-    {
-      columnName: 'totalAmountReconciled',
-      columnDesc: 'Total Amt. Reconciled',
-    },
+    }
   ];
 
   numericColumns: any[] = ['totalAmountReconciled', 'totalAmountPaid', 'totalReconciled', 'totalClaims', 'totalPharmacy'];

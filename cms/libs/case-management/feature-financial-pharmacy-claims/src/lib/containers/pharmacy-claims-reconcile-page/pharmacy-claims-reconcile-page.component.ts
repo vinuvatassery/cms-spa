@@ -44,6 +44,7 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
    reconcileBreakoutSummary$ = this.financialPharmacyClaimsFacade.reconcileBreakoutSummary$;
    reconcilePaymentBreakoutList$ = this.financialPharmacyClaimsFacade.reconcilePaymentBreakoutList$;
    reconcilePaymentBreakoutLoaderList$ = this.financialPharmacyClaimsFacade.reconcilePaymentBreakoutLoaderList$ 
+   pharmacyBreakoutProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyBreakoutProfilePhotoSubject;
 
   constructor( 
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,

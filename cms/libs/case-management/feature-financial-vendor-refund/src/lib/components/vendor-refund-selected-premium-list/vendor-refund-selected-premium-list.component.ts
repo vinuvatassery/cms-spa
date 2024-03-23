@@ -27,25 +27,26 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
    @Input() sortType :any
    @Input() editPaymentRequestId:any
    isSpotPayment = false
-     public state!: State;
-     filter!: any;  
+  public state!: State;
+  filter!: any;  
   @Output() insuranceRefundInformationConfirmClicked = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>()
   public totalAmountPaid =0;
   public totalRefundAmount=0
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   financialPremiumsRefundGridLists!: any[];
- @Input() gridDataResult! : GridDataResult
- @Input() clientId :any 
-@Input() vendorAddressId :any 
- public formUiStyle: UIFormStyle = new UIFormStyle();
+  @Input() gridDataResult! : GridDataResult
+  @Input() clientId :any
+  @Input() vendorAddressId:any;
+  @Input() clientName:any;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   refundNoteValueLength = 0
   @Input() isEdit = false
   isSubmitted = false;
   @Input() insuraceAddRefundClick$:any
   @Output() Reqpayload = new EventEmitter<any>()
   refundForm! :FormGroup
-  
+
   @Input() insurancePremiumPaymentReqIds:any[] =[]
   public constructor(private formBuilder : FormBuilder,
     private readonly changeDetectorRef: ChangeDetectorRef){
@@ -59,6 +60,20 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   this.insuraceAddRefundClick$.subscribe((res:any) =>{
     this.changeDetectorRef.markForCheck()
     this.isSubmitted = true;
+    this.financialPremiumsRefundGridLists.forEach(x=>{      
+      if(!x.refundAmount)
+      {
+        x.refundAmountError = "Refund amount is required"
+        return
+      }else if(x.refundAmountError)
+      {
+        return
+      }
+      else
+      {
+        x.refundAmountError = ""
+      }
+    })
     let refundError =   this.financialPremiumsRefundGridLists.filter((x) =>{
       return   !!x.refundAmountError 
     })
@@ -166,13 +181,16 @@ initForm(){
        this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountDue).reduce((a, b) => a + b, 0)  
        const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
        this.isSpotPayment = formData.isSpotPayment
-      this.refundForm.patchValue({
+       this.refundForm.patchValue({
         vp: formData.voucherPayabeNbr,
         creditNumber:formData.creditNumber,
         warantNumber:formData.refundWarantNumber ,
         refundNote:formData.refundNote      
        })
-      this.refundForm.controls['depositDate'].setValue(new Date(formData.depositDate));
+       if(formData.depositDate != null && formData.depositDate !="" && formData.depositDate !=undefined)
+       {
+        this.refundForm.controls['depositDate'].setValue(new Date(formData.depositDate));
+       }
     })
     this.insuranceRefundInformationConfirmClicked.emit(
       {...param, 

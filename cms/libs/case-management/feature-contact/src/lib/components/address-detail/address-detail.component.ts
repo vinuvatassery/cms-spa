@@ -165,7 +165,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
    if(addressType ===AddressType.Home || addressType === AddressType.Mailing){
       this.addressForm.controls["address1"].setValidators([Validators.required]);
       this.addressForm.controls["address1"].updateValueAndValidity();
-      this.addressForm.controls["zip"].setValidators([Validators.required]);
+     this.addressForm.controls["zip"].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')]);
       this.addressForm.controls["zip"].updateValueAndValidity();
       this.addressForm.controls["state"].setValidators([Validators.required]);
       this.addressForm.controls["state"].updateValueAndValidity();
@@ -335,6 +335,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
         this.addressForm.controls["city"].enable();
         this.addressForm.controls["state"].enable();
         this.addressForm.controls["state"].setValue('OR');
+        this.addressForm.controls["state"].disable();
         this.addressForm.controls["zip"].disable();
         this.addressForm.controls["county"].enable();
         this.addressForm.controls["county"].patchValue(null);

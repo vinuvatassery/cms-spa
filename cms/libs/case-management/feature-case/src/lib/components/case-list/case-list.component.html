@@ -121,7 +121,10 @@
         </kendo-grid-string-filter-menu>
          </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="caseStatus" title="Status" [width]="120">
+    <kendo-grid-column field="eligibilityStatusCode" title="Status" [width]="120">
+       <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.caseStatus }}
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate
       let-column="column"
       let-filter="filter"
@@ -130,10 +133,10 @@
       <kendo-dropdownlist
       [data]="caseStatusTypes"
       textField="lovDesc"
-      valueField="lovDesc"
+      valueField="lovCode"
       [value]="statusValue"
       [(ngModel)]="selectedStatus"
-      (valueChange)="dropdownFilterChange('caseStatus',$event, filterService)"
+      (valueChange)="dropdownFilterChange('eligibilityStatusCode',$event, filterService)"
     >
     </kendo-dropdownlist>
  </ng-template>
@@ -224,6 +227,35 @@
         </kendo-grid-string-filter-menu>
          </ng-template>
     </kendo-grid-column>
+    <kendo-grid-column field="insuranceType" title="Health Insurance Type" [width]="210" [hidden]="(selectedTab != tabOptions.ALL)">
+      <ng-template kendoGridCellTemplate let-dataItem>
+       {{ dataItem.healthInsuranceType }}
+      </ng-template>
+        <ng-template kendoGridFilterMenuTemplate
+          let-column="column"
+          let-filter="filter"
+          let-filterService="filterService"> 
+          <kendo-dropdownlist
+            [data]="healthinsuranceTypes"
+            textField="lovDesc"
+            valueField="lovCode"
+            [value]="healthInsuranceTypeValue"
+            [(ngModel)]="selectedHealthInsuranceType"
+            (valueChange)="dropdownFilterChange('insuranceType',$event, filterService)">
+          </kendo-dropdownlist>
+        </ng-template>
+        
+   </kendo-grid-column>
+   <kendo-grid-column field="fplPercentage" title="FPL %" [width]="110" [hidden]="(selectedTab != tabOptions.ALL)">
+    <ng-template kendoGridCellTemplate let-dataItem>
+     {{ dataItem.fplPercentage }}
+    </ng-template> 
+    <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
+      <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+        <kendo-filter-eq-operator></kendo-filter-eq-operator> 
+      </kendo-grid-string-filter-menu>
+       </ng-template>
+ </kendo-grid-column>
     <kendo-grid-column field="assignedCw" title="Assigned to" [width]="150" [sticky]="(selectedTab != tabOptions.MY_CASES)" [hidden]="(selectedTab == tabOptions.MY_CASES)">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.assignedCw" kendoButton look="flat" class="card-link-button"
@@ -233,7 +265,7 @@
           {{ dataItem.assignedCw }}
         </button>
 
-          <kendo-popover #userCard width="330" position="left">
+          <kendo-popover #userCard width="330" position="right">
             <ng-template kendoPopoverBodyTemplate>
               <common-user-profile-card
               [userId]="dataItem.assignedCwUserId"

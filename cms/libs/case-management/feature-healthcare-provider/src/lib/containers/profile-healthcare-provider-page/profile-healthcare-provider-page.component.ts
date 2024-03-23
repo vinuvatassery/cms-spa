@@ -30,6 +30,7 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
   showProvidervalidation$ = this.healthProvider.showProvidervalidation$;
   healthCareProvideReactivate$ = this.healthProvider.healthCareProvideReactivate$;
   showAddNewProvider$ = this.healthProvider.showAddNewProvider$;
+  healthCareProviderProfilePhoto$ = this.healthProvider.healthCareProviderProfilePhotoSubject;
   showProvidervalidationbox$ =
     this.showProvidervalidationboxSubject.asObservable();
   isProvidersGridDisplay = true;

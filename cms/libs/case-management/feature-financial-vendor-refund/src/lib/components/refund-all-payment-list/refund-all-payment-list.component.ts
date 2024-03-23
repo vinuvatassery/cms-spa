@@ -15,12 +15,13 @@ import { Router } from '@angular/router';
 import { GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy
+  State
 } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject, first } from 'rxjs';
-import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-refund-all-payment-list',
   templateUrl: './refund-all-payment-list.component.html',
@@ -42,6 +43,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() updateProviderPanelSubject$: any
   @Input() ddlStates$: any
   @Input() paymentMethodCode$: any
+  @Input() allRefundProfilePhoto$!: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -51,8 +53,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
   unBatchRefundsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
-  deleteRefundsConfirmationDialogTemplate!: TemplateRef<any>;
-
+  deleteRefundsConfirmationDialogTemplate!: TemplateRef<any>; 
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   private addEditRefundFormDialog: any;
 
   public state!: State;
@@ -91,6 +93,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   public checkboxOnly = true;
   public mode: SelectableMode = 'multiple';
   public drag = false;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
   @ViewChild('addEditRefundDialog', { read: TemplateRef })
   addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
 
@@ -173,54 +176,14 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       columnDesc: 'Vendor',
     },
     {
-      columnCode: 'paymentType',
-      columnDesc: 'Type',
-    },
-    {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
-    },
-    {
-      columnCode: 'insuranceName',
-      columnDesc: 'Name on Primary Insurance Card',
     },
     {
       columnCode: 'clientId',
       columnDesc: 'Client ID',
     },
-    {
-      columnCode: 'warrantNumber',
-      columnDesc: 'Refund Warrant #',
-    },
-    {
-      columnCode: 'refundAmount',
-      columnDesc: 'Refund Amount',
-    }
-    ,
-    {
-      columnCode: 'originalAmount',
-      columnDesc: 'Original Amount',
-    }
-    ,
-    {
-      columnCode: 'indexCode',
-      columnDesc: 'Index Code',
-    }
-    ,
-    {
-      columnCode: 'pcaCode',
-      columnDesc: 'PCA',
-    }
-    ,
-    {
-      columnCode: 'voucherPayable',
-      columnDesc: 'VP',
-    }
-    ,
-    {
-      columnCode: 'refundNote',
-      columnDesc: 'Refund Note',
-    }
+
   ];
   showExportLoader = false;
 
@@ -237,13 +200,22 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
+  allRefundProfilePhotoSubject = new Subject();
+  showDateSearchWarning = false;
+
 
   /** Constructor **/
   constructor(
     private route: Router, private readonly cdr: ChangeDetectorRef,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private readonly configurationProvider: ConfigurationProvider,
+    public readonly intl: IntlService,
+    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade,) {
       this.selectableSettings = {
         checkboxOnly: this.checkboxOnly,
         mode: this.mode,
@@ -252,7 +224,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     }
 
   ngOnInit(): void {
-    this.sortType = 'desc'
+        this.sortType = 'desc'
     this.handleAllPaymentsGridData();
   }
   gridLoaderSubject = new BehaviorSubject(false);
@@ -364,17 +336,34 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   searchColumnChangeHandler(data: any) {
-    this.onChange('')
+    this.searchValue = '';
+    this.filter = [];
+    this.refundAllPaymentSearch(this.searchValue)
+  }
+
+  refundAllPaymentSearch(searchValue: any) { 
+    const isDateSearch = searchValue.includes('/');
+    this.showDateSearchWarning = (!isDateSearch && this.selectedColumn === 'depositDate') && searchValue !== '';
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    if (isDateSearch && !searchValue) return;
+    this.onChange(searchValue);
   }
 
   onChange(data: any) {
     this.defaultGridState();
+    if (this.selectedColumn === 'depositDate' && (!this.isValidDate(data) && data !== '')) {
+      return;
+    }
     let operator = 'contains';
 
     if (
       this.selectedColumn === 'refundAmount' ||
       this.selectedColumn === 'originalAmount'
     ) {
+      operator = 'eq';
+    }
+    if(this.selectedColumn === 'depositDate'){
+      data = this.intl.formatDate(data.replace(/\s/g, ""),this.dateFormat);
       operator = 'eq';
     }
 
@@ -636,8 +625,12 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.hideActionButton = !this.hideActionButton;
   }
 
-  onProviderNameClick(event: any) {
-    this.providerNameClickEvent.emit(event);
+  onProviderNameClick(paymentRequestId:any, type:any){
+    const data ={
+      paymentRequestId,
+      type
+    }
+    this.providerNameClickEvent.emit(data);
   }
 
   selectionAllChange() {
@@ -751,6 +744,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     }
   }
 
+  loadRecentClaimListEventHandler(data : any){
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+  }
+
   onRecordSelectionUnChecked(dataItem: any) {
     this.unCheckedProcessRequest = this.unCheckedProcessRequest.filter((item: any) => item.paymentRequestId !== dataItem.paymentRequestId);
     this.currentPageRecords?.forEach((element: any) => {
@@ -821,6 +818,23 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
+  }
+
+  private isValidDate = (searchValue: any) =>
+    isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configurationProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+    return searchValue;
   }
 
   selectAll: boolean = false;

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
+import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, SearchHeaderType } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';

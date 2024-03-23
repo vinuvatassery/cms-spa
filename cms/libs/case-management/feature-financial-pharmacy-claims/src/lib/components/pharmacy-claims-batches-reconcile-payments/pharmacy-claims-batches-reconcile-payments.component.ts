@@ -10,8 +10,8 @@ import {
   ViewChild,
   ChangeDetectorRef,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import {  ColumnVisibilityChangeEvent, FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -32,7 +32,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
-  PrintAuthorizationDialog!: TemplateRef<any>; 
+  PrintAuthorizationDialog!: TemplateRef<any>;
+  @ViewChild('grid') grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   providerDetailsDialog: any;
@@ -55,14 +56,17 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Input() letterContentLoader$ :any;
   @Input() reconcilePaymentBreakoutLoaderList$:any;
   @Input() deliveryMethodLov$:any;
+  @Input() pharmacyBreakoutProfilePhoto$!: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
-  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
+  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
+  showTinSearchWarning=false;
   @Output() onVendorClickedEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+
   reconcileGridListsSubscription !: Subscription;
   paymentRequestId!: string;
   entityId: any;
@@ -108,6 +112,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Pharmacy Provider';
   checkingPaymentRequest!:any;
+  totalCount:any;
+  isSubmitted:any = false;
   public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
     datePaymentReconciled: new FormControl('', []),
     datePaymentSend: new FormControl('', []),
@@ -117,9 +123,11 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   claimReconcileCount:any=0;
   isRecordForPrint:any=0;
   bulkNoteCounter:any=0;
+  hasWarrantNo:any=0;
   showExportLoader = false;
   loadType:any = null;
   loadTypeAllPayments:any = LoadTypes.allPayments
+  columnChangeDesc:any='Default Columns';
   columns : any = {
     ALL: 'ALL',
     vendorName:this.providerTitle,
@@ -175,9 +183,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   spotsPayment:any = PaymentMethodCode.SPOTS;
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
-    private readonly cd: ChangeDetectorRef, public intl: IntlService, 
+    private readonly cd: ChangeDetectorRef, public intl: IntlService,
     private configurationProvider: ConfigurationProvider,private readonly lovFacade: LovFacade ) {}
-  
+
   ngOnInit(): void {
     this.reconcilePaymentGridUpdatedResult = [];
     this.loadQueryParams();
@@ -265,7 +273,23 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       this.paymentMethodDesc = value;
     }
   }
-  
+
+  checkErrorCount() {
+    const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
+    const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
+    const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
+    this.totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length + warrantNumberInValidCount.length;
+    if (this.totalCount === 0) {
+      if( this.isSubmitted){
+      this.pageValidationMessageFlag = false;
+      this.pageValidationMessage = null;
+      }
+    }
+    else {
+      this.pageValidationMessageFlag = true;
+      this.pageValidationMessage = this.totalCount + " validation errors found, please review each page for errors. ";
+    }
+  }
 
   paymentMethodSubscription(){
     this.paymentMethodLovSubscription = this.paymentMethodType$.subscribe(data=>{
@@ -286,30 +310,60 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    let columnsRemoved = false;
+    for (const column of this.grid.columns.toArray()){
+      if (column.hidden) {
+        columnsRemoved = true;
+      }
+    }
+    this.columnChangeDesc = columnsRemoved ? 'Columns Removed' : 'Default Columns';
+  }
+
   allColumnChange(){
     this.searchItem = null;
     this.defaultGridState();
   }
   onSearchChange(data: any) {
-    let searchValue = data;
-    this.defaultGridState();
     let operator = 'contains';
+    let searchValue = data;
+    this.selectedColumn ?? 'vendorName'
+    if (data !== '') {
+      searchValue = data;
+      this.defaultGridState();
+      operator = 'contains';
 
-    if (
-      this.selectedColumn === 'amountDue' 
-    ) {
-      operator = 'eq';
-    }
-    else if (
-      this.selectedColumn === 'paymentReconciledDate' ||
-      this.selectedColumn === 'paymentSentDate'
-    ) {
-      operator = 'eq';
-      searchValue = this.formatSearchValue(data,true);
+      if (
+        this.selectedColumn === 'amountDue'
+      ) {
+        operator = 'eq';
+      }
+      else if (
+        this.selectedColumn === 'paymentReconciledDate' ||
+        this.selectedColumn === 'paymentSentDate'
+      ) {
+        operator = 'eq';
+        searchValue = this.formatSearchValue(data, true);
 
+      }
+
+      if (this.selectedColumn === "checkNbr" || this.selectedColumn === "ALL") {
+        searchValue = searchValue.replace("-", "")
+      }
+
+      if (this.selectedColumn === "tin" || this.selectedColumn === "ALL") {
+        let noOfhypen = searchValue.split("-").length - 1
+        let index = searchValue.lastIndexOf("-")
+        if (noOfhypen >= 1 && (index !== 2 && index !== 3)) {
+          this.showTinSearchWarning = true;
+          return;
+        } else {
+          this.showTinSearchWarning = false;
+          searchValue = searchValue.replace("-", "")
+        }
+      }
     }
-   
-    if(searchValue !== ''){
     this.filterData = {
       logic: 'and',
       filters: [
@@ -329,7 +383,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
-  }
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     if (isDateSearch) {
       if (this.isValidDate(searchValue)) {
@@ -342,7 +395,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     return searchValue;
   }
 
-  private isValidDate(searchValue: any) {   
+  private isValidDate(searchValue: any) {
     let dateValue = isNaN(searchValue) && !isNaN(Date.parse(searchValue));
     if(dateValue !== null){
       let dateArray = searchValue.split('/');
@@ -367,6 +420,23 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.sortColumn = this.columns[stateData.sort[0]?.field];
 
     if (stateData.filter?.filters.length > 0) {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      if(stateFilter.field ==="checkNbr"){
+          stateFilter.value = stateFilter.value.replace("-","")
+        }
+        if(stateFilter.field ==="tin"){
+          let noOfhypen =   stateFilter.value.split("-").length - 1
+          let index = stateFilter.value.lastIndexOf("-")
+          if(noOfhypen>=1 && (index!==2 && index !==3)){
+            this.showTinSearchWarning = true;
+            return;
+          }else{
+            this.showTinSearchWarning = false;
+            stateFilter.value = stateFilter.value.replace("-","")
+          }
+
+        }
+
       this.isFiltered = true;
       const filterList = [];
       for (const filter of stateData.filter.filters) {
@@ -439,6 +509,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     }
     this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged).length;
     this.isRecordForPrint =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.isPrintAdviceLetter).length;
+    this.hasWarrantNo =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr).length;
   }
 
   assignPaymentReconciledDateToPagedList() {
@@ -494,7 +565,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         itemResponse.data[index].datePaymentSentInValidMsg = ifExist?.datePaymentSentInValidMsg;
         itemResponse.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
         itemResponse.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
-        itemResponse.data[index].batchId = ifExist?.batchId;       
+        itemResponse.data[index].batchId = ifExist?.batchId;
       }
       else {
         itemResponse.data[index].paymentReconciledDate = itemResponse.data[index].paymentReconciledDate !== null ? new Date(itemResponse.data[index].paymentReconciledDate) : itemResponse.data[index].paymentReconciledDate;
@@ -502,10 +573,10 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         if((itemResponse.data[index].checkNbr !== null && itemResponse.data[index].checkNbr !== '' && itemResponse.data[index].checkNbr !== undefined )){
           itemResponse.data[index].reconciled = true;
         }
-      }     
-         
+      }
+
     });
-    this.reconcilePaymentGridPagedResult = itemResponse;   
+    this.reconcilePaymentGridPagedResult = itemResponse;
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -664,11 +735,12 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         break;
     }
     this.assignRowDataToMainList(dataItem);
+    this.checkErrorCount();
   }
 
   printAdviceLetterChange(dataItem: any) {
     let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
-    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChanged){           
+    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChanged){
       this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.paymentRequestId !== dataItem.paymentRequestId);
     }
     else{
@@ -678,9 +750,10 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
     }
     this.isRecordForPrint =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.isPrintAdviceLetter).length;
+    this.hasWarrantNo =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr).length;
   }
 
-  noteChange(dataItem: any) {    
+  noteChange(dataItem: any) {
     if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined && dataItem.checkNbr !== ''){
       dataItem.warrantNumberChanged = true;
     }
@@ -732,7 +805,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       dataItem.datePaymentRecInValidMsg = null;
     }
     if (dataItem.checkNbr !== '') {
-      dataItem.isPrintAdviceLetter = true;      
+      dataItem.isPrintAdviceLetter = true;
+      this.hasWarrantNo =  this.hasWarrantNo + 1;
     }
     this.assignRowDataToMainList(dataItem);
 
@@ -744,6 +818,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     else{
       dataItem.warrantNumberChanged = false;
     }
+    this.checkErrorCount();
   }
 
   validateReconcileGridRecord() {
@@ -794,7 +869,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         }
       }
     })
-  }  
+  }
 
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
     let inValid = false;
@@ -824,6 +899,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.isSubmitted = true;
     this.reconcileAssignValueBatchForm.controls['note'].removeValidators([
       Validators.required,
     ]);
@@ -841,18 +917,18 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
     const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
-    const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length ;
+    this.totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length ;
     if (isValid.length > 0) {
       this.pageValidationMessageFlag = true;
-      this.pageValidationMessage = totalCount +" validation errors found, please review each page for errors. " ;
+      this.pageValidationMessage = this.totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
-      this.pageValidationMessage = "No data for reconcile and print";
+      this.pageValidationMessage = null;
       this.pageValidationMessageFlag = true;
     }
     else {
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared.";
+      this.pageValidationMessage = null;
        this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
       this.selectedReconcileDataRows.forEach((data:any) =>{
         data. paymentReconciledDate =  this.intl.formatDate(data.paymentReconciledDate, this.dateFormat);
@@ -886,18 +962,18 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     onRowSelection(grid:any, selection:any)
     {
       this.warrantCalculationArray=[];
-      const data = selection.dataItem;    
+      const data = selection.dataItem;
       this.isBreakoutPanelShow=true;
-      this.entityId=data.entityId; 
-      let warrantTotal=0; 
-      this.batchId=data.batchId;    
-      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined 
-      && x.checkNbr !== '' && x.checkNbr=== data.checkNbr).forEach((item: any) => {  
+      this.entityId=data.entityId;
+      let warrantTotal=0;
+      this.batchId=data.batchId;
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined
+      && x.checkNbr !== '' && x.checkNbr=== data.checkNbr).forEach((item: any) => {
         let object={
           vendorId:item?.entityId,
           batchId:item?.batchId,
           paymentRequestId:item?.paymentRequestId,
-          warrantNumber:item?.checkNbr,  
+          warrantNumber:item?.checkNbr,
           amountDue:item?.amountDue
         }
         this.warrantCalculationArray.push(object);
@@ -911,8 +987,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1,
-        loadType:this.loadType 
-      }      
+        loadType:this.loadType
+      }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
 
@@ -931,7 +1007,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       sort:event.sortColumn,
       sortType:event.sortType,
       filter:event.filter,
-      loadType:this.loadType 
+      loadType:this.loadType
     });
   }
   getItemNumber() {
@@ -954,17 +1030,17 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     }
   }
 
-  onViewProviderDetailClicked(paymentRequestId:any) {  
+  onViewProviderDetailClicked(paymentRequestId:any) {
     this.onVendorClickedEvent.emit(paymentRequestId);
   }
   onClickedExport(){
     this.showExportLoader = true
-    this.exportGridDataEvent.emit()        
+    this.exportGridDataEvent.emit()
     this.exportButtonShow$
     .subscribe((response: any) =>
     {
       if(response)
-      {        
+      {
          this.showExportLoader = false
         this.cd.detectChanges()
       }

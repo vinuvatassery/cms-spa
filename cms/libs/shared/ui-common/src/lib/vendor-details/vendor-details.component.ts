@@ -226,11 +226,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       }
     }
     else if (this.providerType == this.vendorTypes.Manufacturers) {
-      this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
-      this.medicalProviderForm.controls['providerName']
-        .setValidators([
-          Validators.required, Validators.required, Validators.pattern('^[A-Za-z ]+$')
-        ]);
+      this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);      
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
     else {
@@ -241,6 +237,17 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     this.validateMailCode()
+
+    let addressLine1 = this.medicalProviderForm.controls['addressLine1'].value;
+    if(addressLine1) {
+      this.medicalProviderForm.controls['mailCode']
+          .setValidators([
+              Validators.required,
+          ]);
+      this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();    
+      this.mailCodeLengthError = false;
+      this.cdr.detectChanges();
+    }
 
     if (mailCode) {
       this.medicalProviderForm.controls['addressLine1']
@@ -275,7 +282,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
       }
       else {
-        this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
       }
 

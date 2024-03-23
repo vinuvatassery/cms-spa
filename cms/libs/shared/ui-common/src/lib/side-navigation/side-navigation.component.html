@@ -1,18 +1,19 @@
-<ul class="sidebar-menu" aria-label="sidebar menu" role="menu">
-  <li role="menuitem" *ngFor="let menu of menus$ | async as menus; let i = index" 
-    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus.length !== 0 }"
+<ul class="sidebar-menu" aria-label="sidebar menu" role="menu" kendoTooltip>
+  <li role="menuitem" *ngFor="let menu of (menus$ | async) as menus; let i = index"
+    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus.length !== 0, 'active-item': menu.isActive}"
     class="new_sub_sidebar_menu">
-    <a class="sub-menu-item"(click)="onMenuClick(menu)"  role="region" attr.aria-label="{{ menu.name }}">
+    <a class="sub-menu-item" role="region" attr.aria-label="{{ menu.name }}"
+      (click)="onMenuClick( menu, $event)">
       <span class="material-icons sidebar-menu_icon" aria-disabled="true">
         {{menu.icon}}
       </span>
-      <label class="sidebar-menu_label"  attr.aria-label="{{ menu.name }}">
-        {{ menu.name }} <span *ngIf="menu?.hasBadge && isShowBadge(menu.code)" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
+      <label class="sidebar-menu_label" attr.aria-label="{{ menu.name }}">
+        {{ menu.name }} <span *ngIf="menu?.hasBadge && isShowBadge(menu.code)" class="sidebar-menu_label-badge"> {{
+          getBadge(menu.code)}} </span>
       </label>
     </a>
 
-    <ul class="secondary_submenu" *ngIf="menu.subMenus?.length !== 0"
-      attr.aria-label="{{ menu.name }}">
+    <ul class="secondary_submenu" *ngIf="menu.subMenus?.length !== 0" attr.aria-label="{{ menu.name }}">
       <li class="menu_search_header">
         <p class="submenu_heading">{{menu.name}}</p>
         <div class="input-search">
@@ -23,21 +24,22 @@
           </kendo-floatinglabel>
         </div>
       </li>
-      <li class="submenu_list_wrapper" *ngFor="let subMenu of menu.subMenus"
-        attr.aria-label="{{ subMenu.name }}">
+      <li class="submenu_list_wrapper" *ngFor="let subMenu of menu.subMenus" attr.aria-label="{{ subMenu.name }}" >
 
         <div *ngIf="subMenu.subMenus?.length !== 0">
-        <p class="submenu_list_heading" [attr.aria-label]="subMenu.name"
+          <p class="submenu_list_heading" [attr.aria-label]="subMenu.name"
             *ngIf="isMenuHeadingVisible(subMenu.subMenus, menu.filterText) || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1">
-            <span>  {{ subMenu.name | uppercase }}
-            <span class="tab-batch-notify" *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> {{ getBadge(subMenu.code)}} </span></span>
+            <span> {{ subMenu.name | uppercase }}
+              <span class="tab-batch-notify" *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> {{
+                getBadge(subMenu.code)}} </span></span>
           </p>
 
-          <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus">
+          <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus" [ngClass]="{ 'submenu_list_active_item': sprSubMenu.isActive }">
             <div
-              *ngIf="(menu?.filterText === '' || (sprSubMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1 || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)">
+              *ngIf="(menu?.filterText === '' || (sprSubMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1 || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)" >
               <a class="submenu_list_click_items" [attr.aria-label]="sprSubMenu.name"
-                (click)="onMenuClick(sprSubMenu)">
+                (click)="onMenuClick(sprSubMenu, $event)"
+                >
                 <span>
                   {{ sprSubMenu.name }}
                   <span *ngIf="sprSubMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(sprSubMenu.code)}}
@@ -49,8 +51,9 @@
         </div>
         <div
           *ngIf="subMenu.subMenus?.length === 0 && (menu?.filterText === '' || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)"
-          class="submenu_list_container">
-          <a class="submenu_list_click_items" [attr.aria-label]="subMenu.name" (click)="onMenuClick(subMenu)">
+          class="submenu_list_container" [ngClass]="{ 'submenu_list_active_item': subMenu.isActive }">
+          <a class="submenu_list_click_items" [attr.aria-label]="subMenu.name"
+            (click)="onMenuClick(subMenu, $event)">
             <span [attr.aria-label]="subMenu.name">
               {{ subMenu.name }}
               <span *ngIf="subMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(subMenu.code)}} </span>

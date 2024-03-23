@@ -19,8 +19,8 @@ import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { CompositeFilterDescriptor, State, } from '@progress/kendo-data-query';
-import { Observable, Subject, Subscription, first } from 'rxjs';
+import { CompositeFilterDescriptor, State, filterBy, } from '@progress/kendo-data-query';
+import { BehaviorSubject, Observable, Subject, Subscription, first } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-batches-log-lists',
   templateUrl: './financial-premiums-batches-log-lists.component.html',
@@ -52,7 +52,8 @@ export class FinancialPremiumsBatchesLogListsComponent
   clientName: any = "";
   totalPaymentsCount = 0;
   totalReconciled = 0;
-
+  isPageCountChanged: boolean = false;
+  isPageChanged: boolean = false;
   yesOrNoLovs: any = [];
   onlyPrintAdviceLetter = true;
   printAuthorizationDialog: any;
@@ -85,7 +86,13 @@ export class FinancialPremiumsBatchesLogListsComponent
   isEditBatchClosed =false;
   premiumId!:string;
   paymentRequestId!:any
-  public bulkMore !:any
+  gridLoaderSubject = new BehaviorSubject(false);
+  unCheckedProcessRequest: any = [];
+  batchLogGridLists!: any;
+  recordCountWhenSelectallClicked: number = 0;
+  totalGridRecordsCount: number = 0;
+  currentPageRecords: any = [];
+  selectedAllPaymentsList!: any;
     @Output() updatePremiumEvent = new EventEmitter<any>();
     @Output() loadPremiumEvent = new EventEmitter<string>();
 
@@ -234,6 +241,8 @@ export class FinancialPremiumsBatchesLogListsComponent
   sendReportDialog: any;
   selectedCount = 0;
   disablePrwButton = true;
+  public bulkMore !:any
+  isReconciled: boolean = false;
   batchLogListSubscription!: Subscription;
   @Input() insuranceCoverageDates$: any;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
@@ -267,44 +276,44 @@ export class FinancialPremiumsBatchesLogListsComponent
   }
 
   initiateBulkMore() {
-    this.bulkMore = [
-     {
-       buttonType: 'btn-h-primary',
-       text: 'RECONCILE PAYMENTS',
-       icon: 'edit',
-       click: (data: any): void => {
-         this.navToReconcilePayments(data);
-       },
-     },
-     {
-       buttonType: 'btn-h-primary',
-       text: 'PRINT ADVICE LETTERS',
-       icon: 'print',
-       click: (data: any): void => {
-         this.isRequestPaymentClicked = false;
-         this.isPrintAdviceLetterClicked = true;
-       },
-     },
-     {
-       buttonType: 'btn-h-primary',
-       text: 'UNBATCH ENTIRE BATCH',
-       icon: 'undo',
-       disabled: [
-         PaymentStatusCode.Paid,
-         PaymentStatusCode.PaymentRequested,
-         PaymentStatusCode.ManagerApproved,
-       ].includes(this.batchStatus),
-       click: (data: any): void => {
-         if (!this.isBulkUnBatchOpened) {
-           this.isBulkUnBatchOpened = true;
-           this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
-         }
-       },
-     }
-   ];
-  }
- 
-
+     this.bulkMore = [
+      {
+        buttonType: 'btn-h-primary',
+        text: 'RECONCILE PAYMENTS',
+        icon: 'edit',
+        click: (data: any): void => {
+          this.navToReconcilePayments(data);
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'PRINT ADVICE LETTERS',
+        icon: 'print',
+        click: (data: any): void => {
+          this.isReconciled = true;
+          this.loadBatchLogListGrid();
+          this.isRequestPaymentClicked = false;
+          this.isPrintAdviceLetterClicked = true;
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'UNBATCH ENTIRE BATCH',
+        icon: 'undo',
+        disabled: [
+          PaymentStatusCode.Paid,
+          PaymentStatusCode.PaymentRequested,
+          PaymentStatusCode.ManagerApproved,
+        ].includes(this.batchStatus),
+        click: (data: any): void => {
+          if (!this.isBulkUnBatchOpened) {
+            this.isBulkUnBatchOpened = true;
+            this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
+          }
+        },
+      }
+    ];
+   }
   onEditPremiumsClick(premiumId: string,vendorId:any,clientId:any,clientName:any,paymentRequestId:any){
     this.vendorId=vendorId;
     this.clientId=clientId;
@@ -382,6 +391,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       sortColumn: sortValue ?? 'itemNbr',
       sortType: sortTypeValue ?? 'asc',
       filter: this.state?.['filter']?.['filters'] ?? [],
+      isReconciled: this.isReconciled
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
     this.currentPrintAdviceLetterGridFilter = this.state?.['filter']?.['filters'] ?? [];
@@ -509,6 +519,8 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   }
 
   dataStateChange(stateData: any): void {
+    this.isPageCountChanged = false;
+    this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -531,13 +543,21 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
       this.isFiltered = false;
     }
     this.loadBatchLogListGrid();
+    if (this.isPrintAdviceLetterClicked) {
+      this.handleBatchPaymentsGridData();
+    }
   }
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.isPageCountChanged = true;
+    this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadBatchLogListGrid();
+    if (this.isPrintAdviceLetterClicked) {
+      this.handleBatchPaymentsGridData();
+    }
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -584,6 +604,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   }
 
   onBulkOptionCancelClicked() {
+    this.isReconciled = false;
     this.selectAll = false;
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
@@ -592,8 +613,6 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     this.noOfRecordToPrint = 0;
     this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
     this.markAsUnChecked(this.selectedDataIfSelectAllUnchecked);
-    this.selectedDataRows.PrintAdviceLetterSelected = [];
-    this.selectedDataRows.PrintAdviceLetterUnSelected = [];
     this.unCheckedPaymentRequest=[];
     this.selectedDataIfSelectAllUnchecked=[];
     this.loadBatchLogListGrid();
@@ -661,6 +680,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
       .subscribe((unbatchEntireBatchResponse: any) => {
         if (unbatchEntireBatchResponse ?? false) {
           this.loadBatchLogListGrid();
+          this.backToBatch(null)
         }
       });
   }
@@ -831,7 +851,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   disablePreviewButton(result: any) {
     this.selectedDataRows = result;
     this.selectedDataRows.batchId = this.batchId
-    if(result.selectAll){
+    if(result.selectAll && this.batchLogPrintAdviceLetterPagedList.data?.length > 0){
       this.disablePrwButton = false;
     }
     else if(result.PrintAdviceLetterSelected.length>0)
@@ -852,19 +872,19 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     this.unCheckedPaymentRequest=[];
     this.selectedDataIfSelectAllUnchecked=[];
     if(this.selectAll){
-      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList?.data);
       this.noOfRecordToPrint = this.totalRecord;
       this.selectedCount = this.noOfRecordToPrint;
     }
     else{
       this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
-      this.noOfRecordToPrint = 0;
+      this.noOfRecordToPrint = 0; 
       this.selectedCount = this.noOfRecordToPrint
     }
-    const returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
-    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
-    this.disablePreviewButton(returnResult);
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print', 'isReconciled': this.isReconciled}
+    this.disablePreviewButton(this.selectedAllPaymentsList);
   }
 
   selectionChange(dataItem:any,selected:boolean){
@@ -885,10 +905,10 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
       this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
       }
     }
-    const returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
-    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
-    this.disablePreviewButton(returnResult);
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print', 'isReconciled': this.isReconciled}
+    this.disablePreviewButton(this.selectedAllPaymentsList);
   }
 
   markAsUnChecked(data:any){
@@ -952,6 +972,71 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   private unsubscribeFromActionResponse() {
     if (this.actionResponseSubscription) {
       this.actionResponseSubscription.unsubscribe();
+    }
+  }
+
+  handleBatchPaymentsGridData() {
+    this.batchLogGridLists$.subscribe((data: GridDataResult) => {
+      this.gridDataResult = data;
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
+      if (data?.total >= 0 || data?.total === -1) {
+        this.gridLoaderSubject.next(false);
+      }
+      this.batchLogGridLists = this.gridDataResult?.data;
+      if (this.recordCountWhenSelectallClicked == 0) {
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
+        this.totalGridRecordsCount = this.gridDataResult?.total;
+      }
+      if (!this.selectAll) {
+        this.batchLogGridLists.forEach((item1: any) => {
+          const matchingGridItem = this.selectedAllPaymentsList?.PrintAdviceLetterSelected.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
+          if (matchingGridItem) {
+            item1.selected = true;
+          } else {
+            item1.selected = false;
+          }
+        });
+      }
+      this.currentPageRecords = this.batchLogGridLists;
+      //If the user is selecting the individual check boxes and changing the page count
+      this.handlePageCountSelectionChange();
+      //If the user click on select all header and either changing the page number or page count
+      this.pageNumberAndCountChangedInSelectAll();
+      this.gridLoaderSubject.next(false);
+    });
+  }
+
+  handlePageCountSelectionChange() {
+    if (!this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
+      // Extract the payment request ids from grid data
+      const idsToKeep: number[] = this.selectedDataIfSelectAllUnchecked.map((item: any) => item.paymentRequestId);
+      // Remove items from selected records based on the IDs from grid data
+      for (let i = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.length - 1; i >= 0; i--) {
+        if (!idsToKeep.includes(this.selectedAllPaymentsList?.PrintAdviceLetterSelected[i].paymentRequestId)) {
+          this.selectedAllPaymentsList?.PrintAdviceLetterSelected.splice(i, 1); // Remove the item at index i
+        }
+      }
+    }
+  }
+
+  pageNumberAndCountChangedInSelectAll() {
+    //If selecte all header checked and either the page count or the page number changed
+    if (this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
+      this.selectedAllPaymentsList = [];
+      this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+      for (const item of this.batchLogGridLists) {
+        // Check if the item is in the second list.
+        const isItemInSecondList = this.unCheckedPaymentRequest.find((item2: any) => item2.paymentRequestId === item.paymentRequestId);
+        // If the item is in the second list, mark it as selected true.
+        if (isItemInSecondList) {
+          item.selected = false;
+        } else {
+          item.selected = true;
+        }
+      }
     }
   }
 }

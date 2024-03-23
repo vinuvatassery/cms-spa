@@ -1,17 +1,22 @@
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
+  TemplateRef,
   ViewEncapsulation
 } from '@angular/core';
-import { CaseFacade, DrugPharmacyFacade } from '@cms/case-management/domain';
+import { CaseFacade, DrugPharmacyFacade, DrugsFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { Subscription, first } from 'rxjs';
 
 @Component({
   selector: 'case-management-drugs-purchased-list',
@@ -19,7 +24,9 @@ import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
   encapsulation: ViewEncapsulation.None,
 })
 export class DrugsPurchasedListComponent implements OnInit {
+
   @Input() clientId: any;
+  
   /** Public properties **/
   drugPurchases$ = this.drugPharmacyFacade.drugPurchases$;
   isOpenChangePriorityClicked = false;
@@ -85,6 +92,45 @@ export class DrugsPurchasedListComponent implements OnInit {
   paymentStauses: any = [];
   paymentTypes: any = [];
   paymentRequestTypes: any = [];
+  deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
+
+  addPharmacyClaim$ = this.financialPharmacyClaimsFacade.addPharmacyClaim$;
+  editPharmacyClaim$ = this.financialPharmacyClaimsFacade.editPharmacyClaim$;
+  getPharmacyClaim$ = this.financialPharmacyClaimsFacade.getPharmacyClaim$;
+  searchPharmacies$ = this.financialPharmacyClaimsFacade.searchPharmacies$;
+  searchClients$ = this.financialPharmacyClaimsFacade.searchClients$;
+  searchDrugs$ = this.financialPharmacyClaimsFacade.searchDrugs$;
+  searchPharmaciesLoader$ = this.financialPharmacyClaimsFacade.searchPharmaciesLoader$;
+  searchClientLoader$ = this.financialPharmacyClaimsFacade.searchClientLoader$;
+  searchDrugsLoader$ = this.financialPharmacyClaimsFacade.searchDrugsLoader$;
+
+  addDrug$ = this.drugsFacade.addDrug$
+  manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
+
+  /** Input Properties**/
+  @Input() clientCaseEligibilityId:any
+
+    /** Output Properties**/
+  @Output() addPharmacyClaimEvent = new EventEmitter<any>();
+  @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
+  @Output() getPharmacyClaimEvent = new EventEmitter<any>();
+  @Output() searchPharmaciesEvent = new EventEmitter<any>();
+  @Output() searchClientsEvent = new EventEmitter<any>();
+  @Output() searchDrugEvent = new EventEmitter<any>();
+  @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
+  @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
+  
+  isAddEditClaimMoreClose = false;
+
+  private addEditClaimsFormDialog: any;
+  pharmacyPurchaseProfilePhotoSubscription = new Subscription();
+  pharmacyPurchaseProfile$ = this.drugPharmacyFacade.pharmacyPurchaseProfileSubject;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
+  clientCustomName : any
+  fromDrugPurchased:any ;
 
   public actions = [
     {
@@ -121,11 +167,17 @@ export class DrugsPurchasedListComponent implements OnInit {
     private readonly cdr: ChangeDetectorRef,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
+    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
+    private readonly drugsFacade: DrugsFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
+    private dialogService: DialogService,
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.clientCustomName = this.caseFacade.clientCustomName;
+    this.fromDrugPurchased = true;
     this.getLovs();
     this.defaultGridState();
     this.loadDrugsPurchased();
@@ -138,6 +190,7 @@ export class DrugsPurchasedListComponent implements OnInit {
     this.getPaymentStatusLov();
     this.getPaymentTypeCodeLov();
     this.getPaymentRequestTypeCodeLov();
+    this.lovFacade.getDeliveryMethodLovs();
   }
 
   private getPaymentTypeCodeLov() {
@@ -330,4 +383,86 @@ export class DrugsPurchasedListComponent implements OnInit {
   public onClickLoadDrugsPurchasedData() {
     this.loadDrugsPurchased();
   }
+
+  addPharmacyClaim(data: any) {
+    this.addPharmacyClaimEvent.emit(data);
+    this.addPharmacyClaim$.pipe(first((addResponse: any) => addResponse != null))
+      .subscribe((addResponse: any) => {
+        if (addResponse) {
+
+          this.loadDrugsPurchased()
+          this.modalCloseAddEditClaimsFormModal(true)
+        }
+      })
+  }
+  
+  updatePharmacyClaim(data: any) {
+    this.updatePharmacyClaimEvent.emit(data);
+    this.editPharmacyClaim$.pipe(first((editResponse: any ) => editResponse != null))
+    .subscribe((editResponse: any) =>
+    {
+      if(editResponse)
+      {    
+        this.loadDrugsPurchased();
+        this.modalCloseAddEditClaimsFormModal(true)
+      }
+
+    })
+  }
+
+  searchPharmacies(searchText: any) {
+    this.searchPharmaciesEvent.emit(searchText);
+  }
+
+  searchClients(searchText: any) {
+    this.searchClientsEvent.emit(searchText);
+  }
+  searchDrug(searchText: string) {
+    this.searchDrugEvent.emit(searchText);
+  }
+
+  getCoPaymentRequestTypeLov()
+  {
+    this.getCoPaymentRequestTypeLovEvent.emit();
+  }
+
+  getDrugUnitTypeLov()
+  {
+    this.getDrugUnitTypeLovEvent.emit();
+  }
+
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>,paymentRequestId : any): void {  
+    if(paymentRequestId !== '00000000-0000-0000-0000-000000000000')  
+    {
+    this.getPharmacyClaimEvent.emit(paymentRequestId);
+    }
+    this.addEditClaimsFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-96full add_claims_modal',
+    });
+  }
+  
+  modalCloseAddEditClaimsFormModal(result: any) {
+    if (result) {
+      this.isAddEditClaimMoreClose = false;
+      this.addEditClaimsFormDialog.close();
+    }
+  }
+
+  addDrugEventHandler(event:any){
+    this.drugsFacade.addDrugData(event);
+  }
+
+  searchClientsDataEventHandler(client:any){
+    this.financialPharmacyClaimsFacade.searchClientsDataSubject.next(client);
+  }
+
+  searchPharmacyDataEventHandler(vendor:any){
+    this.financialPharmacyClaimsFacade.searchPharmaciesDataSubject.next(vendor)
+  }
+
+  loadRecentClaimListEventHandler(data : any){
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+  }
+
 }

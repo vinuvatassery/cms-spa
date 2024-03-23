@@ -14,13 +14,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialClaimsFacade, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy
+  State
 } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject, first } from 'rxjs';
 
@@ -49,6 +48,7 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() exportButtonShow$: any;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
+  @Input() dentalClaimAllPaymentClaimsProfilePhoto$!: any;
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
@@ -225,69 +225,7 @@ export class FinancialClaimsAllPaymentsListComponent
     paymentStatusDesc: 'Payment Status',
   };
 
-  dropDowncolumns: any = [
-    {
-      columnCode: 'ALL',
-      columnDesc: 'All Columns',
-    },
-    {
-      columnCode: 'itemNumber',
-      columnDesc: 'Item #',
-    },
-    {
-      columnCode: 'batchNumber',
-      columnDesc: 'Batch #',
-    },
-    {
-      columnCode: 'invoiceNbr',
-      columnDesc: 'Invoice ID',
-    },
-    {
-      columnCode: 'providerName',
-      columnDesc: 'Provider Name',
-    },
-    {
-      columnCode: 'tin',
-      columnDesc: 'Tax ID',
-    },
-    {
-      columnCode: 'paymentMethodDesc',
-      columnDesc: 'Payment Method',
-    },
-    {
-      columnCode: 'clientFullName',
-      columnDesc: 'Client Name',
-    },
-    {
-      columnCode: 'insuranceName',
-      columnDesc: 'Name on Primary Insurance Card',
-    },
-    {
-      columnCode: 'clientId',
-      columnDesc: 'Client ID',
-    },
-    {
-      columnCode: 'serviceCount',
-      columnDesc: 'Service Count',
-    },
-    {
-      columnCode: 'totalCost',
-      columnDesc: 'Total Cost',
-    },
-    {
-      columnCode: 'totalDue',
-      columnDesc: 'Total Due',
-    },
-    {
-      columnCode: 'amountDue',
-      columnDesc: 'Total Due',
-    },
-    {
-      columnCode: 'paymentStatusDesc',
-      columnDesc: 'Payment Status',
-    },
-  ];
-
+  dropDowncolumns!: any[];
   selectedPaymentStatus: string | null = null;
   selectedpaymentMethod: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
@@ -295,6 +233,7 @@ export class FinancialClaimsAllPaymentsListComponent
   paymentMethodTypes: any = [];
   paymentStauses: any = [];
   selectedColumn = 'ALL';
+  allPaymentClaimsProfileSubject = new Subject();
   constructor(
     private route: Router,
     private dialogService: DialogService,
@@ -303,6 +242,7 @@ export class FinancialClaimsAllPaymentsListComponent
     private readonly cdr: ChangeDetectorRef,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -312,9 +252,64 @@ export class FinancialClaimsAllPaymentsListComponent
   }
 
   ngOnInit(): void {
+    this.setDropDownColumns();
     this.getPaymentMethodLov();
     this.getPaymentStatusLov();
     this.handleAllPaymentsGridData();
+  }
+  setDropDownColumns() {
+    if(this.claimsType == 'medical') {
+      this.dropDowncolumns = [
+        {
+          columnCode: 'ALL',
+          columnDesc: 'All Columns',
+        },
+        {
+          columnCode: 'batchNumber',
+          columnDesc: 'Batch #',
+        },
+        {
+          columnCode: 'providerName',
+          columnDesc: 'Provider Name',
+        },
+        {
+          columnCode: 'tin',
+          columnDesc: 'Tax ID',
+        },
+        {
+          columnCode: 'clientFullName',
+          columnDesc: 'Client Name',
+        },
+        {
+          columnCode: 'clientId',
+          columnDesc: 'Client ID',
+        },
+      ];
+    } else if (this.claimsType == 'dental') {
+      this.dropDowncolumns = [
+        {
+          columnCode: 'ALL',
+          columnDesc: 'All Columns',
+        },
+        {
+          columnCode: 'batchNumber',
+          columnDesc: 'Batch #',
+        },
+        {
+          columnCode:  'invoiceNbr',
+          columnDesc:  'Invoice ID',
+        },
+        {
+          columnCode: 'clientFullName',
+          columnDesc: 'Client Name',
+        },
+        {
+          columnCode: 'clientId',
+          columnDesc: 'Client ID',
+        },
+      ];
+    }
+  
   }
 
   handleAllPaymentsGridData() {
@@ -379,7 +374,7 @@ pageNumberAndCountChangedInSelectAll() {
       }
     }
   }
-}
+} 
 
   ngOnChanges(): void {
     this.defaultGridState();
@@ -784,7 +779,6 @@ pageNumberAndCountChangedInSelectAll() {
     if (result === true) {
       this.loadFinancialClaimsAllPaymentsListGrid();
     }
-    
     this.addEditClaimsFormDialog.close();
   }
 

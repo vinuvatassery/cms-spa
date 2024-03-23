@@ -290,7 +290,6 @@ export class ClientFacade {
       return this.clientDataService.save(applicantInfo);
   }
   load(clientId:any,clientCaseId:any,eligibilityId:any) {
-      this.clientProfileReloadSubject.next(true)
       return this.clientDataService.load(clientId,clientCaseId,eligibilityId);
   }
   update(applicantInfo:ApplicantInfo,clientId:any) {
@@ -331,5 +330,8 @@ export class ClientFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
+  }
+  reloadClientHeader(){
+    this.clientProfileReloadSubject.next(true)
   }
 }

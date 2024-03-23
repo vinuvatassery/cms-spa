@@ -301,6 +301,6 @@ export class ClientDataService {
     }
     runImportedClaimRules(clientId: number){
       return this.http.get(
-        `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/rules?clientId=${clientId}`,);
+        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/rules?clientId=${clientId}`,);
       }
 }

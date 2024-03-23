@@ -73,6 +73,8 @@ export class FinancialClaimsPageComponent implements OnInit {
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
   tab = 1;
+  dentalClaimAllPaymentClaimsProfilePhoto$ = this.financialClaimsFacade.dentalClaimAllPaymentClaimsProfilePhotoSubject;
+  medicalClaimsProfilePhoto$ = this.financialClaimsFacade.medicalClaimsProfilePhotoSubject;
 
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,

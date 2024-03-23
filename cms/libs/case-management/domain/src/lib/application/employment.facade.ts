@@ -16,6 +16,7 @@ import { EmployersDataService } from '../infrastructure/employers.data.service';
 import { WorkflowFacade } from './workflow.facade'
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class EmploymentFacade {
@@ -46,6 +47,7 @@ export class EmploymentFacade {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   employmentFacadeSnackbar$ = this.snackbarSubject.asObservable();
+  employerProfilePhotoSubject = new Subject();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -70,7 +72,8 @@ export class EmploymentFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade
   ) { }
 
   /** Public methods **/
@@ -121,6 +124,7 @@ export class EmploymentFacade {
 
             this.updateWorkFlowCount(parseInt(employersResponse['totalCount']) > 0 ? StatusFlag.Yes : StatusFlag.No);
             this.employersSubject.next(gridView);
+            this.loadEmployersDistinctUserIdsAndProfilePhoto(employersResponse['items']);
             this.hideLoader();
           }
         },
@@ -130,6 +134,20 @@ export class EmploymentFacade {
         },
       });
   }
+
+  loadEmployersDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.employerProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+}
 
   loadPrevEmployers(clientId : any,prvClientCaseEligibilityId: string,){
     this.showLoader();

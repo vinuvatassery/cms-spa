@@ -21,5 +21,8 @@ export class ClientEligibilityInfo{
   zip : string='';
   assisterGroup : string='';
   domainCode : string='';
+  userFirstName : string='';
+  userLastName : string='';
+  isUserProfilePhotoExist : boolean= false;
 
 }

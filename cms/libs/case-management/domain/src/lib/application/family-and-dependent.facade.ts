@@ -13,6 +13,7 @@ import { ConfigurationProvider, LoggingService, NotificationSnackbarService, Sna
 import { WorkflowFacade } from './workflow.facade';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { SnackBar ,StatusFlag} from '@cms/shared/ui-common';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 
 @Injectable({ providedIn: 'root' })
@@ -62,9 +63,7 @@ export class FamilyAndDependentFacade {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   familyfacadesnackbar$ = this.snackbarSubject.asObservable();
-
-
-
+  dependentProfilePhotoSubject= new Subject();
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any, source :  NotificationSource  = NotificationSource.API)
   {
@@ -84,7 +83,8 @@ export class FamilyAndDependentFacade {
     private configurationProvider : ConfigurationProvider ,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService ) {}
+    public intl: IntlService,
+    private readonly userManagementFacade: UserManagementFacade, ) {}
 
   /** Public methods **/
   showLoader()
@@ -190,6 +190,7 @@ export class FamilyAndDependentFacade {
 
           this.workflowFacade.updateChecklist(workFlowdata);
           this.dependentsSubject.next(gridView);
+          this.loadFamilyDependantDistintUserIdsAndProfilePhotos(dependentsResponse["items"]);
         }
         this.hideLoader();
       },
@@ -201,6 +202,20 @@ export class FamilyAndDependentFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
+  }
+
+  loadFamilyDependantDistintUserIdsAndProfilePhotos(data: any[]){
+    const distinctUserIds = Array.from(new Set(data?.map(dependent => dependent.creatorId))).join(',');
+      if(distinctUserIds){
+        this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+        .subscribe({
+          next: (data: any[]) => {
+            if (data.length > 0) {
+              this.dependentProfilePhotoSubject.next(data);
+            }
+          },
+        });
+      }
   }
 
   loadPreviousRelations(previousEligibilityId: string, clientId: number): void {

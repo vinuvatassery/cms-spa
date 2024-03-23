@@ -137,8 +137,11 @@
                         </div>
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Credit #">
-                                <kendo-textbox aria-label="Refund Warrant #"
-                                 [(ngModel)]="item.creditNbr" [fillMode]="formUiStyle.inputFillMode"
+                                <kendo-textbox aria-label="Credit #"
+                                 [(ngModel)]="item.creditNbr"
+                                 [fillMode]="formUiStyle.inputFillMode"
+                                 [maxlength]="10"
+                                 (keyup)="validateCreditNumber($event)"
                                  (valueChange)="onRefundNoteValueChange($event,'creditNbr',item)" >
                                 </kendo-textbox>
                             </kendo-floatinglabel>
