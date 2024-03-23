@@ -7,10 +7,13 @@ import {
   OnChanges,
   Output,
   ViewEncapsulation,
-  OnDestroy
+  OnDestroy,
+  ViewChild,
+  TemplateRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject, Subscription } from 'rxjs';
@@ -37,7 +40,7 @@ defaultPageSize=20;
   @Input() activityEventLogList$: any;
   @Input() lovsList$: any;
   @Input() skipCount$: any;
-
+  @Input() supportGroupProfilePhoto$: any;
   // Flags
   displayAll = true;
   columnsReordered = false;
@@ -52,6 +55,7 @@ defaultPageSize=20;
   // Observable Variables
   webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
   webLogListsLoader$ = this.systemInterfaceDashboardFacade.webLogsDataLoader$;
+  profilePhoto$ = this.systemInterfaceDashboardFacade.profilePhoto$;
   gridData$ = this.gridDataSubject.asObservable();
 
   // Output Events
@@ -79,16 +83,21 @@ defaultPageSize=20;
 
   // Filter Data
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  errorDialog: any;
+  @ViewChild('errorInformationDialogTemplate', { read: TemplateRef })
+  errorInformationDialogTemplate!: TemplateRef<any>;
+  failureDetail:string="";
   interfaceFilterDropDown: any = null;
   lovsSubscription: Subscription | undefined;
 
   constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade) {
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
+    private dialogService: DialogService) {
 
     this.statusArray = systemInterfaceDashboardFacade.getStatusArray()
     this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray()
     this.processArray = systemInterfaceDashboardFacade.getEecProcessTypeCodeArray()
+  
   }
 
   gridColumns: any = {
@@ -265,5 +274,27 @@ defaultPageSize=20;
   downloadFile(filePath: any) {
     this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
   }
+
+
+  Close() {
+      this.errorDialog.close();
+    
+  }
+  
+ onViewInformation(error:string){
+ this.failureDetail=error;
+  this.onErrorDetailClicked(
+    this.errorInformationDialogTemplate
+  );
+  
+ }
+  public onErrorDetailClicked(template: TemplateRef<unknown>): void {
+    this.errorDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+ 
 
 }

@@ -7,6 +7,8 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { SystemInterfaceActivityStatusCode } from '../enums/system-interface-status-type-code';
 import { SystemInterfaceActivityStatusCodeDescription } from '../enums/system-interface-status-type-code.description';
 import { SystemInterfaceEecProcessTypeCode } from '../enums/system-interface-eec-process-type-code';
+import { SystemInterfaceSupportFacade } from './system-interface-support.facade';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceDashboardFacade {
@@ -36,6 +38,9 @@ export class SystemInterfaceDashboardFacade {
   webLogsDataLoader$ = this.webLogsDataLoaderSubject.asObservable();
   // ----------------------------------
 
+  private profilePhotoSubject = new Subject();
+  profilePhoto$ = this.profilePhotoSubject.asObservable();
+
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'startDate'
   public sortType = 'desc'
@@ -58,7 +63,9 @@ export class SystemInterfaceDashboardFacade {
     private configurationProvider: ConfigurationProvider,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
-    public intl: IntlService, private service: SystemInterfaceDashboardService) { }
+    public intl: IntlService, private service: SystemInterfaceDashboardService,
+   private readonly userManagementFacade: UserManagementFacade,
+    ) { }
 
   /** Public methods **/
   showLoader() {
@@ -156,7 +163,9 @@ export class SystemInterfaceDashboardFacade {
             total: dataResponse?.totalCount,
           };
           this.webLogListSubject.next(gridView);
+          this.loadProfilePhoto(gridView?.data);
           this.webLogsDataLoaderSubject.next(false);
+
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -165,6 +174,20 @@ export class SystemInterfaceDashboardFacade {
       });
   }
 
+  loadProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.triggeredBy))).join(',');
+    if (distinctUserIds) {
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+        .subscribe({
+          next: (data: any[]) => {
+            debugger
+            if (data.length > 0) {
+              this.profilePhotoSubject.next(data);
+            }
+          },
+        });
+    }
+  }
   getDocumentDownload(fileId: string) {
     return this.systemInterfaceDashboardService.getDocumentDownload(fileId).subscribe({
       next: (dataResponse: any) => {
