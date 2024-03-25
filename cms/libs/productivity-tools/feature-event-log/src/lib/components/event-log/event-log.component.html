@@ -38,12 +38,12 @@
           aria-hidden="true"
           >search</span
         >
-      </button>     
+      </button>
       <button #eventFilterCardBtn kendoButton (click)="isEventFilterPopoverOpen = !isEventFilterPopoverOpen">
         <span class="material-icons" aria-label="More option" *ngIf="!isEventFilterPopoverOpen"> more_vert </span>
-        
+
         <span class="material-icons" aria-label="Cancel" *ngIf="isEventFilterPopoverOpen"> cancel </span>
-      </button>   
+      </button>
       <div class="event-filter_popover_wrapper" *ngIf="isEventFilterPopoverOpen" #eventtFilterPopover>
         <div class="event-filter-body">
           <div class="event-filters">
@@ -66,7 +66,7 @@
               <kendo-dropdownlist aria-label="Case Worker" [fillMode]="formUiStyle.dropDownFillMode" formControlName="caseworkerfilterbyoperator"
              [data]="operators" textField="text" valueField="value" [valuePrimitive]="true" placeholder="Case Worker">
               </kendo-dropdownlist>
-              <kendo-textbox aria-label="Case Worker" [clearButton]="true" *ngIf="eventLogFilterForm.controls['caseworkerfilterbyoperator'].value.length > 0"  
+              <kendo-textbox aria-label="Case Worker" [clearButton]="true" *ngIf="eventLogFilterForm.controls['caseworkerfilterbyoperator'].value.length > 0"
                 formControlName="caseworkerfilterbyvalue" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
                 (valueChange)="onChange('CASEWORKER')">
               </kendo-textbox>
@@ -75,14 +75,14 @@
               <kendo-dropdownlist aria-label="Event Type" [fillMode]="formUiStyle.dropDownFillMode" formControlName="eventtypefilterbyoperator"
               [data]="operators" textField="text" valueField="value" [valuePrimitive]="true" placeholder="Event Type">
               </kendo-dropdownlist>
-              <kendo-textbox aria-label="Event Type" [clearButton]="true" *ngIf="eventLogFilterForm.controls['eventtypefilterbyoperator'].value.length > 0" 
-                formControlName="eventtypefilterbyvalue" rounded="medium" [fillMode]="formUiStyle.inputFillMode" 
+              <kendo-textbox aria-label="Event Type" [clearButton]="true" *ngIf="eventLogFilterForm.controls['eventtypefilterbyoperator'].value.length > 0"
+                formControlName="eventtypefilterbyvalue" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
                 (valueChange)="onChange('EVENTTYPE')">
               </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-floatinglabel class="mb-1" text="After Date">
               <kendo-datepicker class="mb-1" [fillMode]="formUiStyle.dateInputFillMode" aria-label="After Date"
-                format="MM/dd/yyyy" formatPlaceholder="formatPattern" formControlName="afterdatefilter" placeholder="After Date" 
+                format="MM/dd/yyyy" formatPlaceholder="formatPattern" formControlName="afterdatefilter" placeholder="After Date"
                 (valueChange)="onChange('AFTERDATE')" [max]="eventLogFilterForm.controls['beforedatefilter'].value" [incompleteDateValidation]="true">
               </kendo-datepicker>
             </kendo-floatinglabel>
@@ -99,11 +99,11 @@
               <button kendoButton [primary]="true" look="outline" aria-label="Clear" (click)="onEventLogFilterClearClicked()" [disabled]="!isEnableFilterBtn">
                 CLEAR
               </button>
-            </div>            
+            </div>
           </div>
         </div>
-      </div>   
-     
+      </div>
+
       <button kendoButton class="k-icon-button small-i-btn" aria-label="close" (click)="onCloseEventLogClicked()"
         title="close">
         <span class="material-icons" aria-label="close" aria-hidden="true">close</span>
@@ -121,11 +121,11 @@
             <p class="items-head_label">{{eventLog.eventDesc}}</p>
             <p class="items-head_info text-right">
               {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by
-              
+
             <span class="items-head_info-user">
 
-              <common-user-photo-icon  
-              [userId]="eventLog.creatorId" 
+              <common-user-photo-icon
+              [userId]="eventLog.creatorId"
               [userFirstName]="eventLog.createdBy"
               [userLastName]="''"
               [linkType]="'profileLink'"
@@ -152,16 +152,16 @@
               >
             </button>
             <!-- <span class="items-body_details">{{eventLog.eventLogDesc}}</span> -->
-            <div class="items-body">                
+            <div class="items-body">
               <common-read-more
               [content]="eventLog.eventLogDesc"
               [limit]="250"
               [completeWords]="true">
-  
+
               </common-read-more>
             </div>
-            <span *ngIf="eventLog.userEventFlag && eventLog.attachments?.length > 0" 
-              class="text-primary text-underline c-pointer" 
+            <span *ngIf="eventLog.userEventFlag && eventLog.attachments?.length > 0"
+              class="text-primary text-underline c-pointer"
               (click)="downloadAttachment(eventLog.attachments[0]?.eventLogAttachmentId, eventLog.attachments[0]?.attachmentFilePath)">
               View Attachment</span>
           </div>
@@ -178,27 +178,27 @@
                   {{subEventLog.creationTime | date: 'MM-dd-yyyy'}} by
                   <span class="items-head_info-user">
 
-                    <common-user-photo-icon  
-                    [userId]="subEventLog.creatorId" 
+                    <common-user-photo-icon
+                    [userId]="subEventLog.creatorId"
                     [userFirstName]="subEventLog.createdBy"
                     [userLastName]="''"
                     [linkType]="'profileLink'"
                     [position]="'left'"
                     [callout]="false">
                   </common-user-photo-icon>
-      
+
                   </span>
                 </p>
               </div>
-              <div class="items-body">                
+              <div class="items-body">
                 <common-read-more
                 [content]="subEventLog.eventLogDesc"
                 [limit]="250"
                 [completeWords]="true">
                 </common-read-more>
 
-                <span *ngIf="subEventLog.userEventFlag && subEventLog.attachments?.length > 0" 
-                  class="text-primary text-underline c-pointer" 
+                <span *ngIf="subEventLog.userEventFlag && subEventLog.attachments?.length > 0"
+                  class="text-primary text-underline c-pointer"
                   (click)="downloadAttachment(subEventLog.attachments[0]?.eventLogAttachmentId, subEventLog.attachments[0]?.attachmentFilePath)">
                   View Attachment</span>
               </div>
@@ -217,5 +217,5 @@
 <ng-template #eventDetailsDialogTemplate>
 
   <kendo-dialog-titlebar  (close)="onCloseEventDetailsClicked(false)"> {{isSubEvent?  'Add Sub-Event' : 'Add Event'  }}</kendo-dialog-titlebar>
-  <productivity-tools-event-detail  [isSubEvent]="isSubEvent" [parentEventLogId]="parentEventLogId"  [eventList]="isSubEvent ? SubEventList : eventList"  [entityId] = "entityId" [clientCaseEligibilityId]="clientCaseEligibilityId" [entityType] = "entityType"  [eventAttachmentTypeLov$]="eventAttachmentTypeLov$" [eventsdata$]="eventsdata$"  (closeEventDetailsClickedEmitter)="onCloseEventDetailsClicked($event)"></productivity-tools-event-detail>
+  <productivity-tools-event-detail  [isSubEvent]="isSubEvent" [parentEventLogId]="parentEventLogId"  [eventList]="isSubEvent ? SubEventList : eventList"  [entityId] = "entityId" [clientCaseEligibilityId]="clientCaseEligibilityId" [entityType] = "entityType"  [eventAttachmentTypeList]="eventAttachmentTypeList" [eventsdata$]="eventsdata$"  (closeEventDetailsClickedEmitter)="onCloseEventDetailsClicked($event)"></productivity-tools-event-detail>
 </ng-template>

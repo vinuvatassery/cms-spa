@@ -41,7 +41,7 @@ export class ClientRecordSentComponent {
           },
           valueAxis: {
             title: {
-                text: 'Number of Records sent' // Add title for y-axis
+                text: 'Number of Records Sent' // Add title for y-axis
             }
         },
           tooltip: {

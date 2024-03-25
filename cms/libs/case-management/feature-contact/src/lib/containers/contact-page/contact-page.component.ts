@@ -11,7 +11,7 @@ import {
   NavigationType, ContactInfo, ClientAddress, AddressTypeCode,
   ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact,
   CompletionChecklist, ClientDocument, ClientCaseElgblty,
-  ClientDocumentFacade, HomeAddressProof, StatesInUSA
+  ClientDocumentFacade, HomeAddressProof, StatesInUSA, WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
@@ -81,6 +81,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   oldPreferredContact?: string;
   oldPreferredContactMethodName?: string = '';
   oldFriendsOrFamilyContact?: FriendsOrFamilyContact;
+  workflowTypeCode:any;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private currentSessionSubscription !: Subscription;
@@ -154,6 +155,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private loadCurrentSession() {
     const sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.loaderService.show();
     this.workflowFacade.loadWorkFlowSessionData(sessionId);
     this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
@@ -1929,12 +1931,32 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+            else
+            {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
+        else
+        {
+          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
       }
     });
   }

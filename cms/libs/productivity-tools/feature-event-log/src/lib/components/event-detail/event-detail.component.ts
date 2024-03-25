@@ -18,7 +18,6 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 export class EventDetailComponent implements OnInit {
 
   @Output() public closeEventDetailsClickedEmitter = new EventEmitter<any>();
-  @Input() eventAttachmentTypeLov$: any;
   @Input() eventsdata$: any;
   @Input() entityType: any;
   @Input() entityId: any;
@@ -26,7 +25,7 @@ export class EventDetailComponent implements OnInit {
   @Input() parentEventLogId: any;
   @Input() eventList : any
   @Input() isSubEvent : any;
-
+  @Input() eventAttachmentTypeList : any
   eventForm!: FormGroup;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   attachmentNoteMaxLength = 100;
@@ -121,7 +120,8 @@ export class EventDetailComponent implements OnInit {
         attachmentTypeCode : this.eventForm.controls['attachmentType'].value,
         attachment : this.attachmentFile,
         attachmentNote :  this.eventForm.controls['attachmentNote'].value,
-        entityId : this.entityId ? this.entityId.toString() : null,
+        sourceEntityId : this.entityId ? this.entityId.toString() : null,
+        sourceEntityTypeCode: this.entityType,
         entityTypeCode: this.entityType,
         parentEventLogId : this.parentEventLogId ? this.parentEventLogId : null,
         isSubEvent : this.isSubEvent

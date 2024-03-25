@@ -1,0 +1,194 @@
+<section class="table-filter-section mat-form-no-b-space">
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" aria-label="All Columns"
+        [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc" valueField="columnName" [valuePrimitive]="true"
+        [(ngModel)]="selectedSearchColumn" [data]="searchColumnList" (valueChange)="searchColumnChangeHandler($event)">
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
+    <kendo-floatinglabel text="Search">
+      <kendo-textbox aria-label="Search case" [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)"
+        [clearButton]="true" rounded="medium" [fillMode]="formUiStyle.inputFillMode">
+      </kendo-textbox>
+
+    </kendo-floatinglabel>
+  </span>
+</section>
+
+<h3>Support Group</h3>
+<p>Select a Group in the table below to view assigned Users and Notification Categories</p>
+
+<div class="app-c-table">
+  <kendo-grid [resizable]="true" [loading]="(supportGroupListsLoader$  | async) === true" [pageSize]="state.take"
+    [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
+    [filter]="state.filter" [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
+    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
+    (columnReorder)="onColumnReorder($event)" [data]="gridSupportGroupData$ | async" [selectable]="selectableSettings" (selectionChange)="selectedRowChange($event)" [rowSelected]="isRowSelected">
+    <kendo-grid-column field="groupCode" title="Interface" [width]="100" [sortable]="true" >
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="groupName" title="Group Name" [width]="120">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="groupDesc" title="Group Desciption" [width]="140">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="userPerGroup" title="User Per Group" [width]="100">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="activeFlag" title="Status" [width]="80">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-dropdownlist [data]="['Active', 'Inactive']" [(ngModel)]="statusFilter"
+          (valueChange)="dropdownFilterChange('activeFlag',$event, filterService)">
+        </kendo-dropdownlist>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="lastModificationTime" title="Last Modified" [width]="80">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.lastModificationTime | date: 'MM/dd/yyyy'}}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter [field]="'lastModificationTime'" [filter]="filter" [filterService]="filterService">
+        </common-grid-cell-date-range-filter>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="70" class="text-center" [columnMenu]="false" [sortable]="false" [filterable]="false">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <common-user-photo-icon  
+        [userId]="dataItem.lastModifierId" 
+        [userFirstName]="dataItem.userFirstName"
+        [userLastName]="dataItem.userLastName"
+        [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+        [linkType]="'profileIcon'"
+        [userPhotos$]="supportGroupProfilePhoto$"></common-user-photo-icon>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+  
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="notificationGroupId" title="Option" [sticky]="true" [columnMenu]="false" [sortable]="false"  [width]="50"
+      class="text-center">
+      <ng-template kendoGridCellTemplate let-dataItem let-notificationSupportId="field">
+        <kendo-dropdownbutton [data]="gridMoreActionsSupport"
+          class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
+          aria-label="more actions" title="More option"
+          [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+          <span class="material-icons" aria-label="More option"> more_vert </span>
+          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem
+            let-groupId="notificationGroupId">
+            <ng-container>
+              <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+              [disabled]="(dataItem.activeFlag === 'Inactive' && buttondataItem.text === 'Deactivate') || (dataItem.activeFlag === 'Active' && buttondataItem.text === 'Re-activate')"
+                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                <label> {{ buttondataItem.text }} </label>
+              </button>
+            </ng-container>
+          </ng-template>
+        </kendo-dropdownbutton>
+      </ng-template>
+    </kendo-grid-column>
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+      let-currentPage="currentPage">
+      <div class="grid-custom-paginationtemplates d-flex">
+        <div class="d-flex align-items-center">
+          <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+            [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+          <kendo-pager-info> </kendo-pager-info>
+          <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+          </kendo-grid-messages>
+
+        </div>
+        <div class="d-flex">
+          <kendo-pager-input></kendo-pager-input>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+    </ng-template>
+    <!-- grid No data Template -->
+    <ng-template kendoGridNoRecordsTemplate>
+      <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+      </div>
+      <p>There is no data to display.</p>
+    </ng-template>
+  </kendo-grid>
+</div>
+
+
+
+<div class="mt-1">
+
+  <button kendoButton class="mr-1" [primary]="true" aria-label="Group" icon="add" (click)="onGroupDetailsClicked()">
+    Group</button>
+</div>
+<kendo-dialog *ngIf="isGroupDetailPopup" (close)="onCloseGroupDetailPopupClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar>{{ isEditSupportGroup ? 'Edit Support Group' : 'Add Support Group' }} </kendo-dialog-titlebar>
+  <support-group-detail [isEditSupportGroup]="isEditSupportGroup" [selectedSupportGroup]="selectedSupportGroup"
+    [interfaceSupportGroupLov]="interfaceSupportGroupLov" (addSupportGroupEvent)="addSupportGroup($event)"
+    (editSupportGroupEvent)="editSupportGroup($event)" (close)="onCloseGroupDetailPopupClicked()">
+  </support-group-detail>
+</kendo-dialog>
+
+
+<kendo-dialog *ngIf="isSupportGroupDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeactivateClicked()"> Deactivate Confirmation
+  </kendo-dialog-titlebar>
+  <deactivate-support-group (deactivateConfimEvent)="handleSupportGroupDeactive($event)"
+    (close)="onCloseSupportGroupDeactivateClicked()"></deactivate-support-group>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isSupportGroupReactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupReactivateClicked()"> Re-activate Confirmation
+  </kendo-dialog-titlebar>
+  <reactivate-support-group (reactivateConfimEvent)="handleSupportGroupReactive($event)"
+    (close)="onCloseSupportGroupReactivateClicked()"></reactivate-support-group>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isSupportGroupDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()"> Delete Confirmation</kendo-dialog-titlebar>
+  <remove-support-group (deleteConfimEvent)="handleSupportGroupDelete($event)"
+    (close)="onCloseSupportGroupDeleteClicked()"></remove-support-group>
+</kendo-dialog>

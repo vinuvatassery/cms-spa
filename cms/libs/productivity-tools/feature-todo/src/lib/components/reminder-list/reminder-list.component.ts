@@ -13,18 +13,20 @@ import {
 } from '@angular/core';
 /** External libraries **/
 import { SnackBar, ToDoEntityTypeCode } from '@cms/shared/ui-common';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** Facades **/ 
-import { LoaderService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { AlertTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
+import { AlertTypeCode, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FormControl } from '@angular/forms';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
@@ -45,6 +47,7 @@ export class ReminderListComponent implements  OnInit{
    @Input()todoGrid$ : any;
   @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   sort: SortDescriptor[] = [{
     field: this.sortColumn,
     dir: 'asc',
@@ -73,8 +76,15 @@ export class ReminderListComponent implements  OnInit{
   clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
+  searchProviderSubject = this.financialVendorFacade.searchProviderSubject;
+  notificationList$ = this.notificationFacade.notificationList$;
+  getTodo$ = this.Todofacade.getTodo$
   todoItemList: any[] = [];
   selectedAlertId:string="";
+  isEdit = false;
+  isDelete = false;
+  searchTerm = new FormControl();
+  reminderCrudText ="Create New"
   public toDoGridState!: State;
 
   public reminderActions = [
@@ -109,32 +119,75 @@ export class ReminderListComponent implements  OnInit{
   private readonly router: Router,
     private cdr : ChangeDetectorRef,
     private lovFacade : LovFacade,
+    private readonly configurationProvider: ConfigurationProvider,
+    public readonly  intl: IntlService,
     private financialVendorFacade : FinancialVendorFacade,
+    public notificationFacade: NotificationFacade, 
     private financialRefundFacade : FinancialVendorRefundFacade
   ) {}
   ngOnInit(): void {
+  this.InitializeData()
+  this.searchTerm.valueChanges.subscribe((value) => {
+  const containsOnlyNumbers = /^\d+$/.test(value);
+  const tempDate = new Date(value);
+  const isDateFormat = !isNaN(tempDate.getTime());
+  if (containsOnlyNumbers) 
+  { 
+      this.onListenSearchTerm(value);
+  } 
+  else if (isDateFormat) 
+  {
+      const formattedDate = this.intl.formatDate(tempDate, this.dateFormat);
+      this.onListenSearchTerm(formattedDate);
+  }
+ else 
+ {
+      this.onListenSearchTerm(value?.trim());
+  }});
+  }
+
+  InitializeData(){
     this.toDoGridState = {
       skip: 0,
       take: 10,
       sort: this.sort,
     };
     this.loadTodoGrid();
-    this.loadAlertGrid$.subscribe((data: any) => {
+    this.loadAlertGrid$?.subscribe((data: any) => {
       this.loadTodoGrid();
     });
   }
+
   /** Internal event methods **/
   onReminderDoneClicked() { 
     this.ReminderEventClicked.emit();
   }
+  onloadReminderAndNotificationsGrid(){
+    this.notificationFacade.loadNotificationsAndReminders();
+  }
+
+  onGetTodoItemData(event:any){
+    this.Todofacade.getTodoItem(event);
+  }
 
   onNewReminderClosed(result: any) {
+    this.remainderIsFor = ''
+    this.newReminderDetailsDialog.close();
+    this.isEdit = false;
+    this.isDelete = false;
+    this.reminderCrudText ="Create New"
     if (result) {
-      this.remainderIsFor = ''
-      this.newReminderDetailsDialog.close();
+    
+      this.onloadReminderAndNotificationsGrid();
     }
   }
 
+  onDeleteReminderAlert(event:any){
+    this.isDelete = true;
+    this.reminderCrudText ="Delete"
+    this.selectedAlertId = event;
+    this.onNewReminderOpenClicked(this.reminderDetailsTemplate)
+  }
   getReminderDetailsLov(){
     this.lovFacade.getEntityTypeCodeLov()
   }
@@ -201,8 +254,8 @@ export class ReminderListComponent implements  OnInit{
         Filter: "[]",
       };
         this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
-        this.todoGrid$.subscribe((todoItemList : any) =>{
-          this.todoItemList = todoItemList?.items ? todoItemList?.items : [];
+        this.todoGrid$?.subscribe((todoItemList : any) =>{
+          this.todoItemList = todoItemList?.data ? todoItemList?.data : [];
           var currentDate = new Date();
           this.todoItemList = this.todoItemList.filter(todoItem => new Date(todoItem.alertDueDate) <= new Date(currentDate.setDate(currentDate.getDate() +30)));
           this.todoItemList.forEach((todoItem:any)=>{
@@ -251,6 +304,14 @@ export class ReminderListComponent implements  OnInit{
           this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
         }
     }
+  }
+
+
+  onEditReminder(event:any){
+    this.isEdit = true;
+    this.reminderCrudText ="Edit"
+    this.selectedAlertId = event;
+    this.onNewReminderOpenClicked(this.reminderDetailsTemplate)
   }
  
   onOpenTodoDetailsClicked() {
@@ -318,8 +379,14 @@ export class ReminderListComponent implements  OnInit{
     }
   }
 
-
-
+  onListenSearchTerm(searchedValue:any){
+    if(searchedValue){
+      this.notificationFacade.loadNotificatioBySearchText(searchedValue);
+    }else {
+      this.onloadReminderAndNotificationsGrid();
+    }
+    
+  }
   remainderFor(event:any){
     this.remainderIsFor = event
   }

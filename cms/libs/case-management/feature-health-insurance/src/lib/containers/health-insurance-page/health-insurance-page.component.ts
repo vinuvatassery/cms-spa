@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType, GridFilterParam } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType, GridFilterParam, WorkflowTypeCode } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LovFacade } from '@cms/system-config/domain';
@@ -39,6 +39,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   priorityCodeType$ = this.lovFacade.priorityCodeType$;
+  workflowTypeCode:any;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -297,6 +298,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   loadSessionData() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
@@ -466,12 +468,32 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+            else
+            {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
+        else
+        {
+          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
       }
     });
   }

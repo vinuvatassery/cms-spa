@@ -1,14 +1,15 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 /** Facades **/
-import { ClientEligibilityFacade, AcceptedApplication, GroupCode, CaseStatusCode, EligibilityRequestType, CaseFacade } from '@cms/case-management/domain';
+import { ClientEligibilityFacade, AcceptedApplication, GroupCode, CaseStatusCode, EligibilityRequestType, CaseFacade, WorkflowFacade, WorkflowTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade, UserManagementFacade, UserDefaultRoles } from '@cms/system-config/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-accept-application',
@@ -38,6 +39,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
   @Input() isEdit!: boolean;
   @Input() isCerForm!: boolean;
   btnDisabled = false;
+  workflowTypeCode:any;
   dayOptions: Intl.DateTimeFormatOptions = {
     day: 'numeric',
   };
@@ -52,7 +54,9 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
     private readonly configurationProvider : ConfigurationProvider,
     private readonly loginUserFacade : UserManagementFacade,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly workflowFacade: WorkflowFacade,
+    private route: ActivatedRoute,
   ) {}
 
   /** Lifecycle hooks **/
@@ -69,6 +73,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
     this.loadLovs();
     this.loaddata();
     this.setGroupCodes();
+    this.loadSessionData();
   }
 
   ngOnDestroy(): void {
@@ -78,6 +83,10 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
   /** Private methods **/
   private loadDdlAcceptApplications() {
     this.clientEligibilityFacade.loadDdlAcceptApplications();
+  }
+
+  private loadSessionData(){
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
   }
 
   private setGroupCodes(){
@@ -121,9 +130,19 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
             'Eligibility added successfully.'
           );
           this.loaderService.hide();
-          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
+          this.workflowFacade.sendLetterEmailFlag = StatusFlag.Yes;
+          this.workflowFacade.caseStatus = CaseStatusCode.accept;
+          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
+          else
+          {
+            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
         }
         else
         {

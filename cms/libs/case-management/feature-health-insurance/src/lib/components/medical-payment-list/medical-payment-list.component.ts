@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 
@@ -9,7 +9,7 @@ import { Subject, Subscription } from 'rxjs';
 /** Facades **/
 import { HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
@@ -44,7 +44,6 @@ export class MedicalPaymentListComponent implements OnInit {
   private triggeredPremiumPaymentSubscription!: Subscription;
   insurancePremiumProfilePhotoSubject = new Subject();
   insurancePremiumProfilePhotoSubscription = new Subscription();
-  //insurancePremiumProfilePhoto$ = this.insurancePolicyFacade.insurancePremiumProfilePhotoSubject;
 
   /** Constructor **/
 

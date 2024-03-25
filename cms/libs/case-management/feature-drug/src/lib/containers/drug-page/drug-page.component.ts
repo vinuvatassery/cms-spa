@@ -5,12 +5,12 @@ import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoi
 /** Facades **/
 import {
   DrugPharmacyFacade, WorkflowFacade, PrescriptionDrugFacade, PrescriptionDrug,
-  CompletionChecklist, NavigationType
+  CompletionChecklist, NavigationType, WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 
 @Component({
@@ -43,6 +43,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   showPharmacySection = true;
   isCerText=false;
   prevClientCaseEligibilityId:any;
+  workflowTypeCode:any;
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -60,6 +61,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly prescriptionDrugFacade: PrescriptionDrugFacade,
     private changeDetector: ChangeDetectorRef,
+    private readonly router: Router,
   ) {
 
   }
@@ -221,6 +223,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadSessionData() {
     this.loaderService.show();
     this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId);
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$
       .pipe(first((sessionData) => sessionData.sessionData != null))
@@ -391,12 +394,32 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.save().subscribe((response: any) => {
             if (response) {
               this.loaderService.hide();
-              this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
+              else
+              {
+                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
             }
           })
         }
         else {
-          this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
+          else
+          {
+            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
         }
       });
   }

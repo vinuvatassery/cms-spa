@@ -1,13 +1,8 @@
-<kendo-dialog-titlebar (close)="onCloseSendEmailClicked()">Send New Email </kendo-dialog-titlebar>
-<kendo-dialog
-  *ngIf="isOpenSendEmailClicked"
-  (close)="onCloseSendEmailClicked()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np"
-  title="Send New Email "
->
+ 
+<kendo-dialog-titlebar  (close)="onCloseSendEmailClicked()"> {{templateHeader}} </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
-      Select an existing template or draft a custom email.
+      {{informationalText}}
     </p>
     <div class="flex-row pb-2">
       <div class="flex-col">
@@ -17,6 +12,8 @@
             [data]="ddlTemplates"
             textField="description"
             valueField="documentTemplateId"
+            [(ngModel)]="documentTemplate"
+            [disabled]="templateDrpDisable"
             (valueChange)="handleDdlEmailValueChange($event)"
           >
           </kendo-dropdownlist>
@@ -35,18 +32,48 @@
           ></kendo-multiselect>
           </kendo-floatinglabel>
         </div>
-        <div class="flex-col">
+        <div class="flex-col" [style]="{'display': 'flex'}">
           <kendo-floatinglabel text="CC" class="inline-search-loader" *ngIf="isCCDropdownVisible">
             <kendo-multiselect
           [fillMode]="formUiStyle.dropDownFillMode"
           [data]="ccEmail"
           [(ngModel)]="selectedCCEmail"
+          [filterable]="true"
+          [allowCustom]="true"
           aria-label="cc of email"
+          [clearButton]="false"
+          (valueChange)="onCCValueChange($event)"
+          ></kendo-multiselect>
+          </kendo-floatinglabel>
+          <kendo-floatinglabel text="CC" *ngIf="isCCDropdownVisible===false">
+            <kendo-textbox  placeholder="CC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+          </kendo-floatinglabel>
+          <button [style]="{'height': 'fit-content','margin': 'auto','margin-top': '1.5rem','margin-left': '1rem'}"
+          kendoButton
+          [primary]="true"
+          (click)="onBccEmailClicked()"
+          aria-label="BCC of email"
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+        >
+         BCC
+        </button>
+        </div>
+        <div class="flex-col" [style]="{'display': 'flex'}">
+          <kendo-floatinglabel text="BCC" class="inline-search-loader" *ngIf="!isBCCDropdownVisible">
+            <kendo-multiselect
+          [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="bccEmail"
+          [(ngModel)]="selectedBccEmail"
+          [filterable]="true"
+          [allowCustom]="true"
+          [clearButton]="false"
+          aria-label="bcc of email"
+          (valueChange)="onBCCValueChange($event)"
           ></kendo-multiselect>
           </kendo-floatinglabel>
 
-          <kendo-floatinglabel text="CC" *ngIf="isCCDropdownVisible===false">
-            <kendo-textbox  placeholder="CC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+          <kendo-floatinglabel text="BCC" *ngIf="isCCDropdownVisible===false">
+            <kendo-textbox  placeholder="BCC" [(ngModel)]="selectedBccEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col">
@@ -62,14 +89,14 @@
           </p>
         </div>
         <div class="flex-col  ">
-          <case-management-email-editor
-          [dataEvent]="emailEditorValueEvent"
-          [currentValue]="currentEmailData"
+          <case-management-email-editor  
+          [selectedTemplate]="selectedTemplate" 
+          [selectedTemplateContent]="selectedTemplateContent"           
           [clientCaseEligibilityId]="clientCaseEligibilityId"
-          [clientId]="clientId"
+          [clientId]="entityId"
           [communicationTypeCode]="communicationEmailTypeCode"
-          (cerEmailAttachments)="cerEmailAttachments($event)"
-          (editorValue)="handleEmailEditor($event)"
+          (editorValueChangeEvent) ="editorValueChange($event)"
+          (cerEmailAttachments)="cerEmailAttachments($event)"          
           class="editor-lg-email"
           ></case-management-email-editor>
         </div>
@@ -105,6 +132,7 @@
           look="outline"
           (click)="onCloseSendEmailClicked()"
           aria-label="Cancel"
+          *ngIf ="cancelDisplay"
         >
           Cancel
         </button>
@@ -120,7 +148,7 @@
     </div>
   </kendo-dialog-actions>
 
-<!-- Save for Latter (Email Draft) Modal -->
+<!-- Save for Later (Email Draft) Modal -->
 <kendo-dialog (close)="onCloseSaveForLaterClicked()"
   *ngIf="isShowSaveForLaterPopupClicked"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
@@ -149,14 +177,17 @@
 </kendo-dialog>
 
 <!-- Email Preview Modal -->
-<kendo-dialog (close)="onClosePreviewEmail()"
+<kendo-dialog
   *ngIf="isShowPreviewEmailPopupClicked"
   (close)="onClosePreviewEmail()"
   class="app-c-modal app-c-modal-lg app-c-modal-np no-title-actions"
   title="Preview Email"
 >
   <case-management-preview-email
-    [emailContent]="emailContentValue" [paperlessFlag]="paperlessFlag"
+    [emailContent]="emailContentValue"
+    [paperlessFlag]="paperlessFlag"
+    [attachmentCount]="attachmentCount"
+    (closeEvent)="onClosePreviewEmail()"
   ></case-management-preview-email>
   <kendo-dialog-actions>
     <div class="justify-content-between bigbtn-wrapper">
@@ -186,14 +217,14 @@
   </kendo-dialog-actions>
 </kendo-dialog>
 
-<!-- Sene Email ConfirmationModal -->
+<!-- Send Email Confirmation Modal -->
 <kendo-dialog
   *ngIf="isShowSendEmailConfirmationPopupClicked"
   (close)="onSendEmailDailougeConfirmationClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Send Email?"
 >  <section class="k-dialog-body">
-  <p class="text-muted mb-2">The action cannot be undone</p>
+  <p class="text-muted mb-2">This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal</p>
 </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -213,9 +244,9 @@
           kendoButton
           [primary]="true"
           (click)="onSendEmailConfirmationDialogClicked('Print')"
-          aria-label="OK"
+          aria-label="Send Email"
         >
-          OK
+        SEND EMAIL
         </button>
       </div>
     </div>

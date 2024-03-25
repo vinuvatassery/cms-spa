@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import {  ReminderFacade } from '@cms/productivity-tools/domain';
+import {  NotificationFacade, ReminderFacade } from '@cms/productivity-tools/domain';
 import {  SnackBarNotificationType } from '@cms/shared/util-core'; 
 
 @Component({
@@ -9,8 +9,10 @@ import {  SnackBarNotificationType } from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationAndReminderPageComponent {
+  notificationList$ = this.notificationFacade.notificationList$;
   constructor(
     private reminderFacade: ReminderFacade,
+    public notificationFacade: NotificationFacade, 
   ) {}
 
   onReminderDoneClicked(event:any) {
@@ -18,5 +20,16 @@ export class NotificationAndReminderPageComponent {
       SnackBarNotificationType.SUCCESS,
       'Item  updated to Done successfully'
     );
+  }
+  onloadReminderAndNotificationsGrid(){
+    this.notificationFacade.loadNotificationsAndReminders();
+  }
+  onListenSearchTerm(searchedValue:any){
+    if(searchedValue){
+      this.notificationFacade.loadNotificatioBySearchText(searchedValue);
+    }else {
+      this.onloadReminderAndNotificationsGrid();
+    }
+    
   }
 }

@@ -8,7 +8,7 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { Observable } from 'rxjs/internal/Observable';
 
 /** Internal Libraries **/
-import { ScreenType, WorkFlowProgress } from '@cms/case-management/domain';
+import { ScreenType, WorkFlowProgress, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService, LoggingService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 
@@ -41,7 +41,8 @@ export class CaseNavigationComponent implements OnInit {
     private readonly router: Router,
     private readonly actRoute: ActivatedRoute,
     private readonly loaderService: LoaderService,
-    private readonly loggingService: LoggingService) { }
+    private readonly loggingService: LoggingService,
+    private readonly workflowFacade: WorkflowFacade) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -128,6 +129,14 @@ export class CaseNavigationComponent implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe({
         next: () => {
+          if(this.router.url.includes('send-letter')){
+            this.isSendLetterProfileOpenedSubject.next(true);
+            this.workflowFacade.showSplitButtonSubject.next(false);
+          }
+          else{
+            this.isSendLetterProfileOpenedSubject.next(false);
+            this.workflowFacade.showSplitButtonSubject.next(true);
+          }
           if (this.isApplicationReviewOpened === true) {
             const routeArray = this.router.url?.substring(0, this.router.url?.indexOf('?') !== -1 ? this.router.url?.indexOf('?') : this.router.url?.length).split('/');
             const isNotNavigatedAwayFromReview = routeArray?.findIndex((i: any) => i === ScreenType.Eligibility || i === ScreenType.SendLetter) !== -1;

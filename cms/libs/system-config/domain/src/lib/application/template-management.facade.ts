@@ -44,6 +44,7 @@ export class TemplateManagementFacade {
     field: this.sortValueLayoutTemplates,
   }];
  
+
   /** Private properties **/
   private templateSubject = new BehaviorSubject<Template[]>([]);
   private clientNotificationDefaultsListsSubject = new BehaviorSubject<any>([]);

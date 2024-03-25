@@ -40,8 +40,18 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     todoGrid$ = this.todoFacade.todoGrid$
     loadAlertGrid$ = this.todoFacade.loadAlertGrid$;
     selectedAlertId! :any
+    isEdit = false;
+    isDelete = false;
     @ViewChild('todoList', { static: false })
     todoList!: TodoListComponent;
+    @ViewChild('newReminderTemplate', { read: TemplateRef })
+    newReminderTemplate!: TemplateRef<any>;
+    @ViewChild('deleteTodoTemplate', { read: TemplateRef })
+    deleteTodoTemplateRef!: TemplateRef<any>;
+    deleteToDoDialog!:any
+    isToDODeleteActionOpen = false
+    reminderDialog :any
+    crudText ="Create New"
     constructor( private route: ActivatedRoute,
       public readonly todoFacade: TodoFacade,
       public lovFacade : LovFacade,
@@ -64,21 +74,33 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
             this.isShowTodoReminders = false
             this.showRemindersList = true
         }
+        this.todoFacade.curdAlert$.subscribe(res =>{
+          if(this.clientId){
+          this.todoFacade.todoAndRemindersByClient(this.clientId)
+          }
+
+        })
       }
       closeAction()
       {
         this.fabMenuFacade.isShownTodoReminders = !this.fabMenuFacade.isShownTodoReminders;
       }
 
+      editTodoItem(event:any){
+      
+      }
       onloadTodoGrid(payload: any, alertTypeCode:any){
         this.todoFacade.loadAlerts(payload,alertTypeCode.alertType);
       }
       onMarkAlertDoneGrid(selectedAlertId: any){
         this.todoFacade.markAlertAsDone(selectedAlertId);
       }
+
       onDeleteAlertGrid(selectedAlertId: any){
         this.todoFacade.deleteAlert(selectedAlertId);
+     
       }
+      
       onOpenTodoClicked(alertId:any ,template: TemplateRef<unknown>): void {
         this.selectedAlertId = alertId;
          this.todoDetailsDialog = this.dialogService.open({
@@ -87,14 +109,23 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
          });
          this.isToDODetailsActionOpen = true;
        }
+
        onCloseTodoClicked(result: any) {
+        this.isEdit = false;
+        this.isDelete = false;
         if (result) {
           this.isToDODetailsActionOpen = false;
-          this.todoDetailsDialog.close();
+          if(this.clientId){
+          this.todoFacade.todoAndRemindersByClient(this.clientId)
+          }
         }
+        this.todoDetailsDialog.close();
+
       }
       loadTodoList(){
-        this.todoList.initilizeGridRefinersAndGrid()
+        if(this.clientId){
+        this.todoFacade.todoAndRemindersByClient(this.clientId)
+        }
        }
        searchProvider(data:any){
         this.financialVendorFacade.searchAllProvider(data);
@@ -115,4 +146,52 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
         this.lovFacade.getFrequencyTypeLov()
         this.lovFacade.getEntityTypeCodeLov()
       }
+
+      onReminderOpenClicked(event:any) {
+        this.selectedAlertId = event.alertId;
+        if(event.type =='edit'){
+          this.crudText ="Edit"
+        }
+        if(event.type =='delete'){
+          this.crudText ="Delete"
+        }
+        this.isEdit = event.type == 'edit'
+        this.isDelete = event.type == 'delete'
+        this.reminderDialog = this.dialogService.open({
+          content: this.newReminderTemplate,
+          cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+        });
+      
+    }
+
+    onNewReminderClosed(){
+      this.isDelete = false;
+      this.isEdit = false;
+      this.crudText ="Create New"
+     this.reminderDialog.close()
+    }
+
+    onDeleteToDoClicked(event:any): void {
+      this.selectedAlertId = event;
+      this.deleteToDoDialog = this.dialogService.open({
+        content: this.deleteTodoTemplateRef,
+        cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      });
+    }
+
+    onCloseDeleteToDoClicked(result: any) {
+      if (result) {
+        this.isToDODeleteActionOpen = false;
+        this.deleteToDoDialog.close();
+      }
+    }
+    onConfirmDeleteToDOClicked(result: any) 
+    {
+      if (result) {
+        this.isToDODeleteActionOpen = false;
+        this.deleteToDoDialog.close();
+        this.onDeleteAlertGrid(this.selectedAlertId);
+      }
+    }
+
   }

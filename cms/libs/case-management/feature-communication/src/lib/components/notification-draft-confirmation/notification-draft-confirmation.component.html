@@ -1,0 +1,18 @@
+<div>
+    <kendo-dialog-titlebar (close)="closeDraftDailogCloseClicked()"> Continue Editing? </kendo-dialog-titlebar>
+    <section class="k-dialog-body break-word">
+        <p class="text-muted mb-2">A draft {{communicationTypeCode}} already exists.<br>
+            Click 'NEW {{buttonText}}'to discard the draft and start a new {{communicationTypeCode}}.<br>
+            Click 'CONTINUE' to open the saved draft.</p>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDraftDailogCloseClicked()">
+            Cancel </button>
+            <button kendoButton class="k-primary-button" [primary]="true" aria-label="Remove" (click)="openNewNotificationClicked()">New {{buttonText}} </button>
+            <button kendoButton class="k-primary-button" [primary]="true" aria-label="Remove" (click)="continueWithDraftClicked()">Continue </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+  </div>

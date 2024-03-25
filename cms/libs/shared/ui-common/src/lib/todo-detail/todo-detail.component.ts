@@ -49,6 +49,7 @@ export class TodoDetailComponent implements OnInit {
   @Output() getTodoItemsLov = new EventEmitter();
   @Input() searchProviderSubject! : Subject<any>
   @Input() clientSubject! : Subject<any>
+  @Output() onDeleteAlertClicked = new EventEmitter()
   showClientSearchInputLoader = false
   placeholderText =""
   vendorPlaceHolderText = "Search for Vendor Name or TIN";
@@ -219,15 +220,15 @@ export class TodoDetailComponent implements OnInit {
     this.tareaCustomTodoCharactersCount = event.length;
     this.tareaCustomTodoCounter = `${this.tareaCustomTodoCharactersCount}/${this.tareaCustomTodoMaxLength}`;
   }
-  closeTodoDetailsClicked() {
-    this.isModalTodoDetailsCloseClicked.emit(true);
+  closeTodoDetailsClicked(event:any) {
+    this.isModalTodoDetailsCloseClicked.emit(event);
   }
 
   CreateToDoItem(){
     this.createTodo$.subscribe(res =>{
       if(res){
       this.loadToDoSearch()
-      this.closeTodoDetailsClicked()
+      this.closeTodoDetailsClicked(true)
       }
     })
     let entityTypeCode ='';
@@ -252,8 +253,7 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     const payload ={
       alertName :  this.todoDetailsForm.controls['title'].value,
       alertDueDate : dueDate,
-      alertEndDate : endDate,
-      alertId :    this.alertId,
+      alertEndDate : endDate,  
       alertDesc : this.todoDetailsForm.controls['alertDesc'].value,
       entityTypeCode : entityTypeCode,
       entityId :entityId ,
@@ -263,12 +263,22 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     }
 
     if(!this.isEdit){
+      
       this.onTodoItemCreateClick.emit(payload)
     }
     else{
-    this.onUpdateTodoItemClick.emit(payload);
+      const editPayload ={
+        ...payload,
+        alertId :    this.alertId,
+      }
+    this.onUpdateTodoItemClick.emit(editPayload);
     }
   }
+
+  
+  delete(){
+    this.onDeleteAlertClicked.emit(this.alertId)
+   }
 
   endDateValidation(){
     const endDate = this.todoDetailsForm.controls['endDate'].value;
@@ -279,4 +289,5 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       return;
     }
   }
+
 }

@@ -98,12 +98,11 @@ export class LovFacade {
   private refundTypeSubject = new Subject<any>();
   private batchStatusSubject = new Subject<any>();
   private lovProofOfIncomeByTypeSubject = new BehaviorSubject<Lov[]>([]);
-
+  private eventAttachmentTypeLovSubject = new Subject<any>();
   private interfaceExceptionSubject = new BehaviorSubject<Lov[]>([]);
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
-  private eventAttachmentTypeLovSubject = new BehaviorSubject<Lov[]>([]);
-
+  private interfaceSupportGroupSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
@@ -183,8 +182,8 @@ export class LovFacade {
   interfaceExceptionLov$ = this.interfaceExceptionSubject.asObservable();
   BatchInterfaceStatusLov$ = this.BatchInterfaceStatusSubject.asObservable();
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
+  interfaceSupportGroupLov$ = this.interfaceSupportGroupSubject.asObservable();
   eventAttachmentTypeLov$ = this.eventAttachmentTypeLovSubject.asObservable();
-
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -217,6 +216,16 @@ export class LovFacade {
     });
   }
 
+  // getEventAttachmentTypeLov(): void {
+  //   this.lovDataService.getLovsbyType(LovType.EventAttachemntType).subscribe({
+  //     next: (lovResponse) => {
+  //       this.eventAttachmentTypeLovSubject.next(lovResponse);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+  //     }
+  //   });
+  // }
   getRelationShipsLovs(): void {
     this.lovDataService.getLovsbyType(LovType.RelationshipCode).subscribe({
       next: (relationsResponse) => {
@@ -249,6 +258,7 @@ export class LovFacade {
     });
 
   }
+  
   getPronounLovs(): void {
     this.lovDataService.getLovsbyType(LovType.Pronoun).subscribe({
       next: (lovPronounResponse) => {
@@ -476,7 +486,7 @@ export class LovFacade {
   getCaseStatusLovs(): void {
     this.lovDataService.getLovsbyType(LovType.CaseStatus).subscribe({
       next: (lovResponse) => {
-        this.lovCaseStatusTypeSubject.next(lovResponse);
+         this.lovCaseStatusTypeSubject.next(lovResponse);
         const acceptedCaseStatusCodes = Object.values(AcceptedCaseStatusCode)
         const filteredLov = lovResponse.filter((item: any) => acceptedCaseStatusCodes.includes(item.lovCode))
         filteredLov.forEach((item: any) => {
@@ -870,7 +880,16 @@ export class LovFacade {
       },
     });
   }
-
+  // getFrequencyTypeLov(){
+  //   this.lovDataService.getLovsbyType(LovType.AlertFrequencyCode).subscribe({
+  //     next: (lovResponse) => {
+  //       this.lovFrequencyTypeCodeSubject.next(lovResponse);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+  //     }
+  //   });
+  // }
   getServiceTypeLov() {
     this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
       next: (lovResponse) => {
@@ -923,6 +942,17 @@ export class LovFacade {
     this.lovDataService.getLovsbyType(LovType.BatchInterface).subscribe({
       next: (relationsResponse) => {
         this.batchInterfaceActivityLogSubject.next(relationsResponse);
+      },
+
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  getInterfaceSupportGroupLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.BatchInterface).subscribe({
+      next: (relationsResponse) => {
+        this.interfaceSupportGroupSubject.next(relationsResponse);
       },
 
       error: (err) => {

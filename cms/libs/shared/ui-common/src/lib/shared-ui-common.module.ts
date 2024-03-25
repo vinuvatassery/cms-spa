@@ -51,6 +51,8 @@ import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboar
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { GridNoRecordsComponent } from './grid-no-records/grid-no-records.component';
 import { ReadMoreComponent } from './read-more/read-more.component';
+import { AlertBannerComponent } from './alert-banner/alert-banner.component';
+import { DeleteTodoConfirmationComponent } from './delete-todo-confirmation/delete-todo-confirmation.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -96,6 +98,8 @@ import { ReadMoreComponent } from './read-more/read-more.component';
     TodoDetailComponent,
     GridNoRecordsComponent,
     ReadMoreComponent,
+    AlertBannerComponent,
+    DeleteTodoConfirmationComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -140,6 +144,8 @@ import { ReadMoreComponent } from './read-more/read-more.component';
     TodoDetailComponent,
     GridNoRecordsComponent, 
     ReadMoreComponent, 
+    AlertBannerComponent,
+    DeleteTodoConfirmationComponent
   ],
 })
 export class SharedUiCommonModule {}

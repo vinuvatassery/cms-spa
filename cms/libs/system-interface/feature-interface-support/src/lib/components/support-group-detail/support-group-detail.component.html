@@ -1,0 +1,75 @@
+<form class="k-form" [formGroup]="notiificationGroupForm">
+
+    <section class="k-dialog-body">
+        <p class="text-muted">
+            Adds a user to the Group list for the selected role
+        </p>
+        <div class="flex-row">
+
+            <div class="flex-col">
+                <kendo-floatinglabel text="Interface">
+                    <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
+                        valueField="lovDesc" [data]="interfaceSupportGroupLov | async" aria-label="State"  
+                        [valuePrimitive]="true" formControlName="groupCode"> </kendo-dropdownlist>
+                        <kendo-formerror *ngIf="(!notiificationGroupForm.controls['groupCode'].valid) && notiificationGroupForm.controls['groupCode'].hasError('required') &&isSubmitted">
+                            Interface must be selected</kendo-formerror>
+                </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col ">
+                <kendo-floatinglabel text="Group Name">
+                    <div>
+                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [maxlength]="tAreaCessationMaxLength"
+                            resizable="none" formControlName="groupName" aria-label="Group Name" [disabled]="true"
+                            class="form-control table-text-area">
+                        </kendo-textbox>
+                        <div class="flex-row">
+                            <div class="flex-col flex-col-6">
+                                <kendo-formerror
+                                    *ngIf="(!notiificationGroupForm.controls['groupDesc'].valid && notiificationGroupForm.controls['groupDesc'].hasError('required')) && isSubmitted">
+                                    Group Name is required.
+                                </kendo-formerror>
+                            </div>
+                        </div>
+
+                    </div>
+                </kendo-floatinglabel>
+            </div>
+            <div class="flex-col ">
+                <kendo-floatinglabel text="Description">
+                    <div>
+                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode" resizable="none"
+                            formControlName="groupDesc" aria-label="Group Description"
+                            class="form-control table-text-area">
+                        </kendo-textbox>
+                        <div class="flex-row">
+                            <div class="flex-col flex-col-6">
+                                <kendo-formerror
+                                    *ngIf="(!notiificationGroupForm.controls['groupDesc'].valid && notiificationGroupForm.controls['groupDesc'].hasError('required')) && isSubmitted">
+                                    Description is required.
+                                </kendo-formerror>
+                            </div>
+                        </div>
+                    </div>
+
+                </kendo-floatinglabel>
+            </div>
+
+        </div>
+
+    </section>
+
+    <kendo-dialog-actions>
+        <div class="justify-content-between">
+            <div class="justify-content-end">
+                <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancelClick()">
+                    Cancel
+                </button>
+                <button kendoButton [primary]="true" aria-label="Add" (click)="addAndSaveSupportGroup()">
+                    {{ isEditSupportGroup ? 'Update' : 'Add' }}
+                </button>
+            </div>
+        </div>
+    </kendo-dialog-actions>
+
+</form>

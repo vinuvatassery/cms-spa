@@ -1,139 +1,141 @@
  
 <kendo-dialog-titlebar (close)="onCloseSendMessageClicked()">Send New SMS Text </kendo-dialog-titlebar>
-  <section class="k-dialog-body">
-    <p class="text-muted mb-1">
-      Select an existing template or draft custom text messages.
-    </p>
-    <div class="flex-row pb-2">
-      <div class="flex-col">
-        <kendo-floatinglabel text="SMS Template">
-          <kendo-dropdownlist
-          [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="ddlTemplates"
-            textField="value"
-            valueField="key"
-            (valueChange)="handleDdlTextMessageValueChange()"
-          >
-          </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col mb-2" *ngIf="isOpenMessageTemplate">
-        <kendo-floatinglabel
-          text="Send Messages to"
-          aria-label="send messages to" class="inline-search-loader"
+<section class="k-dialog-body">
+  <p class="text-muted mb-1">
+    Select an existing template or draft custom text messages.
+  </p>
+  <div class="flex-row pb-2">
+    <div class="flex-col">
+      <kendo-floatinglabel text="SMS Template">
+        <kendo-dropdownlist
+        [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="ddlTemplates"
+          textField="description"
+          valueField="documentTemplateId"
+          [(ngModel)]="documentTemplate"
+          (valueChange)="handleDdlTextMessageValueChange($event)"
         >
-        <span *ngIf="isShowToPhoneNumbersLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-          <kendo-dropdownlist
-          [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="phoneNumbers"
-            textField="formattedPhoneNbr"
-            valueField="phoneNbr"
-          >
-          </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col mb-2" *ngIf="isOpenMessageTemplate">
-        <case-management-text-message-editor></case-management-text-message-editor>
-      </div>
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
     </div>
-  </section>
-  <kendo-dialog-actions *ngIf="isOpenMessageTemplate">
-    <div class="justify-content-between bigbtn-wrapper">
-      <div class="w100">
-        <button
-          kendoButton
-          [primary]="true"
-          look="flat"
-          (click)="onSaveForLaterClicked()"
-          aria-label="Save for Later"
+    <div class="flex-col mb-2" *ngIf="isOpenMessageTemplate">
+      <kendo-floatinglabel
+        text="Send Messages to"
+        aria-label="send messages to" class="inline-search-loader"
+      >
+      <span *ngIf="isShowToPhoneNumbersLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <kendo-dropdownlist
+        [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="phoneNumbers"
+          textField="formattedPhoneNbr"
+          valueField="phoneNbr"
+          [(ngModel)]="messageRecipient"
         >
-          Save for Later
-        </button>
-      </div>
-      <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          (click)="onCloseSendMessageClicked()"
-          aria-label="Cancel"
-        >
-          Cancel
-        </button>
-        <button
-          kendoButton
-          [primary]="true"
-          (click)="onSendMessageConfirmClicked()"
-          aria-label="Send Message(s)"
-        >
-          Send Message(s)
-        </button>
-      </div>
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
     </div>
-  </kendo-dialog-actions>
- 
+    <div class="flex-col mb-2" *ngIf="currentSmsData">
+      <case-management-text-message-editor [templateContent] ="templateContent" [smsMessages]="smsMessages" [dataEvent]="smsEditorValueEvent" [currentValue]="currentSmsData" (editorValue)="handleSmsEditor($event)" ></case-management-text-message-editor>
+    </div>
+  </div>
+</section>
+<kendo-dialog-actions *ngIf="isOpenMessageTemplate">
+  <div class="justify-content-between bigbtn-wrapper">
+    <div class="w100">
+      <button
+        kendoButton
+        [primary]="true"
+        look="flat"
+        (click)="onSaveForLaterClicked()"
+        aria-label="Save for Later"
+      >
+        Save for Later
+      </button>
+    </div>
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        (click)="onCloseSendMessageClicked()"
+        aria-label="Cancel"
+      >
+        Cancel
+      </button>
+      <button
+        kendoButton
+        [primary]="true"
+        (click)="onSendMessageConfirmClicked()"
+        aria-label="Send Message(s)"
+      >
+        Send Message(s)
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>
+
 
 <!-- Save for Latter (SMS Draft) Modal -->
 <kendo-dialog
-  *ngIf="isShowSaveForLaterPopupClicked"
-  (close)="onCloseSaveForLaterClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="SMS Draft Saved"
+*ngIf="isShowSaveForLaterPopupClicked"
+(close)="onCloseSaveForLaterClicked()"
+class="app-c-modal app-c-modal-sm app-c-modal-np"
+title="SMS Draft Saved"
 >
-  <section class="k-dialog-body">
-    <p class="mb-3">
-      To pick up where you left off, click “New SMS Text” from the client’s
-      profile.
-    </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true" 
-          (click)="onCloseSaveForLaterClicked()"
-          aria-label="OK"
-        >
-          OK
-        </button>
-      </div>
+<section class="k-dialog-body">
+  <p class="mb-3">
+    To pick up where you left off, click “New SMS Text” from the client’s
+    profile.
+  </p>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true" 
+        (click)="onSaveSmsForLaterClicked()"
+        aria-label="OK"
+      >
+        OK
+      </button>
     </div>
-  </kendo-dialog-actions>
+  </div>
+</kendo-dialog-actions>
 </kendo-dialog>
 
 <!-- Send SMS text message Modal -->
 <kendo-dialog
-  *ngIf="isShowSendMessageConfirmPopupClicked" 
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
+*ngIf="isShowSendMessageConfirmPopupClicked" 
+class="app-c-modal app-c-modal-sm app-c-modal-np">
 <kendo-dialog-titlebar (close)="onCloseSendMessageConfirmClicked()">  Send SMS Text Message(s)? </kendo-dialog-titlebar>
 
-  <section class="k-dialog-body">
-    <p class="mb-3">This action cannot be undone.</p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="w100">
-        <button
-          kendoButton
-          [primary]="true"
-          look="flat"
-          (click)="onEditMessagesClicked()"
-          aria-label="Edit Message(s)"
-        >
-          Edit Message(s)
-        </button>
-      </div>
-      <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          (click)="onCloseSendMessageConfirmClicked()"
-          aria-label="Send"
-        >
-          Send
-        </button>
-      </div>
+<section class="k-dialog-body">
+  <p class="mb-3">This action cannot be undone.</p>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="w100">
+      <button
+        kendoButton
+        [primary]="true"
+        look="flat"
+        (click)="onEditMessagesClicked()"
+        aria-label="Edit Message(s)"
+      >
+        Edit Message(s)
+      </button>
     </div>
-  </kendo-dialog-actions>
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        (click)="onSendMessagesClick()"
+        aria-label="Send"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>
 </kendo-dialog>

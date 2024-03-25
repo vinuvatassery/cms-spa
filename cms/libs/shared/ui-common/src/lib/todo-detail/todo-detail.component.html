@@ -172,7 +172,7 @@
             >
               <span class="pr-1">{{ dataItem.clientFullName}}</span>
               <span class="pr-1 text-muted">ID {{ dataItem.clientId }}</span>
-              <span class="pr-1 text-muted">DOB {{ dataItem.dob }}</span>
+              <span class="pr-1 text-muted">DOB {{ dataItem.dob  | date: 'MM/dd/yyyy' }}</span>
               <span class="text-muted">SSN {{ dataItem.ssn }}</span>
             </ng-template>
           </kendo-combobox-column>
@@ -190,6 +190,10 @@
 
 <kendo-dialog-actions kendoTooltip>
   <div class="justify-content-between">
+    <div>
+      <button kendoButton aria-label="Delete" *ngIf="isEdit"
+       class="k-danger-link"(click)="delete()" >  Delete     </button>
+    </div>
 
     <div class="justify-content-end">
       <button
@@ -197,7 +201,7 @@
         [primary]="true"
         look="outline"
         aria-label="Cancel"
-        (click)="closeTodoDetailsClicked()"
+        (click)="closeTodoDetailsClicked(false)"
       >
         Cancel
       </button>
@@ -206,3 +210,5 @@
     </div>
   </div>
 </kendo-dialog-actions>
+
+

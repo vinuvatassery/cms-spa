@@ -242,3 +242,24 @@
   }
 
 }
+
+.text-message-preview-wrapper {
+ 
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  .text-message-preview{
+    margin-bottom: 1rem;
+    max-width: 300px;
+    p {
+      background: $success-green-dark;
+      padding: 10px;
+      border-radius: 8px 8px 2px 8px;
+      color: $white;
+    }
+    a{
+      color: $white;
+    }
+  }
+
+}

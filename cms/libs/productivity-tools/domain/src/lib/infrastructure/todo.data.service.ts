@@ -43,7 +43,7 @@ export class TodoDataService {
   }
 
   loadAlerts(payload:any, alertTypeCode:any) {
-    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${alertTypeCode}`,payload.gridDataRefinerValue);
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload.alertType}`,payload.gridDataRefinerValue);
   }
 
   getTodoItem(alertId:any){  
@@ -60,6 +60,19 @@ export class TodoDataService {
   }
   updateAlertItem(payload:any){
     return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts`,payload);
+
+  }
+
+   todoAndReminderByClient(clientId:any){  
+    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/clients/${clientId}`, null);
+  }
+
+  loadAlertsBanner(payload:any) {
+    return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/banner/${payload}`);
+  }
+
+  dismissAlert(alertId:any){
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/dismiss/${alertId}`,null);
 
   }
 }

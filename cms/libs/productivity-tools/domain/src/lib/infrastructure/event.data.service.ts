@@ -47,6 +47,8 @@ export class EventDataService {
     eventFormData.append("entityTypeCode", event?.entityTypeCode ?? '');
     eventFormData.append("parentEventLogId", event?.parentEventLogId ?? '');
     eventFormData.append("isSubEvent", event?.isSubEvent ?? '');
+    eventFormData.append("sourceEntityId", event?.sourceEntityId ?? '');
+    eventFormData.append("sourceEntityTypeCode", event?.sourceEntityTypeCode ?? '');
 
     return eventFormData;
   }
