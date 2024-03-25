@@ -6,6 +6,7 @@ import { ReminderNotificationSnackBarComponent } from './containers/reminder-not
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { ProductivityToolsDomainModule } from '@cms/productivity-tools/domain';
 import { ProductivityToolsFeatureTodoModule } from '@cms/productivity-tools/feature-todo';
+import { ReminderNotificationSnackBarTemplateComponent } from './containers/reminder-notification-snack-bar-template/reminder-notification-snack-bar-template.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -14,15 +15,16 @@ import { ProductivityToolsFeatureTodoModule } from '@cms/productivity-tools/feat
     SharedUiCommonModule,
     ProductivityToolsFeatureFabsMenuRoutingModule,
     ProductivityToolsFeatureTodoModule,
-    
   ],
   declarations: [
-    ReminderNotificationSnackBarComponent
-    
+    ReminderNotificationSnackBarComponent,
+
+    ReminderNotificationSnackBarTemplateComponent,
   ],
   exports: [
-    ReminderNotificationSnackBarComponent
-    
+    ReminderNotificationSnackBarComponent,
+
+    ReminderNotificationSnackBarTemplateComponent,
   ],
 })
 export class ProductivityToolsFeatureNotificationSnackbarModule {}
