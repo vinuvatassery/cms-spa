@@ -277,8 +277,12 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
 
   
   delete(){
+    this.createTodo$.subscribe(res =>{
+      if(res){
+      this.closeTodoDetailsClicked(true)
+      }
+    })
     this.onDeleteAlertClicked.emit(this.alertId)
-    this.closeTodoDetailsClicked(true)
    }
 
   endDateValidation(){

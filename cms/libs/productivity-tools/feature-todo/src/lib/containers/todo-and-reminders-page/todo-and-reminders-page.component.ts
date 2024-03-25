@@ -59,23 +59,38 @@ export class TodoAndRemindersPageComponent implements OnInit {
       this.id = params.get('id')
       this.eid = params.get('e_id')
       if(this.id){
-        this.todoFacade.clientTodoAndRemindersLoader$.subscribe(res =>{
-            this.showDataLoader = res
-            this.cdr.detectChanges()
-          
-        })
-        this.caseFacade.clientProfileDataLoader$.subscribe(res =>{
-          this.showLoader = res;
-          this.cdr.detectChanges()
-        })
-        this.caseFacade.clientProfileData$.subscribe(cp =>{
-           this.clientName = cp?.firstName
-        })
-       this.caseFacade.loadClientProfileWithOutLoader(this.eid);
-        this.todoFacade.todoAndRemindersByClient(this.id);   
+        this.loadData()
       }
      })
   
+}
+
+loadData(){
+  this.todoAndReminders$.subscribe(res =>{
+    this.showNoDataFor7Days= false;
+    this.showNoDataFor30Days = false;
+    this.showNoDataAfter30Days = false;
+    this.noTodoFor7Days = false;
+    this.noTodoFor30Days = false;
+    this.noTodoAfter30Days = false;
+    this.noReminderFor7Days = false;
+    this.noReminderFor30Days = false;
+    this.noReminderAfter30Days = false;
+  })
+this.todoFacade.clientTodoAndRemindersLoader$.subscribe(res =>{
+    this.showDataLoader = res
+    this.cdr.detectChanges()
+  
+})
+this.caseFacade.clientProfileDataLoader$.subscribe(res =>{
+  this.showLoader = res;
+  this.cdr.detectChanges()
+})
+this.caseFacade.clientProfileData$.subscribe(cp =>{
+   this.clientName = cp?.firstName
+})
+this.caseFacade.loadClientProfileWithOutLoader(this.eid);
+this.todoFacade.todoAndRemindersByClient(this.id);
 }
 onMarkAlertDoneGrid(event:any){
   this.onMarkAlertAsDoneGridClicked.emit(event)
@@ -127,7 +142,7 @@ loadReminders(){
       this.noTodoFor7Days = true
       }
     if(type == 'reminder'){
-    this.noReminderFor7Days = type =='reminder'
+    this.noReminderFor7Days = true;
     }
      
       this.showNoDataFor7Days = this.noTodoFor7Days && this.noReminderFor7Days;
@@ -137,7 +152,7 @@ loadReminders(){
         this.noTodoFor30Days = true
         }
         if(type == 'reminder'){
-        this.noReminderFor30Days = type =='reminder'
+        this.noReminderFor30Days =true;
         }
       this.showNoDataFor30Days = this.noTodoFor30Days && this.noReminderFor30Days;
     }
@@ -146,7 +161,7 @@ loadReminders(){
       this.noTodoAfter30Days = true
       }
       if(type == 'reminder'){
-      this.noReminderAfter30Days = type =='reminder'
+      this.noReminderAfter30Days = true
       }
       this.showNoDataAfter30Days = this.noTodoAfter30Days && this.noReminderAfter30Days;
     }

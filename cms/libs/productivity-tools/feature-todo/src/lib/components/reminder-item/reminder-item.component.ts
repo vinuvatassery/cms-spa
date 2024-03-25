@@ -102,19 +102,26 @@ export class ReminderItemComponent implements OnInit {
         clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.formatDate(new Date()) 
                                         && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 7) )
       this.isDueWithIn7Days = true
+      if(this.items.length<=0){
       this.noReminderFor7Days.emit(true)
+      }
       }
       if(this.nDays=="DUE WITHIN 30 DAYS"){
           this.items = 
         clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 8) 
                                     && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 30) )   
-         this.noReminderFor30Days.emit(true);
+         
+         if(this.items.length<=0){
+            this.noReminderFor30Days.emit(true);
+         }
          this.isDueWithIn7Days = false;
                                   }
       if(this.nDays=="DUE LATER"){
         this.items = 
         clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 31) )
-       this.noReminderAfter30Days.emit(true)
+        if(this.items.length<=0){
+        this.noReminderAfter30Days.emit(true)
+        }
       }
       if(!this.nDays){
         this.items = clientsTodoReminders
