@@ -1,1 +1,4 @@
-<system-config-eligibility-check-list></system-config-eligibility-check-list>
+<system-config-eligibility-check-list [eligibilityChecklistDataLists$]="eligibilityChecklistService$" 
+[pageSizes]="pageSizes" [sortValue]="sortValueEligibilityChecklist"
+[sortType]="sortType" [sort]="sortEligibilityChecklistGrid" 
+(loadEligibilityChecklistListsEvent)="loadEligibilityChecklistLists($event)"></system-config-eligibility-check-list>
