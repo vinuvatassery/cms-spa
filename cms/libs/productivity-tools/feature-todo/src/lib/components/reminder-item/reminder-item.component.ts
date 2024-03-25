@@ -11,8 +11,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ReminderFacade, TodoFacade } from '@cms/productivity-tools/domain';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 @Component({
   selector: 'productivity-tools-reminder-item',
@@ -32,7 +34,10 @@ export class ReminderItemComponent implements OnInit {
   gridDataResult!: GridDataResult;
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
   items!:any[]
-  isDueWithIn7Days = false;
+  isDueWithIn7Days = true;
+  @Output() noReminderFor7Days = new EventEmitter<any>()
+  @Output() noReminderFor30Days = new EventEmitter<any>()
+  @Output() noReminderAfter30Days = new EventEmitter<any>()
   @Input() todoAndReminders$! : Observable<any>
   @Output() onEditReminderClickedEvent = new EventEmitter();
   @Output() onDeleteAlertGridClicked = new EventEmitter();
@@ -44,6 +49,10 @@ export class ReminderItemComponent implements OnInit {
   selectedAlertId!:any
   isDelete = false
   isReminderOpenClicked= false
+  @Output() noTodoFor7Days = new EventEmitter<any>()
+  @Output() noTodoFor30Days = new EventEmitter<any>()
+  @Output() noTodoAfter30Days = new EventEmitter<any>()
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   public data = [
     {
       buttonType: 'btn-h-primary',
@@ -72,7 +81,9 @@ export class ReminderItemComponent implements OnInit {
   constructor(private reminderFacade: ReminderFacade,
     private cdr : ChangeDetectorRef,
     private dialogService: DialogService,
-    private todoFacade : TodoFacade) {}
+    private todoFacade : TodoFacade,
+    public intl: IntlService,
+    private configurationProvider : ConfigurationProvider) {}
   ngOnInit(): void {
     this.loadNotificationsAndReminders();
       this.notificationList$?.subscribe((data: any) => {
@@ -88,16 +99,29 @@ export class ReminderItemComponent implements OnInit {
    
       if(this.nDays=="DUE WITHIN 7 DAYS"){
            this.items = 
-        clientsReminder.filter((x:any)=> new Date(x.alertDueDate) >= new Date() && new Date(x.alertDueDate) <= this.addDays(new Date(), 7) )
+        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.formatDate(new Date()) 
+                                        && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 7) )
       this.isDueWithIn7Days = true
+      if(this.items.length<=0){
+      this.noReminderFor7Days.emit(true)
+      }
       }
       if(this.nDays=="DUE WITHIN 30 DAYS"){
           this.items = 
-        clientsReminder.filter((x:any)=> new Date(x.alertDueDate) >= this.addDays(new Date(), 8) && new Date(x.alertDueDate) <= this.addDays(new Date(), 30) )   
-      }
+        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 8) 
+                                    && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 30) )   
+         
+         if(this.items.length<=0){
+            this.noReminderFor30Days.emit(true);
+         }
+         this.isDueWithIn7Days = false;
+                                  }
       if(this.nDays=="DUE LATER"){
         this.items = 
-        clientsReminder.filter((x:any)=> new Date(x.alertDueDate) >= this.addDays(new Date(), 31) )
+        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 31) )
+        if(this.items.length<=0){
+        this.noReminderAfter30Days.emit(true)
+        }
       }
       if(!this.nDays){
         this.items = clientsTodoReminders
@@ -107,9 +131,13 @@ export class ReminderItemComponent implements OnInit {
   }
 
 
+  formatDate(date:any){
+    return new Date(this.intl.formatDate(date, this.dateFormat));
+  }
+
   addDays(date: Date, days: any): Date {
     date.setDate(date.getDate() + parseInt(days));
-    return date;
+    return this.formatDate(date);
   }
 
 
