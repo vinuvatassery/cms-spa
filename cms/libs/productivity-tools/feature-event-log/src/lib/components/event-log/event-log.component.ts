@@ -77,6 +77,7 @@ export class EventLogComponent implements OnInit {
     ];
   searchValue = '';
   filterDataQueryArray:any[]=[];
+  skeletonCounts = [1, 2, 3, 4, 5]
 
   public eventLogFilterForm: FormGroup = new FormGroup({
     caseworkerfilterbyoperator: new FormControl('', []),

@@ -120,7 +120,7 @@
           <div class="items-head">
             <p class="items-head_label">{{eventLog.eventDesc}}</p>
             <p class="items-head_info text-right">
-              {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by
+              {{eventLog.creationTime | date : 'MM/dd/yyyy'}} by
 
             <span class="items-head_info-user">
 
@@ -208,6 +208,10 @@
         <!-- Event sub list items -->
       </li>
     </ul>
+    <div *ngIf="events.length <= 0">
+      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
+      class="event-list-skeleton-loader"></kendo-skeleton>
+    </div>
     <div class="filter-footer-event" *ngIf="filterBy.length > 0">
       <small>Filtered By: {{filterBy}} <a (click)="onEventLogFilterClearClicked()">Clear</a></small>
     </div>
