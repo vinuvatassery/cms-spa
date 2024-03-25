@@ -2,7 +2,8 @@
   <!-- List Item Repeatable -->
   <ng-container  *ngFor="let item of items">
     <li class="card-list_items"
-      aria-label="reminder menu item">
+      aria-label="reminder menu item"
+      [className]="isDueWithIn7Days ? ' card-list_items red-item-block' : 'card-list_items canyon-item-block'">
       <div class="card-type-icon">
         <span class="material-icons" aria-label="notification" aria-hidden="true">alarm</span>
       </div>
@@ -39,7 +40,8 @@
  
   </li>
 </ng-container>
-<div style="text-align: center;" *ngIf="items?.length == 0">
+
+<div style="text-align: center;" *ngIf="items?.length == 0 && !nDays">
   <p>There is no data to display</p>
 </div>
 
