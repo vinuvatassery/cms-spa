@@ -45,6 +45,7 @@
     [isEdit]="!!this.selectedAlertId"
     [searchProviderSubject]="searchProviderSubject"
     [clientSubject]="clientSubject"
+    (onDeleteAlertClicked)="onDeleteToDoClicked($event)"
     ></productivity-tools-todo-detail>
   </ng-template>
   
@@ -61,7 +62,8 @@
      [alertId] = "selectedAlertId"
      (onGetTodoItem)="onGetTodoItem($event)"
      [getTodo$]="getTodo$"
-     (isModalNewReminderCloseClicked)="onNewReminderClosed()">
+     (isModalNewReminderCloseClicked)="onNewReminderClosed()"
+    >
     </productivity-tools-reminder-detail>
   </ng-template>
   

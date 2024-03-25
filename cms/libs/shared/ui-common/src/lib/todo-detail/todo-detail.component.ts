@@ -278,6 +278,7 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
   
   delete(){
     this.onDeleteAlertClicked.emit(this.alertId)
+    this.closeTodoDetailsClicked(true)
    }
 
   endDateValidation(){
