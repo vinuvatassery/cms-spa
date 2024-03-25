@@ -384,7 +384,7 @@ export class EventLogComponent implements OnInit {
   downloadAttachment(eventLogAttachmentId: any, filePath: string){
     let pathSplitArray = filePath.split('$');
     let fileNmae = pathSplitArray[pathSplitArray.length-1];
-    this.documentFacade.viewOrDownloadEventFile(true, eventLogAttachmentId, fileNmae);
+    this.documentFacade.viewOrDownloadEventFile(false, eventLogAttachmentId, fileNmae);
   }
 
   @HostListener('document:keydown', ['$event'])

@@ -113,7 +113,6 @@ export class DocumentFacade {
         this.loaderService.show()
         this.documentDataService.getEventtDocumentsViewDownload(eventLogAttachmentId).subscribe({
             next: (data: any) => {
-
                 const fileUrl = window.URL.createObjectURL(data);
                 if (isFileViewable === true) {
                     window.open(fileUrl, "_blank");
