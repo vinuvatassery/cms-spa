@@ -433,6 +433,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
         templateTypeCode = CommunicationEventTypeCode.ApprovalEmailSent;
         break;
+      case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
+        templateTypeCode = CommunicationEventTypeCode.DisenrollmentEmailSent;
+        break;
     }
     return templateTypeCode;
   }
@@ -452,6 +455,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    if(this.communicationEmailTypeCode === undefined){
+      this.communicationEmailTypeCode = event.templateTypeCode;
+    }
     this.selectedTemplate = event;
     if (event.documentTemplateId && !event.esignRequestId) {
       this.loaderService.show();

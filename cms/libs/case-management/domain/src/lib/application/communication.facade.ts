@@ -160,9 +160,10 @@ export class CommunicationFacade {
     return formData;
   }
 
-  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any) {
+  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any,notificationGroup:any) {
     const formData = new FormData();
     formData.append('templateTypeCode', templateTypeCode ?? '');
+    formData.append('entityTypeCode', notificationGroup ?? '');
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
     formData.append('typeCode', draftTemplate?.typeCode ?? '');
     formData.append('languageCode', draftTemplate?.languageCode ?? '');
@@ -184,7 +185,7 @@ export class CommunicationFacade {
       }
     });
   }
-  if(clientAndVendorAttachedFiles?.length <= 0 && draftTemplate?.notificationRequestAttachments.length > 0){
+  if(clientAndVendorAttachedFiles?.length <= 0 && draftTemplate?.notificationRequestAttachments?.length > 0){
     let i = 0;
     draftTemplate?.notificationRequestAttachments.forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {

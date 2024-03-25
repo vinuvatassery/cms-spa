@@ -305,7 +305,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
     let templateTypeCode = this.getApiTemplateTypeCode();
-    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles, templateTypeCode);
+    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles, templateTypeCode, this.notificationGroup);
     this.communicationFacade.sendLetterToPrint(this.entityId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
@@ -356,6 +356,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.ApprovalLetterSent;
+        break;
+      case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
+        templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterSent;
         break;
     }
     return templateTypeCode;
@@ -453,6 +456,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   handleDdlLetterValueChange(event: any) {
+    if(this.communicationLetterTypeCode === undefined){
+      this.communicationLetterTypeCode = event.templateTypeCode;
+    }
     if (event.documentTemplateId) {
       this.loaderService.show();
       this.communicationFacade.loadTemplateById(event.documentTemplateId)
