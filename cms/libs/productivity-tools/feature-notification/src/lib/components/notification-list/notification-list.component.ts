@@ -1,9 +1,14 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Output, Input, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { NotificationFacade } from '@cms/productivity-tools/domain';
+import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { GridDataResult } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
 import { BehaviorSubject, Subject } from 'rxjs';
 @Component({
   selector: 'productivity-tools-notification-list',
@@ -23,6 +28,8 @@ export class NotificationListComponent {
   @Output() loadNotificationtEvent = new EventEmitter<any>();
   @Output() searchTermTextEvent = new EventEmitter<any>();
   searchTerm = new FormControl();
+  tabCode= 'MEDICAL_CLINIC'
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
     /** Lifecycle hooks **/
     ngOnInit(): void {
       this.loadNotificationsAndReminders();
@@ -33,12 +40,30 @@ export class NotificationListComponent {
           return dateA - dateB}) : []; // Sorting by alertDueDate in ascending order;
         this.cdr.detectChanges();
       });
-      this.searchTerm.valueChanges.subscribe((value) =>{
-          this.searchTermTextEvent.emit(value?.trim());
-      })
+      this.searchTerm.valueChanges.subscribe((value) => {
+        const containsOnlyNumbers = /^\d+$/.test(value);
+        const tempDate = new Date(value);
+        const isDateFormat = !isNaN(tempDate.getTime());
+        if (containsOnlyNumbers) 
+        { 
+            this.searchTermTextEvent.emit(value);
+        } 
+        else if (isDateFormat) 
+        {
+            const formattedDate = this.intl.formatDate(tempDate, this.dateFormat);
+            this.searchTermTextEvent.emit(formattedDate);
+        }
+       else 
+       {
+            this.searchTermTextEvent.emit(value?.trim());
+        }
+    });
     }
     constructor(
       private cdr : ChangeDetectorRef,
+      private readonly router: Router,
+      private readonly configurationProvider: ConfigurationProvider,
+      public readonly  intl: IntlService,
       private notificationFacade: NotificationFacade
     ) {}
   // data: Array<any> = [{}];
@@ -75,5 +100,55 @@ export class NotificationListComponent {
       }
       this.notificationaAndReminderDataSubject.next(this.gridDataResult);
     });
+  }
+  public get entityTypes(): typeof ToDoEntityTypeCode {
+    return ToDoEntityTypeCode;
+  }
+  onNavigationClicked(result: any) {
+    if (result.entityTypeCode == this.entityTypes.Client) {
+      this.router.navigate([`/case-management/cases/case360/${result.entityId}`]);
+    }
+    else if(result.entityTypeCode == this.entityTypes.Vendor)
+    { 
+      this.getVendorProfile(result.vendorTypeCode);
+     
+      const query = {
+        queryParams: {
+          v_id: result?.entityId ,
+          tab_code : this.tabCode
+        },
+      };
+      this.router.navigate(['/financial-management/vendors/profile'], query )
+    }
+  }
+  getVendorProfile(vendorTypeCode :any) {
+    switch (vendorTypeCode) {
+      case (FinancialVendorProviderTab.Manufacturers)  :
+        this.tabCode = FinancialVendorProviderTabCode.Manufacturers;
+        break;
+ 
+      case  (FinancialVendorProviderTab.MedicalClinic) :
+        this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+        break;
+ 
+        case  (FinancialVendorProviderTab.MedicalProvider) :
+          this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+          break;
+      case  (FinancialVendorProviderTab.InsuranceVendors):
+        this.tabCode = FinancialVendorProviderTabCode.InsuranceVendors;
+        break;
+ 
+      case  (FinancialVendorProviderTab.Pharmacy):
+        this.tabCode = FinancialVendorProviderTabCode.Pharmacy;
+        break;
+ 
+      case (FinancialVendorProviderTab.DentalClinic)  :
+        this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+        break;
+ 
+        case (FinancialVendorProviderTab.DentalProvider)  :
+          this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+          break;
+    }
   }
 }

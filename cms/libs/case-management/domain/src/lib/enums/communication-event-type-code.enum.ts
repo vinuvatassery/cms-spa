@@ -1,6 +1,8 @@
 export enum CommunicationEventTypeCode {
     CerAuthorizationEmail="CER_AUTHORIZATION_EMAIL",
     CerAuthorizationLetter="CER_AUTHORIZATION_LETTER",
+    ApplicationAuthorizationEmail="APPLICATION_AUTHORIZATION_EMAIL",
+    ApplicationAuthorizationLetter="APPLICATION_AUTHORIZATION_LETTER",
     TemplateVariable="TEMPLATE_VARIABLE",
     TemplateAttachmentTypeCode="CER_DEF_ATTACHMENT",
     CERAttachmentTypeCode="CER_ATTACHMENT",
@@ -30,6 +32,8 @@ export enum CommunicationEventTypeCode {
     EMAIL="EMAIL",
     LETTER="Letter",
     SMS="Sms",
+    HIVVerificationEmail="HIV_VERIFICATION_EMAIL",
+    HIVVerificationAttachmentTypeCode="HIV_VERIFICATION_FORM",
     PendingNoticeLetter = 'PENDING_NOTICE_LETTER',
     PendingLetterSent = 'PENDING_LETTER_SENT' ,
     PendingNoticeEmail = 'PENDING_NOTICE_EMAIL',

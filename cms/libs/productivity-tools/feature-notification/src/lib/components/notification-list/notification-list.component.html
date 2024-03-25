@@ -14,7 +14,7 @@
 
 <section class="card-list-block" *ngFor="let message of alertsData?.items">
   <ul class="card-list pt-0" aria-label="notification menu">
-    <li class="card-list_items unread-item" aria-label="notification menu item">
+    <li class="card-list_items" aria-label="notification menu item">
       <div class="card-type-icon">
         <span
           class="material-icons"
@@ -25,8 +25,8 @@
       </div>
       <div class="card-list_details">
         <p> {{message.alertDesc}}</p>
-        <a>Go to Payments</a>
-        <p class="text-muted">{{message?.alertDueDate | date:'MM-dd-YYYY'}}</p>
+        <a (click)="onNavigationClicked(message)">{{message.entityName}}</a>
+        <p class="text-muted">{{message?.alertDueDate | date:'MM/dd/YYYY'}}</p>
       </div>
   </ul>
 </section>

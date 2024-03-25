@@ -102,8 +102,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.loadTemplate();
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
-    if (this.templateLoadType != CommunicationEventTypeCode.CerAuthorizationLetter) {
-      this.loadMailCodes();
+    if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
+      this.vendorContactFacade.loadMailCodes(this.entityId);
+      this.loadClientAndVendorDraftLetterTemplates();
+    }else {
+      this.vendorContactFacade.loadMailCodes(this.entityId);
       if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftLetterTemplates();
       }else if(this.isNewNotificationClicked){
@@ -111,9 +114,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       }else{
         this.loadDropdownLetterTemplates();
       }      
-    }
-    else {
-      this.vendorContactFacade.loadMailCodes(this.entityId);
     }
     this.isNewLetterClicked =  this.notificationGroup ? true : false;
   }
@@ -208,8 +208,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
     let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
-    let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
-        this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
+    let draftLetterRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
+        this.communicationFacade.saveClientAndVendorNotificationForLater(draftLetterRequest)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -234,9 +234,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   onSaveForLaterTemplateClicked() {
     this.isShowSaveForLaterPopupClicked = true;
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if (this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
+    if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
     {
-      this.saveDraftLetterTemplate(this.selectedTemplate);
+      this.saveDraftEsignLetterRequest(this.selectedTemplate);
     }else{
       this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
       this.isShowSaveForLaterPopupClicked = false;
@@ -261,7 +261,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private generateText(letterData: any, requestType: CommunicationEvents){
-    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
+    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
       this.generateClientTextTemplate(letterData, requestType);
     }else{
     this.entityId = this.workflowFacade.clientId ?? 0;
@@ -294,15 +294,16 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     this.loaderService.show();
-    if(this.templateLoadType != CommunicationEventTypeCode.CerAuthorizationLetter){
-      this.sendClientAndVendorLetterToPrint(draftTemplate, requestType);
-    }else{
+    if(this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
       this.entityId = this.workflowFacade.clientId ?? 0;
       this.clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+      this.sendClientAndVendorLetterToPrint(this.entityId, this.clientCaseEligibilityId, draftTemplate, requestType, this.cerEmailAttachedFiles);
+    }else{
+      this.sendClientAndVendorLetterToPrint(this.entityId, this.clientCaseEligibilityId, draftTemplate, requestType, this.clientAndVendorAttachedFiles);
     }
   }
 
-  private sendClientAndVendorLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
+  private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
     let templateTypeCode = this.getApiTemplateTypeCode();
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles, templateTypeCode);
     this.communicationFacade.sendLetterToPrint(this.entityId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
@@ -495,10 +496,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
   }
 
-  private saveDraftLetterTemplate(draftTemplate: any) {
+  private saveDraftEsignLetterRequest(draftTemplate: any) {
     this.loaderService.show();
-    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.cerEmailAttachedFiles, this.communicationLetterTypeCode);
-    this.communicationFacade.saveForLaterEmailTemplate(formData)
+    draftTemplate.entity = this.communicationLetterTypeCode;
+    let formData = this.communicationFacade.prepareEsignLetterData(draftTemplate, this.entityId,this.loginUserId, this.cerEmailAttachedFiles);
+    this.communicationFacade.saveEsignLetterForLater(formData)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -536,9 +538,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
  }
 
  cerEmailAttachments(event:any){
-  if (this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
+  if (this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
   {
-    this.cerEmailAttachedFiles = event;
+    const isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
+    if(!isFileExists)
+    {
+    this.cerEmailAttachedFiles?.push(event);
+    }
     this.attachmentCount = this.cerEmailAttachedFiles?.length;
   }else{
     const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
@@ -551,7 +557,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 }
 
 loadMailingAddress() {
-  if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
+  if (this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
   {
     if(this.notificationGroup == ScreenType.ClientProfile){
       this.loadClientMailingAddress();
@@ -571,6 +577,8 @@ loadMailingAddress() {
         return "Client Letter_" + this.entityId + ".zip";
       case CommunicationEventTypeCode.VendorLetter:
         return "Vendor Letter+" + this.entityId + ".zip";
+      case CommunicationEventTypeCode.ApplicationAuthorizationLetter:
+        return "Application Authorization Letter.zip";
       case CommunicationEventTypeCode.CerAuthorizationLetter:
         return "CER Authorization Letter.zip";
       case CommunicationEventTypeCode.PendingNoticeLetter:

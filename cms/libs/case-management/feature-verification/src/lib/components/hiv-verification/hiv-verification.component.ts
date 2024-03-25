@@ -19,6 +19,14 @@ export class HivVerificationComponent implements OnInit {
   @Input() clientId!: number;
   @Input() clientCaseId!: any;
   @Input() clientCaseEligibilityId!: any;
+  @Input() healthCareProviderExists!: any;
+  @Input() providerEmail!: any;
+  @Input() emailSentDate!: any;
+  @Input() loginUserName!: any;
+  @Input() isSendEmailFailed!: boolean;
+  @Input() errorMessage!: any;
+  @Input() isSendEmailClicked!: boolean;
+  @Input() loginUserId!: any;
   @Output() onAttachmentConfirmationEvent = new EventEmitter();
 
   /** Public properties **/

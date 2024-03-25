@@ -4,6 +4,8 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   OnDestroy,
+  ViewChild,
+  TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
@@ -22,6 +24,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -51,6 +54,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
+  clientName =""
 
   ddlGroups$ = this.caseFacade.ddlGroups$;
   currentGroup$ = this.caseFacade.currentGroup$;
@@ -75,6 +79,14 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   mng_button_grp = false;
   selectedTabName = 'clinfo';
   alertList$ = this.todoFacade.bannerAlertList$;
+  isEdit = false;
+  isDelete = false;
+  selectedAlertId =""
+  getTodo$ = this.todoFacade.getTodo$
+  crudText =""
+  newReminderDetailsDialog!:any
+  @ViewChild('NewReminderTemplate', { read: TemplateRef })
+  reminderTemplate!: TemplateRef<any>;
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -84,6 +96,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly clientFacade: ClientFacade,
+    private readonly dialogService : DialogService,
     private readonly userManagementFacade: UserManagementFacade,
     public todoFacade: TodoFacade,
   ) {}
@@ -184,7 +197,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       ?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
       .subscribe((clientHeaderData: any) => {
         if (clientHeaderData?.clientId > 0) {
-
+        this.clientName = clientHeaderData?.clientFullName
           this.clientId = clientHeaderData?.clientId;
           this.clientCaseEligibilityId =
             clientHeaderData?.clientCaseEligibilityId;
@@ -325,5 +338,41 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   }
   onDeleteAlert(event:any){
     this.todoFacade.deleteAlert(event);
+  }
+
+
+  onNewReminderClicked(): void {
+    this.newReminderDetailsDialog = this.dialogService.open({
+      content: this.reminderTemplate,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+
+  onEditReminder(event:any){
+    this.isEdit = true;
+    this.selectedAlertId = event
+    this.crudText ='Edit'
+    this.todoFacade.getTodoItem(event)
+    this.onNewReminderClicked()
+  }
+
+  onDeleteReminder(event:any){
+    this.isDelete = true;
+    this.crudText ='Delete'
+    this.selectedAlertId = event;
+    this.todoFacade.getTodoItem(event)
+    this.onNewReminderClicked()
+  }
+
+  onNewReminderClosed(result: any) {
+    if(result){
+      this.todoFacade.loadAlertsBanner(this.profileClientId)
+    }
+    this.isEdit = false;
+    this.isDelete = false;
+    this.crudText ='Create New'
+    this.newReminderDetailsDialog.close()
+  
   }
 }

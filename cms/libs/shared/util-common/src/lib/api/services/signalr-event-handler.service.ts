@@ -15,8 +15,13 @@ import { Subject } from 'rxjs';
 export class SignalrEventHandlerService {
   /** Private  properties **/
   private reminderSnackBars = new Subject<any>();
+  private remindersUnViewedCountSubject = new Subject<any>();
   /** Public properties **/
   reminderSnackBar$ = this.reminderSnackBars.asObservable();
+
+  private snackBarAlertIds:any[]=[]
+  unviewedCount = 0;
+  remindersUnViewedCount$  = this.remindersUnViewedCountSubject.asObservable();
   /** Constructor **/
   constructor(private readonly signalrService: SignalrService) {
     this.registerHubMethodHandlers();
@@ -49,7 +54,15 @@ export class SignalrEventHandlerService {
     return this.signalrService.signalrEvents$?.pipe(
       filter((event) => event.payload.eventType === eventType),
       map((event) => {
+        if(!this.snackBarAlertIds.includes(event?.payload?.alertExtraProperties?.AlertId)){
+          this.snackBarAlertIds.push(event?.payload?.alertExtraProperties?.AlertId)
+          if(event?.payload?.alertExtraProperties?.RecentViewedFlag == 'N'){
+            this.unviewedCount = this.unviewedCount + 1;
+          this.remindersUnViewedCountSubject.next( this.unviewedCount)
+          }
         this.reminderSnackBars.next(event.payload)
+        }
+        
         // Send an acknowledgment to update the status of the message (if Ack enabled).
         if (event.payload.isAckEnabled) {
           this.sendAckMessage(event.payload.messageId, true);

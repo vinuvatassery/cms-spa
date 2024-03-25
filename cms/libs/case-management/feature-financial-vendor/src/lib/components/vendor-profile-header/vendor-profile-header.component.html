@@ -26,8 +26,10 @@
     </section>
   </div>
   <common-alert-banner *ngIf="vendorProfile?.vendorId" 
-  [alertList$]="alertList$" [entityId]="vendorProfile?.vendorId" 
-  [entityType]='"VENDOR"' [alertTypeCode]='"TODO"'
+  [alertList$]="alertList$"
+   [entityId]="vendorProfile?.vendorId" 
+  [entityType]='"VENDOR"' 
+  [alertTypeCode]='"TODO"'
    (isLoadAlertListEvent) = "isLoadAlertBannerEvent($event)"
     (onMarkAlertAsDoneClick)="onMarkAlertAsDoneClick($event)"
      (onDeleteAlertClick)="onDeleteAlertClick($event)"
