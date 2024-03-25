@@ -25,7 +25,10 @@ export class ReminderNotificationSnackbarService {
         } ); 
      }  
 
-      manageSnackBar(type : ReminderSnackBarNotificationType , errorBody : any,source :  ReminderNotificationSource  = ReminderNotificationSource.API)
+      manageSnackBar(type : ReminderSnackBarNotificationType 
+        , errorBody : any
+        , content :any =null
+        ,source :  ReminderNotificationSource  = ReminderNotificationSource.API)
       { 
         
         let subtitleText = errorBody;
@@ -54,6 +57,7 @@ export class ReminderNotificationSnackbarService {
           title: titleText,
           subtitle: subtitleText,
           type: type,
+          content :content
         };
         this.filterManager.next(snackbarMessage);
 
