@@ -130,7 +130,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    debugger;
     this.loadTemplate();   
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();

@@ -172,8 +172,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     this.emailLetterSubscriptionInitializer();
     this.loadPaperLessStatus();
     this.loadPhoneNumbers();
-    this.loadEmailAddress();
     this.addEmailSubscription();
+    this.loadEmailAddress();
     this.addPhoneNumbersSubscription();
     this.refreshButtonList();
   }
