@@ -7,7 +7,6 @@
     <div class="interface-chart-cards">
       <h3 class="mb-1"></h3>
       <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
-
       <kendo-chart  *ngIf="clientRecordSendChart" [series]="clientRecordSendChart?.chartData?.series"
         [legend]="clientRecordSendChart?.chartData?.legend" [title]="clientRecordSendChart?.chartData?.title"
         [categoryAxis]="clientRecordSendChart?.chartData?.categoryAxis"

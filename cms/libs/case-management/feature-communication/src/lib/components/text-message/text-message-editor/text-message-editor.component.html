@@ -1,15 +1,16 @@
-<div class="flex-row">
-  <div class="flex-col" *ngFor="let item of tareaMessages">
+<div class="flex-row  sms-temp-scroll">
+  <div class="flex-col mb-2" *ngFor="let item of tareaMessages; index as i">
     <div class="sms-text-header">
       <h5>Message</h5>
       <div>
         <button
           kendoButton
-          #smsAnchor
-          (click)="onToggleInsertVariableClicked()"
+          #anchorInsert
+          (click)="onToggleInsertVariableClicked(item, i)"
           class="text-t-normal"
           aria-label="Insert a variable"
           title="Insert a variable"
+          [attr.data-index]="i"
         >
           Insert a variable
           <span
@@ -20,60 +21,74 @@
           >
         </button>
         <kendo-popup
-          #smsPopup
-          [anchor]="$any(smsAnchor)"
-          popupClass="content"
-          *ngIf="isShowPopupClicked"
-          popupClass="notification-inner"
+        [attr.data-index]="i"
+        #popupAsf
+        [anchor]="anchorInsert.element" 
+        *ngIf="(i+1) === selectedItem"
+          popupClass="content notification-inner"
         >
-          <div class="sms-popup-content" *ngIf="isSearchOpened">
-            <div class="sms-variable-search-block">
-              <div class="input-search mat-form-no-b-space">
-                <div  class="medium-input-form sms-variable-search_input"  >
-                  <kendo-textbox aria-label="input a variable"  placeholder="Search" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-                </div>
+        <div class="sms-popup-content">
+          <div class="sms-variable-search-block">
+            <div class="input-search mat-form-no-b-space">
+              <div  class="medium-input-form sms-variable-search_input"  >
+                <kendo-textbox aria-label="input a variable"  placeholder="Search" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
               </div>
-              <button
-                kendoButton
-                class="k-icon-button sms-variable-search_close"
-                (click)="onSearchClosed()"
+            </div>
+            <button
+              kendoButton
+              class="k-icon-button sms-variable-search_close"
+              (click)="onSearchClosed()"
+              aria-label="Close"
+              title="Close"
+            >
+              <span
+                class="material-icons"
                 aria-label="Close"
-                title="Close"
+                aria-hidden="true"
+                >close</span
               >
-                <span
-                  class="material-icons"
-                  aria-label="Close"
-                  aria-hidden="true"
-                  >close</span
-                >
-              </button>
-            </div>
-            <div class="var-list-block">
-              <section>
-                <h5>Client Variables</h5>
-                <ul aria-label="client variables" class="var-list-item">
-                  <li aria-label="client variable item">Variable 1</li>
-                  <li aria-label="client variable item">Variable 2</li>
-                  <li aria-label="client variable item">Variable 3</li>
-                  <li aria-label="client variable item">Variable 4</li>
-                  <li aria-label="client variable item">Variable 5</li>
-                </ul>
-              </section>
-              <section>
-                <h5>My Variables</h5>
-                <ul aria-label="my variable" class="var-list-item">
-                  <li aria-label="my variable item">Variable 1</li>
-                  <li aria-label="my variable item">Variable 2</li>
-                  <li aria-label="my variable item">Variable 3</li>
-                  <li aria-label="my variable item">Variable 4</li>
-                  <li aria-label="my variable item">Variable 5</li>
-                </ul>
-              </section>
-            </div>
+            </button>
           </div>
+          <div class="var-list-block">
+            <section>
+              <h5>Client Variables</h5>
+              <ul
+                class="var-list-item"
+                aria-label="client variables"
+                *ngFor="let variable of clientVariables"
+              >
+                <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='CLIENT_VARIABLE'" aria-label="client variables item">{{ variable.lovDesc }}</li>
+              </ul>
+            </section>
+            <section>
+              <h5>My Variables</h5>
+              <ul
+                class="var-list-item"
+                aria-label="my variables"
+                *ngFor="let variable of clientVariables"
+              >
+                <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ variable.lovDesc }}</li>
+              </ul>
+            </section>
+            <section>
+              <h5>Other Variables</h5>
+              <ul
+                class="var-list-item"
+                aria-label="other variables"
+                *ngFor="let variable of clientVariables"
+              >
+                <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='OTHER_VARIABLE'" aria-label="other variables item">{{ variable.lovDesc }}</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+        <!-- <case-management-send-text-message
+        (editorValue)="smsEditorValueEvent($event)"
+        ></case-management-send-text-message> -->
         </kendo-popup>
-        <button
+        <button 
           kendoButton
+          [disabled]="this.tareaMessages.length <= 1"
           class="k-danger-link"
           (click)="onDeleteMessageClicked(item.id)"
           aria-label="Delete"
@@ -83,15 +98,16 @@
       </div>
     </div>
     <kendo-floatinglabel text="" class="pt-0">
-      <kendo-textarea
-      [fillMode]="formUiStyle.inputFillMode"
+      <kendo-textarea #textareaRef
+        [fillMode]="formUiStyle.inputFillMode"
         name="Message Description"
-        [rows]="2"
+        [rows]="3"
         [cols]="40"
         [maxlength]="tareaMessageMaxLength"
-        [value]="item.description"
         [id]="item.id"
+        [class]="'c-'+item.id"
         (valueChange)="onMessageValueChange($event, item.id)"
+        [(ngModel)]="item.description"
         aria-label="message description"
       >
       <kendo-textarea-suffix class="justify-content-end"> <span  class="counter">  {{ item.wordCount }}/{{ tareaMessageMaxLength }} </span> </kendo-textarea-suffix>
@@ -99,12 +115,13 @@
    
     </kendo-floatinglabel>
   </div>
-  <div class="flex-col">
+  <div class="flex-col mt-1 mb-1">
     <button
       kendoButton
       [primary]="true"
       look="flat"
       icon="add"
+      [disabled]="this.tareaMessages.length >=10 "
       (click)="onAddNewMessageClicked()"
       aria-label="Message"
     >

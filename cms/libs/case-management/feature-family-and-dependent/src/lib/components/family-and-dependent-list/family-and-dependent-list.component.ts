@@ -1,7 +1,7 @@
 /** Angular **/
 import {
   Component,  OnInit,  ChangeDetectionStrategy,  Input,
-   OnChanges, EventEmitter,  Output,ChangeDetectorRef, OnDestroy} from '@angular/core';
+   OnChanges, EventEmitter,  Output,ChangeDetectorRef } from '@angular/core';
 import {  Router ,ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -12,7 +12,6 @@ import { DependentTypeCode, ScreenType, FamilyAndDependentFacade, CaseFacade } f
 import { DeleteRequest } from '@cms/shared/ui-common';
 import {  State } from '@progress/kendo-data-query';
 import { Subscription, first } from 'rxjs';
-import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-family-and-dependent-list',

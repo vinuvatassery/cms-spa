@@ -1,8 +1,9 @@
 
-  <kendo-dialog-titlebar  (close)="onCloseNewLetterClicked()">Send New Letter </kendo-dialog-titlebar>
+ <kendo-dialog-titlebar  (close)="onCloseNewLetterClicked()">{{templateHeader}}</kendo-dialog-titlebar>
   <section class="k-dialog-body" >
     <p class="text-muted mb-1">
-      Select an existing template or draft a custom letter.
+     {{informationalText}} 
+     
     </p>
     <div class="flex-row pb-2">
       <div class="flex-col">
@@ -12,6 +13,8 @@
               [data]="ddlTemplates"
               textField="description"
               valueField="documentTemplateId"
+              [(ngModel)]="documentTemplate"
+              [disabled]="templateDrpDisable"
               (valueChange)="handleDdlLetterValueChange($event)"
             >
             </kendo-dropdownlist>
@@ -42,11 +45,12 @@
         </div>
         <div class="flex-col">
           <case-management-email-editor
-          [dataEvent]="emailEditorValueEvent"
-          [currentValue]="currentLetterData"
+          [selectedTemplate]="selectedTemplate" 
+          [selectedTemplateContent]="selectedTemplateContent"         
           [clientCaseEligibilityId]="clientCaseEligibilityId"
-          [clientId]="clientId"
+          [clientId]="entityId"
           [communicationTypeCode]="communicationLetterTypeCode"
+          (editorValueChangeEvent) ="editorValueChange($event)"
           (cerEmailAttachments)="cerEmailAttachments($event)"
           ></case-management-email-editor>
         </div>
@@ -65,7 +69,7 @@
         </button>
       </div>
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" (click)="onCloseNewLetterClicked()"
+        <button kendoButton [primary]="true" look="outline" (click)="onCloseNewLetterClicked()" *ngIf="cancelDisplay"
           aria-label="Cancel">
           Cancel
         </button>
@@ -89,7 +93,7 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" (click)="onCloseSaveForLaterClicked()"
+        <button kendoButton [primary]="true" (click)="onSaveForLaterTemplateClicked()"
           aria-label="OK">
           OK
         </button>
@@ -103,6 +107,8 @@
   title="Preview Letter">
   <case-management-preview-letter
     [letterContent]="currentLetterPreviewData"
+    [attachmentCount]="attachmentCount"
+    (closeEvent)="onPreviewLetterClose()"
   ></case-management-preview-letter>
   <kendo-dialog-actions>
     <div class="justify-content-between bigbtn-wrapper ">
@@ -125,7 +131,7 @@
 <kendo-dialog *ngIf="isShowSendLetterToPrintPopupClicked" (close)="onConfirmSendLetterToPrintDialogClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Send Letter to Print?">
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">The action cannot be undone</p>
+    <p class="text-muted mb-2">This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal</p>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between  ">
@@ -137,7 +143,7 @@
       <div class="justify-content-end align-items-center">
         <button kendoButton [primary]="true" (click)="onSendLetterToPrintDialogClicked('Print')"
           aria-label="Print">
-          Print
+          SEND TO PRINT
         </button>
       </div>
     </div>

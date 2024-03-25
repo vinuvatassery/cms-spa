@@ -242,9 +242,7 @@
                     class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text"
                     [class]="buttondataItem.buttonType" aria-hidden="false"
                     (click)="buttondataItem.click($event,dataItem)">
-                    <label [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{
-                      (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New from
-                      client\'s attachments" : "Attach from client\'s attachments" }} </label>
+                    <label [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{(dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New from \client\'s attachments" : "Attach from client\'s attachments" }} </label>
                     <label [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removefile'"><span
                         class="material-icons middleicon" aria-hidden="true">
                         delete

@@ -55,7 +55,7 @@ export class VendorContactsDataService {
   updateContactAddress(contact: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/contacts`, contact);
   }
-  loadVendorMailCodes(vendorId: number) {
+  loadVendorMailCodes(vendorId: string) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/financial-management/vendors/${vendorId}/addresses`

@@ -5,11 +5,11 @@ import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, AfterView
 /** External libraries **/
 import {catchError, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode, WorkflowTypeCode, ContactFacade } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
@@ -88,6 +88,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   employerIncome:any;
   minDate = new Date();
   totalIncome:any = 0;
+  //address$ = this.contactFacade.address$;
+  paperlessFlag:String | null= null;
+  workflowTypeCode:any;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -127,7 +130,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly configurationProvider : ConfigurationProvider,
     private readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly dependentFacade:FamilyAndDependentFacade,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly router: Router,
+    private readonly contactFacade: ContactFacade
     ) { }
 
   /** Lifecycle hooks **/
@@ -148,6 +153,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
     this.addDiscardChangesSubscription();  
+    //this.loadAddress();
   }
 
   ngOnDestroy(): void {
@@ -175,6 +181,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadQueryParams()
   {
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.isCerForm = this.route.snapshot.queryParams['wtc'] === WorkflowTypeCode.CaseEligibilityReview;
   }
   public onBlur() {
@@ -262,7 +269,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.noIncomeData.noIncomeSignatureNotedDate = null;
           this.noIncomeData.noIncomeNote = null;
           this.noIncomeData.isCERRequest = this.isCerForm;
-          this.loaderService.show();
           return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
             catchError((err: any) => {
               this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -462,7 +468,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
       let cerFormValid = true;
-      if(this.isCerForm){
+      if (this.isCerForm) {
         cerFormValid = this.validateEmployerIncome()
         this.noIncomeData.employersIncome = this.employerIncome;
       }
@@ -470,12 +476,32 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+            else
+            {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
+        else
+        {
+          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
       }
       this.cdr.detectChanges();
     });

@@ -34,6 +34,7 @@
   [todoGrid$]="todoGrid$"
   [loadAlertGrid$]="loadAlertGrid$"
   [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+  [pageSizes]="pageSizes"
   (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
   (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
   (getTodoItemsLov)="getTodoItemsLov()"
@@ -65,8 +66,15 @@
   [isEdit]="!!this.selectedAlertId"
   [searchProviderSubject]="searchProviderSubject"
   [clientSubject]="clientSubject"
+  (onDeleteAlertClicked)="onDeleteAlertClicked($event)"
   ></productivity-tools-todo-detail>
 </ng-template>
 
+<ng-template #deleteToDOTemplate>   
+  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+</ng-template>
+
+
+ 
 
  

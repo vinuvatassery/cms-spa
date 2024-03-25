@@ -22,7 +22,7 @@
         </button>
 
         <div class="breadcrumb-right app-c-split-button">
-          <kendo-splitbutton [data]="saveForLaterData" class="app-c-split-button app-dropdown-action"
+          <kendo-splitbutton [data]="saveForLaterData" class="app-c-split-button app-dropdown-action" *ngIf ="showButton"
             buttonClass="k-split-button" [tabindex]="0"  [disabled]="!(isSaveButtonEnabled$ | async)"
             [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }" aria-label="Save & Continue">
             <div class="btn-inner-block" (click)="onSaveAndContinueClicked()">
@@ -150,15 +150,15 @@
 
     <!-- Send New Email Modal -->
     <ng-template #sendNewEmailModalDialog>
-<case-management-send-email [data]="ScreenName" [paperlessFlag]="paperlessFlag"
+<case-management-send-email [notificationGroup]="ScreenName" [paperlessFlag]="paperlessFlag"
 (closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
 </ng-template>
 <ng-template #sendNewLetterModalDialog>
-  <case-management-send-letter [data]="ScreenName"
+  <case-management-send-letter [notificationGroup]="ScreenName"
   (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-letter>
   </ng-template>
 <ng-template #sendNewLetterModalDialog>
-  <case-management-send-letter [data]="ScreenName"
+  <case-management-send-letter [notificationGroup]="ScreenName"
   (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-letter>
   </ng-template>
 <!-- Cancel Application Modal -->

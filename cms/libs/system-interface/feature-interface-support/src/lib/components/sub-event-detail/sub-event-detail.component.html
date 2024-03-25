@@ -1,0 +1,16 @@
+<div *ngIf="(subEventLists$ | async) as subEventLists; else loading">
+    <ul *ngIf="subEventLists?.length; else noRecords">
+      <li *ngFor="let event of subEventLists">
+       {{ event?.eventDesc }}
+      </li>
+    </ul>
+    <ng-template #noRecords>
+      <div>No records found</div>
+    </ng-template>
+  </div>
+  
+  <ng-template #loading>
+    <!-- Add loader here -->
+    <div>Loading...</div>
+  </ng-template>
+  

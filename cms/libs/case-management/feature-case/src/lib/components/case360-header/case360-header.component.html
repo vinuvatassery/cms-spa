@@ -1,6 +1,6 @@
 <div class="app-l-inner-rapper pt-0 pb-0" kendoRippleContainer>
   <div class="assigned-to-right" *ngIf="assignedToVisibility$ | async">
-   <span> Assigned To</span>
+   <span class="mr-1"> Assigned To</span>
    <common-user-photo-icon  
    class="ml-1"
    [userId]="caseWorkerId" 
@@ -87,6 +87,16 @@
   <case-management-case360-header-notifications
   *ngIf="loadedClientHeader?.clientCaseEligibilityCerId && loadedClientHeader?.caseStatus!=='DISENROLLED'"
   ></case-management-case360-header-notifications>
+  <common-alert-banner *ngIf="loadedClientHeader?.clientId"
+   [alertList$]="alertList$" [entityId]="loadedClientHeader?.clientId" 
+  [entityType]='"CLIENT"'
+   [alertTypeCode]='"TODO"'
+    (isLoadAlertListEvent) = "isLoadAlertListEvent($event)" 
+  (onMarkAlertAsDoneClick)="onMarkAlertAsDoneClick($event)" 
+  (onDeleteAlertClick)="onDeleteAlertClick($event)"
+    (onEditReminderClicked)="onEditReminder($event)"
+    (onDeleteReminderClicked)="onDeleteReminder($event)"
+  ></common-alert-banner>
 </div>
 
 
@@ -115,4 +125,3 @@
   (checkIfSCheduled)="checkIfSCheduledGroup($event)"
   ></case-management-group-detail>
   </ng-template>
-

@@ -1,6 +1,7 @@
 <!-- Table Top Filter, Search and Export -->
 
-<p class="mt-2"> Add, edit, or remove premiums as needed. Click “Batch Premiums” when you are done.</p>
+<p class="mt-2" *ngIf="!isSendReportOpened"> Add, edit, or remove premiums as needed. Click “Batch Premiums” when you are done.</p>
+<p class="mt-2" *ngIf="isSendReportOpened"> Select the payments to be included in the Report, click the "Send" button to send the report.</p>
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
@@ -184,13 +185,13 @@
       </ng-template>
          </kendo-grid-column>
          <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="160">
-          <ng-template kendoGridFilterMenuTemplate let-filter 
+          <ng-template kendoGridFilterMenuTemplate let-filter
           let-column="column" let-filterService="filterService">
             <kendo-dropdownlist
-              textField="lovDesc" 
-              valueField="lovCode" 
-              [data]="paymentMethodCode$ | async" 
-              [value]="paymentMethodFilter" 
+              textField="lovDesc"
+              valueField="lovCode"
+              [data]="paymentMethodCode$ | async"
+              [value]="paymentMethodFilter"
               [valuePrimitive]="true"
               (valueChange)="dropdownFilterChange('paymentMethod',$event, filterService)">
             </kendo-dropdownlist>
@@ -222,10 +223,10 @@
     <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist
-          textField="lovDesc" 
-          valueField="lovCode" 
-          [data]="paymentStatusCode$ | async" 
-          [value]="paymentStatusFilter" 
+          textField="lovDesc"
+          valueField="lovCode"
+          [data]="paymentStatusCode$ | async"
+          [value]="paymentStatusFilter"
           [valuePrimitive]="true"
           (valueChange)="dropdownFilterChange('paymentStatus',$event, filterService)">
         </kendo-dropdownlist>
@@ -244,8 +245,8 @@
        </kendo-grid-column>
        <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" [columnMenu]="false" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <common-user-photo-icon  
-          [userId]="dataItem.createdId" 
+          <common-user-photo-icon
+          [userId]="dataItem.createdId"
           [userFirstName]="dataItem.userFirstName"
           [userLastName]="dataItem.userLastName"
           [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
@@ -269,7 +270,7 @@
     <kendo-grid-column field="Option" title="Options" [columnMenu]="false"  [width]="70" class="text-center"
     [sortable]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="processGridActions" 
+        <kendo-dropdownbutton [data]="processGridActions"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -356,6 +357,7 @@
 <ng-template #sendReportDialogTemplate>
   <cms-financial-premiums-send-report
     (sendReportCloseClickedEvent)="onSendReportCloseClicked($event)"
+    (sendReportClickedEvent)="SendInsuranceVendorReports($event)"
     [sendReportCount]="sendReportCount"
     [selectedSendReportList]="selectedSendReportList"></cms-financial-premiums-send-report>
 </ng-template>

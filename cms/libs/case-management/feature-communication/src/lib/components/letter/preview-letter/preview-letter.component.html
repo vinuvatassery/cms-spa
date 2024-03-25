@@ -1,12 +1,22 @@
 <section class="k-dialog-body">
-  <p class="text-muted mb-2">If the {{paperlessFlag === 'Y' ? 'email' : 'letter'}} is ready, click “Send  {{paperlessFlag === 'Y' ? 'Email' : 'to Print'}}."</p>
+  <p class="text-muted mb-2">To edit or print the letter, click "Close."</p>
   <section>
     <div class="border-box">
       <div class="flex-row">
         <div class="flex-col letter-preview-box mb-3">
-          <div [innerHTML]="letterContent"></div>         
+          <div [innerHTML]="letterContent"></div>
         </div>
       </div>
     </div>
   </section>
 </section>
+<kendo-dialog-actions>
+  <div class="justify-content-between bigbtn-wrapper">
+    <div class="justify-content-end">
+      <span class="mt-1 mr-2">{{attachmentCount}} attachment(s) to be printed</span>
+      <button kendoButton [primary]="true" look="outline" aria-label="Close" (click)="closeClicked()">
+        Close
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

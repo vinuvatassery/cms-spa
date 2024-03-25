@@ -1,22 +1,35 @@
-<div kendoTooltip #reminderNotificationTemplateContainer class="remainder_container" (click)="reminderContainerClicked();$event.stopPropagation()" [ngClass]="{'expand_view': isReminderExpand === true, 'collapse_view' : isReminderExpand === false}" id="reminder_notify">
+<div kendoTooltip #reminderNotificationTemplateContainer class="remainder_container" (click)="reminderContainerClicked();$event.stopPropagation()"
+ [ngClass]="{'expand_view': isReminderExpand === true, 'collapse_view' : isReminderExpand === false}" id="reminder_notify">
 
 </div>
 
  
 <ng-template #reminderNotificationTemplate>
-  <button class="reminder_list_show_btn" title="Reminder Notification List" kendoButton *ngIf="isReminderExpands"> <span class="material-icons" aria-hidden="true"> alarm </span> <span class="app-c-badge badge-round-right badge-warn" role="region"  [attr.aria-label]="messageCount.length">{{messageCount.length}}</span></button>
+  <button class="reminder_list_show_btn" title="Reminder Notification List" 
+  kendoButton *ngIf="isReminderExpands">
+   <span class="material-icons" aria-hidden="true"> alarm </span>
+    <span class="app-c-badge badge-round-right badge-warn" role="region" 
+     [attr.aria-label]="messageCount.length">{{unviewedCount}}</span></button>
   <div class="reminder-snack-bar-wrapper">
     <div class="reminder-col-one">
       <span class="material-icons" aria-hidden="true"> alarm </span>
     </div>
     <div class="reminder-col-two">
-      <p class="reminder-description" role="region"  aria-label="title">Switch to HTML view to display exact element location Switch to HTML view to display exact element locationSwitch to HTML view to display exact element locationSwitch to HTML view to display exact element location  </p>
+      <p class="reminder-description" role="region"  aria-label="title">
+        <button kendoButton look="flat" *ngIf="entityName" 
+        [attr.aria-label]="entityName" class="card-link-button"
+        (click)="onEntityNameClick(entityId,entityTypeCode,vendorTypeCode)"
+         aria-label="todo item for">
+          {{entityName }}
+        </button>
+        {{alertText}} </p>
       <div class="flex-space-bw align-items-center mt-1">
         <div>
-          <span aria-label="Today" role="region" > Today</span>
+          <span aria-label="Today" role="region" > {{dueDateText}}</span>
         </div>
         <div class="d-flex">
-          <kendo-dropdownbutton role="region" aria-label="Options" themeColor="primary" fillMode="flat"  [data]="data" (click)="$event.stopPropagation()">
+          <kendo-dropdownbutton role="region" aria-label="Options" themeColor="primary" fillMode="flat" 
+           [data]="data" (click)="$event.stopPropagation()" (itemClick)="onOptionClicked($event, alertId)">
             Options <span class="material-icons" aria-hidden="true">   arrow_drop_down    </span>
           </kendo-dropdownbutton>
 
@@ -31,4 +44,27 @@
       </button>
     </div> 
   </div>
+</ng-template>
+
+<ng-template #NewReminderTemplate>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
+    Edit Reminder  </kendo-dialog-titlebar>
+  <productivity-tools-reminder-detail
+  [isEdit]="isEdit" 
+  [alertId] = "selectedAlertId"
+  (onGetTodoItem)="onGetTodoItemData($event)"
+  [getTodo$]="getTodo$"
+  [searchProviderSubject]="searchProviderSubject"
+   [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+    (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"
+    [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+    [providerSearchResult$]="  providerSearchResult$"
+    [clientSubject]="clientSubject"
+    [clientSearchResult$]="clientSearchResult$"
+    [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+    (searchClientName)="searchClientName($event)"
+    (searchProvider)="searchProvider($event)"
+    (remainderFor)="remainderFor($event)"
+    (getReminderDetailsLov)="getReminderDetailsLov()"
+    ></productivity-tools-reminder-detail>
 </ng-template>

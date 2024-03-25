@@ -194,12 +194,15 @@
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
 <case-management-send-letter
-  [data]="screenName"
-  [clientId]="clientId"
+  [notificationGroup]="notificationGroup"
+  [entityId]="clientId"
   [isCerForm]="isCerForm"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   [communicationLetterTypeCode] = "communicationLetterTypeCode"
   (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"
+  [templateLoadType]="templateLoadType"
+  [informationalText]="informationalText"
+  [templateHeader]="templateHeader"
   kendoTooltip
 >
 </case-management-send-letter>
@@ -207,16 +210,19 @@
 <!-- Send New Email Modal -->
 <ng-template #sendEmailDialog>
 <case-management-send-email
-  [data]="screenName"
+  [notificationGroup]="notificationGroup"
   [toEmail]="toEmail"
   [paperlessFlag]="paperlessFlag"
-  [clientId]="clientId"
+  [entityId]="clientId"
   [isCerForm]="isCerForm"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)"
   (isSendEmailSuccess)="updateSendEmailSuccessStatus($event)"
   [emailSubject] = "emailSubject"
   [communicationEmailTypeCode] = "communicationEmailTypeCode"
+  [templateLoadType]="templateLoadType"
+  [informationalText]="informationalText"
+  [templateHeader]="templateHeader"
   kendoTooltip
 ></case-management-send-email>
 </ng-template>

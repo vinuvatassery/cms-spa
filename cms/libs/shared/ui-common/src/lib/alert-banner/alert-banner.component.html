@@ -1,0 +1,87 @@
+<section *ngIf="topAlert">
+  <div class="flex-row align-items-end">
+    <div class="flex-col flex-col-10">
+      <div [ngClass]="todoItemCrossedDueDate(null) ? 'info-banners red-banner hover-link' : 'info-banners canyon-banner hover-link'">
+
+        <div class="flex-col info-banners p-0">
+          <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
+          <span class="text-bold">{{topAlert.alertTypeCode =='REMINDER'? topAlert.alertDesc : topAlert.alertName}} </span>
+          <span class="text-normal">{{DueOn(topAlert)}}</span>
+        </div>
+
+        <div class="" *ngIf="topAlert.alertTypeCode != 'NOTIFICATION' || topAlert.customAlertFlag !='Y'">
+          <kendo-dropdownbutton  title="More option" [data]="bannerAlertActions" look="bare"
+            aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
+          popupClass: reminderActionPopupClass,
+          animate: true
+        }">
+            <span class="material-icons" aria-label="More option"> more_vert    </span>
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+              <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+                 (click)="dataItem.click">
+                <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                <label> {{ dataItem.text }} </label>
+              </button>
+            </ng-template>
+          </kendo-dropdownbutton>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col flex-col-2 mt-1" *ngIf="moreItems"> 
+      <button attr.aria-label=" {{ showMoreAlert ? 'Hide Items' : moreItems }}" kendoButton look="flat" class="card-link-button" [popover]="moreAlertmessage"  kendoPopoverAnchor showOn="click" >
+
+
+        {{ showMoreAlert ? 'Hide Items' : moreItems }}
+      </button>
+    </div>
+  </div>
+
+</section>
+<kendo-popover #moreAlertmessage width="330" position="left">
+<ng-template kendoPopoverBodyTemplate>
+<div class="p-2 popover-banner-container">
+<ng-container  *ngFor="let alertItem of  secondaryAlertList; let i = index">
+<div style="width: 330px;" [ngClass]="todoItemCrossedDueDate(alertItem.alertDueDate)? 'info-banners red-banner hover-link mt-1' : 'info-banners canyon-banner hover-link mt-1'">
+ <div class="flex-col info-banners p-0">
+   <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
+   <span class="text-bold">{{alertItem.alertTypeCode == 'REMINDER'? alertItem.alertDesc : alertItem.alertName}} </span>
+   <span class="text-normal">{{DueOn(alertItem)}}</span>
+ </div>
+
+ <div class="" *ngIf="alertItem.alertTypeCode != 'NOTIFICATION' || alertItem.customAlertFlag !='Y'">
+   <kendo-dropdownbutton  title="More option" [data]="popoverAlertActions" look="bare"
+     aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
+   popupClass: reminderActionPopupClass, animate: true}" (itemClick)="onToDoActionClicked($event,alertItem)">
+     <span class="material-icons" aria-label="More option"> more_vert    </span>
+     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType">
+         <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+         <label> {{ dataItem.text }} </label>
+       </button>
+     </ng-template>
+   </kendo-dropdownbutton>
+ </div>
+</div>
+</ng-container>
+<!-- -->
+<button aria-label="View More on Notification Panel" kendoButton look="flat" class="card-link-button mt-1"  (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)" >  View More on Notification Panel </button>
+</div>
+</ng-template>
+</kendo-popover> 
+ <ng-template #notificationsAndRemindersDialog>
+
+  <kendo-dialog-titlebar  (close)="onNotificationsAndRemindersClosed()">
+    <span
+      class="material-icons mr-1"
+      aria-hidden="true"
+      aria-label="notifications"
+      >notifications</span
+    >
+    <span class="text-bold">Notifications and Reminders</span>
+  </kendo-dialog-titlebar>
+
+ <!-- <productivity-tools-notification-and-reminder-page></productivity-tools-notification-and-reminder-page> -->
+</ng-template>
+<ng-template #deleteToDODialogTemplate>   
+  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+</ng-template>

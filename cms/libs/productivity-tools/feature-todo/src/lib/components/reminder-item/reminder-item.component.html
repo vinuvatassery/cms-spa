@@ -1,17 +1,17 @@
 <ul class="card-list  pt-0" aria-label="reminder menu">
   <!-- List Item Repeatable -->
-  <ng-container *ngFor="let item of items">
-  <li class="card-list_items"
-    aria-label="reminder menu item">
-    <div class="card-type-icon">
-      <span class="material-icons" aria-label="notification" aria-hidden="true">alarm</span>
-    </div>
-    <div class="card-list_details">
-      <p>
-      {{ item.alertDesc }}
-      </p>
-      <p class="text-muted">{{item.alertDueDate  | date:'MM/dd/yyyy'}}</p>
-    </div>
+  <ng-container  *ngFor="let item of items">
+    <li class="card-list_items"
+      aria-label="reminder menu item">
+      <div class="card-type-icon">
+        <span class="material-icons" aria-label="notification" aria-hidden="true">alarm</span>
+      </div>
+      <div class="card-list_details">
+        <p>
+          {{item.alertDesc}}
+        </p>
+        <p class="text-muted">{{item?.alertDueDate | date:'MM/dd/YYYY'}}</p>
+      </div>
     <div>
       <kendo-dropdownbutton
       [data]="data"
@@ -21,11 +21,16 @@
       title="More option"
       class="small-i-btn app-dropdown-action more_action_wid"
       [popupSettings]="{ popupClass: popupClass1, animate: true }"
+      (itemClick)="onActionClicked($event,item)"
     >
     <span class="material-icons" aria-label="More option"> more_vert    </span>
-    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-        <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+    <ng-template class="app-dropdown-action-list"
+     kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text"
+       [class]="dataItem.buttonType" aria-hidden="false">
+        <span class="material-icons" aria-hidden="true"
+         [attr.aria-label]="dataItem.text"
+         >{{dataItem.icon}}</span>
         <label>   {{ dataItem.text }} </label>
     </button>    
       </ng-template>
@@ -34,9 +39,12 @@
  
   </li>
 </ng-container>
+<div style="text-align: center;" *ngIf="items?.length == 0">
+  <p>There is no data to display</p>
+</div>
+
 
 </ul>
-
 
 
  

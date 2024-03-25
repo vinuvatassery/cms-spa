@@ -31,7 +31,6 @@ import { NewCaseComponent } from './components/new-case/new-case.component';
 import { CaseDetailPageComponent } from './containers/case-detail-page/case-detail-page.component';
 import { Case360PageComponent } from './containers/case360-page/case360-page.component';
 import { Case360HeaderComponent } from './components/case360-header/case360-header.component';
-//import { CommonActionsComponent } from './components/common-actions/common-actions.component';
 import { SendLetterProfileComponent } from './components/send-letter-profile/send-letter-profile.component';
 import { CaseSummaryComponent } from './containers/case-summary/case-summary.component';
 import { CaseDetailsSummaryComponent } from './components/case-details/case-details.component';

@@ -6,7 +6,6 @@ import {
   EventEmitter,
   Output,
   OnChanges,
-  ChangeDetectorRef,
   OnDestroy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -14,7 +13,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
 import { CaseFacade } from '@cms/case-management/domain';
-import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-email-list',
   templateUrl: './email-list.component.html',

@@ -11,6 +11,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
+import { filter, first } from 'rxjs';
 
 @Component({
   selector: 'notification-category-detail',
@@ -30,10 +31,12 @@ export class NotiificationCategoryDetailComponent implements OnInit {
   @Input() isEditNotificationCategory: any;
   @Input() selectedMemberData: any;
   @Input() selectedNotificationCategory: any;
-  @Input() eventLov: any
+  @Input() eventLov: any;
+  @Input() subEventLov$: any;
   @Output() close = new EventEmitter<any>();
   @Output() addNotificationCategoryEvent = new EventEmitter<any>();
   @Output() editNotificationCategoryEvent = new EventEmitter<any>();
+  @Output() loadSubEventByParentIdEvent = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   notiificationCategoryForm!: FormGroup;
@@ -43,8 +46,8 @@ export class NotiificationCategoryDetailComponent implements OnInit {
   isLoading = false;
   isValidateForm = false;
   notiificationCategory!: any;
-
-
+  showEventList: boolean = false;
+  isloading: boolean = false;
   constructor(private formBuilder: FormBuilder,
     private readonly loaderService: LoaderService,
     private cd: ChangeDetectorRef) {
@@ -62,6 +65,7 @@ export class NotiificationCategoryDetailComponent implements OnInit {
     this.notiificationCategoryForm = this.formBuilder.group({
       groupName: new FormControl({ value: '', disabled: true }),
       eventId: new FormControl({ value: '', disabled: false }, [Validators.required]),
+      eventListInput: new FormControl({ value: '', disabled: true })
     });
 
     if (this.selectedGroup)
@@ -72,6 +76,7 @@ export class NotiificationCategoryDetailComponent implements OnInit {
     this.notiificationCategory = notificationCategory;
     this.notiificationCategoryForm.controls["groupName"].setValue(this.selectedGroup.groupName);
     this.notiificationCategoryForm.controls["eventId"].setValue(notificationCategory.eventId);
+    this.onNotificationCategoryChanged(notificationCategory.eventId);
     this.notiificationCategoryForm.markAllAsTouched();
     this.cd.detectChanges();
   }
@@ -84,7 +89,23 @@ export class NotiificationCategoryDetailComponent implements OnInit {
     };
     return dto;
   }
+  onNotificationCategoryChanged(event: any) {
+    this.isloading = true;
+    this.loadSubEventByParentIdEvent.emit(event);
+    this.subEventLov$.pipe(
+      first()
+    ).subscribe((response: any[]) => {
+      const eventListString = response
+        .sort((a, b) => a.eventDesc.localeCompare(b.eventDesc))
+        .map(event => `${event?.eventDesc ?? ''}`)
+        .join('\n');
 
+      this.notiificationCategoryForm.controls['eventListInput'].setValue(eventListString);
+      this.isloading = false;
+    });
+
+    this.showEventList = !!event;
+  }
 
   onCancelClick() {
     this.close.emit();

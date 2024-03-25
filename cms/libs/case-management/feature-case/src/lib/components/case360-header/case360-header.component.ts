@@ -45,7 +45,12 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   @Output() createCerSessionEvent = new EventEmitter<string>();
   @Input() clientProfileHeader$!: Observable<any>;
   @Input() userDetail$!: any;  
-
+  @Input()  alertList$ :any;
+  @Output() isLoadAlertBannerContainerEvent = new EventEmitter<any>();
+  @Output() onMarkAlertAsDoneEvent = new EventEmitter<any>();
+  @Output() onDeleteAlertEvent = new EventEmitter<any>();
+  @Output() openEditReminderEvent = new EventEmitter()
+  @Output() openDeleteReminderEvent = new EventEmitter()
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
   isGroupDetailOpened$ = new BehaviorSubject<boolean>(false);
@@ -59,7 +64,6 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   userLastName!: string;
   assignedToVisibility$ = new BehaviorSubject<boolean>(false);
   groupUpdatedSubscription = new Subscription();
-  // userDetailSubscription = new Subscription();
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
     private readonly caseFacade: CaseFacade,
@@ -87,7 +91,6 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.groupUpdatedSubscription?.unsubscribe();
-    // this.userDetailSubscription?.unsubscribe();
   }
   /** Internal event methods **/
   onStatusPeriodDetailClosed(): void {
@@ -212,5 +215,23 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
       });
       this.cdr.detectChanges();
     }
+}
+isLoadAlertListEvent(entityId: any)
+{
+  this.isLoadAlertBannerContainerEvent.emit(entityId)
+}
+onMarkAlertAsDoneClick(event:any){
+  this.onMarkAlertAsDoneEvent.emit(event);
+}
+onDeleteAlertClick(event:any){
+  this.onDeleteAlertEvent.emit(event);
+}
+
+onEditReminder(event:any){
+  this.openEditReminderEvent.emit(event)
+}
+
+onDeleteReminder(event:any){
+  this.openDeleteReminderEvent.emit(event)
 }
 }

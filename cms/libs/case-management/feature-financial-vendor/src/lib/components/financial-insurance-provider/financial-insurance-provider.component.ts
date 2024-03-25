@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { InsuranceProviderFacade } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
-import { UserManagementFacade } from '@cms/system-config/domain';
 import { Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-insurance-provider',

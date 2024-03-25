@@ -199,8 +199,11 @@
         width: calc(100% - 1rem);
       }
     }
-  }
 
+  }
+  &.just_start{
+    justify-content: flex-start;
+  }
   &-xl {
     .k-dialog {
       width: 900px;
