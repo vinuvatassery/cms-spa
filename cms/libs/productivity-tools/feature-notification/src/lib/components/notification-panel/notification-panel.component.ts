@@ -239,6 +239,9 @@ export class NotificationPanelComponent implements OnInit {
     this.isNotificationsAndRemindersOpened = true;
   } 
 
+  onCloseNotificationsAndReminders(event: any) {
+    this.notificationReminderDialog.close();
+  }
   onNotificationButtonToggleClicked(show?: boolean): void {
     this.isNotificationPopupOpened =
       show !== undefined ? show : !this.isNotificationPopupOpened;
