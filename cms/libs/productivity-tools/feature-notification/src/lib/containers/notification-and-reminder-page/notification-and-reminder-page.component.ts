@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import {  NotificationFacade, ReminderFacade } from '@cms/productivity-tools/domain';
 import {  SnackBarNotificationType } from '@cms/shared/util-core'; 
 
@@ -10,6 +10,7 @@ import {  SnackBarNotificationType } from '@cms/shared/util-core';
 })
 export class NotificationAndReminderPageComponent {
   notificationList$ = this.notificationFacade.notificationList$;
+  @Output() closeDialog = new EventEmitter<void>();
   constructor(
     private reminderFacade: ReminderFacade,
     public notificationFacade: NotificationFacade, 
@@ -31,5 +32,8 @@ export class NotificationAndReminderPageComponent {
       this.onloadReminderAndNotificationsGrid();
     }
     
+  }
+  onCloseDialog(event: any) : void {
+    this.closeDialog.emit();
   }
 }

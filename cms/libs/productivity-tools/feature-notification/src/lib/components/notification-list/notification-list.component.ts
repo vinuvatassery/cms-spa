@@ -7,6 +7,7 @@ import { NotificationFacade } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { DialogRef } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -27,6 +28,7 @@ export class NotificationListComponent {
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
   @Output() loadNotificationtEvent = new EventEmitter<any>();
   @Output() searchTermTextEvent = new EventEmitter<any>();
+  @Output() closeDialog = new EventEmitter<void>();
   searchTerm = new FormControl();
   tabCode= 'MEDICAL_CLINIC'
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -120,6 +122,7 @@ export class NotificationListComponent {
       };
       this.router.navigate(['/financial-management/vendors/profile'], query )
     }
+    this.closeDialog.emit();
   }
   getVendorProfile(vendorTypeCode :any) {
     switch (vendorTypeCode) {
