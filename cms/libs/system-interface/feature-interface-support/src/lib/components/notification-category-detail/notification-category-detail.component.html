@@ -1,7 +1,7 @@
-<form class="k-form" [formGroup]="notiificationCategoryForm">
+<form class="k-form" [formGroup]="notificationCategoryForm">
   <section class="k-dialog-body">
     <p class="text-muted">
-      {{ isEditNotificationCategory ? 'Update' : 'Adds' }} a notification category to the selected group
+      {{ isEditNotificationCategory ? 'Update' : 'Adds' }} a notification category to the selected support group.
     </p>
     <div class="flex-row">
 
@@ -17,13 +17,13 @@
             [data]="eventLov | async" aria-label="NotificationCategory" [valuePrimitive]="true"
             formControlName="eventId" (valueChange)="onNotificationCategoryChanged($event)"> </kendo-dropdownlist>
           <kendo-formerror
-            *ngIf="(!notiificationCategoryForm.controls['eventId'].valid) && notiificationCategoryForm.controls['eventId'].hasError('required') &&isSubmitted">
+            *ngIf="(!notificationCategoryForm.controls['eventId'].valid) && notificationCategoryForm.controls['eventId'].hasError('required') &&isSubmitted">
             Notification Category is required</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Event List" *ngIf="showEventList">
-          <kendo-textarea class="form-control" [rows]="5" formControlName="eventListInput">
+          <kendo-textarea class="form-control" [rows]="7" formControlName="eventListInput">
           </kendo-textarea>
         </kendo-floatinglabel>
       </div>

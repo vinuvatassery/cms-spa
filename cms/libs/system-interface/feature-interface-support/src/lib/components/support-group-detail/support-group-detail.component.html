@@ -2,7 +2,7 @@
 
     <section class="k-dialog-body">
         <p class="text-muted">
-            Adds a user to the Group list for the selected role
+           
         </p>
         <div class="flex-row">
 
@@ -12,7 +12,7 @@
                         valueField="lovDesc" [data]="interfaceSupportGroupLov | async" aria-label="State"  
                         [valuePrimitive]="true" formControlName="groupCode"> </kendo-dropdownlist>
                         <kendo-formerror *ngIf="(!notiificationGroupForm.controls['groupCode'].valid) && notiificationGroupForm.controls['groupCode'].hasError('required') &&isSubmitted">
-                            Interface must be selected</kendo-formerror>
+                            Interface must be selected.</kendo-formerror>
                 </kendo-floatinglabel>
 
             </div>
@@ -39,7 +39,7 @@
                 <kendo-floatinglabel text="Description">
                     <div>
                         <kendo-textbox [fillMode]="formUiStyle.inputFillMode" resizable="none"
-                            formControlName="groupDesc" aria-label="Group Description"
+                            formControlName="groupDesc" aria-label="Description"
                             class="form-control table-text-area">
                         </kendo-textbox>
                         <div class="flex-row">

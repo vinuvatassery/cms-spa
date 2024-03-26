@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
-import { SystemInterfaceEventGroup } from '../enums/system-interface-event-group';
 @Injectable({
   providedIn: 'root',
 })
@@ -199,11 +198,8 @@ export class SystemInterfaceSupportService {
   }
 
   getEventLovList() {
-    const groupCodes: string[] = [
-      SystemInterfaceEventGroup.SYSTEM_INTERFACE_EXTERNAL,
-      SystemInterfaceEventGroup.SYSTEM_INTERFACE_INTERNAL
-    ];
-    return this.http.get<any[]>(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/events-list/${groupCodes.join(',')}`);
+    const groupCodes = "groupCode";
+    return this.http.get<any[]>(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/events-list/${groupCodes}`);
   }
   // ----------------------------------------
 
