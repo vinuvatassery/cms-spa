@@ -439,7 +439,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.lovFacade.caseStatusType$.subscribe((statusResponse: any) => {
 
       if (statusResponse.length > 0 && this.workflowType === WorkflowTypeCode.CaseEligibilityReview) {
-        this.caseStatuses = statusResponse.filter((x: any) => x.lovCode == CaseStatusCode.incomplete || x.lovCode == CaseStatusCode.reject
+        this.caseStatuses = statusResponse.filter((x: any) => x.lovCode == CaseStatusCode.incomplete 
           || x.lovCode == CaseStatusCode.disenrolled)
       }
       else if (statusResponse.length > 0) {

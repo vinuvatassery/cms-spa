@@ -47,5 +47,7 @@ export enum CommunicationEventTypeCode {
     ApprovalNoticeEmail = 'APPROVAL_NOTICE_EMAIL',
     ApprovalEmailSent = 'APPROVAL_EMAIL_SENT',
     DisenrollmentNoticeLetter = 'DISENROLLMENT_NOTICE_LETTER',
+    DisenrollmentLetterSent = 'DISENROLLMENT_NOTICE_SENT',
     DisenrollmentNoticeEmail = 'DISENROLLMENT_NOTICE_EMAIL',
+    DisenrollmentEmailSent = 'DISENROLLMENT_EMAIL_SENT',
   }

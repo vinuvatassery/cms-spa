@@ -67,6 +67,7 @@ export class ReminderDetailComponent implements OnInit {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
  isSubmitted = false
  @Input() isFromNotificationPanel = false;
+ allowCustom = false;
   constructor(private readonly todoFacade: TodoFacade, 
     private router : Router,
     private route : ActivatedRoute,
@@ -175,6 +176,7 @@ export class ReminderDetailComponent implements OnInit {
         tin : res.tin,
         providerId: res.entityId
       };
+      this.allowCustom = true;
       this.searchProviderSubject.next([
         { providerName : res.providerName,
           tin : res.tin,
@@ -187,8 +189,7 @@ export class ReminderDetailComponent implements OnInit {
         providerId: res.entityId
       })
       this.clientReminderForm.controls['vendorId'].updateValueAndValidity();
-      this.cdr.detectChanges();
-     console.log(this.clientReminderForm)
+     
     }else{
       this.showVendorSearch = false;
       this.showClientSearch = true;
@@ -366,6 +367,7 @@ export class ReminderDetailComponent implements OnInit {
     }
   }
   loadVendorsBySearchText(vendorSearchText:any){
+    this.allowCustom = false;
     if (!vendorSearchText || vendorSearchText.length == 0) {
       return
     }

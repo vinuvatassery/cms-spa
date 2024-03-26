@@ -44,7 +44,7 @@
 <!-- Create To Do Modal Html-->
 <ng-template #todoDetailTemplate>
   <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">
- {{!!this.selectedAlertId?  'Edit or delete this item' : 'Create a Custom To Do Item'}}    </kendo-dialog-titlebar>
+ {{!!this.selectedAlertId?  'Edit or delete this item' : 'Create a Custom To-Do Item'}}    </kendo-dialog-titlebar>
   <productivity-tools-todo-detail 
   (isLoadTodoGridEvent)="loadTodoList()" 
   [frequencyTypeCodeSubject$]="frequencyTypeCodeSubject$"

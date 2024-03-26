@@ -1,8 +1,8 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef, ChangeDetectorRef, ViewChild,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ContactFacade, ScreenType } from '@cms/case-management/domain';
-import { Observable, Subscription } from 'rxjs';
+import { CaseStatusCode, CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ContactFacade, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
+import { Observable, Subscription, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -43,13 +43,14 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   emailSubscription$ = new Subscription();
   phoneNumbersSubscription$ = new Subscription();
   reloadSubscription$ = new Subscription();
+  emailLetterSubscription !: Subscription;
   buttonList!: any[];
   isFirstLoad = false;
   isNewNotificationClicked: boolean = false;
   isContinueDraftClicked: boolean = false;
-  emailCommunicationTypeCode = CommunicationEventTypeCode.ClientEmail;
-  letterCommunicationTypeCode = CommunicationEventTypeCode.ClientLetter;
-  smsCommunicationTypeCode = CommunicationEventTypeCode.ClientSMS;
+  emailCommunicationTypeCode : any;
+  letterCommunicationTypeCode : any;
+  smsCommunicationTypeCode : any;
   notificationGroup!: string;
   toEmail: Array<string> = [];
   currentCommunicationTypeCode!: string;
@@ -66,7 +67,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   private isNewSMSTextOpenedDialog : any;
   private isIdCardOpenedDialog : any;  
   private isDraftNotificationOpenedDialog: any;
+  paperless$ = this.contactFacade.paperless$;
   clientHeader:any
+  paperlessFlag:any;
+  emailSubject:any;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -136,27 +140,68 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute, 
     private dialogService: DialogService, private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService, private readonly loggingService: LoggingService,
-    private readonly ref: ChangeDetectorRef,) {
+    private readonly ref: ChangeDetectorRef,private readonly workflowFacade: WorkflowFacade) {
   }
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
     this.phoneNumbersSubscription$.unsubscribe();
+    this.emailLetterSubscription.unsubscribe();
   }
 
   /* Internal Methods */
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.initialize();
-    this.loadedClientHeader.subscribe(res =>{
+    this.loadedClientHeader.subscribe(res => {
       this.clientHeader = res;
     })
+   
   }
 
+  private loadPaperLessStatus() {    
+    this.paperless$
+      ?.pipe(first((emailData: any) => emailData?.paperlessFlag != null))
+      .subscribe((emailData: any) => {
+        if (emailData?.paperlessFlag) {
+          this.paperlessFlag = emailData?.paperlessFlag;
+        }
+      });
+
+      this.contactFacade.loadClientPaperLessStatus(this.clientId,this.clientCaseEligibilityId);
+  }
   private initialize() {
+    this.emailLetterSubscriptionInitializer();
+    this.loadPaperLessStatus();
     this.loadPhoneNumbers();
-    this.loadEmailAddress();
     this.addEmailSubscription();
+    this.loadEmailAddress();
     this.addPhoneNumbersSubscription();
     this.refreshButtonList();
+  }
+
+  private emailLetterSubscriptionInitializer(){
+    this.emailLetterSubscription = this.workflowFacade.sendEmailLetterClicked$.subscribe(response => {
+      if (response) {
+        if (this.workflowFacade.caseStatus.toLowerCase() === CaseStatusCode.disenrolled.toLowerCase()) {    
+          if (this.paperlessFlag === StatusFlag.Yes) {
+            this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
+            this.emailCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
+            this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
+            this.templateHeader = 'Send Disenrollment Email';
+            this.emailSubject = "CAREAssist Disenrollment Notice";
+            this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
+          }
+          else {
+            this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
+            this.letterCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
+            this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
+            this.templateHeader = 'Send Disenrollment Letter';
+            this.emailSubject = '';
+            this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, this.sendLetterDialog);
+          }
+          this.ref.detectChanges();
+        }
+      }
+    })
   }
 
   private addEmailSubscription() {
@@ -320,11 +365,11 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   loadNotificationTemplates(typeCode: string, templateName: TemplateRef<unknown>) {
-    if(typeCode == CommunicationEventTypeCode.ClientEmail){
+    if(typeCode == CommunicationEventTypeCode.ClientEmail || typeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail){
       templateName = this.sendNewEmailDialog;
       this.onSendNewEmailClicked(templateName);
     }
-    if(typeCode == CommunicationEventTypeCode.ClientLetter){
+    if(typeCode == CommunicationEventTypeCode.ClientLetter || typeCode == CommunicationEventTypeCode.DisenrollmentNoticeLetter){
       templateName = this.sendLetterDialog;
       this.onSendNewLetterClicked(templateName);
     }

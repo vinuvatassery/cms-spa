@@ -64,15 +64,12 @@ export class EventLogFacade {
   }
 
   loadEventsData(): void {
-    this.showLoader();
     this.eventDataService.loadEventsData().subscribe({
       next: (eventResponse) => {
         this.eventsDataSubject.next(eventResponse);
-        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-        this.hideLoader();
       },
     });
   }
