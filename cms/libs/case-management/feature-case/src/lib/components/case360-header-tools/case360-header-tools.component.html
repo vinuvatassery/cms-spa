@@ -34,6 +34,7 @@
       </button>
     </ng-template>
   </kendo-dropdownbutton>
+  <!-- <button (click)="onPreviewTemplateClicked(viewTemplateDialog)">onPreviewTemplateClicked</button> -->
 </div>
 
 
@@ -99,3 +100,12 @@
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
   [clientCaseEligibilityId]="clientCaseEligibilityId" kendoTooltip></case-management-send-text-message>
 </ng-template>
+
+
+
+
+<!-- view template Modal Html-->
+<ng-template #viewTemplateDialog>
+  <kendo-dialog-titlebar (close)="handlePreviewTemplateClosed($event)">Preview Template </kendo-dialog-titlebar>
+ <case-management-preview-notification-templates></case-management-preview-notification-templates>
+  </ng-template>
