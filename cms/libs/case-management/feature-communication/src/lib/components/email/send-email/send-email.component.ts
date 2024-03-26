@@ -11,7 +11,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 /** Internal Libraries **/
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode } from '@cms/case-management/domain';
@@ -125,7 +125,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly ref: ChangeDetectorRef,
     private readonly workflowFacade: WorkflowFacade,
     private readonly userDataService: UserDataService,
-    private readonly esignFacade: EsignFacade) { }
+    private readonly esignFacade: EsignFacade,
+    private readonly router: Router) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -334,7 +335,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail) {
         this.initiateAdobeEsignProcess(this.selectedTemplate);
       } else {
-        this.initiateSendEmailProcess(this.selectedTemplate);
+        this.initiateSendEmailProcess(this.selectedTemplate);        
       }
     }
   }
@@ -395,7 +396,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.onCloseSendEmailClicked();
           }
           this.ref.detectChanges();
-          this.loaderService.hide();
+          this.loaderService.hide(); 
+          this.navigateConditionally();
         },
         error: (err: any) => {
           this.loaderService.hide();
@@ -406,6 +408,19 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       });
   }
 
+  navigateConditionally(){
+    switch (this.communicationEmailTypeCode) {
+      case CommunicationEventTypeCode.PendingNoticeEmail:
+        this.router.navigate([`/case-management/cases/`]);
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeEmail:
+      case CommunicationEventTypeCode.ApprovalNoticeEmail:
+      case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
+        this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
+        break;
+    }
+  }
+  
   getApiTemplateTypeCode(): string {
     let templateTypeCode = '';
     switch (this.communicationEmailTypeCode) {
@@ -417,6 +432,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         break;
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
         templateTypeCode = CommunicationEventTypeCode.ApprovalEmailSent;
+        break;
+      case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
+        templateTypeCode = CommunicationEventTypeCode.DisenrollmentEmailSent;
         break;
     }
     return templateTypeCode;
@@ -437,6 +455,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    if(this.communicationEmailTypeCode === undefined){
+      this.communicationEmailTypeCode = event.templateTypeCode;
+    }
     this.selectedTemplate = event;
     if (event.documentTemplateId && !event.esignRequestId) {
       this.loaderService.show();

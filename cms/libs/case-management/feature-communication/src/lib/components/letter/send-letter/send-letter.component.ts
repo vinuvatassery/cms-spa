@@ -20,6 +20,7 @@ import { Observable, Subscription } from 'rxjs';
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UserDataService } from '@cms/system-config/domain';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-send-letter',
@@ -56,7 +57,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly workflowFacade: WorkflowFacade,
     private readonly contactFacade: ContactFacade,
     private readonly vendorContactFacade: VendorContactsFacade,
-    private readonly userDataService: UserDataService,) { }
+    private readonly userDataService: UserDataService,
+    private readonly router: Router) { }
 
   /** Public properties **/
 
@@ -303,7 +305,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
     let templateTypeCode = this.getApiTemplateTypeCode();
-    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles, templateTypeCode);
+    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles, templateTypeCode, this.notificationGroup);
     this.communicationFacade.sendLetterToPrint(this.entityId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
@@ -318,9 +320,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             downloadLink.click();
             this.onCloseNewLetterClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
           }
           this.loaderService.hide();
+          this.navigateConditionally();
         },
         error: (err: any) => {
           this.loaderService.hide();
@@ -328,6 +330,19 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         },
       });
+  }
+
+  navigateConditionally(){
+    switch (this.communicationLetterTypeCode) {
+      case CommunicationEventTypeCode.PendingNoticeLetter:
+        this.router.navigate([`/case-management/cases/`]);
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeLetter:
+      case CommunicationEventTypeCode.ApprovalNoticeLetter:
+      case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
+        this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
+        break;
+    }
   }
 
   getApiTemplateTypeCode(): string {
@@ -341,6 +356,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.ApprovalLetterSent;
+        break;
+      case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
+        templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterSent;
         break;
     }
     return templateTypeCode;
@@ -438,6 +456,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   handleDdlLetterValueChange(event: any) {
+    if(this.communicationLetterTypeCode === undefined){
+      this.communicationLetterTypeCode = event.templateTypeCode;
+    }
     if (event.documentTemplateId) {
       this.loaderService.show();
       this.communicationFacade.loadTemplateById(event.documentTemplateId)
