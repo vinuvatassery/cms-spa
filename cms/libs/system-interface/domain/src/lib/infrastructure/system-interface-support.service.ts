@@ -200,8 +200,8 @@ export class SystemInterfaceSupportService {
 
   getEventLovList() {
     const groupCodes: string[] = [
-      SystemInterfaceEventGroup.SYSTEM_INTERFACE_EXTERNAL,
-      SystemInterfaceEventGroup.SYSTEM_INTERFACE_INTERNAL
+      SystemInterfaceEventGroup.CATEGORY_1,
+      SystemInterfaceEventGroup.CATEGORY_2
     ];
     return this.http.get<any[]>(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/events-list/${groupCodes.join(',')}`);
   }

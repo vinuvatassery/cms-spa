@@ -100,8 +100,8 @@ export class NotiificationCategoryDetailComponent implements OnInit {
         data: response?.["items"] ?? [] // Check for null response or missing items property
       };
       const eventListString = newResponse.data
-        .sort((a: any, b: any) => (a?.eventDesc ?? '').localeCompare(b?.eventDesc ?? '')) // Check for null eventDesc
-        .map((event: any) => `${event?.eventDesc ?? ''}`)
+        .sort((a: any, b: any) => (a?.eventTypeCode ?? '').localeCompare(b?.eventTypeCode ?? '')) // Check for null eventDesc
+        .map((event: any) => `${event?.eventTypeCode ?? ''}`)
         .join('\n');
   
       // Check if the form control exists before setting its value

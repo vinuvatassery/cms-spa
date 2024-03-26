@@ -1,7 +1,9 @@
 <kendo-grid [resizable]="true" [navigable]="true" [loading]="gridLoaderShow" [data]="subEventLists$ | async">
-  <kendo-grid-column field="eventDesc" title="Event List" [width]="200">
+  <kendo-grid-column field="eventTypeCode" title="Event" [width]="150">
   </kendo-grid-column>
-  <kendo-grid-column field="activeFlag" title="Status" [width]="80">
+  <kendo-grid-column field="eventDesc" title="Desciption" [width]="230">
+  </kendo-grid-column>
+  <kendo-grid-column field="activeFlag" title="Status" [width]="50">
   </kendo-grid-column>
   <ng-template kendoGridNoRecordsTemplate>
     <common-grid-no-records></common-grid-no-records>
