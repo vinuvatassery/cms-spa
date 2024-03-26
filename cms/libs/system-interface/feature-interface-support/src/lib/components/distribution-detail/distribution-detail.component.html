@@ -1,6 +1,6 @@
 <section class="k-dialog-body" [formGroup]="memberForm">
     <p class="text-muted">
-        Adds a user to the distribution list for the selected role
+        {{ isEditMode ? 'Updates' : 'Add' }} a user to the distribution list for the selected this member.
     </p>
     <div class="flex-row">
 
@@ -32,7 +32,7 @@
                 </kendo-autocomplete> -->
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="!memberForm.controls['firstName'].valid">
-                First Name is required
+                First Name is required.
             </kendo-formerror>
         </kendo-formfield>
         </div>
@@ -45,7 +45,7 @@
                 </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="!memberForm.controls['lastName'].valid">
-                Last Name is required
+                Last Name is required.
             </kendo-formerror>
         </kendo-formfield>
 
@@ -57,10 +57,10 @@
                 </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="isSubmitted && !memberForm.controls['email'].valid && !memberForm.controls['email'].value">
-                Email Address is required
+                Email Address is required.
             </kendo-formerror>
             <kendo-formerror *ngIf="isSubmitted && !memberForm.controls['email'].valid && memberForm.controls['email'].value">
-                Invalid Email Address
+                Invalid Email Address.
             </kendo-formerror>
         </kendo-formfield>
         </div>
