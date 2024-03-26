@@ -85,13 +85,6 @@
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_INCOME }"
           *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]' aria-label="Income">
           Income</button>
-        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_EMPLOYMENT)"
-          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_EMPLOYMENT }"
-          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]' aria-label="Employment"> Employment</button>
-
-          <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_SMOKING_CESS)"
-          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_SMOKING_CESS }"
-          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]' aria-label="Smoking Cessation"> Smoking Cessation</button>
       </kendo-buttongroup>
       <kendo-buttongroup *ngIf="health_button_grp">
         <button kendoButton (click)="onTabClick(clientProfileTabs.HEALTH_INSURANCE_STATUS)"
