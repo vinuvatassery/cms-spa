@@ -199,7 +199,7 @@ export class SystemInterfaceSupportService {
   }
 
   getEventLovList() {
-    const groupCodes = "";
+    const groupCodes = "code";
     return this.http.get<any[]>(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/events-list/${groupCodes}`);
   }
   // ----------------------------------------
