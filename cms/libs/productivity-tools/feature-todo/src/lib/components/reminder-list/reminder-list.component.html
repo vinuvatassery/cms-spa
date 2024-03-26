@@ -21,6 +21,7 @@
     (onDeleteAlertGridClicked)="onDeleteReminderAlert($event)"
     (reminderDetailsClickedEvent)="onNewReminderOpenClicked(reminderDetailsTemplate)"
     (deleteReminderOpenClickedEvent)="onDeleteReminderOpenClicked(deleteReminderTemplate)"
+    (onSnoozeReminderEvent)="onSnoozeReminder($event)"
     ></productivity-tools-reminder-item>
   </section>
 </section>
@@ -80,7 +81,6 @@
     (searchProvider)="searchProvider($event)"
     (remainderFor)="remainderFor($event)"
     (getReminderDetailsLov)="getReminderDetailsLov()"
-   
     ></productivity-tools-reminder-detail>
 </ng-template>
 
