@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CaseFacade, CaseScreenTab, WorkflowFacade, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import {UITabStripScroll} from '@cms/shared/ui-tpa'
-import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade , UserManagementFacade, UserDefaultRoles} from '@cms/system-config/domain'
 
 
@@ -51,7 +51,7 @@ export class CasePageComponent implements OnInit {
   myClients$ = this.caseFacade.myClients$;
   recentClients$ = this.caseFacade.recentClients$;
   allClients$ = this.caseFacade.allClients$;
-
+i=0;
   /** Constructor**/
 
     constructor(private readonly router: Router,
@@ -62,6 +62,7 @@ export class CasePageComponent implements OnInit {
       private readonly  cdr :ChangeDetectorRef,
       private reminderFacade: ReminderFacade,
       private route: ActivatedRoute,
+      private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
     ) {}
 
   /** Lifecycle hooks **/
@@ -208,5 +209,11 @@ export class CasePageComponent implements OnInit {
         SnackBarNotificationType.SUCCESS,
         'Item  updated to Done successfully'
       );
+    }
+
+
+    addSnackBars(){
+      this.i = this.i+1;
+      this.reminderNotificationSnackbarService.manageSnackBar(ReminderSnackBarNotificationType.LIGHT,'alertText'+this.i)
     }
   }

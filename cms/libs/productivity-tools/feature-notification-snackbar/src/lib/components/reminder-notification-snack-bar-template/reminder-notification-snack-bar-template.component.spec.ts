@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReminderNotificationSnackBarTemplateComponent } from './reminder-notification-snack-bar-template.component';
+import { ReminderNotificationSnackBarsTemplateComponent } from './reminder-notification-snack-bar-template.component';
 
 describe('ReminderNotificationSnackBarTemplateComponent', () => {
-  let component: ReminderNotificationSnackBarTemplateComponent;
-  let fixture: ComponentFixture<ReminderNotificationSnackBarTemplateComponent>;
+  let component: ReminderNotificationSnackBarsTemplateComponent;
+  let fixture: ComponentFixture<ReminderNotificationSnackBarsTemplateComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ReminderNotificationSnackBarTemplateComponent],
+      declarations: [ReminderNotificationSnackBarsTemplateComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(
-      ReminderNotificationSnackBarTemplateComponent
+      ReminderNotificationSnackBarsTemplateComponent
     );
     component = fixture.componentInstance;
     fixture.detectChanges();

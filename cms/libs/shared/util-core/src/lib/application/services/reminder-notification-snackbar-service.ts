@@ -27,7 +27,6 @@ export class ReminderNotificationSnackbarService {
 
       manageSnackBar(type : ReminderSnackBarNotificationType 
         , errorBody : any
-        , content :any =null
         ,source :  ReminderNotificationSource  = ReminderNotificationSource.API)
       { 
         
@@ -56,8 +55,7 @@ export class ReminderNotificationSnackbarService {
         const snackbarMessage: any = {
           title: titleText,
           subtitle: subtitleText,
-          type: type,
-          content :content
+          type: type
         };
         this.filterManager.next(snackbarMessage);
 

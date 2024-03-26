@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   TemplateRef,
+  Type,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
@@ -25,6 +26,7 @@ import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProvi
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
+import { ReminderNotificationSnackBarsTemplateComponent } from '../../components/reminder-notification-snack-bar-template/reminder-notification-snack-bar-template.component';
 @Component({
   selector: 'productivity-tools-reminder-notification-snack-bar',
   templateUrl: './reminder-notification-snack-bar.component.html',
@@ -45,6 +47,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   @ViewChild('reminderNotificationTemplateContainer', {
     read: ViewContainerRef,
   })
+
   reminderNotificationTemplateContainer!: ViewContainerRef; 
   isReminderExpand = false;
   isReminderExpands = false;
@@ -91,6 +94,8 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   unviewedCount =0;
+  disablePrevButton = true;
+  disableNxtButton = false;
   /** Constructor **/
   constructor(
     private readonly notificationService: NotificationService,
@@ -103,6 +108,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     public lovFacade : LovFacade,
     public financialRefundFacade : FinancialVendorRefundFacade,
     public financialVendorFacade : FinancialVendorFacade,
+    public viewContainerRef : ViewContainerRef,
     private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
   ) {}
 
@@ -113,11 +119,15 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   }
 
   reminderSnackBarSubscribe() {
+    
+
     this.remindersUnViewedCount$.subscribe((res:number) =>{
        this.unviewedCount = res;
     })
+    this.reminderNotificationSnackbarService
+    .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, "alertText1")
+
     this.reminderSnackBar$.subscribe((res:any) =>{
-      this.snackbarMessage = res;
        this.entityName = res.alertExtraProperties.EntityName
        this.entityId = res.alertExtraProperties.EntityId
        this.vendorTypeCode = res.alertExtraProperties.VendorTypeCode
@@ -145,15 +155,18 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
        if(dueDate == today && !repeatTime){
         this.dueDateText ="Today"
        }
-    this.reminderNotificationSnackbarService
-    .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, res.alertText)
 
-    })
+       this.reminderNotificationSnackbarService
+       .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, this.entityName)
+
+  })
+
     this.reminderNotificationSnackbarService.snackbar$.subscribe({
       next: (res) => {
         if (res) {          
           this.alertText = res.subtitle;
           this.snackbarMessage = res;
+         console.log(this.snackbarMessage)
           this.notificationService.show({
             content: this.alertTemplate,
             appendTo: this.reminderNotificationTemplateContainer,
@@ -165,6 +178,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
             cssClass: 'reminder-notification-bar',
           });
         }
+        this.displayNextAd()
         this.messageCount = document.getElementsByClassName(
           'k-notification-container ng-star-inserted'
         );
@@ -311,6 +325,97 @@ onNewReminderClosed(result: any) {
   this.newReminderDetailsDialog.close();
   this.isEdit = false;
     
+}
+
+getAds() {
+  return [
+    {
+      component: ReminderNotificationSnackBarsTemplateComponent,
+      inputs: { entityName: 'Dr. IQ', 
+      alertText: 'Smart as they come',
+      entityId :"257",
+      entityTypeCode :"CLIENT",
+      vendorTypeCode :"",
+      alertId : '72F258B7-BCD0-4F5C-8082-B2DEEB951C56'
+     },
+    },
+    {
+      component: ReminderNotificationSnackBarsTemplateComponent,
+      inputs: { entityName: 'Bombasto',
+       alertText: 'Brave as they come',
+       entityId :"257",
+      entityTypeCode :"CLIENT",
+      vendorTypeCode :"",
+      alertId : '72F258B7-BCD0-4F5C-8082-B2DEEB951C56' },
+    },
+    {
+      component: ReminderNotificationSnackBarsTemplateComponent,
+      inputs: {
+        entityName: 'Hiring for several positions',
+        alertText: 'Submit your resume today!',
+        entityId :"257",
+        entityTypeCode :"CLIENT",
+        vendorTypeCode :"",
+        alertId : '72F258B7-BCD0-4F5C-8082-B2DEEB951C56'
+      },
+    },
+    {
+      component: ReminderNotificationSnackBarsTemplateComponent,
+      inputs: {
+        entityName: 'Openings in all departments',
+        alertText: 'Apply today',
+        entityId :"257",
+        entityTypeCode :"CLIENT",
+        vendorTypeCode :"",
+        alertId : '72F258B7-BCD0-4F5C-8082-B2DEEB951C56'
+      },
+    },
+  ] as {component: Type<any>, inputs: Record<string, unknown>}[];
+}
+
+setAds(entityName:any, alertText:any){
+return this.getAds().push({
+  component : ReminderNotificationSnackBarsTemplateComponent,
+  inputs:{
+    entityName: entityName,
+    alertText: alertText,
+  }
+})
+}
+
+
+private adList = this.getAds()
+
+private currentAdIndex = 0;
+
+get currentAd() {
+  return this.adList[this.currentAdIndex];
+}
+
+displayNextAd() {
+  this.currentAdIndex++;
+  // Reset the current ad index back to `0` when we reach the end of an array.
+  if (this.currentAdIndex >= this.adList.length) {
+    this.disableNxtButton = true;
+  }else{
+    this.disableNxtButton = false;
+  }
+  if(this.currentAdIndex == 0){
+    this.disablePrevButton = true
+  }else{
+    this.disablePrevButton = false
+  }
+}
+
+displayPrevAd() {
+  this.currentAdIndex--;
+  // Reset the current ad index back to `0` when we reach the end of an array.
+  if (this.currentAdIndex <= 0) {
+    this.disablePrevButton = true
+    this.currentAdIndex = 0;
+  }else{
+    this.disablePrevButton = false;
+  }
 }
 }
 

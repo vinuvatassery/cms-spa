@@ -3,48 +3,23 @@
 
 </div>
 
- 
 <ng-template #reminderNotificationTemplate>
-  <button class="reminder_list_show_btn" title="Reminder Notification List" 
-  kendoButton *ngIf="isReminderExpands">
-   <span class="material-icons" aria-hidden="true"> alarm </span>
-    <span class="app-c-badge badge-round-right badge-warn" role="region" 
-     [attr.aria-label]="messageCount.length">{{unviewedCount}}</span></button>
-  <div class="reminder-snack-bar-wrapper">
-    <div class="reminder-col-one">
-      <span class="material-icons" aria-hidden="true"> alarm </span>
-    </div>
-    <div class="reminder-col-two">
-      <p class="reminder-description" role="region"  aria-label="title">
-        <button kendoButton look="flat" *ngIf="entityName" 
-        [attr.aria-label]="entityName" class="card-link-button"
-        (click)="onEntityNameClick(entityId,entityTypeCode,vendorTypeCode)"
-         aria-label="todo item for">
-          {{entityName }}
-        </button>
-        {{alertText}} </p>
-      <div class="flex-space-bw align-items-center mt-1">
-        <div>
-          <span aria-label="Today" role="region" > {{dueDateText}}</span>
-        </div>
-        <div class="d-flex">
-          <kendo-dropdownbutton role="region" aria-label="Options" themeColor="primary" fillMode="flat" 
-           [data]="data" (click)="$event.stopPropagation()" (itemClick)="onOptionClicked($event, alertId)">
-            Options <span class="material-icons" aria-hidden="true">   arrow_drop_down    </span>
-          </kendo-dropdownbutton>
+  <div class="ad-banner-example">
+    <h3>Advertisements</h3>
+    <ng-container *ngComponentOutlet="
+      currentAd.component;
+      inputs: currentAd.inputs;
+    " />
 
-          <button kendoButton role="region" themeColor="primary" aria-label="Dismiss"  fillMode="flat"  (click)="removePreviousMessage();$event.stopPropagation()"> DISMISS</button>
-        </div>
-      </div>
-    </div>
-    <div class="reminder-col-three">
-      <button kendoButton fillMode="clear" aria-label="Move Reminder Notification on Side" class="snakbar-close-btn" 
-        (click)="moveSideReminderNotification();$event.stopPropagation()">
-        <span class="material-icons" aria-hidden="true"> chevron_right </span>
-      </button>
-    </div> 
+    <button kendoButton role="region" themeColor="primary" aria-label="Dismiss"  fillMode="flat"
+    (click)="displayNextAd()" [disabled]="disableNxtButton"> Next</button>
+    <button kendoButton role="region" themeColor="primary" aria-label="Dismiss"  fillMode="flat"
+    (click)="displayPrevAd()" [disabled]="disablePrevButton"> Prev</button>
+    <!-- <button (click)="displayNextAd()">Next</button> -->
   </div>
 </ng-template>
+
+
 
 <ng-template #NewReminderTemplate>
   <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
