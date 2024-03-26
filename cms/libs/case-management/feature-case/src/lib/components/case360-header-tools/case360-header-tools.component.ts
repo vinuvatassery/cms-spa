@@ -118,9 +118,11 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.templateLoadType = this.smsCommunicationTypeCode;
-        this.currentCommunicationTypeCode = this.smsCommunicationTypeCode;
-        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+        this.templateLoadType = CommunicationEventTypeCode.ClientSMS;
+        this.informationalText = "Select an existing template or draft custom text messages"
+        this.templateHeader = 'Send New SMS Text';
+        this.currentCommunicationTypeCode = CommunicationEventTypeCode.ClientSMS;
+        this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
         }
       },
     },

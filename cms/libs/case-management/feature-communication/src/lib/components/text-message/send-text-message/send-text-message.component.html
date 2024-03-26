@@ -1,8 +1,8 @@
  
-<kendo-dialog-titlebar (close)="onCloseSendMessageClicked()">Send New SMS Text </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="onCloseSendMessageClicked()">{{templateHeader}} </kendo-dialog-titlebar>
 <section class="k-dialog-body">
   <p class="text-muted mb-1">
-    Select an existing template or draft custom text messages.
+    {{informationalText}} 
   </p>
   <div class="flex-row pb-2">
     <div class="flex-col">

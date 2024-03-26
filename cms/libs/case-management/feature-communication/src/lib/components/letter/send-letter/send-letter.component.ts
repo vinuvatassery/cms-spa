@@ -103,7 +103,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
-      this.vendorContactFacade.loadMailCodes(this.entityId);
       this.loadClientAndVendorDraftLetterTemplates();
     }else {
       this.vendorContactFacade.loadMailCodes(this.entityId);
@@ -139,9 +138,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       next: (data: any) =>{
         if (data?.length > 0) {
           this.ddlTemplates = data;
-
            this.handleDdlLetterValueChange(data[0]);
-
           this.ref.detectChanges();
         }else{
           this.loadDropdownLetterTemplates();
@@ -305,7 +302,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
     let templateTypeCode = this.getApiTemplateTypeCode();
-    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles, templateTypeCode, this.notificationGroup);
+    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, this.notificationGroup);
     this.communicationFacade.sendLetterToPrint(this.entityId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
