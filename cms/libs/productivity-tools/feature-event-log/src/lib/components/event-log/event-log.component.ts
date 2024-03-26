@@ -77,6 +77,7 @@ export class EventLogComponent implements OnInit {
     ];
   searchValue = '';
   filterDataQueryArray:any[]=[];
+  skeletonCounts = [1, 2, 3, 4, 5]
 
   public eventLogFilterForm: FormGroup = new FormGroup({
     caseworkerfilterbyoperator: new FormControl('', []),
@@ -383,7 +384,7 @@ export class EventLogComponent implements OnInit {
   downloadAttachment(eventLogAttachmentId: any, filePath: string){
     let pathSplitArray = filePath.split('$');
     let fileNmae = pathSplitArray[pathSplitArray.length-1];
-    this.documentFacade.viewOrDownloadEventFile(true, eventLogAttachmentId, fileNmae);
+    this.documentFacade.viewOrDownloadEventFile(false, eventLogAttachmentId, fileNmae);
   }
 
   @HostListener('document:keydown', ['$event'])
