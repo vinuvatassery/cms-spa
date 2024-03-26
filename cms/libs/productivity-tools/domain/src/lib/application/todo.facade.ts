@@ -182,9 +182,14 @@ export class TodoFacade {
         next: (todoGridResponse: any) => {
           this.loaderService.hide()
           this.curdAlertSubject.next(true);
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
-          this.loadAlertGridSubject.next(true);
-          this.bannerAlertListSubject.next(true);
+          if(todoGridResponse.status == 0){
+            this.showHideSnackBar(SnackBarNotificationType.ERROR , todoGridResponse.message)
+          }else {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
+            this.loadAlertGridSubject.next(true);
+            this.bannerAlertListSubject.next(true);
+          }
+          
         },
         error: (err) => {
           this.loaderService.hide()
