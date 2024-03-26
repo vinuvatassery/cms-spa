@@ -1,15 +1,19 @@
 <div kendoTooltip #reminderNotificationTemplateContainer class="remainder_container" (click)="reminderContainerClicked();$event.stopPropagation()"
  [ngClass]="{'expand_view': isReminderExpand === true, 'collapse_view' : isReminderExpand === false}" id="reminder_notify">
-
-</div>
-
- 
-<ng-template #reminderNotificationTemplate>
-  <button class="reminder_list_show_btn" title="Reminder Notification List" 
+ <button class="reminder_list_show_btn" title="Reminder Notification List" 
   kendoButton *ngIf="isReminderExpands">
    <span class="material-icons" aria-hidden="true"> alarm </span>
     <span class="app-c-badge badge-round-right badge-warn" role="region" 
      [attr.aria-label]="messageCount.length">{{unviewedCount}}</span></button>
+</div>
+
+ 
+<ng-template #reminderNotificationTemplate>
+  <!-- <button class="reminder_list_show_btn" title="Reminder Notification List" 
+  kendoButton *ngIf="isReminderExpands">
+   <span class="material-icons" aria-hidden="true"> alarm </span>
+    <span class="app-c-badge badge-round-right badge-warn" role="region" 
+     [attr.aria-label]="messageCount.length">{{unviewedCount}}</span></button> -->
   <div class="reminder-snack-bar-wrapper">
     <div class="reminder-col-one">
       <span class="material-icons" aria-hidden="true"> alarm </span>
