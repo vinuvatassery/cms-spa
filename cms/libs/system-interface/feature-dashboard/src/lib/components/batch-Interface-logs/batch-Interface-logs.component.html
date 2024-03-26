@@ -62,6 +62,11 @@
       (detailExpand)="onDetailExpand($event)"
       [data]="activityEventLogLists$ | async">
         <kendo-grid-column field="processTypeDesc" title="Process" [width]="180">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.processTypeDesc}}
+             <p *ngIf="dataItem.inboundFlag==Yes"> {{Inbound}}</p>
+             <p *ngIf="dataItem.inboundFlag==NO"> {{Outbound}}</p>
+          </ng-template>
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist 
             [data]="interfaceProcessBatchLov$ | async" 
@@ -72,6 +77,7 @@
             (valueChange)="dropdownFilterChange('processTypeDesc',$event, filterService)"
          >
             </kendo-dropdownlist>
+            
        </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="startDate" title="Process Start Date" [width]="180" [sortable]="true">

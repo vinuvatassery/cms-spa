@@ -121,20 +121,6 @@
           </kendo-popover>
         </ng-template>
       </kendo-grid-column>
-      <!-- <kendo-grid-column field="triggeredBy" title="Triggered By" [width]="70" class="text-center" [columnMenu]="false" [sortable]="false" [filterable]="false">
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <common-user-photo-icon  
-          [userId]="dataItem.lastModifierId" 
-          [userFirstName]="dataItem.userFirstName"
-          [userLastName]="dataItem.userLastName"
-          [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
-          [linkType]="'profileIcon'"
-          [userPhotos$]="supportGroupProfilePhoto$"></common-user-photo-icon>
-        </ng-template>
-        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-    
-        </ng-template>
-      </kendo-grid-column> -->
 
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
@@ -178,7 +164,7 @@
     <kendo-dialog-actions>
       <div class="justify-content-between">
         <div class="justify-content-end">
-          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="Close()"> Cancel  </button>
+          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="Close()"> Close  </button>
 
         </div>
       </div>

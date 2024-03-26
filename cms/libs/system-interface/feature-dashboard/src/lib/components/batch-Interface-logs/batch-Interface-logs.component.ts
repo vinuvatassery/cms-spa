@@ -52,6 +52,11 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   /** Public properties **/
   InterfaceType: string = "RAMSELL";
+  Inbound: string = "[Inbound]";
+  Outbound: string = "[Outbound]";
+  Yes: string = "Y";
+  NO: string = "N";
+
   columnsReordered = false;
   displayAll: boolean = true;
   activityEventLogSubList = [
