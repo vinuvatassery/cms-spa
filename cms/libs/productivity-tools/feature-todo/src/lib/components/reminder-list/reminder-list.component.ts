@@ -39,6 +39,7 @@ export class ReminderListComponent implements  OnInit{
   reminderDetailsTemplate!: TemplateRef<any>;
   @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
   deleteToDODialogTemplate!: TemplateRef<any>;
+  @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   isOpenDeleteTODOItem = false;
   sortColumn ="alertDueDate";
   sortValue ="alertDueDate";
@@ -71,6 +72,8 @@ export class ReminderListComponent implements  OnInit{
   @Output() ReminderEventClicked  = new EventEmitter<any>();
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
   @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
+  @ViewChild('NewReminderTemplate', { read: TemplateRef })
+  NewReminderTemplate!: TemplateRef<any>;
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
   clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
@@ -110,7 +113,6 @@ export class ReminderListComponent implements  OnInit{
       icon: 'delete',
     },
   ];
-
   /** Constructor **/
   constructor( 
     private loaderService: LoaderService,
@@ -389,5 +391,8 @@ export class ReminderListComponent implements  OnInit{
   }
   remainderFor(event:any){
     this.remainderIsFor = event
+  }
+  onSnoozeReminder(event:any){ 
+    this.notificationFacade.SnoozeReminder(event.reminderId,event.duration);
   }
 }
