@@ -18,7 +18,6 @@ import { CaseManagementFeatureClientModule } from '@cms/case-management/feature-
 import { CaseManagementFeatureContactModule } from '@cms/case-management/feature-contact';
 import { CaseManagementFeatureFamilyAndDependentModule } from '@cms/case-management/feature-family-and-dependent';
 import { CaseManagementFeatureIncomeModule } from '@cms/case-management/feature-income';
-import { CaseManagementFeatureEmploymentModule } from '@cms/case-management/feature-employment';
 import { CaseManagementFeatureVerificationModule } from '@cms/case-management/feature-verification';
 import { CaseManagementFeatureHealthInsuranceModule } from '@cms/case-management/feature-health-insurance';
 import { CaseManagementFeatureCaseRoutingModule } from './case-management-feature-case-routing.module';
@@ -40,7 +39,6 @@ import { CaseManagementFeatureManagementModule } from '@cms/case-management/feat
 import { CaseManagementFeatureDocumentModule } from '@cms/case-management/feature-document';
 import { Case360HeaderNotificationsComponent } from './components/case360-header-notifications/case360-header-notifications.component';
 import { ClientImportantInfoComponent } from './components/client-important-info/client-important-info.component';
-import {CaseManagementFeatureSmokingCessationModule} from '@cms/case-management/feature-smoking-cessation'
 import { Case360HeaderToolsComponent } from './components/case360-header-tools/case360-header-tools.component';
 
 @NgModule({
@@ -61,13 +59,11 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CaseManagementFeatureContactModule,
     CaseManagementFeatureFamilyAndDependentModule,
     CaseManagementFeatureIncomeModule,
-    CaseManagementFeatureEmploymentModule,
     CaseManagementFeatureVerificationModule,
     CaseManagementFeatureHealthInsuranceModule,
     CaseManagementFeatureDrugModule,
     CaseManagementFeatureManagementModule,
     CaseManagementFeatureDocumentModule,
-    CaseManagementFeatureSmokingCessationModule,
     ProductivityToolsFeatureFabsMenuModule
   ],
   declarations: [
