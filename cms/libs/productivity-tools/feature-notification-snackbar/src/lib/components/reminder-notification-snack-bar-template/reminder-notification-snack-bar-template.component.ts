@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
-import { TodoFacade } from '@cms/productivity-tools/domain';
+import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -37,6 +37,7 @@ isReminderExpand = false;
   isReminderOpenClicked = false
   newReminderDetailsDialog!:any
   getTodo$ = this.todoFacade.getTodo$
+
   public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
   public duration =
     this.configurationProvider.appSettings.snackbarAnimationDuration;
@@ -46,13 +47,25 @@ isReminderExpand = false;
       text: 'Edit Reminder',
     },
     {
-      text: '15 Minutes Snooze',
+      text: '15 Minutes',
     },
     {
-      text: '30 Minutes Snooze',
+      text: '30 Minutes',
     },
     {
-      text: '1 Hour Snooze',
+      text: '1 hour',
+    },
+    {
+      text: '2 hours',
+    }, 
+    {
+      text: '1 day',
+    },
+    {
+      text: '3 days',
+    },
+    {
+      text: '7 days',
     },
   ];
 
@@ -78,6 +91,7 @@ isReminderExpand = false;
   ,public financialVendorFacade : FinancialVendorFacade
   , public cdr : ChangeDetectorRef
   ,  public intl: IntlService
+  , public notificationFacade : NotificationFacade
   ) {
       
   }
@@ -88,8 +102,6 @@ isReminderExpand = false;
 
   ngDoCheck(){
     if(this.snackBarMessage){
-      console.log(this.snackBarMessage)
-      console.log(this.dueDate)
       this.entityName = this.snackBarMessage.alertExtraProperties.EntityName
       this.entityId = this.snackBarMessage.alertExtraProperties.EntityId
       this.vendorTypeCode = this.snackBarMessage.alertExtraProperties.VendorTypeCode
@@ -103,7 +115,7 @@ isReminderExpand = false;
 
   }
 
-  public removePreviousMessage(alertId:any) {
+  public removePreviousMessage() {
     this.showSideReminderNotification();
     
     const divMessage = document.getElementsByClassName(
@@ -136,12 +148,26 @@ isReminderExpand = false;
   }
 
   onOptionClicked(event:any, alertId:any){
+    this.selectedAlertId = alertId;
+
     if(event.text == 'Edit Reminder'){
   if (!this.isReminderOpenClicked) {
     this.isEdit = true;
-     this.selectedAlertId = alertId;
      this.onNewReminderOpenClicked(this.NewReminderTemplate)
     }
+ }
+ if(event.text == '15 Minutes'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false)
+  this.removePreviousMessage()
+ }
+ if(event.text == '30 Minutes'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,30)
+ }
+ if(event.text == '1 hour'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1)
+ }
+ if(event.text == '2 hours'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1)
  }
   }
 
@@ -169,10 +195,18 @@ isReminderExpand = false;
   
 
   onNewReminderClosed(result: any) {
-    this.newReminderDetailsDialog.close();
-    this.isEdit = false;
-      
+   this.newReminderDetailsDialog.close();
+    this.isEdit = true;
+    if(result){
+    this.todoFacade.getTodo$.subscribe(res =>{
+      this.snackBarMessage.alertText = res.alertDesc;
+      this.snackBarMessage.entityName = res.entityTypeCode == 'CLIENT' ? res.clientFullName : res.providerName
+    })
+    this.todoFacade.getTodoItem(this.alertId);
   }
+}
+
+    
   showSideReminderNotification() {
     this.isReminderSideOff = document.getElementById('reminder_notify');
     this.isReminderSideOff.classList.remove('move_notify_aside');

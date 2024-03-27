@@ -141,8 +141,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
             hideAfter: this.hideAfter,
             cssClass: 'reminder-notification-bar',
           });
-          if(notificationRef && notificationRef.content &&  notificationRef.content.instance){
-                    
+          if(notificationRef && notificationRef.content &&  notificationRef.content.instance){          
       const repeatTime =  res.payload.alertExtraProperties.RepeatTime
       const dueDate = this.intl.formatDate( res.payload.alertExtraProperties.AlertDueDate, this.dateFormat);
       const today = this.intl.formatDate(new Date(), this.dateFormat)

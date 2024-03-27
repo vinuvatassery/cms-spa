@@ -84,9 +84,9 @@ export class NotificationFacade {
     }
   } 
   
-  SnoozeReminder(reminderId:any, duration:any){
+  SnoozeReminder(reminderId:any, duration:any, isFullDay= true){
     this.loaderService.show()
-    this.notificationDataService.SnoozeReminder(reminderId,duration).subscribe({
+    this.notificationDataService.SnoozeReminder(reminderId,duration,isFullDay).subscribe({
       next: (snoozeResponse: any) => {
         this.loaderService.hide() 
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , snoozeResponse.message);
