@@ -21,6 +21,7 @@ import { UserDataService } from '@cms/system-config/domain';
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { Router } from '@angular/router';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'case-management-send-email',
@@ -148,10 +149,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.openNewEmailClicked();
           } else {
             this.loadEmailTemplates();
+            this.loadDraftEsignRequest();
           }
-        }
-        else {
-          this.loadDraftEsignRequest();
         }
       });
     this.vendorContactFacade.loadMailCodes(this.entityId);
@@ -303,10 +302,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (!this.selectedTemplate.documentTemplateId) {
       this.selectedTemplate.documentTemplateId = this.selectedTemplate.notificationTemplateId;
     }
-      this.saveDraftEsignRequest(this.selectedTemplate);
-    } else {
-      this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
-    }
+    
+    this.saveDraftEsignRequest(this.selectedTemplate);
+    this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
   }
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
@@ -605,7 +603,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private initiateAdobeEsignProcess(emailData: any) {
     this.loaderService.show();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.ccEmail, this.selectedBccEmail, this.isSaveForLater);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.ccEmail, this.selectedBccEmail, this.isSaveForLater);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
       .subscribe({
@@ -660,7 +658,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
     this.isSaveForLater = true;
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater);
     let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(esignRequestFormdata, draftTemplate, this.cerEmailAttachedFiles);
     if (draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null) {
       this.esignFacade.saveDraftEsignRequest(draftEsignRequest)
