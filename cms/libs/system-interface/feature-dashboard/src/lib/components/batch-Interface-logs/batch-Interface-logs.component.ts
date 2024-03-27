@@ -151,7 +151,6 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
       skip: this.skipCount$ ?? 0,
       take: this.defaultPageSize,
       sort: sort,
-      filter: this.filterData,
     };
   }
 
@@ -177,7 +176,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.InterfaceType = event;
     this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.defaultGridState()
-    this.loadActivityListGrid();
+    this.loadDefaultActivityListGrid();
     this.getHistoryByInterfaceType(this.InterfaceType);
     this.collapseRowsInGrid();
   }
@@ -295,25 +294,37 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.dataStateChange(stateData);
   }
   defaultGridState() {
+    const sort: SortDescriptor[] = [{
+      field: 'startDate',
+      dir: 'desc'
+    }];
     this.state = {
       skip: 0,
       take:this.defaultPageSize,
-      sort: this.sort,
+      sort:sort,
       filter: { logic: 'and', filters: [] },
-    };
+    };  
   }
-  resetGrid() {    
+  resetGrid() {   
+    this.defaultGridState();
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filteredBy = '';
     this.filteredByColumnDesc = '';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
-    this.columnChangeDesc = 'Default Columns';
-    this.loadActivityListGrid();
+   this.sortColumn ='Process Start Date';
+   this.columnChangeDesc = 'Default Columns';
+    this.loadDefaultActivityListGrid();
 
   }
-
+  loadDefaultActivityListGrid() {
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? this.defaultPageSize,
+      this.sortValue,
+      this.sortType);
+    this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, !this.displayAll, param);
+  }
   public onDetailExpand(e: any): void {
     this.fileId = e.dataItem.fileId;
     this.interfaceTypeCode = e.dataItem.interfaceTypeCode;

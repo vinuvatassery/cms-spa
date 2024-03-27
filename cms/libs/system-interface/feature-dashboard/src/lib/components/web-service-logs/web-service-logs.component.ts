@@ -137,6 +137,12 @@ defaultPageSize=20;
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
+    this.state = {
+      skip: 0,
+      take:this.defaultPageSize,
+      sort:this.sort ,
+      filter: { logic: 'and', filters: [] },
+    }; 
     this.loadListGrid();
 
   }
