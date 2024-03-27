@@ -19,6 +19,7 @@ export class SignalrEventHandlerService {
   /** Public properties **/
   reminderSnackBar$ = this.reminderSnackBars.asObservable();
 
+  
   private snackBarAlertIds:any[]=[]
   unviewedCount = 0;
   remindersUnViewedCount$  = this.remindersUnViewedCountSubject.asObservable();
