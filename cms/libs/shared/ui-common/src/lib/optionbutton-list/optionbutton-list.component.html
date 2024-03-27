@@ -8,13 +8,13 @@
             id="{{OptionControlerName}}"
             [value]="material.lovCode"
             [name]="OptionControlerName"
-            attr.aria-labelledby="{{OptionControlerName + material.lovCode}}"
+            attr.aria-labelledby="{{OptionControlerName}}"
             [formControlName]="OptionControlerName"
             (change)="onMaterialsRdoClicked($event)"/>
 
           <kendo-label
             class="k-radio-label"
-            for="{{OptionControlerName + material.lovCode}}"
+            for="{{OptionControlerName}}"
             text="{{material.lovDesc}}"
           ></kendo-label>
 
