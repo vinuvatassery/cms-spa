@@ -167,7 +167,7 @@ if(this.selectedItem > 0){
   private contains(target: EventTarget): boolean {
     return (
       this.anchorInsert.nativeElement.contains(target) ||
-      this.popupInsert.forEach((element) => { element.valueToInsert.selectedItem=0 })
+      this.popupInsert?.forEach((element) => { element.valueToInsert.selectedItem=0 })
     );
   }
   private closeAllVariablePanels() {

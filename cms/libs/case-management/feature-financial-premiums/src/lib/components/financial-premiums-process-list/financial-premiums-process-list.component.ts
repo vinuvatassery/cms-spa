@@ -19,6 +19,7 @@ import { FilterService, GridDataResult, SelectableMode, SelectableSettings } fro
 import {CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
 import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { Legend } from '@progress/kendo-angular-charts';
 @Component({
   selector: 'cms-financial-premiums-process-list',
   templateUrl: './financial-premiums-process-list.component.html',
@@ -746,7 +747,9 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
         this.sendReportCount = this.recordCountWhenSelectallClicked;
       }
     } else {
-      this.sendReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((item: any) => item.selected).length;
+      this.sendReportCount = this.selectedSendReportList?.SelectedSendReports.filter((obj: any, index: any, self: any) =>
+      index === self.findIndex((t: any) => ( t.vendorId === obj.vendorId ))).length;
+      //this.sendReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((item: any) => item.selected).length;
     }
   }
 
@@ -759,7 +762,12 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
       });
       let exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
       if (exist == 0) {
-        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+        this.checkedAndUncheckedRecordsFromSelectAll.push(
+          { 'paymentRequestId': dataItem.paymentRequestId,
+            'vendorAddressId': dataItem.vendorAddressId,
+            'selected': true,
+            'vendorId': dataItem.vendorId,
+            'clientId': dataItem.clientId });
       }
     }
   }
@@ -768,7 +776,13 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     if (this.isSendReportOpened) {
       let exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
       if (exist === 0) {
-        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+        this.checkedAndUncheckedRecordsFromSelectAll.push(
+          { 'paymentRequestId': dataItem.paymentRequestId,
+            'vendorAddressId': dataItem.vendorAddressId,
+            'selected': true,
+            'vendorId': dataItem.vendorId,
+            'clientId': dataItem.clientId,
+            'vendorName': dataItem.insuranceVendor });
       } else {
         const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
         if (recordIndex !== -1) {
@@ -792,7 +806,13 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     if (this.isSendReportOpened) {
       let exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
       if (exist === 0) {
-        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': false });
+        this.checkedAndUncheckedRecordsFromSelectAll.push(
+          { 'paymentRequestId': dataItem.paymentRequestId,
+            'vendorAddressId': dataItem.vendorAddressId,
+            'selected': true,
+            'vendorId': dataItem.vendorId,
+            'clientId': dataItem.clientId,
+            'vendorName': dataItem.insuranceVendor });
       } else {
         const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
         if (recordIndex !== -1) {
@@ -911,7 +931,13 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     this.selectedProcessClaims = selection;
     this.selectedSendReportList = selection;
     this.checkedAndUncheckedRecordsFromSelectAll = [];
-    this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': selection.paymentRequestId, 'vendorAddressId': selection.vendorAddressId });
+    this.checkedAndUncheckedRecordsFromSelectAll.push(
+      { 'paymentRequestId': selection.paymentRequestId,
+            'vendorAddressId': selection.vendorAddressId,
+            'selected': true,
+            'vendorId': selection.vendorId,
+            'clientId': selection.clientId,
+            'vendorName': selection.insuranceVendor });
     this.selectedSendReportList = { 'SelectedSendReports': this.checkedAndUncheckedRecordsFromSelectAll };
     this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
   }
@@ -994,5 +1020,10 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   searchColumnChangeHandler(data: any) {
     this.searchValue = '';
     this.onChange(data)
+  }
+  SendInsuranceVendorReports(result: any){
+    if(result){
+      this.financialPremiumsFacade.SendInsuranceVendorReports(this.selectedSendReportList?.SelectedSendReports);
+    }
   }
 }

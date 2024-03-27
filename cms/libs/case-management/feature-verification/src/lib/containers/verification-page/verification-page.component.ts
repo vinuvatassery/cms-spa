@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription, first } from 'rxjs';
 /** Internal Libraries **/
-import { VerificationFacade, NavigationType, WorkflowFacade } from '@cms/case-management/domain';
+import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, EsignStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-
-
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { UserDataService } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-verification-page',
@@ -32,7 +32,16 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   isNotUploaded = true;
   alreadyUploaded = false;
   showAttachmentOptions = true;
-
+  healthCareProviderExists: boolean = false;
+  providerEmail!: string;
+  emailSentDate?:any = null;
+  loginUserName!:any;
+  loginUserId!: any;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
+  errorMessage!: string;
+  isSendEmailFailed: boolean = false;
+  isSendEmailClicked: boolean = false;
+  workflowTypeCode:any;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
@@ -42,14 +51,18 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly router: Router,
+    private readonly esignFacade: EsignFacade,
+    private readonly intl: IntlService,
+    private readonly userDataService: UserDataService,
+    private readonly configurationProvider: ConfigurationProvider,
 ) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
+    this.loadSessionData();
     this.buildForm();
     this.addSaveForLaterSubscription();
     this.addSaveSubscription();
-    this.loadSessionData();
     this.verificationFacade.hivVerificationSave$.subscribe(data=>{
       this.load();
     });
@@ -116,16 +129,32 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
+            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+            else
+            {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
           }
         })
       }
       else {
-        this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-          queryParamsHandling: "preserve"
-        });
+        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
+        else
+        {
+          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
       }
     });
   }
@@ -133,6 +162,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   private loadSessionData() {
     this.verificationFacade.showLoader();
     this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
@@ -141,14 +171,16 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.verificationFacade.getClientHivDocuments(this.clientId);
-          this.cdr.detectChanges();
           this.load();
+          this.loadPendingEsignRequestInfo();
+          this.cdr.detectChanges();
         }
-
       });
+      this.verificationFacade.hideLoader();
   }
 
   private load(){
+    this.verificationFacade.showLoader();
     this.verificationFacade.getHivVerificationWithAttachment( this.clientId, this.clientCaseEligibilityId).subscribe({
       next:(data)=>{
         if(data?.clientHivVerificationId){
@@ -259,4 +291,77 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.hivVerificationForm.controls['attachmentType'].updateValueAndValidity();
 
   }
+
+  getHealthcareProvider() {
+    if(this.clientId > 0){
+    this.verificationFacade.showLoader();
+    this.verificationFacade.loadHealthCareProviders(this.clientId , 0 , 10, '' , 'asc', false).subscribe({
+      next: (healthCareProvidersResponse : any) => {        
+        if(healthCareProvidersResponse)
+        {      
+          const items = healthCareProvidersResponse["items"];
+          if(items.length > 0){
+            this.healthCareProviderExists = true;
+            items.forEach((item: any) => {
+              this.providerEmail = item?.emailAddress;
+            });
+        this.cdr.detectChanges();
+          } 
+        }
+        this.verificationFacade.hideLoader();
+      },
+      error: (err) => {   
+        this.verificationFacade.hideLoader();   
+        this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
+    });
+  }
+}
+
+loadPendingEsignRequestInfo(){
+  this.verificationFacade.showLoader();
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
+    .subscribe({
+      next: (data: any) =>{
+        if (data?.esignRequestId != null) {
+          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.InProgress){
+            this.isSendEmailClicked=true;
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.providerEmail = data?.to.map((x: any)=>x);
+            this.getLoggedInUserProfile();
+          }
+          else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
+            this.isSendEmailClicked=true;
+            this.providerEmail = data?.to.map((x: any)=>x);
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.getLoggedInUserProfile();
+          }else if(data?.esignRequestStatusCode == EsignStatusCode.Failed){
+            this.providerEmail = data?.to.map((x: any)=>x);
+            this.isSendEmailFailed = true;
+            this.errorMessage = data?.errorMessage;
+          }
+            this.cdr.detectChanges();
+          }else{
+          this.getHealthcareProvider();
+          }
+          this.verificationFacade.hideLoader();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      this.loggingService.logException(err);
+    },
+  });
+}
+
+getLoggedInUserProfile(){
+  this.verificationFacade.showLoader();
+ this.userDataService.getProfile$.subscribe((profile:any)=>{
+    if(profile?.length>0){
+     this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
+     this.loginUserId = profile[0].loginUserId;
+    }
+  })
+  this.verificationFacade.hideLoader();
+}
 }

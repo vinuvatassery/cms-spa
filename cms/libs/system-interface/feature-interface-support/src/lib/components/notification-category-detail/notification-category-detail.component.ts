@@ -12,6 +12,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { filter, first } from 'rxjs';
+import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
 @Component({
   selector: 'notification-category-detail',
@@ -39,14 +40,13 @@ export class NotiificationCategoryDetailComponent implements OnInit {
   @Output() loadSubEventByParentIdEvent = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  notiificationCategoryForm!: FormGroup;
+  notificationCategoryForm!: FormGroup;
   memberForm!: FormGroup;
   tAreaCessationMaxLength = 200;
   isSubmitted: boolean = false;
   isLoading = false;
   isValidateForm = false;
   notiificationCategory!: any;
-  eventList: string[] = ['This is event 1', 'This is event 2', 'This is event 3'];
   showEventList: boolean = false;
   isloading: boolean = false;
   constructor(private formBuilder: FormBuilder,
@@ -63,27 +63,27 @@ export class NotiificationCategoryDetailComponent implements OnInit {
 
 
   createNotiificationCategoryForm() {
-    this.notiificationCategoryForm = this.formBuilder.group({
+    this.notificationCategoryForm = this.formBuilder.group({
       groupName: new FormControl({ value: '', disabled: true }),
       eventId: new FormControl({ value: '', disabled: false }, [Validators.required]),
       eventListInput: new FormControl({ value: '', disabled: true })
     });
 
     if (this.selectedGroup)
-      this.notiificationCategoryForm.controls['groupName'].setValue(this.selectedGroup.groupName);
+      this.notificationCategoryForm.controls['groupName'].setValue(this.selectedGroup.groupName);
   }
 
   bindDataToForm(notificationCategory: any) {
     this.notiificationCategory = notificationCategory;
-    this.notiificationCategoryForm.controls["groupName"].setValue(this.selectedGroup.groupName);
-    this.notiificationCategoryForm.controls["eventId"].setValue(notificationCategory.eventId);
+    this.notificationCategoryForm.controls["groupName"].setValue(this.selectedGroup.groupName);
+    this.notificationCategoryForm.controls["eventId"].setValue(notificationCategory.eventId);
     this.onNotificationCategoryChanged(notificationCategory.eventId);
-    this.notiificationCategoryForm.markAllAsTouched();
+    this.notificationCategoryForm.markAllAsTouched();
     this.cd.detectChanges();
   }
 
   mapFormValues() {
-    const formValues = this.notiificationCategoryForm.value;
+    const formValues = this.notificationCategoryForm.value;
     const dto = {
       notificationGroupId: this.selectedGroup.notificationGroupId,
       eventId: formValues.eventId,
@@ -95,33 +95,40 @@ export class NotiificationCategoryDetailComponent implements OnInit {
     this.loadSubEventByParentIdEvent.emit(event);
     this.subEventLov$.pipe(
       first()
-    ).subscribe((response: any[]) => {
-      const eventListString = response
-        .sort((a, b) => a.eventDesc.localeCompare(b.eventDesc))
-        .map(event => `- ${event?.eventDesc ?? ''}`)
+    ).subscribe((response: any) => {
+      const newResponse = {
+        data: response?.["items"] ?? [] // Check for null response or missing items property
+      };
+      const eventListString = newResponse.data
+        .sort((a: any, b: any) => (a?.eventTypeCode ?? '').localeCompare(b?.eventTypeCode ?? '')) // Check for null eventDesc
+        .map((event: any) => `${event?.eventTypeCode ?? ''}`)
         .join('\n');
-
-      this.notiificationCategoryForm.controls['eventListInput'].setValue(eventListString);
+  
+      // Check if the form control exists before setting its value
+      if (this.notificationCategoryForm?.controls?.['eventListInput']) {
+        this.notificationCategoryForm.controls['eventListInput'].setValue(eventListString);
+      }
       this.isloading = false;
     });
-
+  
+    // Ensure event is not null or undefined before assigning to showEventList
     this.showEventList = !!event;
   }
-
+  
   onCancelClick() {
     this.close.emit();
   }
 
   validateForm() {
-    this.notiificationCategoryForm.markAllAsTouched();
+    this.notificationCategoryForm.markAllAsTouched();
   }
 
   checkValidations() {
-    return this.notiificationCategoryForm.valid;
+    return this.notificationCategoryForm.valid;
   }
 
   public addAndSaveNotificationCategory() {
-    this.notiificationCategoryForm.markAllAsTouched();
+    this.notificationCategoryForm.markAllAsTouched();
     const res = this.checkValidations();
     this.isSubmitted = true;
     if (!res) { return; }
@@ -129,7 +136,7 @@ export class NotiificationCategoryDetailComponent implements OnInit {
     this.validateForm();
     this.isValidateForm = true;
 
-    if (this.notiificationCategoryForm.valid) {
+    if (this.notificationCategoryForm.valid) {
       let finalData = this.mapFormValues();
       if (this.isEditNotificationCategory) {
         this.editNotificationCategoryEvent.emit(finalData)

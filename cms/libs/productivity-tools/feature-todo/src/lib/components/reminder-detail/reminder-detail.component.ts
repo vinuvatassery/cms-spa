@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, Output, ChangeDetectionStrategy, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, ChangeDetectionStrategy, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
 import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CaseFacade, FinancialVendorFacade } from '@cms/case-management/domain';
@@ -26,11 +26,13 @@ export class ReminderDetailComponent implements OnInit {
   caseSearched$ = this.caseFacade.caseSearched$;
   search$ = this.todoFacade.search$;
   tareaRemindermaxLength = 200;
+  selectedMedicalProvider!:any
   tareaReminderCharachtersCount!: number;
   tareaReminderCounter!: string;
   tareaReminderDescription = '';
   isShowEntityTypeCode = false;
   dateValidator = false;
+
   @Input() entityTypeCodeSubject$! : Observable<any>
   @Input() providerSearchResult$!:Observable<any>
   @Input() medicalProviderSearchLoaderVisibility$! : Observable<any>
@@ -65,6 +67,7 @@ export class ReminderDetailComponent implements OnInit {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
  isSubmitted = false
  @Input() isFromNotificationPanel = false;
+ allowCustom = false;
   constructor(private readonly todoFacade: TodoFacade, 
     private router : Router,
     private route : ActivatedRoute,
@@ -72,7 +75,8 @@ export class ReminderDetailComponent implements OnInit {
     private configurationProvider: ConfigurationProvider,
     private financialVendorFacade : FinancialVendorFacade,
     public intl: IntlService,
-    public formBuilder: FormBuilder) { }
+    public formBuilder: FormBuilder,
+    public cdr : ChangeDetectorRef) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -140,7 +144,7 @@ export class ReminderDetailComponent implements OnInit {
       addToOutlookCalender: [false],
       deleteFromOutlookCalender :[false]
     });
-   
+   if(this.isDelete || this.isEdit){
    this.getTodo$.subscribe((res:any) =>{
     if(res){
       const repeatTime = res.repeatTime?.split(':')
@@ -168,6 +172,11 @@ export class ReminderDetailComponent implements OnInit {
       this.showVendorSearch = true;
       this.showClientSearch = false;
       this.placeholderText = this.vendorPlaceHolderText;
+      this.selectedMedicalProvider =   { providerName : res.providerName,
+        tin : res.tin,
+        providerId: res.entityId
+      };
+      this.allowCustom = true;
       this.searchProviderSubject.next([
         { providerName : res.providerName,
           tin : res.tin,
@@ -179,7 +188,8 @@ export class ReminderDetailComponent implements OnInit {
         tin : res.tin,
         providerId: res.entityId
       })
- 
+      this.clientReminderForm.controls['vendorId'].updateValueAndValidity();
+     
     }else{
       this.showVendorSearch = false;
       this.showClientSearch = true;
@@ -200,7 +210,7 @@ export class ReminderDetailComponent implements OnInit {
      }
    }
   })
-  
+}
   }
  
   onCloseReminderClicked() 
@@ -271,14 +281,7 @@ export class ReminderDetailComponent implements OnInit {
   }
   }
 
-  public save() {
-    this.isSubmitted = true;
-    this.afterCrudOperationAddSubscription();
-    this.setLinkToAndEntity();
-   this.clientReminderForm.markAllAsTouched();
-   if(this.isEdit){
-   if (this.clientReminderForm.valid) {
-   
+  updateReminder(){
     if(this.clientReminderForm.controls['time'].value){
       this.todoFacade.updateAlertItem(this.prepareRepeatPayload()) 
      }else{
@@ -287,10 +290,30 @@ export class ReminderDetailComponent implements OnInit {
         alertId : this.alertId,
       }) 
      }  
-    }
-  }   
-    else{
-      this.todoFacade.createAlertItem(this.prepareCommonPayload())
+  }
+  
+  addReminder(){
+      if(this.clientReminderForm.controls['time'].value){
+        this.todoFacade.createAlertItem(this.prepareRepeatPayload()) 
+       }else{
+        this.todoFacade.createAlertItem(this.prepareCommonPayload()) 
+       }  
+      }
+  
+
+  public save() {
+    this.isSubmitted = true;
+    this.afterCrudOperationAddSubscription();
+    this.setLinkToAndEntity();
+    this.timeValidation();
+    this.dueDateValidation();
+   this.clientReminderForm.markAllAsTouched();
+   if (this.clientReminderForm.valid) {
+   if(this.isEdit){
+    this.updateReminder()
+   }else{
+     this.addReminder()
+   }
     }
   }
 
@@ -319,6 +342,7 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   providerSelectionChange(event : any){  
+    console.log(event)
     this.remainderFor.emit(event.providerName)
   }
   clientSelectionChange(event:any){
@@ -343,6 +367,7 @@ export class ReminderDetailComponent implements OnInit {
     }
   }
   loadVendorsBySearchText(vendorSearchText:any){
+    this.allowCustom = false;
     if (!vendorSearchText || vendorSearchText.length == 0) {
       return
     }
@@ -363,10 +388,9 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   dueDateValidation(){
-    const dueDate = this.clientReminderForm.controls['dueDate'].value;
-    console.log(dueDate)
-    console.log(new Date())
-    if ( this.clientReminderForm.controls['dueDate'].value && dueDate < new Date()) {
+    const dueDate = new Date(this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat));
+    const todayDate =  new Date(this.intl.formatDate(new Date(), this.dateFormat));
+    if ( this.clientReminderForm.controls['dueDate'].value && dueDate < todayDate) {
       this.clientReminderForm.controls['dueDate'].setErrors({ 'incorrect': true });
     
       return;
@@ -374,10 +398,10 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   timeValidation(){
-    const time = this.clientReminderForm.controls['time'].value;
-    console.log(time)
-    console.log(new Date())
-    if ( this.clientReminderForm.controls['time'].value && time < new Date()) {
+    const timeInMinutes = new Date(this.clientReminderForm.controls['time'].value).getMinutes();
+    const timeInHours = new Date(this.clientReminderForm.controls['time'].value).getHours();
+    
+    if ( this.clientReminderForm.controls['time'].value && timeInMinutes < new Date().getMinutes() && timeInHours <  new Date().getMinutes() ) {
       this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
     
       return;

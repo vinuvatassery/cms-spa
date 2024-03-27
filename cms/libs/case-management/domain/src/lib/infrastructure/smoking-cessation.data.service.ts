@@ -7,20 +7,8 @@ import { ClientNote } from "../entities/client-note";
 @Injectable({ providedIn: 'root' })
 export class SmokingCessationDataService{
     constructor(private readonly http: HttpClient,private configurationProvider: ConfigurationProvider) {
-     
-    }
+    }  
     
-    updateSmokingCessation(smokingCessation: SmokingCessation,clientId:any) {  
-        return this.http.put<SmokingCessation>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/smoking-cessations`,
-           smokingCessation,
-
-        )}
-      loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any,clientId:any){
-        return this.http.get<SmokingCessation>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/smoking-cessations?ClientCaseId=${clientCaseId}&ClientCaseEligibilityId=${clientCaseEligibilityId}`);
-      }
-
       loadSmokingCessationNotes(clientId:any,clientCaseId:any,clientCaseEligibilityId:any,type:any,isShowHistoricalData:boolean=false){
         return this.http.get<SmokingCessation>(
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/notes?clientCaseId=${clientCaseId}&clientCaseEligibilityId=${clientCaseEligibilityId}&type=${type}&isShowHistoricalData=${isShowHistoricalData}`);

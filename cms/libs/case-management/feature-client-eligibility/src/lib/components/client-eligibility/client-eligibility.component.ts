@@ -2,9 +2,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { first, forkJoin, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode, EligibilityRequestType, ClientNoteTypeCode, SmokingCessationFacade } from '@cms/case-management/domain';
-import { YesNoFlag } from '@cms/shared/ui-common';
-import { ActivatedRoute } from '@angular/router';
+import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode, EligibilityRequestType, ClientNoteTypeCode, CaseStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   LoaderService,
   LoggingService,
@@ -63,7 +63,8 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   isCerForm = false;
   acceptanceModalTitle: string = 'Application Accepted';
   isreviewQuestionAnswersFacadeSubscribed = false;
- 
+  workflowTypeCode:any;
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -76,9 +77,9 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
     private readonly formBuilder: FormBuilder,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService,
-    private readonly reviewQuestionAnswerFacade: ReviewQuestionAnswerFacade,
-    private readonly smokingCessationFacade : SmokingCessationFacade ,   
-    public readonly documentFacade: DocumentFacade
+    private readonly reviewQuestionAnswerFacade: ReviewQuestionAnswerFacade,  
+    public readonly documentFacade: DocumentFacade,
+    private readonly router: Router,
 
   ) {
     this.eligibilityForm = this.formBuilder.group({});
@@ -193,6 +194,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
 
   loadSessionData() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
@@ -316,16 +318,27 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
     this.isOpenDisenroll = false;   
   }
 
-  handleClosAfterDisEnroll(event: any) {        
+  handleClosAfterDisEnroll(event: any) {
     if (event.cancel === true) {
-      this.isOpenDisenroll = false;   
+      this.isOpenDisenroll = false;
     }
-    else {     
+    else {
 
-      if(this.clientCaseId && this.clientCaseEligibilityId &&  event?.disenrollReasonCode)
-      {
-      this.isOpenDisenroll = false;   
-      this.clientEligibilityFacade.disEnrollCerApplication(this.clientCaseId , this.clientCaseEligibilityId, event?.disenrollReasonCode)     
+      if (this.clientCaseId && this.clientCaseEligibilityId && event?.disenrollReasonCode) {
+        this.isOpenDisenroll = false;
+        this.clientEligibilityFacade.disEnrollCerApplication(this.clientCaseId, this.clientCaseEligibilityId, event?.disenrollReasonCode);
+        this.workflowFacade.sendLetterEmailFlag = StatusFlag.Yes;
+        this.workflowFacade.caseStatus = CaseStatusCode.disenrolled;
+        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
+        else {
+          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
+        }
       }
     }
   }

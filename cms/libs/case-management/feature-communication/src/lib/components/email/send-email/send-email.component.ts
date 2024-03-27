@@ -11,8 +11,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 /** Internal Libraries **/
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -21,7 +20,7 @@ import { UserDataService } from '@cms/system-config/domain';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
-import { DialogService } from '@progress/kendo-angular-dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-send-email',
@@ -97,7 +96,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() emailSubject!: string;
   existingFile: any = [];
   loginUserId!: any;
-  isSaveFoLater: boolean = false;
+  isSaveForLater: boolean = false;
   isButtonsVisible: boolean = true;
   isCCDropdownVisible: boolean = true;
   isBCCDropdownVisible: boolean = true;
@@ -129,17 +128,20 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly userDataService: UserDataService,
     private readonly esignFacade: EsignFacade,
     private dialogService: DialogService,
+    private readonly router: Router,
     private readonly vendorContactFacade: VendorContactsFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadTemplate();   
+    this.loadTemplate();
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
     this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
       this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
-      if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.templateLoadType) {
+      if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
+        this.loadDraftEsignRequest();
+      }else{
           if (this.isContinueDraftClicked) {
             this.loadClientAndVendorDraftEmailTemplates();
           } else if (this.isNewNotificationClicked) {
@@ -186,7 +188,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           } else {
             this.loadEmailTemplates();
           }
-         
+
           this.loaderService.hide();
         },
         error: (err: any) => {
@@ -250,7 +252,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             }
             if(this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
               ||this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
-              || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail){
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail){
               this.templateDrpDisable = true;
               this.cancelDisplay = false;
             }
@@ -300,7 +303,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (!this.selectedTemplate.documentTemplateId) {
       this.selectedTemplate.documentTemplateId = this.selectedTemplate.notificationTemplateId;
     }
-    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.saveDraftEsignRequest(this.selectedTemplate);
     } else {
       this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
@@ -362,10 +364,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.selectedTemplate.templateContent = this.updatedTemplateContent;
-      if (this.templateLoadType == CommunicationEventTypeCode.CerAuthorizationEmail) {
-        this.initiateAdobeEsignProcess(this.selectedTemplate, CommunicationEvents.SendEmail);
+      if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail) {
+        this.initiateAdobeEsignProcess(this.selectedTemplate);
       } else {
-        this.initiateSendEmailProcess(this.selectedTemplate);
+        this.initiateSendEmailProcess(this.selectedTemplate);        
       }
     }
   }
@@ -416,17 +418,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.selectedTemplate.documentTemplateId = this.selectedTemplate.notificationTemplateId
     }
     let templateTypeCode = this.getApiTemplateTypeCode();
-    const emailData = this.getEmailPayload(selectedTemplate,templateTypeCode);    
+    const emailData = this.getEmailPayload(selectedTemplate,templateTypeCode);
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     this.communicationFacade.initiateSendEmailRequest(emailFormData)
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message)
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message) //'Email Sent! Event Logged.'
             this.onCloseSendEmailClicked();
           }
           this.ref.detectChanges();
-          this.loaderService.hide();
+          this.loaderService.hide(); 
+          this.navigateConditionally();
         },
         error: (err: any) => {
           this.loaderService.hide();
@@ -437,6 +440,19 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       });
   }
 
+  navigateConditionally(){
+    switch (this.communicationEmailTypeCode) {
+      case CommunicationEventTypeCode.PendingNoticeEmail:
+        this.router.navigate([`/case-management/cases/`]);
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeEmail:
+      case CommunicationEventTypeCode.ApprovalNoticeEmail:
+      case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
+        this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
+        break;
+    }
+  }
+  
   getApiTemplateTypeCode(): string {
     let templateTypeCode = '';
     switch (this.communicationEmailTypeCode) {
@@ -448,6 +464,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         break;
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
         templateTypeCode = CommunicationEventTypeCode.ApprovalEmailSent;
+        break;
+      case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
+        templateTypeCode = CommunicationEventTypeCode.DisenrollmentEmailSent;
         break;
     }
     return templateTypeCode;
@@ -468,8 +487,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    if(this.communicationEmailTypeCode === undefined){
+      this.communicationEmailTypeCode = event.templateTypeCode;
+    }
     this.selectedTemplate = event;
-    if (event.documentTemplateId) {
+    if (event.documentTemplateId && !event.esignRequestId) {
       this.loaderService.show();
       this.communicationFacade.loadTemplateById(event.documentTemplateId)
         .subscribe({
@@ -497,11 +519,15 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.selectedCCEmail = this.ccEmail;
               this.defaultCCEmail = data.cc;
               this.showToEmailLoader = false;
-              if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
-                || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
-                || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail)
+              if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
+                || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
+                || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail
+                || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail)
                 && this.triggerFrom === WorkflowTypeCode.NewCase) {
                 this.getDraftedTemplate();
+              }
+              if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail  || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
+                this.getCCEmailList(this.entityId, this.loginUserId);
               }
               this.ref.detectChanges();
             }
@@ -537,9 +563,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         'description': event.description,
         'documentTemplateId': event.notificationTemplateId
       };
-      if (CommunicationEventTypeCode.CerAuthorizationEmail === this.communicationEmailTypeCode) {
-        this.getCCEmailList(this.entityId, this.loginUserId);
-      }
       this.ref.detectChanges();
     }
   }
@@ -548,7 +571,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationEmailTypeCode).subscribe((response:any)=>{
       if(response.length>0){
         this.selectedTemplateContent =response[0].requestBody;
-        this.updatedTemplateContent = response[0].requestBody; 
+        this.updatedTemplateContent = response[0].requestBody;
         this.ref.detectChanges();
       }
     });
@@ -580,9 +603,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.selectedToEmails = event[0].email;
   }
 
-  private initiateAdobeEsignProcess(emailData: any, requestType: string) {
+  private initiateAdobeEsignProcess(emailData: any) {
     this.loaderService.show();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.ccEmail, this.selectedBccEmail, this.isSaveForLater);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
       .subscribe({
@@ -636,8 +659,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
-    this.isSaveFoLater = true;
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
+    this.isSaveForLater = true;
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater);
     let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(esignRequestFormdata, draftTemplate, this.cerEmailAttachedFiles);
     if (draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null) {
       this.esignFacade.saveDraftEsignRequest(draftEsignRequest)
@@ -677,8 +700,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   cerEmailAttachments(event: any) {
-    if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter) {
-      this.cerEmailAttachedFiles = event;
+    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
+      const isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
+      if(!isFileExists)
+      {
+      this.cerEmailAttachedFiles?.push(event);
+      }
       this.attachmentCount = this.cerEmailAttachedFiles?.length;
     } else {
       const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
@@ -706,7 +733,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.ccEmail = data;
+            this.selectedCCEmail = data?.map((item: any)=> item.email);
+            this.ccEmail = this.selectedCCEmail;
             this.ref.detectChanges();
           }
           this.loaderService.hide();

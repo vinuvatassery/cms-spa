@@ -44,9 +44,10 @@ export class NotificationPanelComponent implements OnInit {
   // data: Array<any> = [{}];
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
-  clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchLoaderVisibility$= this.financialRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
+  searchProviderSubject = this.financialVendorFacade.searchProviderSubject
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   notificationaAndReminderDataSubject = new Subject<any>();
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
@@ -146,14 +147,8 @@ export class NotificationPanelComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadNotificationsAndReminders();
     this.loadSignalrGeneralNotifications();
     this.loadSignalrReminders();
-    this.notificationList$.subscribe((data: any) => {
-      this.alertsData = data;
-      this.cdr.detectChanges();
-      this.loadNotificationsAndReminders;
-    });
   }
 
   /** Private methods */
@@ -238,11 +233,19 @@ export class NotificationPanelComponent implements OnInit {
     this.isNotificationsAndRemindersOpened = true;
   } 
 
+  onCloseNotificationsAndReminders(event: any) {
+    this.notificationReminderDialog.close();
+  }
   onNotificationButtonToggleClicked(show?: boolean): void {
     this.isNotificationPopupOpened =
       show !== undefined ? show : !this.isNotificationPopupOpened;
        
      if(this.isNotificationPopupOpened){
+      this.loadNotificationsAndReminders();
+      this.notificationList$.subscribe((data: any) => {
+        this.alertsData = data;
+        this.cdr.detectChanges();
+      });
         this.viewNotifications();
       }
   }

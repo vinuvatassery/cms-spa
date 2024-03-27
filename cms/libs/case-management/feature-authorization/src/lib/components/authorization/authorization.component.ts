@@ -42,7 +42,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   showCopyOfSignedApplicationRequiredValidation = new BehaviorSubject(false);
   showCopyOfSignedApplicationSizeValidation = new BehaviorSubject(false);
   documentTypeCode!: string;
-  screenName = ScreenType.Authorization;
+  emailScreenName = CommunicationEventTypeCode.ClientEmail;
+  letterScreenName = CommunicationEventTypeCode.ClientLetter;
+  notificationGroup = ScreenType.ClientProfile;
   isPrintClicked!: boolean;
   isSendEmailClicked!: boolean;
   isAuthorizationNoticePopupOpened = false;
@@ -77,9 +79,13 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   signedClietDocumentId!: string;
   paperlessFlag: any;
   minApplicantSignedDate: any = '01/01/1900';
-  communicationLetterTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
-  communicationEmailTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
-  emailSubject: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+  cerCommunicationLetterTypeCode!: string;
+  communicationLetterTypeCode!: string;
+  communicationEmailTypeCode!: string;
+  emailSubject!: string;
+  templateLoadType!:any;
+  informationalText :any = null;
+  templateHeader : string='';
 
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
@@ -112,6 +118,34 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.addDiscardChangesSubscription();
   }
 
+  getNotificationTypeCode() {
+    if(this.isCerForm){
+      if(this.paperlessFlag == StatusFlag.Yes){
+        this.templateLoadType = this.communicationEmailTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+        this.templateHeader = 'CER Authorization Email';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
+      }else{
+        this.templateLoadType = this.communicationLetterTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
+        this.templateHeader = 'CER Authorization Letter';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
+      }
+    }else{
+      if(this.paperlessFlag == StatusFlag.Yes){
+        this.templateLoadType = this.communicationEmailTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
+        this.templateHeader = 'Application Authorization Email';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
+      }else{
+        this.templateLoadType = this.communicationLetterTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetter;
+        this.templateHeader = 'Application Authorization Letter';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
+      }
+    }
+  }
+
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
   }
@@ -132,6 +166,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
                 }
               }
               this.loadPendingEsignRequestInfo();
+              this.getNotificationTypeCode();
             }
             this.loaderService.hide();
       },
@@ -149,7 +184,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       if(profile?.length>0){
        this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
       }
-    })
+    });
     this.loaderService.hide();
   }
 
@@ -286,14 +321,14 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
     this.isSendLetterOpenedDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
     });
   }
 
   onSendNewEmailClicked(template: TemplateRef<unknown>): void {
     this.isSendEmailOpenedDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
     });
   }
 

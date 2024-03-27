@@ -34,6 +34,9 @@ export class SendTextMessageComponent implements OnInit {
   @Input() communicationSmsTypeCode!: string;
   @Input() isContinueDraftClicked!: boolean;
   @Input() isNewNotificationClicked!: boolean;
+  @Input() templateLoadType!: string;
+  @Input() informationalText!:string
+  @Input() templateHeader !:string;
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
@@ -300,6 +303,9 @@ export class SendTextMessageComponent implements OnInit {
 
   /** External event methods **/
   handleDdlTextMessageValueChange(event: any) {
+    if(this.communicationSmsTypeCode === undefined){
+      this.communicationSmsTypeCode = event.templateTypeCode;
+    }
     this.isOpenMessageTemplate = true;
     this.isClearPhoneNumbers = true;
     this.isShowToPhoneNumbersLoader$.next(true);

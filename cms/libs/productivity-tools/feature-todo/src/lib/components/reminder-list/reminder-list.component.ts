@@ -16,7 +16,7 @@ import { SnackBar, ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** Facades **/ 
-import { LoaderService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { AlertTypeCode, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -26,6 +26,7 @@ import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { FormControl } from '@angular/forms';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
@@ -38,6 +39,7 @@ export class ReminderListComponent implements  OnInit{
   reminderDetailsTemplate!: TemplateRef<any>;
   @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
   deleteToDODialogTemplate!: TemplateRef<any>;
+  @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   isOpenDeleteTODOItem = false;
   sortColumn ="alertDueDate";
   sortValue ="alertDueDate";
@@ -46,6 +48,7 @@ export class ReminderListComponent implements  OnInit{
    @Input()todoGrid$ : any;
   @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   sort: SortDescriptor[] = [{
     field: this.sortColumn,
     dir: 'asc',
@@ -69,11 +72,14 @@ export class ReminderListComponent implements  OnInit{
   @Output() ReminderEventClicked  = new EventEmitter<any>();
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
   @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
+  @ViewChild('NewReminderTemplate', { read: TemplateRef })
+  NewReminderTemplate!: TemplateRef<any>;
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
   clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
+  searchProviderSubject = this.financialVendorFacade.searchProviderSubject;
   notificationList$ = this.notificationFacade.notificationList$;
   getTodo$ = this.Todofacade.getTodo$
   todoItemList: any[] = [];
@@ -107,7 +113,6 @@ export class ReminderListComponent implements  OnInit{
       icon: 'delete',
     },
   ];
-
   /** Constructor **/
   constructor( 
     private loaderService: LoaderService,
@@ -116,15 +121,31 @@ export class ReminderListComponent implements  OnInit{
   private readonly router: Router,
     private cdr : ChangeDetectorRef,
     private lovFacade : LovFacade,
+    private readonly configurationProvider: ConfigurationProvider,
+    public readonly  intl: IntlService,
     private financialVendorFacade : FinancialVendorFacade,
     public notificationFacade: NotificationFacade, 
     private financialRefundFacade : FinancialVendorRefundFacade
   ) {}
   ngOnInit(): void {
   this.InitializeData()
-  this.searchTerm.valueChanges.subscribe((value) =>{
-    this.onListenSearchTerm(value?.trim());
-})
+  this.searchTerm.valueChanges.subscribe((value) => {
+  const containsOnlyNumbers = /^\d+$/.test(value);
+  const tempDate = new Date(value);
+  const isDateFormat = !isNaN(tempDate.getTime());
+  if (containsOnlyNumbers) 
+  { 
+      this.onListenSearchTerm(value);
+  } 
+  else if (isDateFormat) 
+  {
+      const formattedDate = this.intl.formatDate(tempDate, this.dateFormat);
+      this.onListenSearchTerm(formattedDate);
+  }
+ else 
+ {
+      this.onListenSearchTerm(value?.trim());
+  }});
   }
 
   InitializeData(){
@@ -370,5 +391,8 @@ export class ReminderListComponent implements  OnInit{
   }
   remainderFor(event:any){
     this.remainderIsFor = event
+  }
+  onSnoozeReminder(event:any){ 
+    this.notificationFacade.SnoozeReminder(event.reminderId,event.duration);
   }
 }

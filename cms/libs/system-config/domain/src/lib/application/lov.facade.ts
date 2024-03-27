@@ -486,7 +486,7 @@ export class LovFacade {
   getCaseStatusLovs(): void {
     this.lovDataService.getLovsbyType(LovType.CaseStatus).subscribe({
       next: (lovResponse) => {
-        this.lovCaseStatusTypeSubject.next(lovResponse);
+         this.lovCaseStatusTypeSubject.next(lovResponse);
         const acceptedCaseStatusCodes = Object.values(AcceptedCaseStatusCode)
         const filteredLov = lovResponse.filter((item: any) => acceptedCaseStatusCodes.includes(item.lovCode))
         filteredLov.forEach((item: any) => {

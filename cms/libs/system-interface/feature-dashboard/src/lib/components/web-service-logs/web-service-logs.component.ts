@@ -7,10 +7,13 @@ import {
   OnChanges,
   Output,
   ViewEncapsulation,
-  OnDestroy
+  OnDestroy,
+  ViewChild,
+  TemplateRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject, Subscription } from 'rxjs';
@@ -28,7 +31,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // UI Variables
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+defaultPageSize=20;
   // Input Variables
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -37,7 +40,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   @Input() activityEventLogList$: any;
   @Input() lovsList$: any;
   @Input() skipCount$: any;
-
   // Flags
   displayAll = true;
   columnsReordered = false;
@@ -52,6 +54,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // Observable Variables
   webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
   webLogListsLoader$ = this.systemInterfaceDashboardFacade.webLogsDataLoader$;
+  profilePhoto$ = this.systemInterfaceDashboardFacade.profilePhoto$;
   gridData$ = this.gridDataSubject.asObservable();
 
   // Output Events
@@ -79,16 +82,21 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
   // Filter Data
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  errorDialog: any;
+  @ViewChild('errorInformationDialogTemplate', { read: TemplateRef })
+  errorInformationDialogTemplate!: TemplateRef<any>;
+  failureDetail:string="";
   interfaceFilterDropDown: any = null;
   lovsSubscription: Subscription | undefined;
 
   constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade) {
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
+    private dialogService: DialogService) {
 
     this.statusArray = systemInterfaceDashboardFacade.getStatusArray()
     this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray()
     this.processArray = systemInterfaceDashboardFacade.getEecProcessTypeCodeArray()
+  
   }
 
   gridColumns: any = {
@@ -159,7 +167,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
-      this.state?.take ?? 0,
+      this.state.take=this.defaultPageSize,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
@@ -175,7 +183,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.sortType = "desc"
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take:this.defaultPageSize,
       sort: this.sort,
     };
 
@@ -218,7 +226,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     }];
     this.state = {
       skip: this.skipCount$ ?? 0,
-      take: this.pageSizes[0]?.value,
+      take: this.defaultPageSize,
       sort: sort,
       filter: this.filterData,
     };
@@ -265,5 +273,27 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   downloadFile(filePath: any) {
     this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
   }
+
+
+  Close() {
+      this.errorDialog.close();
+    
+  }
+  
+ onViewInformation(error:string){
+ this.failureDetail=error;
+  this.onErrorDetailClicked(
+    this.errorInformationDialogTemplate
+  );
+  
+ }
+  public onErrorDetailClicked(template: TemplateRef<unknown>): void {
+    this.errorDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+ 
 
 }

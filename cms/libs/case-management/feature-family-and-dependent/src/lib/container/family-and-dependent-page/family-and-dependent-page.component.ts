@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 
 /** Internal libraries **/
-import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, Dependent, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, Dependent, CompletionChecklist, NavigationType, WorkflowTypeCode } from '@cms/case-management/domain';
 import {LovFacade } from '@cms/system-config/domain'
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -57,7 +57,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   updatedDependentsStatus: any = [];
   showPrevRelations$ = new BehaviorSubject<boolean>(false);
   dependentProfilePhoto$ = this.familyAndDependentFacade.dependentProfilePhotoSubject;
-
+  workflowTypeCode:any;
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -100,6 +100,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   private loadCase()
   {
    this.sessionId = this.route.snapshot.queryParams['sid'];
+   this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
     this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
     .subscribe((session: any) => {
@@ -334,9 +335,17 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.save().subscribe((response: any) => {
         if (response) {
           this.loaderService.hide();
-          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
+          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
+          else
+          {
+            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
         }
       })
     });

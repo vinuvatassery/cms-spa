@@ -81,19 +81,12 @@
 
         <ng-template kendoGridCellTemplate let-dataItem>
           <button *ngIf="dataItem.status === 'FAILED'" [attr.aria-label]="dataItem.status" kendoButton look="flat"
-            class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
+            class="card-link-button" (click)="onViewInformation(dataItem.exceptionDetails)" >
             Failure
           </button>
+       
           <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
           <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span>
-          <kendo-popover #userCard width="330" position="left">
-            <ng-template kendoPopoverBodyTemplate>
-              <div class="p-2">
-                <h5> Failure Detail </h5>
-                <p> {{ dataItem.exceptionDetails }} </p>
-              </div>
-            </ng-template>
-          </kendo-popover>
         </ng-template>
       </kendo-grid-column>
 
@@ -111,7 +104,15 @@
         <ng-template kendoGridCellTemplate let-dataItem>
           <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.triggeredBy">
-            <common-user-photo-icon [userId]="dataItem.triggeredBy"></common-user-photo-icon>
+            <common-user-photo-icon
+
+        [userId]="dataItem.triggeredBy"
+        [userFirstName]="dataItem.userFirstName"
+        [userLastName]="dataItem.userLastName"
+        [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+        [linkType]="'profileIcon'"
+        [userPhotos$]="profilePhoto$"
+             ></common-user-photo-icon>
           </button>
           <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
             <ng-template kendoPopoverBodyTemplate>
@@ -152,3 +153,20 @@
     </kendo-grid>
   </div>
 </section>
+
+<ng-template #errorInformationDialogTemplate>
+  <kendo-dialog-titlebar (close)="Close()"> Failure Detail</kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+     
+          <p class="text-muted mb-1">{{failureDetail}}</p>
+       
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="Close()"> Close  </button>
+
+        </div>
+      </div>
+    </kendo-dialog-actions>
+</ng-template>
