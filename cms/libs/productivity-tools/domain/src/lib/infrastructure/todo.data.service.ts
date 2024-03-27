@@ -75,5 +75,9 @@ export class TodoDataService {
     return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/dismiss/${alertId}`,null);
 
   }
+  loadAlertsData() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/alert_list`);
+  }
 }
 
