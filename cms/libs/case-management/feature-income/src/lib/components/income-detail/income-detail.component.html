@@ -73,10 +73,11 @@
               formControlName="incomeStartDate" (valueChange)="startDateOnChange()" placeholder="" #incomeStartDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !IncomeDetailsForm.controls['incomeStartDate'].disabled && insuranceEndDateIsgreaterthanStartDate">Income Start Date is required.
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid 
+          && !IncomeDetailsForm.controls['incomeStartDate'].disabled && insuranceStartDateIsLessThanEndDate">Income Start Date is required.
           </kendo-formerror>
           <kendo-formerror
-          *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !insuranceEndDateIsgreaterthanStartDate && 
+          *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !insuranceStartDateIsLessThanEndDate  && 
           !IncomeDetailsForm.controls['incomeStartDate'].disabled">Start Date must be before End Date.</kendo-formerror>
 
         </div>
@@ -89,7 +90,7 @@
               #incomeEndDate>
             </kendo-datepicker>
             <kendo-formerror
-            *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate && 
+            *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid && !insuranceStartDateIsLessThanEndDate && 
             !IncomeDetailsForm.controls['incomeEndDate'].disabled">End date must be after Start date.</kendo-formerror>
           </kendo-floatinglabel>
 
