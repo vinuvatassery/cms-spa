@@ -5,7 +5,7 @@
             <input
             type="radio"
             kendoRadioButton
-            id="{{OptionControlerName + material.lovCode}}"
+            id="{{OptionControlerName}}"
             [value]="material.lovCode"
             [name]="OptionControlerName"
             attr.aria-labelledby="{{OptionControlerName + material.lovCode}}"
@@ -29,6 +29,7 @@
                  [attr.aria-label]="textPlaceholderText"
                 textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
                 [formControlName]="textControlerName"
+                id="{{textControlerName}}"
                 [disabled]="textFieldDisable" (valueChange)="onChange($event)">
              </kendo-dropdownlist>
               </kendo-floatinglabel>
@@ -45,6 +46,7 @@
         <kendo-textbox [attr.aria-label]="otherControlerPlaceholderText"
           [fillMode]="formUiStyle.inputFillMode"
           [formControlName]="otherControlerName"
+          id="{{otherControlerName}}"
           [placeholder]="otherControlerPlaceholderText"
           [maxlength]="textFieldMaxLimit"
           (blur)="onOtherChanged($event)">
@@ -63,6 +65,7 @@
           [fillMode]="formUiStyle.inputFillMode"
           [disabled]="textFieldDisable"
           [formControlName]="textControlerName"
+          id="{{textControlerName}}"
           [placeholder]="textPlaceholderText"
           [maxlength]="textFieldMaxLimit"
           (blur)="onChanged($event)">
@@ -81,6 +84,7 @@
         [fillMode]="formUiStyle.inputFillMode"
         [disabled]="textFieldDisable"
         [formControlName]="textControlerName"
+        id="{{textControlerName}}"
         [autoCorrect]="autoCorrect"
         [format]="'n'"
         [min]="textFieldMinLimit"
