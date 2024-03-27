@@ -137,6 +137,11 @@ export class IncomeDetailComponent implements OnInit {
     });
   }
 
+  loadIncomeListGrid(event: any) {
+    this.loadIncomeList.emit(true);
+
+  }
+
   loadEmployers(employerName: any){
 
     if (!employerName || employerName.length == 0) {
