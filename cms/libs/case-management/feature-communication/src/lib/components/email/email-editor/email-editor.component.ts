@@ -113,7 +113,9 @@ export class EmailEditorComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadClientAttachments(this.clientId);
+    if (![CommunicationEventTypeCode.VendorEmail, CommunicationEventTypeCode.VendorLetter].includes(this.communicationTypeCode)) {
+      this.loadClientAttachments(this.clientId);
+    }
     this.loadFormsAndDocuemnts();
     this.loadClientVariables();
     this.loadDdlEditorVariables();
@@ -145,6 +147,14 @@ export class EmailEditorComponent implements OnInit {
         }else{
         this.loadClientVendorDefaultAttachment(this.selectedTemplate.documentTemplateId);
         }
+    }
+    
+    if ([CommunicationEventTypeCode.VendorEmail, CommunicationEventTypeCode.VendorLetter].includes(this.communicationTypeCode)) {
+      const optionIndex = this.editorUploadOptions.findIndex(i => i.id === 'attachfromclient');
+      if (optionIndex > -1) {
+        this.editorUploadOptions.splice(optionIndex, 1);
+        this.editorUploadOptions = [...this.editorUploadOptions];
+      }
     }
   }
 

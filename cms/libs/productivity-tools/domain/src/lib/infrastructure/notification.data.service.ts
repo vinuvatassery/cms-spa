@@ -45,8 +45,8 @@ export class NotificationDataService {
     return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/search/${text}` );
   }
 
-  SnoozeReminder(reminderId:any,duration:any) {
+  SnoozeReminder(reminderId:any,duration:any, isFullDay:boolean) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/snooze-reminder/${reminderId}/${duration}`,null);
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/snooze-reminder/${reminderId}/${duration}?isFullDay=${isFullDay}`,null);
   }
 }

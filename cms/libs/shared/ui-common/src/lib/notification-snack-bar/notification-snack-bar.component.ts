@@ -37,6 +37,7 @@ export class NotificationSnackBarComponent implements OnInit {
   constructor(private readonly notificationService: NotificationService,
     private configurationProvider : ConfigurationProvider) {}
 
+    notificationRef! :any
   /** Lifecycle hooks **/
   ngOnInit(): void {   
     this.data$.subscribe({
@@ -44,7 +45,7 @@ export class NotificationSnackBarComponent implements OnInit {
         this.removePreviousMessage()
         if (res) {
           this.snackbarMessage = res;
-          this.notificationService.show({
+          this.notificationRef =   this.notificationService.show({
             content: this.alertTemplate,
             position: { horizontal: 'center', vertical: 'top' },
             animation: { type: 'fade', duration: this.duration },
@@ -62,12 +63,15 @@ export class NotificationSnackBarComponent implements OnInit {
   }   
 
   public removePreviousMessage()
-  {      
-   const divMessage = document.getElementsByClassName("k-notification-container ng-star-inserted");
-   if(divMessage.length > 0)
-     {    
-      let currentMessage = divMessage.item(0);
-      currentMessage?.remove(); 
+  {    
+    if(this.notificationRef){  
+  this.notificationRef.hide()
+  // const divMessage = document.getElementsByClassName("k-notification-container ng-star-inserted");
+  // if(divMessage.length > 0)
+  //   {    
+  //    let currentMessage = divMessage.item(0);
+  //    currentMessage?.remove(); 
+  //  }
     }
    }
 
