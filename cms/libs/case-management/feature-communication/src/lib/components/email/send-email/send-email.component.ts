@@ -474,7 +474,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.selectedEmail = [];
               this.selectedEmail.push(this.toEmail[0]?.trim());
               this.selectedToEmail = this.selectedEmail;
-              if(this.emailSubject == ''){
+              if(this.emailSubject == '' || this.emailSubject === undefined){
               this.emailSubject = data.description;
               }
               const ccEmails = data.cc?.map((item: any)=> item.email);
@@ -572,7 +572,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private initiateAdobeEsignProcess(emailData: any) {
     this.loaderService.show();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.ccEmail, this.selectedBccEmail, this.isSaveForLater);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
       .subscribe({
@@ -702,6 +702,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           if (data) {
             this.selectedCCEmail = data?.map((item: any)=> item.email);
             this.ccEmail = this.selectedCCEmail;
+            this.defaultCCEmail = data;
             this.ref.detectChanges();
           }
           this.loaderService.hide();

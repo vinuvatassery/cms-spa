@@ -105,7 +105,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadClientAndVendorDraftLetterTemplates();
     }else {
-      this.vendorContactFacade.loadMailCodes(this.entityId);
+      if(this.communicationLetterTypeCode == CommunicationEventTypeCode.VendorLetter)
+      {
+        this.vendorContactFacade.loadMailCodes(this.entityId);
+      }
       if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftLetterTemplates();
       }else if(this.isNewNotificationClicked){
@@ -303,7 +306,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
     let templateTypeCode = this.getApiTemplateTypeCode();
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, this.notificationGroup);
-    this.communicationFacade.sendLetterToPrint(this.entityId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
+    this.communicationFacade.sendLetterToPrint(entityId, clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -356,6 +359,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterSent;
+        break;
+        case CommunicationEventTypeCode.ApplicationAuthorizationLetter || CommunicationEventTypeCode.CerAuthorizationLetter || CommunicationEventTypeCode.ClientLetter || CommunicationEventTypeCode.VendorLetter:
+        templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
         break;
     }
     return templateTypeCode;
