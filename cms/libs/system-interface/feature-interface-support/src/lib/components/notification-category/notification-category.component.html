@@ -34,7 +34,7 @@
                   </ng-template>
             </kendo-grid-column>
 
-            <kendo-grid-column field="eventNotificationGroupId" title="Option" [columnMenu]="false" [width]="50"
+            <kendo-grid-column field="eventNotificationGroupId" title="Options" [columnMenu]="false" [sortable]="false" [width]="50"
                   class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <kendo-dropdownbutton [data]="gridMoreActionsNotification"
