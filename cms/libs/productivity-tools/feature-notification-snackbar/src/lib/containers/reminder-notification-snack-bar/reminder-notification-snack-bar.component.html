@@ -3,21 +3,6 @@
 
 </div>
 
-<ng-template #reminderNotificationTemplate>
-  <div class="ad-banner-example">
-    <h3>Advertisements</h3>
-    <ng-container *ngComponentOutlet="
-      currentAd.component;
-      inputs: currentAd.inputs;
-    " />
-
-    <button kendoButton role="region" themeColor="primary" aria-label="Dismiss"  fillMode="flat"
-    (click)="displayNextAd()" [disabled]="disableNxtButton"> Next</button>
-    <button kendoButton role="region" themeColor="primary" aria-label="Dismiss"  fillMode="flat"
-    (click)="displayPrevAd()" [disabled]="disablePrevButton"> Prev</button>
-    <!-- <button (click)="displayNextAd()">Next</button> -->
-  </div>
-</ng-template>
 
 
 

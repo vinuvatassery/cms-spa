@@ -14,7 +14,7 @@ import { Observable } from 'rxjs/internal/Observable';
 /** Entities **/
 
 /** Services **/
-import { NotificationService } from '@progress/kendo-angular-notification';
+import { NotificationRef, NotificationService } from '@progress/kendo-angular-notification';
 
 /** Providers **/
 import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
@@ -119,56 +119,20 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   }
 
   reminderSnackBarSubscribe() {
-    
-
     this.remindersUnViewedCount$.subscribe((res:number) =>{
        this.unviewedCount = res;
     })
-    this.reminderNotificationSnackbarService
-    .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, "alertText1")
-
     this.reminderSnackBar$.subscribe((res:any) =>{
-       this.entityName = res.alertExtraProperties.EntityName
-       this.entityId = res.alertExtraProperties.EntityId
-       this.vendorTypeCode = res.alertExtraProperties.VendorTypeCode
-       this.entityTypeCode  = res.alertExtraProperties.EntityTypeCode
-       this.alertId =res.alertExtraProperties.AlertId
-       const repeatTime = res.alertExtraProperties.RepeatTime
-       const dueDate = new Date(this.intl.formatDate(res.alertExtraProperties.AlertDueDate, this.dateFormat));
-       const today = new Date(this.intl.formatDate(new Date(), this.dateFormat))
-        if(repeatTime){
-          const times =repeatTime.split(':')
-          const timeStart = new Date().getTime();
-          const timeEnd = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate(), times[0], times[1]).getTime()
-          var hourDiff = timeEnd - timeStart; //in ms
-          var minDiff = hourDiff / 60 / 1000;
-          if(minDiff <=15 && minDiff >=0){
-            this.dueDateText = "Due in" +minDiff
-          }
-          if(minDiff <=0){
-            this.dueDateText = "Overdue" + minDiff
-          }
-          if(minDiff ==0){
-            this.dueDateText = "Now"
-          }
-        }
-       if(dueDate == today && !repeatTime){
-        this.dueDateText ="Today"
-       }
-
        this.reminderNotificationSnackbarService
-       .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, this.entityName)
-
+       .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, res)
   })
 
     this.reminderNotificationSnackbarService.snackbar$.subscribe({
       next: (res) => {
-        if (res) {          
-          this.alertText = res.subtitle;
-          this.snackbarMessage = res;
-         console.log(this.snackbarMessage)
-          this.notificationService.show({
-            content: this.alertTemplate,
+        if (res) {       
+           console.log(res)
+          const notificationRef: NotificationRef =    this.notificationService.show({
+            content: ReminderNotificationSnackBarsTemplateComponent,
             appendTo: this.reminderNotificationTemplateContainer,
             position: { horizontal: 'right', vertical: 'bottom' },
             animation: { type: 'fade', duration: this.duration },
@@ -177,8 +141,40 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
             hideAfter: this.hideAfter,
             cssClass: 'reminder-notification-bar',
           });
+          if(notificationRef && notificationRef.content &&  notificationRef.content.instance){
+                    
+      const repeatTime =  res.payload.alertExtraProperties.RepeatTime
+      const dueDate = this.intl.formatDate( res.payload.alertExtraProperties.AlertDueDate, this.dateFormat);
+      const today = this.intl.formatDate(new Date(), this.dateFormat)
+       if(repeatTime){
+         const times =repeatTime.split(':')
+         const startTimeInHours = new Date().getHours();
+         const startTimeInMinutes = new Date().getMinutes();
+         const endTimeInHours = new Date(new Date(dueDate).getFullYear(), new Date(dueDate).getMonth(), new Date(dueDate).getDate(), times[0], times[1]).getHours()
+         const endTimeInMinutes = new Date(new Date(dueDate).getFullYear(), new Date(dueDate).getMonth(), new Date(dueDate).getDate(), times[0], times[1]).getMinutes()
+       
+         if(startTimeInHours == endTimeInHours){
+          if(endTimeInMinutes - startTimeInMinutes >=0){
+            this.dueDateText = "In " +(endTimeInMinutes - startTimeInMinutes)+" Mins"
+          }
+          if(endTimeInMinutes - startTimeInMinutes <=0){
+            this.dueDateText = (startTimeInMinutes- endTimeInMinutes)+" Mins Over Due"
+          }
+          if(endTimeInMinutes - startTimeInMinutes ==0){
+            this.dueDateText = "Now"
+          }
+         }     
+       }
+      if(dueDate == today && !repeatTime){
+       this.dueDateText ="Today"
+      }
+      const payload ={
+        ...res.payload,
+        dueDateText : this.dueDateText
+      }
+          notificationRef.content.instance.snackBarMessage = payload
+          }
         }
-        this.displayNextAd()
         this.messageCount = document.getElementsByClassName(
           'k-notification-container ng-star-inserted'
         );
@@ -186,7 +182,9 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
       },
      
     });
+
   }
+
 
   public removePreviousMessage() {
     this.showSideReminderNotification();
@@ -327,95 +325,9 @@ onNewReminderClosed(result: any) {
     
 }
 
-getAds() {
-  return [
-    {
-      component: ReminderNotificationSnackBarsTemplateComponent,
-      inputs: { entityName: 'Dr. IQ', 
-      alertText: 'Smart as they come',
-      entityId :"257",
-      entityTypeCode :"CLIENT",
-      vendorTypeCode :"",
-      alertId : '72F258B7-BCD0-4F5C-8082-B2DEEB951C56'
-     },
-    },
-    {
-      component: ReminderNotificationSnackBarsTemplateComponent,
-      inputs: { entityName: 'Bombasto',
-       alertText: 'Brave as they come',
-       entityId :"257",
-      entityTypeCode :"CLIENT",
-      vendorTypeCode :"",
-      alertId : '72F258B7-BCD0-4F5C-8082-B2DEEB951C56' },
-    },
-    {
-      component: ReminderNotificationSnackBarsTemplateComponent,
-      inputs: {
-        entityName: 'Hiring for several positions',
-        alertText: 'Submit your resume today!',
-        entityId :"257",
-        entityTypeCode :"CLIENT",
-        vendorTypeCode :"",
-        alertId : '72F258B7-BCD0-4F5C-8082-B2DEEB951C56'
-      },
-    },
-    {
-      component: ReminderNotificationSnackBarsTemplateComponent,
-      inputs: {
-        entityName: 'Openings in all departments',
-        alertText: 'Apply today',
-        entityId :"257",
-        entityTypeCode :"CLIENT",
-        vendorTypeCode :"",
-        alertId : '72F258B7-BCD0-4F5C-8082-B2DEEB951C56'
-      },
-    },
-  ] as {component: Type<any>, inputs: Record<string, unknown>}[];
-}
-
-setAds(entityName:any, alertText:any){
-return this.getAds().push({
-  component : ReminderNotificationSnackBarsTemplateComponent,
-  inputs:{
-    entityName: entityName,
-    alertText: alertText,
-  }
-})
-}
 
 
-private adList = this.getAds()
 
-private currentAdIndex = 0;
 
-get currentAd() {
-  return this.adList[this.currentAdIndex];
-}
-
-displayNextAd() {
-  this.currentAdIndex++;
-  // Reset the current ad index back to `0` when we reach the end of an array.
-  if (this.currentAdIndex >= this.adList.length) {
-    this.disableNxtButton = true;
-  }else{
-    this.disableNxtButton = false;
-  }
-  if(this.currentAdIndex == 0){
-    this.disablePrevButton = true
-  }else{
-    this.disablePrevButton = false
-  }
-}
-
-displayPrevAd() {
-  this.currentAdIndex--;
-  // Reset the current ad index back to `0` when we reach the end of an array.
-  if (this.currentAdIndex <= 0) {
-    this.disablePrevButton = true
-    this.currentAdIndex = 0;
-  }else{
-    this.disablePrevButton = false;
-  }
-}
 }
 

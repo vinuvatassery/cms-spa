@@ -4,6 +4,3 @@ export *from './lib/containers/reminder-notification-snack-bar/reminder-notifica
 
 export * from './lib/components/reminder-notification-snack-bar-template/reminder-notification-snack-bar-template.component';
 
-
-export * from './lib/components/reminder-notification-snack-bars/reminder-notification-snack-bars.component';
-

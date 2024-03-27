@@ -1,25 +1,30 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'cms-reminder-notification-snack-bars',
   templateUrl: './reminder-notification-snack-bar-template.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReminderNotificationSnackBarsTemplateComponent {
+export class ReminderNotificationSnackBarsTemplateComponent implements 
+OnInit,DoCheck {
 
-@Input() entityName =""
-@Input() alertText=""
-@Input() entityId =""
-@Input() entityTypeCode =""
-@Input() vendorTypeCode =""
-@Input() alertId =""
+entityName =""
+alertText=""
+entityId =""
+entityTypeCode =""
+vendorTypeCode =""
+alertId =""
+
+@Input() snackBarMessage!:any
+@Input() dueDate!:any
 unviewedCount=9
 tabCode = ""
 selectedAlertId =""
@@ -70,8 +75,32 @@ isReminderExpand = false;
    , private dialogService : DialogService 
    , private lovFacade : LovFacade
    ,private financialRefundFacade : FinancialVendorRefundFacade
-  ,public financialVendorFacade : FinancialVendorFacade) {
+  ,public financialVendorFacade : FinancialVendorFacade
+  , public cdr : ChangeDetectorRef
+  ,  public intl: IntlService
+  ) {
       
+  }
+
+  ngOnInit(): void {
+
+  }
+
+  ngDoCheck(){
+    if(this.snackBarMessage){
+      console.log(this.snackBarMessage)
+      console.log(this.dueDate)
+      this.entityName = this.snackBarMessage.alertExtraProperties.EntityName
+      this.entityId = this.snackBarMessage.alertExtraProperties.EntityId
+      this.vendorTypeCode = this.snackBarMessage.alertExtraProperties.VendorTypeCode
+      this.entityTypeCode  = this.snackBarMessage.alertExtraProperties.EntityTypeCode
+      this.alertId =this.snackBarMessage.alertExtraProperties.AlertId  
+      this.alertText =this.snackBarMessage.alertText  
+      this.dueDateText = this.snackBarMessage.dueDateText
+
+      } 
+    this.cdr.detectChanges()
+
   }
 
   public removePreviousMessage(alertId:any) {
@@ -111,9 +140,9 @@ isReminderExpand = false;
   if (!this.isReminderOpenClicked) {
     this.isEdit = true;
      this.selectedAlertId = alertId;
-          this.onNewReminderOpenClicked(this.NewReminderTemplate)
-           }
+     this.onNewReminderOpenClicked(this.NewReminderTemplate)
     }
+ }
   }
 
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
@@ -138,8 +167,11 @@ isReminderExpand = false;
     this.financialVendorFacade.searchAllProvider(data);
   }
   
-  onNewReminderClosed(event:any){
 
+  onNewReminderClosed(result: any) {
+    this.newReminderDetailsDialog.close();
+    this.isEdit = false;
+      
   }
   showSideReminderNotification() {
     this.isReminderSideOff = document.getElementById('reminder_notify');

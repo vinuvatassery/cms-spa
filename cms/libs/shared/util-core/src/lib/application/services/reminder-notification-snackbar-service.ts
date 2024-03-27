@@ -26,35 +26,11 @@ export class ReminderNotificationSnackbarService {
      }  
 
       manageSnackBar(type : ReminderSnackBarNotificationType 
-        , errorBody : any
-        ,source :  ReminderNotificationSource  = ReminderNotificationSource.API)
+        , payload : any)
       { 
-        
-        let subtitleText = errorBody;
-        const titleText = (type== ReminderSnackBarNotificationType.SUCCESS) ? ReminderSnackBarNotificationText.SUCCESS : ReminderSnackBarNotificationText.ERROR
-        
-        if(type == ReminderSnackBarNotificationType.ERROR && source == ReminderNotificationSource.API)
-        {         
-          const errorData= errorBody;     
-          let errorMessage =''          
-          //In case of fluent validation result from API
-          if(errorData?.error?.isValid === false)
-          {
-            errorData?.error?.errors?.forEach((item : any)=> {
-              errorMessage += item?.errorMessage+' ';
-            });    
-            
-            subtitleText = errorMessage
-          }
-          else
-          {            
-              subtitleText = errorBody?.error?.error?.message ?? this.configurationProvider.appSettings.genericErrorMessage
-          } 
-        }
-
+      
         const snackbarMessage: any = {
-          title: titleText,
-          subtitle: subtitleText,
+          payload:payload,
           type: type
         };
         this.filterManager.next(snackbarMessage);

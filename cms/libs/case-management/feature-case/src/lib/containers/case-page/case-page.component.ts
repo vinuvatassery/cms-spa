@@ -210,10 +210,4 @@ i=0;
         'Item  updated to Done successfully'
       );
     }
-
-
-    addSnackBars(){
-      this.i = this.i+1;
-      this.reminderNotificationSnackbarService.manageSnackBar(ReminderSnackBarNotificationType.LIGHT,'alertText'+this.i)
-    }
   }
