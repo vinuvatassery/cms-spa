@@ -138,23 +138,24 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
-    this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
-      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
-      if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
-        this.loadDraftEsignRequest();
+    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
+      this.loadDraftEsignRequest();
+    } else if (this.communicationEmailTypeCode === CommunicationEventTypeCode.VendorEmail) {
+        this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+          this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+          });
+        this.vendorContactFacade.loadMailCodes(this.entityId);
       }else{
-          if (this.isContinueDraftClicked) {
-            this.loadClientAndVendorDraftEmailTemplates();
-          } else if (this.isNewNotificationClicked) {
-            this.openNewEmailClicked();
-          } else {
-            this.loadEmailTemplates();
-            this.loadDraftEsignRequest();
-          }
+        if (this.isContinueDraftClicked) {
+          this.loadClientAndVendorDraftEmailTemplates();
+        } else if (this.isNewNotificationClicked) {
+          this.openNewEmailClicked();
+        } else {
+          this.loadEmailTemplates();
+          this.loadDraftEsignRequest();
         }
-      });
-    this.vendorContactFacade.loadMailCodes(this.entityId);
-  }
+      }
+}
 
   handleDdlMailCodesChange(mailCode: any) {
     this.showToEmailLoader = true;

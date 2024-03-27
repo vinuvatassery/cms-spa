@@ -104,14 +104,15 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.loadTemplate();
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
-    this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
-      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadClientAndVendorDraftLetterTemplates();
-    }else {
-      if(this.communicationLetterTypeCode == CommunicationEventTypeCode.VendorLetter)
-      {
-        }
+    }else if (this.communicationLetterTypeCode === CommunicationEventTypeCode.VendorLetter) {
+      this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+        this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+        this.vendorContactFacade.loadMailCodes(this.entityId);
+      });
+    }
+    else {
         if(this.isContinueDraftClicked){
           this.loadClientAndVendorDraftLetterTemplates();
         }else if(this.isNewNotificationClicked){
@@ -120,8 +121,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           this.loadDropdownLetterTemplates();
         }
       }
-    });
-    this.vendorContactFacade.loadMailCodes(this.entityId);
     this.isNewLetterClicked =  this.notificationGroup ? true : false;
   }
 
