@@ -321,7 +321,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       clientSexualIdentity.clientId = x.clientId;
       clientSexualIdentity.clientSexualIdentityCode =
         x.clientSexualIdentityCode;
-      clientSexualIdentity.clientSexualyIdentityId = x.clientSexualyIdentityId;
+      clientSexualIdentity.clientSexualIdentityId = x.clientSexualyIdentityId;
       clientSexualIdentity.otherDesc = x.otherDesc;
       if (this.applicantInfo.clientSexualIdentityList == undefined || null) {
         this.applicantInfo.clientSexualIdentityList = [];
@@ -883,13 +883,14 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   private populateClientSexualIdentity() {
+    const clientSexualIdentityListSaved = this.applicantInfo.clientSexualIdentityList;
     this.applicantInfo.clientSexualIdentityList = [];
     Object.keys(this.appInfoForm.controls)
       .filter((m) => m.includes(ControlPrefix.sexualIdentity))
       .forEach((control) => {
         if (this.appInfoForm.controls[control].value === true) {
           control = control.replace(ControlPrefix.sexualIdentity, '');
-          const clientSexualIdentity = new ClientSexualIdentity();
+          let clientSexualIdentity = new ClientSexualIdentity();
           clientSexualIdentity.clientSexualIdentityCode = control;
           clientSexualIdentity.clientId = this.clientId;
           if (
@@ -898,6 +899,12 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           ) {
             clientSexualIdentity.otherDesc =
               this.appInfoForm.controls['SexualIdentityDescription'].value;
+          }
+          const Existing = clientSexualIdentityListSaved.find(
+            (m) => m.clientSexualIdentityCode === clientSexualIdentity.clientSexualIdentityCode
+          );
+          if (Existing !== undefined) {
+            clientSexualIdentity = Existing;
           }
 
           this.applicantInfo.clientSexualIdentityList.push(
