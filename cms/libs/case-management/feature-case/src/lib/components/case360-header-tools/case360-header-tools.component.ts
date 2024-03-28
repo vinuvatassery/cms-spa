@@ -326,13 +326,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onTodoDetailsClicked( template: TemplateRef<unknown>): void {
-    this.todoDetailsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    }); 
-  }
-
   notificationDraftCheck(clientId: any, typeCode: string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
     this.loaderService.show();
     this.communicationFacade.loadDraftNotificationRequest(clientId, typeCode)
