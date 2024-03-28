@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
@@ -7,6 +7,7 @@ import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSna
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'cms-reminder-notification-snack-bars',
@@ -22,7 +23,8 @@ entityId =""
 entityTypeCode =""
 vendorTypeCode =""
 alertId =""
-
+@Output() hideSnackBar = new EventEmitter();
+@Output() snoozeReminder = new EventEmitter();
 @Input() snackBarMessage!:any
 @Input() dueDate!:any
 unviewedCount=9
@@ -118,13 +120,14 @@ isReminderExpand = false;
   public removePreviousMessage() {
     this.showSideReminderNotification();
     
-    const divMessage = document.getElementsByClassName(
-      'k-notification-container ng-star-inserted'
-    );
-    if (divMessage.length > 0) {
-      let currentMessage = divMessage.item(0);
-      currentMessage?.remove();
-    }
+    this.hideSnackBar.emit(); 
+    // const divMessage = document.getElementsByClassName(
+    //   'k-notification-container ng-star-inserted'
+    // );
+    // if (divMessage.length > 0) {
+    //   let currentMessage = divMessage.item(0);
+    //   currentMessage?.remove();
+    // }
   }
 
   reminderContainerClicked() {
@@ -155,10 +158,16 @@ isReminderExpand = false;
     this.isEdit = true;
      this.onNewReminderOpenClicked(this.NewReminderTemplate)
     }
- }
+ }else{
+  this.notificationFacade.snoozeReminder$.pipe(take(1)).subscribe(res =>{
+    if(res){
+      this.snoozeReminder.emit(this.selectedAlertId)
+      this.removePreviousMessage()
+    }
+  })
  if(event.text == '15 Minutes'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false)
-  this.removePreviousMessage()
+ 
  }
  if(event.text == '30 Minutes'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,30)
@@ -169,6 +178,7 @@ isReminderExpand = false;
  if(event.text == '2 hours'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,1)
  }
+}
   }
 
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {

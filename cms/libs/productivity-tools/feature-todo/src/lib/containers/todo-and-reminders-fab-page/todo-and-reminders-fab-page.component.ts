@@ -39,6 +39,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     @Output() isToDODetailsActionOpen!: boolean;
     todoGrid$ = this.todoFacade.todoGrid$
     loadAlertGrid$ = this.todoFacade.loadAlertGrid$;
+    loadTodoList$ = this.todoFacade.loadTodoList$;
     selectedAlertId! :any
     isEdit = false;
     isDelete = false;

@@ -88,13 +88,13 @@ export class ReminderDetailComponent implements OnInit {
     if(this.router.url.includes('vendors')){
       const vid = this.route.snapshot.queryParamMap.get('v_id')
       const tabcode = this.route.snapshot.queryParamMap.get('tab_code')
-      this.financialVendorFacade.vendorProfile$.subscribe(vp =>{  
+      this.financialVendorFacade.vendorProfileForReminderPanel$.subscribe(vp =>{  
         this.remainderFor.emit(vp?.vendorName)
       })
       this.entityTypeCode='VENDOR'
       if(vid && tabcode){
         this.entityId = vid
-      this.financialVendorFacade.getVendorProfile(vid,tabcode)
+      this.financialVendorFacade.getVendorProfileForReminderPanel(vid,tabcode)
       }
     }
     if(this.router.url.includes('case360')){
@@ -324,7 +324,9 @@ export class ReminderDetailComponent implements OnInit {
       this.isModalNewReminderCloseClicked.emit(true)
       }
     })
-    this.todoFacade.deleteAlert(this.alertId);
+    this.todoFacade.deleteAlert({alertId : this.alertId, 
+                         isDeleteFromOutlookCalender: this.clientReminderForm.controls['deleteFromOutlookCalender'].value ? 'N' :'Y'
+    });
     
   }
   onLinkToChange(event:any){

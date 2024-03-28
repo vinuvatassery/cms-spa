@@ -104,11 +104,15 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.loadTemplate();
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
-    this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
-      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadClientAndVendorDraftLetterTemplates();
-    }else {
+    }else if (this.communicationLetterTypeCode === CommunicationEventTypeCode.VendorLetter) {
+      this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+        this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+        this.vendorContactFacade.loadMailCodes(this.entityId);
+      });
+    }
+    else {
         if(this.isContinueDraftClicked){
           this.loadClientAndVendorDraftLetterTemplates();
         }else if(this.isNewNotificationClicked){
@@ -117,8 +121,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           this.loadDropdownLetterTemplates();
         }
       }
-    });
-    this.vendorContactFacade.loadMailCodes(this.entityId);
     this.isNewLetterClicked =  this.notificationGroup ? true : false;
   }
 
@@ -304,8 +306,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     let templateTypeCode = this.getApiTemplateTypeCode();
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, this.notificationGroup);
     formData.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
-
-    this.communicationFacade.sendLetterToPrint(this.entityId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
+    this.communicationFacade.sendLetterToPrint(entityId, clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -358,6 +359,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterSent;
+        break;
+        case CommunicationEventTypeCode.ApplicationAuthorizationLetter || CommunicationEventTypeCode.CerAuthorizationLetter || CommunicationEventTypeCode.ClientLetter || CommunicationEventTypeCode.VendorLetter:
+        templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
         break;
     }
     return templateTypeCode;

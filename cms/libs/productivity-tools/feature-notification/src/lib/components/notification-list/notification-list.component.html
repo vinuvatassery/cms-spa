@@ -11,23 +11,25 @@
     </kendo-floatinglabel>
   </div>
 </section>
-
 <section class="card-list-block" *ngFor="let message of alertsData?.items">
   <ul class="card-list pt-0" aria-label="notification menu">
     <li class="card-list_items" aria-label="notification menu item">
       <div class="card-type-icon">
-        <span
-          class="material-icons"
-          aria-label="notifications"
-          aria-hidden="true"
-          >notifications</span
-        >
+        <span class="material-icons" aria-label="notifications" aria-hidden="true">notifications</span>
       </div>
       <div class="card-list_details">
-        <p> {{message.alertDesc}}</p>
-        <a (click)="onNavigationClicked(message)">{{message.entityName}}</a>
-        <p class="text-muted">{{message?.alertDueDate | date:'MM/dd/YYYY'}}</p>
+        <div *ngIf="message.alertDesc.length > 70" class="description-banner">
+          <p>{{ message.showFullDescription ? message.alertDesc : (message.alertDesc.substring(0, 70) + '...') }}</p>
+          <a *ngIf="!message.showFullDescription" (click)="toggleDescription(message)">See More</a>
+          <a *ngIf="message.showFullDescription" (click)="toggleDescription(message)">See Less</a>
+        </div>
+        <div *ngIf="message.alertDesc.length <= 70">
+          <p>{{ message.alertDesc }}</p>
+        </div>
+        <a (click)="onNavigationClicked(message)">{{ message.entityName }}</a>
+        <p class="text-muted">{{ message?.alertDueDate | date:'MM/dd/YYYY' }}</p>
       </div>
+    </li>
   </ul>
 </section>
 <div style="text-align: center;" *ngIf="alertsData?.items?.length == 0">
