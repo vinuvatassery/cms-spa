@@ -1079,6 +1079,8 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       this.appInfoForm.controls['prmInsFirstName'].disable();
       this.appInfoForm.controls['prmInsMiddleName'].disable();
       this.appInfoForm.controls['prmInsLastName'].disable();
+      this.appInfoForm.controls['chkPrmInsMiddleName'].setValue(false)
+      this.appInfoForm.controls['chkPrmInsMiddleName'].disable();
     } else {
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
@@ -1088,6 +1090,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       }
       this.appInfoForm.controls['prmInsFirstName'].enable();
       this.appInfoForm.controls['prmInsLastName'].enable();
+      this.appInfoForm.controls['chkPrmInsMiddleName'].enable();
     }
   }
 
@@ -1109,6 +1112,8 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       this.appInfoForm.controls['officialIdFirstName'].disable();
       this.appInfoForm.controls['officialIdMiddleName'].disable();
       this.appInfoForm.controls['officialIdLastName'].disable();
+      this.appInfoForm.controls['chkOfficialIdMiddleName'].setValue(false)
+      this.appInfoForm.controls['chkOfficialIdMiddleName'].disable();
     } else {
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
@@ -1118,6 +1123,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
         this.appInfoForm.controls['officialIdMiddleName'].enable();
       }
       this.appInfoForm.controls['officialIdLastName'].enable();
+      this.appInfoForm.controls['chkOfficialIdMiddleName'].enable();
     }
   }
 
