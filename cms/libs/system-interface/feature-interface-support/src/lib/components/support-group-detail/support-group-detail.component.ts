@@ -7,9 +7,9 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LoaderService} from '@cms/shared/util-core';
+import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'support-group-detail',
@@ -24,7 +24,7 @@ export class SupportGroupDetailComponent implements OnInit {
   @Output() close = new EventEmitter<any>();
   @Output() addSupportGroupEvent = new EventEmitter<any>();
   @Output() editSupportGroupEvent = new EventEmitter<any>();
-  
+
   showLoader() {
     this.loaderService.show();
   }
@@ -35,9 +35,9 @@ export class SupportGroupDetailComponent implements OnInit {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   notiificationGroup: any;
-  notiificationGroupForm!: FormGroup;
+  notificationGroupForm!: FormGroup;
   tAreaCessationMaxLength = 200;
-  isSubmitted: boolean = false;
+  isSubmitted = false;
   isLoading = false;
   isValidateForm = false;
   supportGroup!: any;
@@ -47,40 +47,32 @@ export class SupportGroupDetailComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private readonly loaderService: LoaderService,
     private cd: ChangeDetectorRef) {
-    this.createSupportGroupForm();
   }
 
   ngOnInit(): void {
-    //this.buildForm();
+    this.createSupportGroupForm();
     if (this.isEditSupportGroup) {
       this.bindDataToForm(this.selectedSupportGroup)
     }
   }
 
   createSupportGroupForm() {
-    this.notiificationGroupForm = this.formBuilder.group({
-      groupCode: [{ value: this.notiificationGroup?.groupCode, disabled: false }, [Validators.required]],
-      groupName: [this.notiificationGroup?.groupName, [Validators.required, Validators.maxLength(200)]],
-      groupDesc: [this.notiificationGroup?.groupDesc, [Validators.required, Validators.maxLength(500)]],
-    });
-  }
-  buildForm() {
-    this.notiificationGroupForm = this.formBuilder.group({
-      groupCode: [''],
-      groupName: [''],
-      groupDesc: ['']
+    this.notificationGroupForm = this.formBuilder.group({
+      groupCode: ["", [Validators.required]],
+      groupName: ["", [Validators.required, Validators.maxLength(200)]],
+      groupDesc: ["", [Validators.required, Validators.maxLength(500)]],
     });
   }
   bindDataToForm(supportGroup: any) {
     this.supportGroup = supportGroup;
-    this.notiificationGroupForm.controls["groupCode"].setValue(supportGroup.groupCode);
-    this.notiificationGroupForm.controls["groupName"].setValue(supportGroup.groupName);
-    this.notiificationGroupForm.controls["groupDesc"].setValue(supportGroup.groupDesc);
-    this.notiificationGroupForm.markAllAsTouched();
+    this.notificationGroupForm.controls["groupCode"].setValue(supportGroup.groupCode);
+    this.notificationGroupForm.controls["groupName"].setValue(supportGroup.groupName);
+    this.notificationGroupForm.controls["groupDesc"].setValue(supportGroup.groupDesc);
+    this.notificationGroupForm.markAllAsTouched();
     this.cd.detectChanges();
   }
   mapFormValues() {
-    const formValues = this.notiificationGroupForm.value;
+    const formValues = this.notificationGroupForm.value;
     const dto = {
       groupCode: formValues.groupCode,
       groupName: formValues.groupName,
@@ -93,13 +85,13 @@ export class SupportGroupDetailComponent implements OnInit {
     this.close.emit();
   }
   validateForm() {
-    this.notiificationGroupForm.markAllAsTouched();
+    this.notificationGroupForm.markAllAsTouched();
   }
   checkValidations() {
-    return this.notiificationGroupForm.valid;
+    return this.notificationGroupForm.valid;
   }
   public addAndSaveSupportGroup() {
-    this.notiificationGroupForm.markAllAsTouched();
+    this.notificationGroupForm.markAllAsTouched();
     const res = this.checkValidations();
     this.isSubmitted = true;
     if (!res) {
@@ -109,7 +101,7 @@ export class SupportGroupDetailComponent implements OnInit {
     this.validateForm();
     this.isValidateForm = true;
 
-    if (this.notiificationGroupForm.valid) {
+    if (this.notificationGroupForm.valid) {
       let finalData = this.mapFormValues();
 
       if (this.isEditSupportGroup) {
