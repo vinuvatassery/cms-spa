@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  ChangeDetectionStrategy, 
+  ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit,
@@ -18,7 +18,7 @@ import { filter, Subject, Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileManagementPageComponent implements OnInit, OnDestroy {
- 
+
   pageSizes = this.managementFacade.gridPageSizes;
   sortValue = this.managementFacade.sortValue;
   sortType = this.managementFacade.sortType;
@@ -40,7 +40,7 @@ clientCaseId! : string;
 sessionId! : string;
 clientId ! : number
 clientCaseEligibilityId ! : string
-
+caseManagerReferral$ = this.caseManagerFacade.caseManagerReferral$;
 getCaseManagers$ = this.caseManagerFacade.getCaseManagers$;
 getManagerUsers$ = this.caseManagerFacade.getManagerUsers$;
 selectedCaseManagerDetails$= this.caseManagerFacade.selectedCaseManagerDetails$;
@@ -57,10 +57,10 @@ caseManagersProfilePhoto$ = this.caseManagerFacade.caseManagersProfilePhotoSubje
   tabIdSubject = new Subject<string>();
   tabId$ = this.tabIdSubject.asObservable();
   profileClientId!: number;
- 
+
   tabId!: any;
   labResultType! : string;
- 
+
   ngOnInit(): void {
     this.loadQueryParams();
     this.routeChangeSubscription()
@@ -81,8 +81,8 @@ caseManagersProfilePhoto$ = this.caseManagerFacade.caseManagersProfilePhotoSubje
       this.labResultType = LabResultLovType.VRL_LOAD
     }
 
-    this.tabIdSubject.next(this.tabId);    
-    
+    this.tabIdSubject.next(this.tabId);
+
   }
   get clientProfileTabs(): typeof ClientProfileTabs {
     return ClientProfileTabs;
@@ -107,23 +107,23 @@ caseManagersProfilePhoto$ = this.caseManagerFacade.caseManagersProfilePhotoSubje
     this.pageSizes = this.managementFacade.gridPageSizes;
     this.managementFacade.loadLabResults(
       this.labResultType,
-      this.profileClientId,     
+      this.profileClientId,
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sort,
       gridDataRefiner.sortType,
-      gridDataRefiner.historychkBoxChecked   
+      gridDataRefiner.historychkBoxChecked
     );
   }
 
- 
+
 
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();
-  } 
- 
+  }
+
    /** Private Methods **/
-   onHistoryChkBoxChanged() {    
+   onHistoryChkBoxChanged() {
     this.historychkBoxChecked = !this.historychkBoxChecked;
     this.caseManagerFacade.loadCaseManagers(
       this.clientCaseId,
@@ -135,7 +135,7 @@ caseManagersProfilePhoto$ = this.caseManagerFacade.caseManagersProfilePhotoSubje
     );
   }
 
-   loadCaseManagers(gridDataRefinerValue: any): void {   
+   loadCaseManagers(gridDataRefinerValue: any): void {
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount: gridDataRefinerValue.pagesize,
@@ -151,50 +151,54 @@ caseManagersProfilePhoto$ = this.caseManagerFacade.caseManagersProfilePhotoSubje
       gridDataRefiner.sort,
       gridDataRefiner.sortType,
       this.historychkBoxChecked
-    );   
+    );
   }
- 
-    
- 
+
+
+
   removecaseManagerHandler(data : any)
-   {    
+   {
      this.caseManagerFacade.removeCaseManager(this.clientCaseId, data?.endDate, data?.assignedcaseManagerId)
    }
 
 
    updateCaseManagerDates(data : any)
-   {    
+   {
      this.caseManagerFacade.updateCaseManagerDates(data?.clientCaseManagerId,data?.assignedcaseManagerId,data?.startDate,data?.endDate)
    }
- 
+
    searchTextEventHandler(text : string)
    {
     this.caseManagerFacade.searchUsersByRole(text);
    }
- 
+
    getExistingCaseManagerEventHandler(assignedCaseManagerId : string)
-    {        
+    {
      if(assignedCaseManagerId)
      {
      this.caseManagerFacade.loadSelectedCaseManagerData(assignedCaseManagerId,this.clientCaseId)
      }
     }
- 
- 
+
+
     assignCaseManagerEventHandler(event : any)
-    {       
+    {
      if(event?.assignedcaseManagerId)
      {
      this.caseManagerFacade.assignCaseManager(this.clientCaseId ,event?.assignedcaseManagerId)
      }
     }
- 
+
     getCaseManagerImage(assignedCaseManagerId : string)
-    {    
+    {
         if(assignedCaseManagerId)
         {
         this.userManagementFacade.getUserImage(assignedCaseManagerId);
         }
-    } 
- 
+    }
+    caseManagerReferralSubmit(clientId : any)
+    {
+      this.caseManagerFacade.submitCaseManagerReferral(clientId);
+    }
+
 }
