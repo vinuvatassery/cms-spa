@@ -208,6 +208,16 @@ export class ReminderItemComponent implements OnInit {
     return new Date(this.intl.formatDate(date, this.dateFormat));
   }
 
+  getcssClassName(){
+    if(this.isDueWithIn7Days){
+      return 'card-list_items red-item-block'
+    }
+    if(!this.isDueWithIn7Days){
+      return' card-list_items canyon-item-block'
+    }  
+      return ' card-list_items'   
+  }
+
   addDays(date: Date, days: any): Date {
     date.setDate(date.getDate() + parseInt(days));
     return this.formatDate(date);

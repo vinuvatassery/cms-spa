@@ -1,7 +1,7 @@
 <div class="due-items-wrapper">
   <ng-container *ngFor="let item of items">
   <div class="due-item-blocks"
-  [className]="isDueWithIn7Days ? 'due-item-blocks red-item-block' : 'due-item-blocks canyon-item-block'"
+  [className]="getcssClassName()"
  >
     <div class="due-item-details">
       <span

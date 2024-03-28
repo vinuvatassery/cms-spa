@@ -3,7 +3,7 @@
   <ng-container  *ngFor="let item of items">
     <li class="card-list_items"
       aria-label="reminder menu item"
-      [className]="isDueWithIn7Days ? ' card-list_items red-item-block' : 'card-list_items canyon-item-block'">
+      [className]="getcssClassName()">
       <div class="card-type-icon">
         <span class="material-icons" aria-label="notification" aria-hidden="true">alarm</span>
       </div>
