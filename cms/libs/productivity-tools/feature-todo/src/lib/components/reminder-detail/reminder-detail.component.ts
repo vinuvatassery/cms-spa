@@ -325,7 +325,7 @@ export class ReminderDetailComponent implements OnInit {
       }
     })
     this.todoFacade.deleteAlert({alertId : this.alertId, 
-                         isDeleteFromOutlookCalender: this.clientReminderForm.controls['deleteFromOutlookCalender'].value
+                         isDeleteFromOutlookCalender: this.clientReminderForm.controls['deleteFromOutlookCalender'].value ? 'N' :'Y'
     });
     
   }
