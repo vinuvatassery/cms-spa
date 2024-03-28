@@ -64,7 +64,7 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #reminderDetailsTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed()">{{reminderCrudText}} Reminder </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed(false)">{{reminderCrudText}} Reminder </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
   [isEdit]="isEdit" 
   [isDelete]="isDelete"
