@@ -67,9 +67,9 @@ defaultPageSize=20;
   interfaceFilterDataList = null;
 
   // Sorting Variables
-  sortColumn = 'startDate';
-  sortColumnDesc = 'startDate';
-  sortDir = 'Ascending';
+  sortColumn = 'Process Date';
+  sortColumnDesc = 'Process Date';
+  sortDir = 'Descending';
 
   // Filtering Variables
   statusFilter = '';
@@ -101,12 +101,14 @@ defaultPageSize=20;
 
   gridColumns: any = {
     process: 'Process',
-    startDate: 'ProcessDate',
+    startDate: 'Process Date',
     status: 'Status',
+    clientId:'Client Id',
     triggeredBy: 'Triggered By',
   };
 
   public dataStateChange(stateData: any): void {
+    debugger
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -133,7 +135,7 @@ defaultPageSize=20;
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
-    this.filter = [];
+    this.filter = "";
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
@@ -143,7 +145,7 @@ defaultPageSize=20;
       sort:this.sort ,
       filter: { logic: 'and', filters: [] },
     }; 
-    this.loadListGrid();
+    this.loadDefaultListGrid();
 
   }
 
@@ -177,6 +179,19 @@ defaultPageSize=20;
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
+
+
+    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, !this.displayAll, param);
+    this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
+  }
+  loadDefaultListGrid() {
+    this.updateStatusFilterValue(this.filter, this.statusArray, this.statusArrayDesc);
+
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state.take=this.defaultPageSize,
+      this.sortValue,
+      this.sortType);
 
 
     this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, !this.displayAll, param);

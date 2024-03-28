@@ -83,9 +83,13 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   gridColumns: any = {
     startDate: 'Process Start Date',
     endDate: 'End Date',
+    fileReceiveDate: 'File Receive Date',
     interfaceTypeDesc: 'Interface',
     processTypeDesc: 'Process',
-    status: 'status'
+    status: 'Status',
+
+    totalRecords: 'Total Records',
+    totalFailed: 'Failed Records'
 
   };
   searchColumnList: { columnName: string; columnDesc: string }[] = [
