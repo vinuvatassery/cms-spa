@@ -189,7 +189,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
       const clientSexualIdentity = new ClientSexualIdentity();
       clientSexualIdentity.clientId = x.clientId;
       clientSexualIdentity.clientSexualIdentityCode = x.clientSexualIdentityCode;
-      clientSexualIdentity.clientSexualIdentityId = x.clientSexualyIdentityId;
+      clientSexualIdentity.clientSexualIdentityId = x.clientSexualIdentityId;
       clientSexualIdentity.otherDesc = x.otherDesc;
       if (this.applicantInfo.clientSexualIdentityList == undefined || null) {
         this.applicantInfo.clientSexualIdentityList = []

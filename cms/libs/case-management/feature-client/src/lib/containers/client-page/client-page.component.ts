@@ -321,7 +321,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       clientSexualIdentity.clientId = x.clientId;
       clientSexualIdentity.clientSexualIdentityCode =
         x.clientSexualIdentityCode;
-      clientSexualIdentity.clientSexualIdentityId = x.clientSexualyIdentityId;
+      clientSexualIdentity.clientSexualIdentityId = x.clientSexualIdentityId;
       clientSexualIdentity.otherDesc = x.otherDesc;
       if (this.applicantInfo.clientSexualIdentityList == undefined || null) {
         this.applicantInfo.clientSexualIdentityList = [];
