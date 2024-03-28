@@ -39,7 +39,9 @@ export class ReminderListComponent implements  OnInit{
   reminderDetailsTemplate!: TemplateRef<any>;
   @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
   deleteToDODialogTemplate!: TemplateRef<any>;
+  @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   isOpenDeleteTODOItem = false;
+  itemsLoader = false;
   sortColumn ="alertDueDate";
   sortValue ="alertDueDate";
   isToDODeleteActionOpen = false;
@@ -71,6 +73,8 @@ export class ReminderListComponent implements  OnInit{
   @Output() ReminderEventClicked  = new EventEmitter<any>();
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
   @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
+  @ViewChild('NewReminderTemplate', { read: TemplateRef })
+  NewReminderTemplate!: TemplateRef<any>;
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
   clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
@@ -80,6 +84,7 @@ export class ReminderListComponent implements  OnInit{
   notificationList$ = this.notificationFacade.notificationList$;
   getTodo$ = this.Todofacade.getTodo$
   todoItemList: any[] = [];
+  skeletonCounts = [1,2,3,4,5];
   selectedAlertId:string="";
   isEdit = false;
   isDelete = false;
@@ -110,7 +115,6 @@ export class ReminderListComponent implements  OnInit{
       icon: 'delete',
     },
   ];
-
   /** Constructor **/
   constructor( 
     private loaderService: LoaderService,
@@ -253,8 +257,13 @@ export class ReminderListComponent implements  OnInit{
         SortType: sortTypeValue,
         Filter: "[]",
       };
+      this.itemsLoader=true;
         this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
         this.todoGrid$?.subscribe((todoItemList : any) =>{
+          if(todoItemList)
+          {
+            this.itemsLoader =false;
+          }
           this.todoItemList = todoItemList?.data ? todoItemList?.data : [];
           var currentDate = new Date();
           this.todoItemList = this.todoItemList.filter(todoItem => new Date(todoItem.alertDueDate) <= new Date(currentDate.setDate(currentDate.getDate() +30)));
@@ -389,5 +398,8 @@ export class ReminderListComponent implements  OnInit{
   }
   remainderFor(event:any){
     this.remainderIsFor = event
+  }
+  onSnoozeReminder(event:any){ 
+    this.notificationFacade.SnoozeReminder(event.reminderId,event.duration);
   }
 }

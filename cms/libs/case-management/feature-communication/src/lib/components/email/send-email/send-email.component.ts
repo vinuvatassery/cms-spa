@@ -11,16 +11,16 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserDataService } from '@cms/system-config/domain';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+import { Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
@@ -61,6 +61,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any = [];
   selectEmail: any = [];
+  ddlMailCodes: any[] = [];
+  selectedMailCode: any;
+  emails: any[] = [];
   emailContentValue: any;
   isOpenSendEmailClicked!: boolean;
   isOpenDdlEmailDetails = false;
@@ -79,8 +82,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   previewEmailContent!: any;
   prevClientCaseEligibilityId!: string;
   cerAuthorizationEmailTypeCode!: string;
-  selectedToEmail: any = [];
-  selectedEmail: any = [];
+  selectedToEmails: any = [];
   ccEmail: Array<string> = [];
   selectedCCEmail: any = [];
   defaultCCEmail: any = [];
@@ -126,7 +128,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly workflowFacade: WorkflowFacade,
     private readonly userDataService: UserDataService,
     private readonly esignFacade: EsignFacade,
-    private readonly router: Router) { }
+    private dialogService: DialogService,
+    private readonly router: Router,
+    private readonly vendorContactFacade: VendorContactsFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -134,9 +138,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
-    if (this.templateLoadType) {
-      if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
-        this.loadDraftEsignRequest();
+    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
+      this.loadDraftEsignRequest();
+    } else if (this.communicationEmailTypeCode === CommunicationEventTypeCode.VendorEmail) {
+        this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+          this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+          });
+        this.vendorContactFacade.loadMailCodes(this.entityId);
       }else{
         if (this.isContinueDraftClicked) {
           this.loadClientAndVendorDraftEmailTemplates();
@@ -144,9 +152,28 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           this.openNewEmailClicked();
         } else {
           this.loadEmailTemplates();
+          this.loadDraftEsignRequest();
         }
       }
-    }
+}
+
+  handleDdlMailCodesChange(mailCode: any) {
+    this.showToEmailLoader = true;
+    this.selectedMailCode = mailCode;
+    this.emails = this.selectedToEmails = [];
+    this.vendorContactFacade.loadcontacts(mailCode.vendorAddressId, 0, 999999, 'EmailAddress', 'ASC', JSON.stringify([{
+      filters: [
+        { field: 'ActiveFlag', operator: 'eq', value: 'Y' }
+      ]
+    }])).subscribe(resp => {
+      this.emails = this.selectedToEmails = resp.items.map((contact: any) => contact.emailAddress);
+      this.showToEmailLoader = false;
+      this.ref.detectChanges();
+    });
+  }
+
+  handleEmailsChanged(emails: any) {
+    this.selectedToEmails = emails;
   }
 
   loadClientAndVendorDraftEmailTemplates() {
@@ -272,18 +299,22 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSaveForLaterPopupClicked = false;
     this.isOpenSendEmailClicked = true;
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    this.selectedTemplate.toEmailAddress = this.selectedToEmail;
-    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
-      this.saveDraftEsignRequest(this.selectedTemplate);
-    } else {
-      this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
+    this.selectedTemplate.toEmailAddress = this.selectedToEmails;
+    if (!this.selectedTemplate.documentTemplateId) {
+      this.selectedTemplate.documentTemplateId = this.selectedTemplate.notificationTemplateId;
     }
+    
+    this.saveDraftEsignRequest(this.selectedTemplate);
+    this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
   }
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
     const emailData = this.getEmailPayload(draftTemplate);
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
+
+    emailFormData.append('vendorAddressId', this.selectedMailCode?.vendorAddressId ?? '');
+
     this.communicationFacade.saveClientAndVendorNotificationForLater(emailFormData)
       .subscribe({
         next: (data: any) => {
@@ -342,7 +373,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private getSelectedEmails(emailList: any, emailType: string){
     const emailRecipients:any=[];
-     emailList.forEach((recipient:any) => {
+     emailList?.forEach((recipient:any) => {
       let defaultItem: any;
       if(emailType=="CC"){
          defaultItem = this.defaultCCEmail.find((item: any) => recipient.includes(item?.email?.trim()));
@@ -367,7 +398,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     return {
       templateTypeCode: templateTypeCode,
       subject: this.emailSubject,
-      toEmail: this.selectedToEmail,
+      toEmail: this.selectedToEmails,
       ccEmail: this.getSelectedEmails(this.selectedCCEmail,"CC"),
       bccEmail: this.isBCCDropdownVisible ? null : this.getSelectedEmails(this.selectedCCEmail,"BCC"),
       eligibilityId: this.clientCaseEligibilityId,
@@ -472,10 +503,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.isClearEmails = true;
               this.isShowToEmailLoader$.next(true);
               this.isOpenDdlEmailDetails = true;
-              this.selectedEmail = [];
-              this.selectedEmail.push(this.toEmail[0]?.trim());
-              this.selectedToEmail = this.selectedEmail;
-              if(this.emailSubject == ''){
+              this.selectedToEmails = [];
+              for (let email of this.toEmail) {
+                this.selectedToEmails.push(email?.trim());
+              if(this.emailSubject == '' || this.emailSubject === undefined){
               this.emailSubject = data.description;
               }
               const ccEmails = data.cc?.map((item: any)=> item.email);
@@ -500,7 +531,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.ref.detectChanges();
             }
             this.loaderService.hide();
-          },
+          }},
           error: (err: any) => {
             this.loaderService.hide();
             this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -515,9 +546,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isClearEmails = true;
       this.isShowToEmailLoader$.next(true);
       this.isOpenDdlEmailDetails = true;
-      this.selectedEmail = [];
-      this.selectedEmail = event.to;
-      this.selectedToEmail = this.selectedEmail;
+      this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == event.vendorAddressId);
+      this.selectedToEmails = [];
+      this.selectedToEmails = event.to;
       this.emailSubject = event.description;
       this.defaultCCEmail = event.cc;
       this.defaultBCCEmail = event.bcc;
@@ -568,12 +599,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onEmailChange(event: any) {
-    this.selectedToEmail = event[0].email;
+    this.selectedToEmails = event[0].email;
   }
 
   private initiateAdobeEsignProcess(emailData: any) {
     this.loaderService.show();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.ccEmail, this.selectedBccEmail, this.isSaveForLater);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.ccEmail, this.selectedBccEmail, this.isSaveForLater);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
       .subscribe({
@@ -628,7 +659,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
     this.isSaveForLater = true;
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater);
     let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(esignRequestFormdata, draftTemplate, this.cerEmailAttachedFiles);
     if (draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null) {
       this.esignFacade.saveDraftEsignRequest(draftEsignRequest)
@@ -703,6 +734,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           if (data) {
             this.selectedCCEmail = data?.map((item: any)=> item.email);
             this.ccEmail = this.selectedCCEmail;
+            this.defaultCCEmail = data;
             this.ref.detectChanges();
           }
           this.loaderService.hide();

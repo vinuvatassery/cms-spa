@@ -61,16 +61,6 @@ const routes: Routes = [
         },
       },
       {
-        path: 'smoking-cessation',
-        loadChildren: () =>
-          import('@cms/case-management/feature-smoking-cessation').then(
-            (m) => m.CaseManagementFeatureSmokingCessationModule
-          ),
-          data: {
-            title: '',
-          },
-      },
-      {
         path: 'health-insurance',
         loadChildren: () =>
           import('@cms/case-management/feature-health-insurance').then(
@@ -125,16 +115,6 @@ const routes: Routes = [
         loadChildren: () =>
           import('@cms/case-management/feature-income').then(
             (m) => m.CaseManagementFeatureIncomeModule
-          ),
-        data: {
-          title: '',
-        },
-      },
-      {
-        path: 'employment',
-        loadChildren: () =>
-          import('@cms/case-management/feature-employment').then(
-            (m) => m.CaseManagementFeatureEmploymentModule
           ),
         data: {
           title: '',

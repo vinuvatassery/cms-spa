@@ -15,7 +15,7 @@
       </div>
     <div>
       <kendo-dropdownbutton
-      [data]="data"
+      [data]="dataTwo"
       
       look="bare"
       aria-label="more actions"
@@ -26,15 +26,12 @@
     >
     <span class="material-icons" aria-label="More option"> more_vert    </span>
     <ng-template class="app-dropdown-action-list"
-     kendoDropDownButtonItemTemplate let-dataItem>
-      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text"
-       [class]="dataItem.buttonType" aria-hidden="false">
-        <span class="material-icons" aria-hidden="true"
-         [attr.aria-label]="dataItem.text"
-         >{{dataItem.icon}}</span>
-        <label>   {{ dataItem.text }} </label>
-    </button>    
-      </ng-template>
+    kendoDropDownButtonItemTemplate let-dataItem>
+     <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+       <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+       <label>   {{ dataItem.text }} </label>
+   </button>          
+     </ng-template>
     </kendo-dropdownbutton>
     </div>
  
@@ -44,9 +41,34 @@
 <div style="text-align: center;" *ngIf="items?.length == 0 && !nDays">
   <p>There is no data to display</p>
 </div>
-
-
 </ul>
 
-
- 
+<!-- Create New Reminder Popup -->
+<ng-template #NewReminderTemplate>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
+    {{crudText}} Reminder  </kendo-dialog-titlebar>
+  <productivity-tools-reminder-detail
+  [isEdit]="isEdit" 
+  [isDelete]="isDelete"
+  [alertId] = "selectedAlertId"
+  (onGetTodoItem)="onGetTodoItemData($event)"
+  [getTodo$]="getTodo$"
+  [isFromNotificationPanel]="true"
+  [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+    (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"
+    [searchProviderSubject]="searchProviderSubject"
+    [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+    [providerSearchResult$]="providerSearchResult$"
+    [clientSubject]="clientSubject"
+    [clientSearchResult$]="clientSearchResult$"
+    [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+    (searchClientName)="searchClientName($event)"
+    (searchProvider)="searchProvider($event)"
+    (remainderFor)="remainderFor($event)"
+    (getReminderDetailsLov)="getReminderDetailsLov()"
+    ></productivity-tools-reminder-detail>
+</ng-template>
+<ng-template #deleteReminderTemplate> 
+  <productivity-tools-delete-reminder-confirmation
+    (isModalDeleteReminderCloseClicked)="onDeleteReminderClosed($event)"></productivity-tools-delete-reminder-confirmation>
+</ng-template>

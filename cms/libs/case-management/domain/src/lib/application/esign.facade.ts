@@ -102,7 +102,7 @@ prepareDraftAdobeEsignFormData(selectedToEmail: any, clientCaseEligibilityId: an
     if(selectedCCEmail?.length > 0){
       let i = 0;
       selectedCCEmail.forEach((item: any) =>{
-        formData.append('cc[' + i + '][email]', item.email ?? '');
+        formData.append('cc[' + i + '][email]', item ?? '');
         formData.append('cc[' + i + '][isDefault]', item.isDefault ?? '');
         i++;
       });

@@ -46,14 +46,11 @@ export class NotificationFacade {
   }
 
   loadNotificationsAndReminders(): void {
-    this.loaderService.show();
     this.notificationDataService.loadNotificationsAndReminders().subscribe({
       next: (todoGridResponse: any) => {
-        this.loaderService.hide();
         this.notificationAndReminderListSubject.next(todoGridResponse);
       },
       error: (err) => {
-        this.loaderService.hide()
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
@@ -84,9 +81,9 @@ export class NotificationFacade {
     }
   } 
   
-  SnoozeReminder(reminderId:any, duration:any){
+  SnoozeReminder(reminderId:any, duration:any, isFullDay= true){
     this.loaderService.show()
-    this.notificationDataService.SnoozeReminder(reminderId,duration).subscribe({
+    this.notificationDataService.SnoozeReminder(reminderId,duration,isFullDay).subscribe({
       next: (snoozeResponse: any) => {
         this.loaderService.hide() 
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , snoozeResponse.message);

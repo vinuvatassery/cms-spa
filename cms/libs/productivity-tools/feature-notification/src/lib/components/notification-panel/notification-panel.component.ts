@@ -44,7 +44,7 @@ export class NotificationPanelComponent implements OnInit {
   // data: Array<any> = [{}];
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
-  clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchLoaderVisibility$= this.financialRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
   searchProviderSubject = this.financialVendorFacade.searchProviderSubject
@@ -55,7 +55,9 @@ export class NotificationPanelComponent implements OnInit {
   @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   @Input() notificationList$: any;
   reminderFor = '';
+  itemsLoader = false;
   notifications: any = [];
+  skeletonCounts = [1,2,3];
   alertsData:any = {};
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
@@ -147,14 +149,8 @@ export class NotificationPanelComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadNotificationsAndReminders();
     this.loadSignalrGeneralNotifications();
     this.loadSignalrReminders();
-    this.notificationList$.subscribe((data: any) => {
-      this.alertsData = data;
-      this.cdr.detectChanges();
-      this.loadNotificationsAndReminders;
-    });
   }
 
   /** Private methods */
@@ -247,6 +243,15 @@ export class NotificationPanelComponent implements OnInit {
       show !== undefined ? show : !this.isNotificationPopupOpened;
        
      if(this.isNotificationPopupOpened){
+      this.itemsLoader = true;
+      this.loadNotificationsAndReminders();
+      this.notificationList$.subscribe((data: any) => {
+        if(data){
+          this.itemsLoader = false;
+        }
+        this.alertsData = data;
+        this.cdr.detectChanges();
+      });
         this.viewNotifications();
       }
   }

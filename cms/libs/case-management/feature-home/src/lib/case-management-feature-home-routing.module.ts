@@ -70,26 +70,6 @@ const routes: Routes = [
         },
       },
       {
-        path: 'employment',
-        loadChildren: () =>
-          import('@cms/case-management/feature-employment').then(
-            (m) => m.CaseManagementFeatureEmploymentModule
-          ),
-        data: {
-          title: 'New Application',
-        },
-      },
-      {
-        path: 'smoking-cessation',
-        loadChildren: () =>
-          import('@cms/case-management/feature-smoking-cessation').then(
-            (m) => m.CaseManagementFeatureSmokingCessationModule
-          ),
-          data: {
-            title: 'New Application',
-          },
-      },
-      {
         path: 'health-insurance',
         loadChildren: () =>
           import('@cms/case-management/feature-health-insurance').then(
@@ -229,26 +209,6 @@ const routes: Routes = [
         data: {
           title: 'Renew Eligibility',
         },
-      },
-      {
-        path: 'employment',
-        loadChildren: () =>
-          import('@cms/case-management/feature-employment').then(
-            (m) => m.CaseManagementFeatureEmploymentModule
-          ),
-        data: {
-          title: 'Renew Eligibility',
-        },
-      },
-      {
-        path: 'smoking-cessation',
-        loadChildren: () =>
-          import('@cms/case-management/feature-smoking-cessation').then(
-            (m) => m.CaseManagementFeatureSmokingCessationModule
-          ),
-          data: {
-            title: 'Renew Eligibility',
-          },
       },
       {
         path: 'health-insurance',

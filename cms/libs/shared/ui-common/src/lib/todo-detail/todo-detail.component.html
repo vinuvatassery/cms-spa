@@ -134,9 +134,11 @@
               </ng-template>
             </kendo-combobox-column>
           </kendo-multicolumncombobox>
-          <kendo-formerror *ngIf="!todoDetailsForm.controls['vendorId']?.valid && isValidateForm && todoDetailsForm.controls['linkTo'].valid">
-            Vendor is required
-          </kendo-formerror>
+        
+          <kendo-formerror
+          *ngIf="todoDetailsForm?.hasError('required','vendorId') && isValidateForm && todoDetailsForm.controls['linkTo'].valid">Vendor
+          is Required
+      </kendo-formerror>
         </div>
       </div>
      </div> 

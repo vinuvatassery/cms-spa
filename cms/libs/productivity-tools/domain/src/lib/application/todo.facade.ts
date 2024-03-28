@@ -182,9 +182,14 @@ export class TodoFacade {
         next: (todoGridResponse: any) => {
           this.loaderService.hide()
           this.curdAlertSubject.next(true);
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
-          this.loadAlertGridSubject.next(true);
-          this.bannerAlertListSubject.next(true);
+          if(todoGridResponse.status == 0){
+            this.showHideSnackBar(SnackBarNotificationType.ERROR , todoGridResponse.message)
+          }else {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
+            this.loadAlertGridSubject.next(true);
+            this.bannerAlertListSubject.next(true);
+          }
+          
         },
         error: (err) => {
           this.loaderService.hide()
@@ -234,6 +239,21 @@ export class TodoFacade {
         this.dismissAlertSubject.next(alertResponse.message);
       },
       error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  loadAlertsData(): void {
+    this.todoDataService.loadAlertsData().subscribe({
+      next: (todoGridResponse: any) => {
+        const gridView: any = {
+          data: todoGridResponse.items,
+          total:todoGridResponse.totalCount,
+        }; 
+        this.todoGridSubject.next(gridView); 
+      },
+      error: (err) => {
+        this.loaderService.hide()
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });

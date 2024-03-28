@@ -19,7 +19,7 @@
 </section>
 
 <h3>Support Group</h3>
-<p>Select a Group in the table below to view assigned Users and Notification Categories</p>
+<p>Select a Support Group in the table below to view assigned Users and Notification Categories</p>
 
 <div class="app-c-table">
   <kendo-grid [resizable]="true" [loading]="(supportGroupListsLoader$  | async) === true" [pageSize]="state.take"
@@ -47,7 +47,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="groupDesc" title="Group Desciption" [width]="140">
+    <kendo-grid-column field="groupDesc" title="Desciption" [width]="140">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -57,7 +57,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="userPerGroup" title="User Per Group" [width]="100">
+    <kendo-grid-column field="userPerGroup" title="Users per Group" [width]="100">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -102,7 +102,7 @@
   
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="notificationGroupId" title="Option" [sticky]="true" [columnMenu]="false" [sortable]="false"  [width]="50"
+    <kendo-grid-column field="notificationGroupId" title="Options" [sticky]="true" [columnMenu]="false" [sortable]="false"  [width]="50"
       class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem let-notificationSupportId="field">
         <kendo-dropdownbutton [data]="gridMoreActionsSupport"

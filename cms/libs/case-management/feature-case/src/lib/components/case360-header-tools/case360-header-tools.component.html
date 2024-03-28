@@ -92,10 +92,7 @@
 <!-- New SMS Text Modal Html-->
 <ng-template #sendTextMessageDialog>
 <case-management-send-text-message [ddlMessageRecipients$] ="phoneNumbers$" [notificationGroup]="screenName" [entityId]="clientId"
-  (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDraftId]="notificationDraftId"
-  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
-  [clientCaseEligibilityId]="clientCaseEligibilityId" kendoTooltip></case-management-send-text-message>
-<case-management-send-text-message [ddlMessageRecipients$] ="phoneNumbers$" [notificationGroup]="screenName" [entityId]="clientId"
+[templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
   (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDraftId]="notificationDraftId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
   [clientCaseEligibilityId]="clientCaseEligibilityId" kendoTooltip></case-management-send-text-message>

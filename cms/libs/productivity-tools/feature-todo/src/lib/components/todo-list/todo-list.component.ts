@@ -11,8 +11,9 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
-import { AlertFrequencyTypeCode, AlertTypeCode } from '@cms/productivity-tools/domain';
+import { AlertFrequencyTypeCode, AlertTypeCode, ConstantValue } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Facades **/
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -32,6 +33,7 @@ export class TodoListComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public deleteToDoDialog: any;
   isToDODeleteActionOpen = false;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
   @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Input() isToDODetailsActionOpen: any;
@@ -124,27 +126,11 @@ export class TodoListComponent implements OnInit {
 
   /** Private methods **/
   public loadTodoGrid() {
-    this.loadTodoGridData(
-      this.toDoGridState.skip?? 0,
-      this.toDoGridState.take?? this.pageSizes[2]?.value,
-      this.toDoGridState?.sort![0]?.field ?? this.sortValue,
-      this.toDoGridState?.sort![0]?.dir ?? 'asc',
-      AlertTypeCode.Todo.toString()
-    )
+    this.loadTodoGridData();
   }
-  private loadTodoGridData(skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string, alertType:string){
+  private loadTodoGridData(){
       this.isToDoGridLoaderShow.next(true);
-      const gridDataRefinerValue = {
-        skipCount: skipCountValue,
-        maxResultCount: maxResultCountValue,
-        sorting: sortValue,
-        sortType: sortTypeValue,
-        filter: JSON.stringify(this.filter),
-      }; 
-        this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
+        this.isLoadTodoGridEvent.emit();
         this.todoGrid$.subscribe((data: any) => {
           this.gridDataResult = data;
           if(data?.total >=0 || data?.total === -1){
@@ -309,5 +295,8 @@ export class TodoListComponent implements OnInit {
     this.toDoGridState.take = data.value;
     this.toDoGridState.skip = 0;
     this.loadTodoGrid();
+  }
+  alertRepeatDesc(desc: string){
+    return  ConstantValue.Repeat +" "+ desc.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
   }
 }
