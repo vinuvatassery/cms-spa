@@ -154,4 +154,7 @@ export class NotificationListComponent {
           break;
     }
   }
+  toggleDescription(message: any) {
+    message.showFullDescription = !message.showFullDescription;
+  }
 }

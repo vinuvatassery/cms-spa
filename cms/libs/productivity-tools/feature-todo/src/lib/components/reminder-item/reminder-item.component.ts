@@ -238,12 +238,7 @@ export class ReminderItemComponent implements OnInit {
       }
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
-if(item.text == 'Delete'){ 
-      if (!this.isReminderOpenClicked) {
-          this.onDeleteAlertGridClicked.emit(gridItem.alertId);
-          this.isReminderOpenClicked = false
-        }
-    if(item.id == '3daysnooze'){ 
+    if(item.id == '3daysnooze'){
       const snoozeReminder={
         reminderId:gridItem.alertId,
         duration: 3
@@ -257,7 +252,12 @@ if(item.text == 'Delete'){
       }
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
-   }
+     if(item.text == 'Delete'){ 
+      if (!this.isReminderOpenClicked) {
+          this.onDeleteAlertGridClicked.emit(gridItem.alertId);
+          this.isReminderOpenClicked = false
+        }
+      }
   }
   public loadNotificationsAndReminders() {
     this.isToDoGridLoaderShow.next(true);
