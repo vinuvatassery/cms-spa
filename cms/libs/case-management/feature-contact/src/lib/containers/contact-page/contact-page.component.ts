@@ -761,6 +761,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         invalidControl.focus();
       }
+       //in case of upload dosuments
+       if(this.showAddressProofRequiredValidation){
+        const element = this.elementRef.nativeElement.querySelector(`#HOME_ADDRESS_PROOF`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center'});
+          element.focus();
+        }
+      }
+      
     return of(false);
   }
 

@@ -243,5 +243,20 @@ export class TodoFacade {
       },
     });
   }
+  loadAlertsData(): void {
+    this.todoDataService.loadAlertsData().subscribe({
+      next: (todoGridResponse: any) => {
+        const gridView: any = {
+          data: todoGridResponse.items,
+          total:todoGridResponse.totalCount,
+        }; 
+        this.todoGridSubject.next(gridView); 
+      },
+      error: (err) => {
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
   
 }

@@ -48,8 +48,9 @@
 <ng-template #sendLetterDialog>
   <case-management-send-letter [mailingAddress$]="mailCodes$"
   [entityId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
-  (loadInitialData)="loadMailingAddress()" [notificationGroup]="screenName"
+  [notificationGroup]="screenName"
   [communicationLetterTypeCode]="communicationLetterTypeCode"
+  [isContinueDraftClicked]="isContinueDraftClicked" (loadInitialData)="loadMailingAddress()"
   kendoTooltip></case-management-send-letter>
 </ng-template>
 
@@ -58,6 +59,7 @@
   <case-management-send-email
   [communicationEmailTypeCode]="communicationEmailTypeCode"
   [emailSubject]="emailSubject" [notificationGroup]="screenName"
-  [toEmail]="toEmail" [entityId]="vendorId"
+  [entityId]="vendorId" [toEmail]="toEmail"
+  [isContinueDraftClicked]="isContinueDraftClicked"
   (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>

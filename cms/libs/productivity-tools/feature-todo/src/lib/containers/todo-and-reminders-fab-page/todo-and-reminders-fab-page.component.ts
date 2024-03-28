@@ -89,8 +89,8 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       editTodoItem(event:any){
       
       }
-      onloadTodoGrid(payload: any, alertTypeCode:any){
-        this.todoFacade.loadAlerts(payload,alertTypeCode.alertType);
+      onloadTodoGrid(){
+        this.todoFacade.loadAlertsData();
       }
       onMarkAlertDoneGrid(selectedAlertId: any){
         this.todoFacade.markAlertAsDone(selectedAlertId);

@@ -126,27 +126,11 @@ export class TodoListComponent implements OnInit {
 
   /** Private methods **/
   public loadTodoGrid() {
-    this.loadTodoGridData(
-      this.toDoGridState.skip?? 0,
-      this.toDoGridState.take?? this.pageSizes[2]?.value,
-      this.toDoGridState?.sort![0]?.field ?? this.sortValue,
-      this.toDoGridState?.sort![0]?.dir ?? 'asc',
-      AlertTypeCode.Todo.toString()
-    )
+    this.loadTodoGridData();
   }
-  private loadTodoGridData(skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string, alertType:string){
+  private loadTodoGridData(){
       this.isToDoGridLoaderShow.next(true);
-      const gridDataRefinerValue = {
-        skipCount: skipCountValue,
-        maxResultCount: maxResultCountValue,
-        sorting: sortValue,
-        sortType: sortTypeValue,
-        filter: JSON.stringify(this.filter),
-      }; 
-        this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
+        this.isLoadTodoGridEvent.emit();
         this.todoGrid$.subscribe((data: any) => {
           this.gridDataResult = data;
           if(data?.total >=0 || data?.total === -1){
