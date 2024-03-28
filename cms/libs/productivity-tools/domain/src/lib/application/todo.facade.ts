@@ -176,9 +176,9 @@ export class TodoFacade {
       
   }
 
-  deleteAlert(alertId:any):any {
+  deleteAlert(payload:any):any {
       this.loaderService.show()
-      this.todoDataService.deleteAlert(alertId).subscribe({
+      this.todoDataService.deleteAlert(payload).subscribe({
         next: (todoGridResponse: any) => {
           this.loaderService.hide()
           this.curdAlertSubject.next(true);
