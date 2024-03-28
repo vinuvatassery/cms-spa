@@ -234,12 +234,6 @@ export class VendorHeaderToolsComponent {
     }
   }
 
-  onTodoDetailsClicked( template: TemplateRef<unknown>): void {
-    this.todoDetailsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
  
     onSendNewLetterClicked(template: TemplateRef<unknown>): void {
       this.isSendNewLetterDialog = this.dialogService.open({
