@@ -129,8 +129,43 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
 
     this.reminderNotificationSnackbarService.snackbar$.subscribe({
       next: (res) => {
-        if (res) {       
-           console.log(res)
+        if (res) {  
+          let  timeDifferenceMinutes=0;
+          const repeatTime =  res.payload.alertExtraProperties.RepeatTime
+          const dueDate = this.intl.formatDate( res.payload.alertExtraProperties.AlertDueDate, this.dateFormat);
+          const today = this.intl.formatDate(new Date(), this.dateFormat)
+            if(repeatTime){
+               const times =repeatTime.split(':')
+               const duedateWithRepeatTime =  new Date(new Date().getFullYear(), new Date().getMonth(), 
+               new Date().getDate(), times[0], times[1])
+               console.log(duedateWithRepeatTime)
+               const timeDifferenceMs = duedateWithRepeatTime.getTime() - new Date().getTime();
+                timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+
+               
+                  if(timeDifferenceMinutes >=0){
+                    this.dueDateText = "In " +timeDifferenceMinutes+" Mins"
+                  }
+                  if(timeDifferenceMinutes <=0){
+                    this.dueDateText = timeDifferenceMinutes+" Mins Over Due"
+                  }
+                  if(timeDifferenceMinutes ==0){
+                    this.dueDateText = "Now"
+                  }
+                      
+            }
+            if(dueDate == today && !repeatTime){
+                 this.dueDateText ="Today"
+            }   
+            if((repeatTime && timeDifferenceMinutes<=15) || !repeatTime){  
+          if(!this.signalrEventHandlerService.snackBarAlertIds.includes(res.payload?.alertExtraProperties?.AlertId)){
+            this.signalrEventHandlerService.snackBarAlertIds.push(res.payload.alertExtraProperties?.AlertId)
+          
+            if(res.payload.alertExtraProperties?.RecentViewedFlag == 'N'){
+              this.unviewedCount = this.unviewedCount + 1;
+              this.signalrEventHandlerService.remindersUnViewedCountSubject.next( this.unviewedCount)
+            }
+
           const notificationRef: NotificationRef =    this.notificationService.show({
             content: ReminderNotificationSnackBarsTemplateComponent,
             appendTo: this.reminderNotificationTemplateContainer,
@@ -142,38 +177,26 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
             cssClass: 'reminder-notification-bar',
           });
           if(notificationRef && notificationRef.content &&  notificationRef.content.instance){          
-      const repeatTime =  res.payload.alertExtraProperties.RepeatTime
-      const dueDate = this.intl.formatDate( res.payload.alertExtraProperties.AlertDueDate, this.dateFormat);
-      const today = this.intl.formatDate(new Date(), this.dateFormat)
-       if(repeatTime){
-         const times =repeatTime.split(':')
-         const startTimeInHours = new Date().getHours();
-         const startTimeInMinutes = new Date().getMinutes();
-         const endTimeInHours = new Date(new Date(dueDate).getFullYear(), new Date(dueDate).getMonth(), new Date(dueDate).getDate(), times[0], times[1]).getHours()
-         const endTimeInMinutes = new Date(new Date(dueDate).getFullYear(), new Date(dueDate).getMonth(), new Date(dueDate).getDate(), times[0], times[1]).getMinutes()
-       
-         if(startTimeInHours == endTimeInHours){
-          if(endTimeInMinutes - startTimeInMinutes >=0){
-            this.dueDateText = "In " +(endTimeInMinutes - startTimeInMinutes)+" Mins"
-          }
-          if(endTimeInMinutes - startTimeInMinutes <=0){
-            this.dueDateText = (startTimeInMinutes- endTimeInMinutes)+" Mins Over Due"
-          }
-          if(endTimeInMinutes - startTimeInMinutes ==0){
-            this.dueDateText = "Now"
-          }
-         }     
-       }
-      if(dueDate == today && !repeatTime){
-       this.dueDateText ="Today"
-      }
-      const payload ={
+            
+                 const payload ={
         ...res.payload,
         dueDateText : this.dueDateText
-      }
-          notificationRef.content.instance.snackBarMessage = payload
+                 }
+                notificationRef.content.instance.snackBarMessage = payload
+                
+                notificationRef.content.instance.snoozeReminder.subscribe((event:any) =>
+               {
+                console.log(event)
+                this.signalrEventHandlerService.snackBarAlertIds = this.signalrEventHandlerService.snackBarAlertIds.filter(x => x!==event)
+               }
+              );
+                notificationRef.content.instance.hideSnackBar.subscribe(() =>
+                notificationRef.hide()
+              );
           }
         }
+      }
+      }
         this.messageCount = document.getElementsByClassName(
           'k-notification-container ng-star-inserted'
         );
