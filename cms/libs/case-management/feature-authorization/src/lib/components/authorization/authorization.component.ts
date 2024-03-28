@@ -118,9 +118,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.addDiscardChangesSubscription();
   }
 
-  getNotificationTypeCode() {
+  getNotificationTypeCode(sendEmailClick: boolean) {
     if(this.isCerForm){
-      if(this.paperlessFlag == StatusFlag.Yes){
+      if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
         this.templateLoadType = this.communicationEmailTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
         this.templateHeader = 'CER Authorization Email';
         this.emailSubject = this.templateHeader;
@@ -132,7 +132,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
       }
     }else{
-      if(this.paperlessFlag == StatusFlag.Yes){
+      if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
         this.templateLoadType = this.communicationEmailTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
@@ -166,7 +166,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
                 }
               }
               this.loadPendingEsignRequestInfo();
-              this.getNotificationTypeCode();
+              this.getNotificationTypeCode(this.paperlessFlag ? true : false);
             }
             this.loaderService.hide();
       },
@@ -319,6 +319,8 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   /** Internal event methods **/
 
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
+    const sendEmailClick = false;
+    this.getNotificationTypeCode(sendEmailClick);
     this.isSendLetterOpenedDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
@@ -326,6 +328,8 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   }
 
   onSendNewEmailClicked(template: TemplateRef<unknown>): void {
+    const sendEmailClick = true;
+    this.getNotificationTypeCode(sendEmailClick);
     this.isSendEmailOpenedDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
