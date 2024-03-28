@@ -7,7 +7,7 @@
 
 
 <ng-template #NewReminderTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
+  <kendo-dialog-titlebar (close)="onNewReminderClosed(false)">
     Edit Reminder  </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
   [isEdit]="isEdit" 

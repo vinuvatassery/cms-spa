@@ -153,7 +153,7 @@
 
 <ng-template #NewReminderTemplate>
   <kendo-dialog-titlebar 
-  (close)="onNewReminderClosed($event)"
+  (close)="onNewReminderClosed(false)"
 
   >{{crudText}} Reminder for {{clientName}} </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail 
