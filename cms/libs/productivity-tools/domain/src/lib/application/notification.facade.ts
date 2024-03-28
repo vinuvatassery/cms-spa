@@ -14,7 +14,9 @@ export class NotificationFacade {
   /** Public properties **/
   signalrGeneralNotifications$!: Observable<any>;
   private notificationAndReminderListSubject = new Subject<any>();
+  private snoozeReminderSubject = new Subject<any>();
   notificationList$ = this.notificationAndReminderListSubject.asObservable();
+  snoozeReminder$ = this.snoozeReminderSubject.asObservable();
   private alertSearchLoaderVisibilitySubject = new Subject<boolean>;
   alertSearchLoaderVisibility$= this.alertSearchLoaderVisibilitySubject.asObservable();
   /** Constructor **/
@@ -86,6 +88,7 @@ export class NotificationFacade {
     this.notificationDataService.SnoozeReminder(reminderId,duration,isFullDay).subscribe({
       next: (snoozeResponse: any) => {
         this.loaderService.hide() 
+        this.snoozeReminderSubject.next(true);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , snoozeResponse.message);
         this.loadNotificationsAndReminders();
       },
