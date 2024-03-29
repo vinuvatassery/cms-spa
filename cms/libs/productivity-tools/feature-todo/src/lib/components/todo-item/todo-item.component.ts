@@ -60,7 +60,6 @@ export class TodoItemComponent implements OnInit {
     this.todoAndReminders$.subscribe((clientsTodoReminders :any) =>{
       const clientsTodo  = 
       clientsTodoReminders.filter((x:any) => x.alertTypeCode =="TODO")
-   console.log(clientsTodo)
       if(this.nDays=="DUE WITHIN 7 DAYS"){
            this.items = 
            clientsTodo.filter((x:any)=> this.formatDate(new Date(x.alertDueDate))>= this.formatDate(new Date()) 

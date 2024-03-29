@@ -2,6 +2,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FabMenuFacade } from '@cms/productivity-tools/domain';
+import { SignalrEventHandlerService } from '@cms/shared/util-common';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
 
@@ -16,16 +17,20 @@ export class CommonActionsComponent {
  
   clickedContact!: any;
   item: Array<DialItem> = [{}];
-  
+  todoAndRemindersCount =0;
   
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    public readonly fabMenuFacade : FabMenuFacade
+    public readonly fabMenuFacade : FabMenuFacade,
+    public signalrEventHandlerService : SignalrEventHandlerService
   ) {}
 
   ngOnInit(): void {
 
+    this.signalrEventHandlerService.reminderSnackBar$.subscribe(res =>{
+     this.todoAndRemindersCount =  res.payload.alertExtraProperties.FabPanelCount
+    })
   }
   /** Internal event methods **/
   onDialItemClicked(event: any): void {
