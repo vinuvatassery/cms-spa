@@ -53,6 +53,14 @@ export class AlertBannerComponent implements OnInit {
   public popoverAlertActions = [
     {
       buttonType:"btn-h-primary",
+      text: "Done",
+      icon: "done",
+      id:"done",
+      click: (): void => {
+      },
+    },
+    {
+      buttonType:"btn-h-primary",
       text: "Edit",
       icon: "edit",
       id:"edit",
