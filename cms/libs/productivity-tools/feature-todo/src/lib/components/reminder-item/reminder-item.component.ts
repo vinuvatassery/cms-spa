@@ -58,7 +58,9 @@ export class ReminderItemComponent implements OnInit {
   isReminderOpenClicked = false
   reminderDialog! :any
   crudText ="Create New"
-  isDueWithIn7Days = true;
+  isDueWithIn7Days = false;
+  isDueWithIn30Days = false;
+  isDueWithAfter30Days = false;
   @Output() noReminderFor7Days = new EventEmitter<any>()
   @Output() noReminderFor30Days = new EventEmitter<any>()
   @Output() noReminderAfter30Days = new EventEmitter<any>()
@@ -177,6 +179,8 @@ export class ReminderItemComponent implements OnInit {
         clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.formatDate(new Date()) 
                                         && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 7) )
       this.isDueWithIn7Days = true
+      this.isDueWithIn30Days = false;
+         this.isDueWithAfter30Days = false;
       if(this.items.length<=0){
       this.noReminderFor7Days.emit(true)
       }
@@ -190,10 +194,15 @@ export class ReminderItemComponent implements OnInit {
             this.noReminderFor30Days.emit(true);
          }
          this.isDueWithIn7Days = false;
+         this.isDueWithIn30Days = true;
+         this.isDueWithAfter30Days = false;
                                   }
       if(this.nDays=="DUE LATER"){
         this.items = 
         clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 31) )
+        this.isDueWithIn7Days = false
+      this.isDueWithIn30Days = false;
+         this.isDueWithAfter30Days = true;
         if(this.items.length<=0){
         this.noReminderAfter30Days.emit(true)
         }
@@ -206,6 +215,16 @@ export class ReminderItemComponent implements OnInit {
   }
   formatDate(date:any){
     return new Date(this.intl.formatDate(date, this.dateFormat));
+  }
+
+  getcssClassName(){
+    if(this.isDueWithIn7Days){
+      return 'card-list_items red-item-block'
+    }
+    if(this.isDueWithIn30Days){
+      return' card-list_items canyon-item-block'
+    }  
+      return ' card-list_items'   
   }
 
   addDays(date: Date, days: any): Date {

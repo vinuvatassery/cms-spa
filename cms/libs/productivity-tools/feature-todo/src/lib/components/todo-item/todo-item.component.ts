@@ -87,11 +87,24 @@ export class TodoItemComponent implements OnInit {
         if(this.items.length <=0){
           this.noTodoAfter30Days.emit(true);
         }
+        this.isDueWithIn7Days = false;
+        this.isDueWithIn30Days = false;
       }
        this.cdr.detectChanges()
     })
   }
 
+  getcssClassName(){
+    if(this.isDueWithIn7Days){
+      return 'due-item-blocks red-item-block'
+    }
+    if(this.isDueWithIn30Days){
+      return'due-item-blocks canyon-item-block'
+    }
+   
+      return 'due-item-blocks'
+    
+  }
   formatDate(date:any){
     return new Date(this.intl.formatDate(date, this.dateFormat));
   }
