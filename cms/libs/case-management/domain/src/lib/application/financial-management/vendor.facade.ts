@@ -19,6 +19,7 @@ export class FinancialVendorFacade {
   private vendorsSubject = new Subject<any>();
   private selectedVendorSubject = new Subject<any>();
   private vendorProfileSubject = new Subject<any>();
+  private vendorProfileForReminderPanelSubject = new Subject<any>();
   private vendorProfileSpecialHandlingSubject = new Subject<any>();
   private clinicVendorSubject = new Subject<any>();
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
@@ -33,6 +34,7 @@ export class FinancialVendorFacade {
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
+  vendorProfileForReminderPanel$ = this.vendorProfileForReminderPanelSubject.asObservable();
   clinicVendorList$ = this.clinicVendorSubject.asObservable();
   clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable();
   providePanelSubject$ = this.providePanelSubject.asObservable();
@@ -151,6 +153,19 @@ export class FinancialVendorFacade {
       },
       error: (err) => {
         this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  getVendorProfileForReminderPanel(vendorId: string, tabCode: string): void {
+    this.financialVendorDataService.getVendorProfile(vendorId, tabCode).subscribe({
+      next: (vendorResponse: any) => {
+        if (vendorResponse) {
+          this.vendorProfileForReminderPanelSubject.next(vendorResponse);
+        }
+      },
+      error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });

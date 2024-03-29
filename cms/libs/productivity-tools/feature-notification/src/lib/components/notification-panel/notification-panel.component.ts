@@ -55,7 +55,9 @@ export class NotificationPanelComponent implements OnInit {
   @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   @Input() notificationList$: any;
   reminderFor = '';
+  itemsLoader = false;
   notifications: any = [];
+  skeletonCounts = [1,2,3];
   alertsData:any = {};
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
@@ -241,8 +243,12 @@ export class NotificationPanelComponent implements OnInit {
       show !== undefined ? show : !this.isNotificationPopupOpened;
        
      if(this.isNotificationPopupOpened){
+      this.itemsLoader = true;
       this.loadNotificationsAndReminders();
       this.notificationList$.subscribe((data: any) => {
+        if(data){
+          this.itemsLoader = false;
+        }
         this.alertsData = data;
         this.cdr.detectChanges();
       });

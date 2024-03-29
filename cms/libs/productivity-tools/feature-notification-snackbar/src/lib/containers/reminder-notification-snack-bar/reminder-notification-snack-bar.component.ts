@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   TemplateRef,
+  Type,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
@@ -13,7 +14,7 @@ import { Observable } from 'rxjs/internal/Observable';
 /** Entities **/
 
 /** Services **/
-import { NotificationService } from '@progress/kendo-angular-notification';
+import { NotificationRef, NotificationService } from '@progress/kendo-angular-notification';
 
 /** Providers **/
 import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
@@ -25,6 +26,7 @@ import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProvi
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
+import { ReminderNotificationSnackBarsTemplateComponent } from '../../components/reminder-notification-snack-bar-template/reminder-notification-snack-bar-template.component';
 @Component({
   selector: 'productivity-tools-reminder-notification-snack-bar',
   templateUrl: './reminder-notification-snack-bar.component.html',
@@ -45,6 +47,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   @ViewChild('reminderNotificationTemplateContainer', {
     read: ViewContainerRef,
   })
+
   reminderNotificationTemplateContainer!: ViewContainerRef; 
   isReminderExpand = false;
   isReminderExpands = false;
@@ -91,6 +94,8 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   unviewedCount =0;
+  disablePrevButton = true;
+  disableNxtButton = false;
   /** Constructor **/
   constructor(
     private readonly notificationService: NotificationService,
@@ -103,6 +108,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     public lovFacade : LovFacade,
     public financialRefundFacade : FinancialVendorRefundFacade,
     public financialVendorFacade : FinancialVendorFacade,
+    public viewContainerRef : ViewContainerRef,
     private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
   ) {}
 
@@ -117,45 +123,51 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
        this.unviewedCount = res;
     })
     this.reminderSnackBar$.subscribe((res:any) =>{
-      this.snackbarMessage = res;
-       this.entityName = res.alertExtraProperties.EntityName
-       this.entityId = res.alertExtraProperties.EntityId
-       this.vendorTypeCode = res.alertExtraProperties.VendorTypeCode
-       this.entityTypeCode  = res.alertExtraProperties.EntityTypeCode
-       this.alertId =res.alertExtraProperties.AlertId
-       const repeatTime = res.alertExtraProperties.RepeatTime
-       const dueDate = new Date(this.intl.formatDate(res.alertExtraProperties.AlertDueDate, this.dateFormat));
-       const today = new Date(this.intl.formatDate(new Date(), this.dateFormat))
-        if(repeatTime){
-          const times =repeatTime.split(':')
-          const timeStart = new Date().getTime();
-          const timeEnd = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate(), times[0], times[1]).getTime()
-          var hourDiff = timeEnd - timeStart; //in ms
-          var minDiff = hourDiff / 60 / 1000;
-          if(minDiff <=15 && minDiff >=0){
-            this.dueDateText = "Due in" +minDiff
-          }
-          if(minDiff <=0){
-            this.dueDateText = "Overdue" + minDiff
-          }
-          if(minDiff ==0){
-            this.dueDateText = "Now"
-          }
-        }
-       if(dueDate == today && !repeatTime){
-        this.dueDateText ="Today"
-       }
-    this.reminderNotificationSnackbarService
-    .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, res.alertText)
+       this.reminderNotificationSnackbarService
+       .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, res)
+  })
 
-    })
     this.reminderNotificationSnackbarService.snackbar$.subscribe({
       next: (res) => {
-        if (res) {          
-          this.alertText = res.subtitle;
-          this.snackbarMessage = res;
-          this.notificationService.show({
-            content: this.alertTemplate,
+        if (res) {  
+          let  timeDifferenceMinutes=0;
+          const repeatTime =  res.payload.alertExtraProperties.RepeatTime
+          const dueDate = this.intl.formatDate( res.payload.alertExtraProperties.AlertDueDate, this.dateFormat);
+          const today = this.intl.formatDate(new Date(), this.dateFormat)
+            if(repeatTime){
+               const times =repeatTime.split(':')
+               const duedateWithRepeatTime =  new Date(new Date().getFullYear(), new Date().getMonth(), 
+               new Date().getDate(), times[0], times[1])
+               console.log(duedateWithRepeatTime)
+               const timeDifferenceMs = duedateWithRepeatTime.getTime() - new Date().getTime();
+                timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+
+               
+                  if(timeDifferenceMinutes >=0){
+                    this.dueDateText = "In " +timeDifferenceMinutes+" Mins"
+                  }
+                  if(timeDifferenceMinutes <=0){
+                    this.dueDateText = timeDifferenceMinutes+" Mins Over Due"
+                  }
+                  if(timeDifferenceMinutes ==0){
+                    this.dueDateText = "Now"
+                  }
+                      
+            }
+            if(dueDate == today && !repeatTime){
+                 this.dueDateText ="Today"
+            }   
+            if((repeatTime && timeDifferenceMinutes<=15) || !repeatTime){  
+          if(!this.signalrEventHandlerService.snackBarAlertIds.includes(res.payload?.alertExtraProperties?.AlertId)){
+            this.signalrEventHandlerService.snackBarAlertIds.push(res.payload.alertExtraProperties?.AlertId)
+          
+            if(res.payload.alertExtraProperties?.RecentViewedFlag == 'N'){
+              this.unviewedCount = this.unviewedCount + 1;
+              this.signalrEventHandlerService.remindersUnViewedCountSubject.next( this.unviewedCount)
+            }
+
+          const notificationRef: NotificationRef =    this.notificationService.show({
+            content: ReminderNotificationSnackBarsTemplateComponent,
             appendTo: this.reminderNotificationTemplateContainer,
             position: { horizontal: 'right', vertical: 'bottom' },
             animation: { type: 'fade', duration: this.duration },
@@ -164,7 +176,27 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
             hideAfter: this.hideAfter,
             cssClass: 'reminder-notification-bar',
           });
+          if(notificationRef && notificationRef.content &&  notificationRef.content.instance){          
+            
+                 const payload ={
+        ...res.payload,
+        dueDateText : this.dueDateText
+                 }
+                notificationRef.content.instance.snackBarMessage = payload
+                
+                notificationRef.content.instance.snoozeReminder.subscribe((event:any) =>
+               {
+                console.log(event)
+                this.signalrEventHandlerService.snackBarAlertIds = this.signalrEventHandlerService.snackBarAlertIds.filter(x => x!==event)
+               }
+              );
+                notificationRef.content.instance.hideSnackBar.subscribe(() =>
+                notificationRef.hide()
+              );
+          }
         }
+      }
+      }
         this.messageCount = document.getElementsByClassName(
           'k-notification-container ng-star-inserted'
         );
@@ -172,7 +204,9 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
       },
      
     });
+
   }
+
 
   public removePreviousMessage() {
     this.showSideReminderNotification();
@@ -312,5 +346,10 @@ onNewReminderClosed(result: any) {
   this.isEdit = false;
     
 }
+
+
+
+
+
 }
 

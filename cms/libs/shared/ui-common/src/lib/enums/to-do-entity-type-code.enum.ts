@@ -3,5 +3,7 @@ export enum ToDoEntityTypeCode{
     Vendor = 'VENDOR',
     Insurance = 'INSURANCE_PREMIUM',
     Pharmacy ='PHARMACY',
-    Tpa ='TPA'
+    Tpa ='TPA',
+    CERComplete= 'CER_ELIGIBILITY',
+    NewCERApplication = 'NEW_APP_ELIGIBILITY'
 }

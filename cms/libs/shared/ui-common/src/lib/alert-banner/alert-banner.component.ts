@@ -166,7 +166,7 @@ export class AlertBannerComponent implements OnInit {
   }
   private differenceInDays(date1: Date, date2: Date): number {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    const diffInTime = date2.getTime() - date1.getTime();
+    const diffInTime = date1.getTime() - date2.getTime();
     return Math.round(diffInTime / oneDay);
   }
   todoItemCrossedDueDate(alertDueDate:any):boolean{

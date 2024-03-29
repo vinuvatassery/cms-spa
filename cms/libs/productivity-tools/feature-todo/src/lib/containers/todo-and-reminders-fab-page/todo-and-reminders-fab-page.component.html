@@ -11,11 +11,12 @@
 
 <productivity-tools-reminder-list *ngIf="showRemindersList"
 [todoGrid$]="todoGrid$"
-(isLoadTodoGridEvent)="onloadTodoGrid($event,$event)"
+(isLoadTodoGridEvent)="onloadTodoGrid()"
 (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
 (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
 [isToDODetailsActionOpen]="isToDODetailsActionOpen"
 [loadAlertGrid$]="loadAlertGrid$"
+[loadTodoList$]="loadTodoList$"
 (isModalTodoDetailsOpenClicked)="onOpenTodoClicked($event,todoDetailTemplate)"
 
 ></productivity-tools-reminder-list>
