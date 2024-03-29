@@ -90,6 +90,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   ddlTemplates: any;
   ddlMailCodes: any[] = [];
   selectedMailCode: any;
+  selectedMailCodeId: any;
   isButtonVisible: boolean = true;
   loginUserId!: any;
   selectedTemplateId!: string;
@@ -104,22 +105,34 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.loadTemplate();
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
+    this.addSubscriptions();
+    if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter) {
+      if(this.isContinueDraftClicked){
+        this.loadClientAndVendorDraftLetterTemplates();
+      }else if(this.isNewNotificationClicked){
+        this.openNewLetterClicked();
+      }else{
+        this.loadDropdownLetterTemplates();
+      }
+    }
+    this.isNewLetterClicked =  this.notificationGroup ? true : false;
+  }
+
+  addSubscriptions() {
     this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
       this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
-    if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
-      this.loadClientAndVendorDraftLetterTemplates();
-    }else {
-        if(this.isContinueDraftClicked){
-          this.loadClientAndVendorDraftLetterTemplates();
-        }else if(this.isNewNotificationClicked){
-          this.openNewLetterClicked();
-        }else{
-          this.loadDropdownLetterTemplates();
-        }
+      if (this.selectedMailCodeId) {
+        this.mailingAddress = this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == this.selectedMailCodeId);
+        this.selectedMailCodeId = null;
+        this.ref.detectChanges();
       }
     });
-    this.vendorContactFacade.loadMailCodes(this.entityId);
-    this.isNewLetterClicked =  this.notificationGroup ? true : false;
+  }
+
+  getProfileName() {
+    if (this.communicationLetterTypeCode.includes('CLIENT')) return 'client';
+    else if (this.communicationLetterTypeCode.includes('VENDOR')) return 'vendor';
+    else return this.communicationLetterTypeCode;
   }
 
   ngOnDestroy(): void {
@@ -359,6 +372,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterSent;
         break;
+      case CommunicationEventTypeCode.VendorLetter:
+        templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
+        break;
     }
     return templateTypeCode;
   }
@@ -413,9 +429,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private loadDropdownLetterTemplates() { 
-    if (this.notificationGroup !== undefined && this.templateLoadType !== undefined) {
+    if (this.notificationGroup !== undefined && this.communicationLetterTypeCode !== undefined) {
       this.loaderService.show();
-      this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.templateLoadType)
+      this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.communicationLetterTypeCode)
         .subscribe({
           next: (data: any) => {
             if (data) {
@@ -490,7 +506,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.selectedTemplateId = event.notificationTemplateId;
       this.isOpenLetterTemplate = true;
       this.selectedTemplate = event;
-      this.mailingAddress = this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == event.vendorAddressId);
+      this.selectedMailCodeId = event.vendorAddressId;
+      this.loadMailingAddress();
       this.selectedTemplateContent = event.requestBody;
       this.updatedTemplateContent = event.requestBody;
       this.documentTemplate = {

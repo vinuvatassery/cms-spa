@@ -46,7 +46,7 @@
 
 <!-- Send New Letter Popup -->
 <ng-template #sendLetterDialog>
-  <case-management-send-letter [mailingAddress$]="mailCodes$"
+  <case-management-send-letter templateHeader="Send Letter" [mailingAddress$]="mailCodes$"
   [entityId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
   [notificationGroup]="screenName"
   [communicationLetterTypeCode]="communicationLetterTypeCode"
@@ -57,6 +57,7 @@
 <!-- Send New Email Popup -->
 <ng-template #sendNewEmailDialog>
   <case-management-send-email
+  templateHeader="Send Email"
   [communicationEmailTypeCode]="communicationEmailTypeCode"
   [emailSubject]="emailSubject" [notificationGroup]="screenName"
   [entityId]="vendorId" [toEmail]="toEmail"
