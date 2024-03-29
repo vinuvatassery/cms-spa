@@ -14,7 +14,7 @@ import {
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { AlertDueOn } from '../enums/alert-due-on.enum';
+import { AlertDueOn } from '@cms/productivity-tools/domain';
 @Component({
   selector: 'common-alert-banner',
   templateUrl: './alert-banner.component.html',
