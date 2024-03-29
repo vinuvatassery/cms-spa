@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FabMenuFacade } from '@cms/productivity-tools/domain';
+import { FabMenuFacade, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
@@ -23,13 +23,21 @@ export class CommonActionsComponent {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     public readonly fabMenuFacade : FabMenuFacade,
-    public signalrEventHandlerService : SignalrEventHandlerService
+    public notificationFacade : NotificationFacade,
+    public todoFacade : TodoFacade
   ) {}
 
   ngOnInit(): void {
 
-    this.signalrEventHandlerService.reminderSnackBar$.subscribe(res =>{
-     this.todoAndRemindersCount =  res.payload.alertExtraProperties.FabPanelCount
+    this.notificationFacade.todoAndReminderFabCount$.subscribe((res :any) =>{
+     this.todoAndRemindersCount =  res;
+    })
+    var clientId = this.route.snapshot.queryParams['id'];
+    if(clientId){
+    this.notificationFacade.todoAndReminderFabCount(clientId);
+    }
+    this.todoFacade.curdAlert$.subscribe(res =>{
+      this.notificationFacade.todoAndReminderFabCount(clientId);
     })
   }
   /** Internal event methods **/

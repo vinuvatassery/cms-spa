@@ -184,9 +184,9 @@ export class TodoFacade {
       
   }
 
-  deleteAlert(payload:any):any {
+  deleteAlert(alertId:any, deleteFromOutlookCalender:any='N'):any {
       this.loaderService.show()
-      this.todoDataService.deleteAlert(payload).subscribe({
+      this.todoDataService.deleteAlert(alertId,deleteFromOutlookCalender).subscribe({
         next: (todoGridResponse: any) => {
           this.loaderService.hide()
           this.curdAlertSubject.next(true);

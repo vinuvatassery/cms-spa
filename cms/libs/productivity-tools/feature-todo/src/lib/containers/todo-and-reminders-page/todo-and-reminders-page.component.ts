@@ -78,7 +78,7 @@ loadData(){
     this.noReminderFor30Days = false;
     this.noReminderAfter30Days = false;
     if(res && res.length >0){
-    this.notificationFacade.viewNotifications(res)
+    this.notificationFacade.viewNotifications(res).subscribe()
     }
 
   })
