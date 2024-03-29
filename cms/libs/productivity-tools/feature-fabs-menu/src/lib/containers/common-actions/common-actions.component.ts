@@ -16,6 +16,9 @@ export class CommonActionsComponent {
  
   clickedContact!: any;
   item: Array<DialItem> = [{}];
+  clientId : any;
+  //vendorId : any;
+  entityId : any;
   
   
   constructor(
@@ -25,7 +28,15 @@ export class CommonActionsComponent {
   ) {}
 
   ngOnInit(): void {
-
+    debugger;
+      this.clientId = this.route.snapshot.params['id'];
+      //this.vendorId = this.route.snapshot.queryParams['v_id'];
+      if(this.clientId){
+        this.entityId = this.clientId.toString();
+      }
+      // else if(this.vendorId){
+      //   this.entityId = this.vendorId.toString();
+      // }
   }
   /** Internal event methods **/
   onDialItemClicked(event: any): void {
