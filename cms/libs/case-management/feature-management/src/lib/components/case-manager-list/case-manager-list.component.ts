@@ -7,6 +7,7 @@ import {
   EventEmitter,
   OnChanges,
   OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -27,6 +28,8 @@ export class CaseManagerListComponent implements OnChanges, OnDestroy {
   @Output() addExistingCaseManagerEvent = new EventEmitter<string>();
   @Output() loadprofilePhotoEvent = new EventEmitter<string>();
   @Output() changeDateConfimEvent = new EventEmitter<any>();
+  @Output() caseManagerReferralSubmitEvent = new EventEmitter<any>();
+
 
   /** Input properties **/
   @Input() getCaseManagers$: any;
@@ -45,6 +48,8 @@ export class CaseManagerListComponent implements OnChanges, OnDestroy {
   @Input() isCerForm: any;
   @Input() showCaseListRequired$: any;
   @Input() caseManagersProfilePhoto$!: any;
+  @Input() clientId ! : any;
+  @Input() caseManagerReferral$ : any;
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -191,13 +196,13 @@ export class CaseManagerListComponent implements OnChanges, OnDestroy {
       },
     },
   ];
-constructor(private caseFacade: CaseFacade,){}
+constructor(private caseFacade: CaseFacade, private readonly cdr: ChangeDetectorRef){}
   /** Lifecycle hooks **/
   ngOnInit(): void {
     if (!this.isCerForm) {
       this.newAppActions = this.newAppActions.filter(x=>x.buttonName != 'unAssignMngr');
     }
-  } 
+  }
 
   ngOnDestroy(): void {
     this.caseManagerProfileSubscription?.unsubscribe();
@@ -315,7 +320,21 @@ constructor(private caseFacade: CaseFacade,){}
 
   submitReferalEvent(confirm : boolean)
   {
-     this.showReferralPopup =false;
+    if(confirm)
+    {
+      this.caseManagerReferralSubmitEvent.emit(this.clientId);
+    }
+    else
+    {
+      this.showReferralPopup =false;
+    }
+    this.caseManagerReferral$.subscribe((response: any) => {
+      if (response) {
+        this.showReferralPopup =false;
+        this.cdr.detectChanges();
+      }
+    });
+
   }
 
   onDeleteConfirmHandle(data: any) {

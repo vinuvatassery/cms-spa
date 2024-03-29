@@ -10,6 +10,6 @@ export class CaseManagerReferralRequestComponent {
   @Output() submitReferalEvent =  new EventEmitter<any>();
   onSubmitConfirm(confirm : boolean)
   {
-      this.submitReferalEvent.emit()
+      this.submitReferalEvent.emit(confirm);
   }
 }
