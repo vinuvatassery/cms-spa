@@ -219,9 +219,11 @@ isReminderExpand = false;
     this.isEdit = true;
     if(result){
       this.todoFacade.getTodo$.subscribe(res =>{
+        if(this.alertId == res.alertId){
         this.snackBarMessage.alertText = res.alertDesc;
         this.snackBarMessage.entityName = res.entityTypeCode == 'CLIENT' ? res.clientFullName : res.providerName
         this.setDueDateText(res)
+        }
       })
       this.todoFacade.getTodoItem(this.alertId);
   
