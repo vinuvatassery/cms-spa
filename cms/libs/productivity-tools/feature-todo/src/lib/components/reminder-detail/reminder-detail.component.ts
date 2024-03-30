@@ -324,9 +324,9 @@ export class ReminderDetailComponent implements OnInit {
       this.isModalNewReminderCloseClicked.emit(true)
       }
     })
-    this.todoFacade.deleteAlert({alertId : this.alertId, 
-                         isDeleteFromOutlookCalender: this.clientReminderForm.controls['deleteFromOutlookCalender'].value ? 'N' :'Y'
-    });
+    this.todoFacade.deleteAlert(this.alertId, 
+     this.clientReminderForm.controls['deleteFromOutlookCalender'].value ? 'Y' :'N'
+    );
     
   }
   onLinkToChange(event:any){

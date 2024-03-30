@@ -15,14 +15,15 @@ import { Subject } from 'rxjs';
 export class SignalrEventHandlerService {
   /** Private  properties **/
   private reminderSnackBars = new Subject<any>();
-  remindersUnViewedCountSubject = new Subject<any>();
+  todoRemindersUnViewedCountSubject = new Subject<any>();
   /** Public properties **/
   reminderSnackBar$ = this.reminderSnackBars.asObservable();
 
-  
+  remindersCountSubject = new Subject<any>();
+  remindersCount$ = this.remindersCountSubject.asObservable();
   snackBarAlertIds:any[]=[]
   unviewedCount = 0;
-  remindersUnViewedCount$  = this.remindersUnViewedCountSubject.asObservable();
+  todoRemindersUnViewedCount$  = this.todoRemindersUnViewedCountSubject.asObservable();
   /** Constructor **/
   constructor(private readonly signalrService: SignalrService) {
     this.registerHubMethodHandlers();

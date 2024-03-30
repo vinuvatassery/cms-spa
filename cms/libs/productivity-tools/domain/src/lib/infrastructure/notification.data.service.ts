@@ -49,4 +49,10 @@ export class NotificationDataService {
     return this.http.post(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/snooze-reminder/${reminderId}/${duration}?isFullDay=${isFullDay}`,null);
   }
+
+  todoAndReminderFabCount(clientId:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/clients/${clientId}/fab-count`,null);
+  }
 }
+
