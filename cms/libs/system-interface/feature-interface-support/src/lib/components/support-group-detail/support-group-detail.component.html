@@ -1,60 +1,48 @@
-<form class="k-form" [formGroup]="notiificationGroupForm">
+<form class="k-form" [formGroup]="notificationGroupForm">
 
     <section class="k-dialog-body">
         <p class="text-muted">
-           
+            {{ isEditSupportGroup ? 'Updates' : 'Adds' }} a {{ isEditSupportGroup ? 'existing' : 'new' }} support group to
+            interface support
         </p>
         <div class="flex-row">
 
             <div class="flex-col">
-                <kendo-floatinglabel text="Interface">
-                    <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
-                        valueField="lovDesc" [data]="interfaceSupportGroupLov | async" aria-label="State"  
-                        [valuePrimitive]="true" formControlName="groupCode"> </kendo-dropdownlist>
-                        <kendo-formerror *ngIf="(!notiificationGroupForm.controls['groupCode'].valid) && notiificationGroupForm.controls['groupCode'].hasError('required') &&isSubmitted">
-                            Interface must be selected.</kendo-formerror>
-                </kendo-floatinglabel>
-
+                <kendo-formfield>
+                    <kendo-floatinglabel text="Interface">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
+                            valueField="lovDesc" [data]="interfaceSupportGroupLov | async" aria-label="State"
+                            [valuePrimitive]="true" formControlName="groupCode"> </kendo-dropdownlist>
+                    </kendo-floatinglabel>
+                    <kendo-formerror
+                        *ngIf="!notificationGroupForm.controls['groupCode'].valid">
+                        Interface must be selected.</kendo-formerror>
+                </kendo-formfield>
             </div>
             <div class="flex-col ">
-                <kendo-floatinglabel text="Group Name">
-                    <div>
-                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [maxlength]="tAreaCessationMaxLength"
-                            resizable="none" formControlName="groupName" aria-label="Group Name" [disabled]="true"
-                            class="form-control table-text-area">
+                <kendo-formfield>
+                    <kendo-floatinglabel text="Group Name">
+                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="groupName"
+                            aria-label="Group Name">
                         </kendo-textbox>
-                        <div class="flex-row">
-                            <div class="flex-col flex-col-6">
-                                <kendo-formerror
-                                    *ngIf="(!notiificationGroupForm.controls['groupDesc'].valid && notiificationGroupForm.controls['groupDesc'].hasError('required')) && isSubmitted">
-                                    Group Name is required.
-                                </kendo-formerror>
-                            </div>
-                        </div>
-
-                    </div>
-                </kendo-floatinglabel>
+                    </kendo-floatinglabel>
+                    <kendo-formerror *ngIf="!notificationGroupForm.controls['groupName'].valid">
+                        Group Name is required.
+                    </kendo-formerror>
+                </kendo-formfield>
             </div>
             <div class="flex-col ">
-                <kendo-floatinglabel text="Description">
-                    <div>
-                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode" resizable="none"
-                            formControlName="groupDesc" aria-label="Description"
-                            class="form-control table-text-area">
+                <kendo-formfield>
+                    <kendo-floatinglabel text="Description">
+                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="groupDesc"
+                            aria-label="Description">
                         </kendo-textbox>
-                        <div class="flex-row">
-                            <div class="flex-col flex-col-6">
-                                <kendo-formerror
-                                    *ngIf="(!notiificationGroupForm.controls['groupDesc'].valid && notiificationGroupForm.controls['groupDesc'].hasError('required')) && isSubmitted">
-                                    Description is required.
-                                </kendo-formerror>
-                            </div>
-                        </div>
-                    </div>
-
-                </kendo-floatinglabel>
+                    </kendo-floatinglabel>
+                    <kendo-formerror *ngIf="!notificationGroupForm.controls['groupDesc'].valid">
+                        Description is required.
+                    </kendo-formerror>
+                </kendo-formfield>
             </div>
-
         </div>
 
     </section>

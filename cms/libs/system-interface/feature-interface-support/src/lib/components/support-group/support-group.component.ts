@@ -89,13 +89,13 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     ALL: 'All Columns',
     groupCode: 'Interface',
     groupName: 'Group Name',
-    groupDesc: 'Desciption'
+    groupDesc: 'Description'
   };
   searchColumnList = [
     { columnName: 'ALL', columnDesc: 'All Columns' },
     { columnName: 'groupCode', columnDesc: 'Interface' },
     { columnName: 'groupName', columnDesc: 'Group Name' },
-    { columnName: 'groupDesc', columnDesc: 'Desciption' }
+    { columnName: 'groupDesc', columnDesc: 'Description' }
   ];
 
   public gridMoreActionsSupport = [
