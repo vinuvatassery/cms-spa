@@ -28,7 +28,7 @@
             Options <span class="material-icons" aria-hidden="true">   arrow_drop_down    </span>
           </kendo-dropdownbutton>
 
-          <button kendoButton role="region" themeColor="primary" aria-label="Dismiss"  fillMode="flat"  (click)="dismissAlert(alertId);removePreviousMessage();$event.stopPropagation()"> DISMISS</button>
+          <button kendoButton role="region" themeColor="primary" aria-label="Dismiss"  fillMode="flat"  (click)="dismissAlert(alertId);$event.stopPropagation()"> DISMISS</button>
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@
 
 
   <ng-template #NewReminderTemplate>
-    <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
+    <kendo-dialog-titlebar (close)="onNewReminderClosed(false)">
       Edit Reminder  </kendo-dialog-titlebar>
     <productivity-tools-reminder-detail
     [isEdit]="isEdit" 

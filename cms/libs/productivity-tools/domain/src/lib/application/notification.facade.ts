@@ -14,9 +14,14 @@ export class NotificationFacade {
   /** Public properties **/
   signalrGeneralNotifications$!: Observable<any>;
   private notificationAndReminderListSubject = new Subject<any>();
+  private snoozeReminderSubject = new Subject<any>();
   notificationList$ = this.notificationAndReminderListSubject.asObservable();
+  snoozeReminder$ = this.snoozeReminderSubject.asObservable();
   private alertSearchLoaderVisibilitySubject = new Subject<boolean>;
   alertSearchLoaderVisibility$= this.alertSearchLoaderVisibilitySubject.asObservable();
+
+  private todoAndReminderFabCountSubject = new Subject<boolean>;
+  todoAndReminderFabCount$= this.todoAndReminderFabCountSubject.asObservable();
   /** Constructor **/
   constructor(
     private readonly notificationDataService: NotificationDataService,
@@ -59,6 +64,19 @@ export class NotificationFacade {
        
     return this.notificationDataService.viewNotifictaions(notifictaions);
   }
+
+  todoAndReminderFabCount(clientId: any): void {
+       
+   this.notificationDataService.todoAndReminderFabCount(clientId).subscribe({
+      next: (fabCount: any) => {
+        this.todoAndReminderFabCountSubject.next(fabCount);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },     
+    });
+  }
+
   loadNotificatioBySearchText(text : string): void {
     this.loaderService.show()
     this.alertSearchLoaderVisibilitySubject.next(true);
@@ -86,6 +104,7 @@ export class NotificationFacade {
     this.notificationDataService.SnoozeReminder(reminderId,duration,isFullDay).subscribe({
       next: (snoozeResponse: any) => {
         this.loaderService.hide() 
+        this.snoozeReminderSubject.next(true);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , snoozeResponse.message);
         this.loadNotificationsAndReminders();
       },

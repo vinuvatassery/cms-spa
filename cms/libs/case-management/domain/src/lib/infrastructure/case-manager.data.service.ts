@@ -58,7 +58,7 @@ export class CaseManagerDataService {
     caseId: string,
     hasManager: string,
     needManager: string
-  ) {    
+  ) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers/${caseId}?hasManager=${hasManager}&needManager=${needManager}`,
       null
@@ -76,7 +76,7 @@ export class CaseManagerDataService {
         startDate: startDate,
         endDate: endDate,
         userId: userId,
-      
+
     };
 
     return this.http.put(
@@ -101,5 +101,10 @@ export class CaseManagerDataService {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers/${caseId}`
     );
+  }
+
+  submitCaseManagerReferral(clientId: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/case-managers/submit-referral`, null);
   }
 }

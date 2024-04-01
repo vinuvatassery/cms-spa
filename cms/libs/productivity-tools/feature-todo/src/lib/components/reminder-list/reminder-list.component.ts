@@ -47,6 +47,7 @@ export class ReminderListComponent implements  OnInit{
   isToDODeleteActionOpen = false;
   @Input() isToDODetailsActionOpen: any;
    @Input()todoGrid$ : any;
+   @Input()loadTodoList$ : any;
   @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -245,21 +246,10 @@ export class ReminderListComponent implements  OnInit{
     }
      return isCrossedDueDate;
   }
-  private loadTodoGridData(skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string, alertType:string){
-      this.loaderService.show;
-      const gridDataRefinerValue = {
-        SkipCount: skipCountValue,
-        MaxResultCount: maxResultCountValue,
-        Sorting: sortValue,
-        SortType: sortTypeValue,
-        Filter: "[]",
-      };
+  private loadTodoGridData(){
       this.itemsLoader=true;
-        this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
-        this.todoGrid$?.subscribe((todoItemList : any) =>{
+        this.isLoadTodoGridEvent.emit();
+        this.loadTodoList$?.subscribe((todoItemList : any) =>{
           if(todoItemList)
           {
             this.itemsLoader =false;
@@ -287,13 +277,7 @@ export class ReminderListComponent implements  OnInit{
         });
   }
   private loadTodoGrid() {
-    this.loadTodoGridData(
-      this.toDoGridState.skip?? 0,
-      this.toDoGridState.take?? 10,
-      this.toDoGridState?.sort![0]?.field ?? this.sortValue,
-      this.toDoGridState?.sort![0]?.dir ?? 'asc',
-      AlertTypeCode.Todo.toString()
-    )
+    this.loadTodoGridData();
   }
   onToDoActionClicked(item: any,gridItem: any){ 
     if(item.id == 'done'){

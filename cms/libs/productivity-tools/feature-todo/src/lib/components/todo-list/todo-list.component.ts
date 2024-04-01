@@ -97,8 +97,10 @@ export class TodoListComponent implements OnInit {
    this.initilizeGridRefinersAndGrid()
     this.loadColumnsData();
    
-    this.loadAlertGrid$.subscribe((data: any) => {
-      this.loadTodoGrid();
+    this.todoGrid$.subscribe((data: any) => {
+      if(data == true){
+        this.loadTodoGrid();
+      } 
     });
     this.loadEntityTypeList()
   }
@@ -126,11 +128,27 @@ export class TodoListComponent implements OnInit {
 
   /** Private methods **/
   public loadTodoGrid() {
-    this.loadTodoGridData();
+    this.loadTodoGridData(
+      this.toDoGridState.skip?? 0,
+      this.toDoGridState.take?? this.pageSizes[2]?.value,
+      this.toDoGridState?.sort![0]?.field ?? this.sortValue,
+      this.toDoGridState?.sort![0]?.dir ?? 'asc',
+      AlertTypeCode.Todo.toString()
+    )
   }
-  private loadTodoGridData(){
+  private loadTodoGridData(skipCountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string, alertType:string){
       this.isToDoGridLoaderShow.next(true);
-        this.isLoadTodoGridEvent.emit();
+      const gridDataRefinerValue = {
+        skipCount: skipCountValue,
+        maxResultCount: maxResultCountValue,
+        sorting: sortValue,
+        sortType: sortTypeValue,
+        filter: JSON.stringify(this.filter),
+      }; 
+        this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
         this.todoGrid$.subscribe((data: any) => {
           this.gridDataResult = data;
           if(data?.total >=0 || data?.total === -1){
