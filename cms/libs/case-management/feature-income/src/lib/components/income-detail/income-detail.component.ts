@@ -10,6 +10,7 @@ import { Lov, LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/
 import { LoaderService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IntlService } from '@progress/kendo-angular-intl';
+
 @Component({
   selector: 'case-management-income-detail',
   templateUrl: './income-detail.component.html',
@@ -250,7 +251,12 @@ export class IncomeDetailComponent implements OnInit {
       this.onProofofIncomeValueChangedUpdated(this.hasNoProofOfIncome);
     }
     if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator && !this.proofOfIncomeValidatorSize) {
+      const validGuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       let incomeData = this.IncomeDetailsForm.value;
+      if(!validGuidRegex.test(incomeData.employerId)){
+        incomeData['employerName'] = incomeData.employerId;
+        incomeData['employerId'] = null;       
+      }
       incomeData['clientCaseEligibilityId'] = this.clientCaseEligibilityId;
       incomeData['clientId'] = this.clientId;
       incomeData['clientCaseId'] = this.clientCaseId;

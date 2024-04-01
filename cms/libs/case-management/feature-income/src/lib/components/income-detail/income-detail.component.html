@@ -29,7 +29,7 @@
           <kendo-multicolumncombobox textField="employerName" [fillMode]="formUiStyle.dropDownFillMode"
             placeholder="Employer Name" [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
             [filterable]="true" (filterChange)="loadEmployers($event)" [data]="employers$ | async"
-            formControlName="employerId" [valuePrimitive]="true"
+            formControlName="employerId" [valuePrimitive]="true" [allowCustom]="true"
             valueField="employerId">
             <button kendoButton fillMode="clear" icon="image"></button>        
             <kendo-combobox-column>
