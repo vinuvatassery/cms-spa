@@ -4,7 +4,9 @@
       <div [ngClass]="todoItemCrossedDueDate(null) ? 'info-banners red-banner hover-link' : 'info-banners canyon-banner hover-link'">
 
         <div class="flex-col info-banners p-0">
-          <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
+          <span class="material-icons" aria-label="to do" aria-hidden="true" *ngIf="topAlert.alertTypeCode == 'TODO'">playlist_add_check</span>
+          <span class="material-icons" aria-label="notification" aria-hidden="true" *ngIf="topAlert.alertTypeCode == 'REMINDER'">alarm</span>
+  
           <span class="text-bold">{{topAlert.alertTypeCode =='REMINDER'? topAlert.alertDesc : topAlert.alertName}} </span>
           <span class="text-normal">{{DueOn(topAlert)}}</span>
         </div>
@@ -41,7 +43,8 @@
 <ng-container  *ngFor="let alertItem of  secondaryAlertList; let i = index">
 <div style="width: 330px;" [ngClass]="todoItemCrossedDueDate(alertItem.alertDueDate)? 'info-banners red-banner hover-link mt-1' : 'info-banners canyon-banner hover-link mt-1'">
  <div class="flex-col info-banners p-0">
-   <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
+   <span class="material-icons" aria-label="to do" aria-hidden="true" *ngIf="alertItem.alertTypeCode == 'TODO'">playlist_add_check</span>
+   <span class="material-icons" aria-label="notification" aria-hidden="true" *ngIf="alertItem.alertTypeCode == 'REMINDER'">alarm</span>
    <span class="text-bold">{{alertItem.alertTypeCode == 'REMINDER'? alertItem.alertDesc : alertItem.alertName}} </span>
    <span class="text-normal">{{DueOn(alertItem)}}</span>
  </div>
@@ -79,7 +82,4 @@
   </kendo-dialog-titlebar>
 
  <productivity-tools-notification-and-reminder-page [focusedTab]='"REMINDER"'></productivity-tools-notification-and-reminder-page>
-</ng-template>
-<ng-template #deleteToDODialogTemplate>   
-  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
 </ng-template>
