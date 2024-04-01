@@ -1,10 +1,10 @@
-<p>Users assigned to {{selectedInterface}}. Users in this list will be notified in case of interface error</p>
+<p class="mb-1">Users assigned to {{selectedInterface}}. Users in this list will be notified in case of interface error</p>
 <div class="app-c-table">
   <kendo-grid [resizable]="true" [loading]="(dataListsLoader$  | async) === true"  [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [filter]="state.filter"
     [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)" (columnReorder)="onColumnReorder($event)"
-    [data]="gridDistributionData$ | async" [selectable]="true" >
+    [data]="gridDistributionData$ | async"  class="grid_scroll">
 
     <kendo-grid-column field="email" title="Email" [width]="150">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -54,7 +54,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [sortable]="false" [width]="100" class="text-center">
+    <kendo-grid-column field="Option" title="Options"   [columnMenu]="false" [sortable]="false" [width]="100" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="gridMoreActions" class="TableActionPopup app-dropdown-action more_action_wid"
           buttonClass="k-icon-button" aria-label="more actions" title="More option"
