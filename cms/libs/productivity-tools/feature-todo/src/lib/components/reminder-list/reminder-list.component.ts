@@ -40,6 +40,8 @@ export class ReminderListComponent implements  OnInit{
   @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
   deleteToDODialogTemplate!: TemplateRef<any>;
   @Output() onSnoozeReminderEvent = new EventEmitter<any>();
+  alertSearchLoaderVisibility$ =
+  this.notificationFacade.alertSearchLoaderVisibility$;
   isOpenDeleteTODOItem = false;
   itemsLoader = false;
   sortColumn ="alertDueDate";
