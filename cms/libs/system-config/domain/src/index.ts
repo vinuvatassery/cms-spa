@@ -23,6 +23,7 @@ export * from './lib/infrastructure/service_providers.data.service';
 export * from './lib/infrastructure/tin-validation.data.service';
 export * from './lib/infrastructure/other_lists.data.service';
 export * from './lib/infrastructure/housing-coordination.service';
+export * from './lib/infrastructure/phone-validation.data.service';
 
 /** Facades **/
 export * from './lib/application/lov.facade';
@@ -37,6 +38,7 @@ export * from './lib/application/tin-validation.facade';
 export * from './lib/application/other_lists.facade';
 export * from './lib/application/housing-coordination.facade';
 export * from './lib/application/scroll-focus-validation.facade';
+export * from './lib/application/phone-validation.facade';
 
 /** Enums **/
 export * from './lib/enums/lov-types.enum';

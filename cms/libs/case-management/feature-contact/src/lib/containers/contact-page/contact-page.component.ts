@@ -14,7 +14,7 @@ import {
   ClientDocumentFacade, HomeAddressProof, StatesInUSA, WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
+import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade, PhoneValidationFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
@@ -67,6 +67,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   public homeAddressProofFile: any = undefined;
   showAddressProofSizeValidation = false;
   isCerForm = false;
+  duplicatePhoneFound = false;
   documentTypeCode!: string;
   prevClientCaseEligibilityId!: string;
   oldContactInfo!: ContactInfo;
@@ -105,7 +106,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly router: Router,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly cd: ChangeDetectorRef,
-    private scrollFocusValidationfacade: ScrollFocusValidationfacade
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade,
+    private phoneValidationFacade : PhoneValidationFacade
   ) { }
 
   /** Lifecycle hooks **/
@@ -769,7 +771,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
           element.focus();
         }
       }
-      
+
     return of(false);
   }
 
@@ -1062,7 +1064,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       const cellPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
       const workPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
       const otherPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
-     
+
       if(mailingAddress1){
       mailingAddress.clientAddressId = mailingAddress1?.clientAddressId ? mailingAddress1?.clientAddressId : "00000000-0000-0000-0000-000000000000" ;
       mailingAddress.concurrencyStamp = mailingAddress1?.concurrencyStamp;
@@ -2110,7 +2112,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.hasValidator) {
       this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.setValidators(null);
       this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.updateValueAndValidity();
-      return;
+      const phoneNumber = (this.contactInfoForm.get(phoneType) as FormGroup)?.controls['phoneNbr'];
+      const isValidPhoneNumber = phoneNumber?.value && phoneNumber?.valid && !((this.contactInfoForm?.get(phoneType) as FormGroup)?.controls['applicableFlag']?.value ?? false);
+      if(phoneNumber.value.trim().length == 10 && isValidPhoneNumber){
+        this.checkDuplicatePhoneNumber(phoneNumber);
+      }
     }
     if (phoneType === 'contactPhoneNbr') {
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.setValidators(null);
@@ -2132,5 +2138,20 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   removeEmailValidation(){
     this.contactInfoForm?.get('email.email')?.setValidators(null);
     this.contactInfoForm?.get('email.email')?.updateValueAndValidity();
+  }
+  checkDuplicatePhoneNumber(phoneNumber: any){
+    this.phoneValidationFacade.validatePhoneNbr(phoneNumber.value.trim()).subscribe({
+      next: (response: any) => {
+        if(response.status == 1){
+          return;
+        }
+      },
+      error: (err: any) => {
+        this.duplicatePhoneFound = true;
+        phoneNumber.setErrors({ incorrect: true });
+        this.cd.detectChanges();
+        this.loggingService.logException(err);
+      }
+    })
   }
 }
