@@ -20,7 +20,7 @@
         </kendo-floatinglabel>
       </div>
       <div *ngIf="isOpenDdlEmailDetails">
-        <div class="flex-col">
+        <div class="flex-col" *ngIf="getProfileName() == 'vendor'">
           <kendo-floatinglabel text="Mail Code">
             <kendo-dropdownlist
               [fillMode]="formUiStyle.dropDownFillMode"

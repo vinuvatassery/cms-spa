@@ -384,7 +384,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.communicationFacade.deleteNotificationDraft(this.notificationDraftId)
         .subscribe({
           next: (data: any) =>{
-          if (data === true) {
+          if (!!data === true) {
             this.loadDropdownLetterTemplates();
           }
           this.loaderService.hide();
