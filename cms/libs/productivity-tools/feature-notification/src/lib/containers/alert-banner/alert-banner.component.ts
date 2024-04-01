@@ -14,7 +14,7 @@ import {
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { AlertDueOn } from '../enums/alert-due-on.enum';
+import { AlertDueOn } from '@cms/productivity-tools/domain';
 @Component({
   selector: 'common-alert-banner',
   templateUrl: './alert-banner.component.html',
@@ -51,6 +51,14 @@ export class AlertBannerComponent implements OnInit {
   @Output() onEditReminderClicked = new EventEmitter<any>()
   @Output()  onDeleteReminderClicked =  new EventEmitter<any>()
   public popoverAlertActions = [
+    {
+      buttonType:"btn-h-primary",
+      text: "Done",
+      icon: "done",
+      id:"done",
+      click: (): void => {
+      },
+    },
     {
       buttonType:"btn-h-primary",
       text: "Edit",
@@ -135,6 +143,10 @@ export class AlertBannerComponent implements OnInit {
           if(data?.total > 0 ){
             this.topAlert=data.data[0]; 
             this.moreItems = (data?.total-1) < 1 ? "" : (data?.total-1) + "+ More Items";
+            if ((data?.total-1) > 3) {
+                this.showMoreAlert = true;
+            }else
+              this.showMoreAlert = false;
             this.makePopoverAlertBanner(data);
             this.cdr.detectChanges();
           }else{ 

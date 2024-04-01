@@ -29,9 +29,7 @@
     </div>
     <div class="flex-col flex-col-2 mt-1" *ngIf="moreItems"> 
       <button attr.aria-label=" {{ showMoreAlert ? 'Hide Items' : moreItems }}" kendoButton look="flat" class="card-link-button" [popover]="moreAlertmessage"  kendoPopoverAnchor showOn="click" >
-
-
-        {{ showMoreAlert ? 'Hide Items' : moreItems }}
+        {{ moreItems }}
       </button>
     </div>
   </div>
@@ -64,7 +62,7 @@
 </div>
 </ng-container>
 <!-- -->
-<button aria-label="View All Reminders" kendoButton look="flat" class="card-link-button mt-1"  (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)" >  View All Reminders </button>
+<button *ngIf="showMoreAlert" aria-label="View All Reminders" kendoButton look="flat" class="card-link-button mt-1"  (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)" >  View All Reminders </button>
 </div>
 </ng-template>
 </kendo-popover> 
@@ -80,7 +78,7 @@
     <span class="text-bold">Notifications and Reminders</span>
   </kendo-dialog-titlebar>
 
- <!-- <productivity-tools-notification-and-reminder-page></productivity-tools-notification-and-reminder-page> -->
+ <productivity-tools-notification-and-reminder-page [focusedTab]='"REMINDER"'></productivity-tools-notification-and-reminder-page>
 </ng-template>
 <ng-template #deleteToDODialogTemplate>   
   <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
