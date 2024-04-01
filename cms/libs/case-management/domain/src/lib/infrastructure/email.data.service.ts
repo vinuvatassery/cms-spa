@@ -104,9 +104,9 @@ export class EmailDataService {
       );
     }
 
-    loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${clientId}/${clientCaseEligibilityId}/${templateId}`
+    loadAttachmentPreview(attachmentPreviewDto: FormData) {
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/attachment/preview`, attachmentPreviewDto
         , {
           responseType: 'blob'
         });

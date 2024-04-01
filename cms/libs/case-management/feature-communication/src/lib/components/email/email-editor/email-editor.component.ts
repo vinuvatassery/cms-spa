@@ -100,6 +100,8 @@ export class EmailEditorComponent implements OnInit {
   ];
   clientAllDocumentList$!: any;  
   formsAndDocumentList$!: any;
+  searchText: string = '';
+  filteredOptions !: any;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -138,7 +140,7 @@ export class EmailEditorComponent implements OnInit {
                 size: file.fileSize,
                 name: file.fileName,
                 path: file.filePath,
-                documentTemplateId: file.documentTemplateId,
+                notificationAttachmentId: file.documentTemplateId,
                 typeCode: file.typeCode
               })
             }
@@ -169,9 +171,9 @@ export class EmailEditorComponent implements OnInit {
               document: file,
               size: file.templateSize,
               name: file.description,
-              documentTemplateId: file.documentTemplateId,
+              notificationAttachmentId: file.documentTemplateId,
               typeCode: file.typeCode
-            })
+            });
           }
         this.ref.detectChanges();
         this.cerEmailAttachments.emit(this.selectedAttachedFile);
@@ -211,6 +213,7 @@ export class EmailEditorComponent implements OnInit {
           variables = variables.filter((option: any) => option.lovDesc !== 'Signature');
           }
           this.clientVariables = variables;
+          this.filteredOptions = this.clientVariables;
         }
       this.loaderService.hide();
     },
@@ -314,6 +317,7 @@ export class EmailEditorComponent implements OnInit {
 
   removeAddedFile(index: any){
     this.selectedAttachedFile.splice(index, 1);
+    this.cerEmailAttachments.emit(this.selectedAttachedFile);
   }
 
   clientAttachmentChange(event:any)
@@ -325,7 +329,8 @@ export class EmailEditorComponent implements OnInit {
       size: event.documentSize,
       name: event.documentName,
       clientDocumentId: event.clientDocumentId,
-      uid: ''
+      uid: '',
+      documentPath: event.documentPath
     }];
     if(this.selectedAttachedFile.length == 0){
       this.selectedAttachedFile = this.uploadedAttachedFile;
@@ -349,7 +354,8 @@ export class EmailEditorComponent implements OnInit {
       size: event.templateSize,
       name: event.description,
       documentTemplateId: event.documentTemplateId,
-      uid: ''
+      uid: '',
+      templatePath: event.templatePath
     }];
     if(this.selectedAttachedFile.length == 0){
       this.selectedAttachedFile = this.uploadedAttachedFile;
@@ -366,8 +372,27 @@ export class EmailEditorComponent implements OnInit {
 
 clientAttachmentClick(item:any)
   {
+    if(!item?.rawFile){
     this.loaderService.show();
-    this.communicationFacade.loadAttachmentPreview(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', item?.documentTemplateId ?? null)
+    let templatePath = '';
+    if(item?.notificationAttachmentId){
+      templatePath = item?.document?.templatePath;
+    }
+    if(item?.documentTemplateId){
+      templatePath = item?.templatePath;
+    }
+    if(item?.clientDocumentId){
+      templatePath = item?.documentPath;
+    }
+    const formData = new FormData();
+    formData.append('notificationAttachmentId', item?.notificationAttachmentId ?? '');
+    formData.append('documentTemplateId', item?.documentTemplateId ?? '');
+    formData.append('clientDocumentId', item?.clientDocumentId ?? '');
+    formData.append('clientId', this.clientId ?? '');
+    formData.append('clientCaseEligibilityId', this.clientCaseEligibilityId ?? '');
+    formData.append('templatePath', templatePath ?? '');
+
+    this.communicationFacade.loadAttachmentPreview(formData)
         .subscribe({
           next: (data: any) =>{
          if (data) {
@@ -380,9 +405,10 @@ clientAttachmentClick(item:any)
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
         },
       });
+    }
   }
 
   getClientDocumentsViewDownload(clientDocumentId: string) {
@@ -539,5 +565,16 @@ clientAttachmentClick(item:any)
           this.loggingService.logException(err);
         },
       });
+  }
+
+  onSearchChange(searchText: string): void {
+    if(searchText){
+    this.searchText = searchText;
+    this.clientVariables = this.filteredOptions.filter((option: any) =>
+      option.lovDesc?.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+    }else{
+      this.clientVariables = this.filteredOptions;
+    }
   }
 }

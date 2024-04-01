@@ -245,6 +245,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           if (data) {
             this.ddlTemplates = data;
+            const defaultOption = this.ddlTemplates.find((option: any) => option.description === 'Draft Custom Email');
+              const otherOptions = this.ddlTemplates.filter((option: any) => option.description !== 'Draft Custom Email');
             this.currentTemplate = this.ddlTemplates.filter((x:any)=>x.templateTypeCode === this.communicationEmailTypeCode )
             if(this.currentTemplate .length>0){
             this.documentTemplate = {'description': this.currentTemplate[0].description,'documentTemplateId':this.currentTemplate[0].documentTemplateId};
@@ -257,6 +259,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.templateDrpDisable = true;
               this.cancelDisplay = false;
             }
+            this.sortDropdownValues(defaultOption, otherOptions);
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -267,6 +270,29 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         },
       });
+  }
+
+  sortDropdownValues(defaultOption: any, otherOptions: any) {
+    // Sort the rest alphabetically and numerically
+    const sortedOptions = otherOptions.sort((a: any, b: any) => {
+      const isANumeric = !isNaN(Number(a.description.charAt(0))); // Check if option a starts with a number
+      const isBNumeric = !isNaN(Number(b.description.charAt(0))); // Check if option b starts with a number
+
+      // If both are alphabetic or both are numeric, sort them using localeCompare
+      if ((isANumeric && isBNumeric) || (!isANumeric && !isBNumeric)) {
+        return a.description?.localeCompare(b.description);
+      }
+      // If option a starts with a number and option b does not, put option b first
+      else if (isANumeric && !isBNumeric) {
+        return 1;
+      }
+      // If option b starts with a number and option a does not, put option a first
+      else {
+        return -1;
+      }
+    });
+    // Combine lists
+    this.ddlTemplates = [defaultOption, ...sortedOptions];
   }
 
   private loadDraftEsignRequest() {

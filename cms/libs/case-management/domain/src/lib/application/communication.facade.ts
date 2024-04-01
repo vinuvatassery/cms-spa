@@ -110,8 +110,8 @@ export class CommunicationFacade {
     return this.emailDataService.replaceAndGenerateTextTemplate(entityId, clientCaseEligibilityId, selectedTemplate, requestType);
   }
 
-  loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
-    return this.emailDataService.loadAttachmentPreview(clientId, clientCaseEligibilityId, templateId);
+  loadAttachmentPreview(attachmentPreviewDto: FormData) {
+    return this.emailDataService.loadAttachmentPreview(attachmentPreviewDto);
   }
 
   sendLetterToPrint(entityId: string, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
