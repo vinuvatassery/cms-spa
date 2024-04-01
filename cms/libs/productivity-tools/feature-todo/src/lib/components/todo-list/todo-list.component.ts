@@ -10,7 +10,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { AlertFrequencyTypeCode, AlertTypeCode, ConstantValue } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -213,6 +213,15 @@ export class TodoListComponent implements OnInit {
         [`/financial-management/claims/dental/batch`],
         { queryParams: { bid: gridItem?.paymentRequestBatchId } }
       );
+    }
+    else if (gridItem && gridItem.entityTypeCode == this.entityTypes.NewCERApplication) {
+      this.router.navigate(['case-management/case-detail'], {
+        queryParams: {
+          sid: gridItem?.sessionId,
+          eid: gridItem?.entityId,
+          wtc: WorkflowTypeCode.NewCase
+        }
+      });
     }
   }
   dataStateChange(stateData: any): void { 
