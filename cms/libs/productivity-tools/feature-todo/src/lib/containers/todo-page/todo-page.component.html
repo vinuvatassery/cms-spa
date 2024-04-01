@@ -44,7 +44,7 @@
 <!-- Create To Do Modal Html-->
 <ng-template #todoDetailTemplate>
   <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">
- {{!!this.selectedAlertId?  'Edit or delete this item' : 'Create a Custom To-Do Item'}}    </kendo-dialog-titlebar>
+ {{!!this.selectedAlertId?  'Edit To-Do Item' : 'Create Custom To-Do Item'}}    </kendo-dialog-titlebar>
   <productivity-tools-todo-detail 
   (isLoadTodoGridEvent)="loadTodoList()" 
   [frequencyTypeCodeSubject$]="frequencyTypeCodeSubject$"
@@ -71,7 +71,9 @@
 </ng-template>
 
 <ng-template #deleteToDOTemplate>   
-  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+  <productivity-tools-delete-todo-confirmation 
+   (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)"
+    (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
 </ng-template>
 
 
