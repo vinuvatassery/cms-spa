@@ -318,13 +318,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, this.notificationGroup);
     formData.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
 
-    this.communicationFacade.sendLetterToPrint(this.entityId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
+    this.communicationFacade.sendLetterToPrint(entityId, clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {
             this.currentLetterPreviewData = data;
             const fileUrl = window.URL.createObjectURL(data);
-            const documentName = this.getFileNameFromTypeCode(draftTemplate.typeCode);
+            const documentName = this.getFileNameFromTypeCode(CommunicationEventTypeCode.ClientLetter);
             this.ref.detectChanges();
             const downloadLink = document.createElement('a');
             downloadLink.href = fileUrl;
@@ -374,6 +374,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
       case CommunicationEventTypeCode.VendorLetter:
         templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
+        break;
+      case CommunicationEventTypeCode.ClientLetter:
+        templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
+        break;
+        case CommunicationEventTypeCode.ApplicationAuthorizationLetter || CommunicationEventTypeCode.ApplicationAuthorizationLetter:
+        templateTypeCode = CommunicationEventTypeCode.ApplicationAndCERLetterSent;
         break;
     }
     return templateTypeCode;
@@ -586,21 +592,44 @@ export class SendLetterComponent implements OnInit, OnDestroy {
  }
 
  cerEmailAttachments(event:any){
+  let isFileExists = false; 
   if (this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
   {
-    const isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
-    if(!isFileExists)
-    {
-    this.cerEmailAttachedFiles?.push(event);
+    if(event.length > 0){
+      this.cerEmailAttachedFiles = event;
+    }else{
+      if(event.documentTemplateId){
+        isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.description);
+        if(!isFileExists || isFileExists === undefined){
+          this.cerEmailAttachedFiles?.push(event);
+        }
+      }
+      if(event.clientDocumentId){
+        isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.documentName);
+        if(!isFileExists || isFileExists === undefined){
+          this.cerEmailAttachedFiles?.push(event);
+        }
+      }
     }
-    this.attachmentCount = this.cerEmailAttachedFiles[0]?.length;
+    this.attachmentCount = this.cerEmailAttachedFiles?.length;
   }else{
-    const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
-    if(!isFileExists)
-    {
-    this.clientAndVendorAttachedFiles?.push(event);
+    if(event.length > 0){
+      this.clientAndVendorAttachedFiles = event;
+    }else{
+      if(event.documentTemplateId){
+        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.description);
+        if(!isFileExists || isFileExists === undefined){
+          this.clientAndVendorAttachedFiles?.push(event);
+        }
+      }
+      if(event.clientDocumentId){
+        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.documentName);
+        if(!isFileExists || isFileExists === undefined){
+          this.clientAndVendorAttachedFiles?.push(event);
+        }
+      }
     }
-    this.attachmentCount = this.clientAndVendorAttachedFiles[0]?.length;
+    this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
   }
 }
 

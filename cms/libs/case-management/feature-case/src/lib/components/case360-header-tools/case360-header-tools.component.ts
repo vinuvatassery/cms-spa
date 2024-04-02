@@ -86,7 +86,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode = '';
+        this.currentCommunicationTypeCode = CommunicationEventTypeCode.ClientLetter;
         this.templateLoadType = this.letterCommunicationTypeCode = CommunicationEventTypeCode.ClientLetter;
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
@@ -104,7 +104,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode ='';
+        this.currentCommunicationTypeCode = CommunicationEventTypeCode.ClientEmail;
         this.templateLoadType = this.emailCommunicationTypeCode = CommunicationEventTypeCode.ClientEmail;
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
@@ -219,7 +219,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       if(isEmailOk){
       email.forEach((item: any) => {
         if (item.detailMsgFlag === StatusFlag.Yes && item.paperlessFlag === StatusFlag.Yes) {
+          let emailExists = this.toEmail?.includes(item.email.trim());
+          if(!emailExists){
           this.toEmail.push(item.email.trim());
+          }
         }
       });
     }

@@ -349,9 +349,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (!this.selectedTemplate.documentTemplateId) {
       this.selectedTemplate.documentTemplateId = this.selectedTemplate.notificationTemplateId;
     }
-    
+    if(this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail){
     this.saveDraftEsignRequest(this.selectedTemplate);
+    }
+    if(this.communicationEmailTypeCode === CommunicationEventTypeCode.ClientEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.VendorEmail){
     this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
+    }
   }
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
@@ -750,21 +753,45 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   cerEmailAttachments(event: any) {
-    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
-      const isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
-      if(!isFileExists)
-      {
-      this.cerEmailAttachedFiles?.push(event);
+    let isFileExists = false; 
+    if (this.communicationEmailTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail)
+    {
+      if(event.length > 0){
+        this.cerEmailAttachedFiles = event;
+      }else{
+        if(event.documentTemplateId){
+          isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.description);
+          if(!isFileExists || isFileExists === undefined){
+            this.cerEmailAttachedFiles?.push(event);
+          }
+        }
+        if(event.clientDocumentId){
+          isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.documentName);
+          if(!isFileExists || isFileExists === undefined){
+            this.cerEmailAttachedFiles?.push(event);
+          }
+        }
       }
       this.attachmentCount = this.cerEmailAttachedFiles?.length;
     } else {
-      const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
-      if(!isFileExists)
-      {
-      this.clientAndVendorAttachedFiles?.push(event);
+    if(event.length > 0){
+      this.clientAndVendorAttachedFiles = event;
+    }else{
+      if(event.documentTemplateId){
+        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.description);
+        if(!isFileExists || isFileExists === undefined){
+          this.clientAndVendorAttachedFiles?.push(event);
+        }
       }
-      this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
+      if(event.clientDocumentId){
+        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.documentName);
+        if(!isFileExists || isFileExists === undefined){
+          this.clientAndVendorAttachedFiles?.push(event);
+        }
+      }
     }
+    this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
+   }
   }
 
   getLoggedInUserProfile() {

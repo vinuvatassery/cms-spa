@@ -164,8 +164,8 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
                 if(data?.email?.email !== null){
                   this.toEmail.push(data?.email?.email.trim());
                 }
-              }
               this.loadPendingEsignRequestInfo();
+              }
               this.getNotificationTypeCode(this.paperlessFlag ? true : false);
             }
             this.loaderService.hide();

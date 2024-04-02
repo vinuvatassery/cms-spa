@@ -322,6 +322,7 @@ export class EmailEditorComponent implements OnInit {
 
   clientAttachmentChange(event:any)
   {
+    if( event != undefined){
     const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.documentName);
     if(!isFileExists){
     this.uploadedAttachedFile = [{
@@ -344,9 +345,11 @@ export class EmailEditorComponent implements OnInit {
     }
     this.showClientAttachmentUpload = false;
   }
+  }
 
   formsAndDocumentChange(event:any)
   {
+    if(event !== undefined){
     const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.description);
     if(!isFileExists){
     this.uploadedAttachedFile = [{
@@ -368,6 +371,7 @@ export class EmailEditorComponent implements OnInit {
     this.cerEmailAttachments.emit(event);
     }
     this.showFormsAndDocumentsUpload = false;
+   }
   }
 
 clientAttachmentClick(item:any)
@@ -377,12 +381,12 @@ clientAttachmentClick(item:any)
     let templatePath = '';
     if(item?.notificationAttachmentId){
       templatePath = item?.document?.templatePath;
-    }
-    if(item?.documentTemplateId){
+    }else if(item?.documentTemplateId){
       templatePath = item?.templatePath;
-    }
-    if(item?.clientDocumentId){
+    }else if(item?.clientDocumentId){
       templatePath = item?.documentPath;
+    }else{
+      templatePath = item.path;
     }
     const formData = new FormData();
     formData.append('notificationAttachmentId', item?.notificationAttachmentId ?? '');

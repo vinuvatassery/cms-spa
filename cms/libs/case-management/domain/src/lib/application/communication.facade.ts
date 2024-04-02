@@ -170,9 +170,9 @@ export class CommunicationFacade {
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('templateContent', draftTemplate?.templateContent ?? '');
     formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
-    if (clientAndVendorAttachedFiles[0]?.length > 0){
+    if (clientAndVendorAttachedFiles?.length > 0){
     let i = 0;
-    clientAndVendorAttachedFiles[0].forEach((file: any) => {
+    clientAndVendorAttachedFiles.forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
@@ -222,13 +222,13 @@ export class CommunicationFacade {
     if (data?.emailData) {
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
       formData.append('description', data?.emailData?.description ?? '');
-      formData.append('typeCode', data?.emailData?.typeCode ?? '');
+      formData.append('typeCode', data?.emailData?.templateCategoryCode ?? data?.emailData?.typeCode);
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
       formData.append('notifcationDraftId', data?.emailData?.notifcationDraftId ?? '');
     }
-    if (data?.clientAndVendorEmailAttachedFiles[0]?.length > 0) {
+    if (data?.clientAndVendorEmailAttachedFiles?.length > 0) {
       let i = 0;
-      data?.clientAndVendorEmailAttachedFiles[0].forEach((file: any) => {
+      data?.clientAndVendorEmailAttachedFiles.forEach((file: any) => {
         if (file.rawFile == undefined || file.rawFile == null) {
           formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file.document.fileName);
           formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
@@ -268,13 +268,13 @@ export class CommunicationFacade {
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
-    formData.append('typeCode', emailData?.templateCategoryCode ?? '');
+    formData.append('typeCode', emailData?.templateCategoryCode ?? emailData?.typeCode);
     formData.append('entity', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('notifcationDraftId', emailData?.notifcationDraftId ?? '');
-    if(clientAndVendorEmailAttachedFiles[0]?.length > 0){
+    if(clientAndVendorEmailAttachedFiles?.length > 0){
     let i = 0;
-    clientAndVendorEmailAttachedFiles[0].forEach((file: any) => {
+    clientAndVendorEmailAttachedFiles.forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file.document.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
@@ -379,7 +379,7 @@ export class CommunicationFacade {
     formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
     if (cerEmailAttachedFiles?.length > 0){
     let i = 0;
-    cerEmailAttachedFiles[0].forEach((file: any) => {
+    cerEmailAttachedFiles.forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));

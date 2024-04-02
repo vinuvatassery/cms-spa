@@ -48,11 +48,14 @@ prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: 
     formData.append('typeCode', emailData?.typeCode ?? '');
     if(cerEmailAttachedFiles?.length > 0){
     let i = 0;
-    cerEmailAttachedFiles[0].forEach((file: any) => { 
+    cerEmailAttachedFiles.forEach((file: any) => { 
       if(file.rawFile == undefined || file.rawFile == null){
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
         formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
+        formData.append('AttachmentDetails['+i+'][clientDocumentId]', file?.document?.clientDocumentId ?? '');
+        formData.append('AttachmentDetails['+i+'][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
+        formData.append('AttachmentDetails['+i+'][notificationAttachmentId]', file?.notificationAttachmentId ?? '');
       i++;
       }else{
         formData.append('attachments', file.rawFile); 
@@ -74,7 +77,7 @@ prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAtt
       formData.append('requestBody', draftTemplate?.templateContent ?? '');
       if(cerEmailAttachedFiles?.length > 0){
       let i = 0;
-      cerEmailAttachedFiles[0].forEach((file: any) => { 
+      cerEmailAttachedFiles.forEach((file: any) => { 
         if(file.rawFile == undefined || file.rawFile == null){
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath);
