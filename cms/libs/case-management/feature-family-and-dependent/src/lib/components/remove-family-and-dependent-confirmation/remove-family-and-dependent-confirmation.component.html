@@ -1,10 +1,10 @@
- 
+
 <kendo-dialog-titlebar (close)="onDeleteConfirm(false)"> {{ deleteRqdependentTypeCode === CAClient ? 'Remove' : 'Delete' }} Family Member? </kendo-dialog-titlebar>
- 
+
   <section class="k-dialog-body mb-2">
     <p>
-        {{ deleteRqdependentTypeCode === CAClient ? 'Their CAREAssist profile will no longer be associated with this client' : 'Their data will be permanently deleted from this application' }}
-   
+        {{ deleteRqdependentTypeCode === CAClient ? 'Their CAREAssist profile will no longer be associated with this client' : 'Their data will be permanently deleted from this application. This includes any income for this member.' }}
+
     </p>
   </section>
   <kendo-dialog-actions>
