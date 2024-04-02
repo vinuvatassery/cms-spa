@@ -10,7 +10,7 @@
               <fieldset class="k-form-fieldset mb-0"
                 *ngIf="prvEmployer.employerId !== null && prvEmployer.employerId !== '' 
                 && prvEmployer.employerId !== undefined && prvEmployer.cerReviewStatusCode !== null
-                && prvEmployer.employerId  !== '00000000-0000-0000-0000-000000000000'">
+                && prvEmployer.employerId  !== '00000000-0000-0000-0000-000000000000'  && prvEmployer.employerName !== notApplicable ">
                 <legend class="k-form-legend">
                   <h5>Is the {{[prvEmployer.incomeSourceCodeDesc]}} still employed with {{prvEmployer.employerName}}</h5>
                 </legend>              
@@ -54,7 +54,7 @@
               
               <fieldset class="k-form-fieldset mb-0"
                 *ngIf="(prvEmployer.employerId === null || prvEmployer.employerId === '' || prvEmployer.employerId === undefined || prvEmployer.employerId  === '00000000-0000-0000-0000-000000000000')
-                 && prvEmployer.cerReviewStatusCode !== null">
+                 && prvEmployer.cerReviewStatusCode !== null || prvEmployer.employerName === notApplicable">
                 <legend class="k-form-legend">
                   <h5>Is the {{[prvEmployer.incomeSourceCodeDesc]}} still receiving {{prvEmployer.incomeTypeCodeDesc}} Income </h5>
                 </legend>              

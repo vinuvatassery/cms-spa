@@ -68,6 +68,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   employerIncome$ = this.incomeFacade. employerIncome$;
   hasNoIncome = false;
   isNodateSignatureNoted = false;
+  notApplicable = "Not Applicable";
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public noIncomeDetailsForm: FormGroup = new FormGroup({
     noIncomeClientSignedDate: new FormControl('', []),

@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit, ElementRef, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit, ElementRef, ChangeDetectorRef, } from '@angular/core';
 /** Facades **/
 import { IncomeFacade, IncomeTypeCode} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
@@ -64,7 +64,11 @@ export class IncomeDetailComponent implements OnInit {
   documentTypeCode!: string;
   insuranceStartDateIsLessThanEndDate: boolean = true;
   employers$ = this.incomeFacade.employers$;
+  notApplicableId:any;
+  NotApplicable = "Not Applicable";
+  setNotApplicable:boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  isAddNewEmployerOpen : boolean = false;
   public IncomeDetailsFormData: { incomeAmount: number } = {
     incomeAmount: 0,
   };
@@ -81,7 +85,7 @@ export class IncomeDetailComponent implements OnInit {
     incomeNote: new FormControl('', []),
     proofIncomeTypeCode: new FormControl('', []),
     otherDesc: new FormControl('', []),
-    employerId : new FormControl('', []),
+    employerId : new FormControl(''),
   });
 
   /** Constructor **/
@@ -94,6 +98,7 @@ export class IncomeDetailComponent implements OnInit {
     private readonly configurationProvider: ConfigurationProvider,
     private scrollFocusValidationfacade: ScrollFocusValidationfacade,
     private intl: IntlService,
+    private readonly cdr: ChangeDetectorRef
   ) { }
 
   /** Lifecycle hooks **/
@@ -109,6 +114,16 @@ export class IncomeDetailComponent implements OnInit {
     } else {
       this.selectedIncome = [];
     }
+
+    this.employers$.subscribe((response:any)=>{
+      if(this.setNotApplicable){
+        this.notApplicableId =response[0].employerId;       
+        this.incomeFacade.employerSubject.next(response);
+        this.IncomeDetailsForm.controls['employerId'].setValue(this.notApplicableId);
+        this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
+      }
+      this.setNotApplicable = false;
+    })
   }
 
   /** Private methods **/
@@ -150,6 +165,11 @@ export class IncomeDetailComponent implements OnInit {
     this.incomeFacade.loadEmployers(employerName);
   }
   loadProofOfIncomeTypes(proofIncomeTypeStatus: boolean = false) {
+    let incomeTypeEmployerRequired = ['W','SE','OI'];
+    if(!(incomeTypeEmployerRequired.filter((x:any) => x === this.IncomeDetailsForm.controls['incomeTypeCode'].value).length > 0)){
+      this.setNotApplicable = true;
+      this.loadEmployers(this.NotApplicable);
+    }
     switch (this.IncomeDetailsForm.controls['incomeTypeCode'].value.toUpperCase()) {
       case IncomeTypeCode.Work:
         this.incomeTypeDateLabel = 'Date of Hire (Default)';
@@ -205,7 +225,7 @@ export class IncomeDetailComponent implements OnInit {
       .loadIncomeDetails(this.clientId, this.selectedIncome.clientIncomeId)
       .subscribe({
         next: (response: any) => {
-          if (response) {         
+          if (response) {     
             this.incomeFacade.employerSubject.next(response);
             this.loadingIncomeDetailsIntoForm(response);
             this.loaderService.hide();
@@ -398,6 +418,7 @@ export class IncomeDetailComponent implements OnInit {
       this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
     }
     else{
+      this.loadEmployers(this.NotApplicable);
       this.IncomeDetailsForm.controls['employerId'].removeValidators([Validators.required,]);
       this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
     }
@@ -532,9 +553,6 @@ export class IncomeDetailComponent implements OnInit {
     }
 
   }
-
-
-
   onDeleteIncomeClicked() {
     this.isRemoveIncomeConfirmationPopupOpened = true;
   }
@@ -548,5 +566,45 @@ export class IncomeDetailComponent implements OnInit {
       this.sendDetailToIncomeList.next(true);
       this.onRemoveIncomeConfirmationClosed();
     }
+  }
+
+  addNewEmployerPopUpOpen(): void {
+    this.isAddNewEmployerOpen = true;
+  }
+  addNewEmployerPopUpClose(event: any = null): void {
+    this.isAddNewEmployerOpen = false;
+  }
+  addEmployer(employerName: string) {
+    this.incomeFacade.showLoader();
+    this.incomeFacade.addEmployer(employerName).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.incomeFacade.hideLoader();
+          if (response.status === 2) {
+            this.incomeFacade.showHideSnackBar(
+              SnackBarNotificationType.WARNING,
+              response.message
+            );
+          }
+          else {            
+            this.incomeFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Employer added successfully.'
+            );
+            let employers = [];
+            employers.push(response);
+            this.incomeFacade.employerSubject.next(employers);
+            this.IncomeDetailsForm.controls['employerId'].setValue(response.employerId);
+            this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
+            this.addNewEmployerPopUpClose();
+            this.cdr.detectChanges();
+          }
+        }
+      },
+      error: (err) => {
+        this.incomeFacade.hideLoader();
+        this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    })
   }
 }
