@@ -179,6 +179,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   onInterfaceChange(event: any) {
     this.InterfaceType = event;
     this.defaultGridState()
+    this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.loadDefaultActivityListGrid();
     this.getHistoryByInterfaceType(this.InterfaceType);
     this.collapseRowsInGrid();

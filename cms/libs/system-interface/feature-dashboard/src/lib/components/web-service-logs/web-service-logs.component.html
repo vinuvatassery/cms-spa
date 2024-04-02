@@ -86,12 +86,13 @@
         </ng-template>
 
         <ng-template kendoGridCellTemplate let-dataItem >        
-          <button *ngIf="dataItem.status === 'FAILED'  " [attr.aria-label]="dataItem.status" kendoButton look="flat"
+          <button *ngIf="dataItem.status === 'FAILED' || dataItem.status === 'WebService_Down'" [attr.aria-label]="dataItem.status" kendoButton look="flat"
             class="card-link-button" (click)="onViewInformation(dataItem.exceptionDetails)" >
             Failed
           </button>     
           <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
           <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span> 
+          <span *ngIf="dataItem.status === 'WebService_Down'"> WebService Down </span> 
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column *ngIf="interfaceType !='USPS'" title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
