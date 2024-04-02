@@ -12,8 +12,8 @@ export class PhoneValidationFacade {
       private readonly loaderService: LoaderService ) { }
 
     /** Public methods **/
-    validatePhoneNbr(phoneNbr: any) {
-      return this.phoneValidationDataService.getValidatePhoneNbr(phoneNbr);
+    validatePhoneNbr(clientId: any ,phoneNbr: any) {
+      return this.phoneValidationDataService.getValidatePhoneNbr(clientId, phoneNbr);
     }
 
     showLoader()

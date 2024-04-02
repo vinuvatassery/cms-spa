@@ -2115,7 +2115,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       const phoneNumber = (this.contactInfoForm.get(phoneType) as FormGroup)?.controls['phoneNbr'];
       const isValidPhoneNumber = phoneNumber?.value && phoneNumber?.valid && !((this.contactInfoForm?.get(phoneType) as FormGroup)?.controls['applicableFlag']?.value ?? false);
       if(phoneNumber.value.trim().length == 10 && isValidPhoneNumber){
-        this.checkDuplicatePhoneNumber(phoneNumber);
+        this.validateDuplicatePhone(phoneNumber,phoneType);
       }
     }
     if (phoneType === 'contactPhoneNbr') {
@@ -2140,7 +2140,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contactInfoForm?.get('email.email')?.updateValueAndValidity();
   }
   checkDuplicatePhoneNumber(phoneNumber: any){
-    this.phoneValidationFacade.validatePhoneNbr(phoneNumber.value.trim()).subscribe({
+    this.phoneValidationFacade.validatePhoneNbr(this.workflowFacade.clientId ?? 0, phoneNumber.value.trim()).subscribe({
       next: (response: any) => {
         if(response.status == 1){
           return;
@@ -2153,5 +2153,66 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loggingService.logException(err);
       }
     })
+  }
+  validateDuplicatePhone(phoneNumber: any, phoneType: string) {
+
+    let phoneFirst =  '';
+    let phoneSecond =  '';
+    let phoneThird =  '';
+
+    if (phoneType == 'homePhone') {
+      phoneFirst = (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+      phoneSecond = (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+      phoneThird = (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+    }
+    if (phoneType == 'cellPhone') {
+      phoneFirst = (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+      phoneSecond = (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+      phoneThird = (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+    }
+    if (phoneType == 'workPhone') {
+      phoneFirst = (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+      phoneSecond = (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+      phoneThird = (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+
+    }
+    if (phoneType == 'otherPhone') {
+      phoneFirst = (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+      phoneSecond = (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+      phoneThird = (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'].value ?? 0;
+      (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'].setValidators(null);
+      (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'].updateValueAndValidity();
+    }
+    if (phoneNumber.value.trim() == phoneFirst.trim() || phoneNumber.value.trim() == phoneSecond.trim() || phoneNumber.value.trim() == phoneThird.trim()) {
+      this.duplicatePhoneFound = true;
+      phoneNumber.setErrors({ incorrect: true });
+      this.cd.detectChanges();
+    }
+    else {
+      this.checkDuplicatePhoneNumber(phoneNumber);
+    }
+
   }
 }

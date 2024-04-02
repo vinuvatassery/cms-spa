@@ -14,10 +14,10 @@ export class PhoneValidationDataService {
         private configurationProvider: ConfigurationProvider) { }
 
     /** Public methods **/
-    getValidatePhoneNbr(phoneNumber:any){
+    getValidatePhoneNbr(clientId: any, phoneNumber:any){
       return this.http.get<any>(
         `${this.configurationProvider.appSettings.caseApiUrl}` +
-          `/case-management/clients/ValidatePhone/${phoneNumber}`
+          `/case-management/clients/${clientId}/ValidatePhone/${phoneNumber}`
           );
         }
 }
