@@ -13,11 +13,13 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
 import { CaseFacade } from '@cms/case-management/domain';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-email-list',
   templateUrl: './email-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class EmailListComponent implements OnChanges, OnDestroy {
 export class EmailListComponent implements OnChanges, OnDestroy {
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -31,6 +33,7 @@ export class EmailListComponent implements OnChanges, OnDestroy {
   @Input() deactivateClientEmail$: any;
   @Input() removeClientEmail$: any;
   @Input() paperless$: any;
+  @Input() clientEmailProfilePhoto$!: any;
   @Input() clientEmailProfilePhoto$!: any;
  
   @Output() loadClientEmailsListEvent = new EventEmitter<any>();
@@ -68,6 +71,8 @@ export class EmailListComponent implements OnChanges, OnDestroy {
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  userEmailProfilrPhotoSubject = new Subject<any>();
+  clientEmailsDataSubscription = new Subscription();
   userEmailProfilrPhotoSubject = new Subject<any>();
   clientEmailsDataSubscription = new Subscription();
   public gridOption = [
@@ -125,6 +130,7 @@ export class EmailListComponent implements OnChanges, OnDestroy {
   ];
 
   constructor(private caseFacade: CaseFacade,){  
+  constructor(private caseFacade: CaseFacade,){  
   }
 
   ngOnChanges(): void {
@@ -141,6 +147,9 @@ export class EmailListComponent implements OnChanges, OnDestroy {
     this.loadClientEmailsList();
   }
 
+  ngOnDestroy(): void {
+    this.clientEmailsDataSubscription?.unsubscribe();
+  }
   ngOnDestroy(): void {
     this.clientEmailsDataSubscription?.unsubscribe();
   }
@@ -170,6 +179,7 @@ export class EmailListComponent implements OnChanges, OnDestroy {
     };
     this.loader = true;
     this.gridDataHandle();
+    this.gridDataHandle();
     this.loadClientEmailsListEvent.next(gridDataRefinerValue);
   }
 
@@ -184,6 +194,7 @@ export class EmailListComponent implements OnChanges, OnDestroy {
   }
 
   gridDataHandle() {
+    this.clientEmailsDataSubscription = this.clientEmailsData$.subscribe((data: any) => {
     this.clientEmailsDataSubscription = this.clientEmailsData$.subscribe((data: any) => {
       this.gridEmailDataSubject.next(data);
       if (data?.total >= 0 || data?.total === -1) {

@@ -1,13 +1,23 @@
 <div class="app-c-table"> 
-  <kendo-grid #selectable [resizable]="true" [loading]="isClientClaimsLoaderShow" [pageSize]="state.take" [pageable]="true"
-    [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort"    (dataStateChange)="dataStateChange($event)"
-    [data]="gridClientClaimsData$| async"    
+  <kendo-grid #selectable 
+    [resizable]="true" 
+    [loading]="isClientClaimsLoaderShow" 
+    [pageSize]="state.take" 
+    [pageable]="true"
+    [sortable]="true" 
+    [skip]="state.skip" 
+    [groupable]="false" 
+    [reorderable]="true"
+    [columnMenu]="{ filter: true }" 
+    [sort]="state.sort"   
+    [filter]="state.filter" 
     kendoGridSelectBy="paymentRequestId"
+    (dataStateChange)="dataStateChange($event)"
+    [data]="gridClientClaimsData$| async"     
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedInsuranceClaims"
-  
-
+    (filterChange)="filterChange($event)"
+    [selectable]="selectableSettings"
     >
     <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>

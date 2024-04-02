@@ -15,6 +15,7 @@ import { LovFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPaymentComponent implements OnDestroy {
+export class FinancialPaymentComponent implements OnDestroy {
   /** Input Properties **/
   @Input() vendorId!: string;
   formUiStyle: UIFormStyle = new UIFormStyle();
@@ -76,6 +77,9 @@ export class FinancialPaymentComponent implements OnDestroy {
   paymentBatchesProfilePhotoSubscription = new Subscription();
   paymentBatchesProfilePhotoSubject = new Subject();
   paymentBatchesProfilePhoto$ = this.paymentsFacade.paymentBatchesProfilePhotoSubject;
+  paymentBatchesProfilePhotoSubscription = new Subscription();
+  paymentBatchesProfilePhotoSubject = new Subject();
+  paymentBatchesProfilePhoto$ = this.paymentsFacade.paymentBatchesProfilePhotoSubject;
 
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
@@ -83,6 +87,8 @@ export class FinancialPaymentComponent implements OnDestroy {
     private lovFacade :  LovFacade,
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
+    private route: Router,
+) { }
     private route: Router,
 ) { }
     
@@ -304,6 +310,7 @@ export class FinancialPaymentComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.batchStatusLovSubscription.unsubscribe();
+    this.paymentBatchesProfilePhotoSubscription?.unsubscribe();
     this.paymentBatchesProfilePhotoSubscription?.unsubscribe();
   }
 }

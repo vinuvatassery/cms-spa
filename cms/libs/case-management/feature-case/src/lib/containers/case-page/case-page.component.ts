@@ -2,6 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 /** Internal Libraries **/
@@ -38,6 +39,11 @@ export class CasePageComponent implements OnInit {
   fplPercentage = -1;
   filterOperator = '';
   group :string = ''
+  caseStatus: string = '';
+  healthInsuranceType ='';
+  fplPercentage = -1;
+  filterOperator = '';
+  group :string = ''
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
@@ -69,6 +75,7 @@ export class CasePageComponent implements OnInit {
     this.loadColumnDroplist();
     this.loadCases();
     this.loadQueryParams();
+    this.loadQueryParams();
   }
 
   /** Private methods **/
@@ -82,6 +89,29 @@ export class CasePageComponent implements OnInit {
       this.lovFacade.getCaseOriginLovs();
   }
 
+  /** Private Query String values **/
+  loadQueryParams()
+  {   
+      switch(this.route.snapshot.queryParams['tab']){
+        case CaseScreenTab.MY_CASES.toString():
+          this.selectedTab = CaseScreenTab.MY_CASES;
+          break;
+        case CaseScreenTab.CER_TRACKING.toString():
+          this.selectedTab = CaseScreenTab.CER_TRACKING;
+          break;
+        case CaseScreenTab.ALL.toString():
+          this.selectedTab = CaseScreenTab.ALL;
+          break;
+        default:
+          this.selectedTab = CaseScreenTab.MY_CASES;
+          break;
+      } 
+    this.caseStatus = this.route.snapshot.queryParams['casestatus'];
+    this.healthInsuranceType = this.route.snapshot.queryParams['healthInsuranceType'];
+    this.fplPercentage = this.route.snapshot.queryParams['fplPercentage']; 
+    this.filterOperator = this.route.snapshot.queryParams['filterOperator'];
+    this.group = this.route.snapshot.queryParams['group']
+  }
   /** Private Query String values **/
   loadQueryParams()
   {   

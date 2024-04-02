@@ -56,6 +56,8 @@ export class IncomeFacade {
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly userManagementFacade: UserManagementFacade) { }
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly userManagementFacade: UserManagementFacade) { }
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
@@ -164,6 +166,35 @@ export class IncomeFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
+  }
+
+  loadDependantProofDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.dependantProofProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+}
+
+loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
+  const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+  if(distinctUserIds){
+    this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          this.incomeListProfilePhotoSubject.next(data);
+        }
+      },
+    });
+  }
+}
   }
 
   loadDependantProofDistinctUserIdsAndProfilePhoto(data: any[]) {

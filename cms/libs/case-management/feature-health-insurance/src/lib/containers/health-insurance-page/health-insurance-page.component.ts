@@ -10,6 +10,7 @@ import { LoaderService, LoggingService, NotificationSnackbarService, Notificatio
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LovFacade } from '@cms/system-config/domain';
 
+
 @Component({
   selector: 'case-management-health-insurance-page',
   templateUrl: './health-insurance-page.component.html',
@@ -57,6 +58,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     private readonly loggingService: LoggingService,
     private readonly router: Router,
     private lovFacade: LovFacade
+    private readonly router: Router,
+    private lovFacade: LovFacade
   ) { }
 
   /** Lifecycle Hooks **/
@@ -69,6 +72,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
     this.addHealthInsuranceStatusSubscription();
+    this.loadHealthInsuranceLovs();
     this.loadHealthInsuranceLovs();
   }
 
@@ -90,6 +94,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.HideLoader();
+  }
+
+  private loadHealthInsuranceLovs() {
+    this.lovFacade.getHealthInsuranceTypeLovs();
+    this.lovFacade.getPremiumFrequencyLovs();
+    this.lovFacade.getCaseCodeLovs();
   }
 
   private loadHealthInsuranceLovs() {
@@ -312,7 +322,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           }
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,           
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -372,6 +382,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
             maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -405,10 +416,11 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       this.clientId,
       this.clientCaseEligibilityId,
       typeParam,
-      gridFilterParam
+      gridFilterParam      
     );
   }
 
+  deleteInsurancePolicy(insurancePolicyId: any) {
   deleteInsurancePolicy(insurancePolicyId: any) {
     if (insurancePolicyId != undefined) {
       this.ShowLoader();
@@ -418,6 +430,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
+            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
@@ -445,13 +458,14 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,         
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
           this.loadHealthInsuranceHandle(gridDataRefinerValue);
           this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy removed successfully");
           this.HideLoader();
+          this.insurancePolicyFacade.triggerPriorityPopupSubject.next(true);
           this.ref.detectChanges();
         },
         error: (error: any) => {
@@ -525,6 +539,11 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.validateForm();
     this.ref.detectChanges();
     return this.insuranceFlagForm.valid;
+  }
+
+  getPolicies(event:any){
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.clientCaseEligibilityId, InsuranceStatusType.healthInsurance);
+   }
   }
 
   getPolicies(event:any){

@@ -369,8 +369,40 @@ export class UserManagementFacade {
     });
   }
 
- 
- 
+  loadClientProfileSlots() {
+    this.userDataService.loadClientProfileSlots().subscribe({
+      next: (clientProfileSlots) => {
+        this.clientProfileSlotsSubject.next(clientProfileSlots);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+
+  loadClientProfileCaseAvailabilities() {
+    this.userDataService.loadClientProfileCaseAvailabilities().subscribe({
+      next: (clientProfileCaseAvailabilities) => {
+        this.clientProfileCaseAvailabilitiesSubject.next(
+          clientProfileCaseAvailabilities
+        );
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+
+  loadClientProfilePeriods() {
+    this.userDataService.loadClientProfilePeriods().subscribe({
+      next: (clientProfilePeriods) => {
+        this.clientProfilePeriodsSubject.next(clientProfilePeriods);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
 
   loadSexualOrientationList(){
     this.userDataService.loadSexualOrientationList().subscribe({
@@ -432,6 +464,42 @@ export class UserManagementFacade {
           });
           this.profilePhotosSubject.next(data);
         }
+
+  loadHousingAcuityLevelList(){
+    this.userDataService.loadHousingAcuityLevelList().subscribe({
+      next: (clientProfileHousingAcuityLevel) => {
+        this.clientProfileHousingAcuityLevelSubject.next(clientProfileHousingAcuityLevel);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+  loadIncomeInclusionsExlusionsList(){
+    this.userDataService.loadIncomeInclusionsExlusionsList().subscribe({
+      next: (clientProfilIncomeInclusionsExlusions) => {
+        this.clientProfileIncomeInclusionsExlusionsSubject.next(clientProfilIncomeInclusionsExlusions);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+
+  loadRegionAssignmentList(){
+    this.userDataService.loadRegionAssignmentList().subscribe({
+      next: (clientProfilRegionAssignment) => {
+        this.clientProfileRegionAssignmentSubject.next(clientProfilRegionAssignment);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+  loadPSMFRZIPList(){
+    this.userDataService.loadPSMFRZIPList().subscribe({
+      next: (clientProfilPSMFRZIP) => {
+        this.clientProfilePSMFRZIPSubject.next(clientProfilPSMFRZIP);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);   
@@ -449,8 +517,38 @@ export class UserManagementFacade {
         this.directMessageLogEventSubject.next(response);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
+
+  reassignCase(caseReassignData : any){
+    return this.userDataService.reassignCase(caseReassignData);
+  }
+
+  getUserProfilePhotosByIds(userIds : string, gridItems: any) {    
+    return this.userDataService.getUserProfilePhotos(userIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          gridItems.forEach((item: any) => {
+            const matchingItem = data.find((profileItem: any) => profileItem.creatorId === item.creatorId);
+            if (matchingItem) {
+              item.userProfilePhoto = matchingItem.profilePhoto;
+            }
+          });
+          this.profilePhotosSubject.next(data);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);   
+      },
+    });
+  }
+
+
+  getProfilePhotosByUserIds(userIds : string) {    
+    return this.userDataService.getUserProfilePhotos(userIds);
+  }
+ 
 }

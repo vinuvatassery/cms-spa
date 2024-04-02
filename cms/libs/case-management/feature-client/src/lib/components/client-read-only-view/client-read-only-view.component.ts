@@ -10,9 +10,11 @@ import {
   CaseFacade
 } from '@cms/case-management/domain';
 import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
+import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
+import { Subject, Subscription, of } from 'rxjs';
 import { Subject, Subscription, of } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
@@ -36,12 +38,25 @@ export class ClientReadOnlyViewComponent implements OnInit{
   @Input() userManagerprofilePhoto$!: any;
   @Input() userLastModifierProfilePhoto$!: any;
 
+  @Input() clientProfile$!: any;
+  @Input() userManagerprofilePhoto$!: any;
+  @Input() userLastModifierProfilePhoto$!: any;
+
   applicantInfo = {} as ApplicantInfo;
   isEditClientInformationPopup = false;
   caseManagerHoverDataItem! : any
   appInfoForm!: FormGroup;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  userManagerprofilePhotoSubject = new Subject();
+  userLastModifierProfilePhotoSubject = new Subject();
+  userFirstName: string  |null=null;
+  userLastName: string  |null=null;
+  isUserProfilePhotoExist: boolean |null=null;
+  creatorId: string  |null=null;
+  lastModifierId: string  |null=null;
+  clientProfileSubscription = new Subscription();
+
   userManagerprofilePhotoSubject = new Subject();
   userLastModifierProfilePhotoSubject = new Subject();
   userFirstName: string  |null=null;
@@ -62,6 +77,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
       private scrollFocusValidationfacade: ScrollFocusValidationfacade){}
    /** Lifecycle hooks **/
  ngOnInit(): void {
+  this.loadReadOnlyClientInfoEvent.emit();
   this.loadReadOnlyClientInfoEvent.emit();
 }
 
@@ -221,6 +237,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
             this.clientFacade.runImportedClaimRules(this.clientId);
             this.onCloseEditClientInformationClicked();
             this.onUpdateApplicantInfo.emit();
+            this.clientFacade.reloadClientHeader();
             this.clientFacade.reloadClientHeader();
           },
           error: (error: any) => {

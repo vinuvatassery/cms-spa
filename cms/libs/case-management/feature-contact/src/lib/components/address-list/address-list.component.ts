@@ -38,6 +38,10 @@ export class AddressListComponent implements OnInit {
   allProfilePhotosList:any[]=[];
   userPhotosSubject = new Subject<any>();
   addressListProfilePhoto$ = this.contactFacade.addressListProfilePhotoSubject;
+  distinctUserIds!: string;
+  allProfilePhotosList:any[]=[];
+  userPhotosSubject = new Subject<any>();
+  addressListProfilePhoto$ = this.contactFacade.addressListProfilePhotoSubject;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -81,6 +85,7 @@ export class AddressListComponent implements OnInit {
   ];
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade, private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade,) {}
+  constructor(private readonly contactFacade: ContactFacade, private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -91,9 +96,11 @@ export class AddressListComponent implements OnInit {
   private loadAddress() {
     this.contactFacade.getClientAddress(this.clientId);
     this.contactFacade.address$.subscribe((address:any[])=>{
+    this.contactFacade.address$.subscribe((address:any[])=>{
       this.addressGridView= address.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
       this.allAddressList=address;
       if(this.showHistoricalFlag){
+        this.addressGridView=this.allAddressList;
         this.addressGridView=this.allAddressList;
       }
       this.cdr.detectChanges();
@@ -164,6 +171,8 @@ export class AddressListComponent implements OnInit {
       this.addressGridView= this.allAddressList.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
     }
     this.addressListLoader = false;
+    this.contactFacade.loadAddressDistinctUserIdsAndProfilePhoto(this.addressGridView);
+    this.cdr.detectChanges();
     this.contactFacade.loadAddressDistinctUserIdsAndProfilePhoto(this.addressGridView);
     this.cdr.detectChanges();
   }

@@ -12,7 +12,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State
@@ -35,6 +35,7 @@ import { LoadTypes, PremiumType } from '@cms/case-management/domain';
 export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,OnDestroy {
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
+  @ViewChild('grid') grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReconcileGridLoaderShow = false;
@@ -107,6 +108,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   checkingPaymentRequest!:any;
   totalCount:any;
   isSubmitted:any = false;
+  columnChangeDesc:any='Default Columns';
   public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
     datePaymentReconciled: new FormControl('', []),
     datePaymentSend: new FormControl('', []),
@@ -297,6 +299,17 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    let columnsRemoved = false;
+    for (const column of this.grid.columns.toArray()){
+      if (column.hidden) {
+        columnsRemoved = true;
+      }
+    }
+    this.columnChangeDesc = columnsRemoved ? 'Columns Removed' : 'Default Columns';
+  }
+
   allColumnChange(){
     this.searchItem = null;
     this.defaultGridState();
@@ -305,22 +318,23 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     let searchValue = data;
     this.defaultGridState();
     let operator = 'contains';
+    this.selectedColumn ?? 'vendorName'
+    if (data !== '') {
 
-    if (
-      this.selectedColumn === 'amountDue' 
-    ) {
-      operator = 'eq';
-    }
-    else if (
-      this.selectedColumn === 'paymentReconciledDate' ||
-      this.selectedColumn === 'paymentSentDate'
-    ) {
-      operator = 'eq';
-      searchValue = this.formatSearchValue(data,true);
+      if (
+        this.selectedColumn === 'amountDue'
+      ) {
+        operator = 'eq';
+      }
+      else if (
+        this.selectedColumn === 'paymentReconciledDate' ||
+        this.selectedColumn === 'paymentSentDate'
+      ) {
+        operator = 'eq';
+        searchValue = this.formatSearchValue(data, true);
 
+      }
     }
-   
-    if(searchValue !== ''){
     this.filterData = {
       logic: 'and',
       filters: [
@@ -339,7 +353,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
-  }
+
   }
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     if (isDateSearch) {
@@ -391,7 +405,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
     this.loadReconcileListGrid();
   }
-
+  
   setToDefault() {
     this.searchItem = null;
     this.state = {
@@ -401,14 +415,14 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     };
 
     this.sortColumn = this.providerTitle;
-    this.sortDir = 'Ascending';
+    this.sortDir = 'Descending';
     this.filter = null;
     this.searchValue = '';
     this.isFiltered = false;
     this.columnsReordered = false;
 
     this.sortValue = 'vendorName';
-    this.sortType = 'asc';
+    this.sortType = 'desc';
     this.sort = this.sortColumn;
 
     this.loadReconcileListGrid();
@@ -801,7 +815,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     if (this.totalCount === 0) {
       if( this.isSubmitted){
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared.";
+      this.pageValidationMessage = null;
       }
     }
     else {
@@ -918,12 +932,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.pageValidationMessage = this.totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
-      this.pageValidationMessage = "No data for reconcile and print";
+      this.pageValidationMessage = null;
       this.pageValidationMessageFlag = true;
     }
     else {
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared.";
+      this.pageValidationMessage = null;
        this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
       this.selectedReconcileDataRows.forEach((data:any) =>{
         data. paymentReconciledDate =  this.intl.formatDate(data.paymentReconciledDate, this.dateFormat);

@@ -9,6 +9,7 @@ import {
   TemplateRef,
   ChangeDetectorRef,
   OnDestroy,
+  OnDestroy,
 } from '@angular/core';
 /** External libraries **/
 import { DialItemAnimation } from '@progress/kendo-angular-buttons';
@@ -18,7 +19,10 @@ import {
   ClientFacade
 } from '@cms/case-management/domain';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject } from '@microsoft/signalr';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { Subject } from '@microsoft/signalr';
 @Component({
@@ -27,6 +31,7 @@ import { Subject } from '@microsoft/signalr';
   styleUrls: ['./case360-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class Case360HeaderComponent implements OnInit, OnDestroy {
 export class Case360HeaderComponent implements OnInit, OnDestroy {
   /** Public properties **/
   @Input() loadedClientHeader: any;
@@ -72,6 +77,8 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private clientFacade: ClientFacade,
     private readonly userManagementFacade: UserManagementFacade
+    private clientFacade: ClientFacade,
+    private readonly userManagementFacade: UserManagementFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -86,6 +93,8 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
       if(data){
         this.loadClientProfileInfoEvent.emit();
       }
+    });
+    this.loadDistinctUserIdsAndProfilePhoto();
     });
     this.loadDistinctUserIdsAndProfilePhoto();
   }
@@ -147,6 +156,7 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   }
 
   addGroupUpdatedSubscription() {
+    this.groupUpdatedSubscription = this.groupUpdated$.subscribe((value: boolean) => {
     this.groupUpdatedSubscription = this.groupUpdated$.subscribe((value: boolean) => {
       if (value) {
         this.isGroupDetailOpened$.next(false);
