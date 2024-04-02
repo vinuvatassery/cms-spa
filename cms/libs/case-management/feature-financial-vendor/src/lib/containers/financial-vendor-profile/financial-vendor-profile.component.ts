@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, InvoiceFacade } from '@cms/case-management/domain';
+import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorRefundDataService, FinancialVendorRefundFacade, InvoiceFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
@@ -68,6 +68,21 @@ export class FinancialVendorProfileComponent implements OnInit {
   hasDrugCreateUpdatePermission = false;
   vendorProfileId: any;
   alertList$ = this.todoFacade.bannerAlertList$;
+  frequencyTypeCodeSubject$ = this.lovFacade.frequencyTypeCodeSubject$
+  entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
+  searchProviderSubject = this.financialVendorFacade.searchProviderSubject
+  clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchResult$ = this.financialRefundFacade.clients$;
+  providerSearchResult$ =this.financialVendorFacade.searchProvider$
+  createTodo$ = this.todoFacade.curdAlert$
+   clientSubject = this.financialRefundFacade.clientSubject;
+   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
+   @ViewChild('deleteTodoTemplate', { read: TemplateRef })
+   deleteTodoTemplateRef!: TemplateRef<any>;
+   @ViewChild('todoDetailTemplate', { read: TemplateRef })
+   todoDetailTemplateRef!: TemplateRef<any>;
+   deleteToDoDialog!:any
+   editToDoDialog!:any
   constructor(
     private activeRoute: ActivatedRoute,
     private financialVendorFacade: FinancialVendorFacade,
@@ -78,6 +93,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     private dialogService: DialogService,
     private lovFacade: LovFacade,
     public todoFacade: TodoFacade,
+    public financialRefundFacade : FinancialVendorRefundFacade
   ) { }
 
   ngOnInit(): void {
@@ -265,6 +281,15 @@ export class FinancialVendorProfileComponent implements OnInit {
     });
   }
 
+
+  searchProvider(data:any){
+    this.financialVendorFacade.searchAllProvider(data);
+  }
+
+  searchClientName(event:any){
+    this.financialRefundFacade.loadClientBySearchText(event);
+  }
+
   openAddReminderClicked(){
      this.onNewReminderClicked()
   }
@@ -276,6 +301,20 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.onNewReminderClicked()
   }
 
+  openEditTodoClicked(event:any){
+    this.isEdit = true;
+    this.selectedAlertId = event
+    this.crudText ='Edit'
+    this.todoFacade.getTodoItem(event)
+    this.onNewTodoClicked()
+  }
+  onNewTodoClicked():void {
+    this.editToDoDialog = this.dialogService.open({
+      content: this.todoDetailTemplateRef,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    }); 
+  }
+
   openDeleteReminderClicked(event:any){
     this.isDelete = true;
     this.crudText ='Delete'
@@ -283,4 +322,57 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.todoFacade.getTodoItem(event)
     this.onNewReminderClicked()
   }
+
+  onTodoItemCreateClick(payload:any){
+    this.todoFacade.createAlertItem(payload);
+  }
+  onGetTodoItem($event:any){
+    this.todoFacade.getTodoItem($event);
+  }
+  onDeleteToDoClicked(event:any): void {
+    this.selectedAlertId = event;
+    this.deleteToDoDialog = this.dialogService.open({
+      content: this.deleteTodoTemplateRef,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onUpdateTodoItemClick(payload:any){
+    this.todoFacade.updateAlertItem(payload)
+  }
+  getTodoItemsLov(){
+    this.lovFacade.getFrequencyTypeLov()
+    this.lovFacade.getEntityTypeCodeLov()
+  }
+
+  onCloseDeleteToDoClicked(result: any) {
+    if (result) {
+      this.deleteToDoDialog.close();
+    }
+  }
+
+  onDeleteAlertGrid(selectedAlertId: any){
+    this.todoFacade.curdAlert$.subscribe(res =>{
+      this.getbannerAlertList(this.vendorId)
+    })
+    this.todoFacade.deleteAlert(selectedAlertId);
+  }
+
+  onCloseTodoClicked(result: any) {
+    this.selectedAlertId = ""
+    if(result){
+      this.getbannerAlertList(this.vendorId)
+    }
+  this.editToDoDialog.close();
+  
+}
+
+
+  onDeleteToDOClicked(result: any) 
+  {
+    if (result) {
+      this.deleteToDoDialog.close();
+      this.onDeleteAlertGrid(this.selectedAlertId);
+    }
+  }
+
 }

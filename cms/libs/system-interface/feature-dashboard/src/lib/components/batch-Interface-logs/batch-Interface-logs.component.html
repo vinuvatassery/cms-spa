@@ -94,12 +94,12 @@
           </ng-template>
         </kendo-grid-column>
 
-<kendo-grid-column field="endDate" title="File Receive Date" [width]="180">
+<kendo-grid-column field="fileReceiveDate" title="File Receive Date" [width]="180">
   <ng-template kendoGridCellTemplate let-dataItem>
-    {{dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a'}}
+    {{dataItem.fileReceiveDate | date: 'MM/dd/YYYY hh:mm:ss a'}}
   </ng-template>
   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-    <common-grid-cell-date-range-filter [field]="'startDate'" [filter]="filter" [filterService]="filterService">
+    <common-grid-cell-date-range-filter [field]="'fileReceiveDate'" [filter]="filter" [filterService]="filterService">
     </common-grid-cell-date-range-filter>
   </ng-template>
 </kendo-grid-column>

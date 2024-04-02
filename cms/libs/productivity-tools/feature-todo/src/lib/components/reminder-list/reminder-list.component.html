@@ -3,6 +3,9 @@
   <div class="card-list-search align-items-end mb-3">
     <div class="input-search">
       <span class="material-icons" aria-label="search reminder" aria-hidden="true">search</span>
+      <span *ngIf=" alertSearchLoaderVisibility$ | async"
+      class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+  </span>
       <kendo-floatinglabel text="Search Reminders">
         <kendo-textbox aria-label="search reminder" [clearButton]="true"   [formControl]="searchTerm"  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
       </kendo-floatinglabel>

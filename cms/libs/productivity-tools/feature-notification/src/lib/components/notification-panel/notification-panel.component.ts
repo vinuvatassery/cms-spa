@@ -362,4 +362,7 @@ export class NotificationPanelComponent implements OnInit {
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
    }
+   toggleDescription(message: any) {
+    message.showFullDescription = !message.showFullDescription;
+  }
 }

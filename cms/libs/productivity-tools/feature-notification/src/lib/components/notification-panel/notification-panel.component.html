@@ -56,8 +56,19 @@
               >alarm</span>
           </div>
           <div class="card-list_details">
-            <p [innerHTML]="sanitizeHtml(message.alertDesc)"></p>
+            <div class="card-list_details">
+              <div *ngIf="message.alertDesc.length > 70" class="description-banner">
+                <p *ngIf="!message.showFullDescription">{{ message.alertDesc.substring(0, 70) }}...</p>
+                <p *ngIf="message.showFullDescription">{{ message.alertDesc }}</p>
+                <a (click)="toggleDescription(message)">
+                  {{ message.showFullDescription ? 'See Less' : 'See More' }}
+                </a>
+              </div>
+              <div *ngIf="message.alertDesc.length <= 70">
+                <p [innerHTML]="sanitizeHtml(message.alertDesc)"></p>
+              </div>
             <p class="text-muted">{{message?.alertDueDate | date:'MM/dd/YYYY'}}</p>
+          </div>
           </div>
           <kendo-dropdownbutton
             [data]="dataTwo"

@@ -38,9 +38,7 @@ export class AlertBannerComponent implements OnInit {
   moreItems="";
   secondaryAlertList!:any[];
   notificationReminderDialog : any;
-  //delete confirmation dailog
-  @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
-  deleteToDODialogTemplate!: TemplateRef<any>;
+
   isOpenDeleteTodo = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public deleteToDoDialog: any;
@@ -49,6 +47,7 @@ export class AlertBannerComponent implements OnInit {
   selectedAlertId:string="";
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
   @Output() onEditReminderClicked = new EventEmitter<any>()
+  @Output() onEditTodoClicked = new EventEmitter<any>()
   @Output()  onDeleteReminderClicked =  new EventEmitter<any>()
   public popoverAlertActions = [
     {
@@ -84,7 +83,7 @@ export class AlertBannerComponent implements OnInit {
       text: "Done",
       icon: "done",
       click: (): void => { 
-        this.onMarkAlertAsDoneClick.emit(this.topAlert.alertId);
+               this.onMarkAlertAsDoneClick.emit(this.topAlert.alertId);
       },
     },
     {
@@ -96,6 +95,9 @@ export class AlertBannerComponent implements OnInit {
           if(this.topAlert.alertTypeCode == 'REMINDER'){
           this.onEditReminderClicked.emit(this.selectedAlertId)
           }
+          if(this.topAlert.alertTypeCode == 'TODO'){
+            this.onEditTodoClicked.emit(this.selectedAlertId)
+            }
       },
     },
     {
@@ -107,10 +109,8 @@ export class AlertBannerComponent implements OnInit {
         if(this.topAlert.alertTypeCode == 'REMINDER'){
           this.onDeleteReminderClicked.emit(this.selectedAlertId)
           }else{
-        if (!this.isToDODeleteActionOpen) {
-          this.isToDODeleteActionOpen = true;
-        
-          this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
+        if (this.topAlert.alertTypeCode == 'TODO') {
+          this.onDeleteAlertClick.emit(this.selectedAlertId);
         } 
       }
       },
@@ -150,10 +150,14 @@ export class AlertBannerComponent implements OnInit {
             this.makePopoverAlertBanner(data);
             this.cdr.detectChanges();
           }else{ 
+            this.topAlert =undefined
+            this.secondaryAlertList =[]
             this.cdr.detectChanges();
           }
         });
   } 
+
+
   public DueOn(alertItem:any):any{
     let dateNow = new Date();
     let dueDate = new Date(alertItem.alertDueDate); 
@@ -219,18 +223,20 @@ export class AlertBannerComponent implements OnInit {
       this.onMarkAlertAsDoneClick.emit(gridItem.alertId);
     }else if(item.id == 'edit'){ 
       this.selectedAlertId = gridItem.alertId;
-      if(this.topAlert.alertTypeCode == 'REMINDER'){
+      if(gridItem.alertTypeCode == 'REMINDER'){
       this.onEditReminderClicked.emit(this.selectedAlertId)
       }
+      if(gridItem.alertTypeCode == 'TODO'){
+        this.onEditTodoClicked.emit(this.selectedAlertId)
+        }
     }
     else if(item.id == 'del'){
       this.selectedAlertId = gridItem.alertId;
-      if(this.topAlert.alertTypeCode == 'REMINDER'){
+      if(gridItem.alertTypeCode == 'REMINDER'){
         this.onDeleteReminderClicked.emit(this.selectedAlertId)
         }else{
-      if (!this.isToDODeleteActionOpen) {
-        this.isToDODeleteActionOpen = true;
-        this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
+          if(gridItem.alertTypeCode == 'TODO'){
+        this.onDeleteAlertClick.emit(this.selectedAlertId);
       } 
     }
     }
@@ -240,25 +246,4 @@ export class AlertBannerComponent implements OnInit {
     this.isModalTodoDetailsOpenClicked.emit(this.selectedAlertId);
   }
 
-  onOpenDeleteToDoClicked(template: TemplateRef<unknown>): void {
-    this.deleteToDoDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
-
-  onCloseDeleteToDoClicked(result: any) {
-    if (result) {
-      this.isToDODeleteActionOpen = false;
-      this.deleteToDoDialog.close();
-    }
-  }
-  onDeleteToDOClicked(result: any) 
-  {
-    if (result) {
-      this.isToDODeleteActionOpen = false;
-      this.deleteToDoDialog.close();
-      this.onDeleteAlertClick.emit(this.selectedAlertId);
-    }
-  }
 }
