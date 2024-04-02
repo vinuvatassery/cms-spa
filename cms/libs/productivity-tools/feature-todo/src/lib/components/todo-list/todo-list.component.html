@@ -35,9 +35,9 @@
         </kendo-grid-string-filter-menu>
          </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="entityTypeCode" title="Type" [width]="100">
+    <kendo-grid-column field="displayEntityTypeCode" title="Type" [width]="100">
       <ng-template kendoGridCellTemplate let-dataItem>
-      <span class="text-upper">  {{ dataItem.entityTypeCode }}</span>
+      <span class="text-upper">  {{ dataItem.displayEntityTypeCode }}</span>
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate
       let-column="column"
@@ -54,7 +54,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="alertDesc" title="Description" [width]="300">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton look="flat" *ngIf="dataItem.creatorCw && dataItem.entityTypeCode=='INSURANCE_PREMIUM'" [attr.aria-label]="dataItem.creatorCw" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
+        <button kendoButton look="flat" *ngIf="dataItem.creatorCw && dataItem.entityTypeCode=='BATCH_SENT_BACK'" [attr.aria-label]="dataItem.creatorCw" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
           aria-label="todo item for">
           {{ dataItem.creatorCw }}
         </button>
@@ -62,7 +62,7 @@
         <kendo-popover #userCard width="330">
           <ng-template kendoPopoverBodyTemplate>
             <common-user-profile-card
-            [userId]="dataItem.creatorUserId"
+            [userId]="dataItem.caseManagerId"
             ></common-user-profile-card>
           </ng-template>
         </kendo-popover>
@@ -94,7 +94,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="alertDueDate" title="Options" [width]="50" class="text-center" [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-        <kendo-dropdownbutton [data]="moreactions" *ngIf="(dataItem.customAlertFlag && dataItem.customAlertFlag=='Y')" 
+        <kendo-dropdownbutton [data]="dataItem.entityTypeCode=='BATCH_SENT_BACK' ? moreactionsSystemGenerated : moreactions" *ngIf="dataItem.entityTypeCode=='BATCH_SENT_BACK' || (dataItem.customAlertFlag && dataItem.customAlertFlag=='Y')" 
           title="More option" aria-label="more actions"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }"
