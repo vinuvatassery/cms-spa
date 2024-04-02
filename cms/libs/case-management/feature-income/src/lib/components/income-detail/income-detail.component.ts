@@ -581,9 +581,8 @@ export class IncomeDetailComponent implements OnInit {
         if (response) {
           this.incomeFacade.hideLoader();
           if (response.status === 2) {
-            this.incomeFacade.showHideSnackBar(
-              SnackBarNotificationType.WARNING,
-              response.message
+            this.incomeFacade.errorShowHideSnackBar(
+              response.message,
             );
           }
           else {            
