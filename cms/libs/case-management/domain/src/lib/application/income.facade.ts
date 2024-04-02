@@ -245,6 +245,10 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
     });
   }
 
+  addEmployer(employerName :any) {
+    return this.contactDataService.addEmployer(employerName);
+  }
+
   private formDataAppendObject(fd: FormData, obj: any, key?: any) {
     let i, k;
     for (i in obj) {

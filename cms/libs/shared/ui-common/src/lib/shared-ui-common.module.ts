@@ -52,6 +52,7 @@ import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { GridNoRecordsComponent } from './grid-no-records/grid-no-records.component';
 import { ReadMoreComponent } from './read-more/read-more.component';
 import { DeleteTodoConfirmationComponent } from './delete-todo-confirmation/delete-todo-confirmation.component';
+import { AddEmployerComponent } from './add-employer/add-employer.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -97,7 +98,8 @@ import { DeleteTodoConfirmationComponent } from './delete-todo-confirmation/dele
     TodoDetailComponent,
     GridNoRecordsComponent,
     ReadMoreComponent,
-    DeleteTodoConfirmationComponent
+    DeleteTodoConfirmationComponent,
+    AddEmployerComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -140,9 +142,10 @@ import { DeleteTodoConfirmationComponent } from './delete-todo-confirmation/dele
     CmsPharmacyClaimsDetailComponent,
     CmsPharmacyClaimsRecentClaimsComponent,
     TodoDetailComponent,
-    GridNoRecordsComponent, 
+    GridNoRecordsComponent,
     ReadMoreComponent,
-    DeleteTodoConfirmationComponent
+    DeleteTodoConfirmationComponent,
+    AddEmployerComponent
   ],
 })
 export class SharedUiCommonModule {}
