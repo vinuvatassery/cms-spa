@@ -1,7 +1,8 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FabMenuFacade } from '@cms/productivity-tools/domain';
+import { FabMenuFacade, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
+import { SignalrEventHandlerService } from '@cms/shared/util-common';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
 
@@ -19,12 +20,14 @@ export class CommonActionsComponent {
   clientId : any;
   //vendorId : any;
   entityId : any;
-  
+  todoAndRemindersCount =0;
   
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    public readonly fabMenuFacade : FabMenuFacade
+    public readonly fabMenuFacade : FabMenuFacade,
+    public notificationFacade : NotificationFacade,
+    public todoFacade : TodoFacade
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +40,16 @@ export class CommonActionsComponent {
       // else if(this.vendorId){
       //   this.entityId = this.vendorId.toString();
       // }
+    this.notificationFacade.todoAndReminderFabCount$.subscribe((res :any) =>{
+     this.todoAndRemindersCount =  res;
+    })
+    var clientId = this.route.snapshot.queryParams['id'];
+    if(clientId){
+    this.notificationFacade.todoAndReminderFabCount(clientId);
+    }
+    this.todoFacade.curdAlert$.subscribe(res =>{
+      this.notificationFacade.todoAndReminderFabCount(clientId);
+    })
   }
   /** Internal event methods **/
   onDialItemClicked(event: any): void {

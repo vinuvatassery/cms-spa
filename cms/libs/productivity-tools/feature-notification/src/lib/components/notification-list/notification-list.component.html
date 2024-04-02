@@ -1,11 +1,10 @@
 <section class="card-list-search">
   <div class="input-search mb-3">
-    <span
-      class="material-icons"
-      aria-label="search notification"
-      aria-hidden="true"
-      >search</span
-    >
+    <span class="material-icons global-search-icon" aria-label="search notification"
+    aria-hidden="true">search</span>
+    <span *ngIf=" alertSearchLoaderVisibility$ | async"
+    class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+</span>
     <kendo-floatinglabel text="Search Notifications"> 
       <kendo-textbox  aria-label="search notification"  [clearButton]="true" [formControl]="searchTerm"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
     </kendo-floatinglabel>
@@ -18,15 +17,8 @@
         <span class="material-icons" aria-label="notifications" aria-hidden="true">notifications</span>
       </div>
       <div class="card-list_details">
-        <div *ngIf="message.alertDesc.length > 70" class="description-banner">
-          <p>{{ message.showFullDescription ? message.alertDesc : (message.alertDesc.substring(0, 70) + '...') }}</p>
-          <a *ngIf="!message.showFullDescription" (click)="toggleDescription(message)">See More</a>
-          <a *ngIf="message.showFullDescription" (click)="toggleDescription(message)">See Less</a>
-        </div>
-        <div *ngIf="message.alertDesc.length <= 70">
           <p>{{ message.alertDesc }}</p>
-        </div>
-        <a (click)="onNavigationClicked(message)">{{ message.entityName }}</a>
+          <a (click)="onNavigationClicked(message)">{{ message.entityName }}</a>
         <p class="text-muted">{{ message?.alertDueDate | date:'MM/dd/YYYY' }}</p>
       </div>
     </li>

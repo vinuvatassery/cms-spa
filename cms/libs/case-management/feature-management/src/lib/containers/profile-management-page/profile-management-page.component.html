@@ -2,10 +2,10 @@
 <div class="flex-col flex-space-bw align-items-center mb-1">
   <h2 class="title-md mb-0 text-bold">Case Manager</h2>
   <div>
-    <span class="app-checkboxwidtext-wrapper"> 
+    <span class="app-checkboxwidtext-wrapper">
       <input type="checkbox"
-      kendoCheckBox aria-labelledby="historyCheckBoxProfileMgt"      
-      (click)="onHistoryChkBoxChanged()" 
+      kendoCheckBox aria-labelledby="historyCheckBoxProfileMgt"
+      (click)="onHistoryChkBoxChanged()"
       id="historyCheckBoxProfileMgt"
       name="historyCheckBoxProfileMgt"
       [checked]="historychkBoxChecked"
@@ -18,10 +18,12 @@
 
 </div>
 <case-management-case-manager-list
+[caseManagerReferral$]="caseManagerReferral$"
+[clientId]="profileClientId"
 [updateDatesCaseManager$]="updateDatesCaseManager$"
 [showAddNewManagerButton$]="showAddNewManagerButton$"
-[managementTab]="true"    
-[pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort" 
+[managementTab]="true"
+[pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
 [userImage$]="userImage$"
 [selectedCaseManagerDetails$]="selectedCaseManagerDetails$"
 [getManagerUsers$]="getManagerUsers$"
@@ -35,6 +37,7 @@
 (addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)"
 (loadprofilePhotoEvent)="getCaseManagerImage($event)"
 (changeDateConfimEvent)="updateCaseManagerDates($event)"
+(caseManagerReferralSubmitEvent)="caseManagerReferralSubmit($event)"
 [caseManagersProfilePhoto$]="caseManagersProfilePhoto$"></case-management-case-manager-list>
 </div>
 

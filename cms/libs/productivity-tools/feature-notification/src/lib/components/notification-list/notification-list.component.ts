@@ -29,6 +29,8 @@ export class NotificationListComponent {
   @Output() loadNotificationtEvent = new EventEmitter<any>();
   @Output() searchTermTextEvent = new EventEmitter<any>();
   @Output() closeDialog = new EventEmitter<void>();
+  alertSearchLoaderVisibility$ =
+  this.notificationFacade.alertSearchLoaderVisibility$;
   searchTerm = new FormControl();
   tabCode= 'MEDICAL_CLINIC'
   dateFormat = this.configurationProvider.appSettings.dateFormat;

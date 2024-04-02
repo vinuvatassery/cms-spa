@@ -324,9 +324,9 @@ export class ReminderDetailComponent implements OnInit {
       this.isModalNewReminderCloseClicked.emit(true)
       }
     })
-    this.todoFacade.deleteAlert({alertId : this.alertId, 
-                         isDeleteFromOutlookCalender: this.clientReminderForm.controls['deleteFromOutlookCalender'].value ? 'N' :'Y'
-    });
+    this.todoFacade.deleteAlert(this.alertId, 
+     this.clientReminderForm.controls['deleteFromOutlookCalender'].value ? 'Y' :'N'
+    );
     
   }
   onLinkToChange(event:any){
@@ -403,7 +403,7 @@ export class ReminderDetailComponent implements OnInit {
     const timeInMinutes = new Date(this.clientReminderForm.controls['time'].value).getMinutes();
     const timeInHours = new Date(this.clientReminderForm.controls['time'].value).getHours();
     
-    if ( this.clientReminderForm.controls['time'].value && timeInMinutes < new Date().getMinutes() && timeInHours <  new Date().getMinutes() ) {
+    if ( this.clientReminderForm.controls['time'].value && timeInMinutes < new Date().getMinutes() && timeInHours <  new Date().getHours() ) {
       this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
     
       return;

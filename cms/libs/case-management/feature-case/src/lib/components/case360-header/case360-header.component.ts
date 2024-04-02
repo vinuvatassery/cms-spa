@@ -51,6 +51,7 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   @Output() onDeleteAlertEvent = new EventEmitter<any>();
   @Output() openEditReminderEvent = new EventEmitter()
   @Output() openDeleteReminderEvent = new EventEmitter()
+  @Output() openEditTodoEvent = new EventEmitter()
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
   isGroupDetailOpened$ = new BehaviorSubject<boolean>(false);
@@ -233,5 +234,9 @@ onEditReminder(event:any){
 
 onDeleteReminder(event:any){
   this.openDeleteReminderEvent.emit(event)
+}
+
+onEditTodo(event:any){
+  this.openEditTodoEvent.emit(event)
 }
 }

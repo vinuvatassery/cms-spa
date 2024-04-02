@@ -909,10 +909,13 @@ color: $app-primary-font-color;
 
   }
 }
-
+.popover-banner-container{
+  .info-banners{
+    justify-content: space-between;
+  }
+}
 .cvp_three_dot_drop_btn {
-  >.k-button {
-    display: inline-block;
+  >.k-button { 
     width: 30px;
     background: transparent;
     padding: 5px 6px;
@@ -1283,8 +1286,7 @@ color: $app-primary-font-color;
     .cvp_three_dot_drop_btn > .k-button{
       padding: 0px;
       width: 24px;
-      height: 24px;
-      margin-left: 8px;
+      height: 24px; 
     }
    }
 }

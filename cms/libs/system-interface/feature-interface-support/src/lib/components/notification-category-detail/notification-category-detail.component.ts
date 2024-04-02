@@ -65,7 +65,7 @@ export class NotiificationCategoryDetailComponent implements OnInit {
   createNotiificationCategoryForm() {
     this.notificationCategoryForm = this.formBuilder.group({
       groupName: new FormControl({ value: '', disabled: true }),
-      eventId: new FormControl({ value: '', disabled: false }, [Validators.required]),
+      eventId: new FormControl({ value: '', disabled: false }, Validators.required),
       eventListInput: new FormControl({ value: '', disabled: true })
     });
 

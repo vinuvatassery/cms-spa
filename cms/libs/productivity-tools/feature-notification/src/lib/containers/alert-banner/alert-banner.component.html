@@ -1,10 +1,12 @@
-<section *ngIf="topAlert">
+<section *ngIf="topAlert" class="top_alert">
   <div class="flex-row align-items-end">
     <div class="flex-col flex-col-10">
       <div [ngClass]="todoItemCrossedDueDate(null) ? 'info-banners red-banner hover-link' : 'info-banners canyon-banner hover-link'">
 
         <div class="flex-col info-banners p-0">
-          <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
+          <span class="material-icons" aria-label="to do" aria-hidden="true" *ngIf="topAlert.alertTypeCode == 'TODO'">playlist_add_check</span>
+          <span class="material-icons" aria-label="notification" aria-hidden="true" *ngIf="topAlert.alertTypeCode == 'REMINDER'">alarm</span>
+  
           <span class="text-bold">{{topAlert.alertTypeCode =='REMINDER'? topAlert.alertDesc : topAlert.alertName}} </span>
           <span class="text-normal">{{DueOn(topAlert)}}</span>
         </div>
@@ -29,9 +31,7 @@
     </div>
     <div class="flex-col flex-col-2 mt-1" *ngIf="moreItems"> 
       <button attr.aria-label=" {{ showMoreAlert ? 'Hide Items' : moreItems }}" kendoButton look="flat" class="card-link-button" [popover]="moreAlertmessage"  kendoPopoverAnchor showOn="click" >
-
-
-        {{ showMoreAlert ? 'Hide Items' : moreItems }}
+        {{ moreItems }}
       </button>
     </div>
   </div>
@@ -43,7 +43,8 @@
 <ng-container  *ngFor="let alertItem of  secondaryAlertList; let i = index">
 <div style="width: 330px;" [ngClass]="todoItemCrossedDueDate(alertItem.alertDueDate)? 'info-banners red-banner hover-link mt-1' : 'info-banners canyon-banner hover-link mt-1'">
  <div class="flex-col info-banners p-0">
-   <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
+   <span class="material-icons" aria-label="to do" aria-hidden="true" *ngIf="alertItem.alertTypeCode == 'TODO'">playlist_add_check</span>
+   <span class="material-icons" aria-label="notification" aria-hidden="true" *ngIf="alertItem.alertTypeCode == 'REMINDER'">alarm</span>
    <span class="text-bold">{{alertItem.alertTypeCode == 'REMINDER'? alertItem.alertDesc : alertItem.alertName}} </span>
    <span class="text-normal">{{DueOn(alertItem)}}</span>
  </div>
@@ -64,7 +65,7 @@
 </div>
 </ng-container>
 <!-- -->
-<button aria-label="View All Reminders" kendoButton look="flat" class="card-link-button mt-1"  (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)" >  View All Reminders </button>
+<button *ngIf="showMoreAlert" aria-label="View All Reminders" kendoButton look="flat" class="card-link-button mt-1"  (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)" >  View All Reminders </button>
 </div>
 </ng-template>
 </kendo-popover> 
@@ -80,8 +81,5 @@
     <span class="text-bold">Notifications and Reminders</span>
   </kendo-dialog-titlebar>
 
- <!-- <productivity-tools-notification-and-reminder-page></productivity-tools-notification-and-reminder-page> -->
-</ng-template>
-<ng-template #deleteToDODialogTemplate>   
-  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+ <productivity-tools-notification-and-reminder-page [focusedTab]='"REMINDER"'></productivity-tools-notification-and-reminder-page>
 </ng-template>

@@ -25,10 +25,12 @@ private assignCaseManagerSubject = new Subject<any>();
 private genericCaseManagerSubject = new Subject<any>();
 private updateDatesCaseManagerSubject = new Subject<any>();
 public showCaseListRequiredSubject  = new BehaviorSubject<boolean>(false);
+private caseManagerReferralSubject = new Subject<any>();
 
 
 
 /** Public properties **/
+caseManagerReferral$ = this.caseManagerReferralSubject.asObservable();
 getManagerUsers$ = this.getManagerUsersSubject.asObservable();
 getCaseManagers$ = this.getCaseManagersSubject.asObservable();
 getCaseManagerHasManagerStatus$ = this.getCaseManagerHasManagerStatusSubject.asObservable();
@@ -46,7 +48,7 @@ public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
 caseManagersProfilePhotoSubject = new Subject();
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
-    dir: 'asc' 
+    dir: 'asc'
   }];
   showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
 
@@ -65,7 +67,7 @@ caseManagersProfilePhotoSubject = new Subject();
   public sortImportedClaimsList: SortDescriptor[] = [{
     field: this.sortValueImportedClaimsAPproval,
   }];
-  
+
     /** Constructor **/
 constructor(private readonly userDataService: UserDataService,
   private readonly caseManagerDataService: CaseManagerDataService,
@@ -79,16 +81,16 @@ constructor(private readonly userDataService: UserDataService,
 
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
       if(type == SnackBarNotificationType.ERROR)
       {
-        const err= subtitle;    
+        const err= subtitle;
         this.loggingService.logException(err)
-      }  
+      }
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();   
+        this.hideLoader();
   }
-  
+
   NotifyShowHideSnackBar(type: ReminderSnackBarNotificationType, subtitle: any) {
     if (type == ReminderSnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -102,7 +104,7 @@ constructor(private readonly userDataService: UserDataService,
   {
     this.loaderService.show();
   }
-    
+
   hideLoader()
   {
     this.loaderService.hide();
@@ -111,13 +113,13 @@ constructor(private readonly userDataService: UserDataService,
   searchUsersByRole(text : string): void {
     this.userDataService.searchUsersByRole(UserDefaultRoles.CACaseManager ,text).subscribe({
       next: (getManagerUsersResponse) => {
-        Object.values(getManagerUsersResponse).forEach((key) => {   
+        Object.values(getManagerUsersResponse).forEach((key) => {
           key.fullCustomName = key.fullName +' '+ key.pOrNbr  + ' '+ key.phoneNbr
         });
         this.getManagerUsersSubject.next(getManagerUsersResponse);
       },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       });
   }
@@ -125,22 +127,22 @@ constructor(private readonly userDataService: UserDataService,
   loadCaseManagers(caseId : string  , skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated :boolean): void {
     this.showLoader()
     this.caseManagerDataService.loadCaseManagersGrid(caseId  ,skipcount ,maxResultCount  ,sort , sortType , showDeactivated ).subscribe({
-      next: (getCaseManagersResponse : any) => {        
+      next: (getCaseManagersResponse : any) => {
         if(getCaseManagersResponse)
         {
           const gridView = {
-            data : getCaseManagersResponse["items"] ,        
-            total:  getCaseManagersResponse["totalCount"]  
-            };       
+            data : getCaseManagersResponse["items"] ,
+            total:  getCaseManagersResponse["totalCount"]
+            };
         const workFlowdata: CompletionChecklist[] = [{
           dataPointName: 'caseManager',
           status: (parseInt(getCaseManagersResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
-        }]; 
-        
+        }];
+
         if(parseInt(getCaseManagersResponse["items"].filter(function(item : any){
           return item?.activeFlag === 'Y';
         }).length) > 0)
-        {          
+        {
         this.showAddNewManagerButtonSubject.next(false);
         }
         else
@@ -148,13 +150,13 @@ constructor(private readonly userDataService: UserDataService,
           this.showAddNewManagerButtonSubject.next(true);
         }
         this.workflowFacade.updateChecklist(workFlowdata);
-        this.getCaseManagersSubject.next(gridView);  
-        this.loadCaseManagersDistinctUserIdsAndProfilePhoto(getCaseManagersResponse["items"]);    
-        this.hideLoader();  
-        }      
+        this.getCaseManagersSubject.next(gridView);
+        this.loadCaseManagersDistinctUserIdsAndProfilePhoto(getCaseManagersResponse["items"]);
+        this.hideLoader();
+        }
      },
        error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
        },
      });
  }
@@ -176,37 +178,37 @@ constructor(private readonly userDataService: UserDataService,
     getCaseManagerStatus(clientCaseId : string): void {
       this.showLoader()
       this.caseManagerDataService.getCaseManagerStatus(clientCaseId).subscribe({
-        next: (getManagerStatusResponse : any) => {    
+        next: (getManagerStatusResponse : any) => {
           let hasManager! : any;
           let needManager! : any;
-          if(getManagerStatusResponse?.hasManager === StatusFlag.Yes)  
+          if(getManagerStatusResponse?.hasManager === StatusFlag.Yes)
           {
             hasManager =true;
           }
-          else  if(getManagerStatusResponse?.hasManager === StatusFlag.No)  
+          else  if(getManagerStatusResponse?.hasManager === StatusFlag.No)
           {
             hasManager =false;
-          }   
-          
-          if(getManagerStatusResponse?.needManager === StatusFlag.Yes)  
+          }
+
+          if(getManagerStatusResponse?.needManager === StatusFlag.Yes)
           {
             needManager =true;
           }
-          else  if(getManagerStatusResponse?.needManager === StatusFlag.No)  
+          else  if(getManagerStatusResponse?.needManager === StatusFlag.No)
           {
             needManager =false;
-          }   
+          }
         this.getCaseManagerHasManagerStatusSubject.next(hasManager);
         this.getCaseManagerNeedManagerStatusSubject.next(needManager);
         this.hideLoader()
       },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
-      }); 
+      });
     }
 
-    
+
     updateCaseManagerStatus(clientCaseId : string ,  hasManager :string, needManager : string) {
       this.showLoader()
       if(hasManager === StatusFlag.Yes)
@@ -228,10 +230,10 @@ constructor(private readonly userDataService: UserDataService,
         endDate).subscribe({
         next: (updateDateManagerResponse) => {
          this.updateDatesCaseManagerSubject.next(updateDateManagerResponse);
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Dates Updated')    
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Dates Updated')
        },
          error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
          },
        });
    }
@@ -241,25 +243,25 @@ constructor(private readonly userDataService: UserDataService,
       this.caseManagerDataService.removeCaseManager(clientCaseId, endDate,userId).subscribe({
         next: (removeManagerResponse) => {
          this.removeCaseManagerSubject.next(removeManagerResponse);
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Removed')    
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Removed')
        },
          error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
          },
        });
    }
 
 
-   
+
    loadSelectedCaseManagerData(assignedCaseManagerId: string ,clientCaseId : string): void {
     this.showLoader()
     this.caseManagerDataService.loadSelectedCaseManagerData(assignedCaseManagerId,clientCaseId).subscribe({
       next: (selectedCaseManagerDetailsResponse) => {
-       this.selectedCaseManagerDetailsSubject.next(selectedCaseManagerDetailsResponse);    
-       this.hideLoader()   
+       this.selectedCaseManagerDetailsSubject.next(selectedCaseManagerDetailsResponse);
+       this.hideLoader()
      },
        error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
        },
      });
  }
@@ -271,10 +273,10 @@ constructor(private readonly userDataService: UserDataService,
   this.caseManagerDataService.assignCaseManager(clientCaseId,assignedCaseManagerId).subscribe({
     next: (assignCaseManagerResponse) => {
      this.assignCaseManagerSubject.next(assignCaseManagerResponse);
-     this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Assiged Successfully')    
+     this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Assiged Successfully')
    },
      error: (err) => {
-      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
      },
    });
  }
@@ -283,23 +285,36 @@ constructor(private readonly userDataService: UserDataService,
  {
   const workFlowdata: CompletionChecklist[] = [{
     dataPointName: 'wouldYouLikeOne',
-    status: statusData === true ? StatusFlag.Yes : StatusFlag.No 
-  }]; 
+    status: statusData === true ? StatusFlag.Yes : StatusFlag.No
+  }];
 
   this.workflowFacade.updateChecklist(workFlowdata);
  }
 
 
- 
- getCaseManagerData(clientCaseId : string): void { 
+
+ getCaseManagerData(clientCaseId : string): void {
   this.caseManagerDataService.getCaseManagerData(clientCaseId).subscribe({
     next: (genericCaseManagerResponse) => {
-     this.genericCaseManagerSubject.next(genericCaseManagerResponse);   
+     this.genericCaseManagerSubject.next(genericCaseManagerResponse);
    },
      error: (err) => {
-      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
      },
    });
 }
-    
+
+submitCaseManagerReferral(clientId : any): void {
+  this.showLoader()
+  this.caseManagerDataService.submitCaseManagerReferral(clientId).subscribe({
+    next: (response: any) => {
+     this.caseManagerReferralSubject.next(response);
+     this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response[0].message);
+   },
+     error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+     },
+   });
+ }
+
 }

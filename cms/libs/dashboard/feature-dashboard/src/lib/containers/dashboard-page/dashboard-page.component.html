@@ -17,7 +17,7 @@
 
 
     <div>
-      <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
+      <button kendoButton *ngIf="!isReorderEnable" title="Customize Dashboard"><span class="material-icons" aria-hidden="true"
           (click)="editDashboardClicked(configSubscriptionItems)" title="Customize Dashboard"> dashboard </span></button>
       <div *ngIf="isReorderEnable">
         <button kendoButton (click)="editDashboardCancelClicked('true')" class="mr-1" [primary]="true"

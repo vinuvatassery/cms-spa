@@ -35,8 +35,7 @@
 }
   p {
     letter-spacing: 0px;
-    color: #00000099;
-    text-transform: uppercase;
+    color: #333333; 
     font-family: $font-family-medium;
   }
 
@@ -272,7 +271,7 @@
   }
 
   .app-cars-first-col {
-    h4 {
+    .cervalues-info {
       margin-top: 8px;
       margin-bottom: 0px;
     }
@@ -302,7 +301,7 @@
   .app-cars-col {
     &.red-frame {
 
-      h4,
+      .cervalues-info,
       .btm_texts,
       .material-icons {
         color: $alert-color-dark-1;
@@ -310,7 +309,7 @@
     }
   }
 
-  h4 {
+  .cervalues-info {
     font-size: $font-size-xlg !important;
     margin: 0;
     margin-bottom: 8px;
@@ -370,7 +369,7 @@
     padding-bottom: 0;
   }
 
-  h4 {
+  .info-head {
     font-size: $font-size-xlg-22 !important;
     margin: 0;
     font-family: $font-family-light;
@@ -388,7 +387,8 @@
   .light-blue-btn {
     padding: 12px 10px;
     word-wrap: break-word;
-
+    background: #f0f6fa;
+    color: var(--hive-primary-palette-800) !important;
     .k-button-text {
       word-wrap: break-word;
       white-space: pre-line;

@@ -28,7 +28,7 @@ import { SendLetterPageComponent } from './containers/send-letter-page/send-lett
 import { DisEnrollmentLaterComponent } from './components/disenrollment-letter-later/disenrollment-letter-later.component';
 import { ApprovalLaterComponent } from './components/approval-letter-later/approval-letter-later.component';
 import { NotificationDraftConfirmationComponent } from './components/notification-draft-confirmation/notification-draft-confirmation.component';
-
+import { PreviewNotificationTemplatesComponent } from './components/preview-notification-templates/preview-notification-templates.component';
 
 @NgModule({
   imports: [
@@ -59,7 +59,8 @@ import { NotificationDraftConfirmationComponent } from './components/notificatio
     SendLetterPageComponent,
     DisEnrollmentLaterComponent,
     ApprovalLaterComponent,
-    NotificationDraftConfirmationComponent    
+    NotificationDraftConfirmationComponent,
+    PreviewNotificationTemplatesComponent,
   ],
   exports: [
     SendTextMessageComponent,
@@ -82,7 +83,8 @@ import { NotificationDraftConfirmationComponent } from './components/notificatio
     SendLetterPageComponent,
     DisEnrollmentLaterComponent,
     ApprovalLaterComponent,
-    NotificationDraftConfirmationComponent    
+    NotificationDraftConfirmationComponent,
+    PreviewNotificationTemplatesComponent,
   ],
 })
 export class CaseManagementFeatureCommunicationModule {}
