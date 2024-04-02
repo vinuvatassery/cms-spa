@@ -7,10 +7,9 @@
             (columnReorder)="onColumnReorder($event)"  
             [data]="gridNotificationCategoryData$ | async" class="grid_scroll">
             <kendo-grid-column field="eventDesc" title="Notification Category" [width]="120">
-                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
-                        let-filterService="filterService">
+                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
-                              [filterService]="filterService" [extra]="false" operator="eq">
+                              [filterService]="filterService" [extra]="false" operator="contains">
                               <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
                               <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
                               <kendo-filter-contains-operator></kendo-filter-contains-operator>

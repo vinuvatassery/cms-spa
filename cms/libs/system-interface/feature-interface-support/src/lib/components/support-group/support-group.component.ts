@@ -11,7 +11,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, RowArgs, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor} from '@progress/kendo-data-query';
+import { State, CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subject, first } from 'rxjs';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -49,7 +49,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() supportGroupRemove$: any;
   @Input() supportGroupProfilePhoto$: any;
   @Input() supportGroupListsLoader$: any;
-    @Output() loadSupportGroupListEvent = new EventEmitter<any>();
+  @Output() loadSupportGroupListEvent = new EventEmitter<any>();
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
   @Output() deleteConfimedEvent = new EventEmitter<string>();
@@ -79,12 +79,13 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   editButtonEmitted = false;
   selectedSupportGroup!: any;
   selectedSearchColumn = 'ALL';
-
   gridSupportGroupDataSubject = new Subject<any>();
   public selectableSettings: SelectableSettings;
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
   statusFilter: any;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  public mySelection: any[] = [];
+  public isRowSelected = (e: RowArgs) => this.mySelection.indexOf(e.dataItem.notificationGroupId) >= 0;
   columns: any = {
     ALL: 'All Columns',
     groupCode: 'Interface',
@@ -175,6 +176,14 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.loadSupportGroupListGrid();
     this.lovFacade.getInterfaceSupportGroupLovs();
+
+    // // Emit event to select the first row after loading the grid
+    // this.gridSupportGroupData$.pipe(first()).subscribe((data) => {
+    //   if (data?.data?.length > 0) {
+    //     const firstRow = data.data[0];
+    //     this.selectedRowEvent.emit(firstRow);
+    //   }
+    // });
   }
   ngOnChanges(): void {
     this.state = {
@@ -182,7 +191,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    
+
     this.loadSupportGroupListGrid();
   }
 
@@ -316,7 +325,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       if (data?.total >= 0 || data?.total === -1) {
         this.isSupportGroupGridLoaderShow = false;
       }
-    });
+    }); 
     //this.gridSupportGroupData$.subscribe((data) => { console.log(data) });
     this.isSupportGroupGridLoaderShow = false;
 
@@ -453,6 +462,5 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.onCloseSupportGroupDeleteClicked()
   }
 
-  public mySelection: any[] = [];
-  public isRowSelected = (e: RowArgs) => this.mySelection.indexOf(e.dataItem.notificationGroupId) >= 0;
+
 }
