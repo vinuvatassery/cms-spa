@@ -3,11 +3,7 @@
   <div class="sidePanel_header">
     <div class="sidePanel_header-left"  
     >
-    <kendo-skeleton  *ngIf="showLoader"
-    shape="text"
-    animation="pulse"
-    width="30%"
-  ></kendo-skeleton>
+    <kendo-skeleton  *ngIf="showLoader"  shape="text"  animation="pulse"  width="30%" ></kendo-skeleton>
    
       <h3 *ngIf="!showLoader">{{clientName}}’s To-Do & Reminders</h3>
     
@@ -53,8 +49,14 @@
   <p>There is no data to display</p>
 </div>
     <div *ngIf="showDataLoader">
-      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
-      class="reminder-list-skeleton-loader"></kendo-skeleton>
+      <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
+        <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60" class="bg_rect_loader"></kendo-skeleton>
+        <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40" ></kendo-skeleton>
+      <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
+        <kendo-skeleton  shape="text"   animation="pulse"  width="100%"  ></kendo-skeleton>
+        <kendo-skeleton  shape="text"    animation="pulse"   width="40%"  ></kendo-skeleton>
+      </div>
+      </div>
     </div>
     <section class="pt-2">
       <p class="due-main-heading text-canyon-dark">DUE WITHIN 30 DAYS</p>
@@ -79,11 +81,22 @@
       <div style="text-align: center;" *ngIf="showNoDataFor30Days">
         <p>There is no data to display</p>
       </div>
-      <div *ngIf="showDataLoader">
+      <!-- <div *ngIf="!showDataLoader">
         <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
         class="reminder-list-skeleton-loader"></kendo-skeleton>
-      </div>
-    
+      </div> -->
+      <div *ngIf="showDataLoader"  >    
+        <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
+          <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60" class="bg_rect_loader"></kendo-skeleton>
+          <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40" ></kendo-skeleton>
+        <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
+          <kendo-skeleton  shape="text"   animation="pulse"  width="100%"  ></kendo-skeleton>
+          <kendo-skeleton  shape="text"    animation="pulse"   width="40%"  ></kendo-skeleton>
+        </div>
+        </div>
+        <!-- <kendo-skeleton   shape="rectangle" animation="pulse" width="100%" height="50px" style="margin-bottom: 4px;">
+        </kendo-skeleton> -->
+        </div>
     <section class="pt-2">
       <p class="due-main-heading">DUE LATER</p>
       <productivity-tools-reminder-item 
@@ -106,8 +119,14 @@
       <p>There is no data to display</p>
     </div>
     <div *ngIf="showDataLoader">
-      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
-      class="reminder-list-skeleton-loader"></kendo-skeleton>
+      <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
+        <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60" class="bg_rect_loader"></kendo-skeleton>
+        <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40" ></kendo-skeleton>
+      <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
+        <kendo-skeleton  shape="text"   animation="pulse"  width="100%"  ></kendo-skeleton>
+        <kendo-skeleton  shape="text"    animation="pulse"   width="40%"  ></kendo-skeleton>
+      </div>
+      </div>
     </div>
   
   </div>
