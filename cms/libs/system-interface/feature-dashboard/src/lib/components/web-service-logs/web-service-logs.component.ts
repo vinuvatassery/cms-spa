@@ -81,8 +81,7 @@ defaultPageSize=20;
   public processArray: string[];
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
-  address:any;
-  errorherader: string="";
+
   // Filter Data
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   errorDialog: any;
@@ -313,11 +312,12 @@ defaultPageSize=20;
       this.errorDialog.close();
     
   }
- 
+  address: string="";
+  errorherader: string="";
  onViewInformation(error:string){
  var header=error.split("#");
  this.errorherader=header[1];
- this.address=JSON.parse(header[0]);
+ this.address=JSON.stringify(JSON.parse(header[0]));
   if(this.interfaceType==this.Usps)
 {
  this.failureDetail=error;

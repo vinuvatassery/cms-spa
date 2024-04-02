@@ -177,44 +177,9 @@
 <ng-template #errorAddressDialogTemplate>
   <kendo-dialog-titlebar (close)="Close()"> {{errorherader}}</kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
-    <div class="flex-row">
-      <div class="flex-col">
-          <kendo-floatinglabel text="Address Line 1">
-              <kendo-textbox  [value]="address?.Address1"  textFieldautofocus aria-label="Address Line 1"
-                  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-          </kendo-floatinglabel>
-
-      </div>
-      <div class="flex-col mb-1">
-
-          <kendo-floatinglabel text="Address Line 2 (optional)">
-              <kendo-textbox [value]="address?.Address2" aria-label="Address Line 2 (optional)" [fillMode]="formUiStyle.inputFillMode">
-              </kendo-textbox>
-          </kendo-floatinglabel>
-      </div>
-      <div class="flex-col mb-1">
-
-          <kendo-floatinglabel text="City">
-              <kendo-textbox aria-label="City" [value]="address?.City" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-          </kendo-floatinglabel>
-      </div>
-
-      <div class="flex-col mb-1 flex-col-6">
-          <kendo-floatinglabel text="State">
-            <kendo-textbox aria-label="State" [value]="address?.State" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-            
-          </kendo-floatinglabel>
-      </div>
-      <div class="flex-col mb-1 flex-col-6">
-          <kendo-floatinglabel text="ZIP">
-              <kendo-textbox aria-label="ZIP"  [value]="address?.Zip5"  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-          </kendo-floatinglabel>
-      </div>
-
-
-
-  </div>
-  
+     
+          <p class="text-muted mb-1">{{address}} </p>
+       
     </section>
     <kendo-dialog-actions>
       <div class="justify-content-between">
