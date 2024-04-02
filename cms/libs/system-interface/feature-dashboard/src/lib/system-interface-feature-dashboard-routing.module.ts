@@ -12,11 +12,11 @@ const routes: Routes = [
     component: SystemInterfaceDashboardPageComponent,
   },
   {
-    path: 'web-service-logs',
+    path: 'web-service-files',
     component: WebServiceLogsPageComponent,
   }, 
   {
-    path: 'batch-interface-logs',
+    path: 'batch-files',
     component: BatchInterfaceLogsPageComponent,
   },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

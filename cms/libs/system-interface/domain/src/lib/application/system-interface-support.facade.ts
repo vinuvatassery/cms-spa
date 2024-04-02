@@ -23,7 +23,7 @@ export class SystemInterfaceSupportFacade {
     field: this.sortValueDistribution,
   }];
 
-  public sortValueNotificationCategory = 'notifcationCategoryId';
+  public sortValueNotificationCategory = 'eventDesc';
   public sortNotificationCategoryList: SortDescriptor[] = [{
     field: this.sortValueNotificationCategory,
   }];
