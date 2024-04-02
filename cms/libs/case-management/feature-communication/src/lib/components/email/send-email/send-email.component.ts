@@ -63,6 +63,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   selectEmail: any = [];
   ddlMailCodes: any[] = [];
   selectedMailCode: any;
+  selectedMailCodeId: any;
   emails: any[] = [];
   emailContentValue: any;
   isOpenSendEmailClicked!: boolean;
@@ -89,7 +90,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   defaultBCCEmail: any = [];
   bccEmail: Array<string> = [];
   selectedBccEmail: any = [];
-  showToEmailLoader: boolean = true;
+  showToEmailLoader: boolean = false;
   caseEligibilityId!: any;
   cerEmailAttachedFiles: any[] = [];
   userSelectedAttachment: any[] = [];
@@ -138,24 +139,37 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
+    this.addSubscriptions();
     if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
       this.loadDraftEsignRequest();
-    } else if (this.communicationEmailTypeCode === CommunicationEventTypeCode.VendorEmail) {
-        this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
-          this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
-          });
-        this.vendorContactFacade.loadMailCodes(this.entityId);
-      }else{
+    }
+    else {
         if (this.isContinueDraftClicked) {
           this.loadClientAndVendorDraftEmailTemplates();
         } else if (this.isNewNotificationClicked) {
           this.openNewEmailClicked();
         } else {
           this.loadEmailTemplates();
-          this.loadDraftEsignRequest();
         }
+    }
+  }
+
+  addSubscriptions() {
+    this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+      if (this.selectedMailCodeId) {
+        this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == this.selectedMailCodeId);
+        this.selectedMailCodeId = null;
+        this.ref.detectChanges();
       }
-}
+    });
+  }
+
+  loadMailingAddress() {
+    if (this.communicationEmailTypeCode == CommunicationEventTypeCode.VendorEmail) {
+      this.vendorContactFacade.loadMailCodes(this.entityId);
+    }
+  }
 
   handleDdlMailCodesChange(mailCode: any) {
     this.showToEmailLoader = true;
@@ -166,7 +180,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         { field: 'ActiveFlag', operator: 'eq', value: 'Y' }
       ]
     }])).subscribe(resp => {
-      this.emails = this.selectedToEmails = resp.items.map((contact: any) => contact.emailAddress);
+      this.emails = resp.items.map((contact: any) => contact.emailAddress);
       this.showToEmailLoader = false;
       this.ref.detectChanges();
     });
@@ -174,6 +188,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   handleEmailsChanged(emails: any) {
     this.selectedToEmails = emails;
+  }
+
+  getProfileName() {
+    if (this.communicationEmailTypeCode.includes('CLIENT')) return 'client';
+    else if (this.communicationEmailTypeCode.includes('VENDOR')) return 'vendor';
+    else return this.communicationEmailTypeCode;
   }
 
   loadClientAndVendorDraftEmailTemplates() {
@@ -234,13 +254,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   private loadEmailTemplates() {
-    if (this.templateLoadType == undefined)
+    if (this.communicationEmailTypeCode == undefined)
       return;
     this.loaderService.show();
-    if(this.templateLoadType === null || this.templateLoadType === undefined || this.templateLoadType ===''){
-      this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+    if(this.communicationEmailTypeCode === null || this.communicationEmailTypeCode === undefined || this.communicationEmailTypeCode ===''){
+      this.communicationEmailTypeCode = CommunicationEventTypeCode.ClientEmail;
     }
-    this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.templateLoadType ?? '')
+    this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.communicationEmailTypeCode ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -526,15 +546,20 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.emailContentValue = data.templateContent;
               this.selectedTemplateContent = data.templateContent;
               this.updatedTemplateContent = data.templateContent;
+              this.loadMailingAddress();
               this.isClearEmails = true;
               this.isShowToEmailLoader$.next(true);
               this.isOpenDdlEmailDetails = true;
               this.selectedToEmails = [];
+
               for (let email of this.toEmail) {
                 this.selectedToEmails.push(email?.trim());
-              if(this.emailSubject == '' || this.emailSubject === undefined){
+              }
+
+              if(!this.emailSubject){
               this.emailSubject = data.description;
               }
+
               const ccEmails = data.cc?.map((item: any)=> item.email);
               this.ccEmail = ccEmails;
               if (data?.bccEmail?.length > 0) {
@@ -554,8 +579,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail  || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
                 this.getCCEmailList(this.entityId, this.loginUserId);
               }
-              this.ref.detectChanges();
-            }
+            this.ref.detectChanges();
             this.loaderService.hide();
           }},
           error: (err: any) => {
@@ -572,7 +596,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isClearEmails = true;
       this.isShowToEmailLoader$.next(true);
       this.isOpenDdlEmailDetails = true;
-      this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == event.vendorAddressId);
+      this.selectedMailCodeId = event.vendorAddressId;
+      this.loadMailingAddress();
       this.selectedToEmails = [];
       this.selectedToEmails = event.to;
       this.emailSubject = event.description;
@@ -607,7 +632,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.communicationFacade.deleteNotificationDraft(this.notificationDraftId)
       .subscribe({
         next: (data: any) => {
-          if (data === true) {
+          if (!!data === true) {
             this.loadEmailTemplates();
           }
           this.loaderService.hide();
@@ -760,7 +785,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           if (data) {
             this.selectedCCEmail = data?.map((item: any)=> item.email);
             this.ccEmail = this.selectedCCEmail;
-            this.defaultCCEmail = data;
             this.ref.detectChanges();
           }
           this.loaderService.hide();

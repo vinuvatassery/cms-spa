@@ -9,7 +9,8 @@ import {
   ViewEncapsulation,
   OnDestroy,
   ViewChild,
-  TemplateRef
+  TemplateRef,
+  ChangeDetectorRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
@@ -65,7 +66,8 @@ defaultPageSize=20;
   filteredByColumnDesc = '';
   selectedStatus = '';
   interfaceFilterDataList = null;
-
+  Usps:string ="USPS";
+ interfaceType:string ="USPS";
   // Sorting Variables
   sortColumn = 'Process Date';
   sortColumnDesc = 'Process Date';
@@ -85,6 +87,10 @@ defaultPageSize=20;
   errorDialog: any;
   @ViewChild('errorInformationDialogTemplate', { read: TemplateRef })
   errorInformationDialogTemplate!: TemplateRef<any>;
+
+  @ViewChild('errorAddressDialogTemplate', { read: TemplateRef })
+  errorAddressDialogTemplate!: TemplateRef<any>;
+
   failureDetail:string="";
   interfaceFilterDropDown: any = null;
   lovsSubscription: Subscription | undefined;
@@ -94,8 +100,8 @@ defaultPageSize=20;
     private dialogService: DialogService) {
 
     this.statusArray = systemInterfaceDashboardFacade.getStatusArray()
-    this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray()
-    this.processArray = systemInterfaceDashboardFacade.getEecProcessTypeCodeArray()
+    this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray(this.interfaceType)
+    this.processArray = systemInterfaceDashboardFacade.getEecProcessTypeCodeArray(this.interfaceType)
   
   }
 
@@ -108,7 +114,7 @@ defaultPageSize=20;
   };
 
   public dataStateChange(stateData: any): void {
-    debugger
+    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -136,6 +142,7 @@ defaultPageSize=20;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filter = "";
+    this.filteredBy="";
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
@@ -180,9 +187,9 @@ defaultPageSize=20;
       this.sortType,
       JSON.stringify(this.filter));
 
-
-    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, !this.displayAll, param);
+    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceType, !this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
+
   }
   loadDefaultListGrid() {
     this.updateStatusFilterValue(this.filter, this.statusArray, this.statusArrayDesc);
@@ -192,9 +199,7 @@ defaultPageSize=20;
       this.state.take=this.defaultPageSize,
       this.sortValue,
       this.sortType);
-
-
-    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, !this.displayAll, param);
+    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceType, !this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
 
@@ -220,6 +225,7 @@ defaultPageSize=20;
 
   private initializeDropdownWithFirstValue() {
     this.lovsSubscription = this.lovsList$.subscribe((lovs: any) => {
+      
       this.interfaceFilterDataList = lovs;
       if (lovs && lovs.length > 0) {
         this.interfaceFilterDropDown = lovs[0];
@@ -264,6 +270,12 @@ defaultPageSize=20;
   }
 
   onInterfaceSelectionChanged(event: any) {
+    this.processFilter='';
+    this.statusFilter='';
+    this.interfaceType=event.lovCode;
+    this.processArray = this.systemInterfaceDashboardFacade.getEecProcessTypeCodeArray(this.interfaceType);
+    this.statusArrayDesc = this.systemInterfaceDashboardFacade.getStatusDescriptionArray(this.interfaceType)
+  
     this.loadListGrid();
   }
 
@@ -300,13 +312,26 @@ defaultPageSize=20;
       this.errorDialog.close();
     
   }
-  
+  address: string="";
+  errorherader: string="";
  onViewInformation(error:string){
+ var header=error.split("#");
+ this.errorherader=header[1];
+ this.address=JSON.stringify(JSON.parse(header[0]));
+  if(this.interfaceType==this.Usps)
+{
  this.failureDetail=error;
+ 
+  this.onErrorDetailClicked(
+    this.errorAddressDialogTemplate
+  );
+}else{
+  this.failureDetail=error;
+ 
   this.onErrorDetailClicked(
     this.errorInformationDialogTemplate
-  );
-  
+  )
+}
  }
   public onErrorDetailClicked(template: TemplateRef<unknown>): void {
     this.errorDialog = this.dialogService.open({

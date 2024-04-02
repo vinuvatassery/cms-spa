@@ -16,7 +16,7 @@
           <input type="checkbox" kendoCheckBox
             aria-labelledby="StatusshowHistorical" id="StatusshowHistorical" [(ngModel)]="displayAll"
             (change)="handleShowHistoricalClick()" />
-          <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 2 Weeks </label>
+          <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 2 Weeks {{Usps}}  </label>
         </span>
       </div>
     </div>
@@ -67,14 +67,16 @@
           </common-grid-cell-date-range-filter>
         </ng-template>
       </kendo-grid-column>
-
-      <kendo-grid-column field="clientId" title="Client ID" [width]="180" [field]="'clientId'">
-        <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
-          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-          </kendo-grid-numeric-filter-menu>
-           </ng-template>
-      </kendo-grid-column>
+ <ng-container  *ngIf="interfaceType !='USPS'">
+  <kendo-grid-column field="clientId" title="Client ID" [width]="180" [field]="'clientId'" >
+    <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
+      <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+      </kendo-grid-numeric-filter-menu>
+       </ng-template>
+  </kendo-grid-column>
+ </ng-container>
+     
 
       <kendo-grid-column field="status" title="Status" [width]="180">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -83,18 +85,16 @@
           </kendo-dropdownlist>
         </ng-template>
 
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <button *ngIf="dataItem.status === 'FAILED'" [attr.aria-label]="dataItem.status" kendoButton look="flat"
+        <ng-template kendoGridCellTemplate let-dataItem >        
+          <button *ngIf="dataItem.status === 'FAILED'  " [attr.aria-label]="dataItem.status" kendoButton look="flat"
             class="card-link-button" (click)="onViewInformation(dataItem.exceptionDetails)" >
             Failed
-          </button>
-       
+          </button>     
           <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
-          <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span>
+          <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span> 
         </ng-template>
       </kendo-grid-column>
-
-      <kendo-grid-column title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
+      <kendo-grid-column *ngIf="interfaceType !='USPS'" title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button"
             kendoPopoverAnchor (click)="downloadFile(dataItem.fileId)">
@@ -163,6 +163,22 @@
   <section class="k-dialog-body mb-2">
      
           <p class="text-muted mb-1">{{failureDetail}}</p>
+       
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="Close()"> Close  </button>
+
+        </div>
+      </div>
+    </kendo-dialog-actions>
+</ng-template>
+<ng-template #errorAddressDialogTemplate>
+  <kendo-dialog-titlebar (close)="Close()"> {{errorherader}}</kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+     
+          <p class="text-muted mb-1">{{address}} </p>
        
     </section>
     <kendo-dialog-actions>
