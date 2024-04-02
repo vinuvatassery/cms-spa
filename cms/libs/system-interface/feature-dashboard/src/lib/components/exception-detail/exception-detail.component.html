@@ -3,7 +3,9 @@
   </kendo-grid-column>
   <kendo-grid-column field="rowNo" title="File Row Number" [width]="120">
   </kendo-grid-column>
-  <kendo-grid-column field="keyRecordId" title="{{keyIdColumnHeader}}" [width]="120">
+  <kendo-grid-column *ngIf="(this.interfaceTypeCode=='MODA'&&this.processTypeCode=='TPA_INVOICE') || (this.interfaceTypeCode=='RAMSELL'&&this.processTypeCode=='PRESCRIPTION_FILL_DATA')" field="clientId" title="{{clientColumnName}}" [width]="120">
+  </kendo-grid-column>
+  <kendo-grid-column  field="keyRecordId" title="{{keyIdColumnHeader}}" [width]="120">
   </kendo-grid-column>
   <kendo-grid-column field="description" title="Description" [width]="180">
   </kendo-grid-column>
