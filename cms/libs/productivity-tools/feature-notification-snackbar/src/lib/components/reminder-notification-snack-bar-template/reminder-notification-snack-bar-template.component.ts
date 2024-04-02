@@ -50,25 +50,39 @@ isReminderExpand = false;
       text: 'Edit Reminder',
     },
     {
-      text: '15 Minutes',
+      text: '15 Minutes Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
     },
     {
-      text: '30 Minutes',
+      text: '30 Minutes Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
     },
     {
-      text: '1 hour',
+      text: '1 hour Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
     },
     {
-      text: '2 hours',
+      text: '2 hours Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
     }, 
     {
-      text: '1 day',
+      text: '1 day Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
     },
     {
-      text: '3 days',
+      text: '3 days Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
     },
     {
-      text: '7 days',
+      text: '7 days Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
     },
   ];
 
