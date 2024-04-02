@@ -268,7 +268,7 @@ export class CommunicationFacade {
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
-    formData.append('typeCode', emailData?.typeCode ?? '');
+    formData.append('typeCode', emailData?.templateCategoryCode ?? '');
     formData.append('entity', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('notifcationDraftId', emailData?.notifcationDraftId ?? '');

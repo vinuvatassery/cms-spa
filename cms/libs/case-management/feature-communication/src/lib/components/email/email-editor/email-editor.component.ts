@@ -405,7 +405,7 @@ clientAttachmentClick(item:any)
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, "File is not found at location.");
         },
       });
     }

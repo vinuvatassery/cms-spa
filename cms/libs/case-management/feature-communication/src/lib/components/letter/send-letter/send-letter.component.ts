@@ -580,14 +580,14 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     {
     this.cerEmailAttachedFiles?.push(event);
     }
-    this.attachmentCount = this.cerEmailAttachedFiles?.length;
+    this.attachmentCount = this.cerEmailAttachedFiles[0]?.length;
   }else{
     const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
     if(!isFileExists)
     {
     this.clientAndVendorAttachedFiles?.push(event);
     }
-    this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
+    this.attachmentCount = this.clientAndVendorAttachedFiles[0]?.length;
   }
 }
 
