@@ -211,14 +211,13 @@ export class SystemInterfaceDashboardFacade {
     this.loaderService.show()
     this.getClientDocumentsViewDownload(documentId).subscribe({
       next: (data: any) => {
-
         const fileUrl = window.URL.createObjectURL(data);
-        window.open(fileUrl, "_blank");
         const downloadLink = document.createElement('a');
         downloadLink.href = fileUrl;
         downloadLink.download = documentName;
         downloadLink.click();
         this.loaderService.hide();
+        window.URL.revokeObjectURL(fileUrl);
       },
       error: (error: any) => {
         this.loaderService.hide();

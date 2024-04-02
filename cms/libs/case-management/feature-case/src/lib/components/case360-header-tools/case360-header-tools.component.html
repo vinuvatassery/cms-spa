@@ -1,5 +1,5 @@
 <div class="tab-over-icon-btn" >
-  <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder"  (click)="onNewReminderClicked(NewReminderTemplate)">
+  <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder"  (click)="onNewReminderClicked()">
     <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true"
      >add_alarm</span>
   </button>
@@ -30,20 +30,14 @@
       </button>
     </ng-template>
   </kendo-dropdownbutton>
+  <!-- <button (click)="onPreviewTemplateClicked(viewTemplateDialog)">onPreviewTemplateClicked</button> -->
 </div>
 
 
 
 
-<!-- Create New Reminder Popup -->
-<ng-template #NewReminderTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed()">Create New Reminder for 
-    {{clientHeader?.clientFullName}}</kendo-dialog-titlebar>
-  <productivity-tools-reminder-detail  
-   (isModalNewReminderCloseClicked)="onNewReminderClosed()">
-  </productivity-tools-reminder-detail>
-</ng-template>
- 
+
+
 
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
@@ -85,3 +79,12 @@
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
   [clientCaseEligibilityId]="clientCaseEligibilityId" kendoTooltip></case-management-send-text-message>
 </ng-template>
+
+
+
+
+<!-- view template Modal Html-->
+<ng-template #viewTemplateDialog>
+  <kendo-dialog-titlebar (close)="handlePreviewTemplateClosed($event)">Preview Template </kendo-dialog-titlebar>
+ <case-management-preview-notification-templates></case-management-preview-notification-templates>
+  </ng-template>

@@ -357,6 +357,34 @@
         }
       }
     }
+    &.red-item-block {
+      background: var(--hive-error-palette-100);
+      transition: ease-in all 0.4s;
+      .due-item-heading,
+      .due-item-details {
+        color: var(--hive-error-palette-900);
+      }
+      &:hover {
+        background: var(--hive-error-palette-200);
+      }
+      .item-list-icon {
+        color: var(--hive-error-palette-900);
+      }
+    }
+    &.canyon-item-block {
+      background: var(--hive-canyon-palette-100);
+      transition: ease-in all 0.4s;
+      .due-item-heading,
+      .due-item-details {
+        color: var(--hive-canyon-palette-900);
+      }
+      &:hover {
+        background: var(--hive-canyon-palette-200);
+      }
+      .item-list-icon {
+        color: var(--hive-canyon-palette-900);
+      }
+    }
   }
 
   .card-list_details {

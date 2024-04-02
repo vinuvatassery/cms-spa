@@ -17,12 +17,14 @@ import {
   ClientProfileTabs,
   WorkflowFacade,
   CaseStatusCode,
-  ClientFacade
+  ClientFacade,
+  FinancialVendorFacade,
+  FinancialVendorRefundFacade
 } from '@cms/case-management/domain';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService } from '@cms/shared/util-core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
@@ -67,7 +69,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   clientCaseId!: string;
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  clientId: any;
+  clientId!: any;
   clientChangeSubscription$ = new Subscription();
   clientProfileReloadSubscription$ = new Subscription();
   userDetail$ = this.userManagementFacade.usersById$;
@@ -85,6 +87,26 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   getTodo$ = this.todoFacade.getTodo$
   crudText =""
   newReminderDetailsDialog!:any
+
+  frequencyTypeCodeSubject$ = this.lovFacade.frequencyTypeCodeSubject$
+  entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
+  searchProviderSubject = this.financialVendorFacade.searchProviderSubject
+  clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchResult$ = this.financialRefundFacade.clients$;
+  providerSearchResult$ =this.financialVendorFacade.searchProvider$
+  createTodo$ = this.todoFacade.curdAlert$
+   clientSubject = this.financialRefundFacade.clientSubject;
+   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
+   @ViewChild('deleteTodoTemplate', { read: TemplateRef })
+   deleteTodoTemplateRef!: TemplateRef<any>;
+
+   
+   @ViewChild('todoDetailTemplate', { read: TemplateRef })
+   todoDetailTemplateRef!: TemplateRef<any>;
+   deleteToDoDialog!:any
+   editToDoDialog!:any
+   crudAlert$ = this.todoFacade.curdAlert$
+
   @ViewChild('NewReminderTemplate', { read: TemplateRef })
   reminderTemplate!: TemplateRef<any>;
   /** Constructor**/
@@ -99,6 +121,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     private readonly dialogService : DialogService,
     private readonly userManagementFacade: UserManagementFacade,
     public todoFacade: TodoFacade,
+    public lovFacade : LovFacade,
+    public financialVendorFacade : FinancialVendorFacade,
+    public financialRefundFacade : FinancialVendorRefundFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -162,8 +187,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.clientChangeSubscription$ = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        const clientId = this.route.snapshot.paramMap.get('id') ?? 0;
-        if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
+         this.clientId = this.route.snapshot.paramMap.get('id') ?? 0;
+        if (this.profileClientId !== 0 && this.profileClientId !== this.clientId) {
           this.clientCaseEligibilityId = '';
           this.initialize();
           this.loadClientProfileInfoEventHandler();
@@ -373,6 +398,106 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.isDelete = false;
     this.crudText ='Create New'
     this.newReminderDetailsDialog.close()
+
+  }
+
+
   
+  onTodoItemCreateClick(payload:any){
+    this.todoFacade.createAlertItem(payload);
+  }
+  onGetTodoItem($event:any){
+    this.todoFacade.getTodoItem($event);
+  }
+
+
+  onDeleteToDoClicked(event:any): void {
+    this.selectedAlertId = event;
+    console.log('in delete todo ')
+
+    this.deleteToDoDialog = this.dialogService.open({
+      content: this.deleteTodoTemplateRef,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onUpdateTodoItemClick(payload:any){
+    this.todoFacade.updateAlertItem(payload)
+  }
+  getTodoItemsLov(){
+    this.lovFacade.getFrequencyTypeLov()
+    this.lovFacade.getEntityTypeCodeLov()
+  }
+
+  onCloseDeleteToDoClicked(result: any) {
+    if (result) {
+      this.deleteToDoDialog.close();
+    }
+  }
+
+  onConfirmDeleteToDOClicked(result: any) 
+  {
+    if (result) {
+      this.deleteToDoDialog.close();
+      this.crudAlert$.subscribe(res =>{
+        this.getbannerAlertList(this.clientId)
+      })
+      this.onDeleteAlertGrid(this.selectedAlertId);
+    }
+  }
+
+  onDeleteAlertGrid(selectedAlertId: any){
+    this.todoFacade.deleteAlert(selectedAlertId);
+  }
+
+  
+
+
+  onCloseTodoClicked(result: any) {
+    this.selectedAlertId = ""
+    this.isEdit = false;
+    this.isDelete = false;
+    this.crudText ='Create New'
+    if(result){
+        this.getbannerAlertList(this.clientId)
+    }
+  this.editToDoDialog.close();
+  
+}
+
+
+  onDeleteToDOClicked(result: any) 
+  {
+    if (result) {
+      this.deleteToDoDialog.close();
+      this.crudAlert$.subscribe(res =>{
+        this.getbannerAlertList(this.clientId)
+      })
+      this.onDeleteAlertGrid(this.selectedAlertId);
+ 
+    }
+  }
+
+  searchProvider(data:any){
+    this.financialVendorFacade.searchAllProvider(data);
+  }
+
+  searchClientName(event:any){
+    this.financialRefundFacade.loadClientBySearchText(event);
+  }
+
+  openEditTodoClicked(event:any){
+    this.isEdit = true;
+    this.selectedAlertId = event
+    this.crudText ='Edit'
+    this.todoFacade.getTodoItem(event)
+    this.onNewTodoClicked()
+  }
+
+  onNewTodoClicked():void {
+    this.editToDoDialog = this.dialogService.open({
+      content: this.todoDetailTemplateRef,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    }); 
   }
 }

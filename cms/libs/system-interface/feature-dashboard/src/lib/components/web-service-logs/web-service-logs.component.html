@@ -69,7 +69,11 @@
       </kendo-grid-column>
 
       <kendo-grid-column field="clientId" title="Client ID" [width]="180" [field]="'clientId'">
-
+        <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+           </ng-template>
       </kendo-grid-column>
 
       <kendo-grid-column field="status" title="Status" [width]="180">
@@ -82,7 +86,7 @@
         <ng-template kendoGridCellTemplate let-dataItem>
           <button *ngIf="dataItem.status === 'FAILED'" [attr.aria-label]="dataItem.status" kendoButton look="flat"
             class="card-link-button" (click)="onViewInformation(dataItem.exceptionDetails)" >
-            Failure
+            Failed
           </button>
        
           <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
