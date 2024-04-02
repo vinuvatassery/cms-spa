@@ -11,8 +11,6 @@ import { State } from '@progress/kendo-data-query';
   selector: 'cms-system-interface-web-service-logs-page',
   templateUrl: './web-service-logs-page.component.html',
   styleUrls: ['./web-service-logs-page.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 
