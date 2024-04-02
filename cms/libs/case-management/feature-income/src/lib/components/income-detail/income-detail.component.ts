@@ -61,8 +61,7 @@ export class IncomeDetailComponent implements OnInit {
   startDate!:any;
   incomeTypesOther = '';
   documentTypeCode!: string;
-  insuranceStartDateIslessthanEndDate: boolean = true;
-  insuranceEndDateIsgreaterthanStartDate: boolean = false;
+  insuranceStartDateIsLessThanEndDate: boolean = true;
   employers$ = this.incomeFacade.employers$;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   public IncomeDetailsFormData: { incomeAmount: number } = {
@@ -135,6 +134,11 @@ export class IncomeDetailComponent implements OnInit {
     this.lov.incomeFrequencylov$.subscribe((incomeFrequencyLov: Lov[]) => {
       this.frequencies$ = incomeFrequencyLov;
     });
+  }
+
+  loadIncomeListGrid(event: any) {
+    this.loadIncomeList.emit(true);
+
   }
 
   loadEmployers(employerName: any){
@@ -414,15 +418,16 @@ export class IncomeDetailComponent implements OnInit {
 
   changeMinDate() {
     this.startDate = this.IncomeDetailsForm.controls['incomeStartDate'].value;
+    this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
   }
   endDateOnChange() {
-    this.insuranceEndDateIsgreaterthanStartDate = true;
+    this.insuranceStartDateIsLessThanEndDate = true;
     if (this.IncomeDetailsForm.controls['incomeStartDate'].value === null) {
       this.IncomeDetailsForm.controls['incomeStartDate'].markAllAsTouched();
       this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required]);
       this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
       this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({ 'incorrect': true });
-      this.insuranceEndDateIsgreaterthanStartDate = false;
+      this.insuranceStartDateIsLessThanEndDate = false;
     }
     else if (this.IncomeDetailsForm.controls['incomeEndDate'].value !== null &&
     this.IncomeDetailsForm.controls['incomeEndDate'].value !== '') {
@@ -437,26 +442,27 @@ export class IncomeDetailComponent implements OnInit {
         )
       );
 
-      if (startDate > endDate) {
-        this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({ 'incorrect': true });
-        this.IncomeDetailsForm.controls['incomeStartDate'].setErrors({ 'incorrect': true });
-        this.insuranceEndDateIsgreaterthanStartDate = false;
+      if (startDate < endDate) {        
+        this.insuranceStartDateIsLessThanEndDate = true;
       }
       else {
-        this.insuranceEndDateIsgreaterthanStartDate = true;
-        this.IncomeDetailsForm.controls['incomeEndDate'].setErrors(null);
+        this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({ 'incorrect': true });
+        this.insuranceStartDateIsLessThanEndDate = false;
         this.startDate = this.IncomeDetailsForm.controls['incomeStartDate'].value;
       }
     }
   }
   endDateValueChange(date: Date) {
-    this.insuranceEndDateIsgreaterthanStartDate = false;
+    this.insuranceStartDateIsLessThanEndDate = true;
+    this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
 
   }
   startDateOnChange() {
     if (this.IncomeDetailsForm.controls['incomeEndDate'].value !== null) {
       this.endDateOnChange();
-    }
+    }    
+    this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
   }
 
   // Binding income details to the form

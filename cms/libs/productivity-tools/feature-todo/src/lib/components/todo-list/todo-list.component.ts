@@ -97,8 +97,10 @@ export class TodoListComponent implements OnInit {
    this.initilizeGridRefinersAndGrid()
     this.loadColumnsData();
    
-    this.loadAlertGrid$.subscribe((data: any) => {
-      this.loadTodoGrid();
+    this.todoGrid$.subscribe((data: any) => {
+      if(data == true){
+        this.loadTodoGrid();
+      } 
     });
     this.loadEntityTypeList()
   }

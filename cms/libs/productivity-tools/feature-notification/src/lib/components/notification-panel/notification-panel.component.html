@@ -33,7 +33,7 @@
       </div>
 
       <!-- Notification List -->
-      <ul class="card-list pt-0" aria-label="notification menu">
+      <ul class="card-list pt-0" aria-label="notification menu" *ngIf = "!itemsLoader">
         <!-- List Item Repeatable -->
         <li
           class="card-list_items"
@@ -56,8 +56,19 @@
               >alarm</span>
           </div>
           <div class="card-list_details">
-            <p [innerHTML]="sanitizeHtml(message.alertDesc)"></p>
+            <div class="card-list_details">
+              <div *ngIf="message.alertDesc.length > 70" class="description-banner">
+                <p *ngIf="!message.showFullDescription">{{ message.alertDesc.substring(0, 70) }}...</p>
+                <p *ngIf="message.showFullDescription">{{ message.alertDesc }}</p>
+                <a (click)="toggleDescription(message)">
+                  {{ message.showFullDescription ? 'See Less' : 'See More' }}
+                </a>
+              </div>
+              <div *ngIf="message.alertDesc.length <= 70">
+                <p [innerHTML]="sanitizeHtml(message.alertDesc)"></p>
+              </div>
             <p class="text-muted">{{message?.alertDueDate | date:'MM/dd/YYYY'}}</p>
+          </div>
           </div>
           <kendo-dropdownbutton
             [data]="dataTwo"
@@ -81,6 +92,10 @@
           </kendo-dropdownbutton>
         </li>
       </ul>
+      <div *ngIf= "itemsLoader" >    
+        <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse" width="100%" height="100px" style="margin-bottom: 4px;">
+        </kendo-skeleton>
+        </div>
       <!-- Notification Footer Buttons -->
       <div class="notification-footer">
         <button
@@ -114,7 +129,7 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #NewReminderTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
+  <kendo-dialog-titlebar (close)="onNewReminderClosed(false)">
     {{crudText}} Reminder  </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
   [isEdit]="isEdit" 

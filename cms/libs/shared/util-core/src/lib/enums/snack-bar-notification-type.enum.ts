@@ -7,7 +7,7 @@ export enum SnackBarNotificationType{
 export enum SnackBarNotificationText{
     SUCCESS = 'Success',
     ERROR = 'Error',
-    WARNING = 'warning'
+    WARNING = 'Warning'
 }
 
 

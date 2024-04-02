@@ -52,7 +52,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   @Output() editNotificationCategoryEvent = new EventEmitter<string>();
   @Output() loadSubEventByParentIdEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'vendorName';
+  sortColumn = 'eventDesc';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -166,7 +166,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
     const gridDataRefinerValue = {
       SkipCount: skipCountValue,
       MaxResultCount: maxResultCountValue,
-      Sorting: 'EventGroupCode',
+      Sorting: 'eventDesc',
       SortType: sortTypeValue,
       notificationGroupId: this.selectedGroup.notificationGroupId,
     };
@@ -183,7 +183,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
+              field: this.selectedColumn ?? 'eventDesc',
               operator: 'startswith',
               value: data,
             },

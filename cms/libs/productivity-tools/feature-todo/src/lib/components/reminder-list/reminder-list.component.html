@@ -3,6 +3,9 @@
   <div class="card-list-search align-items-end mb-3">
     <div class="input-search">
       <span class="material-icons" aria-label="search reminder" aria-hidden="true">search</span>
+      <span *ngIf=" alertSearchLoaderVisibility$ | async"
+      class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+  </span>
       <kendo-floatinglabel text="Search Reminders">
         <kendo-textbox aria-label="search reminder" [clearButton]="true"   [formControl]="searchTerm"  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
       </kendo-floatinglabel>
@@ -54,6 +57,9 @@
         </div>
       </div>
     </ng-container>
+<div *ngIf= "itemsLoader" >    <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
+  width="100%"
+  height="100px" style="margin-bottom: 4px;"></kendo-skeleton></div>
   </div>
 </section>
 
@@ -61,7 +67,7 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #reminderDetailsTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">{{reminderCrudText}} Reminder </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed(false)">{{reminderCrudText}} Reminder </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
   [isEdit]="isEdit" 
   [isDelete]="isDelete"

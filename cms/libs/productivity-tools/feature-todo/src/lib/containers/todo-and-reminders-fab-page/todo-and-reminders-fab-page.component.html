@@ -11,11 +11,12 @@
 
 <productivity-tools-reminder-list *ngIf="showRemindersList"
 [todoGrid$]="todoGrid$"
-(isLoadTodoGridEvent)="onloadTodoGrid($event,$event)"
+(isLoadTodoGridEvent)="onloadTodoGrid()"
 (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
 (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
 [isToDODetailsActionOpen]="isToDODetailsActionOpen"
 [loadAlertGrid$]="loadAlertGrid$"
+[loadTodoList$]="loadTodoList$"
 (isModalTodoDetailsOpenClicked)="onOpenTodoClicked($event,todoDetailTemplate)"
 
 ></productivity-tools-reminder-list>
@@ -23,7 +24,7 @@
 <!-- Create To Do Modal Html-->
 <ng-template #todoDetailTemplate>
     <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">
-   {{!!this.selectedAlertId?  'Edit or delete this item' : 'Create a Custom To Do Item'}}    </kendo-dialog-titlebar>
+   {{!!this.selectedAlertId?  'Edit To-Do Item' : 'Create Custom To-Do Item'}}    </kendo-dialog-titlebar>
     <productivity-tools-todo-detail 
     (isModalTodoDetailsCloseClicked)="onCloseTodoClicked($event)"
     (isLoadTodoGridEvent)="loadTodoList()" 

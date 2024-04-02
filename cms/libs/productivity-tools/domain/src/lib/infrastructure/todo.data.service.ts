@@ -55,8 +55,8 @@ export class TodoDataService {
   markAlertAsDone (payload:any){  
     return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/markdone/${payload}`,null);
   }
-  deleteAlert(payload:any){  
-    return this.http.delete<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload}`);
+  deleteAlert(alertId:any, isDeleteFromOutlookCalender :any = 'N'){  
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${alertId}?isDeleteFromOutlookCalender=${isDeleteFromOutlookCalender}`);
   }
   updateAlertItem(payload:any){
     return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts`,payload);
@@ -74,6 +74,10 @@ export class TodoDataService {
   dismissAlert(alertId:any){
     return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/dismiss/${alertId}`,null);
 
+  }
+  loadAlertsData() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/alert_list`);
   }
 }
 

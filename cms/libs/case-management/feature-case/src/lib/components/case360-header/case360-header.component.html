@@ -84,9 +84,9 @@
      </kendo-popover>
 
   <!-- Banners -->
-  <case-management-case360-header-notifications
+  <!-- <case-management-case360-header-notifications
   *ngIf="loadedClientHeader?.clientCaseEligibilityCerId && loadedClientHeader?.caseStatus!=='DISENROLLED'"
-  ></case-management-case360-header-notifications>
+  ></case-management-case360-header-notifications> -->
   <common-alert-banner *ngIf="loadedClientHeader?.clientId"
    [alertList$]="alertList$" [entityId]="loadedClientHeader?.clientId" 
   [entityType]='"CLIENT"'
@@ -96,6 +96,7 @@
   (onDeleteAlertClick)="onDeleteAlertClick($event)"
     (onEditReminderClicked)="onEditReminder($event)"
     (onDeleteReminderClicked)="onDeleteReminder($event)"
+    (onEditTodoClicked)="onEditTodo($event)"
   ></common-alert-banner>
 </div>
 

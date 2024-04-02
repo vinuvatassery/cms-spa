@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   TemplateRef,
+  Type,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
@@ -13,7 +14,7 @@ import { Observable } from 'rxjs/internal/Observable';
 /** Entities **/
 
 /** Services **/
-import { NotificationService } from '@progress/kendo-angular-notification';
+import { NotificationRef, NotificationService } from '@progress/kendo-angular-notification';
 
 /** Providers **/
 import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
@@ -25,37 +26,42 @@ import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProvi
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
+import { ReminderNotificationSnackBarsTemplateComponent } from '../../components/reminder-notification-snack-bar-template/reminder-notification-snack-bar-template.component';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'productivity-tools-reminder-notification-snack-bar',
   templateUrl: './reminder-notification-snack-bar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReminderNotificationSnackBarComponent implements OnInit {
- 
+
   @Input() data$!: Observable<SnackBar>;
   public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
   public duration =
     this.configurationProvider.appSettings.snackbarAnimationDuration;
-    tabCode =""
-    isEdit = false;
-    getTodo$ = this.todoFacade.getTodo$
+  tabCode = ""
+  isEdit = false;
+  getTodo$ = this.todoFacade.getTodo$
   @ViewChild('reminderNotificationTemplate', { read: TemplateRef })
   alertTemplate!: TemplateRef<any>;
-  snackbarMessage!: SnackBar; 
+  snackbarMessage!: SnackBar;
   @ViewChild('reminderNotificationTemplateContainer', {
     read: ViewContainerRef,
   })
-  reminderNotificationTemplateContainer!: ViewContainerRef; 
+
+  reminderNotificationTemplateContainer!: ViewContainerRef;
   isReminderExpand = false;
   isReminderExpands = false;
   isReminderSideOn: any;
   isReminderSideOff: any;
-  entityName =""
-  messageCount : any;
-  alertId=""
-  dueDateText =""
+  entityName = ""
+  messageCount: any;
+  alertId = ""
+  dueDateText = ""
   isReminderOpenClicked = false
-  newReminderDetailsDialog!:any
+  newReminderDetailsDialog!: any
+  remindersCountSubject = new Subject<any>();
+  reminderCount$ = this.remindersCountSubject.asObservable();
   public data = [
     {
       text: 'Edit Reminder',
@@ -72,17 +78,16 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   ];
 
   reminderSnackBar$ = this.signalrEventHandlerService.reminderSnackBar$
-  remindersUnViewedCount$ =  this.signalrEventHandlerService.remindersUnViewedCount$
-  alertText =""
-  entityId =""
-  vendorTypeCode =""
-  entityTypeCode=""
-  selectedAlertId =""
+  alertText = ""
+  entityId = ""
+  vendorTypeCode = ""
+  entityTypeCode = ""
+  selectedAlertId = ""
   dismissAlert$ = this.todoFacade.dismissAlert$;
   @ViewChild('NewReminderTemplate', { read: TemplateRef })
   NewReminderTemplate!: TemplateRef<any>;
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
-  providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
+  providerSearchResult$ = this.financialVendorFacade.searchProvider$
   clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
@@ -90,21 +95,24 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
 
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  unviewedCount =0;
+  unviewedCount = 0;
+  disablePrevButton = true;
+  disableNxtButton = false;
   /** Constructor **/
   constructor(
     private readonly notificationService: NotificationService,
     private configurationProvider: ConfigurationProvider,
-    private todoFacade : TodoFacade,
+    private todoFacade: TodoFacade,
     private readonly router: Router,
     private readonly signalrEventHandlerService: SignalrEventHandlerService,
     public intl: IntlService,
-    public dialogService : DialogService,
-    public lovFacade : LovFacade,
-    public financialRefundFacade : FinancialVendorRefundFacade,
-    public financialVendorFacade : FinancialVendorFacade,
+    public dialogService: DialogService,
+    public lovFacade: LovFacade,
+    public financialRefundFacade: FinancialVendorRefundFacade,
+    public financialVendorFacade: FinancialVendorFacade,
+    public viewContainerRef: ViewContainerRef,
     private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
-  ) {}
+  ) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -113,70 +121,118 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   }
 
   reminderSnackBarSubscribe() {
-    this.remindersUnViewedCount$.subscribe((res:number) =>{
-       this.unviewedCount = res;
+    this.reminderSnackBar$.subscribe((res: any) => {
+      this.reminderNotificationSnackbarService
+        .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, res)
     })
-    this.reminderSnackBar$.subscribe((res:any) =>{
-      this.snackbarMessage = res;
-       this.entityName = res.alertExtraProperties.EntityName
-       this.entityId = res.alertExtraProperties.EntityId
-       this.vendorTypeCode = res.alertExtraProperties.VendorTypeCode
-       this.entityTypeCode  = res.alertExtraProperties.EntityTypeCode
-       this.alertId =res.alertExtraProperties.AlertId
-       const repeatTime = res.alertExtraProperties.RepeatTime
-       const dueDate = new Date(this.intl.formatDate(res.alertExtraProperties.AlertDueDate, this.dateFormat));
-       const today = new Date(this.intl.formatDate(new Date(), this.dateFormat))
-        if(repeatTime){
-          const times =repeatTime.split(':')
-          const timeStart = new Date().getTime();
-          const timeEnd = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate(), times[0], times[1]).getTime()
-          var hourDiff = timeEnd - timeStart; //in ms
-          var minDiff = hourDiff / 60 / 1000;
-          if(minDiff <=15 && minDiff >=0){
-            this.dueDateText = "Due in" +minDiff
-          }
-          if(minDiff <=0){
-            this.dueDateText = "Overdue" + minDiff
-          }
-          if(minDiff ==0){
-            this.dueDateText = "Now"
-          }
-        }
-       if(dueDate == today && !repeatTime){
-        this.dueDateText ="Today"
-       }
-    this.reminderNotificationSnackbarService
-    .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, res.alertText)
 
-    })
     this.reminderNotificationSnackbarService.snackbar$.subscribe({
       next: (res) => {
-        if (res) {          
-          this.alertText = res.subtitle;
-          this.snackbarMessage = res;
-          this.notificationService.show({
-            content: this.alertTemplate,
-            appendTo: this.reminderNotificationTemplateContainer,
-            position: { horizontal: 'right', vertical: 'bottom' },
-            animation: { type: 'fade', duration: this.duration },
-            closable: true,
-            type: { style: res.type, icon: true },
-            hideAfter: this.hideAfter,
-            cssClass: 'reminder-notification-bar',
-          });
+        if (res) {
+          const { timeDifferenceMinutes, dueDate , today, repeatTime } = this.setDueDateText(res);
+          if ((repeatTime && timeDifferenceMinutes <= 15 && dueDate == today)
+            || !repeatTime
+            || new Date(dueDate) < new Date(today)) {
+            if (!this.signalrEventHandlerService.snackBarAlertIds.includes(res.payload?.alertExtraProperties?.AlertId)) {
+              this.signalrEventHandlerService.snackBarAlertIds.push(res.payload.alertExtraProperties?.AlertId)
+              this.showNotifications(res)
+
+            }
+          }
         }
-        this.messageCount = document.getElementsByClassName(
-          'k-notification-container ng-star-inserted'
-        );
-   
       },
-     
+
     });
+
+  }
+  showNotifications(res: any) {
+    const notificationRef: NotificationRef = this.notificationService.show({
+      content: ReminderNotificationSnackBarsTemplateComponent,
+      appendTo: this.reminderNotificationTemplateContainer,
+      position: { horizontal: 'right', vertical: 'bottom' },
+      animation: { type: 'fade', duration: this.duration },
+      closable: true,
+      type: { style: res.type, icon: true },
+      hideAfter: this.hideAfter,
+      cssClass: 'reminder-notification-bar',
+    });
+    if (notificationRef && notificationRef.content && notificationRef.content.instance) {
+
+      const payload = {
+        ...res.payload,
+        dueDateText: this.dueDateText
+      }
+
+      notificationRef.content.instance.snackBarMessage = payload
+      this.signalrEventHandlerService.remindersCountSubject.next(this.signalrEventHandlerService.snackBarAlertIds.length)
+      this.snoozeReminderHandler(notificationRef);
+      this.dismissReminderHandler(notificationRef);
+      notificationRef.content.instance.hideSnackBar.subscribe(() =>
+        notificationRef.hide()
+      );
+    }
+  }
+
+  dismissReminderHandler(notificationRef:any){
+    notificationRef.content.instance.dismissReminder.subscribe((event:any)=>{
+      this.updateSnackBarCount(event,notificationRef)
+    })
+  }
+  snoozeReminderHandler(notificationRef:any){
+    notificationRef.content.instance.snoozeReminder.subscribe((event: any) => {
+      this.updateSnackBarCount(event,notificationRef)
+    }
+    );
+
+  }
+
+
+   updateSnackBarCount(alertId:any, notificationRef:any){
+    this.signalrEventHandlerService.snackBarAlertIds = this.signalrEventHandlerService.snackBarAlertIds.filter(x => x !== alertId)
+    if (notificationRef && notificationRef.content && notificationRef.content.instance) {
+      this.signalrEventHandlerService.remindersCountSubject.next(this.signalrEventHandlerService.snackBarAlertIds.length)
+    }
+   }
+  setDueDateText(res: any) {
+    let timeDifferenceMinutes = 0;
+    this.dueDateText =""
+    const repeatTime = res.payload.alertExtraProperties.RepeatTime
+    const dueDate = this.intl.formatDate(res.payload.alertExtraProperties.AlertDueDate, this.dateFormat);
+    const today = this.intl.formatDate(new Date(), this.dateFormat)
+    if (repeatTime && dueDate !== today) {
+      const times = repeatTime.split(':')
+      const duedateWithRepeatTime = new Date(new Date().getFullYear(), new Date().getMonth(),
+        new Date().getDate(), times[0], times[1])
+      const timeDifferenceMs = duedateWithRepeatTime.getTime() - new Date().getTime();
+      timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+
+
+      if (timeDifferenceMinutes >= 0 && timeDifferenceMinutes <= 15) {
+        this.dueDateText = "In " + timeDifferenceMinutes + " Mins"
+      }
+      if (timeDifferenceMinutes <= 0) {
+        this.dueDateText = timeDifferenceMinutes + " Mins Over Due"
+      }
+      if (timeDifferenceMinutes == 0) {
+        this.dueDateText = "Now"
+      }
+
+    }
+    if (dueDate == today && !repeatTime) {
+      this.dueDateText = "Today"
+    }
+
+    return {
+      timeDifferenceMinutes: timeDifferenceMinutes,
+      dueDate : dueDate,
+      today : today, 
+      repeatTime : repeatTime
+    };
   }
 
   public removePreviousMessage() {
     this.showSideReminderNotification();
-    
+
     const divMessage = document.getElementsByClassName(
       'k-notification-container ng-star-inserted'
     );
@@ -212,105 +268,5 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     this.isReminderExpands = false;
   }
 
-
-  onEntityNameClick(entityId :any, entityTypeCode:any,vendorTypeCode:any) {
-    if (entityTypeCode == "CLIENT") {
-      this.router.navigate([`/case-management/cases/case360/${entityId}`]);
-    }
-    else if (entityTypeCode == "VENDOR") {
-      this.getVendorTabCode(vendorTypeCode)
-      const query = {
-        queryParams: {
-          v_id: this.entityId ,
-          tab_code : this.tabCode
-        },
-      };
-      this.router.navigate(['/financial-management/vendors/profile'], query )
-    }
-}
-
-getVendorTabCode(vendorTypeCode :any) {
-  switch (vendorTypeCode) {
-    case (FinancialVendorProviderTab.Manufacturers)  :
-      this.tabCode = FinancialVendorProviderTabCode.Manufacturers;
-      break;
-
-    case  (FinancialVendorProviderTab.MedicalClinic) :
-      this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
-      break;
-
-      case  (FinancialVendorProviderTab.MedicalProvider) :
-        this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
-        break;
-    case  (FinancialVendorProviderTab.InsuranceVendors):
-      this.tabCode = FinancialVendorProviderTabCode.InsuranceVendors;
-      break;
-
-    case  (FinancialVendorProviderTab.Pharmacy):
-      this.tabCode = FinancialVendorProviderTabCode.Pharmacy;
-      break;
-
-    case (FinancialVendorProviderTab.DentalClinic)  :
-      this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
-      break;
-
-      case (FinancialVendorProviderTab.DentalProvider)  :
-        this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
-        break;
-  }
-}
-
-dismissReminder(alertId:any,event:any){
-  const eventData = event
-  this.dismissAlert$.subscribe(res =>{
-     if(res){
-      this.moveSideReminderNotification()
-      eventData.stopPropagation()
-     }
-  })
-  this.todoFacade.dismissAlert(alertId)
-}
-
-onOptionClicked(event:any, alertId:any){
-  if(event == 'Edit Reminder'){
-if (!this.isReminderOpenClicked) {
-  this.isEdit = true;
-  this.selectedAlertId = alertId;
-           this.onNewReminderOpenClicked(this.NewReminderTemplate)
-         }
-  }
-}
-
-onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
-  this.newReminderDetailsDialog = this.dialogService.open({
-    content: template,
-    cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-  });
-}
-
-onGetTodoItemData(event:any){
-  this.todoFacade.getTodoItem(event);
-}
-
-getReminderDetailsLov(){
-  this.lovFacade.getEntityTypeCodeLov()
-}
-searchClientName(event:any){
-  this.financialRefundFacade.loadClientBySearchText(event);
-}
-
-searchProvider(data:any){
-  this.financialVendorFacade.searchAllProvider(data);
-}
-
-remainderFor(even:any){
-
-}
-
-onNewReminderClosed(result: any) {
-  this.newReminderDetailsDialog.close();
-  this.isEdit = false;
-    
-}
 }
 

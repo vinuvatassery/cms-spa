@@ -12,6 +12,7 @@ import { NotificationListComponent } from './components/notification-list/notifi
 import { NotificationPanelComponent } from './components/notification-panel/notification-panel.component';
 import { NotificationPageComponent } from './containers/notification-page/notification-page.component';
 import { NotificationAndReminderPageComponent } from './containers/notification-and-reminder-page/notification-and-reminder-page.component';
+import { AlertBannerComponent } from './containers/alert-banner/alert-banner.component';
 
 @NgModule({
   imports: [
@@ -27,12 +28,14 @@ import { NotificationAndReminderPageComponent } from './containers/notification-
     NotificationPanelComponent,
     NotificationPageComponent,
     NotificationAndReminderPageComponent,
+    AlertBannerComponent,
   ],
   exports: [
     NotificationListComponent,
     NotificationPanelComponent,
     NotificationPageComponent,
     NotificationAndReminderPageComponent,
+    AlertBannerComponent,
   ],
 })
 export class ProductivityToolsFeatureNotificationModule {}
