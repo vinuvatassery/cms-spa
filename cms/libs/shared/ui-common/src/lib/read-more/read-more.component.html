@@ -1,3 +1,8 @@
-{{ content }}
+{{ data }}
+<div *ngIf="anchorArray.length > 0">
+    <div *ngFor="let item of anchorArray">
+        <a href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
+    </div>
+</div>
 <a *ngIf="!isContentToggled && isShowReadMore" (click)="toggleContent()">Read More</a>
 <a *ngIf="isContentToggled" (click)="toggleContent()">Read Less</a>
