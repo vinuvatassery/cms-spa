@@ -726,6 +726,10 @@ export class ClientReadOnlyViewComponent implements OnInit{
         }
         const Existing = clientGenderListSaved.find(m => m.clientGenderCode === clientGender.clientGenderCode);
         if (Existing !== undefined) {
+          if(Existing.clientGenderCode === PronounCode.notListed && Existing.otherDesc !== clientGender.otherDesc)
+          {
+            Existing.otherDesc = clientGender.otherDesc;
+          }
           clientGender = Existing;
         }
         this.applicantInfo.clientGenderList.push(clientGender);
@@ -749,6 +753,10 @@ export class ClientReadOnlyViewComponent implements OnInit{
           (m) => m.clientSexualIdentityCode === clientSexualIdentity.clientSexualIdentityCode
         );
         if (Existing !== undefined) {
+          if(Existing.clientSexualIdentityCode === PronounCode.notListed && Existing.otherDesc !== clientSexualIdentity.otherDesc)
+          {
+            Existing.otherDesc = clientSexualIdentity.otherDesc;
+          }
           clientSexualIdentity = Existing;
         }
 
