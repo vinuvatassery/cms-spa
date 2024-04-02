@@ -178,8 +178,8 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
   onInterfaceChange(event: any) {
     this.InterfaceType = event;
-    this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.defaultGridState()
+    this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.loadDefaultActivityListGrid();
     this.getHistoryByInterfaceType(this.InterfaceType);
     this.collapseRowsInGrid();
@@ -203,7 +203,12 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, !this.displayAll, param);
   }
 
+  clearlovs(){
+    this.statusFilter="";
+    this.interfaceProcessBatchFilter=""
+  }
   public dataStateChange(stateData: any): void {
+    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -212,6 +217,10 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
+    if(this.filter.length==0)
+    {
+     this.clearlovs();
+    }
     const filterList = [];
     if (stateData.filter?.filters.length > 0) {
       for (const filter of stateData.filter.filters) {
@@ -330,6 +339,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, !this.displayAll, param);
   }
   public onDetailExpand(e: any): void {
+    
     this.fileId = e.dataItem.fileId;
     this.interfaceTypeCode = e.dataItem.interfaceTypeCode;
     this.processTypeCode = e.dataItem.processTypeCode;
@@ -340,6 +350,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     value: any,
     filterService: FilterService
   ): void {
+    
     if (field === 'interfaceTypeDesc') {
       this.interfaceExceptionFilter = value;
     } else if (field === 'processTypeDesc') {
