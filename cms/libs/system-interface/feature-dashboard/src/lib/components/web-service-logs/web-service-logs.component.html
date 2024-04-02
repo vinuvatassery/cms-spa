@@ -16,7 +16,7 @@
           <input type="checkbox" kendoCheckBox
             aria-labelledby="StatusshowHistorical" id="StatusshowHistorical" [(ngModel)]="displayAll"
             (change)="handleShowHistoricalClick()" />
-          <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 2 Weeks {{Usps}}  </label>
+          <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 2 Weeks   </label>
         </span>
       </div>
     </div>
@@ -86,12 +86,13 @@
         </ng-template>
 
         <ng-template kendoGridCellTemplate let-dataItem >        
-          <button *ngIf="dataItem.status === 'FAILED'  " [attr.aria-label]="dataItem.status" kendoButton look="flat"
+          <button *ngIf="dataItem.status === 'FAILED' || dataItem.status === 'WebService_Down'" [attr.aria-label]="dataItem.status" kendoButton look="flat"
             class="card-link-button" (click)="onViewInformation(dataItem.exceptionDetails)" >
             Failed
           </button>     
           <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
           <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span> 
+          <span *ngIf="dataItem.status === 'WebService_Down'"> WebService Down </span> 
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column *ngIf="interfaceType !='USPS'" title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
@@ -177,9 +178,44 @@
 <ng-template #errorAddressDialogTemplate>
   <kendo-dialog-titlebar (close)="Close()"> {{errorherader}}</kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
-     
-          <p class="text-muted mb-1">{{address}} </p>
-       
+    <div class="flex-row">
+      <div class="flex-col">
+          <kendo-floatinglabel text="Address Line 1">
+              <kendo-textbox  [value]="address?.Address1"  textFieldautofocus aria-label="Address Line 1"
+                  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+          </kendo-floatinglabel>
+
+      </div>
+      <div class="flex-col mb-1">
+
+          <kendo-floatinglabel text="Address Line 2 (optional)">
+              <kendo-textbox [value]="address?.Address2" aria-label="Address Line 2 (optional)" [fillMode]="formUiStyle.inputFillMode">
+              </kendo-textbox>
+          </kendo-floatinglabel>
+      </div>
+      <div class="flex-col mb-1">
+
+          <kendo-floatinglabel text="City">
+              <kendo-textbox aria-label="City" [value]="address?.City" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+          </kendo-floatinglabel>
+      </div>
+
+      <div class="flex-col mb-1 flex-col-6">
+          <kendo-floatinglabel text="State">
+            <kendo-textbox aria-label="State" [value]="address?.State" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+            
+          </kendo-floatinglabel>
+      </div>
+      <div class="flex-col mb-1 flex-col-6">
+          <kendo-floatinglabel text="ZIP">
+              <kendo-textbox aria-label="ZIP"  [value]="address?.Zip5"  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+          </kendo-floatinglabel>
+      </div>
+
+
+
+  </div>
+  
     </section>
     <kendo-dialog-actions>
       <div class="justify-content-between">
