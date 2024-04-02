@@ -274,8 +274,13 @@ defaultPageSize=20;
     this.interfaceType=event.lovCode;
     this.processArray = this.systemInterfaceDashboardFacade.getEecProcessTypeCodeArray(this.interfaceType);
     this.statusArrayDesc = this.systemInterfaceDashboardFacade.getStatusDescriptionArray(this.interfaceType)
-  
+    this.state = {
+      skip: 0,
+      take:this.defaultPageSize,
+      sort: this.sort,
+    };
     this.loadListGrid();
+
   }
 
   dropdownFilterChange(
