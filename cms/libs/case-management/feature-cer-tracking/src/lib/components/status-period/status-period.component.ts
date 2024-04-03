@@ -88,6 +88,7 @@ export class StatusPeriodComponent implements OnInit {
     }
   ];
   statusPeriodProfilePhoto$ =this.statusPeriodFacade.statusPeriodProfilePhotoSubject;
+
   /** Constructor **/
   constructor(
     private readonly statusPeriodFacade: StatusPeriodFacade,
@@ -96,6 +97,7 @@ export class StatusPeriodComponent implements OnInit {
     private clientEligibilityFacade: ClientEligibilityFacade,
     private dialogService: DialogService,
     private readonly clientFacade: ClientFacade,) { }
+  
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -214,6 +216,7 @@ export class StatusPeriodComponent implements OnInit {
         res['data'].forEach((x:any, index: number) => {
           this.statusGrid?.collapseRow(index);
         });
+        
         
       }
     })

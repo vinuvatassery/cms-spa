@@ -7,7 +7,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  ChangeDetectorRef 
+  ChangeDetectorRef
 } from '@angular/core';
 import { CerTrackingFacade } from '@cms/case-management/domain';
 /** Facades **/
@@ -107,7 +107,7 @@ export class CerListComponent implements OnInit, OnChanges {
     {
       buttonType: 'btn-h-primary',
       text: 'Re-send CER',
-      click: (eligibilityCer: any): void => {         
+      click: (eligibilityCer: any): void => {
         this.selectedEligibilityCerId = eligibilityCer?.clientCaseEligibilityCerId;
         this.isPaperLessFlag = eligibilityCer?.paperlessFlag === StatusFlag.Yes;
         this.clientName = eligibilityCer?.clientFullName;
@@ -117,26 +117,26 @@ export class CerListComponent implements OnInit, OnChanges {
     {
       buttonType: 'btn-h-primary',
       text: 'Go to CER',
-      click: (eligibilityCer: any): void => { 
+      click: (eligibilityCer: any): void => {
         this.goToCerEvent.emit(eligibilityCer?.clientCaseEligibilityId);
       },
     }
   ];
 
   constructor(private cdr:ChangeDetectorRef,private readonly cerTrackingFacade: CerTrackingFacade){
-   
+
   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.dateDropdownDisabled = false
-    this.loader = true;    
+    this.loader = true;
   }
   ngOnChanges(): void {
-    
-  
+
+
    if(this.gridState$)
-   { 
+   {
     this.state = this.gridState$
     this.dataStateChange(this.state);
    }
@@ -170,22 +170,24 @@ export class CerListComponent implements OnInit, OnChanges {
   epDateOnChange(date: any) {
     this.loader = true;
     this.selectedDate = date;
+    this.state.skip = 0;   
     this.loadCerTrackingList();
   }
-  
+
   setTitle(data : any)
   {
     this.statusTitle = data?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Current Status'
     this.titleSubject.next(this.statusTitle)
   }
   public dataStateChange(stateData: any): void {
+
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.columnName = stateFilter.field;
-     
+
         this.filter = stateFilter.value;
-     
+
       this.isFiltered = true;
       const filterList = []
       for(const filter of stateData.filter.filters)
@@ -205,14 +207,14 @@ export class CerListComponent implements OnInit, OnChanges {
     this.sortValue = stateData.sort[0]?.field;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortColumn = this.columns[stateData.sort[0]?.field];    
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': 'Descending';
-   
-    this.loadCerTrackingList();    
+
+    this.loadCerTrackingList();
   }
   pageselectionchange(data: any) {
     this.loader = true;
-    this.state.take = data.value;   
+    this.state.take = data.value;
     this.loadCerTrackingList();
   }
 
@@ -235,7 +237,7 @@ export class CerListComponent implements OnInit, OnChanges {
       this.sortValue,
       this.sortType
     );
-   
+
   }
 
   loadCerData(
@@ -243,8 +245,8 @@ export class CerListComponent implements OnInit, OnChanges {
     maxResultCountValue: number,
     sortValue: string,
     sortTypeValue: string
-  ) {   
-    
+  ) {
+
     const gridDataRefinerValue = {
       trackingDate: this.selectedDate,
       skipCount: skipcountValue,
@@ -252,7 +254,7 @@ export class CerListComponent implements OnInit, OnChanges {
       sortColumn: sortValue,
       sortType: sortTypeValue,
       filter : this.state?.["filter"]?.["filters"] ?? []
-    };    
+    };
     if(this.selectedDate)
     {
     this.loadCerTrackingListEvent.next(gridDataRefinerValue);
@@ -270,7 +272,7 @@ export class CerListComponent implements OnInit, OnChanges {
       ?.pipe(
         first((trackingDateList: any) => trackingDateList != null)
       )
-      .subscribe((trackingDateList: any) => {      
+      .subscribe((trackingDateList: any) => {
         if (trackingDateList?.seletedDate) {
           this.loadDefSelectedateSubject.next(trackingDateList?.seletedDate);
           this.datesSubject.next(trackingDateList?.datesList);
@@ -278,9 +280,9 @@ export class CerListComponent implements OnInit, OnChanges {
           this.epDateOnChange(this.selectedDate);
         }
         else
-        {    
+        {
           this.titleSubject.next(this.statusTitle)
-          this.datesSubject.next(trackingDateList?.datesList);  
+          this.datesSubject.next(trackingDateList?.datesList);
           this.loadDefSelectedateSubject.next(null);
           this.loader = false;
           this.dateDropdownDisabled = false
@@ -288,42 +290,42 @@ export class CerListComponent implements OnInit, OnChanges {
       });
   }
 
-  gridDataHandle() {       
-    this.cerTrackingData$.subscribe((data: GridDataResult) => {          
+  gridDataHandle() {
+    this.cerTrackingData$.subscribe((data: GridDataResult) => {
     this.statusTitle = data?.data[0]?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Current Status'
     this.titleSubject.next(this.statusTitle)
-    this.gridDataResult = data    
-    for (const res in this.gridDataResult?.data) { 
-     
+    this.gridDataResult = data
+    for (const res in this.gridDataResult?.data) {
+
       this.validateDates(res)
-      
+
       if(this.gridDataResult?.data[res].cerResentDate)
-      {     
+      {
       this.gridDataResult.data[res].cerResentDate = new Date(this.gridDataResult?.data[res].cerResentDate)
       }
 
       if(this.gridDataResult?.data[res].restrictedSentDate)
-      {     
+      {
       this.gridDataResult.data[res].restrictedSentDate = new Date(this.gridDataResult?.data[res].restrictedSentDate)
       }
 
       if(this.gridDataResult?.data[res].disEnrollmentDate)
-      {     
+      {
       this.gridDataResult.data[res].disEnrollmentDate = new Date(this.gridDataResult?.data[res].disEnrollmentDate)
       }
 
       if(this.gridDataResult?.data[res].eilgibilityStartDate)
-      {     
+      {
       this.gridDataResult.data[res].eilgibilityStartDate = new Date(this.gridDataResult?.data[res].eilgibilityStartDate)
       }
 
       if(this.gridDataResult?.data[res].eligibilityEndDate)
-      {     
+      {
       this.gridDataResult.data[res].eligibilityEndDate = new Date(this.gridDataResult?.data[res].eligibilityEndDate)
       }
-    }      
+    }
     //this.gridDataResult.data = filterBy(this.gridDataResult.data, this.filterData)
-    this.gridCERDataSubject.next(this.gridDataResult);  
+    this.gridCERDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
         this.dateDropdownDisabled = false
@@ -331,40 +333,40 @@ export class CerListComponent implements OnInit, OnChanges {
     });
   }
 
- private validateDates( res :  any) 
+ private validateDates( res :  any)
  {
   if(this.gridDataResult?.data[res].dob)
-  {     
+  {
   this.gridDataResult.data[res].dob = new Date(this.gridDataResult?.data[res].dob)
   }
   if(this.gridDataResult?.data[res].cerSentDate)
-  {     
+  {
   this.gridDataResult.data[res].cerSentDate = new Date(this.gridDataResult?.data[res].cerSentDate)
   }
 
   if(this.gridDataResult?.data[res].cerReceivedDate)
-  {     
+  {
   this.gridDataResult.data[res].cerReceivedDate = new Date(this.gridDataResult?.data[res].cerReceivedDate)
   }
 
   if(this.gridDataResult?.data[res].cerCompletedDate)
-  {     
+  {
   this.gridDataResult.data[res].cerCompletedDate = new Date(this.gridDataResult?.data[res].cerCompletedDate)
   }
 
   if(this.gridDataResult?.data[res].reminderSentDate)
-  {     
+  {
   this.gridDataResult.data[res].reminderSentDate = new Date(this.gridDataResult?.data[res].reminderSentDate)
   }
  }
-  
+
  public filterChange(filter: CompositeFilterDescriptor): void {
   this.filterData = filter;
 
   //this.gridDataResult.data = filterBy(this.gridDataResult.data, filter)
-  this.gridCERDataSubject.next(this.gridDataResult);  
+  this.gridCERDataSubject.next(this.gridDataResult);
  }
-  public columnChange(e: ColumnVisibilityChangeEvent) {    
+  public columnChange(e: ColumnVisibilityChangeEvent) {
     const columnsRemoved = e?.columns.filter(x=> x.hidden).length
     const columnsAdded = e?.columns.filter(x=> x.hidden === false).length
 
@@ -386,9 +388,9 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   resendCer(){
-    this.isOpenSendCER$.next(true); 
+    this.isOpenSendCER$.next(true);
     this.sendResponse$.subscribe((resp: boolean) => {
-      this.isOpenSendCER$.next(!resp); 
+      this.isOpenSendCER$.next(!resp);
     });
   }
 
@@ -407,7 +409,7 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   setToDefault()
-  {      
+  {
     this.pageSizes = this.cerTrackingFacade.gridPageSizes;
     this.sortValue  = this.cerTrackingFacade.sortValue;
     this.sortType  = this.cerTrackingFacade.sortType;
@@ -420,7 +422,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.gridFilter = {logic:'and',filters:[]}
     this.sortColumn = this.columns[this.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending':  'Descending';
-    
+
     this.filter = "";
     this.columnName = "";
     this.selectedColumn = "ALL";
@@ -430,6 +432,19 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loader = true;
     this.filterData = {logic:'and',filters:[]}
     this.loadCerTrackingList();
-  } 
+  }
+
+  public getGridCellColor(eligibilityStatus: string) {
+    let result;
+    switch (eligibilityStatus) {
+      case "RESTRICTED":
+        result = "#FFEDC4";
+        break;
+      default:
+        result = "transparent";
+        break;
+    }
+    return result;
+  }
 
 }

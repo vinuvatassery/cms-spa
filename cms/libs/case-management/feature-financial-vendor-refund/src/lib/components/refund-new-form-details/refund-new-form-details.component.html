@@ -10,19 +10,17 @@
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
                     <div class="combotable_search_list new_refund_Search">
-                        <span class="material-icons global-search-icon" aria-label="search" aria-hidden="true">search</span>
+                        <span class="material-icons global-search-icon" aria-label="search"
+                            aria-hidden="true">search</span>
                         <span *ngIf="clientSearchLoaderVisibility$ | async"
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
                         </span>
-                        <kendo-multicolumncombobox [data]="clientSearchResult$ | async" 
-                        textField='clientNames'
-                        valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                        placeholder="Search Client Name, ID, SSN"
-                        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                        [filterable]="true"
-                        (filterChange)="loadClientBySearchText($event)"
-                        (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
-                        [disabled]="disableFeildsOnConfirmSelection" >
+                        <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField='clientNames'
+                            valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
+                            placeholder="Search Client Name, ID, SSN"
+                            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
+                            (filterChange)="loadClientBySearchText($event)" (valueChange)="onClientValueChange($event)"
+                            [(ngModel)]="selectedClient" [disabled]="disableFeildsOnConfirmSelection">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -53,232 +51,230 @@
             <div class="flex-row" *ngIf="isClientSelected">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Refund Type">
-                        <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Refund Type" [(ngModel)]="selectedRefundType"
-                            [data]="refundType"
-                            textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-                            [fillMode]="formUiStyle.dropDownFillMode" (valueChange)="initForm()"  (selectionChange)="selectionChange($event)">
+                        <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Refund Type"
+                            [(ngModel)]="selectedRefundType" [data]="refundType" textField="lovDesc"
+                            valueField="lovCode" [valuePrimitive]="true" [fillMode]="formUiStyle.dropDownFillMode"
+                            (valueChange)="initForm()" (selectionChange)="selectionChange($event)">
                         </kendo-dropdownlist>
                     </kendo-floatinglabel>
                 </div>
             </div>
-            <ng-container [formGroup]="refundForm"  *ngIf="selectedRefundType">
-            <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
-                <div class="flex-col flex-col-6" >
-                    <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">
-                            <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>
-                            <span *ngIf="isShownSearchLoader"
-                                      class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                                    <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
-                                        class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
-                                    </span>
-<kendo-multicolumncombobox [data]="insurancevendors$ | async" textField="providerFullName"
-                                      valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
-                                      (filterChange)="onInputChange($event)"
-                                       placeholder="Search Vendor name or TIN"
-                                       (valueChange)="onProviderValueChange($event)"
-                                         formControlName="insVendor"
-                                          [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                                          [filterable]="true"
-                                          >
+            <ng-container [formGroup]="refundForm" *ngIf="selectedRefundType">
+                <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
+                    <div class="flex-col flex-col-6">
 
-                                      <button kendoButton fillMode="clear" icon="image"></button>
+                        <div class="combotable_search_list new_refund_Search with_float_label">
+                            <kendo-floatinglabel text="Vendor">
+                                <span class="material-icons global-search-icon" aria-label="search"
+                                    aria-hidden="true">search</span>
+                                <span *ngIf="isShownSearchLoader"
+                                    class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                                <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
+                                    class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+                                </span>
+                                <kendo-multicolumncombobox [data]="insurancevendors$ | async"
+                                    textField="providerFullName" valueField="vendorAddressId"
+                                    [fillMode]="formUiStyle.dropDownFillMode" (filterChange)="onInputChange($event)"
+                                    placeholder="Search Vendor name or TIN"
+                                    (valueChange)="onProviderValueChange($event)" formControlName="insVendor"
+                                    [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                                    [filterable]="true">
 
-                                      <kendo-combobox-column>
-                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span>Name:{{ dataItem.vendorName }}</span>
-                                          </ng-template>
-                                      </kendo-combobox-column>
-                                      <kendo-combobox-column [width]="150">
-                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class=" text-muted"> <em></em>Insurance Type: {{dataItem.insuranceType}}</span>
-                                          </ng-template>
-                                      </kendo-combobox-column>
-                                      <kendo-combobox-column [width]="200">
-                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class="text-muted"><em> </em>Insurance Name: {{ dataItem.insuranceName }}</span>
-                                          </ng-template>
-                                      </kendo-combobox-column>
-                                      <kendo-combobox-column [width]="125">
-                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class=" text-muted"> <em>Insurance effective dates:</em> {{ dataItem.coverageStartDate|date:'MM/dd/YYYY'}} - {{ dataItem.coverageEndDate|date:'MM/dd/YYYY'}}</span>
-                                          </ng-template>
-                                      </kendo-combobox-column>
-                                      <ng-template kendoMultiColumnComboBoxNoDataTemplate>
-                                          <div class="no-data-text">No vendors found</div>
-                                      </ng-template>
-                                  </kendo-multicolumncombobox>
-                              </div>
-                      </kendo-floatinglabel>
-                </div>
-            </div>
-            <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
-                <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">
-                            <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>
-                            <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
-                                class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
-                            </span>
-                                      <kendo-multicolumncombobox [data]="tpavendors$ | async"
-                                      textField="providerFullName"
-                                                                   valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
-                                      placeholder="Search Vendor Name, ID"
-                                      [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                                      [filterable]="true"
-                                      formControlName="tpaVendor"
-                                      (filterChange)="searchTpaVendors($event)"
-                                      (valueChange)="onProviderValueChange($event)">
+                                    <button kendoButton fillMode="clear" icon="image"></button>
 
-                                      <button kendoButton fillMode="clear" icon="image"></button>
-
-                                      <kendo-combobox-column>
-                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span>Name:{{ dataItem.vendorName }}</span>
-                                          </ng-template>
-                                      </kendo-combobox-column>
-                                      <kendo-combobox-column [width]="100">
-                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class=" text-muted"> <em></em>TIN: {{dataItem.tin}}</span>
-                                          </ng-template>
-                                      </kendo-combobox-column>
-                                      <kendo-combobox-column [width]="150">
+                                    <kendo-combobox-column>
                                         <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                            <span class="text-muted"><em> </em>MailCode: {{ dataItem.MmilCode }}</span>
+                                            <span>Name:{{ dataItem.vendorName }}</span>
                                         </ng-template>
                                     </kendo-combobox-column>
-                                      <kendo-combobox-column [width]="150">
-                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class="text-muted"><em> </em>Address: {{ dataItem.address }}</span>
-                                          </ng-template>
-                                      </kendo-combobox-column>
-                                      <ng-template kendoMultiColumnComboBoxNoDataTemplate>
+                                    <kendo-combobox-column [width]="150">
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class=" text-muted"> <em></em>Insurance Type:
+                                                {{dataItem.insuranceType}}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <kendo-combobox-column [width]="200">
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class="text-muted"><em> </em>Coverage Type: {{ dataItem.insuranceName
+                                                }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <kendo-combobox-column [width]="125">
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class=" text-muted"> <em>Insurance effective dates:</em> {{
+                                                dataItem.coverageStartDate|date:'MM/dd/YYYY'}} - {{
+                                                dataItem.coverageEndDate|date:'MM/dd/YYYY'}}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <ng-template kendoMultiColumnComboBoxNoDataTemplate>
+                                        <div class="no-data-text">No vendors found</div>
+                                    </ng-template>
+                                </kendo-multicolumncombobox>
+                            </kendo-floatinglabel>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
+                    <div class="flex-col flex-col-6">
+
+                        <div class="combotable_search_list new_refund_Search with_float_label">
+                            <kendo-floatinglabel text="Vendor">
+                                <span class="material-icons global-search-icon" aria-label="search"
+                                    aria-hidden="true">search</span>
+                                <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
+                                    class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+                                </span>
+                                <kendo-multicolumncombobox [data]="tpavendors$ | async" textField="providerFullName"
+                                    valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
+                                    placeholder="Search Vendor Name, ID"
+                                    [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                                    [filterable]="true" formControlName="tpaVendor"
+                                    (filterChange)="searchTpaVendors($event)"
+                                    (valueChange)="onProviderValueChange($event)">
+
+                                    <button kendoButton fillMode="clear" icon="image"></button>
+
+                                    <kendo-combobox-column>
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span>Name:{{ dataItem.vendorName }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <kendo-combobox-column [width]="100">
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class=" text-muted"> <em></em>TIN: {{dataItem.tin}}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <kendo-combobox-column [width]="150">
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class="text-muted"><em> </em>MailCode: {{ dataItem.mailCode }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <kendo-combobox-column [width]="150">
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class="text-muted"><em> </em>Address: {{ dataItem.address }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <ng-template kendoMultiColumnComboBoxNoDataTemplate>
                                         <div class="no-data-text">No providers found</div>
                                     </ng-template>
-                                  </kendo-multicolumncombobox>
-                              </div>
-                      </kendo-floatinglabel>
+                                </kendo-multicolumncombobox>
+                            </kendo-floatinglabel>
+                        </div>
+
+                    </div>
+
                 </div>
+                <div class="flex-row" *ngIf="selectedRefundType === 'PHARMACY' || selectedRefundType === 'RX'">
+                    <div class="flex-col flex-col-6">
 
-            </div>
-            <div class="flex-row" *ngIf="selectedRefundType === 'PHARMACY' || selectedRefundType === 'RX'">
-                <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel  text="Pharmacy Provider ">
-                    <div class="combotable_search_list new_refund_Search">
-                        <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>
+                        <div class="combotable_search_list new_refund_Search with_float_label">
+                            <kendo-floatinglabel text="Pharmacy">
+                                <span class="material-icons global-search-icon" aria-label="search"
+                                    aria-hidden="true">search</span>
 
-                            <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
-                            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
-                        </span>
-                    <kendo-multicolumncombobox textField="providerFullName"
-                    valueField="vendorAddressId"
+                                <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
+                                    class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+                                </span>
+                                <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
+                                    [fillMode]="formUiStyle.dropDownFillMode" placeholder="Search Pharmacy name or TIN"
+                                    [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                                    [filterable]="true" (filterChange)="searchPharmacy($event)" [data]="pharmaciesList"
+                                    (valueChange)="onProviderValueChange($event)" formControlName="rxVendor">
+                                    <kendo-combobox-column>
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span>{{ dataItem.vendorName }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <kendo-combobox-column>
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class="text-muted"><em> TIN:</em> {{ dataItem.tin | tin }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <kendo-combobox-column>
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <kendo-combobox-column [width]="150">
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class="text-muted"><em> </em>Address: {{ dataItem.address }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column>
+                                    <ng-template kendoMultiColumnComboBoxNoDataTemplate>
+                                        <div class="no-data-text">No Vendors found</div>
+                                    </ng-template>
+                                </kendo-multicolumncombobox>
+                            </kendo-floatinglabel>
+                        </div>
 
-                    [fillMode]="formUiStyle.dropDownFillMode"
-                    placeholder="Search Pharmacy name or TIN"
-                    [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                    [filterable]="true"
-                    (filterChange)="searchPharmacy($event)" [data]="pharmaciesList"
-                    (valueChange)="onProviderValueChange($event)"
-                    formControlName="rxVendor"
-                    >
-                        <kendo-combobox-column>
-                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span>{{ dataItem.vendorName }}</span>
-                            </ng-template>
-                        </kendo-combobox-column>
-                        <kendo-combobox-column>
-                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span class="text-muted"><em> TIN:</em> {{ dataItem.tin | tin }}</span>
-                            </ng-template>
-                        </kendo-combobox-column>
+                    </div>
 
-                        <kendo-combobox-column>
-                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
-                            </ng-template>
-                        </kendo-combobox-column>
-                        <ng-template kendoMultiColumnComboBoxNoDataTemplate>
-                            <div class="no-data-text">No Vendors found'</div>
-                        </ng-template>
-                      </kendo-multicolumncombobox>
-                   </div>
-                </kendo-floatinglabel>
                 </div>
-
-            </div>
-        </ng-container>
+            </ng-container>
         </div>
 
         <!-- TPA Content -->
         <div class="add_new_bottom_section" *ngIf="selectedRefundType==='TPA'&& vendorAddressId && clientId">
             <!-- TPA Claims Grid -->
-            <div class="mt-1"  *ngIf="!isConfirmationClicked" >
+            <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select claims to refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                        <cms-vednor-refund-tpa-claims-list #tpaClaims  [tpaPaymentReqIds]="tpaPaymentReqIds"
-                    [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
-                    [sortValue]="sortValueClientClaims" [sortType]="sortType"
-                    (claimsCount)="claimsCountEvent($event)"
-                    (selectedTpaClaimsChangeEvent)="onSelectedTpaClaimsChangeEvent($event)"></cms-vednor-refund-tpa-claims-list>
+                    <cms-vednor-refund-tpa-claims-list #tpaClaims [tpaPaymentReqIds]="tpaPaymentReqIds"
+                        [vendorId]="vendorId" [clientId]="clientId" [pageSizes]="pageSizes"
+                        [sortValue]="sortValueClientClaims" [sortType]="sortType"
+                        (claimsCount)="claimsCountEvent($event)"
+                        (selectedTpaClaimsChangeEvent)="onSelectedTpaClaimsChangeEvent($event)"></cms-vednor-refund-tpa-claims-list>
                 </div>
             </div>
             <div class="confirm-container" *ngIf="isConfirmationClicked">
-             <cms-vednor-refund-tpa-selected-claims-list
-              [tpaRefundInformation$]="tpaRefundInformation$"
-              [isEdit]="isEdit"
-              [tpaRefundGridLists]="tpaRefundGridLists"
-            (tpaRefundInformationConfirmClicked)="getTpaRefundInformation($event)"
-            [tpaAddRefundClick$]="tpaAddRefundClick$"
- (onTpaClaimsDeleteEvent)="onTpaClaimsDelete($event)"
-            (tpaPayload)="addTpa($event)"></cms-vednor-refund-tpa-selected-claims-list>
-            <div class="mt-3" id="medicalProviderPaymentslist">
-                <h5>PROVIDER PAYMENT FOR {{this.clientName}}</h5>
-                <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-claims-list [claimsListData$]="claimsListData$" [pageSizes]="pageSizes"
-                    [sortValue]="sortValueClaims" [sortType]="sortType" [sort]="sortClaims"
-                    (loadClaimsListEvent)="loadClaimsListGrid($event)"
-                    (onProviderNameClickEvent)="onTpaProviderClick($event)"
-                    [clientId]="clientId" [vendorId]="vendorId"
-                    ></cms-vendor-refund-claims-list>
+                <cms-vednor-refund-tpa-selected-claims-list [tpaRefundInformation$]="tpaRefundInformation$"
+                    [isEdit]="isEdit" [tpaRefundGridLists]="tpaRefundGridLists"
+                    (tpaRefundInformationConfirmClicked)="getTpaRefundInformation($event)"
+                    [tpaAddRefundClick$]="tpaAddRefundClick$" (onTpaClaimsDeleteEvent)="onTpaClaimsDelete($event)"
+                    (tpaPayload)="addTpa($event)"></cms-vednor-refund-tpa-selected-claims-list>
+                <div class="mt-3" id="medicalProviderPaymentslist">
+                    <h5>PROVIDER PAYMENT FOR {{this.clientName}}</h5>
+                    <div class="add_new_fixed_bottom_grid_section">
+                        <cms-vendor-refund-claims-list [claimsListData$]="claimsListData$" [pageSizes]="pageSizes"
+                            [sortValue]="sortValueClaims" [sortType]="sortType" [sort]="sortClaims"
+                            (loadClaimsListEvent)="loadClaimsListGrid($event)"
+                            (onProviderNameClickEvent)="onTpaProviderClick($event)" [clientId]="clientId"
+                            [vendorId]="vendorId"></cms-vendor-refund-claims-list>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
 
         <!-- INS Content -->
-        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'&& vendorAddressId && clientId">
-            <div class="mt-1" *ngIf="!isConfirmationClicked" >
+        <div class="add_new_bottom_section"
+            *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'&& vendorAddressId && clientId">
+            <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all premium included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-insurance-premium-list  #insClaims  [selectedInsurancePremiumIds]="insurancePremiumPaymentReqIds"
-                    [vendorAddressId]="vendorAddressId"
-                    [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
-                        [sortValue]="sortValueClientClaims" [sortType]="sortType"
+                    <cms-vendor-refund-insurance-premium-list #insClaims
+                        [selectedInsurancePremiumIds]="insurancePremiumPaymentReqIds"
+                        [vendorAddressId]="vendorAddressId" [vendorId]="vendorId" [clientId]="clientId"
+                        [pageSizes]="pageSizes" [sortValue]="sortValueClientClaims" [sortType]="sortType"
                         [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId"
                         (claimsCount)="claimsCountEvent($event)"
                         (selectedClaimsChangeEvent)="onSelectedClaimsChangeEvent($event)"
-                        (onProviderNameClickEvent)="onTpaProviderClick($event)"
-                        ></cms-vendor-refund-insurance-premium-list>
+                        (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
             <div class="confirm-container" *ngIf="isConfirmationClicked">
 
-            <cms-vendor-refund-selected-premium-list [insuranceRefundInformation$]="insuranceRefundInformation$"
-             [gridDataResult]="financialPremiumsRefundGridLists"
-             [insurancePremiumPaymentReqIds]="insurancePremiumPaymentReqIds"
-                     [refundInformationLoader$]="insuranceRefundInformationLoader$"
-                     [pageSizes]="pageSizes" [sortValue]="sortValueRefundInformationGrid"
-                     (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"
-            [sortType]="sortType" [sort]="sortRefundInformationGrid"
-             (insuranceRefundInformationConfirmClicked)="getInsuranceRefundInformation($event)"
-            [insuraceAddRefundClick$]="insuraceAddRefundClick$"
-            (Reqpayload)="addInsuranceRefundClaim($event)"
-            [vendorAddressId]="vendorAddressId"
-            [isEdit]="isEdit"
-            [clientId]="clientId"></cms-vendor-refund-selected-premium-list>
+                <cms-vendor-refund-selected-premium-list [insuranceRefundInformation$]="insuranceRefundInformation$"
+                    [gridDataResult]="financialPremiumsRefundGridLists"
+                    [insurancePremiumPaymentReqIds]="insurancePremiumPaymentReqIds"
+                    [refundInformationLoader$]="insuranceRefundInformationLoader$" [pageSizes]="pageSizes"
+                    [sortValue]="sortValueRefundInformationGrid"
+                    (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)" [sortType]="sortType"
+                    [sort]="sortRefundInformationGrid"
+                    (insuranceRefundInformationConfirmClicked)="getInsuranceRefundInformation($event)"
+                    [insuraceAddRefundClick$]="insuraceAddRefundClick$" (Reqpayload)="addInsuranceRefundClaim($event)"
+                    [vendorAddressId]="vendorAddressId" [isEdit]="isEdit" [clientId]="clientId"
+                    [clientName]="clientName"></cms-vendor-refund-selected-premium-list>
 
             </div>
         </div>
@@ -288,264 +284,365 @@
             <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all claims included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-client-claims-list #rxClaims  [selectedpharmacyClaimsPaymentReqIds]="pharmacyClaimsPaymentReqIds" [vendorId]="vendorId" [clientId]="clientId"
-                     [refundType]="selectedRefundType" [pageSizes]="pageSizes"  [isEdit]="isEdit"
-                        [sortValue]="sortValueClientClaims" [sortType]="sortType" [sort]="sortClientClaims"
-                        (loadClientClaimsListEvent)="loadClientClaimsListGrid($event)" (claimsCount)="claimsCountEvent($event)"
+                    <cms-vendor-refund-client-claims-list #rxClaims
+                        [selectedpharmacyClaimsPaymentReqIds]="pharmacyClaimsPaymentReqIds" [vendorId]="vendorId"
+                        [clientId]="clientId" [refundType]="selectedRefundType" [pageSizes]="pageSizes"
+                        [isEdit]="isEdit" [sortValue]="sortValueClientClaims" [sortType]="sortType"
+                        [sort]="sortClientClaims" (loadClientClaimsListEvent)="loadClientClaimsListGrid($event)"
+                        (claimsCount)="claimsCountEvent($event)"
                         (selectedVendorRefundsListEvent)="getSelectedVendorRefundsList($event)"
                         [confirmClicked]="inputConfirmationClicked"
                         (selectedClaimsChangeEvent)="selectedRxClaimsChangeEvent($event)"
-                        (onProviderNameClickEvent)="onTpaProviderClick($event)"
-                       ></cms-vendor-refund-client-claims-list>
+                        (onProviderNameClickEvent)="onTpaProviderClick($event)"></cms-vendor-refund-client-claims-list>
+                    <kendo-formerror *ngIf="!claimsCount && isconfirmclicked"> At least one Claim selection is required.
+                    </kendo-formerror>
                 </div>
             </div>
             <div class="confirm-container" *ngIf="isConfirmationClicked">
-            <div class="flex-row">
-                <div class="flex-col flex-col-6 mt-2 mb-2 ">
-                    <div class="text-center">
-                        <a kendoButton look="flat" aria-label="View Pharmacy Payments" class="card-link-button" href="#PharmacyPaymentsList">
-                            View Pharmacy Payments
-                        </a>
+
+                <div class="flex-row">
+                    <div class="flex-col flex-col-2 align-items-center justify-content-start">
+                        <h5>Refund Information </h5>
                     </div>
                 </div>
-            </div>
+                <div *ngFor="let item of selectedVendorRefundsList; index as tblIndex">
+                    <div class="flex-row align-items-center justify-content-between ">
+                        <div class="flex-col flex-col-8">
+                        </div>
 
-            <div class="flex-row">
-                <div class="flex-col flex-col-2 align-items-center justify-content-start">
-                    <h5>Refund Information </h5>
+                        <div class="flex-col flex-col-4 justify-content-end">
+                            <button class="" kendoButton fillMode="flat" aria-label="Delete"
+                                (click)="onDeleteSelectedPharmacyClick(tblIndex)" themeColor="error">DELETE</button>
+                        </div>
+
+                    </div>
+
+                    <div class="flex-row mb-3">
+                        <div class="flex-col flex-col-6">
+                            <table class=" info-table-custom left_right_align ">
+                                <caption hidden> Refund Information</caption>
+                                <tr hidden>
+                                    <th scope="col">Fields</th>
+                                    <th scope="col">Details</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>Index Code</td>
+                                        <td>{{item.indexCode }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PCA Code</td>
+                                        <td>{{item.pcaCode }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Grant #</td>
+                                        <td>{{item.grantNo }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Original Warrant #</td>
+                                        <td>{{item.warrantNbr }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Original Payment Method</td>
+                                        <td>{{item.paymentMethodCode}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="flex-row mb-3">
+                        <div class="flex-col">
+                            <h5>Enter quantity, days supply, and amount refunded</h5>
+                            <div class="app-c-table">
+                                <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true"
+                                    [resizable]="true" [columnMenu]="{ filter: true, sort: true }"
+                                    [data]=item.prescriptionFillItems [skip]="rxstate.skip" [sort]="rxstate.sort"
+                                    [sortable]="true" [filter]="rxstate.filter"
+                                    (dataStateChange)="rxRefundInfoDataStateChange($event,tblIndex)"
+                                    (filterChange)="rxRefundInformationfilterChange($event)">
+                                    <kendo-grid-column field="rxNbr" title="RX #" [width]="160" [sticky]="true">
+                                        <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                                            Total
+                                        </ng-template>
+                                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                                            let-filterService="filterService">
+                                            <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
+                                                [filterService]="filterService" [extra]="false" operator="contains">
+                                                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                                <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                            </kendo-grid-string-filter-menu>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="ndc" title="NDC Code" [width]="160">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            {{dataItem.ndc | ndcCode}}
+                                        </ng-template>
+                                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                                            let-filterService="filterService">
+                                            <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
+                                                [filterService]="filterService" [extra]="false" operator="contains">
+                                                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                                <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                            </kendo-grid-string-filter-menu>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="brandName" title="Brand Name" [width]="180">
+                                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                                            let-filterService="filterService">
+                                            <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
+                                                [filterService]="filterService" [extra]="false" operator="contains">
+                                                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                                <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                            </kendo-grid-string-filter-menu>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="drugName" title="Drug Name" [width]="140">
+                                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                                            let-filterService="filterService">
+                                            <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
+                                                [filterService]="filterService" [extra]="false" operator="contains">
+                                                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                                <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                            </kendo-grid-string-filter-menu>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="130">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            {{dataItem.prescriptionFillDate | date: 'MM/dd/yyyy'}}
+                                        </ng-template>
+                                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                                            let-filterService="filterService">
+                                            <common-grid-cell-date-range-filter [field]="'prescriptionFillDate'"
+                                                [filter]="filter" [filterService]="filterService">
+                                            </common-grid-cell-date-range-filter>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="amountPaid" title="Original Amount Paid" [width]="180">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            <span class="tableamountview"> <strong>$</strong> {{dataItem?.amountPaid |
+                                                kendoNumber:'n2'}}</span>
+                                        </ng-template>
+                                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                                            let-filterService="filterService">
+                                            <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter"
+                                                [filterService]="filterService" [extra]="false" operator="eq"
+                                                format="0">
+                                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                                <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                                                <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                                                <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                                                <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                                            </kendo-grid-numeric-filter-menu>
+                                        </ng-template>
+                                        <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                                            <span class="tableamountview"> <strong>$</strong>
+                                                {{getSumOfColumn(item.prescriptionFillItems,'amountPaid')| number:
+                                                '2.'}} </span>
+                                        </ng-template>
+                                    </kendo-grid-column>
+
+                                    <kendo-grid-column field="rxqty" title="RX Qty." [width]="120">
+                                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                                            let-filterService="filterService">
+                                            <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter"
+                                                [filterService]="filterService" [extra]="false" operator="eq"
+                                                format="0">
+                                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                                <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                                                <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                                                <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                                                <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                                            </kendo-grid-numeric-filter-menu>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="daySupply" title="RX Days Supply" [width]="150">
+                                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                                            let-filterService="filterService">
+                                            <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter"
+                                                [filterService]="filterService" [extra]="false" operator="eq"
+                                                format="0">
+                                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                                <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                                                <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                                                <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                                                <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                                            </kendo-grid-numeric-filter-menu>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="130">
+                                        <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+                                            let-filterService="filterService">
+                                            <kendo-dropdownlist [data]="paymentTypeData" textField="lovDesc"
+                                                valueField="lovCode" [(ngModel)]="selectedPaymentType"
+                                                (valueChange)="dropdownFilterChange('paymentTypeDesc', $event, filterService)">
+                                            </kendo-dropdownlist>
+                                        </ng-template>
+                                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                                            let-filterService="filterService">
+                                            <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
+                                                [filterService]="filterService" [extra]="false" operator="contains">
+                                                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                                <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                            </kendo-grid-string-filter-menu>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="by" title="By" [width]="75" class="text-center"
+                                        [sortable]="false">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            <common-user-photo-icon [userId]="dataItem.by"
+                                                [userFirstName]="dataItem.userFirstName"
+                                                [userLastName]="dataItem.userLastName"
+                                                [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+                                                [linkType]="'profileIcon'"
+                                                [userPhotos$]="vendorRefundFormProfile$"></common-user-photo-icon>
+
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column editor="numeric" [width]="100" field="qtyRefunded"
+                                        title="Qty Refunded" [editable]="true" [sticky]="true" [width]="130">
+                                        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                            <kendo-numerictextbox id="qtyRefunded{{tblIndex}}-{{rowIndex}}"
+                                                name="qtyRefunded{{tblIndex}}-{{rowIndex}}"
+                                                [fillMode]="formUiStyle.inputFillMode" aria-label="Qty Refunded"
+                                                placeholder="Qty Refunded" [min]="0" format="##" [decimals]="0"
+                                                [(ngModel)]="dataItem.qtyRefunded"
+                                                [ngClass]="ngDirtyInValid(dataItem,'qtyRefunded',tblIndex,rowIndex)">
+                                            </kendo-numerictextbox>
+                                            <kendo-formerror *ngIf="isAddClicked && !dataItem.qtyRefundedValid">Qty
+                                                Refunded is required</kendo-formerror>
+                                            <kendo-formerror *ngIf="isAddClicked && dataItem.qtyRefundedGtRxQty">Qty
+                                                Refunded cannot be more than the Rx Qty</kendo-formerror>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="daySupplyRefunded" title="Days Supply Refunded"
+                                        [width]="160" [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                            <kendo-numerictextbox id="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
+                                                name="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
+                                                [fillMode]="formUiStyle.inputFillMode" aria-label="Days Supply Refunded"
+                                                placeholder="Days Supply Refunded"
+                                                [(ngModel)]="dataItem.daySupplyRefunded" [min]="0" format="##"
+                                                [decimals]="0"
+                                                [ngClass]="ngDirtyInValid(dataItem,'daySupplyRefunded',tblIndex,rowIndex)">
+                                            </kendo-numerictextbox>
+
+                                            <kendo-formerror
+                                                *ngIf="isAddClicked && !dataItem.daySupplyRefundedValid">Days Supply
+                                                Refunded is required</kendo-formerror>
+                                            <kendo-formerror *ngIf="isAddClicked && dataItem.daySpyRfdGtDaySpy">Days
+                                                supply cannot be more than the Rx supply</kendo-formerror>
+                                            <kendo-formerror
+                                                *ngIf="isAddClicked && dataItem.daySupplyRefundedRatioValid">Days Supply
+                                                Refunded cannot be more than the RX supply per Rx qty</kendo-formerror>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150"
+                                        [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                            <kendo-numerictextbox id="refundedAmount{{tblIndex}}-{{rowIndex}}"
+                                                name="refundedAmount{{tblIndex}}-{{rowIndex}}"
+                                                [fillMode]="formUiStyle.inputFillMode" aria-label="Refund Amount"
+                                                placeholder="Refund Amount" [min]="0"
+                                                [(ngModel)]="dataItem.refundedAmount"
+                                                [ngClass]="ngDirtyInValid(dataItem,'refundedAmount',tblIndex,rowIndex)">
+                                            </kendo-numerictextbox>
+                                            <kendo-formerror *ngIf="!dataItem.refundedAmountValid">Refund Amount is
+                                                required</kendo-formerror>
+                                        </ng-template>
+                                        <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                                            <span class="tableamountview"> <strong>$</strong>
+                                                {{getSumOfColumn(item.prescriptionFillItems, 'refundedAmount') | number:
+                                                '2.' }} </span>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <ng-template kendoGridLoadingTemplate>
+                                        <common-grid-loader-component></common-grid-loader-component>
+                                    </ng-template>
+                                    <!-- grid No data Template -->
+                                    <ng-template kendoGridNoRecordsTemplate>
+                                        <common-grid-no-records></common-grid-no-records>
+                                    </ng-template>
+                                </kendo-grid>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div *ngFor="let item of selectedVendorRefundsList; index as tblIndex">
                 <div class="flex-row mb-3">
-                <div class="flex-col flex-col-6">
-                    <table class=" info-table-custom left_right_align ">
-                        <caption hidden> Refund Information</caption>
-                        <tr hidden>
-                            <th scope="col">Fields</th>
-                            <th scope="col">Details</th>
-                        </tr>
-                        <tbody>
-                            <tr>
-                                <td>Index Code</td>
-                                <td>{{item.indexCode }}</td>
-                            </tr>
-                            <tr>
-                                <td>PCA Code</td>
-                                <td>{{item.pcaCode }}</td>
-                            </tr>
-                            <tr>
-                                <td>Grant #</td>
-                                <td>{{item.grantNo }}</td>
-                            </tr>
-                            <tr>
-                                <td>Original Warrant #</td>
-                                <td>{{item.warrantNbr }}</td>
-                            </tr>
-                            <tr>
-                                <td>Original Payment Method</td>
-                                <td>{{item.paymentMethodCode}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="flex-row mb-3">
-                <div class="flex-col">
-                    <h5>Enter quantity, days supply, and amount refunded</h5>
-                    <div class="app-c-table">
-                        <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
-                            [columnMenu]="{ filter: true, sort: true }"
-                            [data] = item.prescriptionFillItems>
-                            <kendo-grid-column field="rxNbr" title="RX #" [width]="160">
-                                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-                                    Total
-                                </ng-template>
-                            </kendo-grid-column>
-                            <kendo-grid-column field="ndc" title="NDC Code" [width]="160">
-                              <ng-template kendoGridCellTemplate let-dataItem>
-                                {{dataItem.ndc | ndcCode}}
-                            </ng-template>
-                            </kendo-grid-column>
-                            <kendo-grid-column field="brandName" title="Brand Name" [width]="180">
-                            </kendo-grid-column>
-                            <kendo-grid-column field="drugName" title="Drug Name" [width]="140"> </kendo-grid-column>
-                            <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="130">
-                                <ng-template kendoGridCellTemplate let-dataItem>
-                                    {{dataItem.prescriptionFillDate | date: 'MM/dd/yyyy'}}
-                                </ng-template>
-                             </kendo-grid-column>
-                            <kendo-grid-column field="amountPaid" title="Original Amount Paid" [width]="180">  <ng-template kendoGridCellTemplate
-                              let-dataItem>
-                              <span class="tableamountview"> <strong>$</strong> {{dataItem?.amountPaid  | kendoNumber:'n2'}}</span>
-                            </ng-template>
-                            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                              <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                                [extra]="false" operator="eq">
-                                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                                <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                              </kendo-grid-string-filter-menu>
-                            </ng-template>
-                            <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-                              <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionFillItems,'amountPaid')}} </span>
-                          </ng-template>
-                          </kendo-grid-column>
-
-                            <kendo-grid-column field="rxqty" title="RX Qty." [width]="120" > </kendo-grid-column>
-                            <kendo-grid-column field="daySupply" title="RX Days Supply" [width]="150">
-                            </kendo-grid-column>
-                            <kendo-grid-column field="pmtStatus" title="Payment Type" [width]="130">
-                            </kendo-grid-column>
-                            <kendo-grid-column field="by" title="By" [width]="75" class="text-center">
-                                <ng-template kendoGridCellTemplate let-dataItem>
-                                    <common-user-photo-icon  
-                                    [userId]="dataItem.by" 
-                                    [userFirstName]="dataItem.userFirstName"
-                                    [userLastName]="dataItem.userLastName"
-                                    [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
-                                    [linkType]="'profileIcon'"
-                                    [userPhotos$]="vendorRefundFormProfile$"></common-user-photo-icon>
-                                    
-                                </ng-template>
-                            </kendo-grid-column>
-                            <kendo-grid-column editor="numeric" [width]="100" field="qtyRefunded" title="Qty Refunded" [editable]="true" [sticky]="true" [width]="130">
-                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-numerictextbox
-                                    id ="qtyRefunded{{tblIndex}}-{{rowIndex}}"
-                                    name ="qtyRefunded{{tblIndex}}-{{rowIndex}}"
-                                    [fillMode]= "formUiStyle.inputFillMode"
-                                    aria-label="Qty Refunded"
-                                    placeholder="Qty Refunded"
-                                    [min] = "0"
-                                    format="##"
-                                    [decimals] = "0"
-                                    [(ngModel)]="dataItem.qtyRefunded"
-                                    [ngClass]="ngDirtyInValid(dataItem,'qtyRefunded',tblIndex,rowIndex)"
-                                    >
-                                  </kendo-numerictextbox>
-                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.qtyRefundedValid">Qty Refunded is required</kendo-formerror>
-                              </ng-template>
-                            </kendo-grid-column>
-                            <kendo-grid-column field="daySupplyRefunded" title="Days Supply Refunded" [width]="160"
-                                [sticky]="true">
-                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-numerictextbox                                    
-                                    id ="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
-                                    name ="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
-                                    [fillMode]= "formUiStyle.inputFillMode"
-                                    aria-label="Days Supply Refunded"
-                                    placeholder="Days Supply Refunded"
-                                    [(ngModel)]="dataItem.daySupplyRefunded"
-                                    [min] = "0"
-                                    format="##"
-                                    [decimals] = "0"
-                                    [ngClass]="ngDirtyInValid(dataItem,'daySupplyRefunded',tblIndex,rowIndex)"
-                                    >
-                                  </kendo-numerictextbox>
-                                  
-                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.daySupplyRefundedValid">Days Supply Refunded is required</kendo-formerror>
-                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.daySupplyRefundedRatioValid">Days Supply Refunded can not be more than the RX supply per Rx qty</kendo-formerror>
-                                  
-                                </ng-template>
-                                </kendo-grid-column>
-                            <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150" [sticky]="true">
-                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-numerictextbox
-                                    id ="refundedAmount{{tblIndex}}-{{rowIndex}}"
-                                    name ="refundedAmount{{tblIndex}}-{{rowIndex}}"
-                                    [fillMode]= "formUiStyle.inputFillMode"
-                                    aria-label="Refund Amount"
-                                    placeholder="Refund Amount"
-                                    [min] = "0"
-                                    [(ngModel)]="dataItem.refundedAmount"
-                                    [ngClass]="ngDirtyInValid(dataItem,'refundedAmount',tblIndex,rowIndex)"
-                                    >
-                                  </kendo-numerictextbox>
-                                  <kendo-formerror *ngIf="!dataItem.refundedAmountValid">Refund Amount is required</kendo-formerror>
-                                </ng-template>
-                                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-                                    <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionFillItems, 'refundedAmount')}} </span>
-                                </ng-template>
-                            </kendo-grid-column>
-                            <ng-template kendoGridLoadingTemplate>
-                                <common-grid-loader-component></common-grid-loader-component>
-                            </ng-template>
-                            <!-- grid No data Template -->
-                            <ng-template kendoGridNoRecordsTemplate>
-                                <common-grid-no-records></common-grid-no-records>
-                            </ng-template>
-                        </kendo-grid>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <div class="flex-row mb-3">
-                <div class="flex-col" [formGroup]="refundRXForm">
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="Voucher Payable" >
-                                <kendo-textbox aria-label="Voucher Payable"  [fillMode]="formUiStyle.inputFillMode"
-                                formControlName = "voucherPayable"
-                                [maxlength]="7">
-                                </kendo-textbox >
-                            </kendo-floatinglabel>
+                    <div class="flex-col" [formGroup]="refundRXForm">
+                        <div class="flex-row">
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Voucher Payable">
+                                    <kendo-textbox aria-label="Voucher Payable" [fillMode]="formUiStyle.inputFillMode"
+                                        formControlName="voucherPayable" (keyup)="validateVoucherPayable($event)"
+                                        [maxlength]="13">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Credit #">
+                                    <kendo-textbox aria-label="Credit # (optional)" formControlName="creditNumber"
+                                        [fillMode]="formUiStyle.inputFillMode" name="creditNumber"
+                                        placeholder="Credit #" [maxlength]="10" (keyup)="validateCreditNumber($event)">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
                         </div>
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="Credit #">
-                                <kendo-textbox  aria-label="Credit # (optional)"
-                                    formControlName= "creditNumber"
-                                    [fillMode]="formUiStyle.inputFillMode"  name="creditNumber"
-                                    placeholder="Credit #"
-                                    [maxlength]="10"
-                                    (keyup)="validateCreditNumber($event)">
-                                </kendo-textbox >
-                            </kendo-floatinglabel>
+                        <div class="flex-row">
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Refund Warrant #">
+                                    <kendo-textbox aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode"
+                                        formControlName="warantNumber" id="warantNumber">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                                <kendo-formerror
+                                    *ngIf="refundRXForm.hasError('required','warantNumber') && isRefundRxSubmitted">Refund
+                                    Warrant # is required.
+                                </kendo-formerror>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="Refund Warrant #">
-                                <kendo-textbox aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode"
-                                 formControlName="warantNumber" id="warantNumber">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                            <kendo-formerror *ngIf="refundRXForm.hasError('required','warantNumber') && isRefundRxSubmitted">Refund Warrant # is required.
-                            </kendo-formerror>
-                        </div>
-                    </div>
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="Deposit Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date" formControlName="depositDate"
-                                    format="MM/dd/yyyy" formatPlaceholder="formatPattern">
-                                </kendo-datepicker>
-                            </kendo-floatinglabel>
-                            <kendo-formerror *ngIf="refundRXForm.hasError('required','depositDate') && isRefundRxSubmitted">Deposit Date is required.
-                            </kendo-formerror>
-                        </div>
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="Refund Note (optional)">
-                                <kendo-textbox aria-label="Refund Note (optional)"
-                                    [fillMode]="formUiStyle.inputFillMode"
-                                    formControlName="refundNote"
-                                    [maxlength]="100"
-                                    (valueChange)="onRefundNoteValueChange($event)">
-                                </kendo-textbox>
-                                <kendo-formhint class="justify-content-end"><span class="counter">
-                                    {{refundNoteValueLength}}/100</span></kendo-formhint>
-                            </kendo-floatinglabel>
+                        <div class="flex-row">
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Deposit Date">
+                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+                                        aria-label="Deposit Date" formControlName="depositDate" format="MM/dd/yyyy"
+                                        formatPlaceholder="formatPattern">
+                                    </kendo-datepicker>
+                                </kendo-floatinglabel>
+                                <kendo-formerror
+                                    *ngIf="refundRXForm.hasError('required','depositDate') && isRefundRxSubmitted">Deposit
+                                    Date is required.
+                                </kendo-formerror>
+                            </div>
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Refund Note (optional)">
+                                    <kendo-textbox aria-label="Refund Note (optional)"
+                                        [fillMode]="formUiStyle.inputFillMode" formControlName="refundNote"
+                                        [maxlength]="100" (valueChange)="onRefundNoteValueChange($event)">
+                                    </kendo-textbox>
+                                    <kendo-formhint class="justify-content-end"><span class="counter">
+                                            {{refundNoteValueLength}}/100</span></kendo-formhint>
+                                </kendo-floatinglabel>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="PharmacyPaymentsList" *ngIf="vendorId && clientId">
-                <h5>PHARMACY PAYMENTS FOR {{ clientName }}</h5>
-                    <cms-vendor-refund-pharmacy-payments-list [vendorId]="vendorId" [clientId]="clientId" [refundType]="selectedRefundType"
-                        [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyPayment" [sortType]="sortType"
-                        [sort]="sortPharmacyPayment"
-                        (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"></cms-vendor-refund-pharmacy-payments-list>
-            </div>
+                <div id="PharmacyPaymentsList" *ngIf="vendorId && clientId">
+                    <h5>PHARMACY PAYMENTS FOR {{ clientName }}</h5>
+                    <cms-vendor-refund-pharmacy-payments-list [vendorId]="vendorId" [clientId]="clientId"
+                        [refundType]="selectedRefundType" [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyPayment"
+                        [sortType]="sortType" [sort]="sortPharmacyPayment"
+                        (onProviderNameClickEvent)="onPharmacyPremiumProviderCick($event)"></cms-vendor-refund-pharmacy-payments-list>
+                </div>
             </div>
         </div>
 
@@ -556,43 +653,56 @@
 
 <kendo-dialog-actions>
     <div class="justify-content-between" *ngIf="isConfirmationClicked">
-<div>
-    <button kendoButton [primary]="true" look="flat" aria-label="Select different Payments"
-    class="button-lg" (click)="selectDiffPayments()"> Select different Payments
-</button>
-</div>
-    <div class="justify-content-end align-items-center" >
-        <span class="mr-2">{{claimsCount}} payment(s) selected</span>
-        <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeAddEditRefundFormModalClicked(false)"> Cancel </button>
-        <button kendoButton [primary]="true" aria-label="Add" class=""  (click)="onAddRefundClick()"  > {{isEdit?"Update": "Add"}} </button>
+        <div>
+            <button kendoButton [primary]="true" look="flat" aria-label="Select different Payments" class="button-lg"
+                (click)="selectDiffPayments()"> Select different Payments
+            </button>
+        </div>
+        <div class="justify-content-end align-items-center">
+            <span class="mr-2">{{claimsCount}} payment(s) selected</span>
+            <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                (click)="closeAddEditRefundFormModalClicked(false)"> Cancel </button>
+            <button kendoButton [primary]="true" aria-label="Add" class="" (click)="onAddRefundClick()">
+                {{isEdit?"Update": "Add"}} </button>
+        </div>
     </div>
-</div>
     <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked && selectedRefundType">
 
         <span class="mr-2">{{claimsCount}} refund(s) to be added</span>
-        <button kendoButton [primary]="true" aria-label="Confirm Selections" [disabled]="claimsCount<1"  (click)="confirmationClicked()"> Confirm Selections
+        <button kendoButton [primary]="true" aria-label="Confirm Selections" (click)="confirmationClicked()"
+            [disabled]="claimsCount==0"> Confirm Selections
         </button>
     </div>
 
 </kendo-dialog-actions>
-<ng-template #providerDetailsTemplate>
-    <cms-financial-premiums-provider-info
-    [paymentRequestId]="paymentRequestId"
-    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
-    (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
-    [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-    [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
 
+
+<ng-template #premiumProviderDetailsTemplate>
+    <cms-financial-premiums-provider-info [paymentRequestId]="paymentRequestId"
+        (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+        (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+        (updateProviderProfileEvent)="updateProviderProfile($event)"
+        [updateProviderPanelSubject$]="updateProviderPanelSubject$" [ddlStates$]="ddlStates$"
+        (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+        [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
 </ng-template>
 
-
 <ng-template #tpaProviderDetailsTemplate>
-    <cms-refund-claims-provider-info
-          [paymentRequestId]="paymentRequestId"
-          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
-          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
-          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-          [paymentMethodCode$]="paymentMethodCode$"></cms-refund-claims-provider-info>
+    <cms-financial-claims-provider-info [paymentRequestId]="paymentRequestId"
+        (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+        (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+        (updateProviderProfileEvent)="updateProviderProfile($event)"
+        [updateProviderPanelSubject$]="updateProviderPanelSubject$" [ddlStates$]="ddlStates$"
+        (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+        [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>
+
+<ng-template #pharmacyProviderDetailsTemplate>
+    <cms-pharmacy-claims-provider-info [paymentRequestId]="paymentRequestId"
+        (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+        (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+        (updateProviderProfileEvent)="updateProviderProfile($event)"
+        [updateProviderPanelSubject$]="updateProviderPanelSubject$" [ddlStates$]="ddlStates$"
+        (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+        [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
 </ng-template>

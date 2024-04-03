@@ -2,10 +2,10 @@
   <div class="flex-col flex-space-bw align-items-center">
     <h5 class="title-md mb-0 text-capital">Phone Numbers</h5>
 <div>
-  <span class="app-checkboxwidtext-wrapper"> 
+  <span class="app-checkboxwidtext-wrapper">
     <input   type="checkbox"
-      kendoCheckBox aria-labelledby="historyCheckBoxPhone"      
-      (click)="onhistorychkBoxChanged()" 
+      kendoCheckBox aria-labelledby="historyCheckBoxPhone"
+      (click)="onhistorychkBoxChanged()"
       id="historyCheckBoxPhone"
       name="historyCheckBoxPhone"
       [checked]="historychkBoxChecked"/>
@@ -16,14 +16,14 @@
   <div class="flex-col mt-1">
     <div class="app-c-table">
       <kendo-grid [data]="gridPhoneData$ | async"
-      [pageSize]="state.take" 
-      [pageable]="true" 
-      [sortable]="true" 
+      [pageSize]="state.take"
+      [pageable]="true"
+      [sortable]="true"
       [skip]="state.skip"
       [groupable]="false"
       [reorderable]="true"
       [loading]="loader"
-      [resizable]="true" 
+      [resizable]="true"
       [columnMenu]="{ filter: true }"
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)">
@@ -49,7 +49,7 @@
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.phoneNbr | phone }}
-         </ng-template> 
+         </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
           field="detailMsgConsentFlag"
@@ -57,13 +57,13 @@
           [width]="180"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.detailMsgConsentFlag === 'Y' ? 'Yes' : 'No'}}  
-         </ng-template>   
+          {{dataItem.detailMsgConsentFlag === 'Y' ? 'Yes' : 'No'}}
+         </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="smsTextConsentFlag" title="SMS Text OK?" [width]="120">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.smsTextConsentFlag === 'Y' ? 'Yes' : 'No'}}  
-           </ng-template>   
+            {{dataItem.smsTextConsentFlag === 'Y' ? 'Yes' : 'No'}}
+           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="otherPhoneNote" title="Note" [width]="140" [sortable]="false" >
         </kendo-grid-column>
@@ -73,13 +73,13 @@
           [width]="140"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
-         </ng-template>   
+          {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
+         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center">
+        <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" [filterable]="false" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem >
-            <common-user-photo-icon  
-            [userId]="dataItem.creatorId" 
+            <common-user-photo-icon
+            [userId]="dataItem.creatorId"
             [userFirstName]="dataItem.userFirstName"
             [userLastName]="dataItem.userLastName"
             [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
@@ -87,7 +87,7 @@
             [userPhotos$]="phoneListProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column [sortable]="false" 
+        <kendo-grid-column [sortable]="false"
           field="clientPhoneId"
           [columnMenu]="false"
           title="Options"
@@ -96,7 +96,7 @@
         >
           <ng-template kendoGridCellTemplate let-clientPhone let-clientPhoneId="field">
             <kendo-dropdownbutton
-              [data]="gridOption" 
+              [data]="gridOption"
               title="More option"
               class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
@@ -106,44 +106,44 @@
             <span class="material-icons" aria-label="More option"> more_vert    </span>
               <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientPhoneId="clientPhoneId">
                 <button kendoButton  [hidden]="(clientPhone.isDeleted === true && (dataItem.buttonName==='deactivate' || dataItem.buttonName ==='preferred'))
-                ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred') ||(hasPhoneDeletePermission === false && dataItem.buttonName ==='delete')" 
-                look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
+                ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred') ||(hasPhoneDeletePermission === false && dataItem.buttonName ==='delete')"
+                look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false"
                 (click)="dataItem.click(clientPhone)" [disabled]="(isReadOnly$ | async) ? true : false">
                   <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                   <label>   {{ dataItem.text }} </label>
-              </button> 
+              </button>
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
-        
+
         </kendo-grid-column>
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
-        <div class="grid-custom-paginationtemplates d-flex"> 
-          <div class="d-flex align-items-center"> 
-            <label class="mr-1" for="PhoneRowsPerPage">Rows Per Page</label> 
+        <div class="grid-custom-paginationtemplates d-flex">
+          <div class="d-flex align-items-center">
+            <label class="mr-1" for="PhoneRowsPerPage">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
                   [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="PhoneRowsPerPage" [(value)]="state.take"
                   (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages> 
-  
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+
           </div>
-          <div class="d-flex"> 
-            <kendo-pager-input></kendo-pager-input> 
-            <kendo-pager-prev-buttons></kendo-pager-prev-buttons> 
+          <div class="d-flex">
+            <kendo-pager-input></kendo-pager-input>
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
             <kendo-pager-next-buttons></kendo-pager-next-buttons>
-          </div> 
+          </div>
         </div>
-      </ng-template> 
-       <!-- grid Loader Template -->  
+      </ng-template>
+       <!-- grid Loader Template -->
        <ng-template kendoGridLoadingTemplate>
         <common-grid-loader-component></common-grid-loader-component>
        </ng-template>
-       <!-- grid No data Template -->  
+       <!-- grid No data Template -->
        <ng-template kendoGridNoRecordsTemplate>
         <common-grid-no-records></common-grid-no-records>
-       </ng-template> 
+       </ng-template>
       </kendo-grid>
     </div>
   </div>
@@ -174,8 +174,8 @@
     [isEditValue]="isEditPhoneNumber"
     [lovClientPhoneDeviceType$]="lovClientPhoneDeviceType$"
     [selectedPhoneData]="selectedPhoneData"
-    (addClientPhoneEvent)="addClientPhoneHandle($event)"   
-    (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()" 
+    (addClientPhoneEvent)="addClientPhoneHandle($event)"
+    (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()"
     (deactivateClientPhoneEvent)="onDeactivatePhoneNumberClicked($event)"
     (formClientPhoneCloseEvent)="onPhoneNumberDetailClosed()"
     [deactivateFlag]="isDeactivateFlag"
@@ -193,11 +193,11 @@
 <!-- Delete Modal -->
 <kendo-dialog
   *ngIf="isOpenedDeleteConfirm"
- 
+
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
 <kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Delete Phone Number? </kendo-dialog-titlebar>
- <case-management-phone-remove-confirmation 
+ <case-management-phone-remove-confirmation
  (deleteConfimEvent)="handleAcceptPhoneRemove($event)"
  >
  </case-management-phone-remove-confirmation>

@@ -87,18 +87,13 @@
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Open Date">
-                                    <kendo-dropdownlist class="fixed-height-input"   [fillMode]="formUiStyle.inputFillMode"
-                                    [data]="pcaAssignOpenDatesList$"
+                                    <kendo-combobox  formControlName="openDate" [fillMode]="formUiStyle.dropDownFillMode" [data]="pcaAssignOpenDatesList$"
                                     textField="dateValue"
-                                    valueField="dateValue" 
-                                    aria-label="date"
-                                    [valuePrimitive]="true"
-                                    formControlName="openDate"
-                                    (keyup)="openDateValidate()"
+                                    valueField="dateValue"  [valuePrimitive]="true" (keyup)="openDateValidate()"
                                     (valueChange)="openDateValidate()">
-                                    </kendo-dropdownlist>
+                                    </kendo-combobox>
                                 
-                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required && formSubmitted">
+                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required">
                                     Open Date is required
                               </kendo-formerror>  
                               <kendo-formerror *ngIf="openDateError">{{openDateErrorMsg}}</kendo-formerror>
@@ -108,20 +103,14 @@
 
             </div>
             <div class="flex-col flex-col-6">
-                  <kendo-floatinglabel text="Close Date">
-                        
-                                    <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
-                                    [data]="pcaAssignCloseDatesList$"
+                  <kendo-floatinglabel text="Close Date">                    
+                                    <kendo-combobox  formControlName="closeDate" [fillMode]="formUiStyle.dropDownFillMode" [data]="pcaAssignCloseDatesList$"
                                     textField="dateValue"
-                                    valueField="dateValue" 
                                     aria-label="date"
-                                    [valuePrimitive]="true"
-                                    formControlName="closeDate"
-                                    (keyup)="closeDateValidate()"
+                                    valueField="dateValue"  [valuePrimitive]="true" (keyup)="closeDateValidate()"
                                     (valueChange)="closeDateValidate()">
-                                    </kendo-dropdownlist>
-                               
-                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.closeDate?.errors?.required && formSubmitted">
+                                    </kendo-combobox>
+                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.closeDate?.errors?.required">
                                     Close Date is required
                               </kendo-formerror> 
                              
@@ -139,7 +128,7 @@
                         (valueChange)="amountChange($event)" class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required &&pcaCodeInfo !=null">
+                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount.errors?.required && formSubmitted">
                         Amount is required
                   </kendo-formerror>   
             </div>

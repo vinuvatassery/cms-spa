@@ -57,7 +57,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
                 {Name : 'Quarterly',
                 Value : 'Q'
                 },
-                {Name : 'Yearly',
+                {Name : 'Annually',
                 Value : 'Y'
                 }]
 
