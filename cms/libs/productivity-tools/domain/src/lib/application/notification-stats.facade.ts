@@ -52,7 +52,7 @@ export class NotificationStatsFacade {
   resetStats(entityId:string, statsTypeCode:string): void {
     this.notificationStatsDataService.resetStats(entityId, statsTypeCode).subscribe({
       next: (statsResponse) => {
-        this.resetStatsSubject.next(statsResponse);
+                this.resetStatsSubject.next(statsResponse);
       },
       error: (err) => {
         console.error('err', err);
