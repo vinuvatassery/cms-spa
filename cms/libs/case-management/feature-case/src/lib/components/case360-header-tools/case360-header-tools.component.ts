@@ -64,6 +64,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   templateLoadType!:any;
   informationalText!:any;
   templateHeader!:any;
+  confirmPopupHeader:any;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   private isSendNewLetterDialog : any;
@@ -91,6 +92,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
+        this.confirmPopupHeader = 'Send Letter to Print?';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -108,6 +110,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
+        this.confirmPopupHeader = 'Send Email?';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
         }
       },

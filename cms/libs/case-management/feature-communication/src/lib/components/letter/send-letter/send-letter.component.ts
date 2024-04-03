@@ -43,6 +43,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   @Input() informationalText!:string
   @Input() templateHeader !:string;
   @Input() triggerFrom !: string;
+  @Input() confirmPopupHeader!:string;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
