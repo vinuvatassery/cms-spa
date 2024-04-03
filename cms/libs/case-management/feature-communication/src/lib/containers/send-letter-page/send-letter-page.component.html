@@ -10,6 +10,7 @@
         [triggerFrom]="triggerFrom" (loadInitialData)="loadMailingAddress()" [entityId]="clientId"
         [clientCaseEligibilityId]="clientCaseEligibilityId" [isNewNotificationClicked]="isNewNotificationClicked"
         [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
+        [confirmPopupHeader]="confirmPopupHeader"
         kendoTooltip></case-management-send-letter>
        </div>
 
@@ -20,6 +21,7 @@
         [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName"
         [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked"
         [notificationDraftId]="notificationDraftId" [toEmail]="toEmail" (loadInitialData)="loadEmailAddress()"
+        [confirmPopupHeader]="confirmPopupHeader"
         kendoTooltip></case-management-send-email>
       </div>
 

@@ -48,6 +48,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() templateHeader !:string;
   @Input() triggerFrom !: string;
   @Input() loginUserEmail!: string;
+  @Input() confirmPopupHeader!:string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();

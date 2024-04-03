@@ -61,6 +61,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
   toEmail: Array<string> = [];
   informationalText :any = null;
   templateHeader : string='';
+  confirmPopupHeader:string='';
   emailSubject:any = '';
   triggerFrom:any='';
     /** Constructor**/
@@ -218,13 +219,15 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
         this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''SEND EMAIL'' once the email is complete."
         this.templateHeader = 'Send Pending Email';
         this.emailSubject = '';
+        this.confirmPopupHeader = 'Send Pending Email to print';
       }
       else {
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
-        this.letterCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeLetter;
+        this.letterCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeLetter;        
         this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the letter is complete."
         this.templateHeader = 'Send Pending Letter';
         this.emailSubject = '';
+        this.confirmPopupHeader = 'Send Pending Letter to print?';
       }
 
     }
@@ -235,6 +238,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
         this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
         this.templateHeader = 'Send Denial Email';
         this.emailSubject = "CAREAssist Denial Notice";
+        this.confirmPopupHeader = 'Send Denial Email?';
       }
       else {
         this.templateLoadType = CommunicationEventTypeCode.RejectionNoticeLetter;
@@ -242,6 +246,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
         this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
         this.templateHeader = 'Send Denial Letter';
         this.emailSubject = '';
+        this.confirmPopupHeader = 'Send Denial Letter to print?';
       }
     }
     else if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes && this.workflowFacade.caseStatus === CaseStatusCode.accept) {
@@ -251,6 +256,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
         this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
         this.templateHeader = 'Send Approval Email';
         this.emailSubject = "CareAssist Approval Notice";
+        this.confirmPopupHeader = 'Send Approval Email?';
       }
       else {
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
@@ -258,6 +264,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
         this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
         this.templateHeader = 'Send Approval Letter';
         this.emailSubject = '';
+        this.confirmPopupHeader = 'Send Approval Letter to Print?';
       }
     }
     else if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes && this.workflowFacade.caseStatus === CaseStatusCode.disenrolled) {
@@ -267,6 +274,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
         this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
         this.templateHeader = 'Send Disenrollment Email';
         this.emailSubject = "CAREAssist Disenrollment Notice";
+        this.confirmPopupHeader = 'Send Disenrollment email to print?';
       }
       else {
         this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
@@ -274,6 +282,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
         this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
         this.templateHeader = 'Send Disenrollment Letter';
         this.emailSubject = '';
+        this.confirmPopupHeader = 'Send Disenrollment letter to print?';
       }
     }
   }
