@@ -218,18 +218,20 @@ export class TodoListComponent implements OnInit {
         };
         this.router.navigate(['/financial-management/vendors/profile'], query )
       }
-      else if (gridItem && gridItem.entityTypeCode == this.entityTypes.BatchSentBack) {
-        if(gridItem.displayEntityTypeCode == this.entityTypes.Tpa){
-        this.router.navigate(
-          [`/financial-management/claims/medical/batch`],
-          { queryParams: { bid: gridItem?.entityId } }
-        );
-      }
-        else if (gridItem && gridItem.displayEntityTypeCode == this.entityTypes.Insurance) {
-          this.router.navigate(
-            [`/financial-management/claims/dental/batch`],
-            { queryParams: { bid: gridItem?.entityId } }
-          );
+      else if (gridItem && gridItem.entityTypeCode === this.entityTypes.BatchSentBack) {
+        const urlPaths = {
+            [this.entityTypes.MedicalClaim]: '/financial-management/claims/medical/batch',
+            [this.entityTypes.DentalClaim]: '/financial-management/claims/dental/batch',
+            [this.entityTypes.MedicalPremium]: '/financial-management/premiums/medical/batch',
+            [this.entityTypes.DentalPremium]: '/financial-management/premiums/dental/batch',
+            [this.entityTypes.Pharmacy]: '/financial-management/pharmacy-claims/batch',
+        } as const;
+    
+        const entityType = gridItem.displayEntityTypeCode;
+        const urlPath = urlPaths[entityType as keyof typeof urlPaths];
+    
+        if (urlPath) {
+            this.router.navigate([urlPath], { queryParams: { bid: gridItem?.entityId } });
         }
     }
     else if (gridItem && gridItem.entityTypeCode == this.entityTypes.NewApplication) {     
