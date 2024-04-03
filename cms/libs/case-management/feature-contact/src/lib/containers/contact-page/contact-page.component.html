@@ -625,7 +625,7 @@
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.pattern">
               Home Phone must have 10 digits
             </kendo-formerror>
-            <kendo-formerror *ngIf="duplicatePhoneFound">
+            <kendo-formerror *ngIf="homePhoneDuplicate || homePhone?.phoneNbr?.errors?.incorrect">
               Duplicate Phone Number Entered
             </kendo-formerror>
           </kendo-formfield>
@@ -706,7 +706,7 @@
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.pattern">
               Cell Phone must have 10 digits
             </kendo-formerror>
-            <kendo-formerror *ngIf="duplicatePhoneFound">
+            <kendo-formerror *ngIf="cellPhoneDuplicate || cellPhone?.phoneNbr?.errors?.incorrect">
               Duplicate Phone Number Entered
             </kendo-formerror>
           </kendo-formfield>
@@ -788,7 +788,7 @@
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.pattern">
                 Work Phone must have 10 digits
               </kendo-formerror>
-              <kendo-formerror *ngIf="duplicatePhoneFound">
+              <kendo-formerror *ngIf="workPhoneDuplicate || workPhone?.phoneNbr?.errors?.incorrect">
                 Duplicate Phone Number Entered
               </kendo-formerror>
             </kendo-formfield>
@@ -871,7 +871,7 @@
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.pattern">
                 Other Phone must have 10 digits
               </kendo-formerror>
-              <kendo-formerror *ngIf="duplicatePhoneFound">
+              <kendo-formerror *ngIf="otherPhoneDuplicate || otherPhone?.phoneNbr?.errors?.incorrect">
                 Duplicate Phone Number Entered
               </kendo-formerror>
             </kendo-formfield>
