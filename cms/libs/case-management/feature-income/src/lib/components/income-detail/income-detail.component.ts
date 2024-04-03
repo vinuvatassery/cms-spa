@@ -122,7 +122,6 @@ export class IncomeDetailComponent implements OnInit {
         this.IncomeDetailsForm.controls['employerId'].setValue(this.notApplicableId);
         this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
       }
-      this.setNotApplicable = false;
     })
   }
 
@@ -166,9 +165,21 @@ export class IncomeDetailComponent implements OnInit {
   }
   loadProofOfIncomeTypes(proofIncomeTypeStatus: boolean = false) {
     let incomeTypeEmployerRequired = ['W','SE','OI'];
-    if(!(incomeTypeEmployerRequired.filter((x:any) => x === this.IncomeDetailsForm.controls['incomeTypeCode'].value).length > 0)){
-      this.setNotApplicable = true;
+    if(incomeTypeEmployerRequired.filter((x:any) => x === this.IncomeDetailsForm.controls['incomeTypeCode'].value).length === 0){
+      this.setNotApplicable = true;      
       this.loadEmployers(this.NotApplicable);
+      this.IncomeDetailsForm.controls['employerId'].disable();
+      this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
+    }
+    else
+    {
+      if(this.setNotApplicable)
+      {
+        this.IncomeDetailsForm.controls['employerId'].setValue(null);
+        this.IncomeDetailsForm.controls['employerId'].enable();
+        this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
+      }
+      this.setNotApplicable = false;
     }
     switch (this.IncomeDetailsForm.controls['incomeTypeCode'].value.toUpperCase()) {
       case IncomeTypeCode.Work:

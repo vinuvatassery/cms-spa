@@ -38,6 +38,8 @@
               </ng-template>
             </kendo-combobox-column>        
           </kendo-multicolumncombobox>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['employerId'].valid && !IncomeDetailsForm.controls['employerId'].disabled" > Employer Name is required.
+          </kendo-formerror>
           <div class="d-flex align-items-center mt-2" >
             <span class="fontsize_twel">Don’t see the Employer you’re looking for?</span>
             <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" 
@@ -46,8 +48,7 @@
             </button>
           </div>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!IncomeDetailsForm.controls['employerId'].valid"> Employer Name is required.
-        </kendo-formerror>
+       
       </div>
 
         <div class="flex-col flex-col-6">
