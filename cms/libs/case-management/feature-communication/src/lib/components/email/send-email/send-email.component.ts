@@ -224,7 +224,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   loadClientAndVendorDraftEmailTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationEmailTypeCode)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId)
       .subscribe({
         next: (data: any) => {
           if (data?.length > 0) {
@@ -689,7 +689,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   getDraftedTemplate(){
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationEmailTypeCode).subscribe((response:any)=>{
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
       if(response.length>0){
         this.selectedTemplateContent =response[0].requestBody;
         this.updatedTemplateContent = response[0].requestBody;

@@ -90,10 +90,12 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        this.currentCommunicationTypeCode = CommunicationEventTypeCode.LetterTypeCode;
+        this.letterCommunicationTypeCode = CommunicationEventTypeCode.LetterTypeCode;
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
+        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -108,10 +110,11 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        this.currentCommunicationTypeCode = CommunicationEventTypeCode.EmailTypeCode;
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.confirmPopupHeader = 'Send Email?';
-        this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
+        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -126,9 +129,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientSMS;
+        this.currentCommunicationTypeCode = CommunicationEventTypeCode.SmsTypeCode;
         this.informationalText = "Select an existing template or draft custom text messages"
         this.templateHeader = 'Send New SMS Text';
-        this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
+        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -343,7 +347,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
 
   handlePreviewTemplateClosed(result: any) {
-  
     if (result) {
       this.isPreviewTemplateDialog.close(result);
      
@@ -359,26 +362,26 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   notificationDraftCheck(clientId: any, typeCode: string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(clientId, typeCode)
+    this.communicationFacade.loadDraftNotificationRequest(clientId)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {
           for (let template of data){
             this.notificationDraftId = template.notifcationDraftId;
            }
-          if(typeCode == CommunicationEventTypeCode.ClientEmail){
+          if(typeCode == CommunicationEventTypeCode.EmailTypeCode){
             this.notificationGroup = CommunicationEventTypeCode.EMAIL;
           }
-          if(typeCode == CommunicationEventTypeCode.ClientLetter){
+          if(typeCode == CommunicationEventTypeCode.LetterTypeCode){
             this.notificationGroup = CommunicationEventTypeCode.LETTER;
           }
-          if(typeCode === CommunicationEventTypeCode.ClientSMS){
+          if(typeCode === CommunicationEventTypeCode.SmsTypeCode){
             this.notificationGroup = CommunicationEventTypeCode.SMS;
           }
           this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);
           this.ref.detectChanges();
         }else{
-          this.loadNotificationTemplates(this.templateLoadType, templateName);
+          this.loadNotificationTemplates(typeCode, templateName);
         }
       this.loaderService.hide();
     },
@@ -391,15 +394,15 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   loadNotificationTemplates(typeCode: string, templateName: TemplateRef<unknown>) {
-    if(typeCode == CommunicationEventTypeCode.ClientEmail || typeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail){
+    if(typeCode == CommunicationEventTypeCode.EmailTypeCode || typeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail){
       templateName = this.sendNewEmailDialog;
       this.onSendNewEmailClicked(templateName);
     }
-    if(typeCode == CommunicationEventTypeCode.ClientLetter || typeCode == CommunicationEventTypeCode.DisenrollmentNoticeLetter){
+    if(typeCode == CommunicationEventTypeCode.LetterTypeCode || typeCode == CommunicationEventTypeCode.DisenrollmentNoticeLetter){
       templateName = this.sendLetterDialog;
       this.onSendNewLetterClicked(templateName);
     }
-    if(typeCode === CommunicationEventTypeCode.ClientSMS){
+    if(typeCode === CommunicationEventTypeCode.SmsTypeCode){
       templateName = this.sendTextMessageDialog;
       this.onNewSMSTextClicked(templateName);
     }

@@ -93,7 +93,7 @@ export class SendTextMessageComponent implements OnInit {
 
   loadClientAndVendorDraftSmsTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationSmsTypeCode)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {

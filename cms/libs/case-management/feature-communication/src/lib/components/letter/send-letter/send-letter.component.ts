@@ -131,8 +131,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   getProfileName() {
-    if (this.communicationLetterTypeCode.includes('CLIENT')) return 'client';
-    else if (this.communicationLetterTypeCode.includes('VENDOR')) return 'vendor';
+    if (this.communicationLetterTypeCode?.includes('CLIENT')) return 'client';
+    else if (this.communicationLetterTypeCode?.includes('VENDOR')) return 'vendor';
     else return this.communicationLetterTypeCode;
   }
 
@@ -152,7 +152,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   loadClientAndVendorDraftLetterTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationLetterTypeCode)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {
@@ -376,7 +376,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.VendorLetter:
         templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
         break;
-      case CommunicationEventTypeCode.ClientLetter:
+      case CommunicationEventTypeCode.LetterTypeCode:
         templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
         break;
         case CommunicationEventTypeCode.ApplicationAuthorizationLetter || CommunicationEventTypeCode.ApplicationAuthorizationLetter:
@@ -494,7 +494,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   getDraftedTemplate(){
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationLetterTypeCode).subscribe((response:any)=>{
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
       if(response.length>0){
         this.selectedTemplateContent =response[0].requestBody;
         this.updatedTemplateContent = response[0].requestBody; 

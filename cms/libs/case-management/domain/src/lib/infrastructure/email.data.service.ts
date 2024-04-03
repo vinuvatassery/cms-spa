@@ -169,9 +169,9 @@ export class EmailDataService {
       );
     }
 
-    getDraftNotification(entityId: string, typeCode: string) {
+    getDraftNotification(entityId: string) {
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/draft?entityId=${entityId}&typeCode=${typeCode}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/draft?entityId=${entityId}`
       );
     }
 

@@ -171,7 +171,7 @@ export class VendorHeaderToolsComponent {
 
   notificationDraftCheck(vendorId: any, typeCode: string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(vendorId, typeCode)
+    this.communicationFacade.loadDraftNotificationRequest(vendorId)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {

@@ -222,7 +222,7 @@ export class CommunicationFacade {
     if (data?.emailData) {
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
       formData.append('description', data?.emailData?.description ?? '');
-      formData.append('typeCode', data?.emailData?.templateCategoryCode ?? data?.emailData?.typeCode);
+      formData.append('typeCode', data?.emailData?.typeCode ?? '');
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
       formData.append('notifcationDraftId', data?.emailData?.notifcationDraftId ?? '');
     }
@@ -327,8 +327,8 @@ export class CommunicationFacade {
     return this.emailDataService.saveEmailNotificationForLater(formData);
   }
 
-  loadDraftNotificationRequest(entityId: string, typeCode: string) {
-    return this.emailDataService.getDraftNotification(entityId, typeCode);
+  loadDraftNotificationRequest(entityId: string) {
+    return this.emailDataService.getDraftNotification(entityId);
   }
 
   loadTemplateById(notificationTemplateId: string) {
