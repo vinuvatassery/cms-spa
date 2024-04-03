@@ -41,7 +41,7 @@ export class NotificationListComponent {
         this.alertsData.items =data?.items ?  data?.items?.filter((item:any) => item.alertTypeCode == 'NOTIFICATION').sort((a : any, b : any) => {
           const dateA = new Date(a.alertDueDate).getTime();
           const dateB = new Date(b.alertDueDate).getTime();
-          return dateA - dateB}) : []; // Sorting by alertDueDate in ascending order;
+          return dateB - dateA}) : []; // Sorting by alertDueDate in descending order;
         this.cdr.detectChanges();
       });
       this.searchTerm.valueChanges.subscribe((value) => {

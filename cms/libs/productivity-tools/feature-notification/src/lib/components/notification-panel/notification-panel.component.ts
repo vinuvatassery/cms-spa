@@ -149,6 +149,11 @@ export class NotificationPanelComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadNotificationsAndReminders();
+      this.notificationList$.subscribe((data: any) => {
+        this.alertsData = data;
+        this.cdr.detectChanges();
+      });
     this.loadSignalrGeneralNotifications();
     this.loadSignalrReminders();
   }
