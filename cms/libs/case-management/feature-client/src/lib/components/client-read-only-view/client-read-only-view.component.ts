@@ -10,12 +10,11 @@ import {
   CaseFacade
 } from '@cms/case-management/domain';
 import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
-import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { Subject, Subscription, of } from 'rxjs';
-import { Subject, Subscription, of } from 'rxjs';
+
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 @Component({
@@ -38,9 +37,6 @@ export class ClientReadOnlyViewComponent implements OnInit{
   @Input() userManagerprofilePhoto$!: any;
   @Input() userLastModifierProfilePhoto$!: any;
 
-  @Input() clientProfile$!: any;
-  @Input() userManagerprofilePhoto$!: any;
-  @Input() userLastModifierProfilePhoto$!: any;
 
   applicantInfo = {} as ApplicantInfo;
   isEditClientInformationPopup = false;
@@ -57,14 +53,6 @@ export class ClientReadOnlyViewComponent implements OnInit{
   lastModifierId: string  |null=null;
   clientProfileSubscription = new Subscription();
 
-  userManagerprofilePhotoSubject = new Subject();
-  userLastModifierProfilePhotoSubject = new Subject();
-  userFirstName: string  |null=null;
-  userLastName: string  |null=null;
-  isUserProfilePhotoExist: boolean |null=null;
-  creatorId: string  |null=null;
-  lastModifierId: string  |null=null;
-  clientProfileSubscription = new Subscription();
 
   constructor(
       private readonly elementRef: ElementRef,

@@ -88,7 +88,7 @@ export class StatusPeriodComponent implements OnInit {
     }
   ];
   statusPeriodProfilePhoto$ =this.statusPeriodFacade.statusPeriodProfilePhotoSubject;
-  statusPeriodProfilePhoto$ =this.statusPeriodFacade.statusPeriodProfilePhotoSubject;
+
   /** Constructor **/
   constructor(
     private readonly statusPeriodFacade: StatusPeriodFacade,
@@ -97,7 +97,7 @@ export class StatusPeriodComponent implements OnInit {
     private clientEligibilityFacade: ClientEligibilityFacade,
     private dialogService: DialogService,
     private readonly clientFacade: ClientFacade,) { }
-    private readonly clientFacade: ClientFacade,) { }
+  
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

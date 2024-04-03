@@ -73,7 +73,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   clientChangeSubscription$ = new Subscription();
   clientProfileReloadSubscription$ = new Subscription();
   userDetail$ = this.userManagementFacade.usersById$;
-  userDetail$ = this.userManagementFacade.usersById$;
 
   client_button_grp = true;
   health_button_grp = false;
@@ -129,17 +128,13 @@ export class Case360PageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit() {
-  ngOnInit() {
     this.initialize();
     this.routeChangeSubscription();
     this.clientProfileReloadSubscription$ = this.clientProfileReload$.subscribe((data)=>{
-    this.clientProfileReloadSubscription$ = this.clientProfileReload$.subscribe((data)=>{
       this.loadClientProfileInfoEventHandler();
-    });
     });
   }
 
-  ngOnDestroy(): void {
   ngOnDestroy(): void {
     this.clientChangeSubscription$.unsubscribe();
     this.clientProfileReloadSubscription$.unsubscribe();
@@ -175,11 +170,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
 
   createCerSession()
   {
-  {
     if(this.clientCaseEligibilityId)
     {
      const cerSessionData = {
-        entityId: null,
         entityId: null,
         assignedCwUserId: null,
         caseOriginCode: null,
@@ -191,7 +184,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   }
 
   private routeChangeSubscription() {
-  private routeChangeSubscription() {
     this.clientChangeSubscription$ = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -200,7 +192,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
           this.clientCaseEligibilityId = '';
           this.initialize();
           this.loadClientProfileInfoEventHandler();
-        }
         }
       });
   }
@@ -226,7 +217,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.onClientProfileHeaderLoad();
   }
 
-  onClientProfileHeaderLoad() {
   onClientProfileHeaderLoad() {
     this.clientProfileHeader$
       ?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
@@ -270,10 +260,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
           this.onTabClick(ClientProfileTabs.CLIENT_INFO);
         }
       this.userManagementFacade.getUserById(this.caseWorkerId);
-      this.userManagementFacade.getUserById(this.caseWorkerId);
       });
   }
-
 
   onTabClick(tabName: string) {
     this.selectedTabName = tabName;
@@ -323,7 +311,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         this.mng_button_grp = false;
         break;
     }
-    }
     this.caseFacade.onClientProfileTabSelect(
       tabName,
       this.profileClientId,
@@ -332,7 +319,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     );
   }
 
-  onTabSelect(tabName: string) {
   onTabSelect(tabName: string) {
     this.selectedTabName = tabName;
     this.caseFacade.onClientProfileTabSelect(
@@ -358,7 +344,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         if(response?.caseStatusCode == CaseStatusCode.reject || response?.caseStatusCode == CaseStatusCode.disenrolled){
           this.caseFacade.setCaseReadOnly(true);
         }
-
 
         else{
           this.caseFacade.setCaseReadOnly(false);

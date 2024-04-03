@@ -1,7 +1,6 @@
 /** Angular **/
 import {
   Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChildren, QueryList, OnDestroy
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChildren, QueryList, OnDestroy
 } from '@angular/core';
 /** External Libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -78,10 +77,6 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   sortType: any = 'asc';
   filter!: any;
   public uploadFileRestrictions: UploadFileRistrictionOptions =
-  new UploadFileRistrictionOptions();
-  incomeListSubscription = new Subscription();
-  dependantProofProfilePhoto$ = this.incomeFacade.dependantProofProfilePhotoSubject;
-  incomeListProfilePhoto$ = this.incomeFacade.incomeListProfilePhotoSubject;
   new UploadFileRistrictionOptions();
   incomeListSubscription = new Subscription();
   dependantProofProfilePhoto$ = this.incomeFacade.dependantProofProfilePhotoSubject;

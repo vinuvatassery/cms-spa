@@ -12,26 +12,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  DrugsFacade,
-  FinancialClaimsFacade,
-  FinancialPharmacyClaimsFacade,
-  FinancialVendorFacade,
-  GridFilterParam,
-  VendorFacade,
-} from '@cms/case-management/domain';
+import { DrugsFacade, FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, GridFilterParam, VendorFacade } from '@cms/case-management/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { ColumnVisibilityChangeEvent, FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
-  ColumnVisibilityChangeEvent,
-  FilterService,
-  GridDataResult,
-  SelectableMode,
-  SelectableSettings,
-} from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+  CompositeFilterDescriptor,
+  State,
+} from '@progress/kendo-data-query';
 import { BatchPharmacyClaims } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-pharmacy-claims';
 import { Subject, debounceTime, first } from 'rxjs';
 @Component({
@@ -40,6 +30,7 @@ import { Subject, debounceTime, first } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
+
   /* Input Properties */
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -51,7 +42,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   /* Output Properties */
   @Output() loadPharmacyClaimsProcessListEvent = new EventEmitter<any>();
   @Output() exportPharmacyClaimsProcessListEvent = new EventEmitter<any>();
-  @Input() batchingClaims$: any;
+  @Input() batchingClaims$: any; 
   @Output() onbatchClaimsClickedEvent = new EventEmitter<any>();
   @Output() ondeleteClaimsClickedEvent = new EventEmitter<any>();
   public selectedProcessClaims: any[] = [];
@@ -85,9 +76,9 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   paymentStatus$ = this.lovFacade.paymentStatus$;
   vendorId: any;
   clientId: any;
-  clientName: any;
-  claimsType: any;
-  paymentRequestId!: string;
+ clientName: any;
+ claimsType:any;
+ paymentRequestId!: string;
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
   @Input() getPharmacyClaim$: any;
@@ -97,8 +88,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Input() searchPharmaciesLoader$: any;
   @Input() searchClientLoader$: any;
   @Input() searchDrugsLoader$: any;
-  @Input() paymentRequestType$: any;
-  @Input() deliveryMethodLov$: any;
+  @Input() paymentRequestType$ : any
+  @Input() deliveryMethodLov$ :any
   @Input() pharmacyClaimsProcessListProfilePhoto$: any;
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
@@ -131,24 +122,21 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   private searchSubject = new Subject<string>();
-  addDrug$ = this.drugsFacade.addDrug$;
+  addDrug$ = this.drugsFacade.addDrug$
   manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
-  sortValueRecentClaimList =
-    this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
-  recentClaimsGridLists$ =
-    this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
-  pharmacyRecentClaimsProfilePhoto$ =
-    this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
-  fromDrugPurchased: any = false;
+  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
+  fromDrugPurchased:any = false;
 
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
       text: 'BATCH CLAIMS',
       icon: 'check',
-      click: (data: any, paymentRequestId: any): void => {
+      click: (data: any,paymentRequestId : any): void => {
         if (!this.isProcessBatchClosed) {
           this.isProcessBatchClosed = true;
           this.isDeleteBatchClosed = false;
@@ -161,9 +149,9 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       buttonType: 'btn-h-danger',
       text: 'DELETE CLAIMS',
       icon: 'delete',
-      click: (data: any, paymentRequestId: any): void => {
+      click: (data: any,paymentRequestId : any): void => {
         if (!this.isDeleteBatchClosed) {
-          this.isProcessBatchClosed = false;
+          this.isProcessBatchClosed=false;
           this.isDeleteBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
         }
@@ -173,15 +161,12 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claims',
+      text: 'Edit Claim',
       icon: 'edit',
-      click: (data: any, paymentRequestId: any): void => {
+      click: (data: any,paymentRequestId : any): void => {
         if (!this.isAddEditClaimMoreClose) {
           this.isAddEditClaimMoreClose = true;
-          this.onClickOpenAddEditClaimsFromModal(
-            this.addEditClaimsDialog,
-            paymentRequestId
-          );
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog,paymentRequestId);
         }
       },
     },
@@ -190,10 +175,12 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-        if (data.paymentRequestId) {
+        if(data.paymentRequestId)
+        {
           this.onSingleClaimDelete(data.paymentRequestId.split(','));
           this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
         }
+      
       },
     },
   ];
@@ -213,10 +200,10 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     pcaCode: 'PCA Code',
     objectCode: 'Object Code',
     paymentStatusDesc: 'Payment Status',
-    creationTime: 'Entry Date',
+    creationTime: 'Entry Date'
   };
 
-  searchColumnList: { columnName: string; columnDesc: string }[] = [
+  searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'ALL', columnDesc: 'All Columns' },
     { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
     { columnName: 'clientFullName', columnDesc: 'Client Name' },
@@ -227,7 +214,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   paymentTypeFilter = '';
   paymentStatusFilter = '';
   deletemodelbody =
-    'This action cannot be undone, but you may add a claim at any time.';
+  'This action cannot be undone, but you may add a claim at any time.';
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -238,8 +225,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     private readonly drugsFacade: DrugsFacade,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
-    private readonly vendorFacade: VendorFacade
-  ) {
+    private readonly vendorFacade:VendorFacade
+  ) { 
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
       mode: this.mode,
@@ -247,11 +234,12 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     };
   }
 
+
   ngOnInit(): void {
     this.loadPharmacyClaimsProcessListGrid();
     this.addSearchSubjectSubscription();
     this.lovFacade.getPaymentStatusLov();
-    this.lovFacade.getPaymentMethodLov();
+    this.lovFacade.getPaymentMethodLov();   
   }
 
   ngOnChanges(): void {
@@ -262,27 +250,19 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     };
   }
 
-  loadManufacturerEvent(event: any) {
-    this.vendorFacade
-      .loadAllVendors(FinancialVendorTypeCode.Manufacturers)
-      .subscribe({
-        next: (data: any) => {
-          this.financialVendorFacade.manufacturerListSubject.next(data);
-        },
-      });
+  loadManufacturerEvent(event:any){
+    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (data: any) => {
+        this.financialVendorFacade.manufacturerListSubject.next(data);
+      }      
+    });
   }
   ngOnDestroy(): void {
     this.searchSubject.complete();
   }
 
   loadPharmacyClaimsProcessListGrid() {
-    const gridDataRefinerValue = new GridFilterParam(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType,
-      JSON.stringify(this.filter)
-    );
+    const gridDataRefinerValue = new GridFilterParam(this.state?.skip ?? 0, this.state?.take ?? 0, this.sortValue, this.sortType, JSON.stringify(this.filter));
     this.loadPharmacyClaimsProcessListEvent.emit(gridDataRefinerValue);
   }
 
@@ -300,9 +280,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   }
 
   columnChange(event: ColumnVisibilityChangeEvent) {
-    const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
-    this.columnChangeDesc =
-      columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 
   dataStateChange(stateData: any): void {
@@ -328,49 +307,41 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     const isDateSearch = searchValue.includes('/');
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
-    this.searchSubject.next(searchValue);
+    this.searchSubject.next(searchValue);  
   }
 
-  private setFilterBy(
-    isFromGrid: boolean,
-    searchValue: any = '',
-    filter: any = []
-  ) {
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
     this.filteredByColumnDesc = '';
     if (isFromGrid) {
       if (filter.length > 0) {
         const filteredColumns = this.filter?.map((f: any) => {
-          const filteredColumns = f.filters
-            ?.filter((fld: any) => fld.value)
-            ?.map((fld: any) => this.gridColumns[fld.field]);
-          return [...new Set(filteredColumns)];
+          const filteredColumns = f.filters?.filter((fld: any) => fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
         });
 
-        this.filteredByColumnDesc =
-          [...new Set(filteredColumns)]?.sort()?.join(', ') ?? '';
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
       }
       return;
     }
 
     if (searchValue !== '') {
-      this.filteredByColumnDesc =
-        this.searchColumnList?.find(
-          (i) => i.columnName === this.selectedSearchColumn
-        )?.columnDesc ?? '';
+      this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
     }
   }
 
   private addSearchSubjectSubscription() {
-    this.searchSubject.pipe(debounceTime(300)).subscribe((searchValue) => {
-      this.performSearch(searchValue);
-    });
+    this.searchSubject.pipe(debounceTime(300))
+      .subscribe((searchValue) => {
+        this.performSearch(searchValue);
+      });
   }
 
   resetGrid() {
     this.defaultGridState();
     this.sortValue = 'creationTime';
     this.sortType = 'desc';
-    this.sortDir = this.sortType === 'desc' ? 'Descending' : '';
+    this.sortDir = this.sortType === 'desc' ? 'Descending' : "";
     this.filter = [];
     this.searchText = '';
     this.selectedSearchColumn = 'ALL';
@@ -419,14 +390,13 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     });
   }
   onModalBatchClaimsModalClose() {
-    this.batchConfirmClaimsDialog.close();
+      this.batchConfirmClaimsDialog.close();
   }
 
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
-    if (!this.selectedProcessClaims.length) {
-      this.financialClaimsFacade.errorShowHideSnackBar(
-        'Select a claim to delete'
-      );
+    if (!this.selectedProcessClaims.length)
+    {
+      this.financialClaimsFacade.errorShowHideSnackBar("Select a claim to delete")
       return;
     }
     this.deleteClaimsDialog = this.dialogService.open({
@@ -435,18 +405,18 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
+    
     if (result) {
+      
       this.isDeleteBatchMoreOptionClosed = false;
       this.deleteClaimsDialog.close();
     }
   }
 
-  onClickOpenAddEditClaimsFromModal(
-    template: TemplateRef<unknown>,
-    paymentRequestId: any
-  ): void {
-    if (paymentRequestId !== '00000000-0000-0000-0000-000000000000') {
-      this.getPharmacyClaimEvent.emit(paymentRequestId);
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>,paymentRequestId : any): void {  
+    if(paymentRequestId !== '00000000-0000-0000-0000-000000000000')  
+    {
+    this.getPharmacyClaimEvent.emit(paymentRequestId);
     }
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: template,
@@ -460,16 +430,16 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     }
   }
 
-  addDrugEventHandler(event: any) {
+  addDrugEventHandler(event:any){
     this.drugsFacade.addDrugData(event);
   }
 
-  searchClientsDataEventHandler(client: any) {
+  searchClientsDataEventHandler(client:any){
     this.financialPharmacyClaimsFacade.searchClientsDataSubject.next(client);
   }
 
-  searchPharmacyDataEventHandler(vendor: any) {
-    this.financialPharmacyClaimsFacade.searchPharmaciesDataSubject.next(vendor);
+  searchPharmacyDataEventHandler(vendor:any){
+    this.financialPharmacyClaimsFacade.searchPharmaciesDataSubject.next(vendor)
   }
 
   onBatchClaimsGridSelectedClicked() {
@@ -485,8 +455,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   clientRecentClaimsModalClicked(
     template: TemplateRef<unknown>,
-    data: any
-  ): void {
+  data:any): void {
+    
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
@@ -527,27 +497,32 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   addPharmacyClaim(data: any) {
     this.addPharmacyClaimEvent.emit(data);
 
-    this.addPharmacyClaim$
-      .pipe(first((addResponse: any) => addResponse != null))
-      .subscribe((addResponse: any) => {
-        if (addResponse) {
-          this.loadPharmacyClaimsProcessListGrid();
-          this.modalCloseAddEditClaimsFormModal(true);
-        }
-      });
+    this.addPharmacyClaim$.pipe(first((addResponse: any ) => addResponse != null))
+    .subscribe((addResponse: any) =>
+    {
+      if(addResponse)
+      {      
+        this.loadPharmacyClaimsProcessListGrid();
+        this.modalCloseAddEditClaimsFormModal(true)
+      }
+
+    })
   }
 
   updatePharmacyClaim(data: any) {
     this.updatePharmacyClaimEvent.emit(data);
-    this.editPharmacyClaim$
-      .pipe(first((editResponse: any) => editResponse != null))
-      .subscribe((editResponse: any) => {
-        if (editResponse) {
-          this.loadPharmacyClaimsProcessListGrid();
-          this.modalCloseAddEditClaimsFormModal(true);
-        }
-      });
+    this.editPharmacyClaim$.pipe(first((editResponse: any ) => editResponse != null))
+    .subscribe((editResponse: any) =>
+    {
+      if(editResponse)
+      {      
+        this.loadPharmacyClaimsProcessListGrid();
+        this.modalCloseAddEditClaimsFormModal(true)
+      }
+
+    })
   }
+
 
   searchPharmacies(searchText: any) {
     this.searchPharmaciesEvent.emit(searchText);
@@ -560,47 +535,55 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     this.searchDrugEvent.emit(searchText);
   }
 
-  getCoPaymentRequestTypeLov() {
+  getCoPaymentRequestTypeLov()
+  {
     this.getCoPaymentRequestTypeLovEvent.emit();
   }
 
-  getDrugUnitTypeLov() {
+  getDrugUnitTypeLov()
+  {
     this.getDrugUnitTypeLovEvent.emit();
   }
+
 
   onExportClaims() {
     const params = {
       SortType: this.sortType,
       Sorting: this.sortValue,
-      Filter: JSON.stringify(this.filter),
+      Filter: JSON.stringify(this.filter)
     };
 
     this.exportPharmacyClaimsProcessListEvent.emit(params);
   }
 
+  
   selectedKeysChange(selection: any) {
     this.selectedProcessClaims = selection;
   }
 
-  OnbatchClaimsClicked() {
+  OnbatchClaimsClicked(){
+
     const input: BatchPharmacyClaims = {
       PaymentRequestIds: this.selectedProcessClaims,
     };
-    this.batchingClaims$.subscribe((_: any) => {
-      this.onModalBatchClaimsModalClose();
+    this.batchingClaims$.subscribe((_:any) =>{
+      this.onModalBatchClaimsModalClose()
       this.loadPharmacyClaimsProcessListGrid();
-      this.onBatchClaimsGridSelectedCancelClicked();
-    });
-    this.onbatchClaimsClickedEvent.emit(input);
+      this.onBatchClaimsGridSelectedCancelClicked()
+    })
+    this.onbatchClaimsClickedEvent.emit(input)
   }
   onModalBatchDeletingClaimsButtonClicked() {
-    this.ondeleteClaimsClickedEvent.emit(this.selectedProcessClaims);
-    this.batchingClaims$.subscribe((_: any) => {
+    this.ondeleteClaimsClickedEvent.emit(this.selectedProcessClaims)
+    this.batchingClaims$.subscribe((_:any) =>{
+      
       this.isDeleteBatchMoreOptionClosed = false;
       this.deleteClaimsDialog.close();
       this.loadPharmacyClaimsProcessListGrid();
-      this.onBatchClaimsGridSelectedCancelClicked();
-    });
+      this.onBatchClaimsGridSelectedCancelClicked()
+    })
+    
+   
   }
   dropdownFilterChange(
     field: string,
@@ -633,7 +616,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event);
   }
-  loadRecentClaimListEventHandler(data: any) {
+  loadRecentClaimListEventHandler(data : any){
     this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
   }
 }

@@ -11,7 +11,7 @@ import { FinancialVendorDataService } from '../../infrastructure/financial-manag
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { UserManagementFacade } from '@cms/system-config/domain';
+
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorFacade {
@@ -45,7 +45,7 @@ export class FinancialVendorFacade {
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
 
-  public manufacturerListSubject = new Subject<any>();
+
   public manufacturerListSubject = new Subject<any>();
   manufacturerList$ = this.manufacturerListSubject.asObservable();
 
@@ -65,7 +65,7 @@ export class FinancialVendorFacade {
     field: this.sortValue,
   }];
   financialClinicProviderProfileSubject = new Subject();
-  financialClinicProviderProfileSubject = new Subject();
+
 
   /** Constructor**/
   constructor(private readonly financialVendorDataService: FinancialVendorDataService,
@@ -74,7 +74,7 @@ export class FinancialVendorFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly userManagementFacade: UserManagementFacade,
-    private readonly userManagementFacade: UserManagementFacade,
+  
   ) { }
 
   /** Public methods **/
@@ -356,19 +356,7 @@ export class FinancialVendorFacade {
     });
   }
 
-  loadProviderDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.financialClinicProviderProfileSubject.next(data);
-          }
-        },
-      });
-    }
-  } 
+
 
 
   loadProviderDistinctUserIdsAndProfilePhoto(data: any[]) {

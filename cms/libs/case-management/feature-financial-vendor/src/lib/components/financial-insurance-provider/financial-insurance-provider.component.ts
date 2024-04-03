@@ -22,12 +22,6 @@ export class FinancialInsuranceProviderComponent {
   insursnceProviderSubscription = new Subscription();
   insursnceProviderProfileSubject = new Subject();
   insursnceProviderProfilePhoto$ = this.insuranceProviderFacade.insursnceProviderProfilePhotoSubject;
-  
-  insursnceProviderSubscription = new Subscription();
-  insursnceProviderProfileSubject = new Subject();
-  insursnceProviderProfilePhoto$ = this.insuranceProviderFacade.insursnceProviderProfilePhotoSubject;
-  
-
   public emailBillingAddressActions = [
     {
       buttonType: 'btn-h-primary',
@@ -55,7 +49,7 @@ export class FinancialInsuranceProviderComponent {
   
    /** Constructor **/
    constructor(private readonly insuranceProviderFacade: InsuranceProviderFacade,) {}
-   constructor(private readonly insuranceProviderFacade: InsuranceProviderFacade,) {}
+
    
   ngOnInit(): void {
     this.loadInsuranceProviderListGrid();

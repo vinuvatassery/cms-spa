@@ -24,11 +24,7 @@ import {
   PaymentMethodCode,
   ServiceTypeCode,
 } from '@cms/case-management/domain';
-import {
-  LovFacade,
-  UserManagementFacade,
-  ScrollFocusValidationfacade,
-} from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, Subscription, debounceTime, takeUntil } from 'rxjs';
 import { VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
@@ -196,18 +192,16 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
   paymentTypeData: any[] = [];
   selectedPaymentType: any = '';
 
-  constructor(
-    private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
+  constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
-    public financialVendorFacade: FinancialVendorFacade,
+    public financialVendorFacade :FinancialVendorFacade,
     private dialogService: DialogService,
     private formBuilder: FormBuilder,
-    private readonly userManagementFacade: UserManagementFacade,
-    private readonly cdr: ChangeDetectorRef,
     private readonly elementRef: ElementRef,
-    private scrollFocusValidationfacade: ScrollFocusValidationfacade
-  ) {}
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef) {}
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
@@ -740,25 +734,25 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
 
   onAddRefundClick() {
     this.isAddClicked = true;
-    if (this.selectedRefundType === 'PHARMACY') {
-      this.addNewRefundRx();
-    }
-    if (this.selectedRefundType === ServiceTypeCode.insurancePremium) {
-      if (this.refundRXForm.invalid) {
-        this.scrollToValidationError();
-        return;
-      }
-      this.insuraceAddRefundClickSubject.next(true);
-    }
-     
-    if (this.selectedRefundType === ServiceTypeCode.tpa) {
-      if (this.refundRXForm.invalid) {
-        this.scrollToValidationError();
-        return;
-      }
-      this.tpaAddRefundClickSubject.next(true)
-    } 
+  if (this.selectedRefundType === 'PHARMACY') {
+    this.addNewRefundRx();
   }
+  if (this.selectedRefundType === ServiceTypeCode.insurancePremium) {
+    if (this.refundRXForm.invalid) {
+      this.scrollToValidationError();
+      return;
+    }
+    this.insuraceAddRefundClickSubject.next(true);
+  }
+  if (this.selectedRefundType === ServiceTypeCode.tpa) {
+    if (this.refundRXForm.invalid) {
+      this.scrollToValidationError();
+      return;
+    }
+    this.tpaAddRefundClickSubject.next(true)
+  }
+
+}
 
   addTpa(event: any) {
     this.financialVendorRefundFacade.addUpdateInsuranceRefundClaim$.subscribe(
@@ -1179,6 +1173,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       this.scrollToValidationError();
       return;
     } else {
+    
       let selectedpharmacyClaimsDto = selectedpharmacyClaims.map(
         (obj: any) => ({
           paymentRequestId:
@@ -1270,12 +1265,15 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       }
     }
   }
+
   scrollToValidationError(){
     const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.refundRXForm, this.elementRef.nativeElement,null);
     if (invalidControl) {
       invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       invalidControl.focus();
     }
+  }
+  
   validateFormat(cardnumber: any): string {
     const sanitizedValue = cardnumber.replace(/[^\d]/g, '');
     const regex = /^(\d{0,6})(\d{0,3})/;

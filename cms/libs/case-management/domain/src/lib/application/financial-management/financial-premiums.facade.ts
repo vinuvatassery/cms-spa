@@ -175,8 +175,7 @@ export class FinancialPremiumsFacade {
   premiumProcessListProfilePhotoSubject = new Subject();
   premiumAllPaymentsPremiumSubject = new Subject();
 
-  premiumProcessListProfilePhotoSubject = new Subject();
-  premiumAllPaymentsPremiumSubject = new Subject();
+
   /** Private properties **/
 
   /** Public properties **/
@@ -207,8 +206,6 @@ export class FinancialPremiumsFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService,
-    private readonly userManagementFacade: UserManagementFacade,
     private readonly loaderService: LoaderService,
     private readonly userManagementFacade: UserManagementFacade,
   ) { }
@@ -291,10 +288,10 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadBatchLogListGrid(isReconciled: boolean, premiumType : string ,batchId : string, paginationParameters : any){
+
   loadBatchLogListGrid(isReconciled: boolean, premiumType : string ,batchId : string, paginationParameters : any){
     this.paymentByBatchGridLoaderSubject.next(true);
-    this.financialPremiumsDataService.loadBatchLogListService(isReconciled, premiumType ,batchId ,paginationParameters ).subscribe({
+
     this.financialPremiumsDataService.loadBatchLogListService(isReconciled, premiumType ,batchId ,paginationParameters ).subscribe({
       next: (dataResponse : any) => {
         const gridView = {
@@ -412,8 +409,7 @@ export class FinancialPremiumsFacade {
       });
     }
 
-  loadPremiumPrintAdviceLetterData(isReconciled: boolean, printAdviceLetterData: any, premiumType: any) {
-    return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(isReconciled, printAdviceLetterData, premiumType);
+
   loadPremiumPrintAdviceLetterData(isReconciled: boolean, printAdviceLetterData: any, premiumType: any) {
     return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(isReconciled, printAdviceLetterData, premiumType);
   }

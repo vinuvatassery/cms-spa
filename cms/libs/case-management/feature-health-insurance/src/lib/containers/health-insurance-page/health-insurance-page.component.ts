@@ -58,8 +58,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     private readonly loggingService: LoggingService,
     private readonly router: Router,
     private lovFacade: LovFacade
-    private readonly router: Router,
-    private lovFacade: LovFacade
+
   ) { }
 
   /** Lifecycle Hooks **/
@@ -96,11 +95,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.HideLoader();
   }
 
-  private loadHealthInsuranceLovs() {
-    this.lovFacade.getHealthInsuranceTypeLovs();
-    this.lovFacade.getPremiumFrequencyLovs();
-    this.lovFacade.getCaseCodeLovs();
-  }
+
 
   private loadHealthInsuranceLovs() {
     this.lovFacade.getHealthInsuranceTypeLovs();
@@ -381,8 +376,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.showTable = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
-            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,      
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -421,7 +415,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   }
 
   deleteInsurancePolicy(insurancePolicyId: any) {
-  deleteInsurancePolicy(insurancePolicyId: any) {
+ 
     if (insurancePolicyId != undefined) {
       this.ShowLoader();
       this.closeDeleteModal = false;
@@ -430,8 +424,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
-            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,         
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -544,11 +537,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   getPolicies(event:any){
     this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.clientCaseEligibilityId, InsuranceStatusType.healthInsurance);
    }
-  }
+  
 
-  getPolicies(event:any){
-    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.clientCaseEligibilityId, InsuranceStatusType.healthInsurance);
-   }
 }
 
 

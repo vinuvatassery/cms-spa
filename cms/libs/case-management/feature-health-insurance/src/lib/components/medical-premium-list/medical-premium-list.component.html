@@ -12,17 +12,10 @@
       [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  
       [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [selectable]="true" filterable="menu" [filter]="state.filter"
       [data]="medicalHealthPlans$ |async">
-      <kendo-grid [resizable]="true"  [pageSize]="state.take" #grid
-      [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
-      [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  
-      [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [selectable]="true" filterable="menu" [filter]="state.filter"
-      [data]="medicalHealthPlans$ |async">
 
       <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="180" [sortable]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
           <div class="d-flex" *ngIf="dataItem.cerReviewStatusCode === 'PENDING' || dataItem.cerReviewStatusCode === 'START_REVIEW'">
-            <span class="material-icons red-text-color"> error  </span>  
-            <button            
             <span class="material-icons red-text-color"> error  </span>  
             <button            
             kendoButton look="flat"
@@ -34,12 +27,10 @@
            Start Review   </button>
           </div>
           <div class="d-flex" *ngIf="dataItem.cerReviewStatusCode === 'REVIEWED'">            
-          <div class="d-flex" *ngIf="dataItem.cerReviewStatusCode === 'REVIEWED'">            
             <span class="material-icons green-text-color"> check_circle </span>  <label class="green-text-color button-labels" aria-label="Reviewed"> Reviewed </label>
           </div>
         </ng-template>
       </kendo-grid-column>
-        <kendo-grid-column field="FullDetail" title="Full Details" [width]="160" [sortable]="false"  [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled">
         <kendo-grid-column field="FullDetail" title="Full Details" [width]="160" [sortable]="false"  [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
               (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem)"
@@ -47,33 +38,6 @@
               View
             </button></ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="healthInsuranceTypeDesc" title="Health Insurance Type"[width]="280">  
-          <ng-template kendoGridFilterMenuTemplate
-          let-column="column"
-          let-filter="filter"
-          let-filterService="filterService">
-              <kendo-dropdownlist
-              [data]="insuranceTypeList$ | async"
-              textField="lovDesc"
-              valueField="lovCode"
-              [value]="healthInsuranceTypeDesc"
-              (valueChange)="dropdownFilterChange('healthInsuranceTypeDesc',$event, filterService)">
-            </kendo-dropdownlist>
-          </ng-template>
-        </kendo-grid-column>
-        <kendo-grid-column field="priorityDesc" title="Priority" [width]="100">    
-          <ng-template kendoGridFilterMenuTemplate
-          let-column="column"
-          let-filter="filter"
-          let-filterService="filterService">
-              <kendo-dropdownlist
-              [data]="priorityCodeType$ | async"
-              textField="lovDesc"
-              valueField="lovCode"
-              [value]="priorityDesc"
-              (valueChange)="dropdownFilterChange('priorityDesc',$event, filterService)">
-            </kendo-dropdownlist>
-          </ng-template>
         <kendo-grid-column field="healthInsuranceTypeDesc" title="Health Insurance Type"[width]="280">  
           <ng-template kendoGridFilterMenuTemplate
           let-column="column"
@@ -194,13 +158,6 @@
               [filterService]="filterService">
             </common-grid-cell-date-range-filter>
             </ng-template>
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <common-grid-cell-date-range-filter
-              [field]="'startDate'"
-              [filter]="filter"
-              [filterService]="filterService">
-            </common-grid-cell-date-range-filter>
-            </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="endDate" title="End Date" [width]="110">
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -256,7 +213,6 @@
               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
                 [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"
                 (selectionChange)="pageSelectionchange($event)" aria-label="Rows Per Page" id="MedicalPremiumListRowsPerPage"></kendo-dropdownlist>
-                (selectionChange)="pageSelectionchange($event)" aria-label="Rows Per Page" id="MedicalPremiumListRowsPerPage"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
               <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
             </div>
@@ -302,10 +258,7 @@
     [medicalHealthPlansCount]="medicalHealthPlansCount"
     (isAddPriority)="isAddPriority($event)"
     (getPoliciesEventEmitter)="getPolicies($event)"
-    (getPoliciesEventEmitter)="getPolicies($event)"
     [caseEligibilityId]="caseEligibilityId"
-    [clientId] ="clientId"
-    [insuranceTypeList$]="insuranceTypeList$">
     [clientId] ="clientId"
     [insuranceTypeList$]="insuranceTypeList$">
   </case-management-medical-premium-detail>

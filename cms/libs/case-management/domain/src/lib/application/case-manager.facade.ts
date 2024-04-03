@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDataService, UserDefaultRoles, UserManagementFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService,  ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserDataService, UserDefaultRoles,  UserManagementFacade } from '@cms/system-config/domain';
 import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';

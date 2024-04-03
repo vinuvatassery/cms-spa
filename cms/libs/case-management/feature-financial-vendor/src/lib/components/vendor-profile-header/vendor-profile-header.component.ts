@@ -9,10 +9,8 @@ import { VendorHeaderToolsComponent } from '../vendor-header-tools/vendor-header
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VendorProfileHeaderComponent implements OnInit {
-export class VendorProfileHeaderComponent implements OnInit {
 @Input() vendorProfileSpecialHandling$ : any
 @Input() vendorProfile$ : any
-vendorProfile:any
 vendorProfile:any
 @Input() clientCaseEligibilityId!: any;
 @Input() clientId!: any;
@@ -89,14 +87,6 @@ vendorHeaderTools!: VendorHeaderToolsComponent;
     private dialogService: DialogService) {
 
   }
-  ngOnInit(): void {
-    this.vendorProfile$.subscribe((vendorProfile :any) =>{
-      this.vendorProfile = vendorProfile
-      this.updateRecentlyViewedEvent.emit(vendorProfile.vendorId)
-    });
-   
-  }
-
   ngOnInit(): void {
     this.vendorProfile$.subscribe((vendorProfile :any) =>{
       this.vendorProfile = vendorProfile
