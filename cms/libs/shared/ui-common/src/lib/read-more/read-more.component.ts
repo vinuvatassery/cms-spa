@@ -19,17 +19,10 @@ export class ReadMoreComponent {
   isContentToggled: boolean = false;
   nonEditedContent: string = '';
   isShowReadMore: boolean = false;
-  urlSeparator:string= '!~!';
-  titleOrlinkSeparator:string= '`';
-  baseUrl:string='baseurl';
-  anchorArray:any[]=[];
-  data:any="";
 
   constructor() {}
 
   ngOnInit() {
-    this.findAnchorTag();
-    this.content = this.data;
     this.nonEditedContent = this.content;
     this.setReadmoreDisplay();
   }
@@ -53,27 +46,5 @@ export class ReadMoreComponent {
       this.limit = content.substr(0, this.limit).lastIndexOf(' ');
     }
     return `${content.substr(0, this.limit)}...`;
-  }
-  
-  findAnchorTag()
-  {
-    this.anchorArray=[];
-    let anchorArray = this.content.split(this.urlSeparator);
-    this.data=anchorArray[0];
-    let array = anchorArray.filter((res: any) =>
-        res.indexOf(this.baseUrl) !== -1
-    );
-    if(array.length>0)
-    {
-      array.forEach((item: any) => {
-        let itemDataArray = item.split(this.titleOrlinkSeparator);
-        let object={
-          url : itemDataArray[0].replace(this.baseUrl,window.location.origin),
-          text : itemDataArray[1],
-          title : itemDataArray[1]            
-        }
-        this.anchorArray.push(object);
-      });
-    }
-  }
+  }  
 }

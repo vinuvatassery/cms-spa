@@ -1,0 +1,13 @@
+<div *ngIf="hasUrl">
+    <span *ngFor="let item of anchorArray">
+        <span class="mb-1" *ngIf="!item.isUrlFlag">{{item.text}}</span>
+        <a *ngIf="item.isUrlFlag" href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
+    </span>
+</div>
+<div *ngIf="!hasUrl">
+    <common-read-more
+        [content]="content"
+        [limit]="limit"
+        [completeWords]="completeWords">
+    </common-read-more> 
+</div>

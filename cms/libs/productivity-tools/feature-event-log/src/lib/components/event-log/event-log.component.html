@@ -152,13 +152,12 @@
               >
             </button>
             <!-- <span class="items-body_details">{{eventLog.eventLogDesc}}</span> -->
-            <div class="items-body">
-              <common-read-more
-              [content]="eventLog.eventLogDesc"
-              [limit]="250"
-              [completeWords]="true">
-
-              </common-read-more>
+             <div class="items-body">
+              <productivity-tools-event-log-description
+                [content]="eventLog.eventLogDesc"
+                [limit]="250"
+                [completeWords]="true">
+              </productivity-tools-event-log-description>
             </div>
             <span *ngIf="eventLog.userEventFlag && eventLog.attachments?.length > 0"
               class="text-primary text-underline c-pointer"
