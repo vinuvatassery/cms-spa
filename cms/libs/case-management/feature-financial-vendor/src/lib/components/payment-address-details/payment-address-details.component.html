@@ -23,7 +23,7 @@
                 <kendo-floatinglabel text="Name on Check">
                     <kendo-textbox aria-label="Name on Check" formControlName="nameOnCheck" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode"
-                        (keypress)="isAlphaNumeric($event.charCode)">
+                        (input)="onInputChange($event)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['nameOnCheck'].valid">Name on
@@ -34,7 +34,7 @@
                 <kendo-floatinglabel text="Name on Envelope">
                     <kendo-textbox aria-label="Name on Envelope" formControlName="nameOnEnvelope" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode"
-                        (keypress)="isAlphaNumeric($event.charCode)">
+                        (input)="onInputChange($event)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['nameOnEnvelope'].valid ">Name on
@@ -59,7 +59,7 @@
             <div class="flex-col">
                 <kendo-floatinglabel text="City">
                     <kendo-textbox aria-label="City" formControlName="cityCode" [fillMode]="formUiStyle.inputFillMode" [maxlength]="50"
-                    (keypress)="isAlphaNumeric($event.charCode)">
+                    (input)="onInputChange($event)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['cityCode'].valid">City is
