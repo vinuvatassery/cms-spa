@@ -14,6 +14,7 @@ import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { Subject, Subscription, of } from 'rxjs';
+
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 @Component({
@@ -36,6 +37,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
   @Input() userManagerprofilePhoto$!: any;
   @Input() userLastModifierProfilePhoto$!: any;
 
+
   applicantInfo = {} as ApplicantInfo;
   isEditClientInformationPopup = false;
   caseManagerHoverDataItem! : any
@@ -51,6 +53,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
   lastModifierId: string  |null=null;
   clientProfileSubscription = new Subscription();
 
+
   constructor(
       private readonly elementRef: ElementRef,
       private loaderService: LoaderService,
@@ -62,6 +65,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
       private scrollFocusValidationfacade: ScrollFocusValidationfacade){}
    /** Lifecycle hooks **/
  ngOnInit(): void {
+  this.loadReadOnlyClientInfoEvent.emit();
   this.loadReadOnlyClientInfoEvent.emit();
 }
 
@@ -221,6 +225,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
             this.clientFacade.runImportedClaimRules(this.clientId);
             this.onCloseEditClientInformationClicked();
             this.onUpdateApplicantInfo.emit();
+            this.clientFacade.reloadClientHeader();
             this.clientFacade.reloadClientHeader();
           },
           error: (error: any) => {

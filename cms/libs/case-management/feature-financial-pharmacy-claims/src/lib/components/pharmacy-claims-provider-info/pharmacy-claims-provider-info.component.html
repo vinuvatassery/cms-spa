@@ -25,10 +25,18 @@
                   <td><strong>Payment Method</strong></td>
                   <td>{{vendorProfile.address.paymentMethodCode}}</td>
               </tr>
-              <tr *ngFor="let contact of vendorProfile.address.contacts;let i = index"> 
+              <tr> 
+                <td><strong>Phone</strong></td>
+                <td>
+                <ng-container *ngFor="let phone of prefferedVendorPhones">
+                  <p>{{phone.phoneNbr}}</p> 
+                </ng-container>
+                 </td>
+            </tr>
+              <tr> 
                   <td><strong>Email Address</strong></td>
                   <td>
-                  <ng-container *ngFor="let email of contact.emails">
+                  <ng-container *ngFor="let email of prefferedVendorEmails">
                     <p>{{email.emailAddress}}</p> 
                   </ng-container>
                    </td>

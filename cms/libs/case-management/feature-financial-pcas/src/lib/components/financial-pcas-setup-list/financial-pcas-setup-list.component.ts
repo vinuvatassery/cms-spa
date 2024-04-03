@@ -170,7 +170,12 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
 
   performPcaSearch(data: any) {
     this.defaultGridState();
-    data = this.selectedSearchColumn === 'appropriationYear' ? data.toLowerCase().replace('ay', '') : data;
+    if(data == 'a'){
+      data='';
+    }
+    else{
+    data = this.selectedSearchColumn === 'appropriationYear' ? data.toLowerCase().replace(/^ay+/g, '') : data;
+    }
     this.filterData = {
       logic: 'and',
       filters: [

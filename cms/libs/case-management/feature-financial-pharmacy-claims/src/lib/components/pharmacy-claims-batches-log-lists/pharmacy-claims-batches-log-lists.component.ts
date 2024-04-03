@@ -28,6 +28,7 @@ import {
   PaymentStatusCode,PaymentType, PaymentMethodCode, PaymentBatchName, DrugsFacade, FinancialVendorFacade, FinancialPharmacyClaimsFacade, VendorFacade
 } from '@cms/case-management/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
@@ -120,7 +121,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
   recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
-
+  fromDrugPurchased:any = false;
+  
   public batchLogGridActions(dataItem:any){
    return  [
     {
@@ -238,8 +240,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     clientId: 'Client ID',
     paymentMethodCode: 'Payment Method',
     paymentMethodDesc: 'Payment Method',
-    paymentTypeCode: 'Payment Type',
-    paymentTypeDesc: 'Payment Type',
     creationTime : 'Entry Date',
     paymentStatusCode: 'Payment Status',
     paymentStatusDesc: 'Payment Status',
@@ -293,10 +293,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     {
       columnCode: 'paymentMethodCode',
       columnDesc: 'Payment Method',
-    },
-    {
-      columnCode: 'paymentTypeCode',
-      columnDesc: 'Payment Type',
     },
     {
       columnCode: 'creationTime',
@@ -377,6 +373,19 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           },
 
       },
+      
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Unbatch Entire Batch',
+        icon: 'undo',
+      
+        click: (data: any): void => {
+          if (!this.isBulkUnBatchOpened) {
+            this.isBulkUnBatchOpened = true;
+            this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+          }
+        },
+      }
     ];
   }
   ngOnChanges(): void {
