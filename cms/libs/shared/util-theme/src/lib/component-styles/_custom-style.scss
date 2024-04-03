@@ -1028,6 +1028,12 @@ color: $app-primary-font-color;
     .k-combobox.k-input {
       padding-left: 1.4rem;
     }
+
+    &.with_float_label{
+      .global-search-icon{
+        top:30px;
+      }
+    }
   }
 
   .add_new_bottom_section {
@@ -1395,4 +1401,82 @@ padding: 8px;
   font-size: 18px;
   margin-left: 5px;
   margin-top: -2px;
+}
+
+.modalin_page{
+  .k-dialog-titlebar-actions{
+    display: none;
+  }
+  .k-dialog-titlebar{
+    padding-block: 0;
+    padding-inline: 0;
+  }
+  .k-dialog-actions{
+    border-color: #dbdbdb;
+    margin-top: 20px;
+  }
+}
+
+.reminder_card_loader{
+  min-height: 80px;
+  .br_loader{
+    position: absolute;
+    top: 0;
+    left: 0; 
+    animation: lightBgLoader 0.5s infinite  !important;
+  }
+ 
+  border-radius: 4px;
+position: relative;
+padding: 8px;
+  margin-bottom: 6px;
+}
+.reminder_skeletion_loader{
+  display: flex;
+  margin-bottom: 6px;
+  position: relative;
+  height: 60px;
+  padding: 10px;
+  .bg_rect_loader{
+    position: absolute;
+    top: 0;
+    left: 0; 
+    animation: lightBgLoader 0.5s infinite  !important;
+    height: 60px;
+  }
+}
+.event_log_loader { 
+  position: relative;
+  /* height: 80px; */
+  margin-bottom: 6px;
+  padding: 10px;
+
+  .event_bgloader{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    animation: lightBgLoader 0.5s infinite  !important;
+  }
+.event_log_loader_first{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.event_log_loader_second{
+  width:100%;
+}
+}
+@keyframes lightBgLoader {
+  0% {
+    opacity: .1;
+}
+50% {
+    opacity: 0.2;
+}
+100% {
+    opacity: .1;
+}
 }

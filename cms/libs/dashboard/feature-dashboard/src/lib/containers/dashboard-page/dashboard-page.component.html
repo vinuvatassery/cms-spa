@@ -1,13 +1,13 @@
 <div class="app-l-inner-rapper ">
 
   <section class="app-l-mainTittle justify-content-between">
-    <div> 
+    <div>
       <h1 class="maintitle_withicon text-bold">
         <span aria-label="Clients" class="material-icons sidebar-menu_icon " aria-hidden="true"> home </span>
         Welcome back, {{ onGetUser()?.name }}
       </h1>
 
-      <kendo-dropdownlist class="mt-1" [fillMode]="formUiStyle.dropDownFillMode" style="width: auto;" aria-label="Select DashBoard"
+      <kendo-dropdownlist class="mt-1" [fillMode]="formUiStyle.dropDownFillMode" style="width: auto;"
         placeholder="DashBoard" required [data]="userDashBoardsListData$ | async" textField="dashboardDesc"
         valueField="dashboardId" [valuePrimitive]="true" [(ngModel)]="selectedDashBoard"
         (selectionChange)="dashBoardChange($event)">
@@ -17,8 +17,8 @@
 
 
     <div>
-      <button kendoButton *ngIf="!isReorderEnable" title="Customize Dashboard"><span class="material-icons" aria-hidden="true"
-          (click)="editDashboardClicked(configSubscriptionItems)" title="Customize Dashboard"> dashboard </span></button>
+      <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
+          (click)="editDashboardClicked(configSubscriptionItems)"> dashboard </span></button>
       <div *ngIf="isReorderEnable">
         <button kendoButton (click)="editDashboardCancelClicked('true')" class="mr-1" [primary]="true"
           aria-label="Save">

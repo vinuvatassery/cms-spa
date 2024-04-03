@@ -120,7 +120,7 @@
             </kendo-grid-numeric-filter-menu>
           </ng-template>
           <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"><strong>$</strong> {{dataItem.amountPaid}}</span>
+            <span class="tableamountview"><strong>$</strong> {{dataItem.amountPaid | kendoNumber: 'n2'}}</span>
           </ng-template>
         </kendo-grid-column>
 
@@ -314,7 +314,7 @@
 <ng-template #addEditClaimsDialog> 
   <common-cms-pharmacy-claims-detail
       [deliveryMethodLov$]="deliveryMethodLov$"
-      [paymentRequestType$]="paymentRequestType$"
+      [paymentRequestType$]="paymentType$"
       [addPharmacyClaim$] = "addPharmacyClaim$"
       [editPharmacyClaim$] = "editPharmacyClaim$"
       [getPharmacyClaim$] = "getPharmacyClaim$"
@@ -345,6 +345,10 @@
       (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)"
       [recentClaimsGridLists$]="recentClaimsGridLists$"
       [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$"
+      [clientCustomName] ="clientCustomName"
+      [fromDrugPurchased] ="fromDrugPurchased"
+      [clientId]="clientId"
+      [clientCaseEligibilityId] ="clientCaseEligibilityId"
     > 
     </common-cms-pharmacy-claims-detail>
 </ng-template>

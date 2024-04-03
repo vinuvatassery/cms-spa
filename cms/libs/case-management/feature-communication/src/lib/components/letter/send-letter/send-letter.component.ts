@@ -361,16 +361,16 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     let templateTypeCode = '';
     switch (this.communicationLetterTypeCode) {
       case CommunicationEventTypeCode.PendingNoticeLetter:
-        templateTypeCode = CommunicationEventTypeCode.PendingLetterSent;
+        templateTypeCode = CommunicationEventTypeCode.PendingLetterGenerated;
         break;
       case CommunicationEventTypeCode.RejectionNoticeLetter:
-        templateTypeCode = CommunicationEventTypeCode.RejectionLetterSent;
+        templateTypeCode = CommunicationEventTypeCode.RejectionLetterGenerated;
         break;
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
-        templateTypeCode = CommunicationEventTypeCode.ApprovalLetterSent;
+        templateTypeCode = CommunicationEventTypeCode.ApprovalLetterGenerated;
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
-        templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterSent;
+        templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterGenerated;
         break;
       case CommunicationEventTypeCode.VendorLetter:
         templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;

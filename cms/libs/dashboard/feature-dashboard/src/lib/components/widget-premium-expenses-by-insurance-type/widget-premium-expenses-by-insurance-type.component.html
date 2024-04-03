@@ -3,7 +3,7 @@
             <h5>PREMIUM EXPENSES BY INSURANCE TYPE</h5>
             <div *ngIf="!isEditDashboard">
                   <kendo-dropdownlist size="small"  rounded="medium" class="mr-1"
-                  [(ngModel)]="selectFrequency" aria-label="Frequency Value"
+                  [(ngModel)]="selectFrequency"
                         [fillMode]="formUiStyle.inputFillMode" [data]="data"  (valueChange)="frequecyValueChange()">
                   </kendo-dropdownlist>
 

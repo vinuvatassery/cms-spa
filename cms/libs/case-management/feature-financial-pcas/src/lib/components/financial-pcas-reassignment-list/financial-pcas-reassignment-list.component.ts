@@ -431,7 +431,7 @@ export class FinancialPcasReassignmentListComponent
 
     this.reassignmentDialogService = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
     this.newForm = false;
     this.getPcaAssignmentEvent.emit(data.pcaAssignmentId);

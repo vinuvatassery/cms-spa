@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDataService, UserDefaultRoles, UserManagementFacade } from '@cms/system-config/domain';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService,  ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserDataService, UserDefaultRoles,  UserManagementFacade } from '@cms/system-config/domain';
 import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';
@@ -67,7 +67,7 @@ caseManagersProfilePhotoSubject = new Subject();
   public sortImportedClaimsList: SortDescriptor[] = [{
     field: this.sortValueImportedClaimsAPproval,
   }];
-
+  
     /** Constructor **/
 constructor(private readonly userDataService: UserDataService,
   private readonly caseManagerDataService: CaseManagerDataService,
@@ -88,9 +88,9 @@ constructor(private readonly userDataService: UserDataService,
         this.loggingService.logException(err)
       }
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();
+        this.hideLoader();   
   }
-
+  
   NotifyShowHideSnackBar(type: ReminderSnackBarNotificationType, subtitle: any) {
     if (type == ReminderSnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -113,7 +113,7 @@ constructor(private readonly userDataService: UserDataService,
   searchUsersByRole(text : string): void {
     this.userDataService.searchUsersByRole(UserDefaultRoles.CACaseManager ,text).subscribe({
       next: (getManagerUsersResponse) => {
-        Object.values(getManagerUsersResponse).forEach((key) => {
+        Object.values(getManagerUsersResponse).forEach((key) => {   
           key.fullCustomName = key.fullName +' '+ key.pOrNbr  + ' '+ key.phoneNbr
         });
         this.getManagerUsersSubject.next(getManagerUsersResponse);
@@ -150,10 +150,10 @@ constructor(private readonly userDataService: UserDataService,
           this.showAddNewManagerButtonSubject.next(true);
         }
         this.workflowFacade.updateChecklist(workFlowdata);
-        this.getCaseManagersSubject.next(gridView);
-        this.loadCaseManagersDistinctUserIdsAndProfilePhoto(getCaseManagersResponse["items"]);
-        this.hideLoader();
-        }
+        this.getCaseManagersSubject.next(gridView);  
+        this.loadCaseManagersDistinctUserIdsAndProfilePhoto(getCaseManagersResponse["items"]);    
+        this.hideLoader();  
+        }      
      },
        error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)

@@ -109,6 +109,11 @@ export class DrugsPurchasedListComponent implements OnInit {
   sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
+
+  /** Input Properties**/
+  @Input() clientCaseEligibilityId:any
+
+    /** Output Properties**/
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
   @Output() getPharmacyClaimEvent = new EventEmitter<any>();
@@ -124,6 +129,8 @@ export class DrugsPurchasedListComponent implements OnInit {
   pharmacyPurchaseProfilePhotoSubscription = new Subscription();
   pharmacyPurchaseProfile$ = this.drugPharmacyFacade.pharmacyPurchaseProfileSubject;
   pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
+  clientCustomName : any
+  fromDrugPurchased:any ;
 
   public actions = [
     {
@@ -169,6 +176,8 @@ export class DrugsPurchasedListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.clientCustomName = this.caseFacade.clientCustomName;
+    this.fromDrugPurchased = true;
     this.getLovs();
     this.defaultGridState();
     this.loadDrugsPurchased();

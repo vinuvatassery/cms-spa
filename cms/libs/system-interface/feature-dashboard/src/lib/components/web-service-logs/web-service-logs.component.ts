@@ -23,9 +23,7 @@ import { Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-system-interface-web-service-logs',
   templateUrl: './web-service-logs.component.html',
-  styleUrls: ['./web-service-logs.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./web-service-logs.component.scss']
 })
 export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
@@ -67,7 +65,7 @@ defaultPageSize=20;
   selectedStatus = '';
   interfaceFilterDataList = null;
   Usps:string ="USPS";
- interfaceType:string ="USPS";
+ interfaceType:string ="RAMSELL";
   // Sorting Variables
   sortColumn = 'Process Date';
   sortColumnDesc = 'Process Date';
@@ -81,7 +79,8 @@ defaultPageSize=20;
   public processArray: string[];
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
-
+  address:any;
+  errorherader: string="";
   // Filter Data
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   errorDialog: any;
@@ -228,7 +227,7 @@ defaultPageSize=20;
       
       this.interfaceFilterDataList = lovs;
       if (lovs && lovs.length > 0) {
-        this.interfaceFilterDropDown = lovs[0];
+        this.interfaceFilterDropDown = lovs[1];
         this.loadListGrid();
       }
     });
@@ -312,14 +311,13 @@ defaultPageSize=20;
       this.errorDialog.close();
     
   }
-  address: string="";
-  errorherader: string="";
+ 
  onViewInformation(error:string){
- var header=error.split("#");
- this.errorherader=header[1];
- this.address=JSON.stringify(JSON.parse(header[0]));
-  if(this.interfaceType==this.Usps)
+   if(this.interfaceType==this.Usps)
 {
+  var header=error.split("#");
+  this.errorherader=header[1];
+  this.address=JSON.parse(header[0]);
  this.failureDetail=error;
  
   this.onErrorDetailClicked(

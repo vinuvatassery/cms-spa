@@ -63,7 +63,22 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
      break;
     }
   }
+  validateCreditNumber(event: any): void {
+    const inputValue = event.target.value;
+    const formattedValue = this.validateFormat(inputValue);
+    event.target.value = formattedValue;
+  }
+  validateFormat(cardnumber: any): string {
+    const sanitizedValue = cardnumber.replace(/[^\d]/g, '');
+    const regex = /^(\d{0,6})(\d{0,3})/;
+    const matches = sanitizedValue.match(regex);
 
+    if (matches) {
+      return `${matches[1]}${matches[1] && matches[2] ? '-' : ''}${matches[2]}`;
+    }
+
+    return sanitizedValue;
+  }
   onDeleteClick(index:number){
     this.tpaRefundGridLists.splice(index,1)
     if(this.tpaRefundGridLists.length >0){

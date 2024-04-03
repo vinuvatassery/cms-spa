@@ -174,6 +174,8 @@ export class FinancialPremiumsFacade {
 
   premiumProcessListProfilePhotoSubject = new Subject();
   premiumAllPaymentsPremiumSubject = new Subject();
+
+
   /** Private properties **/
 
   /** Public properties **/
@@ -251,6 +253,7 @@ export class FinancialPremiumsFacade {
           };
           this.financialPremiumsAllPaymentsDataSubject.next(gridView);
           this.loadPremiumAllPaymentDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
+          this.loadPremiumAllPaymentDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
           this.financialPremiumPaymentLoaderSubject.next(false);
         },
         error: (err) => {
@@ -285,8 +288,10 @@ export class FinancialPremiumsFacade {
     });
   }
 
+
   loadBatchLogListGrid(isReconciled: boolean, premiumType : string ,batchId : string, paginationParameters : any){
     this.paymentByBatchGridLoaderSubject.next(true);
+
     this.financialPremiumsDataService.loadBatchLogListService(isReconciled, premiumType ,batchId ,paginationParameters ).subscribe({
       next: (dataResponse : any) => {
         const gridView = {
@@ -404,6 +409,7 @@ export class FinancialPremiumsFacade {
       });
     }
 
+
   loadPremiumPrintAdviceLetterData(isReconciled: boolean, printAdviceLetterData: any, premiumType: any) {
     return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(isReconciled, printAdviceLetterData, premiumType);
   }
@@ -436,6 +442,7 @@ loadMedicalPremiumList(
           acceptsReportsQueryCount: dataResponse['acceptsReportsQueryCount'],
         };
       this.financialPremiumsProcessDataSubject.next(gridView);
+      this.loadPremiumProcessListDistinctUserIdsAndProfilePhoto(dataResponse['items']);
       this.loadPremiumProcessListDistinctUserIdsAndProfilePhoto(dataResponse['items']);
     }},
     error: (err) => {
