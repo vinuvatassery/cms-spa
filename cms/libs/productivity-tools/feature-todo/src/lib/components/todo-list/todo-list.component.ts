@@ -8,10 +8,11 @@ import {
   TemplateRef,
   Input,
   EventEmitter,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
-import { AlertFrequencyTypeCode, AlertTypeCode, ConstantValue } from '@cms/productivity-tools/domain';
+import { FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { AlertEntityTypeCode, AlertFrequencyTypeCode, AlertTypeCode, ConstantValue } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -82,8 +83,22 @@ export class TodoListComponent implements OnInit {
       id:'del',
       text: 'Delete',
       icon: 'delete',
-    },
+    }
   ]; 
+  public moreactionsSystemGenerated = [
+  {
+     buttonType: 'btn-h-primary',
+     id:'done',
+     text: 'Done',
+     icon: 'done',
+   },
+   {
+     buttonType: 'btn-h-danger',
+     id:'del',
+     text: 'Delete',
+     icon: 'delete',
+   }
+ ]; 
   
   /** Constructor **/
   constructor( 
@@ -202,17 +217,37 @@ export class TodoListComponent implements OnInit {
         };
         this.router.navigate(['/financial-management/vendors/profile'], query )
       }
-      else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Tpa) {
+      else if (gridItem && gridItem.entityTypeCode == this.entityTypes.BatchSentBack) {
+        if(gridItem.displayEntityTypeCode == this.entityTypes.Tpa){
         this.router.navigate(
           [`/financial-management/claims/medical/batch`],
-          { queryParams: { bid: gridItem?.paymentRequestBatchId } }
+          { queryParams: { bid: gridItem?.entityId } }
         );
+      }
+        else if (gridItem && gridItem.displayEntityTypeCode == this.entityTypes.Insurance) {
+          this.router.navigate(
+            [`/financial-management/claims/dental/batch`],
+            { queryParams: { bid: gridItem?.entityId } }
+          );
+        }
     }
-    else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Insurance) {
-      this.router.navigate(
-        [`/financial-management/claims/dental/batch`],
-        { queryParams: { bid: gridItem?.paymentRequestBatchId } }
-      );
+    else if (gridItem && gridItem.entityTypeCode == this.entityTypes.NewCERApplication) {
+      this.router.navigate(['case-management/case-detail'], {
+        queryParams: {
+          sid: gridItem?.sessionId,
+          eid: gridItem?.entityId,
+          wtc: WorkflowTypeCode.NewCase
+        }
+      });
+    }
+    else if (gridItem && gridItem.entityTypeCode == this.entityTypes.CERComplete) {
+      this.router.navigate(['case-management/case-detail'], {
+        queryParams: {
+          sid: gridItem?.sessionId,
+          eid: gridItem?.entityId,
+          wtc: WorkflowTypeCode.CaseEligibilityReview
+        }
+      });
     }
   }
   dataStateChange(stateData: any): void { 

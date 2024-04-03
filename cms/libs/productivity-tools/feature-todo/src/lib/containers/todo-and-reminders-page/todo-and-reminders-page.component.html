@@ -41,6 +41,7 @@
                     (onEditReminderClickedEvent)="onEditReminderClicked($event)"
                     (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
                     (noReminderFor7Days)="setNoDataTempalate(7,'reminder')"
+                    (onSnoozeReminderEvent)="onSnoozeReminder($event)"
                        ></productivity-tools-reminder-item>
 
     </section>
@@ -66,6 +67,7 @@
             (onEditReminderClickedEvent)="onEditReminderClicked($event)"
             (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
             (noReminderFor30Days)="setNoDataTempalate(30,'reminder')"
+            (onSnoozeReminderEvent)="onSnoozeReminder($event)"
             ></productivity-tools-reminder-item>
       <productivity-tools-todo-item 
       [nDays]="'DUE WITHIN 30 DAYS'"
@@ -105,6 +107,7 @@
       (onEditReminderClickedEvent)="onEditReminderClicked($event)"
       (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
       (noReminderAfter30Days)="setNoDataTempalate(31,'reminder')"
+      (onSnoozeReminderEvent)="onSnoozeReminder($event)"
       ></productivity-tools-reminder-item>
       <productivity-tools-todo-item  
       [nDays]="'DUE LATER'"

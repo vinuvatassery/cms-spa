@@ -2,7 +2,7 @@
   <h5>ACTIVE CLIENTS BY GROUP </h5>
 
   <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" textField="clientFullName" [valuePrimitive]="true"
-      valueField="userId" (valueChange)="clientsNavigate($event)" rounded="medium" aria-label="Client FullName"
+      valueField="userId" (valueChange)="clientsNavigate($event)" rounded="medium"
       [fillMode]="formUiStyle.inputFillMode" [data]="data" [(ngModel)]="selectedActiveClientByGroup">
     </kendo-dropdownlist></div>
 </div>

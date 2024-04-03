@@ -45,6 +45,7 @@ export class TodoAndRemindersPageComponent implements OnInit {
   @Output() editTodoItemEvent = new EventEmitter()
   @Output() onDeleteReminderAlertGridClicked = new EventEmitter();
   @Output() onEditReminderClickedEvent = new EventEmitter()
+  @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   showNoDataFor7Days= false;
   showNoDataFor30Days = false;
   showNoDataAfter30Days = false;
@@ -172,4 +173,7 @@ loadReminders(){
     }
   }
 
+  onSnoozeReminder(event:any){ 
+   this.onSnoozeReminderEvent.emit(event)
+  }
 }

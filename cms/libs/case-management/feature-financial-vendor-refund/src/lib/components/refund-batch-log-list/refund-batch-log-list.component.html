@@ -66,8 +66,7 @@
             [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
             [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
             (dataStateChange)="dataStateChange($event)" [(selectedKeys)]="selectedPayments"
-            (selectedKeysChange)="selectedKeysChange($event)"
-            kendoGridSelectBy="paymentRequestId" >
+            (selectedKeysChange)="selectedKeysChange($event)" kendoGridSelectBy="paymentRequestId">
 
             <kendo-grid-column *ngIf="receiptLogMode" [sortable]="false" field="add" [width]="40" class="text-center"
               [sticky]="true" [sortable]="false" [columnMenu]="false">
@@ -92,50 +91,11 @@
             </kendo-grid-column>
             <kendo-grid-column field="vendorName" title="Vendor" [width]="160">
               <ng-template kendoGridCellTemplate let-dataItem>
-                <button [attr.aria-label]="dataItem.vendorName" (click)="onProviderNameClick(dataItem.paymentRequestId, dataItem.serviceTypeCode)"
-                  kendoButton look="flat" class="card-link-button" *ngIf="dataItem.vendorName">
+                <button [attr.aria-label]="dataItem.vendorName"
+                  (click)="onProviderNameClick(dataItem.paymentRequestId, dataItem.serviceTypeCode)" kendoButton
+                  look="flat" class="card-link-button" *ngIf="dataItem.vendorName">
                   {{ dataItem.vendorName }}
                 </button>
-              </ng-template>
-            </kendo-grid-column>
-            <kendo-grid-column *ngIf="!receiptLogMode" field="serviceType" title="Type" [width]="160">
-              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                  [extra]="false" operator="eq">
-                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                </kendo-grid-string-filter-menu>
-              </ng-template>
-            </kendo-grid-column>
-            <kendo-grid-column *ngIf="!receiptLogMode" field="clientFullName" title="Client Name" [width]="160">
-              <ng-template kendoGridCellTemplate let-dataItem>
-                <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
-                  (click)="clientRecentClaimsModalClicked(dataItem)" *ngIf="dataItem.clientFullName">
-                  {{ dataItem.clientFullName }}
-                </button>
-              </ng-template>
-              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                  [extra]="false" operator="eq">
-                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                </kendo-grid-string-filter-menu>
-              </ng-template>
-            </kendo-grid-column>
-            <kendo-grid-column *ngIf="!receiptLogMode" field="nameOnInsuranceCard"
-              title="Name on Primary Insurance Card" [width]="180">
-              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                  [extra]="false" operator="eq">
-                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                </kendo-grid-string-filter-menu>
               </ng-template>
             </kendo-grid-column>
             <kendo-grid-column field="clientId" title="Client ID" [width]="160"> </kendo-grid-column>
@@ -186,6 +146,79 @@
               </ng-template>
 
             </kendo-grid-column>
+            <kendo-grid-column field="voucherPayable" title="VP - Suffix" [width]="130"> </kendo-grid-column>
+            <kendo-grid-column *ngIf="receiptLogMode" field="creditNumber" title="Credit - Suffix"
+              [width]="140"></kendo-grid-column>
+            <kendo-grid-column field="grantNumber" title="Grant #" [width]="100">
+              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                  [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                </kendo-grid-string-filter-menu>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="refundNote" title="Refund Note" [width]="150"> </kendo-grid-column>
+            <kendo-grid-column field="entryDate" title="Entry Date" [width]="160">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.entryDate | date:'MM/dd/yyyy'}}
+              </ng-template>
+              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <common-grid-cell-date-range-filter [field]="'entryDate'" [filter]="filter"
+                  [filterService]="filterService">
+                </common-grid-cell-date-range-filter>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center"
+              [columnMenu]="false">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <common-user-photo-icon [userId]="dataItem.creatorId" [userFirstName]="dataItem.userFirstName"
+                  [userLastName]="dataItem.userLastName" [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+                  [linkType]="'profileIcon'" [userPhotos$]="vendorRefundBatchClaims$"></common-user-photo-icon>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column *ngIf="!receiptLogMode" field="serviceType" title="Type" [width]="160">
+              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                  [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                </kendo-grid-string-filter-menu>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column *ngIf="!receiptLogMode" field="clientFullName" title="Client Name" [width]="160">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
+                  (click)="clientRecentClaimsModalClicked(dataItem)">
+                  {{ dataItem.clientFullName }}
+                </button>
+              </ng-template>
+              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                  [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                </kendo-grid-string-filter-menu>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column *ngIf="!receiptLogMode" field="nameOnInsuranceCard"
+              title="Name on Primary Insurance Card" [width]="180">
+              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                  [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                </kendo-grid-string-filter-menu>
+              </ng-template>
+            </kendo-grid-column>
             <kendo-grid-column *ngIf="!receiptLogMode" field="originalWarrant" title="Original Warrant #" [width]="100">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -233,45 +266,6 @@
                 </kendo-grid-string-filter-menu>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="grantNumber" title="Grant #" [width]="100">
-              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                  [extra]="false" operator="eq">
-                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                </kendo-grid-string-filter-menu>
-              </ng-template>
-            </kendo-grid-column>
-
-            <kendo-grid-column field="voucherPayable" title="VP" [width]="130"> </kendo-grid-column>
-            <kendo-grid-column *ngIf="receiptLogMode" field="creditNumber" title="Credit - Suffix"
-              [width]="140"></kendo-grid-column>
-
-            <kendo-grid-column field="refundNote" title="Refund Note" [width]="150"> </kendo-grid-column>
-            <kendo-grid-column field="entryDate" title="Entry Date" [width]="160">
-              <ng-template kendoGridCellTemplate let-dataItem>
-                {{dataItem.entryDate | date:'MM/dd/yyyy'}}
-              </ng-template>
-              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                <common-grid-cell-date-range-filter [field]="'entryDate'" [filter]="filter"
-                  [filterService]="filterService">
-                </common-grid-cell-date-range-filter>
-              </ng-template>
-            </kendo-grid-column>
-            <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center"
-              [columnMenu]="false">
-              <ng-template kendoGridCellTemplate let-dataItem>
-                <common-user-photo-icon
-                [userId]="dataItem.creatorId"
-                [userFirstName]="dataItem.userFirstName"
-                [userLastName]="dataItem.userLastName"
-                [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
-                [linkType]="'profileIcon'"
-                [userPhotos$]="vendorRefundBatchClaims$"></common-user-photo-icon>
-              </ng-template>
-            </kendo-grid-column>
             <kendo-grid-column *ngIf="!receiptLogMode" field="Option" [sortable]="false" title="Options" [sticky]="true"
               [columnMenu]="false" [width]="75" class="text-center">
               <ng-template kendoGridCellTemplate let-dataItem>
@@ -279,12 +273,11 @@
                   class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                   aria-label="more actions" title="More option"
                   [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-                  <span class="material-icons" aria-label="More option"> more_vert    </span>
+                  <span class="material-icons" aria-label="More option"> more_vert </span>
                   <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                     <ng-container>
                       <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                        [class]="buttondataItem.buttonType"
-                        (click)="buttondataItem.click(dataItem)">
+                        [class]="buttondataItem.buttonType" (click)="buttondataItem.click(dataItem)">
                         <span class="material-icons" aria-hidden="true"
                           [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                         <label> {{ buttondataItem.text }} </label>
@@ -298,14 +291,16 @@
                 </kendo-dropdownbutton>
               </ng-template>
             </kendo-grid-column>
+
             <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
               let-currentPage="currentPage">
               <div class="grid-custom-paginationtemplates d-flex">
                 <div class="d-flex align-items-center">
                   <label class="mr-1" for="RefundBatchRowsPerPage">Rows Per Page</label>
                   <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-                    [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RefundBatchRowsPerPage"
-                    [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+                    [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page"
+                    id="RefundBatchRowsPerPage" [(value)]="state.take"
+                    (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                   <kendo-pager-info> </kendo-pager-info>
                   <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
@@ -358,8 +353,7 @@
   <cms-refund-new-form-details [isEdit]="true" [serviceType]="refunEditServiceType" [clientId]="refundEditClientId"
     [clientName]="refundEditClientFullName" [vendorAddressId]="refundEditVendorAddressId"
     [vendorName]="refundEditVendorName" (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"
-    [inspaymentRequestId]="inspaymentRequestId"
-    [vendorId]="vendorId"></cms-refund-new-form-details>
+    [inspaymentRequestId]="inspaymentRequestId" [vendorId]="vendorId"></cms-refund-new-form-details>
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
@@ -367,13 +361,16 @@
     <h4 class="text-upper">Recent Claims for {{clientName}}</h4>
     <div *ngIf="(recentClaimsGridLists$ | async) as recentClaims" class="k-flex-grow justify-content-end">
       <span class="d-flex k-wizard-horizontal align-items-fstart">
-        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
-        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong>
+            {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong>
+            {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
       </span>
     </div>
   </kendo-dialog-titlebar>
   <section class="k-dialog-body-padding">
-    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [includeServiceSubTypeFilter]="false" [claimsType]="claimsType"
+    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId"
+      [includeServiceSubTypeFilter]="false" [claimsType]="claimsType"
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
   </section>
   <kendo-dialog-actions>
@@ -391,15 +388,20 @@
 </ng-template>
 
 <ng-template #clientRecentPremiumsDialogTemplate>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
+    <h5 class="text-upper">Recent Premiums for {{clientName}}</h5>
+  </kendo-dialog-titlebar>
   <section class="k-dialog-body">
-    <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="claimsType" [includeServiceSubTypeFilter]="false"
-      (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick(paymentRequestId, claimsType)"></cms-financial-premiums-recent-premiums-list>
+    <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="claimsType"
+      [includeServiceSubTypeFilter]="false" (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)"
+      [paymentRequestId]="paymentRequestId"
+      (onProviderNameClickEvent)="onProviderNameClick(paymentRequestId, claimsType)"></cms-financial-premiums-recent-premiums-list>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat"
+          (click)="onClientClicked(clientId)">
           Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>
@@ -411,17 +413,20 @@
 </ng-template>
 
 <ng-template #clientRecentPharmacyClaimsDialog>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
+    <h4 class="text-upper"> RECENT CLAIMS FOR {{clientName}} </h4>
+  </kendo-dialog-titlebar>
   <section class="k-dialog-body">
-       <common-cms-pharmacy-claims-recent-claims [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
-      (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)" [recentClaimsGridLists$]="recentClaimsGridLists$"
-      [pageSizes]="pageSizes" [sortType]="sortType" [sortValueRecentClaimList]="sortValueRecentClaimList"
-      [sortRecentClaimList]="sortRecentClaimList" [gridSkipCount]="gridSkipCount" [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$">    
+    <common-cms-pharmacy-claims-recent-claims [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
+      (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)"
+      [recentClaimsGridLists$]="recentClaimsGridLists$" [pageSizes]="pageSizes" [sortType]="sortType"
+      [sortValueRecentClaimList]="sortValueRecentClaimList" [sortRecentClaimList]="sortRecentClaimList"
+      [gridSkipCount]="gridSkipCount" [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$">
     </common-cms-pharmacy-claims-recent-claims>
 
   </section>
   <kendo-dialog-actions>
-    <div class="justify-content-between" >
+    <div class="justify-content-between">
       <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
           Client Profile <span class="material-icons ml-1" aria-hidden="true">

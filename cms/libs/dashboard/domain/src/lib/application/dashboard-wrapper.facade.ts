@@ -16,6 +16,7 @@ export class DashboardWrapperFacade {
   public dashboardAllWidgets$ =  this.dashboardAllWidgetsSubject.asObservable();
   public dashboardContentUpdate$ =  this.dashboardContentUpdateSubject.asObservable();
 
+
   private dashboardConfigurationSubject = new BehaviorSubject<GridsterConfig>(
     {}
   );
@@ -39,12 +40,14 @@ showLoader(){  this.loaderService.show();}
 hideLoader() { this.loaderService.hide();}
 
 getLoggedinUserDashboards(typeCode :  string) {
+    this.showLoader();
     this.dashboardWrapperService.getLoggedinUserDashboards(typeCode).subscribe({
       next: (result) => { 
         this.userDashBoardsSubject.next(result);      
-        
+        this.hideLoader();
       },       
       error: (error) => { 
+        this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });

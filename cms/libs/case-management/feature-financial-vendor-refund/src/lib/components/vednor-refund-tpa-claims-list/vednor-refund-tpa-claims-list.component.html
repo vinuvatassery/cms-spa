@@ -1,12 +1,24 @@
 
 <div class="app-c-table">
-    <kendo-grid #selectable [resizable]="true" [loading]="isClaimsLoaderShow" [pageSize]="state.take"
-      [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-      [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  
-      [data]="tpaGridData"
-      (selectedKeysChange)="selectedKeysChange($event)"     
+    <kendo-grid #selectable 
+      [resizable]="true" 
+      [loading]="isClaimsLoaderShow" 
+      [pageSize]="state.take"
+      [pageable]="true" 
+      [sortable]="true" 
+      [skip]="state.skip" 
+      [groupable]="false" 
+      [reorderable]="true"
+      [columnMenu]="{ filter: true }" 
+      [sort]="state.sort"         
+      [data]="tpaGridData" 
+      [filter]="state.filter"
       kendoGridSelectBy="paymentRequestId"
-      [(selectedKeys)]="selectedTpaClaims">
+      [(selectedKeys)]="selectedTpaClaims"
+      (selectedKeysChange)="selectedKeysChange($event)"     
+      (filterChange)="filterChange($event)"
+      (dataStateChange)="dataStateChange($event)"
+      [selectable]="selectableSettings">
       <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
         [width]="40"></kendo-grid-checkbox-column>
       <kendo-grid-column title="Invoice ID" field="invoiceId" [width]="160">

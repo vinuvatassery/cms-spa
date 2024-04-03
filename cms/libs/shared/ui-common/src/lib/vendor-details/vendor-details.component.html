@@ -1,8 +1,8 @@
 <section class="k-dialog-body">
   <div [formGroup]="medicalProviderForm">
     <p class="text-muted mb-2">
-      All fields are required unless otherwise stated,
-      <span *ngIf="!editVendorInfo"> You may view and edit the vendor's profile once it is added.</span>
+      All fields are required unless otherwise stated<span *ngIf="editVendorInfo">.</span>
+      <span *ngIf="!editVendorInfo">, You may view and edit the vendor's profile once it is added.</span>
     </p>
     <div class="flex-row">
       <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
@@ -44,9 +44,6 @@
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
             Manufacturer Name is required
-          </kendo-formerror>
-          <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.pattern">
-            Special characters and numeric values are not allowed
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -247,7 +244,7 @@
           </kendo-textbox>
           <kendo-formerror
             *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm && !mailCodeLengthError">
-            Mail code is required
+            A mail code must be selected
           </kendo-formerror>
           <kendo-formerror *ngIf="mailCodeLengthError">Mail code must contain 3 characters.</kendo-formerror>
         </kendo-floatinglabel>
@@ -543,9 +540,7 @@
               If adding a contact, Name is required
             </p>
             <kendo-formerror
-              *ngIf="!getContactControl(i, 'contactName')?.valid && isValidateForm && getContactNameValidation(i)">Contact
-              Name is
-              required</kendo-formerror>
+              *ngIf="!getContactControl(i, 'contactName')?.valid && isValidateForm && getContactNameValidation(i)">A Contact Name is required</kendo-formerror>
           </div>
           <div class="flex-col mb-1">
             <kendo-floatinglabel text="Description (Optional)">

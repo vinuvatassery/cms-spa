@@ -17,7 +17,7 @@ export class FinancialVendorRefundFacade {
   selectedRefundsTab = 1
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
 
   public sortValueRefundInformationGrid = 'creationTime';
   public sortValueEntryInformationGrid = 'entryDate';
@@ -57,7 +57,7 @@ export class FinancialVendorRefundFacade {
   }];
 
 
-  public sortValueClientClaims = 'clientId';
+  public sortValueClientClaims = 'EntryDate';
   public sortClientClaimsList: SortDescriptor[] = [{
     field: this.sortValueClientClaims,
   }];
@@ -847,16 +847,31 @@ this.loaderService.show();
   public loadPharmacyRefundEditList(paymentRequestId: string){
     return this.financialVendorRefundDataService.loadPharmacyRefundEditList(paymentRequestId)
     .subscribe({
-      next: (dataResponse) => {
+      next: (dataResponse: any) => {
         this.existingRxRefundClaimSubject.next(dataResponse);
         if (dataResponse) {
           this.existingRxRefundClaimSubject.next(dataResponse);
         }
+        this.loadRefundFormDistinctUserIdsAndProfilePhoto(dataResponse?.prescriptionFillItems);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.hideLoader();
       },
     });
+  }
+
+  loadRefundFormDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.by))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundFormProfileSubject.next(data);
+          }
+        },
+      });
+    }
   }
 }

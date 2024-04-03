@@ -5,7 +5,7 @@ import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subject, Subscription } from 'rxjs';
 

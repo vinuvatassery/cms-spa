@@ -63,7 +63,6 @@
     [reorderable]="true" 
     [columnMenu]="{ filter: true }" 
     [sort]="state.sort" 
-    [navigable]="!isProcessGridExpand" 
     [filter]="state.filter"
     [data]="pharmacyClaimsProcessGridLists$ | async"
     (dataStateChange)="dataStateChange($event)" 
@@ -132,6 +131,9 @@
     <kendo-grid-column field="clientId" title="Client ID" [width]="120">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
+          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
          </kendo-grid-numeric-filter-menu>
       </ng-template>
@@ -346,6 +348,7 @@
       [recentClaimsGridLists$]="recentClaimsGridLists$"
       (loadManufacturer)="loadManufacturerEvent($event)"
       [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$"
+      [fromDrugPurchased] ='fromDrugPurchased'
     > 
     </common-cms-pharmacy-claims-detail>
 </ng-template>

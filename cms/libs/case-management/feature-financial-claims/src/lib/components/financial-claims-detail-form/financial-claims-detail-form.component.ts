@@ -580,8 +580,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   isControlValid(controlName: string, index: any) {
-    let control = this.addClaimServicesForm.at(index) as FormGroup;
-    return control.controls[controlName].status == 'INVALID' && !control.controls[controlName].value;
+    let form = this.addClaimServicesForm.at(index) as FormGroup;
+    let control = form.controls[controlName];
+    if(control){
+      return control?.errors?.['required'] && control.touched;
+    }
+    return false;
   }
 
   isAmountDueValid(index: any) {
@@ -619,7 +623,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    if (startDate != "" && endDate != "" && startDate > endDate) {
+    if (startDate != "" && startDate != null && endDate != null && endDate != "" && startDate > endDate) {
       serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
       return true;
     }
@@ -676,6 +680,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         invalidControl.focus();
       }
+    
       return;
     }
     let formValues = this.claimForm.value;
@@ -1139,7 +1144,9 @@ duplicatePaymentObject:any = {};
   {
     let formValue = this.addExceptionForm.at(index).get(controlName)?.value;
     const ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
-    if(!formValue){
+    if(formValue && (controlName == 'bridgeUppExceptionFlag' || controlName == 'bridgeUppExceptionFlagText')){
+      ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': true});
+    }else{
       ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': null});
       ctpCodeIsvalid?.controls['cptCode'].updateValueAndValidity();
     }
