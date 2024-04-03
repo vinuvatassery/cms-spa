@@ -10,16 +10,14 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 @Injectable({ providedIn: 'root' })
 export class NotificationStatsFacade {
   /** Private properties **/
-  private statsSubject = new Subject<any>();
-   private updateStatsSubject = new Subject<any>();
-//   private eventsDataSubject = new Subject<any>();
-//   private addEventDataSubject = new Subject<any>();
+  private getStatsSubject = new Subject<any>();
+  private updateStatsSubject = new Subject<any>();
+  private resetStatsSubject = new Subject<any>();
 
   /** Public properties **/
-    stats$ = this.statsSubject.asObservable();
-    updateStats$ = this.updateStatsSubject.asObservable();
-//   eventsdata$ = this.eventsDataSubject.asObservable();
-//   addEventdata$ = this.addEventDataSubject.asObservable();
+  getStats$ = this.getStatsSubject.asObservable();
+  updateStats$ = this.updateStatsSubject.asObservable();
+  resetStats$ = this.resetStatsSubject.asObservable();
 
   /** Constructor **/
   constructor(private readonly notificationStatsDataService: NotificationStatsDataService,
@@ -29,31 +27,10 @@ export class NotificationStatsFacade {
 
   /** Public methods **/
 
-//   showHideSnackBar(type : SnackBarNotificationType , subtitle : any, title : string = '')
-//   {
-//       if(type == SnackBarNotificationType.ERROR)
-//       {
-//         const err= subtitle;
-//         this.loggingService.logException(err)
-//       }
-//         this.notificationSnackbarService.manageSnackBar(type, subtitle, NotificationSource.API, title)
-//         this.hideLoader();
-//   }
-
-//   showLoader()
-//   {
-//     this.loaderService.show();
-//   }
-
-//   hideLoader()
-//   {
-//     this.loaderService.hide();
-//   }
-
   getStats(entityId:string, statsTypeCode:string = ''): void {
     this.notificationStatsDataService.getStats(entityId, statsTypeCode).subscribe({
       next: (statsResponse) => {
-        this.statsSubject.next(statsResponse);
+        this.getStatsSubject.next(statsResponse);
       },
       error: (err) => {
         console.error('err', err);
@@ -61,7 +38,7 @@ export class NotificationStatsFacade {
     });
   }
 
-  updateStats(entityId:string, entityTypeCode:string, statsTypeCode:string): void {
+  updateStats(entityId:string, entityTypeCode:string, statsTypeCode:string = ''): void {
     this.notificationStatsDataService.updateStats(entityId, entityTypeCode, statsTypeCode).subscribe({
       next: (statsResponse) => {
         this.updateStatsSubject.next(statsResponse);
@@ -72,29 +49,14 @@ export class NotificationStatsFacade {
     });
   }
 
-//   loadDdlEvents() {
-//     this.eventDataService.loadDdlEvents().subscribe({
-//       next: (eventDdl) => {
-//         this.ddlEventsSubject.next(eventDdl);
-//       },
-//       error: (err) => {
-//         console.error('err', err);
-//       },
-//     });
-//   }
-
-//   addEventData(eventData : any): void {
-//     this.showLoader()
-//     this.eventDataService.addEventData(eventData).subscribe({
-//       next: (response : any) => {
-//         this.hideLoader()
-//         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response[1].message, response[0].message);
-//         this.addEventDataSubject.next(response);
-//       },
-//       error: (err) => {
-//         this.hideLoader()
-//         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-//       },
-//     });
-//   }
+  resetStats(entityId:string, statsTypeCode:string): void {
+    this.notificationStatsDataService.resetStats(entityId, statsTypeCode).subscribe({
+      next: (statsResponse) => {
+        this.resetStatsSubject.next(statsResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
 }
