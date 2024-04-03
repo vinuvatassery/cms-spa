@@ -14,6 +14,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { CommunicationEventTypeCode, CommunicationFacade, ContactFacade, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
 import { CaseStatusCode, StatusFlag } from '@cms/shared/ui-common';
+import { UserDataService } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription, first } from 'rxjs';
 
@@ -43,6 +44,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
   private disenrollLaterDialog: any;
   private approvalLaterDialog: any;
   private saveForLaterValidationSubscription !: Subscription;
+  private loggedInUserProfileSubscription !: Subscription;
   emailSubscription!: Subscription;
   @ViewChild('disenrollment_letter_later', { read: TemplateRef }) disenrollment_letter_later!: TemplateRef<any>;
 
@@ -64,6 +66,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
   confirmPopupHeader: string = '';
   emailSubject: any = '';
   triggerFrom: any = '';
+  loginUserEmail:any;
   /** Constructor**/
   constructor(
     private route: ActivatedRoute,
@@ -71,7 +74,8 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
     private dialogService: DialogService,
     private readonly contactFacade: ContactFacade,
     private readonly cdr: ChangeDetectorRef,
-    private readonly communicationFacade: CommunicationFacade
+    private readonly communicationFacade: CommunicationFacade,
+    private readonly userDataService: UserDataService
   ) {
   }
 
@@ -94,6 +98,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
       }
     }
     this.title = this.title + this.customTitle
+    this.getLoggedInUserProfileSubscriptionInit();
     this.loadCase()
     this.addSaveForLaterValidationsSubscription();
     this.addEmailSubscription();
@@ -101,6 +106,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnDestroy(): void {
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.loggedInUserProfileSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -318,6 +324,14 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   loadEmailAddress() {
     this.contactFacade.loadEmailAddress(this.clientId, this.clientCaseEligibilityId);
+  }
+
+  getLoggedInUserProfileSubscriptionInit(){
+    this.loggedInUserProfileSubscription = this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserEmail = profile[0]?.email;
+      }
+    });
   }
 
 }
