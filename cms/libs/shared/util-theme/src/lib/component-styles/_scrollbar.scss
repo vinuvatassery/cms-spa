@@ -44,6 +44,10 @@ html {
   }
 }
 
-  
- 
- 
+ .grid_scroll{
+  .k-grid-content {
+    max-height: 150px;
+    overflow: auto;
+  }
+
+ }

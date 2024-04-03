@@ -108,18 +108,10 @@ export class CaseManagerEffectiveDatesComponent implements OnInit {
       case "START_DATE":
         this.startDateValidator = false;
         this.effectiveDatesForm.controls['startDate'].setErrors(null);
-        if (startDate > todayDate) {
-          this.startDateValidator = true;
-          this.effectiveDatesForm.controls['startDate'].setErrors({ 'incorrect': true });
-        }
         break;
       case "END_DATE":
         this.endDateValidator = false;
         this.effectiveDatesForm.controls['endDate'].setErrors(null);
-        if (endDate > todayDate) {
-          this.endDateValidator = true;
-          this.effectiveDatesForm.controls['endDate'].setErrors({ 'incorrect': true });
-        }
         break
     }
     if(startDate>endDate){

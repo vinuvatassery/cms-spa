@@ -23,3 +23,5 @@ export * from './lib/containers/communication-page/communication-page.component'
 export * from './lib/components/disenrollment-letter-later/disenrollment-letter-later.component';
 export * from './lib/components/approval-letter-later/approval-letter-later.component';
 export * from './lib/components/notification-draft-confirmation/notification-draft-confirmation.component';
+
+export * from './lib/components/preview-notification-templates/preview-notification-templates.component';

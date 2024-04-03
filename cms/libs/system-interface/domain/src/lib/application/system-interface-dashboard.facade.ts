@@ -9,6 +9,8 @@ import { SystemInterfaceActivityStatusCodeDescription } from '../enums/system-in
 import { SystemInterfaceEecProcessTypeCode } from '../enums/system-interface-eec-process-type-code';
 import { SystemInterfaceSupportFacade } from './system-interface-support.facade';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { SystemInterfaceUsps } from '../enums/system-interface-Usps';
+import { SystemInterfaceUspsStatusCodeDescription } from '../enums/usps-status-type-code';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceDashboardFacade {
@@ -144,12 +146,24 @@ export class SystemInterfaceDashboardFacade {
     return Object.values(SystemInterfaceActivityStatusCode)
   }
 
-  getStatusDescriptionArray(): string[]{
-    return Object.values(SystemInterfaceActivityStatusCodeDescription)
+  getStatusDescriptionArray(type:string): string[]{
+    if(type=='USPS')
+    {
+      return Object.values(SystemInterfaceUspsStatusCodeDescription)
+    }else{
+      return Object.values(SystemInterfaceActivityStatusCodeDescription)
+  
+    }
   }
 
-  getEecProcessTypeCodeArray(): string[]{
-    return Object.values(SystemInterfaceEecProcessTypeCode)
+  getEecProcessTypeCodeArray(type:string): string[]{
+    if(type=='USPS')
+    {
+      return Object.values(SystemInterfaceUsps)
+    }else{
+      return Object.values(SystemInterfaceEecProcessTypeCode)
+  
+    }
   }
 
   // weblogs ----------------------------------
@@ -180,7 +194,7 @@ export class SystemInterfaceDashboardFacade {
       this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
         .subscribe({
           next: (data: any[]) => {
-            debugger
+            
             if (data.length > 0) {
               this.profilePhotoSubject.next(data);
             }
@@ -211,14 +225,13 @@ export class SystemInterfaceDashboardFacade {
     this.loaderService.show()
     this.getClientDocumentsViewDownload(documentId).subscribe({
       next: (data: any) => {
-
         const fileUrl = window.URL.createObjectURL(data);
-        window.open(fileUrl, "_blank");
         const downloadLink = document.createElement('a');
         downloadLink.href = fileUrl;
         downloadLink.download = documentName;
         downloadLink.click();
         this.loaderService.hide();
+        window.URL.revokeObjectURL(fileUrl);
       },
       error: (error: any) => {
         this.loaderService.hide();

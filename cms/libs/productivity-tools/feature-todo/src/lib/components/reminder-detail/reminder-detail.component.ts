@@ -142,7 +142,7 @@ export class ReminderDetailComponent implements OnInit {
       vendorId :[null],
       clientId :[null],
       addToOutlookCalender: [false],
-      deleteFromOutlookCalender :[false]
+      deleteFromOutlookCalender :[true]
     });
    if(this.isDelete || this.isEdit){
    this.getTodo$.subscribe((res:any) =>{
@@ -403,7 +403,7 @@ export class ReminderDetailComponent implements OnInit {
     const timeInMinutes = new Date(this.clientReminderForm.controls['time'].value).getMinutes();
     const timeInHours = new Date(this.clientReminderForm.controls['time'].value).getHours();
     
-    if ( this.clientReminderForm.controls['time'].value && timeInMinutes < new Date().getMinutes() && timeInHours <  new Date().getMinutes() ) {
+    if ( this.clientReminderForm.controls['time'].value && timeInMinutes < new Date().getMinutes() && timeInHours <  new Date().getHours() ) {
       this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
     
       return;

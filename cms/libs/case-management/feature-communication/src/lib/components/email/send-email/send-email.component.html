@@ -20,7 +20,7 @@
         </kendo-floatinglabel>
       </div>
       <div *ngIf="isOpenDdlEmailDetails">
-        <div class="flex-col">
+        <div class="flex-col" *ngIf="getProfileName() == 'vendor'">
           <kendo-floatinglabel text="Mail Code">
             <kendo-dropdownlist
               [fillMode]="formUiStyle.dropDownFillMode"
@@ -99,7 +99,7 @@
         <div class="flex-col mt-3">
           <p>
             Type the body of the email. The email header and footer generate
-            from Admin settings. Click "Preview Email" to see what the client will
+            from Admin settings. Click "Preview Email" to see what the {{getProfileName()}} will
             receive.
           </p>
         </div>
@@ -171,7 +171,7 @@
 >
   <section class="k-dialog-body">
     <p>
-      To pick up where you left off, click “New Email” from the client’s
+      To pick up where you left off, click “New Email” from the {{getProfileName()}}’s
       profile.
     </p>
   </section>

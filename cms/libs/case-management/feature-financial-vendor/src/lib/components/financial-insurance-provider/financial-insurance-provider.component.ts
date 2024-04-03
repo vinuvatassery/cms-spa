@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { InsuranceProviderFacade } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
@@ -22,8 +22,6 @@ export class FinancialInsuranceProviderComponent {
   insursnceProviderSubscription = new Subscription();
   insursnceProviderProfileSubject = new Subject();
   insursnceProviderProfilePhoto$ = this.insuranceProviderFacade.insursnceProviderProfilePhotoSubject;
-  
-
   public emailBillingAddressActions = [
     {
       buttonType: 'btn-h-primary',
@@ -51,10 +49,12 @@ export class FinancialInsuranceProviderComponent {
   
    /** Constructor **/
    constructor(private readonly insuranceProviderFacade: InsuranceProviderFacade,) {}
+
    
   ngOnInit(): void {
     this.loadInsuranceProviderListGrid();
   }
+
 
   ngOnChanges(): void {
     this.state = {

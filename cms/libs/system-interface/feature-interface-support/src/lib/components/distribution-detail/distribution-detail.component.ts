@@ -91,14 +91,6 @@ export class DistributionDetailComponent implements OnInit {
     return this.memberForm.valid;
   }
 
-  getForm(index: number, fieldName: string) {
-    return this.memberForm;
-  }
-
-  onItemSelected(selectedValue: any) {
-    //this.selectedUser = this.userDataList.find((item: any) => item.firstName === selectedValue);
-  }
-
   mapFormValues() {
     const formValues = this.memberForm.value;
     const dto = {

@@ -17,7 +17,8 @@ export class ExceptionDetailComponent implements OnInit, OnChanges {
 
   batchLogExceptionListsSubject = new Subject<any>();
   batchLogExceptionLists$ = this.batchLogExceptionListsSubject.asObservable();
-  keyIdColumnHeader = 'Key Id'
+  keyIdColumnHeader = 'Key Id';
+  clientColumnName='';
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
   ) { }
@@ -25,6 +26,15 @@ export class ExceptionDetailComponent implements OnInit, OnChanges {
   public state!: any;
 
   ngOnInit(): void {
+    switch(this.processTypeCode)
+    {
+      case 'PRESCRIPTION_FILL_DATA' :
+        this.clientColumnName='Client Id';
+        break;
+        case 'TPA_INVOICE':
+          this.clientColumnName='Subscriber Id';
+          break;  
+    }
     this.initializeGrid();
     this.setKeyIdColumnHeader();
   }
@@ -32,7 +42,6 @@ export class ExceptionDetailComponent implements OnInit, OnChanges {
     this.initializeGrid();
     this.setKeyIdColumnHeader();
   }
-
 
   gridLoaderShow = false
 

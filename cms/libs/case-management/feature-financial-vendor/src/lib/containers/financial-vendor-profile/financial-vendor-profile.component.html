@@ -8,6 +8,7 @@
 (loadSpecialHandlingEvent)="loadSpecialHandling()"
 (openAddReminderEvent)="openAddReminderClicked()"
 (openEditReminderEvent)="openEditReminderClicked($event)"
+(openEditTodoEvent)="openEditTodoClicked($event)"
 (openDeleteReminderEvent)="openDeleteReminderClicked($event)"
 (updateRecentlyViewedEvent)="updateRecentlyViewedEvent($event)"></cms-vendor-profile-header>
 
@@ -138,6 +139,7 @@
           [vendorName]="vendorName"
           (onProviderNameClickEvent)="onProviderNameClick($event)"
           [financialClinicProviderProfile$]="financialClinicProviderProfile$"
+          [financialClinicProviderProfile$]="financialClinicProviderProfile$"
           ></cms-financial-clinic-provider-list>
           </div>
         </div>
@@ -184,4 +186,37 @@
   [alertId]="selectedAlertId"
   [getTodo$]="getTodo$"
     (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
+</ng-template>
+
+
+<ng-template #todoDetailTemplate>
+  <kendo-dialog-titlebar (close)="onCloseTodoClicked(false)">
+ {{!!this.selectedAlertId?  'Edit To-Do Item' : 'Create Custom To-Do Item'}}    </kendo-dialog-titlebar>
+  <productivity-tools-todo-detail 
+  [frequencyTypeCodeSubject$]="frequencyTypeCodeSubject$"
+  (isModalTodoDetailsCloseClicked)="onCloseTodoClicked($event)"
+  [clientSearchResult$]="clientSearchResult$"
+  (searchClientName)="searchClientName($event)"
+  (searchProvider)="searchProvider($event)"
+  [providerSearchResult$]="providerSearchResult$"
+  (onTodoItemCreateClick)="onTodoItemCreateClick($event)"
+  [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+  [getTodo$]="getTodo$"
+  [createTodo$]="createTodo$"
+  (onGetTodoItem)="onGetTodoItem($event)"
+  (getTodoItemsLov)="getTodoItemsLov()"
+  (onUpdateTodoItemClick)="onUpdateTodoItemClick($event)"
+  [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+  [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+  [alertId]="selectedAlertId"
+  [isEdit]="!!this.selectedAlertId"
+  [searchProviderSubject]="searchProviderSubject"
+  [clientSubject]="clientSubject"
+  (onDeleteAlertClicked)="onDeleteToDoClicked($event)"
+  ></productivity-tools-todo-detail>
+</ng-template>
+
+<ng-template #deleteTodoTemplate>   
+  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)"
+   (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
 </ng-template>

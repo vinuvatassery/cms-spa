@@ -78,17 +78,14 @@ export class NotificationFacade {
   }
 
   loadNotificatioBySearchText(text : string): void {
-    this.loaderService.show()
     this.alertSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.notificationDataService.searchNotifications(text).subscribe({
         next: (caseBySearchTextResponse) => {
-          this.loaderService.hide();
           this.notificationAndReminderListSubject.next(caseBySearchTextResponse);
           this.alertSearchLoaderVisibilitySubject.next(false);
         },
         error: (err) => {
-          this.loaderService.hide();
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       });

@@ -149,6 +149,11 @@ export class NotificationPanelComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadNotificationsAndReminders();
+      this.notificationList$.subscribe((data: any) => {
+        this.alertsData = data;
+        this.cdr.detectChanges();
+      });
     this.loadSignalrGeneralNotifications();
     this.loadSignalrReminders();
   }
@@ -362,4 +367,7 @@ export class NotificationPanelComponent implements OnInit {
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
    }
+   toggleDescription(message: any) {
+    message.showFullDescription = !message.showFullDescription;
+  }
 }
