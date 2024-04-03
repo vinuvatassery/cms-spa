@@ -46,6 +46,9 @@
         aria-label="to address"
         ></kendo-multiselect>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="isToEmailMissing">
+          To Email is required.
+        </kendo-formerror>
       </div>
         <div class="flex-col" [style]="{'display': 'flex'}">
           <kendo-floatinglabel text="CC" class="inline-search-loader" *ngIf="isCCDropdownVisible">
@@ -93,8 +96,11 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Subject">
-            <kendo-textbox  placeholder="Subject" [(ngModel)]="emailSubject" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+            <kendo-textbox  placeholder="Subject" [(ngModel)]="emailSubject" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode" (valueChange)="handleSubjectChanged($event)">   </kendo-textbox>
           </kendo-floatinglabel>
+          <kendo-formerror *ngIf="isEmailSubjectMissing">
+            Subject is required.
+          </kendo-formerror>
         </div>
         <div class="flex-col mt-3">
           <p>

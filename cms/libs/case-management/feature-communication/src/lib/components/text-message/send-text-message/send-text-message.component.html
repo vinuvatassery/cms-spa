@@ -30,9 +30,13 @@
           textField="formattedPhoneNbr"
           valueField="phoneNbr"
           [(ngModel)]="messageRecipient"
+          (valueChange)="handleRecipientChanged($event)"
         >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="isRecipientMissing">
+        Send Messages to is required.
+      </kendo-formerror>
     </div>
     <div class="flex-col mb-2" *ngIf="currentSmsData">
       <case-management-text-message-editor [templateContent] ="templateContent" [smsMessages]="smsMessages" [dataEvent]="smsEditorValueEvent" [currentValue]="currentSmsData" (editorValue)="handleSmsEditor($event)" ></case-management-text-message-editor>

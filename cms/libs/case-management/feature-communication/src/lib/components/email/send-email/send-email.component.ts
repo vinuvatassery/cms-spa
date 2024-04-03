@@ -47,6 +47,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() informationalText!:string;
   @Input() templateHeader !:string;
   @Input() triggerFrom !: string;
+  @Input() loginUserEmail!: string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -112,6 +113,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   templateDrpDisable : boolean = false;
   cancelDisplay:boolean = true;
   loadTemplate$ = this.communicationFacade.loadTemplate$;
+  isToEmailMissing: boolean = false;
+  isEmailSubjectMissing:boolean = false;
+  isFormValid:boolean = true;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -186,8 +190,29 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleEmailsChanged(emails: any) {
-    this.selectedToEmails = emails;
+  handleEmailsChanged(values: any) {
+    if(values.length > 0){
+      const removedItem = this.selectedToEmails.find((item: any) => !values.includes(item?.email?.trim()));
+      //get invalid email
+      const inValidEmail = values.filter((email: any) => Validators.email(new FormControl(email.trim())));
+      if (inValidEmail.length > 0 && removedItem == null) {
+        this.showHideSnackBar(SnackBarNotificationType.WARNING, 'Invalid Email not allowed.');
+      }
+      const validEmails = values.filter((email: any) => !Validators.email(new FormControl(email.trim())));
+      this.selectedToEmails = validEmails;
+      if(this.selectedToEmails?.length > 0){
+        this.isToEmailMissing = false;
+        this.isFormValid = true;
+      }
+   }
+  }
+
+  handleSubjectChanged(subject: any) {
+    this.emailSubject = subject;
+    if(this.emailSubject){
+      this.isEmailSubjectMissing = false;
+      this.isFormValid = true;
+    }
   }
 
   getProfileName() {
@@ -266,9 +291,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           if (data) {
             this.ddlTemplates = data;
             const defaultOption = this.ddlTemplates.find((option: any) => option.description === 'Draft Custom Email');
-              const otherOptions = this.ddlTemplates.filter((option: any) => option.description !== 'Draft Custom Email');
+            const otherOptions = this.ddlTemplates.filter((option: any) => option.description !== 'Draft Custom Email');
             this.currentTemplate = this.ddlTemplates.filter((x:any)=>x.templateTypeCode === this.communicationEmailTypeCode )
-            if(this.currentTemplate .length>0){
+            if(this.currentTemplate.length>0){
             this.documentTemplate = {'description': this.currentTemplate[0].description,'documentTemplateId':this.currentTemplate[0].documentTemplateId};
             this.handleDdlEmailValueChange(this.currentTemplate[0]);
             }
@@ -342,6 +367,17 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Internal event methods **/
   onSaveForLaterTemplateClicked() {
+    if(this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0){
+      this.isToEmailMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
+    if(this.emailSubject === undefined || this.emailSubject === ''){
+      this.isEmailSubjectMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
+    if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = false;
     this.isOpenSendEmailClicked = true;
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
@@ -355,6 +391,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if(this.communicationEmailTypeCode === CommunicationEventTypeCode.ClientEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.VendorEmail){
     this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
     }
+   }
   }
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
@@ -409,15 +446,29 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onSendEmailConfirmationDialogClicked(event: any) {
+
+    
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.selectedTemplate.templateContent = this.updatedTemplateContent;
+      if(this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0){
+        this.isToEmailMissing = true;
+        this.isFormValid = false;
+        this.onSendEmailDailougeConfirmationClicked();
+      }
+      if(this.emailSubject === undefined || this.emailSubject === ''){
+        this.isEmailSubjectMissing = true;
+        this.isFormValid = false;
+        this.onSendEmailDailougeConfirmationClicked();
+      }
+      if(this.isFormValid){
       if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail) {
         this.initiateAdobeEsignProcess(this.selectedTemplate);
       } else {
         this.initiateSendEmailProcess(this.selectedTemplate);        
       }
     }
+  }
   }
 
   private getSelectedEmails(emailList: any, emailType: string){

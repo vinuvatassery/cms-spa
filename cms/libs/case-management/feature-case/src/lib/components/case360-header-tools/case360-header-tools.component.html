@@ -61,7 +61,7 @@
   [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader" [communicationEmailTypeCode]="emailCommunicationTypeCode"
   [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName" [clientCaseId]="clientCaseId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
-  [toEmail]="toEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
+  [toEmail]="toEmail" [loginUserEmail]="loginUserEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>
 
 <!-- New ID Card Modal Html-->

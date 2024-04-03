@@ -6,6 +6,7 @@ import { Observable, Subscription, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserDataService } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-case360-header-tools',
   templateUrl: './case360-header-tools.component.html',
@@ -75,6 +76,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   clientHeader:any
   paperlessFlag:any;
   emailSubject:any;
+  loginUserEmail: any;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -146,7 +148,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute, 
     private dialogService: DialogService, private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService, private readonly loggingService: LoggingService,
-    private readonly ref: ChangeDetectorRef,private readonly workflowFacade: WorkflowFacade) {
+    private readonly ref: ChangeDetectorRef,private readonly workflowFacade: WorkflowFacade,
+    private readonly userDataService: UserDataService,) {
   }
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
@@ -156,6 +159,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   /* Internal Methods */
   ngOnInit(): void {
+    this.getLoggedInUserProfile();
     this.initialize();
     this.loadedClientHeader.subscribe(res => {
       this.clientHeader = res;
@@ -425,6 +429,16 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     this.isNewNotificationClicked = false;
     this.onDraftNotificationCloseClicked(CommunicationEvents.Close);
     this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.sendNewEmailDialog);
+  }
+
+  getLoggedInUserProfile(){
+    this.loaderService.show();
+    this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserEmail = profile[0]?.email;
+      }
+    });
+    this.loaderService.hide();
   }
 
 }
