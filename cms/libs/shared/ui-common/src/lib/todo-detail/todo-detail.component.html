@@ -100,8 +100,10 @@
     </kendo-floatinglabel>
     
       </div>
-    <div class="flex-col mt-2 "   *ngIf="showVendorSearch">
-      <div class="autoSelect-search mat-form-no-b-space field_with_info ">
+
+
+    <div class="flex-col mt-2 field_with_info"   *ngIf="showVendorSearch">
+      <div class="autoSelect-search mat-form-no-b-space">
         <div class="global-search">
           <span
             class="material-icons global-search-icon"
@@ -140,13 +142,13 @@
           is Required
       </kendo-formerror>
         </div>
-    <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
 
       </div>
+      <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
 
      </div> 
     <div class="flex-col mt-2 field_with_info" *ngIf="showClientSearch">
-      <div class="global-search mat-form-no-b-space">
+      <div class="autoSelect-search mat-form-no-b-space">
         <span
           class="material-icons global-search-icon"
           aria-label="search case"
