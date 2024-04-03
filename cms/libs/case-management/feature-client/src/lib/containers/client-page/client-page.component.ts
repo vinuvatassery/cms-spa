@@ -851,6 +851,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
   private populateClientRace() {
+    const clientRaceListSaved = this.applicantInfo.clientRaceList;
     this.applicantInfo.clientRaceList = [];
     const RaceAndEthnicity =
       this.appInfoForm.controls['RaceAndEthnicity'].value;
@@ -866,7 +867,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       RaceAndEthnicity.push(RaceAndEthnicityPrimary);
     }
     RaceAndEthnicity.forEach((el: any) => {
-      const clientRace = new ClientRace();
+      let clientRace = new ClientRace();
       clientRace.clientRaceCategoryCode = el.lovCode;
       clientRace.clientEthnicIdentityCode = '';
       if (RaceAndEthnicityPrimary.lovCode === el.lovCode)
@@ -875,15 +876,34 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (el.lovCode === PronounCode.notListed)
         clientRace.raceDesc =
           this.appInfoForm.controls['RaceAndEthnicityNotListed'].value;
+
+      const Existing = clientRaceListSaved.find(
+        (m) => m.clientRaceCategoryCode === clientRace.clientRaceCategoryCode
+      );
+      if (Existing !== undefined) {
+        if(Existing.clientRaceCategoryCode === PronounCode.notListed && Existing.raceDesc !== clientRace.raceDesc)
+        {
+          Existing.raceDesc = clientRace.raceDesc;
+        }
+        Existing.isPrimaryFlag = clientRace.isPrimaryFlag;
+        clientRace = Existing;
+      }
       this.applicantInfo.clientRaceList.push(clientRace);
     });
     Ethnicity.forEach((el: any) => {
-      const clientRace = new ClientRace();
+      let clientRace = new ClientRace();
       clientRace.clientEthnicIdentityCode = el.lovCode;
       clientRace.clientRaceCategoryCode = '';
       if (RaceAndEthnicityPrimary.lovCode === el.lovCode)
         clientRace.isPrimaryFlag = StatusFlag.Yes;
       clientRace.clientId = this.clientId;
+      const Existing = clientRaceListSaved.find(
+        (m) => m.clientEthnicIdentityCode === clientRace.clientEthnicIdentityCode
+      );
+      if (Existing !== undefined) {
+        Existing.isPrimaryFlag = clientRace.isPrimaryFlag;
+        clientRace = Existing;
+      }
       this.applicantInfo.clientRaceList.push(clientRace);
     });
   }
