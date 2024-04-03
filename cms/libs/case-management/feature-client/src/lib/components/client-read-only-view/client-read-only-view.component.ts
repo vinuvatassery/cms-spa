@@ -193,7 +193,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
       const clientSexualIdentity = new ClientSexualIdentity();
       clientSexualIdentity.clientId = x.clientId;
       clientSexualIdentity.clientSexualIdentityCode = x.clientSexualIdentityCode;
-      clientSexualIdentity.clientSexualyIdentityId = x.clientSexualyIdentityId;
+      clientSexualIdentity.clientSexualIdentityId = x.clientSexualIdentityId;
       clientSexualIdentity.otherDesc = x.otherDesc;
       if (this.applicantInfo.clientSexualIdentityList == undefined || null) {
         this.applicantInfo.clientSexualIdentityList = []
@@ -731,6 +731,10 @@ export class ClientReadOnlyViewComponent implements OnInit{
         }
         const Existing = clientGenderListSaved.find(m => m.clientGenderCode === clientGender.clientGenderCode);
         if (Existing !== undefined) {
+          if(Existing.clientGenderCode === PronounCode.notListed && Existing.otherDesc !== clientGender.otherDesc)
+          {
+            Existing.otherDesc = clientGender.otherDesc;
+          }
           clientGender = Existing;
         }
         this.applicantInfo.clientGenderList.push(clientGender);
@@ -739,15 +743,26 @@ export class ClientReadOnlyViewComponent implements OnInit{
   }
 
   private populateClientSexualIdentity() {
+    const clientSexualIdentityListSaved = this.applicantInfo.clientSexualIdentityList;
     this.applicantInfo.clientSexualIdentityList = [];
     Object.keys(this.appInfoForm.controls).filter(m => m.includes(ControlPrefix.sexualIdentity)).forEach(control => {
       if (this.appInfoForm.controls[control].value === true) {
         control = control.replace(ControlPrefix.sexualIdentity, '');
-        const clientSexualIdentity = new ClientSexualIdentity();
+        let clientSexualIdentity = new ClientSexualIdentity();
         clientSexualIdentity.clientSexualIdentityCode = control;
         clientSexualIdentity.clientId = this.clientId;
         if (clientSexualIdentity.clientSexualIdentityCode === PronounCode.notListed) {
           clientSexualIdentity.otherDesc = this.appInfoForm.controls['SexualIdentityDescription'].value;
+        }
+        const Existing = clientSexualIdentityListSaved.find(
+          (m) => m.clientSexualIdentityCode === clientSexualIdentity.clientSexualIdentityCode
+        );
+        if (Existing !== undefined) {
+          if(Existing.clientSexualIdentityCode === PronounCode.notListed && Existing.otherDesc !== clientSexualIdentity.otherDesc)
+          {
+            Existing.otherDesc = clientSexualIdentity.otherDesc;
+          }
+          clientSexualIdentity = Existing;
         }
 
         this.applicantInfo.clientSexualIdentityList.push(clientSexualIdentity);
