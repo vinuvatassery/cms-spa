@@ -729,6 +729,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         if (isSaved) {
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Info Saved Successfully!');
           this.workflowFacade.navigate(navigationType);
+          this.workflowFacade.paperLessFlagContactInfoChangeSubject.next(this.getFlag(this.contactInfoForm?.get('email.paperlessFlag')?.value));
         }
         else {
           this.workflowFacade.enableSaveButton();
@@ -745,7 +746,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private save() {
    if (this.isNoProofOfHomeChecked){
       this.handleFileRemoved(null);
-    }
+    }    
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
     const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.configurationProvider?.appSettings.uploadFileSizeLimit ?? 0);
@@ -754,8 +755,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isValid) {
       this.loaderService.show()
       return this.saveContactInfo();
-    }
-
+    }    
     const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.contactInfoForm, this.elementRef.nativeElement,null);
       if (invalidControl) {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1097,6 +1097,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
+    contactInfoData.address = [];
     if(mailingAddress){
       contactInfoData.address?.push(mailingAddress)
     }
@@ -1935,11 +1936,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {    
       if (this.checkValidations()) {
         this.save().subscribe((response: any) => {
           if (response) {
-            this.loaderService.hide();
+            this.loaderService.hide();            
             if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
               this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
                 queryParamsHandling: "preserve"
@@ -1970,8 +1971,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private addSaveForLaterValidationsSubscription(): void {
+  private addSaveForLaterValidationsSubscription(): void {    
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      this.workflowFacade.paperLessFlagContactInfoChangeSubject.next(this.getFlag(this.contactInfoForm?.get('email.paperlessFlag')?.value));
       if (this.checkValidations() && this.contactInfoForm.valid) {
         this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
