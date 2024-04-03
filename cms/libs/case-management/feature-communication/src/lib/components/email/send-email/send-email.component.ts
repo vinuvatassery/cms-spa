@@ -47,7 +47,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() informationalText!:string;
   @Input() templateHeader !:string;
   @Input() triggerFrom !: string;
-  @Input() loginUserEmail!: string;
+  @Input() loginUserEmail!: Array<any>;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -605,15 +605,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.isShowToEmailLoader$.next(true);
               this.isOpenDdlEmailDetails = true;
               this.selectedToEmails = [];
-
               for (let email of this.toEmail) {
                 this.selectedToEmails.push(email?.trim());
               }
-
               if(!this.emailSubject){
               this.emailSubject = data.description;
               }
-
               const ccEmails = data.cc?.map((item: any)=> item.email);
               this.ccEmail = ccEmails;
               if (data?.bccEmail?.length > 0) {
@@ -621,7 +618,19 @@ export class SendEmailComponent implements OnInit, OnDestroy {
                 this.isBCCDropdownVisible = false;
               }
               this.selectedCCEmail = this.ccEmail;
+              if(this.loginUserEmail && this.loginUserEmail?.length > 0){
+                if(this.selectedCCEmail == undefined){
+                  this.selectedCCEmail = this.loginUserEmail?.map((item: any)=> item.email);
+                }else{
+                this.selectedCCEmail?.push(this.loginUserEmail?.map((item: any)=> item.email));
+                }
+              }
               this.defaultCCEmail = data.cc;
+              if(this.defaultCCEmail == undefined){
+                this.defaultCCEmail = this.loginUserEmail;
+              }else{
+                this.defaultCCEmail.push(this.loginUserEmail);
+              }
               this.showToEmailLoader = false;
               if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
                 || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
@@ -658,6 +667,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.defaultCCEmail = event.cc;
       this.defaultBCCEmail = event.bcc;
       this.selectedCCEmail = event.cc?.map((item: any)=> item.email);
+      if(this.loginUserEmail && this.loginUserEmail?.length > 0){
+        if(this.selectedCCEmail == undefined){
+          this.selectedCCEmail = this.loginUserEmail?.map((item: any)=> item.email);
+        }else{
+        this.selectedCCEmail?.push(this.loginUserEmail?.map((item: any)=> item.email));
+        }
+      }
       if (event?.bccEmail?.length > 0) {
         this.bccEmail = this.selectedBccEmail = event.bcc;
         this.isBCCDropdownVisible = false;

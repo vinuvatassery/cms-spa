@@ -76,7 +76,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   clientHeader:any
   paperlessFlag:any;
   emailSubject:any;
-  loginUserEmail: any;
+  loginUserEmail: Array<any> = [];
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -432,7 +432,16 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
-       this.loginUserEmail = profile[0]?.email;
+       if(profile[0]?.email){
+        const ccEmail ={
+          email: profile[0]?.email,
+          isDefault: true
+        };
+        let emailExists = this.loginUserEmail?.includes(ccEmail.email.trim());
+        if(!emailExists){
+          this.loginUserEmail.push(ccEmail);
+        }
+       }
       }
     });
     this.loaderService.hide();
