@@ -65,6 +65,7 @@ export class TodoListComponent implements OnInit {
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
   @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
   @Output() getTodoItemsLov = new EventEmitter();
+  @Output() getSessionInfoByEligibilityEvent = new EventEmitter<any>();
   public moreactions = [
     {
       buttonType: 'btn-h-primary',
@@ -231,23 +232,11 @@ export class TodoListComponent implements OnInit {
           );
         }
     }
-    else if (gridItem && gridItem.entityTypeCode == this.entityTypes.NewCERApplication) {
-      this.router.navigate(['case-management/case-detail'], {
-        queryParams: {
-          sid: gridItem?.sessionId,
-          eid: gridItem?.entityId,
-          wtc: WorkflowTypeCode.NewCase
-        }
-      });
+    else if (gridItem && gridItem.entityTypeCode == this.entityTypes.NewApplication) {     
+      this.getSessionInfoByEligibilityEvent.emit(gridItem?.entityId);
     }
     else if (gridItem && gridItem.entityTypeCode == this.entityTypes.CERComplete) {
-      this.router.navigate(['case-management/case-detail'], {
-        queryParams: {
-          sid: gridItem?.sessionId,
-          eid: gridItem?.entityId,
-          wtc: WorkflowTypeCode.CaseEligibilityReview
-        }
-      });
+      this.getSessionInfoByEligibilityEvent.emit(gridItem?.entityId);
     }
   }
   dataStateChange(stateData: any): void { 

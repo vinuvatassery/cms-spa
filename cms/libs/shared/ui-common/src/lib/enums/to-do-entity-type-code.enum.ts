@@ -5,6 +5,6 @@ export enum ToDoEntityTypeCode{
     Pharmacy ='PHARMACY',
     Tpa ='TPA',
     CERComplete= 'CER_ELIGIBILITY',
-    NewCERApplication = 'NEW_APP_ELIGIBILITY',
+    NewApplication = 'NEW_APP_ELIGIBILITY',
     BatchSentBack="BATCH_SENT_BACK"
 }
