@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'productivity-tools-event-log-description',
@@ -16,44 +16,16 @@ export class EventLogDescriptionComponent {
   baseUrl:string='baseurl';
   anchorArray:any[]=[];
   data:any="";  
+  hasUrl:boolean=false;
 
-  isContentToggled: boolean = false;
-  nonEditedContent: string = '';
-  isShowReadMore: boolean = false;
-
-  constructor(private readonly cd: ChangeDetectorRef) {}
+  constructor() {}
 
   ngOnInit() {
-    this.formattingContent();
+    this.formatContent();
     this.content = this.hasUrl ? this.data : this.content;
-    this.nonEditedContent = this.content;
-    this.setReadmoreDisplay();
-    this.cd.detectChanges();
   }
-
-  setReadmoreDisplay() {
-    if (this.content.length > this.limit) {
-      this.content = this.formatContent(this.content);
-      this.isShowReadMore = true;
-    }
-  }
-
-  toggleContent() {
-    this.isContentToggled = !this.isContentToggled;
-    this.content = this.isContentToggled
-      ? this.nonEditedContent
-      : this.formatContent(this.content);
-    this.cd.detectChanges();
-  }
-
-  formatContent(content: string) {
-    if (this.completeWords) {
-      this.limit = content.substr(0, this.limit).lastIndexOf(' ');
-    }
-    return `${content.substr(0, this.limit)}...`;
-  }  
   
-  formattingContent()
+  formatContent()
   {
     this.anchorArray=[];
     let anchorArray = this.content.split(this.urlSeparator);
@@ -86,5 +58,4 @@ export class EventLogDescriptionComponent {
     );
     this.hasUrl = array.length>0;
   }
-  hasUrl:boolean=false;
 }
