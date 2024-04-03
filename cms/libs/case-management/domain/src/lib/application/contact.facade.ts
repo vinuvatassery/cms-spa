@@ -469,8 +469,8 @@ export class ContactFacade {
 }
 
   loadClientPaperLessStatus(
-    clientId: number,
-    clientCaseEligibilityId: string
+    clientId: number | undefined,
+    clientCaseEligibilityId: string | undefined
   ): void {
     this.showLoader();
     this.contactDataService
