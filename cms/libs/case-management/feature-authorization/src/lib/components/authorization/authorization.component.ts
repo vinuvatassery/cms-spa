@@ -121,24 +121,28 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   getNotificationTypeCode(sendEmailClick: boolean) {
     if(this.isCerForm){
       if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
-        this.templateLoadType = this.communicationEmailTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+        this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        this.communicationEmailTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
         this.templateHeader = 'CER Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
       }else{
-        this.templateLoadType = this.communicationLetterTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
+        this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        this.communicationLetterTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
         this.templateHeader = 'CER Authorization Letter';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
       }
     }else{
       if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
-        this.templateLoadType = this.communicationEmailTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
+        this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        this.communicationEmailTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
       }else{
-        this.templateLoadType = this.communicationLetterTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetter;
+        this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        this.communicationLetterTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetter;
         this.templateHeader = 'Application Authorization Letter';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;

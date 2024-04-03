@@ -160,7 +160,7 @@ export class SendTextMessageComponent implements OnInit {
 
   private loadSmsTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadNotificationTemplates(this.notificationGroup, NotificationTemplateCategoryCode.SMS) // define an enum for category
+    this.communicationFacade.loadNotificationTemplates(this.notificationGroup, this.templateLoadType, this.communicationSmsTypeCode ?? '') // define an enum for category
       .subscribe({
         next: (data: any) => {
           if (data) {

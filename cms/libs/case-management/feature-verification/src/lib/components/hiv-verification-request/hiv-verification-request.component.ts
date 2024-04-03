@@ -324,7 +324,7 @@ export class HivVerificationRequestComponent implements OnInit{
 
   loadHivVerificationEmail() {
     this.verificationFacade.showLoader();
-    this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail ?? '')
+    this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.ClientEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {

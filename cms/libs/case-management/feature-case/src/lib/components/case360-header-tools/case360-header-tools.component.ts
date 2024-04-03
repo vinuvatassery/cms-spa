@@ -88,8 +88,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode = CommunicationEventTypeCode.ClientLetter;
-        this.templateLoadType = this.letterCommunicationTypeCode = CommunicationEventTypeCode.ClientLetter;
+        this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
@@ -106,8 +105,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode = CommunicationEventTypeCode.ClientEmail;
-        this.templateLoadType = this.emailCommunicationTypeCode = CommunicationEventTypeCode.ClientEmail;
+        this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
@@ -127,7 +125,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.templateLoadType = CommunicationEventTypeCode.ClientSMS;
         this.informationalText = "Select an existing template or draft custom text messages"
         this.templateHeader = 'Send New SMS Text';
-        this.currentCommunicationTypeCode = CommunicationEventTypeCode.ClientSMS;
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -193,7 +190,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       if (response) {
         if (this.workflowFacade.caseStatus.toLowerCase() === CaseStatusCode.disenrolled.toLowerCase()) {    
           if (this.paperlessFlag === StatusFlag.Yes) {
-            this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
+            this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
             this.emailCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
             this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
             this.templateHeader = 'Send Disenrollment Email';
@@ -201,7 +198,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
           }
           else {
-            this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
+            this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
             this.letterCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
             this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
             this.templateHeader = 'Send Disenrollment Letter';

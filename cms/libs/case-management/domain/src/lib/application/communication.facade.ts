@@ -90,15 +90,15 @@ export class CommunicationFacade {
     });
   }
 
-  loadEmailTemplates(groupCode: string, categoryCode: string) {
+  loadEmailTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
     return this.emailDataService.loadEmailTemplates(
-      groupCode, categoryCode
+      groupCode, categoryCode, templateTypeCode
     );
   }
 
-  loadLetterTemplates(groupCode: string, categoryCode: string) {
+  loadLetterTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
     return this.emailDataService.loadEmailTemplates(
-      groupCode, categoryCode
+      groupCode, categoryCode, templateTypeCode
     );
   }
 
@@ -347,9 +347,9 @@ export class CommunicationFacade {
     return this.emailDataService.sendSms(smsNotification);
   }
 
-  loadNotificationTemplates(groupCode: string, categoryCode: string) {
+  loadNotificationTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
     return this.emailDataService.loadEmailTemplates(
-      groupCode, categoryCode
+      groupCode, categoryCode, templateTypeCode
     );
   }
 

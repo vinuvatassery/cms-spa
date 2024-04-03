@@ -86,9 +86,9 @@ export class EmailDataService {
     ]);
   }
 
-  loadEmailTemplates(groupCode: string, categoryCode: string) {
+  loadEmailTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${groupCode}/${categoryCode}/templates`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${groupCode}/${categoryCode}/templates?templateTypeCode=${templateTypeCode}`
     );
   }
 
