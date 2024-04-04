@@ -1,117 +1,108 @@
 <div class="app-c-fab-sidePanel sidePanel-todo-reminders" kendoTooltip>
   <!-- Side Panel Header -->
   <div class="sidePanel_header">
-    <div class="sidePanel_header-left"  
-    >
-    <kendo-skeleton  *ngIf="showLoader"
-    shape="text"
-    animation="pulse"
-    width="30%"
-  ></kendo-skeleton>
-   
+    <div class="sidePanel_header-left">
+      <kendo-skeleton *ngIf="showLoader" shape="text" animation="pulse" width="30%"></kendo-skeleton>
+
       <h3 *ngIf="!showLoader">{{clientName}}’s To-Do & Reminders</h3>
-    
+
     </div>
-   
+
 
     <div class="sidePanel_header-right max-w-small">
-      <button
-        kendoButton
-        class="k-icon-button small-i-btn"
-        (click)="onCloseTodoRemindersClicked()"
-        aria-label="Close"
-      >
-        <span class="material-icons" aria-label="close" aria-hidden="true"
-          >close</span
-        >
+      <button kendoButton class="k-icon-button small-i-btn" (click)="onCloseTodoRemindersClicked()" aria-label="Close">
+        <span class="material-icons" aria-label="close" aria-hidden="true">close</span>
       </button>
     </div>
   </div>
-  <div  class="sidePanel_body todo-list">
+  <div class="sidePanel_body todo-list">
     <section>
       <p class="due-main-heading text-red-dark">DUE WITHIN 7 DAYS</p>
-      <productivity-tools-todo-item 
-       [nDays]="'DUE WITHIN 7 DAYS'"
-      [todoAndReminders$]="todoAndReminders$" 
-      (isModalTodoDetailsOpenClicked)="editTodoItem($event)"
-      (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
-      (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
-      (noTodoFor7Days)="setNoDataTempalate(7,'todo')"
-    
-      ></productivity-tools-todo-item>
-      <productivity-tools-reminder-item 
-                    [nDays]="'DUE WITHIN 7 DAYS'"
-                    [todoAndReminders$]="todoAndReminders$"
-                    (onEditReminderClickedEvent)="onEditReminderClicked($event)"
-                    (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
-                    (noReminderFor7Days)="setNoDataTempalate(7,'reminder')"
-                       ></productivity-tools-reminder-item>
+      <productivity-tools-todo-item [nDays]="'DUE WITHIN 7 DAYS'" [todoAndReminders$]="todoAndReminders$"
+        (isModalTodoDetailsOpenClicked)="editTodoItem($event)"
+        (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
+        (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
+        (noTodoFor7Days)="setNoDataTempalate(7,'todo')"></productivity-tools-todo-item>
+      <productivity-tools-reminder-item [nDays]="'DUE WITHIN 7 DAYS'" [todoAndReminders$]="todoAndReminders$"
+        (onEditReminderClickedEvent)="onEditReminderClicked($event)"
+        (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
+        (noReminderFor7Days)="setNoDataTempalate(7,'reminder')"
+        (onSnoozeReminderEvent)="onSnoozeReminder($event)"></productivity-tools-reminder-item>
 
     </section>
-    
-<div style="text-align: center;" *ngIf="showNoDataFor7Days">
-  <p>There is no data to display</p>
-</div>
+
+    <div class="text-center p-2" *ngIf="showNoDataFor7Days">
+      <common-grid-no-records></common-grid-no-records>
+    </div>
     <div *ngIf="showDataLoader">
-      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
-      class="reminder-list-skeleton-loader"></kendo-skeleton>
+      <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
+        <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60"
+          class="bg_rect_loader"></kendo-skeleton>
+        <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40"></kendo-skeleton>
+        <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
+          <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+          <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
+        </div>
+      </div>
     </div>
     <section class="pt-2">
       <p class="due-main-heading text-canyon-dark">DUE WITHIN 30 DAYS</p>
-      <productivity-tools-reminder-item  
-           [nDays]="'DUE WITHIN 30 DAYS'"
-            [todoAndReminders$]="todoAndReminders$"
-            (onEditReminderClickedEvent)="onEditReminderClicked($event)"
-            (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
-            (noReminderFor30Days)="setNoDataTempalate(30,'reminder')"
-            ></productivity-tools-reminder-item>
-      <productivity-tools-todo-item 
-      [nDays]="'DUE WITHIN 30 DAYS'"
-       [todoAndReminders$]="todoAndReminders$"
-       (isModalTodoDetailsOpenClicked)="editTodoItem($event)"     
-       (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
-       (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
-       (noTodoFor30Days)="setNoDataTempalate(30,'todo')"
-       
-      ></productivity-tools-todo-item>
+      <productivity-tools-reminder-item [nDays]="'DUE WITHIN 30 DAYS'" [todoAndReminders$]="todoAndReminders$"
+        (onEditReminderClickedEvent)="onEditReminderClicked($event)"
+        (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
+        (noReminderFor30Days)="setNoDataTempalate(30,'reminder')"
+        (onSnoozeReminderEvent)="onSnoozeReminder($event)"></productivity-tools-reminder-item>
+      <productivity-tools-todo-item [nDays]="'DUE WITHIN 30 DAYS'" [todoAndReminders$]="todoAndReminders$"
+        (isModalTodoDetailsOpenClicked)="editTodoItem($event)"
+        (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
+        (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
+        (noTodoFor30Days)="setNoDataTempalate(30,'todo')"></productivity-tools-todo-item>
 
-      </section>
-      <div style="text-align: center;" *ngIf="showNoDataFor30Days">
-        <p>There is no data to display</p>
+    </section>
+    <div class="text-center p-2" *ngIf="showNoDataFor30Days">
+      <common-grid-no-records></common-grid-no-records>
+    </div>
+
+    <div *ngIf="showDataLoader">
+      <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
+        <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60"
+          class="bg_rect_loader"></kendo-skeleton>
+        <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40"></kendo-skeleton>
+        <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
+          <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+          <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
+        </div>
       </div>
-      <div *ngIf="showDataLoader">
-        <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
-        class="reminder-list-skeleton-loader"></kendo-skeleton>
-      </div>
-    
+
+    </div>
     <section class="pt-2">
       <p class="due-main-heading">DUE LATER</p>
-      <productivity-tools-reminder-item 
-      [nDays]="'DUE LATER'"
-      [todoAndReminders$]="todoAndReminders$"
-      (onEditReminderClickedEvent)="onEditReminderClicked($event)"
-      (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
-      (noReminderAfter30Days)="setNoDataTempalate(31,'reminder')"
-      ></productivity-tools-reminder-item>
-      <productivity-tools-todo-item  
-      [nDays]="'DUE LATER'"
-       [todoAndReminders$]="todoAndReminders$"
-       (isModalTodoDetailsOpenClicked)="editTodoItem($event)"
-       (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
-       (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
-       (noTodoAfter30Days)="setNoDataTempalate(31,'todo')"
-       ></productivity-tools-todo-item>
+      <productivity-tools-reminder-item [nDays]="'DUE LATER'" [todoAndReminders$]="todoAndReminders$"
+        (onEditReminderClickedEvent)="onEditReminderClicked($event)"
+        (onDeleteAlertGridClicked)="onDeleteReminderAlertGrid($event)"
+        (noReminderAfter30Days)="setNoDataTempalate(31,'reminder')"
+        (onSnoozeReminderEvent)="onSnoozeReminder($event)"></productivity-tools-reminder-item>
+      <productivity-tools-todo-item [nDays]="'DUE LATER'" [todoAndReminders$]="todoAndReminders$"
+        (isModalTodoDetailsOpenClicked)="editTodoItem($event)"
+        (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
+        (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
+        (noTodoAfter30Days)="setNoDataTempalate(31,'todo')"></productivity-tools-todo-item>
     </section>
-    <div style="text-align: center;" *ngIf="showNoDataAfter30Days">
-      <p>There is no data to display</p>
+    <div class="text-center p-2" *ngIf="showNoDataAfter30Days">
+      <common-grid-no-records></common-grid-no-records>
     </div>
     <div *ngIf="showDataLoader">
-      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
-      class="reminder-list-skeleton-loader"></kendo-skeleton>
+      <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
+        <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60"
+          class="bg_rect_loader"></kendo-skeleton>
+        <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40"></kendo-skeleton>
+        <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
+          <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+          <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
+        </div>
+      </div>
     </div>
-  
+
   </div>
- 
+
 </div>
-
-

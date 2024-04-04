@@ -11,8 +11,8 @@ import {
   ChangeDetectorRef,
   OnDestroy,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import {  ColumnVisibilityChangeEvent, FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -34,6 +34,7 @@ import { LovFacade } from '@cms/system-config/domain';
 export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnInit, OnDestroy{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
+  @ViewChild('grid') grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReconcileGridLoaderShow = false;
@@ -90,7 +91,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   gridClaimsReconcileData$ = this.gridClaimsReconcileDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] }; 
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   datePaymentReconciledRequired= false;
   paymentSentDateRequired= false;
   tAreaCessationMaxLength:any=200;
@@ -107,6 +108,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   paymentToReconcileCount:any=0;
   totalCount:any;
   isSubmitted:any = false;
+  columnChangeDesc:any='Default Columns';
   columns : any = {
     ALL: 'ALL',
     vendorName:'Insurance Vendor',
@@ -171,14 +173,14 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   warrantInfoArray:any[]=[];
 
   /** Constructor **/
-  constructor(private route: Router,   private dialogService: DialogService, 
-    private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, 
+  constructor(private route: Router,   private dialogService: DialogService,
+    private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider,
     public intl: IntlService,private readonly lovFacade: LovFacade,
     public activeRoute: ActivatedRoute) {}
-  
+
   ngOnInit(): void {
     this.reconcilePaymentGridUpdatedResult = [];
-    this.loadQueryParams();   
+    this.loadQueryParams();
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
     if(this.loadType === LoadTypes.allPayments){
@@ -229,7 +231,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     })
    }
 
-   checkErrorCount() {    
+   checkErrorCount() {
     const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
     const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
@@ -237,7 +239,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     if (this.totalCount === 0) {
       if( this.isSubmitted){
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared.";
+      this.pageValidationMessage = null;
       }
     }
     else {
@@ -263,7 +265,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     maxResultCountValue: number,
     sortValue: string,
     sortTypeValue: string
-  ) {    
+  ) {
       this.isReconcileGridLoaderShow = true;
       const gridDataRefinerValue = {
       skipCount: skipCountValue,
@@ -273,7 +275,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       filter : this.filter === undefined?null:this.filter
     };
     this.loadReconcileListEvent.emit(gridDataRefinerValue);
-  }  
+  }
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
     filterService.filter({
       filters: [{
@@ -310,31 +312,46 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
+    this.cd.detectChanges();
   }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    let columnsRemoved = false;
+    for (const column of this.grid.columns.toArray()){
+      if (column.hidden) {
+        columnsRemoved = true;
+      }
+    }
+    this.columnChangeDesc = columnsRemoved ? 'Columns Removed' : 'Default Columns';
+  }
+
   allColumnChange(){
     this.searchItem =null;
       this.defaultGridState();
       this.loadReconcileListGrid();
   }
   onSearchChange(data: any) {
+
     let searchValue = data;
     this.defaultGridState();
     let operator = 'contains';
+    this.selectedColumn ?? 'vendorName'
+    if (data !== '') {
 
-    if (
-      this.selectedColumn === 'amountDue' 
-    ) {
-      operator = 'eq';
-    }
-    else if (
-      this.selectedColumn === 'paymentReconciledDate' ||
-      this.selectedColumn === 'paymentSentDate'
-    ) {
-      operator = 'eq';
-      searchValue = this.formatSearchValue(data,true);
+      if (
+        this.selectedColumn === 'amountDue'
+      ) {
+        operator = 'eq';
+      }
+      else if (
+        this.selectedColumn === 'paymentReconciledDate' ||
+        this.selectedColumn === 'paymentSentDate'
+      ) {
+        operator = 'eq';
+        searchValue = this.formatSearchValue(data, true);
 
+      }
     }
-   
     this.filterData = {
       logic: 'and',
       filters: [
@@ -366,8 +383,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     }
     return searchValue;
   }
-  
-  private isValidDate(searchValue: any) {   
+
+  private isValidDate(searchValue: any) {
     let dateValue = isNaN(searchValue) && !isNaN(Date.parse(searchValue));
     if(dateValue !== null){
       let dateArray = searchValue.split('/');
@@ -380,7 +397,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     }
     return ''
   }
-  
+
   dataStateChange(stateData: any): void {
     this.sortBatch = stateData.sort;
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
@@ -429,12 +446,12 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   onClickedExport(){
     this.showExportLoader = true
-    this.exportGridDataEvent.emit()        
+    this.exportGridDataEvent.emit()
     this.exportButtonShow$
     .subscribe((response: any) =>
     {
       if(response)
-      {        
+      {
          this.showExportLoader = false
         this.cd.detectChanges()
       }
@@ -469,7 +486,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
           this.reconcilePaymentGridUpdatedResult[index].paymentMethodCode = dataItem?.paymentMethodCode;
           this.reconcilePaymentGridUpdatedResult[index].batchId = dataItem?.batchId;
           this.reconcilePaymentGridUpdatedResult[index].warrantNumberInValid = dataItem?.warrantNumberInValid;
-          this.reconcilePaymentGridUpdatedResult[index].warrantNumberInValidMsg = dataItem?.warrantNumberInValidMsg; 
+          this.reconcilePaymentGridUpdatedResult[index].warrantNumberInValidMsg = dataItem?.warrantNumberInValidMsg;
         }
       });
     }
@@ -533,9 +550,9 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         itemResponse.data[index].datePaymentSentInValidMsg = ifExist?.datePaymentSentInValidMsg;
         itemResponse.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
         itemResponse.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
-        itemResponse.data[index].batchId = ifExist?.batchId;       
+        itemResponse.data[index].batchId = ifExist?.batchId;
         itemResponse.data[index].warrantNumberInValid = ifExist?.warrantNumberInValid;
-        itemResponse.data[index].warrantNumberInValidMsg = ifExist?.warrantNumberInValidMsg; 
+        itemResponse.data[index].warrantNumberInValidMsg = ifExist?.warrantNumberInValidMsg;
       }
       else {
         itemResponse.data[index].paymentReconciledDate = itemResponse.data[index].paymentReconciledDate !== null ? new Date(itemResponse.data[index].paymentReconciledDate) : itemResponse.data[index].paymentReconciledDate;
@@ -543,7 +560,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         if((itemResponse.data[index].checkNbr !== null && itemResponse.data[index].checkNbr !== '' && itemResponse.data[index].checkNbr !== undefined )){
           itemResponse.data[index].reconciled = true;
         }
-      }          
+      }
     });
     this.reconcilePaymentGridPagedResult = itemResponse;
   }
@@ -708,8 +725,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   printAdviceLetterChange(dataItem: any) {
     let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
-    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChanged){           
-      this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.paymentRequestId !== dataItem.paymentRequestId);    
+    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChanged){
+      this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.paymentRequestId !== dataItem.paymentRequestId);
     }
     else{
       this.assignRowDataToMainList(dataItem);
@@ -767,7 +784,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.updateDatePaymentReconciledValidation(dataItem);
     if (dataItem.checkNbr !== '' && dataItem.acceptsReportsFlag == 'Y') {
       dataItem.isPrintAdviceLetter = true;
-    }    
+    }
 
     if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined
       && dataItem.checkNbr !== ''){
@@ -915,12 +932,12 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       this.pageValidationMessage = this.totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
-      this.pageValidationMessage = "No data for reconcile and print.";
+      this.pageValidationMessage = null;
       this.pageValidationMessageFlag = true;
     }
     else {
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared.";
+      this.pageValidationMessage = null;
        this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
       this.selectedReconcileDataRows.forEach((data:any) =>{
         data. paymentReconciledDate =  this.intl.formatDate(data.paymentReconciledDate, this.dateFormat);
@@ -954,13 +971,13 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     });
   }
 
- 
+
   onLeavePageCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.LeavePageDialog.close();
     }
   }
- 
+
   toggleBreakoutPanel()
     {
       this.isBreakoutPanelShow=!this.isBreakoutPanelShow;
@@ -969,13 +986,13 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   onRowSelection(grid:any, selection:any)
     {
       this.warrantCalculationArray=[];
-      const data = selection.dataItem;    
+      const data = selection.dataItem;
       this.isBreakoutPanelShow=true;
-      this.entityId=data.entityId; 
-      let warrantTotal=0; 
+      this.entityId=data.entityId;
+      let warrantTotal=0;
       let bid=this.activeRoute.snapshot.queryParams["bid"];
       this.batchId=data.batchId == '' || data.batchId == null || data.batchId==undefined ? bid:data.batchId;
-    
+
       this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==this.batchId).forEach((item: any) => {
         let object={
           vendorId:item?.entityId,
@@ -1043,7 +1060,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event)
   }
-  
+
   loadEachLetterTemplate(event:any){
   this.loadTemplateEvent.emit(event);
   }

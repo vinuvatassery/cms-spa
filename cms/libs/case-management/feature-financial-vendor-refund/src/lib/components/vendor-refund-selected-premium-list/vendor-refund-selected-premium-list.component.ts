@@ -27,25 +27,26 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
    @Input() sortType :any
    @Input() editPaymentRequestId:any
    isSpotPayment = false
-     public state!: State;
-     filter!: any;  
+  public state!: State;
+  filter!: any;  
   @Output() insuranceRefundInformationConfirmClicked = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>()
   public totalAmountPaid =0;
   public totalRefundAmount=0
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   financialPremiumsRefundGridLists!: any[];
- @Input() gridDataResult! : GridDataResult
- @Input() clientId :any
-@Input() vendorAddressId :any 
- public formUiStyle: UIFormStyle = new UIFormStyle();
+  @Input() gridDataResult! : GridDataResult
+  @Input() clientId :any
+  @Input() vendorAddressId:any;
+  @Input() clientName:any;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   refundNoteValueLength = 0
   @Input() isEdit = false
   isSubmitted = false;
   @Input() insuraceAddRefundClick$:any
   @Output() Reqpayload = new EventEmitter<any>()
   refundForm! :FormGroup
-  
+
   @Input() insurancePremiumPaymentReqIds:any[] =[]
   public constructor(private formBuilder : FormBuilder,
     private readonly changeDetectorRef: ChangeDetectorRef){
@@ -63,6 +64,9 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
       if(!x.refundAmount)
       {
         x.refundAmountError = "Refund amount is required"
+        return
+      }else if(x.refundAmountError)
+      {
         return
       }
       else

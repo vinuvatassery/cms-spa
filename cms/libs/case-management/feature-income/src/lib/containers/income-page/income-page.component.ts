@@ -68,6 +68,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   employerIncome$ = this.incomeFacade. employerIncome$;
   hasNoIncome = false;
   isNodateSignatureNoted = false;
+  notApplicable = "Not Applicable";
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public noIncomeDetailsForm: FormGroup = new FormGroup({
     noIncomeClientSignedDate: new FormControl('', []),
@@ -88,7 +89,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   employerIncome:any;
   minDate = new Date();
   totalIncome:any = 0;
-  //address$ = this.contactFacade.address$;
+  totalIncomeCalculated:any;
+  fplPercentage:any
   paperlessFlag:String | null= null;
   workflowTypeCode:any;
   public actions = [
@@ -308,6 +310,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.incomeResponseSubscription = this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.totalIncome = incomeresponse.totalCount;
       this.incomeData = incomeresponse;
+      this.totalIncomeCalculated = incomeresponse.totalIncome;
+      this.fplPercentage = incomeresponse.fplPercentage;
       let uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item: any) => !!item.documentPath);
       if (uploadedProofOfSchoolDependents?.length == this.incomeData?.dependents?.length) {
         this.isProofOfSchoolDocumentUploaded = true;

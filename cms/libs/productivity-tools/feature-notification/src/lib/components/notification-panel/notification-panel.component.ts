@@ -56,6 +56,7 @@ export class NotificationPanelComponent implements OnInit {
   @Input() notificationList$: any;
   reminderFor = '';
   itemsLoader = false;
+  isViewAll = true;
   notifications: any = [];
   skeletonCounts = [1,2,3];
   alertsData:any = {};
@@ -149,6 +150,11 @@ export class NotificationPanelComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadNotificationsAndReminders();
+      this.notificationList$.subscribe((data: any) => {
+        this.alertsData = data;
+        this.cdr.detectChanges();
+      });
     this.loadSignalrGeneralNotifications();
     this.loadSignalrReminders();
   }
@@ -241,10 +247,10 @@ export class NotificationPanelComponent implements OnInit {
   onNotificationButtonToggleClicked(show?: boolean): void {
     this.isNotificationPopupOpened =
       show !== undefined ? show : !this.isNotificationPopupOpened;
-       
      if(this.isNotificationPopupOpened){
       this.itemsLoader = true;
-      this.loadNotificationsAndReminders();
+      this.isViewAll = false;
+      this.loadNotificationsAndReminders(this.isViewAll);
       this.notificationList$.subscribe((data: any) => {
         if(data){
           this.itemsLoader = false;
@@ -254,6 +260,7 @@ export class NotificationPanelComponent implements OnInit {
       });
         this.viewNotifications();
       }
+      this.isViewAll = true;
   }
 
   onDeleteReminderClosed(result: any) {
@@ -295,9 +302,9 @@ export class NotificationPanelComponent implements OnInit {
     this.lovFacade.getEntityTypeCodeLov()
     }
 
-  public loadNotificationsAndReminders() {
+  public loadNotificationsAndReminders(isViewAll? : any) {
     this.isToDoGridLoaderShow.next(true);
-    this.isLoadReminderAndNotificationEvent.emit({ });
+    this.isLoadReminderAndNotificationEvent.emit(isViewAll);
     this.notificationList$.subscribe((data: any) => {
       this.gridDataResult = data?.items;
       if (data?.totalCount >= 0 || data?.totalCount === -1) {

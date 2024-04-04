@@ -120,7 +120,7 @@ export class CaseFacade {
   activeSession!: ActiveSessions[];
   userManagerprofilePhotoSubject = new Subject();
   userLastModifierProfilePhotoSubject = new Subject();
-
+  clientCustomName:string= '';
   constructor(
     private readonly caseDataService: CaseDataService,
     private readonly loggingService: LoggingService,
@@ -360,14 +360,17 @@ export class CaseFacade {
 
   loadClientProfileHeader(clientId: number): void {
     this.showLoader();
+    this.clientCustomName = '';
     this.caseDataService.loadClientProfileHeader(clientId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileHeaderSubject.next(clientProfileResponse);
+        this.clientCustomName = clientProfileResponse?.clientFullName + ' ' + clientProfileResponse?.clientId + ' ' + clientProfileResponse?.ssn + ' ' + clientProfileResponse?.dob
         this.hideLoader();
         if (clientProfileResponse) {
           const activeSession = {
             clientCaseId: clientProfileResponse?.clientCaseId,
             clientId: clientProfileResponse?.clientId,
+            sessionId: clientProfileResponse?.workflowSessionId
           };
           this.createActiveSession(activeSession);
         }

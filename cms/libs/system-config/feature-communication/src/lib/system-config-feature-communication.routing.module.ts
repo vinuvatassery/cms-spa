@@ -5,12 +5,13 @@ import { EmailTemplatePageComponent } from './containers/email-template-page/ema
 import { FormDocumentsPageComponent } from './containers/form-documents-page/form-documents-page.component';
 import { LetterTemplatePageComponent } from './containers/letter-template-page/letter-template-page.component';
 import { SmsTextTemplatePageComponent } from './containers/sms-text-template-page/sms-text-template-page.component';
-import { TemplatePageComponent } from './containers/template-page/template-page.component';
+import { TemplateLayoutPageComponent } from './containers/template-layout-page/template-layout-page.component';
 import { EmailTemplateHeaderFooterPageComponent } from './containers/email-template-header-footer-page/email-template-header-footer-page.component';
 import { EmailTemplateNewFormPageComponent } from './containers/email-template-new-form-page/email-template-new-form-page.component';
 import { LetterTemplateHeaderFooterPageComponent } from './containers/letter-template-header-footer-page/letter-template-header-footer-page.component';
 import { SmsTextTemplateNewFormPageComponent } from './containers/sms-text-template-new-form-page/sms-text-template-new-form-page.component';
 import { LetterTemplateNewFormPageComponent } from './containers/letter-template-new-form-page/letter-template-new-form-page.component';
+import { TemplateLayoutNewFormPageComponent } from './containers/template-layout-new-form-page/template-layout-new-form-page.component';
 
 const routes: Routes = [
   {
@@ -59,8 +60,12 @@ const routes: Routes = [
     component: SmsTextTemplateNewFormPageComponent,
   },
   {
-    path: 'templates',
-    component: TemplatePageComponent,
+    path: 'template-layouts',
+    component: TemplateLayoutPageComponent,
+  },
+  {
+    path: 'template-layouts/form',
+    component: TemplateLayoutNewFormPageComponent,
   },
  
 ];

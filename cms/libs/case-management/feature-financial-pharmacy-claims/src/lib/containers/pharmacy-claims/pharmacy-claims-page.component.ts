@@ -215,7 +215,7 @@ export class PharmacyClaimsPageComponent implements OnInit {
   }
 
   onPcaAlertCloseClicked(result: any) {
-    if (result) {
+    if (result  && this.pcaExceptionDialogService) {
       this.pcaExceptionDialogService.close();
     }
   }

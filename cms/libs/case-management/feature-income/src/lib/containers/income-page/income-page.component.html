@@ -7,10 +7,10 @@
         <div class="flex-col mb-1">
             <div  *ngIf="isCerForm">
               <div class="flex-col mb-1" *ngFor="let prvEmployer of employerIncome let i = index">    
-              <fieldset class="k-form-fieldset mb-0"
+              <fieldset class="k-form-fieldset mb-1"
                 *ngIf="prvEmployer.employerId !== null && prvEmployer.employerId !== '' 
                 && prvEmployer.employerId !== undefined && prvEmployer.cerReviewStatusCode !== null
-                && prvEmployer.employerId  !== '00000000-0000-0000-0000-000000000000'">
+                && prvEmployer.employerId  !== '00000000-0000-0000-0000-000000000000'  && prvEmployer.employerName !== notApplicable ">
                 <legend class="k-form-legend">
                   <h5>Is the {{[prvEmployer.incomeSourceCodeDesc]}} still employed with {{prvEmployer.employerName}}</h5>
                 </legend>              
@@ -51,10 +51,11 @@
                   </div>
 
               </fieldset>
-              
-              <fieldset class="k-form-fieldset mb-0"
+              </div>
+              <div class="flex-col mb-1" *ngFor="let prvEmployer of employerIncome let i = index">  
+              <fieldset class="k-form-fieldset mb-1"
                 *ngIf="(prvEmployer.employerId === null || prvEmployer.employerId === '' || prvEmployer.employerId === undefined || prvEmployer.employerId  === '00000000-0000-0000-0000-000000000000')
-                 && prvEmployer.cerReviewStatusCode !== null">
+                 && prvEmployer.cerReviewStatusCode !== null || prvEmployer.employerName === notApplicable">
                 <legend class="k-form-legend">
                   <h5>Is the {{[prvEmployer.incomeSourceCodeDesc]}} still receiving {{prvEmployer.incomeTypeCodeDesc}} Income </h5>
                 </legend>              
@@ -98,9 +99,12 @@
           <form [formGroup]="noIncomeDetailsForm">
             <div class="flex-col mb-1">
               <fieldset class="k-form-fieldset">
-                <legend class="k-form-legend">
+                <legend class="k-form-legend" *ngIf="!isCerForm">
                   <h5> Are the Client, Spouse, Partner w/ Shared minor child or Parent of minor client employed? </h5>
-                </legend>          
+                </legend>      
+                <legend class="k-form-legend" *ngIf="isCerForm">
+                  <h5> Does the Client, Spouse, Partner w/ Shared child or Parent of a minor child have additional employers? </h5>
+                </legend>     
                 <div class="component-list-h">
                   <span class="app-radiobtnwidtext-wrapper">
                     <input type="radio" kendoRadioButton name="clientDependentsMinorAdditionalIncomeFlag" aria-labelledby="additionalIncomeFlagYes"
@@ -116,14 +120,16 @@
                   </span>
                 </div>
                 <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].valid">
-                  Are the Client, Spouse, Partner w/ Shared minor child or Parent of minor client employed is required.
-                </kendo-formerror>
+                  <span  *ngIf="!isCerForm">Are the Client, Spouse, Partner w/ Shared minor child or Parent of minor client employed is required. </span>
+                  <span  *ngIf="isCerForm">Does the Client, Spouse, Partner w/ Shared child or Parent of a minor child have additional employers is required.</span>
+                </kendo-formerror>             
               </fieldset>          
             </div>
             <div class="flex-col mb-1">
               <fieldset class="k-form-fieldset">
                 <legend class="k-form-legend">
-                  <h5> Does the Client, Spouse, Partner w/ Shared child or Parent of minor client  have additional income? </h5>
+                  <h5 *ngIf="!isCerForm"> Does the Client, Spouse, Partner w/ Shared child or Parent of minor client  have additional income? </h5>
+                  <h5 *ngIf="isCerForm"> Does the Client, Spouse, Partner w/ Shared child  or Parent of a minor child have additional income? </h5>
                 </legend>          
                 <div class="component-list-h">
                   <span class="app-radiobtnwidtext-wrapper">
@@ -140,7 +146,8 @@
                   </span>
                 </div>
                 <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].valid">
-                  Does the Client, Spouse, Partner w/ Shared child or Parent of minor client  have additional income is required.
+                  <span  *ngIf="!isCerForm">Does the Client, Spouse, Partner w/ Shared child or Parent of minor client  have additional income is required.</span>
+                  <span  *ngIf="isCerForm">Does the Client, Spouse, Partner w/ Shared child  or Parent of a minor child have additional income is required.</span>
                 </kendo-formerror>
               </fieldset>          
             </div>
@@ -288,7 +295,8 @@
             <case-management-income-list [isProofOfSchoolDocumentUploaded] = "isProofOfSchoolDocumentUploaded"  [isCerForm]="isCerForm"  [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" 
             (loadIncomeListEvent)="loadIncomeListHandle($event)"  (loadIncomeList)="loadIncomeListGrid($event)" 
             [lovProofOfIncomeByType$]="lovProofOfIncomeByType$" [incomeSourcelov$] = "incomeSourcelov$ " [incomeTypelov$]="incomeTypelov$"
-            [incomeFrequencylov$]="incomeFrequencylov$" [incomesLoader$] ="incomesLoader$"></case-management-income-list>
+            [incomeFrequencylov$]="incomeFrequencylov$" [incomesLoader$] ="incomesLoader$"[totalIncomeCalculated]="totalIncomeCalculated"
+            [fplPercentage]="fplPercentage"></case-management-income-list>
           </div>
           <kendo-formerror *ngIf="!isProofOfSchoolDocumentUploaded"> Proof of school upload is required
           </kendo-formerror>

@@ -142,7 +142,7 @@ export class ReminderDetailComponent implements OnInit {
       vendorId :[null],
       clientId :[null],
       addToOutlookCalender: [false],
-      deleteFromOutlookCalender :[false]
+      deleteFromOutlookCalender :[true]
     });
    if(this.isDelete || this.isEdit){
    this.getTodo$.subscribe((res:any) =>{

@@ -237,12 +237,16 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
   loadEmployers(employerName :any): void {
     this.contactDataService.loadEmployers(employerName).subscribe({
       next: (employers) => {
-        this.employerSubject.next(employers);
+        this.employerSubject.next(employers);        
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
+  }
+
+  addEmployer(employerName :any) {
+    return this.contactDataService.addEmployer(employerName);
   }
 
   private formDataAppendObject(fd: FormData, obj: any, key?: any) {

@@ -9,10 +9,10 @@
       </div>
       <div class="card-list_details">
         <p>{{ item.alertDesc }}</p>
-        <p class="text-muted">{{ item?.alertDueDate | date:'MM/dd/YYYY'}}</p>
-        <p class="text-muted">{{ formatTime(item?.repeatTime) }}</p>
+        <p class="text-muted">{{ item?.alertDueDate | date:'MM/dd/YYYY'}} {{ formatTime(item?.repeatTime) }}</p>
+       
       </div>
-      <div>
+      <div *ngIf="item.customAlertFlag && item.customAlertFlag=='Y'">
       <kendo-dropdownbutton
       [data]="dataTwo"
       

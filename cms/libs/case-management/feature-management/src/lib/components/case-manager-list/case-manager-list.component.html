@@ -42,8 +42,8 @@
         <kendo-grid-column field="county" title="County" [width]="100" *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false" *ngIf="managementTab">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <common-user-photo-icon
-            [userId]="dataItem.creatorId"
+            <common-user-photo-icon  
+            [userId]="dataItem.creatorId" 
             [userFirstName]="dataItem.userFirstName"
             [userLastName]="dataItem.userLastName"
             [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"

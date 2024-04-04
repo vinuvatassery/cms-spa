@@ -218,6 +218,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
           this.directRemoveClicked = true;
           this.onSinglePremiumRemove(data);
           this.onRemovePremiumsOpenClicked(this.removePremiumsConfirmationDialogTemplate);
+          this.cdr.detectChanges();
         }
       },
     },
@@ -469,7 +470,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
             {
               field: this.selectedColumn ?? 'clientFullName',
               operator: operator,
-              value: data,
+              value: this.searchValue,
             },
           ],
           logic: 'and',
@@ -705,7 +706,6 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
 
   getSelectedReportCount(selectedSendReportList: []) {
     this.sendReportCount = selectedSendReportList.length;
-    this.cdr.detectChanges();
   }
 
   selectionChange(dataItem: any, selected: boolean) {
@@ -749,7 +749,6 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     } else {
       this.sendReportCount = this.selectedSendReportList?.SelectedSendReports.filter((obj: any, index: any, self: any) =>
       index === self.findIndex((t: any) => ( t.vendorId === obj.vendorId ))).length;
-      //this.sendReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((item: any) => item.selected).length;
     }
   }
 

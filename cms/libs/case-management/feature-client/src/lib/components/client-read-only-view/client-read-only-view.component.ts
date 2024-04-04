@@ -14,6 +14,7 @@ import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { Subject, Subscription, of } from 'rxjs';
+
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 @Component({
@@ -36,6 +37,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
   @Input() userManagerprofilePhoto$!: any;
   @Input() userLastModifierProfilePhoto$!: any;
 
+
   applicantInfo = {} as ApplicantInfo;
   isEditClientInformationPopup = false;
   caseManagerHoverDataItem! : any
@@ -51,6 +53,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
   lastModifierId: string  |null=null;
   clientProfileSubscription = new Subscription();
 
+
   constructor(
       private readonly elementRef: ElementRef,
       private loaderService: LoaderService,
@@ -62,6 +65,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
       private scrollFocusValidationfacade: ScrollFocusValidationfacade){}
    /** Lifecycle hooks **/
  ngOnInit(): void {
+  this.loadReadOnlyClientInfoEvent.emit();
   this.loadReadOnlyClientInfoEvent.emit();
 }
 
@@ -189,7 +193,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
       const clientSexualIdentity = new ClientSexualIdentity();
       clientSexualIdentity.clientId = x.clientId;
       clientSexualIdentity.clientSexualIdentityCode = x.clientSexualIdentityCode;
-      clientSexualIdentity.clientSexualyIdentityId = x.clientSexualyIdentityId;
+      clientSexualIdentity.clientSexualIdentityId = x.clientSexualIdentityId;
       clientSexualIdentity.otherDesc = x.otherDesc;
       if (this.applicantInfo.clientSexualIdentityList == undefined || null) {
         this.applicantInfo.clientSexualIdentityList = []
@@ -221,6 +225,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
             this.clientFacade.runImportedClaimRules(this.clientId);
             this.onCloseEditClientInformationClicked();
             this.onUpdateApplicantInfo.emit();
+            this.clientFacade.reloadClientHeader();
             this.clientFacade.reloadClientHeader();
           },
           error: (error: any) => {
@@ -726,6 +731,10 @@ export class ClientReadOnlyViewComponent implements OnInit{
         }
         const Existing = clientGenderListSaved.find(m => m.clientGenderCode === clientGender.clientGenderCode);
         if (Existing !== undefined) {
+          if(Existing.clientGenderCode === PronounCode.notListed && Existing.otherDesc !== clientGender.otherDesc)
+          {
+            Existing.otherDesc = clientGender.otherDesc;
+          }
           clientGender = Existing;
         }
         this.applicantInfo.clientGenderList.push(clientGender);
@@ -734,15 +743,26 @@ export class ClientReadOnlyViewComponent implements OnInit{
   }
 
   private populateClientSexualIdentity() {
+    const clientSexualIdentityListSaved = this.applicantInfo.clientSexualIdentityList;
     this.applicantInfo.clientSexualIdentityList = [];
     Object.keys(this.appInfoForm.controls).filter(m => m.includes(ControlPrefix.sexualIdentity)).forEach(control => {
       if (this.appInfoForm.controls[control].value === true) {
         control = control.replace(ControlPrefix.sexualIdentity, '');
-        const clientSexualIdentity = new ClientSexualIdentity();
+        let clientSexualIdentity = new ClientSexualIdentity();
         clientSexualIdentity.clientSexualIdentityCode = control;
         clientSexualIdentity.clientId = this.clientId;
         if (clientSexualIdentity.clientSexualIdentityCode === PronounCode.notListed) {
           clientSexualIdentity.otherDesc = this.appInfoForm.controls['SexualIdentityDescription'].value;
+        }
+        const Existing = clientSexualIdentityListSaved.find(
+          (m) => m.clientSexualIdentityCode === clientSexualIdentity.clientSexualIdentityCode
+        );
+        if (Existing !== undefined) {
+          if(Existing.clientSexualIdentityCode === PronounCode.notListed && Existing.otherDesc !== clientSexualIdentity.otherDesc)
+          {
+            Existing.otherDesc = clientSexualIdentity.otherDesc;
+          }
+          clientSexualIdentity = Existing;
         }
 
         this.applicantInfo.clientSexualIdentityList.push(clientSexualIdentity);
