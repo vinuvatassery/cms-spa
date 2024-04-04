@@ -30,10 +30,10 @@ export class EligibilityCheckListComponent implements OnInit, OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  @Input() assisterGroupDataLists$: any;
-  @Input() assisterGroupFilterColumn$: any;
-  @Output() loadAssisterGroupListsEvent = new EventEmitter<any>();
-  @Output() assisterGroupFilterColumnEvent = new EventEmitter<any>();
+  @Input() eligibilityChecklistDataLists$: any;
+  @Input() eligibilityChecklistFilterColumn$: any;
+  @Output() loadEligibilityChecklistListsEvent = new EventEmitter<any>();
+  @Output() eligibilityChecklistFilterColumnEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -44,10 +44,10 @@ export class EligibilityCheckListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-  isAssisterGroupListGridLoaderShow = false;
-  gridAssisterGroupDataSubject = new Subject<any>();
-  gridAssisterGroupData$ =
-    this.gridAssisterGroupDataSubject.asObservable();
+  isEligibilityChecklistListGridLoaderShow = false;
+  gridEligibilityChecklistDataSubject = new Subject<any>();
+  gridEligibilityChecklistData$ =
+    this.gridEligibilityChecklistDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -80,7 +80,7 @@ export class EligibilityCheckListComponent implements OnInit, OnChanges {
 
   
   ngOnInit(): void {
-    this.loadAssisterGroupList(); 
+    this.loadEligibilityChecklistList(); 
   }
   ngOnChanges(): void {
     this.state = {
@@ -89,35 +89,35 @@ export class EligibilityCheckListComponent implements OnInit, OnChanges {
       sort: this.sort,
     };
   
-    this.loadAssisterGroupList();
+    this.loadEligibilityChecklistList();
   }
   
-  private loadAssisterGroupList(): void {
-    this.loadAssisterGroupLitData(
+  private loadEligibilityChecklistList(): void {
+    this.loadEligibilityChecklistLitData(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType
     );
   }
-  loadAssisterGroupLitData(
+  loadEligibilityChecklistLitData(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isAssisterGroupListGridLoaderShow = true;
+    this.isEligibilityChecklistListGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
-    this.loadAssisterGroupListsEvent.emit(gridDataRefinerValue);
+    this.loadEligibilityChecklistListsEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
-  loadAssisterGroupFilterColumn(){
-    this.assisterGroupFilterColumnEvent.emit();
+  loadEligibilityChecklistFilterColumn(){
+    this.eligibilityChecklistFilterColumnEvent.emit();
   
   }
   onChange(data: any) {
@@ -162,14 +162,14 @@ export class EligibilityCheckListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadAssisterGroupList();
+    this.loadEligibilityChecklistList();
   }
   
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.loadAssisterGroupList();
+    this.loadEligibilityChecklistList();
   }
   
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -177,20 +177,20 @@ export class EligibilityCheckListComponent implements OnInit, OnChanges {
   }
   
   gridDataHandle() {
-    this.assisterGroupDataLists$.subscribe(
+    this.eligibilityChecklistDataLists$.subscribe(
       (data: GridDataResult) => {
         this.gridDataResult = data;
         this.gridDataResult.data = filterBy(
           this.gridDataResult.data,
           this.filterData
         );
-        this.gridAssisterGroupDataSubject.next(this.gridDataResult);
+        this.gridEligibilityChecklistDataSubject.next(this.gridDataResult);
         if (data?.total >= 0 || data?.total === -1) {
-          this.isAssisterGroupListGridLoaderShow = false;
+          this.isEligibilityChecklistListGridLoaderShow = false;
         }
       }
     );
-    this.isAssisterGroupListGridLoaderShow = false;
+    this.isEligibilityChecklistListGridLoaderShow = false;
   }
 
 

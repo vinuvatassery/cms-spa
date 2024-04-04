@@ -31,6 +31,10 @@ import { EmailTemplateNewFormPageComponent } from './containers/email-template-n
 import { LetterTemplateNewFormPageComponent } from './containers/letter-template-new-form-page/letter-template-new-form-page.component';
 import { SmsTextTemplateNewFormPageComponent } from './containers/sms-text-template-new-form-page/sms-text-template-new-form-page.component';
 import { EmailTemplateHeaderFooterPageComponent } from './containers/email-template-header-footer-page/email-template-header-footer-page.component';
+import { TemplateLayoutListsComponent } from './components/template-layout-lists/template-layout-lists.component';
+import { TemplateLayoutNewFormComponent } from './components/template-layout-new-form/template-layout-new-form.component';
+import { TemplateLayoutNewFormPageComponent } from './containers/template-layout-new-form-page/template-layout-new-form-page.component';
+import { TemplateLayoutPageComponent } from './containers/template-layout-page/template-layout-page.component';
 
 @NgModule({
   imports: [
@@ -69,6 +73,10 @@ import { EmailTemplateHeaderFooterPageComponent } from './containers/email-templ
     LetterTemplateNewFormPageComponent,
     SmsTextTemplateNewFormPageComponent,
     EmailTemplateHeaderFooterPageComponent,
+    TemplateLayoutNewFormComponent,
+    TemplateLayoutNewFormPageComponent,
+    TemplateLayoutPageComponent,
+    TemplateLayoutListsComponent
   ],
   exports: [
     ClientNotificationDefaultsListComponent,
@@ -97,6 +105,10 @@ import { EmailTemplateHeaderFooterPageComponent } from './containers/email-templ
     LetterTemplateNewFormPageComponent,
     SmsTextTemplateNewFormPageComponent,
     EmailTemplateHeaderFooterPageComponent,
+    TemplateLayoutNewFormComponent,
+    TemplateLayoutNewFormPageComponent,
+    TemplateLayoutPageComponent,
+    TemplateLayoutListsComponent
   ],
 })
 export class SystemConfigFeatureCommunicationModule {}
