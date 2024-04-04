@@ -6,7 +6,7 @@
 <section class="k-dialog-body">
     <section class="add_main_popup_screen">
         <div class="add_new_top_section">
-            <p class="mb-3"> Search for a client to add insurance, provider, prescription or tax refunds.</p>
+            <p *ngIf="!isEdit" class="mb-3"> Search for a client to add insurance, provider, prescription or tax refunds.</p>
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
                     <div class="combotable_search_list new_refund_Search">
