@@ -763,11 +763,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isNoProofOfHomeChecked) {
       this.handleFileRemoved(null);
     }
+    this.validateDuplicatePhone();
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
     const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.configurationProvider?.appSettings.uploadFileSizeLimit ?? 0);
     const isHomeAddressStateOregon = this.contactInfoForm?.get('homeAddress.state')?.value == StatesInUSA.Oregon;
-    const isValid = this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile && isHomeAddressStateOregon === true && this.duplicatePhoneFound
+    const isValid = this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile && isHomeAddressStateOregon === true
     if (isValid) {
       this.loaderService.show()
       return this.saveContactInfo();
