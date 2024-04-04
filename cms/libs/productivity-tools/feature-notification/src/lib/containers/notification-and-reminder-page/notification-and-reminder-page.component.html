@@ -11,7 +11,7 @@
         </ng-template>
         <ng-template kendoTabContent>
           <productivity-tools-notification-list
-          (isLoadReminderAndNotificationEvent)="onloadReminderAndNotificationsGrid()"
+          (isLoadReminderAndNotificationEvent)="onloadReminderAndNotificationsGrid($event)"
          [notificationList$]="notificationList$" (searchTermTextEvent)="onListenSearchTerm($event)" 
          (closeDialog)="onCloseDialog($event)"
          ></productivity-tools-notification-list>
