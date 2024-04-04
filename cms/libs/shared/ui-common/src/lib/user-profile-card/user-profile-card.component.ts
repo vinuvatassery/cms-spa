@@ -73,7 +73,7 @@ export class UserProfileCardComponent implements OnInit {
     this.userManagementFacade.reassignCase(data).subscribe({
       next: (response: any) => {
         this.userManagementFacade.hideLoader();
-        this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message, 'Case re-assigned!');
+        this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response[1].message, response[0].message);
         this.businessLogicPopupClose();
       },
       error: (err: any) => {

@@ -48,27 +48,49 @@ isReminderExpand = false;
   public data = [
     {
       text: 'Edit Reminder',
+      icon: 'edit'
     },
     {
-      text: '15 Minutes',
+      text: '15 Minutes Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'15 Minutes'
     },
     {
-      text: '30 Minutes',
+      text: '30 Minutes Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'30 Minutes'
     },
     {
-      text: '1 hour',
+      text: '1 hour Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'1 hour'
     },
     {
-      text: '2 hours',
+      text: '2 hours Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'2 hours'
     }, 
     {
-      text: '1 day',
+      text: '1 day Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'1 day'
     },
     {
-      text: '3 days',
+      text: '3 days Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'3 days'
     },
     {
-      text: '7 days',
+      text: '7 days Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'7 days'
     },
   ];
 
@@ -166,26 +188,26 @@ isReminderExpand = false;
       this.removePreviousMessage()
     }
   })
- if(event.text == '15 Minutes'){
+ if(event.id == '15 Minutes'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false)
  
  }
- if(event.text == '30 Minutes'){
+ if(event.id == '30 Minutes'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,30, false)
  }
- if(event.text == '1 hour'){
+ if(event.id == '1 hour'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
  }
- if(event.text == '2 hours'){
+ if(event.id == '2 hours'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
  }
- if(event.text == '3 days'){
+ if(event.id == '3 days'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,3)
  }
- if(event.text == '1 day'){
+ if(event.id == '1 day'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,1)
  }
- if(event.text == '2 days'){
+ if(event.id == '2 days'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,2)
  }
 }

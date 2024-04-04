@@ -92,7 +92,7 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="healthInsuranceType" title="Insurance Type" [width]="160">
                         </kendo-grid-column>
-                        <kendo-grid-column field="startDate" title="Coverage Period" [width]="160">
+                        <kendo-grid-column field="startDate" title="Coverage Dates" [width]="160">
                             <ng-template kendoGridCellTemplate let-dataItem>
                               <span>{{ dataItem.startDate | date : 'MM/dd/yyyy' }}</span>  
                               <span *ngIf="dataItem.endDate"> - {{ dataItem.endDate | date : 'MM/dd/yyyy' }}</span>  

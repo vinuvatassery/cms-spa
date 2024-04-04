@@ -7,11 +7,13 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FinancialVendorFacade, FinancialVendorRefundFacade, SearchFacade, VendorFacade } from '@cms/case-management/domain';
+import { CaseFacade, FinancialVendorFacade, FinancialVendorRefundFacade, SearchFacade, VendorFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { TodoListComponent } from '../../components/todo-list/todo-list.component';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'productivity-tools-todo-page',
@@ -49,7 +51,10 @@ export class TodoPageComponent implements OnInit {
     public todoFacade: TodoFacade,
     public lovFacade : LovFacade,
     private readonly FinancialRefundFacade: FinancialVendorRefundFacade,
-    private readonly financialVendorFacade : FinancialVendorFacade) {}
+    private readonly financialVendorFacade : FinancialVendorFacade,
+    private caseFacade: CaseFacade,
+    private router: Router,
+    private loaderService: LoaderService) {}
  
     ngOnInit(): void {
      
@@ -137,7 +142,26 @@ onDeleteAlertClicked(event:any){
       });
     }
 
-    
-  
-
+  getSessionInfoByEligibilityId(clientCaseEligibilityId:any){
+    debugger;
+    this.loaderService.show();
+          this.caseFacade.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId).subscribe({
+            next: (response: any) => {
+              if (response) {                
+                this.loaderService.hide();
+                this.router.navigate(['case-management/case-detail'], {
+                  queryParams: {
+                    sid: response.sessionId,
+                    eid: response.entityID,                   
+                    wtc: response?.workflowTypeCode
+                  },
+                });
+              }
+            },
+            error: (err: any) => {
+              this.loaderService.hide();
+              this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            }
+          })
+  }
 }

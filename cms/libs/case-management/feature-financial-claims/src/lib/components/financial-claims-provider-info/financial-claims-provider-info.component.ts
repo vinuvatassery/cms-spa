@@ -174,7 +174,7 @@ export class FinancialClaimsProviderInfoComponent {
 
       }
     });
-    this.specialhandlingCounter = `${this.vendorProfile.address.specialHandlingDesc?.length}/${this.specialHandlingMaxLength}`;
+    this.specialhandlingCounter = `${this.vendorProfile.address.specialHandlingDesc?.length?  this.vendorProfile.address.specialHandlingDesc?.length : 0 }/${this.specialHandlingMaxLength}`;
     this.createContactsFormArray()
   }
 

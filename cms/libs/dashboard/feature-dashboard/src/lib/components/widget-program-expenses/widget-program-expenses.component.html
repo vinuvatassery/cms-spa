@@ -10,7 +10,7 @@
                           textField="Name" 
                           valueField="Value"
                           [kendoMultiSelectSummaryTag]="0"
-                           [valuePrimitive]="true" aria-label="Expenses Type Value" >
+                           [valuePrimitive]="true" >
                           <ng-template kendoMultiSelectHeaderTemplate>
                               <span style="margin-left:11px">
                                 <input
@@ -38,11 +38,11 @@
                             </ng-template>
                   </kendo-multiselect>
                   <kendo-dropdownlist size="small" value="M" rounded="medium" class="mr-1"
-                  [(ngModel)]="selectFrequency" aria-label="Name"
+                  [(ngModel)]="selectFrequency"
                         [fillMode]="formUiStyle.inputFillMode" [data]="dataMonth"  textField="Name" valueField="Value" [valuePrimitive]="true"
                         (valueChange)="frequecyValueChange($event)">
                   </kendo-dropdownlist>
-                  <kendo-dropdownlist aria-label="TIme Frame" size="small" [(ngModel)]="selectedTimeFrame" rounded="medium" class="mr-1"
+                  <kendo-dropdownlist size="small" [(ngModel)]="selectedTimeFrame" rounded="medium" class="mr-1"
                         [fillMode]="formUiStyle.inputFillMode" [data]="dataYear"  (valueChange)="TimeFrameValueChange($event)">
                   </kendo-dropdownlist>
 

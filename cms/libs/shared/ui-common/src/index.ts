@@ -31,6 +31,8 @@ export * from './lib/cms-pharmacy-claims-detail/cms-pharmacy-claims-detail.compo
 export * from './lib/cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
 export * from './lib/dashboard-loader-panel/dashboard-loader-panel.component';
 export * from './lib/todo-detail/todo-detail.component';
+export * from './lib/add-employer/add-employer.component';
+
 /** Pipes **/
 export * from './lib/pipes/ssn.pipe';
 export * from './lib/pipes/fileSize.pipe';
@@ -64,3 +66,4 @@ export * from './lib/directives/placeholder.directive';
 export * from './lib/grid-no-records/grid-no-records.component';
 export * from './lib/read-more/read-more.component';
 export * from './lib/delete-todo-confirmation/delete-todo-confirmation.component';
+export * from './lib/directives/placeholder.directive';

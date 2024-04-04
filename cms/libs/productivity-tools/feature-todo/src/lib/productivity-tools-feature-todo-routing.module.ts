@@ -10,14 +10,14 @@ const routes: Routes = [
     path: '',
     component: TodoAndRemindersFabPageComponent,
     data: {
-      title: null,
+      title: '',
     },
   },
   {
     path: 'list',
     component: TodoPageComponent,
     data: {
-      title: null,
+      title: '',
     },
   },
 ];

@@ -27,7 +27,7 @@ import {
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription, first } from 'rxjs';
 import { Router } from '@angular/router';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-process-list',
   templateUrl: './financial-claims-process-list.component.html',
@@ -277,7 +277,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
             {
               field: this.selectedSearchColumn ?? 'invoiceNbr',
               operator: operator,
-              value: data,
+              value: this.searchValue,
             },
           ],
           logic: 'and',
@@ -337,7 +337,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-  searchColumnChangeHandler(data:any){
+  searchColumnChangeHandler(data:any){    
     this.searchValue = '';
     this.onChange(data)
   }

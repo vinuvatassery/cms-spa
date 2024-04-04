@@ -516,7 +516,7 @@ export class FinancialVendorRefundDataService {
       SortType : data.sortType,
       Sorting : data.sort,
       SkipCount : data.skipCount,
-      MaxResultCount : data.pageSize,
+      MaxResultCount : data.maxResultCount,
       Filter : data.filter
     }
 
