@@ -1,10 +1,11 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FabMenuFacade, NotificationStatsFacade, AlertEntityTypeCode, StatsTypeCode } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-common-actions',
@@ -12,7 +13,7 @@ import { DialItem } from '@progress/kendo-angular-buttons';
   styleUrls: ['./common-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommonActionsComponent {
+export class CommonActionsComponent implements OnInit, OnDestroy{
   /** Public properties **/
  
   clickedContact!: any;
@@ -20,27 +21,30 @@ export class CommonActionsComponent {
   clientId : any;
   //vendorId : any;
   entityId : any;
-  //todoAndRemindersCount =0;
   eventLogCount = 0;
   directMessageCount = 0;
   alertCount = 0;
   totalCount = 0;
+  updateStatsSubscription = new Subscription();
+  getStatsSubscription = new Subscription();
+  resetStatsSubscription = new Subscription();
   
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly cd: ChangeDetectorRef,
     public readonly fabMenuFacade : FabMenuFacade,
     public notificationStatsFacade : NotificationStatsFacade,
-    //public todoFacade : TodoFacade
   ) {}
 
   ngOnInit(): void {
-    this.notificationStatsFacade.updateStats$.subscribe((res: any) => {
+    this.updateStatsSubscription = this.notificationStatsFacade.updateStats$.subscribe((res: any) => {
       if(res){
         this.notificationStatsFacade.getStats(this.entityId);
       }
     });
-    this.notificationStatsFacade.getStats$.subscribe((res:any) => {
+
+    this.getStatsSubscription = this.notificationStatsFacade.getStats$.subscribe((res:any) => {
       if(res.length>0){
         let eventLogStats = res.filter((stat:any) => stat.statsTypeCode == StatsTypeCode.EventLog);
         if(eventLogStats && eventLogStats.length > 0){
@@ -55,8 +59,16 @@ export class CommonActionsComponent {
           this.alertCount = alertStats[0].statsCount;
         }
         this.totalCount = this.eventLogCount + this.directMessageCount + this.alertCount;
+        this.cd.detectChanges();
       }
     });
+
+    this.resetStatsSubscription = this.notificationStatsFacade.resetStats$.subscribe((res: any) => {
+      if(res){
+        this.notificationStatsFacade.getStats(this.entityId);
+      }
+    });
+
 
     this.clientId = this.route.snapshot.params['id'];
     //this.vendorId = this.route.snapshot.queryParams['v_id'];
@@ -64,23 +76,12 @@ export class CommonActionsComponent {
       this.entityId = this.clientId.toString();
       this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);
     }
-    
-      
-      
-      
-      // else if(this.vendorId){
-      //   this.entityId = this.vendorId.toString();
-      // }
-    // this.notificationFacade.todoAndReminderFabCount$.subscribe((res :any) =>{
-    //  this.todoAndRemindersCount =  res;
-    // })
-    // var clientId = this.route.snapshot.queryParams['id'];
-    // if(clientId){
-    // this.notificationFacade.todoAndReminderFabCount(clientId);
-    // }
-    // this.todoFacade.curdAlert$.subscribe(res =>{
-    //   this.notificationFacade.todoAndReminderFabCount(clientId);
-    // })
+  }
+
+  ngOnDestroy(): void {
+    this.updateStatsSubscription?.unsubscribe();
+    this.getStatsSubscription?.unsubscribe();
+    this.resetStatsSubscription?.unsubscribe();
   }
   /** Internal event methods **/
   onDialItemClicked(event: any): void {

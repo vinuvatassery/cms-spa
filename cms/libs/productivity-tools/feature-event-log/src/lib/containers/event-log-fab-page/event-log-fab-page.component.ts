@@ -28,7 +28,6 @@ export class EventLogComponentFabPageComponent
   }
 
   ngOnInit() {
-    debugger;
       this.clientId = this.route.snapshot.queryParams['id'];
       this.vendorId = this.route.snapshot.queryParams['v_id'];
       if(this.clientId){
