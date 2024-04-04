@@ -190,11 +190,11 @@
                 </p>
               </div>
               <div class="items-body">
-                <common-read-more
-                [content]="subEventLog.eventLogDesc"
-                [limit]="250"
-                [completeWords]="true">
-                </common-read-more>
+                <productivity-tools-event-log-description
+                  [content]="subEventLog.eventLogDesc"
+                  [limit]="250"
+                  [completeWords]="true">
+                </productivity-tools-event-log-description>
 
                 <span *ngIf="subEventLog.userEventFlag && subEventLog.attachments?.length > 0"
                   class="text-primary text-underline c-pointer"
