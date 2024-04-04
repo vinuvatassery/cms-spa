@@ -61,7 +61,7 @@ export class EventLogComponent implements OnInit {
   isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
   filterData: any = { logic: 'and', filters: [] };
-
+eventListLoader = false;
   isShowFilter = false;
   filterBy = "";
   public state!: State;
@@ -101,6 +101,7 @@ export class EventLogComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.eventListLoader = true;
     this.loadEventsData();
     if(this.entityType =='CLIENT')
     {
@@ -117,6 +118,7 @@ export class EventLogComponent implements OnInit {
        this.eventAttachmentTypeList = response;
       }
     });
+    
   }
 
   /** Private methods **/
@@ -147,6 +149,7 @@ export class EventLogComponent implements OnInit {
     this.eventsdata$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.eventResponseList = response;
+        this.eventListLoader = false;
       }
     });
   }

@@ -26,13 +26,13 @@ export class SystemConfigCasesFacade {
     field: this.sortValueEligibilityChecklist,
   }];
 
-  public sortValueDomain = 'creationTime'; 
-  public sortDomainGrid: SortDescriptor[] = [{
-    field: this.sortValueDomain,
+  public sortValueCaseAssignment = 'creationTime'; 
+  public sortCaseAssignmentGrid: SortDescriptor[] = [{
+    field: this.sortValueCaseAssignment,
   }];
 
-  private loadDomainsListsServiceSubject = new BehaviorSubject<any>([]);
-  loadDomainsListsService$ = this.loadDomainsListsServiceSubject.asObservable();
+  private loadCaseAssignmentSubject = new BehaviorSubject<any>([]);
+  loadCaseAssignmentService$ = this.loadCaseAssignmentSubject.asObservable();
 
   private loadEligibilityChecklistsListsServiceSubject = new BehaviorSubject<any>([]);
   loadEligibilityChecklistsListsService$ =
@@ -64,10 +64,10 @@ export class SystemConfigCasesFacade {
     this.loaderService.hide();
   }
 
-  loadDomainsLists() {
-    this.systemConfigCasesDataService.loadDomainsListsService().subscribe({
+  loadCaseAssignmentLists() {
+    this.systemConfigCasesDataService.loadCaseAssignment().subscribe({
       next: (response) => {
-        this.loadDomainsListsServiceSubject.next(response);
+        this.loadCaseAssignmentSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

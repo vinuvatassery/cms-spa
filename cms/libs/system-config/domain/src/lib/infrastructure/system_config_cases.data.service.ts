@@ -31,25 +31,37 @@ export class SystemConfigCasesDataService {
     this.loaderService.hide();
   }
 
-  loadDomainsListsService() {
+  loadCaseAssignment() {
     return of([
       {
         id: 1,
-        domainName: 'domainName',
+        language: 'language',
+        range: 'range',
+        assignedCaseWorker: 'assignedCaseWorker',
+        ofClients: 'ofClients',
+        TemporaryAssignment: 'TemporaryAssignment',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
       },
       {
         id: 2,
-        domainName: 'domainName',
+        language: 'language',
+        range: 'range',
+        assignedCaseWorker: 'assignedCaseWorker',
+        ofClients: 'ofClients',
+        TemporaryAssignment: 'TemporaryAssignment',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
       },
       {
         id: 3,
-        domainName: 'domainName',
+        language: 'language',
+        range: 'range',
+        assignedCaseWorker: 'assignedCaseWorker',
+        ofClients: 'ofClients',
+        TemporaryAssignment: 'TemporaryAssignment',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
@@ -60,21 +72,24 @@ export class SystemConfigCasesDataService {
     return of([
       {
         id: 1,
-        assisterGroup: 'assisterGroup',
+        eligibilityCriterion: 'eligibilityCriterion',
+        appearsOn: 'appearsOn',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
       },
       {
         id: 2,
-        assisterGroup: 'assisterGroup',
+        eligibilityCriterion: 'eligibilityCriterion',
+        appearsOn: 'appearsOn',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
       },
       {
         id: 3,
-        assisterGroup: 'assisterGroup',
+        eligibilityCriterion: 'eligibilityCriterion',
+        appearsOn: 'appearsOn',
         lastModified: 'MM/DD/YYYY',
         modifiedBy: 'LS',
         status: 'active',
