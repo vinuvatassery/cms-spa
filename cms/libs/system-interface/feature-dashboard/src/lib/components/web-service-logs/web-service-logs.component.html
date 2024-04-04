@@ -176,13 +176,15 @@
     </kendo-dialog-actions>
 </ng-template>
 <ng-template #errorAddressDialogTemplate>
-  <kendo-dialog-titlebar (close)="Close()"><span *ngIf="status=== 'WEBSERVICE_DOWN'"> Web Service Down(500)</span>
-    <span *ngIf="status != 'WEBSERVICE_DOWN'"> {{errorherader}}</span>
+  <kendo-dialog-titlebar (close)="Close()">
+    <span *ngIf="errorCode=='500'" > Web Service Down  ({{errorCode}})</span>
+    <span *ngIf="errorCode!='500'" > Web Service Error <span *ngIf="errorCode!='200'">({{errorCode}}) </span></span>
+ 
     </kendo-dialog-titlebar>
     <section class="k-dialog-body mb-2">
       <div >
-        <p *ngIf="status=== 'WEBSERVICE_DOWN'">{{errorherader}}</p>
-        <p *ngIf="status != 'WEBSERVICE_DOWN'">
+        <p  >{{errorherader}}</p>
+        <p >
           We can't validate the address below.
         </p>
           <div class="mt-2 ml-3">

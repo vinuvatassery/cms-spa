@@ -379,8 +379,8 @@ closeallexpensions:any;
     });
   }
 
-  downloadFile(filePath: any) {
-    this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
+  downloadFile(filePath: any,fileName:string) {
+    this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, fileName)
   }
 
   textToDisplay = "2 Weeks";

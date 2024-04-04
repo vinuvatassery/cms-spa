@@ -317,12 +317,16 @@ defaultPageSize=20;
     
   }
  status:any;
+ errorCode:any;
  onViewInformation(error:string,status:string){
+  
   this.status=status;
    if(this.interfaceType==this.Usps)
 {
+
   var header=error.split("#");
-  this.errorherader=header[1];
+  this.errorCode=header[1];
+  this.errorherader=header[2];
   this.address=JSON.parse(header[0]);
  this.failureDetail=error;
  
