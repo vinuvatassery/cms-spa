@@ -159,17 +159,18 @@ export class AlertBannerComponent implements OnInit {
 
 
   public DueOn(alertItem:any):any{
+    console.log(alertItem.alertDueDate);
     let dateNow = new Date();
     let dueDate = new Date(alertItem.alertDueDate); 
-         if (dueDate.toLocaleDateString() == dateNow.toLocaleDateString()) {
+         if (dueDate == dateNow) {
              return alertItem.alertTypeCode != 'TODO' ?  '(Due '+AlertDueOn.Today+')' : AlertDueOn.Today;
-          } else if(!(dueDate.toLocaleDateString() < dateNow.toLocaleDateString()) && 
-            (dueDate.toLocaleDateString() <= this.addDays(dateNow,1).toLocaleDateString())) {
+          } else if(!(dueDate < dateNow) && 
+            (dueDate <= this.addDays(dateNow,1))) {
              return alertItem.alertTypeCode != 'TODO' ?  '(Due in 1 day)' : AlertDueOn.Tomorrow;
-           }else if(dueDate.toLocaleDateString() > dateNow.toLocaleDateString()){
+           }else if(dueDate > dateNow){
             return alertItem.alertTypeCode != 'TODO' ?  '(Due in '+this.differenceInDays(dueDate,dateNow)+ ' days)' :
             (this.intl.formatDate(new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
-           }else if (dueDate.toLocaleDateString() < dateNow.toLocaleDateString()){
+           }else if (dueDate < dateNow){
             return alertItem.alertTypeCode != 'TODO' ?  '(Overdue)' : '';
            }
            return (this.intl.formatDate(
