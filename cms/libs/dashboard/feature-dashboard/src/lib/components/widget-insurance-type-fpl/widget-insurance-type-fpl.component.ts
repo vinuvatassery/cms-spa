@@ -54,7 +54,7 @@ export class WidgetInsuranceTypeFplComponent {
     }
     const query = {
       queryParams: {
-        tab: CaseScreenTab.MY_CASES,
+        tab: CaseScreenTab.ALL,
         healthInsuranceType: healthInsuranceType,
         fplPercentage: fplPer,
         filterOperator:operator
