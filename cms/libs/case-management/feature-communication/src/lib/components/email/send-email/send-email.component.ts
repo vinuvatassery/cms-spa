@@ -159,7 +159,22 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       }
 }
 
+addSubscriptions() {
+  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+    this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+    if (this.selectedMailCodeId) {
+      this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == this.selectedMailCodeId);
+      this.selectedMailCodeId = null;
+      this.ref.detectChanges();
+    }
+  });
+}
 
+loadMailingAddress() {
+  if (this.communicationEmailTypeCode == CommunicationEventTypeCode.VendorEmail) {
+    this.vendorContactFacade.loadMailCodes(this.entityId);
+  }
+}
 
   handleDdlMailCodesChange(mailCode: any) {
     this.showToEmailLoader = true;
