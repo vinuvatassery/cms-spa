@@ -1480,6 +1480,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     (this.contactInfoForm.get('familyAndFriendsContact') as FormGroup)?.controls['noFriendOrFamilyContactFlag']?.valueChanges.subscribe(value => {
       this.setVisibilityByNoFriendsOrFamily(value);
     });
+
+    (this.contactInfoForm.get('familyAndFriendsContact') as FormGroup)?.controls['contactPhoneNbr']?.valueChanges.subscribe(value => {
+     const ffContactGroup = this.contactInfoForm.get('familyAndFriendsContact') as FormGroup;
+      let contactPhoneNbr =  ffContactGroup.controls['contactPhoneNbr'].value;
+      this.setVisibilityByContactPhoneNbr(contactPhoneNbr);
+    });
   }
 
   private sameAsMailingAddressChangeSubscription() {
@@ -1572,6 +1578,18 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
     }
     this.loadPreferredContactMethod();
+  }
+
+  private setVisibilityByContactPhoneNbr(poneNumber:any){
+    if(poneNumber === null
+    || poneNumber === ''){
+    this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
+    this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
+  }
+  else{
+    this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
+    this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.enable();
+  }
   }
 
   private setVisibilityByNoFriendsOrFamily(isChecked: boolean) {
