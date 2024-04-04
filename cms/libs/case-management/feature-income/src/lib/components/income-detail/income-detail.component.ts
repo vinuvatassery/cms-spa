@@ -117,8 +117,7 @@ export class IncomeDetailComponent implements OnInit {
 
     this.employers$.subscribe((response:any)=>{
       if(this.setNotApplicable){
-        this.notApplicableId =response[0].employerId;       
-        this.incomeFacade.employerSubject.next(response);
+        this.notApplicableId =response[0].employerId;   
         this.IncomeDetailsForm.controls['employerId'].setValue(this.notApplicableId);
         this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
       }
@@ -284,9 +283,12 @@ export class IncomeDetailComponent implements OnInit {
     if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator && !this.proofOfIncomeValidatorSize) {
       const validGuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       let incomeData = this.IncomeDetailsForm.value;
-      if(!validGuidRegex.test(incomeData.employerId)){
-        incomeData['employerName'] = incomeData.employerId;
+      if(!validGuidRegex.test(this.IncomeDetailsForm.controls['employerId'].value)){
+        incomeData['employerName'] =this.IncomeDetailsForm.controls['employerId'].value;
         incomeData['employerId'] = null;       
+      }
+      else{
+        incomeData['employerId'] = this.IncomeDetailsForm.controls['employerId'].value;
       }
       incomeData['clientCaseEligibilityId'] = this.clientCaseEligibilityId;
       incomeData['clientId'] = this.clientId;
@@ -480,11 +482,14 @@ export class IncomeDetailComponent implements OnInit {
         )
       );
 
-      if (startDate < endDate) {        
+      if (startDate < endDate) {   
+        this.IncomeDetailsForm.controls['incomeEndDate'].setErrors(null);
+        this.IncomeDetailsForm.controls['incomeStartDate'].setErrors(null);     
         this.insuranceStartDateIsLessThanEndDate = true;
       }
       else {
         this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({ 'incorrect': true });
+        this.IncomeDetailsForm.controls['incomeStartDate'].setErrors({ 'incorrect': true });
         this.insuranceStartDateIsLessThanEndDate = false;
         this.startDate = this.IncomeDetailsForm.controls['incomeStartDate'].value;
       }

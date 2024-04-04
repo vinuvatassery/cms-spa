@@ -113,7 +113,7 @@
             </kendo-grid-string-filter-menu>
           </ng-template>
           <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-            ({{incomesTotal?.fplPercentage}}% FPL)
+            ({{fplPercentage}}% FPL)
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="monthlyIncome" title="Monthly Income" [width]="140" format="{0:c2}" [sticky]="true">
@@ -127,7 +127,7 @@
             <span class="tableamountview"> <strong>$</strong> {{dataItem.monthlyIncome | kendoNumber: 'n2'}}</span>
           </ng-template>
           <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-            <span class="tableamountview"> <strong>$</strong> {{incomesTotal?.totalIncome | kendoNumber: 'n2'}} </span>
+            <span class="tableamountview"> <strong>$</strong> {{totalIncomeCalculated | kendoNumber: 'n2'}} </span>
           </ng-template>
 
         </kendo-grid-column>
