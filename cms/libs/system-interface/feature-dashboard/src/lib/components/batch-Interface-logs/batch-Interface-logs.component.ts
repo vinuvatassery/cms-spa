@@ -342,7 +342,7 @@ closeallexpensions:any;
     this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, !this.displayAll, param);
   }
   public onDetailExpand(e: any): void {
-    debugger
+    
 
     this.fileId = e.dataItem.fileId;
     this.interfaceTypeCode = e.dataItem.interfaceTypeCode;

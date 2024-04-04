@@ -316,8 +316,9 @@ defaultPageSize=20;
       this.errorDialog.close();
     
   }
- 
- onViewInformation(error:string){
+ status:any;
+ onViewInformation(error:string,status:string){
+  this.status=status;
    if(this.interfaceType==this.Usps)
 {
   var header=error.split("#");
