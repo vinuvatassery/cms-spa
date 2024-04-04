@@ -167,7 +167,7 @@ export class ReminderItemComponent implements OnInit {
         this.items =data?.items ?  data?.items?.filter((item:any) => item.alertTypeCode == 'REMINDER').sort((a : any, b : any) => {
           const dateA = new Date(a.alertDueDate).getTime();
           const dateB = new Date(b.alertDueDate).getTime();
-          return dateA - dateB}) : []; // Sorting by alertDueDate in ascending order;
+          return dateB - dateA}) : []; // Sorting by alertDueDate in descending order;
         this.cdr.detectChanges();
       });
     this.todoAndReminders$?.subscribe((clientsTodoReminders :any) =>{
@@ -177,7 +177,7 @@ export class ReminderItemComponent implements OnInit {
       if(this.nDays=="DUE WITHIN 7 DAYS"){
            this.items = 
         clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.formatDate(new Date()) 
-                                        && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 7) )
+                                        && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 6) )
       this.isDueWithIn7Days = true
       this.isDueWithIn30Days = false;
          this.isDueWithAfter30Days = false;
@@ -187,8 +187,8 @@ export class ReminderItemComponent implements OnInit {
       }
       if(this.nDays=="DUE WITHIN 30 DAYS"){
           this.items = 
-        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 8) 
-                                    && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 30) )   
+        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 7) 
+                                    && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 29) )   
          
          if(this.items.length<=0){
             this.noReminderFor30Days.emit(true);
@@ -199,7 +199,7 @@ export class ReminderItemComponent implements OnInit {
                                   }
       if(this.nDays=="DUE LATER"){
         this.items = 
-        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 31) )
+        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 30) )
         this.isDueWithIn7Days = false
       this.isDueWithIn30Days = false;
          this.isDueWithAfter30Days = true;
@@ -272,10 +272,7 @@ export class ReminderItemComponent implements OnInit {
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
      if(item.text == 'Delete'){ 
-      if (!this.isReminderOpenClicked) {
           this.onDeleteAlertGridClicked.emit(gridItem.alertId);
-          this.isReminderOpenClicked = false
-        }
       }
   }
   public loadNotificationsAndReminders() {

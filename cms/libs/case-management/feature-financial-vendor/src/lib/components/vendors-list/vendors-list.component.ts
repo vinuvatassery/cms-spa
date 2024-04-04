@@ -102,60 +102,7 @@ dropDowncolumns : any = [
     "columnCode": "tin",
     "columnDesc": "TIN"   ,
     "vendorTypeCode": "ALL",
-  }
-  ,
-  {
-    "columnCode": "totalClaims",
-    "columnDesc": "Total Claims"   ,
-    "vendorTypeCode": ["MEDICAL_PROVIDER"],
-  }
-  ,
-  {
-    "columnCode": "unreconciledClaims",
-    "columnDesc": "Unreconciled Claims"   ,
-    "vendorTypeCode": ["MEDICAL_PROVIDER"],
-  }
-  ,
-  {
-    "columnCode": "totalPayments",
-    "columnDesc": "Total Payments"   ,
-    "vendorTypeCode": ["INSURANCE_VENDOR"],
-  },
-  {
-    "columnCode": "unreconciledPayments",
-    "columnDesc": "Unreconciled Payments"   ,
-    "vendorTypeCode": ["INSURANCE_VENDOR"],
-  },
-  {
-    "columnCode": "insurancePlans",
-    "columnDesc": "Insurance Plans"   ,
-    "vendorTypeCode": ["INSURANCE_VENDOR"],
-  },
-  {
-    "columnCode": "clients",
-    "columnDesc": "Clients"   ,
-    "vendorTypeCode":["INSURANCE_VENDOR"],
-  },
-  {
-    "columnCode": "totalDrugs",
-    "columnDesc": "Total Drugs"   ,
-    "vendorTypeCode": ["MANUFACTURERS"],
-  },
-  {
-    "columnCode": "address",
-    "columnDesc": "Address"   ,
-    "vendorTypeCode":  ["MANUFACTURERS","MEDICAL_PROVIDER"],
-  },
-  {
-    "columnCode": "NpiNbr",
-    "columnDesc": "Npi Number"   ,
-    "vendorTypeCode": [""],
-  },
-  {
-    "columnCode": "physicalAddress",
-    "columnDesc": "Physical Address"   ,
-    "vendorTypeCode": [""],
-  }
+  }    
 
 ]
 
@@ -252,6 +199,11 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     || this.selectedColumn ==="totalDrugs")
     {
       operator = "eq"
+    }
+
+    if(this.selectedColumn ==="vendorName")
+    {
+      operator = "contains"
     }
     if(this.selectedColumn ==="tin" || this.selectedColumn === "ALL"){
       let noOfhypen =   data.split("-").length - 1

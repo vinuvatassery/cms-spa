@@ -81,7 +81,8 @@ private clientClaimsListDataSubject =  new Subject<any>();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
   constructor(
-    public financialVendorRefundFacade:FinancialVendorRefundFacade,private dialogService: DialogService,private readonly cdr: ChangeDetectorRef
+    public financialVendorRefundFacade:FinancialVendorRefundFacade,
+    private dialogService: DialogService,private readonly cdr: ChangeDetectorRef
   ) { }
   ngOnInit(): void {
     this.state = {
@@ -99,7 +100,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   resetFilterClicked(action: any,) {
     if (action) {
       this.setGridDataState();
-      this.selectedClaims=[]
+      this.selectedClaims=[];
       this.clearSelection();
       this.loadRefundClaimsListGrid();
      this.filterResetDialog.close();
@@ -113,9 +114,8 @@ private clientClaimsListDataSubject =  new Subject<any>();
     }
   }
   private clearSelection(): void {  
-    if (this.grid) {
         this.selectedPharmacyClaims = [];
-    }
+        this.selectedPharmacyClaimsPayments=[]
   }
   openResetDialog( template: TemplateRef<unknown>)
   {
@@ -137,6 +137,14 @@ private clientClaimsListDataSubject =  new Subject<any>();
     this.cdr.detectChanges();
   }
   dataStateChange(stateData: any): void {
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      if(stateFilter.field ==="ndc"){
+        stateFilter.value = stateFilter.value.replace(/-/g, "")
+      }
+      this.filter = stateFilter.value;
+    }
     this.openResetDialog(this.filterResetConfirmationDialogTemplate);
    this.gridState = stateData;
   }
@@ -155,7 +163,9 @@ private clientClaimsListDataSubject =  new Subject<any>();
   gridDataHandle() { 
     this. clientclaimsData$.subscribe((data: GridDataResult) => {
       this.gridData = data;
+      if(this.gridData.data != null){
       this.selectedPharmacyClaims = this.gridData.data.filter((i: any) =>  this.selectedPharmacyClaimsPayments.includes( i.perscriptionFillId));
+      }
       this.gridDataResult = data;
       this.clientClaimsListDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
@@ -206,8 +216,23 @@ private clientClaimsListDataSubject =  new Subject<any>();
   }
   selectedRXKeysChange(selection: any[]) {
     this.selectedPharmacyClaims = this.gridData.data.filter((i: any) => selection.includes( i.perscriptionFillId));
-    this.claimsCount.emit(this.selectedPharmacyClaims.length)
-    this.selectedClaimsChangeEvent.emit(selection)
+  
+   const uniqueOriginalWarrants = [...new Set(this.selectedPharmacyClaims.map(obj => obj.warrantNbr))];
+   if(uniqueOriginalWarrants.length>1)
+   {
+     this.financialVendorRefundFacade.errorShowHideSnackBar("Select a claim with Same warrant number")
+     this.claimsCount.emit(0)
+     this.selectedClaimsChangeEvent.emit([])
+     this.selectedPharmacyClaims =[]
+     this.selectedPharmacyClaimsPayments=[]
+     this.cdr.detectChanges();
+   }
+     if(uniqueOriginalWarrants.length<=1)
+       {
+         this.claimsCount.emit(this.selectedPharmacyClaims.length)
+         this.selectedClaimsChangeEvent.emit(selection)
+       }   
+
   }
   setGridDataState(){
     this.sort = this.gridState.sort;

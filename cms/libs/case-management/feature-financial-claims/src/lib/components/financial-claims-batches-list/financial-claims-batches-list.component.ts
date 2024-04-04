@@ -76,35 +76,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
     {
       columnCode: 'batchName',
       columnDesc: 'Batch #',
-    },
-    {
-      columnCode: 'providerCount',
-      columnDesc: '# of Providers',
-    },
-    {
-      columnCode: 'sendBackNotes',
-      columnDesc: 'Send Back Notes',
-    },
-    {
-      columnCode: 'totalClaims',
-      columnDesc: '# of Claims',
-    },
-    {
-      columnCode: 'totalPaymentsRequested',
-      columnDesc: '# of Pmts Requested',
-    },
-    {
-      columnCode: 'reconciledPayments',
-      columnDesc: '# of Pmts Reconciled',
-    },
-    {
-      columnCode: 'totalAmountDue',
-      columnDesc: 'Total Amount Due',
-    },
-    {
-      columnCode: 'totalAmountReconciled',
-      columnDesc: 'Total Amount Reconciled',
-    },
+    }
   ];
   /** Constructor **/
   constructor(
@@ -153,7 +125,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
     this.defaultGridState();
     let operator = 'startswith';
 
-    if (this.selectedColumn !== 'creationTime'  && this.selectedColumn !==  'batchName') {
+    if (this.selectedColumn !== 'creationTime') {
       operator = 'eq';
     }
 

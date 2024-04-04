@@ -1,11 +1,25 @@
 /** Angular **/
-import {  Component,  OnInit,  ChangeDetectionStrategy,  OnDestroy,  Output,  EventEmitter,  ChangeDetectorRef,} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef,
+} from '@angular/core';
 /** Facades **/
 import { DashboardWrapperFacade, WidgetFacade } from '@cms/dashboard/domain';
 /** Services **/
 import { LocalStorageService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
-import {  DisplayGrid,  GridsterConfig,  GridsterItem,  GridsterItemComponentInterface,  GridType,} from 'angular-gridster2';
+import {
+  DisplayGrid,
+  GridsterConfig,
+  GridsterItem,
+  GridsterItemComponentInterface,
+  GridType,
+} from 'angular-gridster2';
 import { first, Subject, Subscription } from 'rxjs';
 import { WidgetRegistry } from '../../widget-registry';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -21,25 +35,32 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   /** Public properties **/
   inputs = {
     isEditDashboard: false,
-    dashboardId : '00000000-0000-0000-0000-000000000000'
+    dashboardId: '00000000-0000-0000-0000-000000000000',
   };
   outputs = {
     removeWidget: (type: any) => this.removeDashboardWidget(type),
   };
   //#region Variables
-  public dashboardContentList$ =    this.dashboardWrapperFacade.dashboardContentList$;
-  public dashboardAllWidgets$ =    this.dashboardWrapperFacade.dashboardAllWidgets$;
-  public dashboardConfiguration$ =    this.dashboardWrapperFacade.dashboardConfiguration$;
+  public dashboardContentList$ =
+    this.dashboardWrapperFacade.dashboardContentList$;
+  public dashboardAllWidgets$ =
+    this.dashboardWrapperFacade.dashboardAllWidgets$;
+  public dashboardConfiguration$ =
+    this.dashboardWrapperFacade.dashboardConfiguration$;
 
   private dashboardAllWidgetsDataSubject = new Subject<any>();
-  public dashboardAllWidgetsListData$ =    this.dashboardAllWidgetsDataSubject.asObservable();
+  public dashboardAllWidgetsListData$ =
+    this.dashboardAllWidgetsDataSubject.asObservable();
 
   private dashboardContentListDataSubject = new Subject<any>();
-  public dashboardContentListData$ =    this.dashboardContentListDataSubject.asObservable();
+  public dashboardContentListData$ =
+    this.dashboardContentListDataSubject.asObservable();
 
   private userDashBoardsListDataSubject = new Subject<any>();
-  public userDashBoardsListData$ =    this.userDashBoardsListDataSubject.asObservable();
-  public dashboardContentUpdate$ =    this.dashboardWrapperFacade.dashboardContentUpdate$;
+  public userDashBoardsListData$ =
+    this.userDashBoardsListDataSubject.asObservable();
+  public dashboardContentUpdate$ =
+    this.dashboardWrapperFacade.dashboardContentUpdate$;
   public userDashBoardsList$ = this.dashboardWrapperFacade.userDashBoardsList$;
   static dashBoardContentData: any = [];
   dashBoardAllWidgetsData!: any;
@@ -79,7 +100,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private readonly dashboardWrapperFacade: DashboardWrapperFacade,
     private readonly cd: ChangeDetectorRef,
     private readonly userManagementFacade: UserManagementFacade,
-    private readonly widgetFacade : WidgetFacade
+    private readonly widgetFacade: WidgetFacade
   ) {
     this.loadConfigSubscription();
     this.options = {
@@ -141,14 +162,14 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       keepFixedWidthInMobile: false,
       keepFixedHeightInMobile: true,
       draggable: {
-        enabled: true, 
+        enabled: true,
       },
     };
   }
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.dashboardWrapperFacade.showLoader();    
+    this.dashboardWrapperFacade.showLoader();
     this.userDashBoardLstSubscribe();
     this.initializeDashboard();
   }
@@ -156,21 +177,18 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   initializeDashboard() {
     this.dashBoardAllWidgetsSubscribe();
     this.ConfigureDashboard();
-  
-    if(this.selectedDashBoard)
-    {
-    this.dashBoardContentSubscribe(this.selectedDashBoard);
-    }
-    else
-    {
-    this.dashboardWrapperFacade.getLoggedinUserDashboards('CASE_MANAGEMENT');
+
+    if (this.selectedDashBoard) {
+      this.dashBoardContentSubscribe(this.selectedDashBoard);
+    } else {
+      this.dashboardWrapperFacade.getLoggedinUserDashboards('CASE_MANAGEMENT');
     }
   }
 
   dashBoardChange(dashboard: any) {
     this.dashBoardContentSubscribe(dashboard?.dashboardId);
     this.selectedDashBoard = dashboard?.dashboardId;
-    this.inputs.dashboardId =  dashboard?.dashboardId
+    this.inputs.dashboardId = dashboard?.dashboardId;
     this.cd.detectChanges();
     this.dashboardContentListDataSubject.next(null);
   }
@@ -182,7 +200,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         this.userDashBoardsListDataSubject.next(response);
         response.forEach((board: any) => {
           if (board?.defaultFlag === 'Y') {
-            this.widgetFacade.selectedDashboardId = board?.dashboardId
+            this.widgetFacade.selectedDashboardId = board?.dashboardId;
             this.selectedDashBoard = board?.dashboardId;
             this.cd.detectChanges();
             this.dashBoardContentSubscribe(board?.dashboardId);
@@ -196,7 +214,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       .loadDashboardContent(dashboardId)
       .pipe(first((response) => response != null))
       .subscribe((response: any) => {
-        
         response.forEach((widg: any) => {
           widg.widgetProperties = JSON.parse(
             widg.widgetProperties.replaceAll('\\', ' ')
@@ -209,25 +226,27 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             ];
         });
         if (response[0]?.widgetProperties?.componentData?.component) {
-          
-          DashboardPageComponent.dashBoardContentData = []   
-          
-           response.forEach((widg: any) => {    
-                   
-            if(this.userManagementFacade.hasPermission([widg.widgetProperties?.componentData?.Permission_Code]))
-             {
-           DashboardPageComponent.dashBoardContentData.push(widg)
+          DashboardPageComponent.dashBoardContentData = [];
+
+          response.forEach((widg: any) => {
+            if (
+              this.userManagementFacade.hasPermission([
+                widg.widgetProperties?.componentData?.Permission_Code,
+              ])
+            ) {
+              DashboardPageComponent.dashBoardContentData.push(widg);
             }
           });
-          this.dashboardContentListDataSubject.next(DashboardPageComponent.dashBoardContentData);
+          this.dashboardContentListDataSubject.next(
+            DashboardPageComponent.dashBoardContentData
+          );
           this.dashboardWrapperFacade.hideLoader();
         }
       });
-      this.dashboardWrapperFacade.hideLoader();
+    this.dashboardWrapperFacade.hideLoader();
   }
 
   dashBoardAllWidgetsSubscribe() {
-    
     this.dashboardWrapperFacade
       .getDashboardAllWidgets()
       .pipe(first((response) => response != null))
@@ -243,15 +262,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
               element?.widgetProperties.componentData.component
             ];
         });
-        this.dashBoardAllWidgetsData = []
-        response.forEach((widg: any) => {     
-                
-          if(this.userManagementFacade.hasPermission([widg?.widgetProperties?.componentData?.Permission_Code]))
-          {
-            
-            this.dashBoardAllWidgetsData.push(widg)
-         }
-       });        
+        this.dashBoardAllWidgetsData = [];
+        response.forEach((widg: any) => {
+          if (
+            this.userManagementFacade.hasPermission([
+              widg?.widgetProperties?.componentData?.Permission_Code,
+            ])
+          ) {
+            this.dashBoardAllWidgetsData.push(widg);
+          }
+        });
         this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
       });
   }
@@ -269,7 +289,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.isReorderEnable = true;
     this.inputs = {
       isEditDashboard: this.isReorderEnable,
-      dashboardId : this.selectedDashBoard
+      dashboardId: this.selectedDashBoard,
     };
     this.dashboardWrapperFacade.getDashboardAllWidgets();
     this.dashBoardAllWidgetsSubscribe();
@@ -298,6 +318,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     );
   }
   editDashboardCancelClicked(save: any) {
+  
     this.configSubscriptionItems = {
       draggable: { enabled: false },
       resizable: { enabled: false },
@@ -305,11 +326,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.isReorderEnable = false;
     this.inputs = {
       isEditDashboard: this.isReorderEnable,
-      dashboardId : this.selectedDashBoard
+      dashboardId: this.selectedDashBoard,
     };
     if (save === 'true' && DashboardPageComponent.dashBoardContentData) {
-      
-      let dashboardContentPostData =  DashboardPageComponent.dashBoardContentData;
+      let dashboardContentPostData =
+        DashboardPageComponent.dashBoardContentData;
       let updatedWidgetsPostData = DashboardPageComponent.updatedWidgets;
       dashboardContentPostData.forEach((widg: any) => {
         if (widg?.widgetProperties) {
@@ -317,16 +338,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         }
       });
 
-      if(updatedWidgetsPostData[0])
-      {
-      updatedWidgetsPostData[0].forEach((widg: any) => {
-        if (widg?.widgetProperties && widg?.newItem !== true) {
-          widg.widgetProperties.componentData.component = widg.widgetName;
-          widg.updated = true;
-          dashboardContentPostData.push(widg);
-        }
-      });
-    }
+      if (updatedWidgetsPostData[0]) {
+        updatedWidgetsPostData.forEach((widg: any) => {
+          if (widg[0]?.widgetProperties && widg[0]?.newItem !== true) {
+            widg[0].widgetProperties.componentData.component = widg[0].widgetName;
+            widg[0].updated = true;
+            dashboardContentPostData.push(widg[0]);
+          }
+        });
+      }
 
       dashboardContentPostData.forEach((widg: any) => {
         if (widg?.widgetProperties && widg?.stringified !== true) {
@@ -338,7 +358,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       const dashBoardWidgetsUpdated = {
         dashBoardWidgetsUpdated: dashboardContentPostData,
       };
-      
+
       this.dashboardWrapperFacade.updateDashboardAllWidgets(
         this.selectedDashBoard,
         dashBoardWidgetsUpdated
@@ -347,10 +367,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       DashboardPageComponent.updatedWidgets = [];
       this.dashboardContentListDataSubject.next(null);
       this.dashBoardUpdateSubscribe();
-    }
-    else
-    {
-    this.initializeDashboard();
+    } else {
+      this.initializeDashboard();
     }
   }
 
@@ -358,7 +376,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.dashboardWrapperFacade.showLoader();
     this.dashboardContentUpdate$.subscribe((response) => {
       if (response === true) {
-        
         this.initializeDashboard();
       }
     });
@@ -368,7 +385,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     item: GridsterItem,
     itemComponent: GridsterItemComponentInterface
   ) {
-    
+  
     const dashBoardData = DashboardPageComponent.dashBoardContentData;
     let changedWidget = dashBoardData.filter(
       (x: any) => x.widgetProperties.componentData['id'] == item['id']
@@ -437,6 +454,4 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
   }
-
-  
 }

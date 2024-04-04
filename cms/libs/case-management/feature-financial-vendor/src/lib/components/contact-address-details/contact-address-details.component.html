@@ -28,12 +28,12 @@
               </button>
             </div>
             <div class="flex-col">
-              <kendo-floatinglabel text="Contact">
-                <kendo-textbox aria-label="Contact" formControlName="contactName"  (valueChange)="onValueChange(i)" [maxlength]="200"
+              <kendo-floatinglabel text="Name">
+                <kendo-textbox aria-label="Name" formControlName="contactName" (valueChange)="onValueChange(i)" [maxlength]="200"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">A Contact is
+              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">A Contact Name is
                 required</kendo-formerror>
             </div>
             <div class="flex-col">

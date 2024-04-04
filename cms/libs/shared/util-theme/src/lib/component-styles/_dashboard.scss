@@ -8,12 +8,6 @@
   .app-c-drag-row-table.recently-view .k-grid .k-grid-content {
     min-height: 10px;
   }
-  .k-picker-md .k-input-inner {
-    padding: 10px 16px;
-    width: 146px;
-}
-
-
 }
 .today_glanse_title{
   .h3{
@@ -35,7 +29,8 @@
 }
   p {
     letter-spacing: 0px;
-    color: #333333; 
+    color: #00000099;
+    text-transform: uppercase;
     font-family: $font-family-medium;
   }
 
@@ -271,7 +266,7 @@
   }
 
   .app-cars-first-col {
-    .cervalues-info {
+    h4 {
       margin-top: 8px;
       margin-bottom: 0px;
     }
@@ -301,7 +296,7 @@
   .app-cars-col {
     &.red-frame {
 
-      .cervalues-info,
+      h4,
       .btm_texts,
       .material-icons {
         color: $alert-color-dark-1;
@@ -309,7 +304,7 @@
     }
   }
 
-  .cervalues-info {
+  h4 {
     font-size: $font-size-xlg !important;
     margin: 0;
     margin-bottom: 8px;
@@ -369,7 +364,7 @@
     padding-bottom: 0;
   }
 
-  .info-head {
+  h4 {
     font-size: $font-size-xlg-22 !important;
     margin: 0;
     font-family: $font-family-light;
@@ -387,8 +382,7 @@
   .light-blue-btn {
     padding: 12px 10px;
     word-wrap: break-word;
-    background: #f0f6fa;
-    color: var(--hive-primary-palette-800) !important;
+
     .k-button-text {
       word-wrap: break-word;
       white-space: pre-line;
@@ -423,6 +417,7 @@
 
 .gridster-preview {
   background: white;
+  transform: translate3d(0px, 142px, 0px) !important;
 }
 
 gridster .gridster-column,
@@ -656,4 +651,8 @@ gridster .gridster-row {
         z-index: 1;
       }
 
- 
+      .k-picker-md .k-input-inner {
+        padding: 10px 16px;
+        width: 146px;
+    }
+

@@ -1028,6 +1028,12 @@ color: $app-primary-font-color;
     .k-combobox.k-input {
       padding-left: 1.4rem;
     }
+
+    &.with_float_label{
+      .global-search-icon{
+        top:30px;
+      }
+    }
   }
 
   .add_new_bottom_section {
@@ -1135,6 +1141,9 @@ color: $app-primary-font-color;
     margin-left: 10px;
     color: rgba($black, 0.6);
     font-size: $font-size-l;
+  }
+  >div.autoSelect-search{
+    width: 100%;
   }
 }
 

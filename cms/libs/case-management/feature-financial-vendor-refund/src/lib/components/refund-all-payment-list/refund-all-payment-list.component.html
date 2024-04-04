@@ -55,9 +55,9 @@
 <div class="app-c-table">
   <kendo-grid [resizable]="true" [loading]="isVendorRefundAllPaymentsGridLoaderShow" [pageSize]="state.take"
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="selectableSettings"
-    (filterChange)="filterChange($event)" [data]="gridVendorsAllPaymentsData$ | async" [filter]="state.filter"
-    kendoGridSelectBy="paymentRequestId" (selectedKeysChange)="selectedKeysChange($event)"
+    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
+    [selectable]="selectableSettings" (filterChange)="filterChange($event)" [data]="gridVendorsAllPaymentsData$ | async"
+    [filter]="state.filter" kendoGridSelectBy="paymentRequestId" (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedPayments">
 
     <kendo-grid-column *ngIf="receiptLogMode" [sortable]="false" field="add" [width]="40" class="text-center"
@@ -80,7 +80,8 @@
         </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column *ngIf="!receiptLogMode" field="batchNumber" title="Batch #" [sticky]="!receiptLogMode" [width]="160">
+    <kendo-grid-column *ngIf="!receiptLogMode" field="batchNumber" title="Batch #" [sticky]="!receiptLogMode"
+      [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.batchNumber" kendoButton look="flat" class="card-link-button"
           (click)="navToBatchDetails(dataItem)" *ngIf="dataItem.batchNumber">
@@ -99,7 +100,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="providerName" title="Vendor" [width]="180">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button [attr.aria-label]="dataItem.vendor"  *ngIf="dataItem.providerName" (click)="onProviderNameClick(dataItem.paymentRequestId, dataItem.paymentTypeCode)" kendoButton look="flat" class="card-link-button">
+        <button [attr.aria-label]="dataItem.vendor" (click)="onProviderNameClick(dataItem.paymentRequestId, dataItem.paymentTypeCode)" kendoButton look="flat" class="card-link-button">
           {{ dataItem.providerName }}
         </button>
       </ng-template>
@@ -126,7 +127,7 @@
       </ng-template>   </kendo-grid-column>
       <kendo-grid-column field="clientFullName"  *ngIf="!receiptLogMode" title="Client Name" [width]="180">
         <ng-template kendoGridCellTemplate let-dataItem>
-        <button [attr.aria-label]="dataItem.clientName" *ngIf="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(dataItem)">
+        <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(dataItem)">
           {{ dataItem.clientFullName }}
         </button>
       </ng-template>
@@ -139,9 +140,10 @@
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
       </ng-template>
-     </kendo-grid-column>
-      <kendo-grid-column field="insuranceName" title="Name on Primary Insurance Card" *ngIf="!receiptLogMode"  [width]="160">
-        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+    </kendo-grid-column>
+    <kendo-grid-column field="insuranceName" title="Name on Primary Insurance Card" *ngIf="!receiptLogMode"
+      [width]="160">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
           <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
@@ -346,12 +348,13 @@
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-          <span class="material-icons" aria-label="More option"> more_vert    </span>
+          <span class="material-icons" aria-label="More option"> more_vert </span>
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [class]="buttondataItem.buttonType"  (click)="buttondataItem.click(dataItem)">
-                <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                [class]="buttondataItem.buttonType" (click)="buttondataItem.click(dataItem)">
+                <span class="material-icons" aria-hidden="true"
+                  [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
             </ng-container>
@@ -398,7 +401,7 @@
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" look="outline" aria-label="Cancel"
     (click)="cancelActions()">Cancel</button>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Download" icon="download"
-  [disabled]="selectionCount < 1" (click)="onClickedDownload()">Download</button>
+    [disabled]="selectionCount < 1" (click)="onClickedDownload()">Download</button>
   <button *ngIf="!hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
     (click)="receiptingLogClicked()">Receipting Log</button>
 </div>
@@ -427,13 +430,16 @@
     <h4 class="text-upper">Recent Claims for {{clientName}}</h4>
     <div *ngIf="(recentClaimsGridLists$ | async) as recentClaims" class="k-flex-grow justify-content-end">
       <span class="d-flex k-wizard-horizontal align-items-fstart">
-        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
-        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong>
+            {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong>
+            {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
       </span>
     </div>
   </kendo-dialog-titlebar>
   <section class="k-dialog-body-padding">
-    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [includeServiceSubTypeFilter]="false" [claimsType]="claimsType"
+    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId"
+      [includeServiceSubTypeFilter]="false" [claimsType]="claimsType"
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
   </section>
   <kendo-dialog-actions>
@@ -451,7 +457,9 @@
 </ng-template>
 
 <ng-template #clientRecentPremiumsDialogTemplate>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
+    <h5 class="text-upper">Recent Premiums for {{clientName}}</h5>
+  </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="claimsType" [includeServiceSubTypeFilter]="false"
       (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick($event,'INSURANCE_PREMIUM')"></cms-financial-premiums-recent-premiums-list>
@@ -459,7 +467,8 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat"
+          (click)="onClientClicked(clientId)">
           Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>
@@ -471,7 +480,9 @@
 </ng-template>
 
 <ng-template #clientRecentPharmacyClaimsDialog>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
+    <h4 class="text-upper"> RECENT CLAIMS FOR {{clientName}} </h4>
+  </kendo-dialog-titlebar>
   <section class="k-dialog-body">
       <common-cms-pharmacy-claims-recent-claims [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
       (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)" [recentClaimsGridLists$]="recentClaimsGridLists$"
@@ -480,7 +491,7 @@
     </common-cms-pharmacy-claims-recent-claims>
   </section>
   <kendo-dialog-actions>
-    <div class="justify-content-between" >
+    <div class="justify-content-between">
       <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
           Client Profile <span class="material-icons ml-1" aria-hidden="true">
