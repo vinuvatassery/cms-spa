@@ -19,7 +19,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
   clickedContact!: any;
   item: Array<DialItem> = [{}];
   clientId : any;
-  //vendorId : any;
   entityId : any;
   eventLogCount = 0;
   directMessageCount = 0;
@@ -38,9 +37,9 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
   ) {}
 
   ngOnInit(): void {
-    this.updateStatsSubscription = this.notificationStatsFacade.updateStats$.subscribe((res: any) => {
-      if(res){
-        this.notificationStatsFacade.getStats(this.entityId);
+    this.updateStatsSubscription = this.notificationStatsFacade.updateStats$.subscribe((response: any) => {
+      if(response.data){
+        this.notificationStatsFacade.getStats(this.entityId, response.statsTypeCode);
       }
     });
 
@@ -63,15 +62,14 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       }
     });
 
-    this.resetStatsSubscription = this.notificationStatsFacade.resetStats$.subscribe((res: any) => {
-      if(res){
-        this.notificationStatsFacade.getStats(this.entityId);
+    this.resetStatsSubscription = this.notificationStatsFacade.resetStats$.subscribe((response: any) => {
+      if(response.data){
+        this.notificationStatsFacade.getStats(this.entityId, response.statsTypeCode);
       }
     });
 
 
     this.clientId = this.route.snapshot.params['id'];
-    //this.vendorId = this.route.snapshot.queryParams['v_id'];
     if(this.clientId){
       this.entityId = this.clientId.toString();
       this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);

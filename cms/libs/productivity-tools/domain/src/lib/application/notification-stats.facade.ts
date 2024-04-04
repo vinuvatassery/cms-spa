@@ -27,7 +27,7 @@ export class NotificationStatsFacade {
 
   /** Public methods **/
 
-  getStats(entityId:string, statsTypeCode:string = ''): void {
+  getStats(entityId:string, statsTypeCode:string): void {
     this.notificationStatsDataService.getStats(entityId, statsTypeCode).subscribe({
       next: (statsResponse) => {
         this.getStatsSubject.next(statsResponse);
@@ -41,7 +41,11 @@ export class NotificationStatsFacade {
   updateStats(entityId:string, entityTypeCode:string, statsTypeCode:string = ''): void {
     this.notificationStatsDataService.updateStats(entityId, entityTypeCode, statsTypeCode).subscribe({
       next: (statsResponse) => {
-        this.updateStatsSubject.next(statsResponse);
+        const response = {
+            data: statsResponse,
+            statsTypeCode: statsTypeCode
+          };
+        this.updateStatsSubject.next(response);
       },
       error: (err) => {
         console.error('err', err);
@@ -52,7 +56,11 @@ export class NotificationStatsFacade {
   resetStats(entityId:string, statsTypeCode:string): void {
     this.notificationStatsDataService.resetStats(entityId, statsTypeCode).subscribe({
       next: (statsResponse) => {
-                this.resetStatsSubject.next(statsResponse);
+        const response = {
+            data: statsResponse,
+            statsTypeCode: statsTypeCode
+          };
+        this.resetStatsSubject.next(response);
       },
       error: (err) => {
         console.error('err', err);
