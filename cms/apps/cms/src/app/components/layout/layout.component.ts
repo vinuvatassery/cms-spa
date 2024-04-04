@@ -44,8 +44,8 @@ export class LayoutComponent {
     this.sizeChange(event);
   }
 
-  onloadReminderAndNotificationsGrid(){
-    this.notificationFacade.loadNotificationsAndReminders();
+  onloadReminderAndNotificationsGrid(isViewAll :boolean){
+    this.notificationFacade.loadNotificationsAndReminders(isViewAll);
   }
   
   onSnoozeReminder(event:any){ 

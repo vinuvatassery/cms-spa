@@ -37,7 +37,7 @@
         <!-- List Item Repeatable -->
         <li
           class="card-list_items"
-          *ngFor="let message of alertsData?.items.slice(0, 3)"
+          *ngFor="let message of alertsData?.items"
           [ngClass]="message.recentViewedFlag === 'N'  ? 'card-list_items unread-item' : 'inherit'"
        
           aria-label="notification menu item"
