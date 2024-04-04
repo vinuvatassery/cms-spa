@@ -102,7 +102,12 @@ dropDowncolumns : any = [
     "columnCode": "tin",
     "columnDesc": "TIN"   ,
     "vendorTypeCode": "ALL",
-  }    
+  },
+  {
+    "columnCode": "address",
+    "columnDesc": "Address"   ,
+    "vendorTypeCode": "ALL",
+  } 
 
 ]
 

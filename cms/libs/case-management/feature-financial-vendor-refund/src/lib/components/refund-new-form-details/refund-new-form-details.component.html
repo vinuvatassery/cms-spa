@@ -576,6 +576,7 @@
                                 </kendo-grid-column>
                             <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150" [sticky]="true">
                                 <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                    <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                     <kendo-numerictextbox
                                     id ="refundedAmount{{tblIndex}}-{{rowIndex}}"
                                     name ="refundedAmount{{tblIndex}}-{{rowIndex}}"
