@@ -14,7 +14,7 @@ import {
   ClientDocumentFacade, HomeAddressProof, StatesInUSA, WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade, PhoneValidationFacade } from '@cms/system-config/domain';
+import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
@@ -110,8 +110,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly router: Router,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly cd: ChangeDetectorRef,
-    private scrollFocusValidationfacade: ScrollFocusValidationfacade,
-    private phoneValidationFacade : PhoneValidationFacade
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade
   ) { }
 
   /** Lifecycle hooks **/
