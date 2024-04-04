@@ -4,11 +4,12 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
+
 /** Internal Libraries **/
 import { CaseFacade, CaseScreenTab, WorkflowFacade, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import {UITabStripScroll} from '@cms/shared/ui-tpa'
-import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { ReminderNotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade , UserManagementFacade, UserDefaultRoles} from '@cms/system-config/domain'
 
 
@@ -38,6 +39,7 @@ export class CasePageComponent implements OnInit {
   fplPercentage = -1;
   filterOperator = '';
   group :string = ''
+
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
@@ -51,7 +53,6 @@ export class CasePageComponent implements OnInit {
   myClients$ = this.caseFacade.myClients$;
   recentClients$ = this.caseFacade.recentClients$;
   allClients$ = this.caseFacade.allClients$;
-
   /** Constructor**/
 
     constructor(private readonly router: Router,
@@ -61,7 +62,7 @@ export class CasePageComponent implements OnInit {
       private readonly lovFacade : LovFacade,
       private readonly  cdr :ChangeDetectorRef,
       private reminderFacade: ReminderFacade,
-      private route: ActivatedRoute,
+      private route: ActivatedRoute
     ) {}
 
   /** Lifecycle hooks **/
@@ -69,6 +70,7 @@ export class CasePageComponent implements OnInit {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.loadColumnDroplist();
     this.loadCases();
+    this.loadQueryParams();
     this.loadQueryParams();
   }
 
@@ -82,7 +84,8 @@ export class CasePageComponent implements OnInit {
       this.caseFacade.loadDdlPrograms();
       this.lovFacade.getCaseOriginLovs();
   }
-
+  
+  
   /** Private Query String values **/
   loadQueryParams()
   {   

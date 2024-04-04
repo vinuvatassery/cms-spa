@@ -1,7 +1,8 @@
 <section class="k-dialog-body" kendoTooltip  [formGroup]="todoDetailsForm" >
-  <p class="text-muted mb-2">
+  <p class="text-muted mb-2" *ngIf="!isEdit">
     All fields are required unless otherwise stated.
   </p>
+  <p class="text-muted mb-2" *ngIf="isEdit">Edit or delete this item.</p>
   
   <div class="flex-row" >
     <div class="flex-col">
@@ -18,7 +19,7 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Due Date">
-        <kendo-datepicker  format="MM-dd-yyyy"
+        <kendo-datepicker  format="MM/dd/yyyy"
          [fillMode]="formUiStyle.dateInputFillMode" 
          formatPlaceholder="formatPattern"
          formControlName="dueDate"
@@ -50,7 +51,7 @@
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="End Date (Optional)" >
         <kendo-datepicker
-          format="MM-dd-yyyy"
+          format="MM/dd/yyyy"
           formatPlaceholder="formatPattern"
           [fillMode]="formUiStyle.dateInputFillMode"
           formControlName="endDate"
@@ -82,7 +83,7 @@
         </kendo-textarea>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col mt-2 field_with_info">
+    <div class="flex-col mt-2">
       <kendo-floatinglabel text="Link Item To">
         <kendo-dropdownlist aria-label="Link Reminder To"
          [fillMode]="formUiStyle.dropDownFillMode" 
@@ -97,11 +98,12 @@
          Link Item To is required
         </kendo-formerror>
     </kendo-floatinglabel>
-    <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
     
       </div>
-    <div class="flex-col mt-2"   *ngIf="showVendorSearch">
-      <div class="autoSelect-search mat-form-no-b-space ">
+
+
+    <div class="flex-col mt-2 field_with_info"   *ngIf="showVendorSearch">
+      <div class="autoSelect-search mat-form-no-b-space">
         <div class="global-search">
           <span
             class="material-icons global-search-icon"
@@ -134,14 +136,19 @@
               </ng-template>
             </kendo-combobox-column>
           </kendo-multicolumncombobox>
-          <kendo-formerror *ngIf="!todoDetailsForm.controls['vendorId']?.valid && isValidateForm && todoDetailsForm.controls['linkTo'].valid">
-            Vendor is required
-          </kendo-formerror>
+        
+          <kendo-formerror
+          *ngIf="todoDetailsForm?.hasError('required','vendorId') && isValidateForm && todoDetailsForm.controls['linkTo'].valid">Vendor
+          is Required
+      </kendo-formerror>
         </div>
+
       </div>
+      <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
+
      </div> 
-    <div class="flex-col mt-2" *ngIf="showClientSearch">
-      <div class="global-search mat-form-no-b-space">
+    <div class="flex-col mt-2 field_with_info" *ngIf="showClientSearch">
+      <div class="autoSelect-search mat-form-no-b-space">
         <span
           class="material-icons global-search-icon"
           aria-label="search case"
@@ -182,6 +189,8 @@
           Client is required
         </kendo-formerror>
       </div>
+    <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
+
     </div>
   </div>
   

@@ -6,7 +6,7 @@
 }
 .sidePanel-event-log {
   .sidePanel_body {
-    max-height: calc(100vh - 40vh);
+    max-height: calc(100vh - 264px);
     overflow: auto;
   }
 }
@@ -111,4 +111,13 @@
     transform: rotate(45deg);
     box-shadow: 3px -4px 4px -2px rgba(61, 69, 76, 0.05);
 }
+}
+
+.event-list-skeleton-loader {
+  height: 70px;
+  width: 92%;
+  border-radius: 6px;
+  background: rgb(163, 163, 163,25%);
+  margin: 0 auto;
+  margin-top: 10px;
 }

@@ -1,12 +1,12 @@
-<p>Category assigned to {{selectedInterface}}</p>
+<p class="mb-1">Category assigned to {{selectedInterface}}</p>
 <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="(notificationCategoryListDataLoader$  | async) === true"
             [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
             [reorderable]="true" [filter]="state.filter" [resizable]="true" [columnMenu]="{ filter: true }"
             [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
-            (columnReorder)="onColumnReorder($event)" [selectable]="true"
-            [data]="gridNotificationCategoryData$ | async">
-            <kendo-grid-column field="eventDesc" title="Notification Category" [width]="170">
+            (columnReorder)="onColumnReorder($event)"  
+            [data]="gridNotificationCategoryData$ | async" class="grid_scroll">
+            <kendo-grid-column field="eventDesc" title="Notification Category" [width]="140">
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                         let-filterService="filterService">
                         <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
@@ -18,7 +18,7 @@
                   </ng-template>
             </kendo-grid-column>
 
-            <kendo-grid-column field="activeFlag" title="Status" [width]="100">
+            <kendo-grid-column field="activeFlag" title="Status" [width]="90">
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                         let-filterService="filterService">
                         <kendo-dropdownlist [data]="['Active', 'Inactive']" [(ngModel)]="statusFilter"
@@ -34,7 +34,7 @@
                   </ng-template>
             </kendo-grid-column>
 
-            <kendo-grid-column field="eventNotificationGroupId" title="Option" [columnMenu]="false" [width]="50"
+            <kendo-grid-column field="eventNotificationGroupId" title="Options" [columnMenu]="false" [sortable]="false" [width]="50"
                   class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <kendo-dropdownbutton [data]="gridMoreActionsNotification"
@@ -99,7 +99,7 @@
 
 
 <div class="mt-1">
-      <button kendoButton class="mr-1" [primary]="true" aria-label="Notification Category" icon="add"
+      <button kendoButton class="mr-1" [primary]="true" aria-label="Notification Category" icon="add" [disabled]="!selectedGroup || !gridDataResult"
             (click)="onNotificationCategoryDetailsClicked()"> Notification Category</button>
 </div>
 <kendo-dialog *ngIf="isNotificationCategoryDetailPopup" (close)="onCloseNotificationCategoryDetailPopupClicked()"

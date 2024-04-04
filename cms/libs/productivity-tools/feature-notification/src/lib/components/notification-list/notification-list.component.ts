@@ -7,6 +7,7 @@ import { NotificationFacade } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { DialogRef } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -27,6 +28,9 @@ export class NotificationListComponent {
   gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
   @Output() loadNotificationtEvent = new EventEmitter<any>();
   @Output() searchTermTextEvent = new EventEmitter<any>();
+  @Output() closeDialog = new EventEmitter<void>();
+  alertSearchLoaderVisibility$ =
+  this.notificationFacade.alertSearchLoaderVisibility$;
   searchTerm = new FormControl();
   tabCode= 'MEDICAL_CLINIC'
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -37,7 +41,7 @@ export class NotificationListComponent {
         this.alertsData.items =data?.items ?  data?.items?.filter((item:any) => item.alertTypeCode == 'NOTIFICATION').sort((a : any, b : any) => {
           const dateA = new Date(a.alertDueDate).getTime();
           const dateB = new Date(b.alertDueDate).getTime();
-          return dateA - dateB}) : []; // Sorting by alertDueDate in ascending order;
+          return dateB - dateA}) : []; // Sorting by alertDueDate in descending order;
         this.cdr.detectChanges();
       });
       this.searchTerm.valueChanges.subscribe((value) => {
@@ -120,6 +124,7 @@ export class NotificationListComponent {
       };
       this.router.navigate(['/financial-management/vendors/profile'], query )
     }
+    this.closeDialog.emit();
   }
   getVendorProfile(vendorTypeCode :any) {
     switch (vendorTypeCode) {
@@ -150,5 +155,8 @@ export class NotificationListComponent {
           this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
           break;
     }
+  }
+  toggleDescription(message: any) {
+    message.showFullDescription = !message.showFullDescription;
   }
 }

@@ -132,7 +132,7 @@
 
         </kendo-grid-column>
         <kendo-grid-column *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center"
-          [sticky]="true" [sortable]="false">
+          [sticky]="true" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <common-user-photo-icon  
             [userId]="dataItem?.creatorId" 

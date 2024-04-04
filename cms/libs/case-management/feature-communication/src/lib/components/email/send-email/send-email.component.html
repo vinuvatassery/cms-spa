@@ -20,18 +20,33 @@
         </kendo-floatinglabel>
       </div>
       <div *ngIf="isOpenDdlEmailDetails">
-        <div class="flex-col">
-          <kendo-floatinglabel text="To" class="inline-search-loader">
-          <span *ngIf="showToEmailLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-          <kendo-multiselect
-          [readonly]="true"
-          [fillMode]="formUiStyle.dropDownFillMode"
-          [data]="toEmail"
-          [(ngModel)]="selectedEmail"
-          aria-label="to address"
-          ></kendo-multiselect>
+        <div class="flex-col" *ngIf="getProfileName() == 'vendor'">
+          <kendo-floatinglabel text="Mail Code">
+            <kendo-dropdownlist
+              [fillMode]="formUiStyle.dropDownFillMode"
+              [data]="ddlMailCodes"
+              textField="mailCode"
+              valueField="mailCode"
+              [(ngModel)]="selectedMailCode"
+              (valueChange)="handleDdlMailCodesChange($event)"
+            >
+            </kendo-dropdownlist>
           </kendo-floatinglabel>
-        </div>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="To" class="inline-search-loader">
+        <span *ngIf="showToEmailLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <kendo-multiselect
+        [readonly]="false"
+        [fillMode]="formUiStyle.dropDownFillMode"
+        [data]="emails"
+        [(ngModel)]="selectedToEmails"
+        [allowCustom]="true"
+        (valueChange)="handleEmailsChanged($event)"
+        aria-label="to address"
+        ></kendo-multiselect>
+        </kendo-floatinglabel>
+      </div>
         <div class="flex-col" [style]="{'display': 'flex'}">
           <kendo-floatinglabel text="CC" class="inline-search-loader" *ngIf="isCCDropdownVisible">
             <kendo-multiselect
@@ -84,7 +99,7 @@
         <div class="flex-col mt-3">
           <p>
             Type the body of the email. The email header and footer generate
-            from Admin settings. Click "Preview Email" to see what the client will
+            from Admin settings. Click "Preview Email" to see what the {{getProfileName()}} will
             receive.
           </p>
         </div>
@@ -156,7 +171,7 @@
 >
   <section class="k-dialog-body">
     <p>
-      To pick up where you left off, click “New Email” from the client’s
+      To pick up where you left off, click “New Email” from the {{getProfileName()}}’s
       profile.
     </p>
   </section>

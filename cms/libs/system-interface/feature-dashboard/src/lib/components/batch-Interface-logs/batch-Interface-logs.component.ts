@@ -26,7 +26,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Input() pageSizes: any;
-  @Input() sortValue: any;
+  @Input()sortValue : any;
   @Input() sortType: any;
   @Input() sort: any;
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
@@ -47,11 +47,16 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   selectedStatus = '';
   showDateSearchWarning = false;
   columnChangeDesc = 'Default Columns';
-
+  defaultPageSize=20;
   dateColumns = ['startDate', 'endDate'];
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   /** Public properties **/
   InterfaceType: string = "RAMSELL";
+  Inbound: string = "[Inbound]";
+  Outbound: string = "[Outbound]";
+  Yes: string = "Y";
+  NO: string = "N";
+
   columnsReordered = false;
   displayAll: boolean = true;
   activityEventLogSubList = [
@@ -76,17 +81,21 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   ]
   lovsList!: any[];
   gridColumns: any = {
-    startDate: 'Start Date',
+    startDate: 'Process Start Date',
     endDate: 'End Date',
+    fileReceiveDate: 'File Receive Date',
     interfaceTypeDesc: 'Interface',
     processTypeDesc: 'Process',
-    status: 'status'
+    status: 'Status',
+
+    totalRecords: 'Total Records',
+    totalFailed: 'Failed Records'
 
   };
   searchColumnList: { columnName: string; columnDesc: string }[] = [
     {
       columnName: 'startDate',
-      columnDesc: 'Start Date',
+      columnDesc: 'Process Start Date',
     },
     {
       columnName: 'endDate',
@@ -101,9 +110,9 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
 
   selectedSearchColumn: string = '';
   private searchSubject = new Subject<string>();
-  sortColumn = 'StartDate';
-  sortColumnDesc = 'StartDate';
-  sortDir = 'Ascending';
+  sortColumn = 'Process Start Date';
+  sortColumnDesc = 'Process Start Date';
+  sortDir = 'Descending';
   interfaceExceptionFilter = '';
   interfaceProcessBatchFilter = '';
   statusFilter = '';
@@ -125,7 +134,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.sortType = 'desc';
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.defaultPageSize,
       sort: this.sort,
     };
     this.loadActivityListGrid();
@@ -135,19 +144,17 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(): void {
-
     this.initializePaging();
   }
   private initializePaging() {
     const sort: SortDescriptor[] = [{
-      field: 'creationTime',
+      field: 'startDate',
       dir: 'desc'
     }];
     this.state = {
       skip: this.skipCount$ ?? 0,
-      take: this.pageSizes[0]?.value,
+      take: this.defaultPageSize,
       sort: sort,
-      filter: this.filterData,
     };
   }
 
@@ -171,9 +178,9 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
   onInterfaceChange(event: any) {
     this.InterfaceType = event;
-    this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.defaultGridState()
-    this.loadActivityListGrid();
+    this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
+    this.loadDefaultActivityListGrid();
     this.getHistoryByInterfaceType(this.InterfaceType);
     this.collapseRowsInGrid();
   }
@@ -189,15 +196,19 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   loadActivityListGrid() {
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
-      this.state?.take ?? 0,
+      this.state?.take ?? this.defaultPageSize,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
     this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, !this.displayAll, param);
   }
 
+  clearlovs(){
+    this.statusFilter="";
+    this.interfaceProcessBatchFilter=""
+  }
   public dataStateChange(stateData: any): void {
-
+    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -206,6 +217,10 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
+    if(this.filter.length==0)
+    {
+     this.clearlovs();
+    }
     const filterList = [];
     if (stateData.filter?.filters.length > 0) {
       for (const filter of stateData.filter.filters) {
@@ -292,26 +307,39 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.dataStateChange(stateData);
   }
   defaultGridState() {
+    const sort: SortDescriptor[] = [{
+      field: 'startDate',
+      dir: 'desc'
+    }];
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      take:this.defaultPageSize,
+      sort:sort,
       filter: { logic: 'and', filters: [] },
-    };
+    };  
   }
-  resetGrid() {
+  resetGrid() {   
+    this.defaultGridState();
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filteredBy = '';
     this.filteredByColumnDesc = '';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
-    this.columnChangeDesc = 'Default Columns';
-    this.loadActivityListGrid();
+   this.sortColumn ='Process Start Date';
+   this.columnChangeDesc = 'Default Columns';
+    this.loadDefaultActivityListGrid();
 
   }
-
+  loadDefaultActivityListGrid() {
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? this.defaultPageSize,
+      this.sortValue,
+      this.sortType);
+    this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, !this.displayAll, param);
+  }
   public onDetailExpand(e: any): void {
+    
     this.fileId = e.dataItem.fileId;
     this.interfaceTypeCode = e.dataItem.interfaceTypeCode;
     this.processTypeCode = e.dataItem.processTypeCode;
@@ -322,6 +350,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     value: any,
     filterService: FilterService
   ): void {
+    
     if (field === 'interfaceTypeDesc') {
       this.interfaceExceptionFilter = value;
     } else if (field === 'processTypeDesc') {
@@ -346,9 +375,9 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
   }
 
-  textToDisplay = "Last 2 Weeks";
+  textToDisplay = "2 Weeks";
   getHistoryByInterfaceType(data: string) {
-    this.textToDisplay = (data === "RAMSELL") ? "Last 2 Weeks" : "Last 12 Months";
+    this.textToDisplay = (data === "RAMSELL") ? "2 weeks" : "12 months";
   }
 
 }

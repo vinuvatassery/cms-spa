@@ -5,15 +5,15 @@
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
       <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedSearchColumn">
+        textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedSearchColumn">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox [(ngModel)]="searchValue" [clearButton]="true" (afterValueChanged)="onChange($event)"  aria-label="Search case" rounded="medium"
-      [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+      <kendo-textbox [(ngModel)]="searchValue" [clearButton]="true" (afterValueChanged)="onChange($event)"
+        aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>
@@ -40,28 +40,19 @@
 </div>
 
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="isVendorRefundProcessGridLoaderShow" [pageSize]="state.take" [filter]="state.filter"
-    [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort"  (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
-    [data]="vendorRefundProcessGridLists$ | async"
-    kendoGridSelectBy="paymentRequestId"
-    [selectable]="selectableSettings"
-    (selectedKeysChange)="selectedKeysChange($event)"
-    [(selectedKeys)]="selectedProcessRefunds"
-    (columnVisibilityChange)="columnChange($event)">
+  <kendo-grid [resizable]="true" [loading]="isVendorRefundProcessGridLoaderShow" [pageSize]="state.take"
+    [filter]="state.filter" [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
+    [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
+    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
+    [data]="vendorRefundProcessGridLists$ | async" kendoGridSelectBy="paymentRequestId"
+    [selectable]="selectableSettings" (selectedKeysChange)="selectedKeysChange($event)"
+    [(selectedKeys)]="selectedProcessRefunds" (columnVisibilityChange)="columnChange($event)">
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
-      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
-      [width]="40"
+      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true" [width]="40"
       [sticky]="true">
       <ng-template *ngIf="this.isProcessBatchClosed" kendoGridHeaderTemplate>
-        <input
-          type="checkbox"
-          kendoCheckBox
-          id="selectAllCheckboxId"
-          kendoGridSelectAllCheckbox
-          [state]="selectAllState"
-          (selectAllChange)="onSelectAllChange($event)"
-        />
+        <input type="checkbox" kendoCheckBox id="selectAllCheckboxId" kendoGridSelectAllCheckbox
+          [state]="selectAllState" (selectAllChange)="onSelectAllChange($event)" />
         <label class="k-checkbox-label" for="selectAllCheckboxId"></label>
       </ng-template>
     </kendo-grid-checkbox-column>
@@ -134,7 +125,7 @@
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         <span class="tableamountview"> <strong>$</strong> {{dataItem.refundAmount | kendoNumber:'n2'}}</span>
-  </ng-template>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="origionalWarrentnbr" title="Original Warrant #" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -222,28 +213,30 @@
     </ng-template>
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
 
-    </ng-template>
-  </kendo-grid-column>
+      </ng-template>
+    </kendo-grid-column>
 
-  <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="70" class="text-center" [sortable]="false" >
-    <ng-template kendoGridCellTemplate let-dataItem>
-      <kendo-dropdownbutton [data]="processGridActions(dataItem)" 
-        class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
-        aria-label="more actions" title="More option"
-        [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-        <span class="material-icons" aria-label="More option"> more_vert    </span>
-        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-          <ng-container>
-            <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-              [class]="buttondataItem.buttonType"   (click)="buttondataItem.click(dataItem)">
-              <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-              <label> {{ buttondataItem.text }} </label>
-            </button>
-          </ng-container>
-        </ng-template>
-      </kendo-dropdownbutton>
-    </ng-template>
-  </kendo-grid-column>
+    <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="70" class="text-center"
+      [sortable]="false">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <kendo-dropdownbutton [data]="processGridActions(dataItem)"
+          class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
+          aria-label="more actions" title="More option"
+          [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+          <span class="material-icons" aria-label="More option"> more_vert </span>
+          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+            <ng-container>
+              <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                [class]="buttondataItem.buttonType" (click)="buttondataItem.click(dataItem)">
+                <span class="material-icons" aria-hidden="true"
+                  [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                <label> {{ buttondataItem.text }} </label>
+              </button>
+            </ng-container>
+          </ng-template>
+        </kendo-dropdownbutton>
+      </ng-template>
+    </kendo-grid-column>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
@@ -274,28 +267,30 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span *ngIf="isProcessBatchClosed" class="">{{selectAllState === "checked" ? vendorRefundProcessGridLists.total : selectedProcessRefunds.length}} refunds(s) to be batched</span>
+  <span *ngIf="isProcessBatchClosed" class="">{{selectAllState === "checked" ? vendorRefundProcessGridLists.total :
+    selectedProcessRefunds.length}} refunds(s) to be batched</span>
   <span *ngIf="isDeleteBatchClosed" class="">{{selectedProcessRefunds.length}} refunds(s) to be deleted</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchRefundsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
 
-  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessRefunds.length"
-    (click)="onDeleteRefundsOpenClicked(deleteRefundConfirmationDialog)"> <span class="material-icons mr-1" aria-hidden="true"
-      aria-label="Delete"> delete</span> Delete </button>
+  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed"
+    [disabled]="!selectedProcessRefunds.length" (click)="onDeleteRefundsOpenClicked(deleteRefundConfirmationDialog)">
+    <span class="material-icons mr-1" aria-hidden="true" aria-label="Delete"> delete</span> Delete </button>
 
   <button kendoButton [primary]="true" aria-label="Batch" class="" [disabled]="!selectedProcessRefunds.length"
     (click)="onBatchRefundsClicked(batchRefundConfirmationDialog)" *ngIf="isProcessBatchClosed"> Batch </button>
 
-  <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="refundProcessMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
+  <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="refundProcessMore"
+    class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
     <div class="btn-inner-block" (click)="onClickOpenAddEditRefundFromModal(addEditRefundDialog)">
-      <span class="material-icons"  aria-label="New Refund" aria-hidden="true">add</span>
+      <span class="material-icons" aria-label="New Refund" aria-hidden="true">add</span>
       New Refund
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-        aria-hidden="false" (click)="!isDataAvailable ? null: dataItem.click(dataItem)" [disabled]="!isDataAvailable" >
+        aria-hidden="false" (click)="!isDataAvailable ? null: dataItem.click(dataItem)" [disabled]="!isDataAvailable">
         <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
@@ -304,31 +299,25 @@
 </div>
 
 <ng-template #batchRefundConfirmationDialog>
-  <cms-batch-refund-confirmation
-      (isModalBatchRefundsCloseClicked)="onModalBatchRefundsModalClose($event)"
-      (isModalBatchRefundsButtonClicked)="onModalBatchRefundsButtonClicked($event)"
-      [selectedProcessRefundsCount]="selectAllState === 'checked' ? vendorRefundProcessGridLists.total : selectedProcessRefunds.length">
-    </cms-batch-refund-confirmation>
+  <cms-batch-refund-confirmation (isModalBatchRefundsCloseClicked)="onModalBatchRefundsModalClose($event)"
+    (isModalBatchRefundsButtonClicked)="onModalBatchRefundsButtonClicked($event)"
+    [selectedProcessRefundsCount]="selectAllState === 'checked' ? vendorRefundProcessGridLists.total : selectedProcessRefunds.length">
+  </cms-batch-refund-confirmation>
 </ng-template>
 <ng-template #deleteRefundConfirmationDialog>
-  <cms-delete-refund-confirmation
-      (isModalDeleteRefundsCloseClicked)="onModalDeleteRefundsModalClose($event)"
-      (isModalDeletedRefundsButtonClicked)="onModalBatchDeletingRefundsButtonClicked($event)"
-      [selectedProcessRefundsCount]="selectedProcessRefunds.length"
-      [deletemodelbody]="deletemodelbody"
-      [singleRefundDelete]="singleRefundDelete">
-    </cms-delete-refund-confirmation>
+  <cms-delete-refund-confirmation (isModalDeleteRefundsCloseClicked)="onModalDeleteRefundsModalClose($event)"
+    (isModalDeletedRefundsButtonClicked)="onModalBatchDeletingRefundsButtonClicked($event)"
+    [selectedProcessRefundsCount]="selectedProcessRefunds.length" [deletemodelbody]="deletemodelbody"
+    [singleRefundDelete]="singleRefundDelete">
+  </cms-delete-refund-confirmation>
 </ng-template>
 
 <ng-template #addEditRefundDialog>
-  <cms-refund-new-form-details [isEdit]="isEditRefund"
-  [serviceType]="refunEditServiceType" [clientId]="refundEditClientId"
-  [clientName]="refundEditClientFullName"
-  [vendorAddressId]="refundEditVendorAddressId"
-  [vendorName]="refundEditVendorName"
-  (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"
-  [inspaymentRequestId]="inspaymentRequestId"
-  [vendorId]="refundEditVendorId"></cms-refund-new-form-details>
+  <cms-refund-new-form-details [isEdit]="isEditRefund" [serviceType]="refunEditServiceType"
+    [clientId]="refundEditClientId" [clientName]="refundEditClientFullName"
+    [vendorAddressId]="refundEditVendorAddressId" [vendorName]="refundEditVendorName"
+    (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"
+    [inspaymentRequestId]="inspaymentRequestId" [vendorId]="refundEditVendorId"></cms-refund-new-form-details>
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
@@ -336,13 +325,16 @@
     <h4 class="text-upper">Recent Claims for {{clientName}}</h4>
     <div *ngIf="(recentClaimsGridLists$ | async) as recentClaims" class="k-flex-grow justify-content-end">
       <span class="d-flex k-wizard-horizontal align-items-fstart">
-        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
-        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong>
+            {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong>
+            {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
       </span>
     </div>
   </kendo-dialog-titlebar>
   <section class="k-dialog-body-padding">
-    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [includeServiceSubTypeFilter]="false" [claimsType]="claimsType"
+    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId"
+      [includeServiceSubTypeFilter]="false" [claimsType]="claimsType"
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
   </section>
   <kendo-dialog-actions>
@@ -360,7 +352,9 @@
 </ng-template>
 
 <ng-template #clientRecentPremiumsDialogTemplate>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
+    <h5 class="text-upper">Recent Premiums for {{clientName}}</h5>
+  </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="claimsType" [includeServiceSubTypeFilter]="false"
       (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick($event,'INSURANCE_PREMIUM')"></cms-financial-premiums-recent-premiums-list>
@@ -389,7 +383,7 @@
     </common-cms-pharmacy-claims-recent-claims>
   </section>
   <kendo-dialog-actions>
-    <div class="justify-content-between" >
+    <div class="justify-content-between">
       <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
           Client Profile <span class="material-icons ml-1" aria-hidden="true">

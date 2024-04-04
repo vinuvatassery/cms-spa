@@ -470,7 +470,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     else {
       this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.disable();
       this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.disable();
-      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.disable();
       this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.reset();
       this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.reset();
       this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.removeValidators(Validators.required);
@@ -690,7 +689,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       otherPhone: new FormGroup({
         phoneNbr: new FormControl(''),
-        otherPhoneNote: new FormControl({ value: '', disabled: true }),
+        otherPhoneNote: new FormControl({ value: '', disabled: false }),
         applicableFlag: new FormControl(false),
         detailMsgConsentFlag: new FormControl({ value: false, disabled: true }),
         smsTextConsentFlag: new FormControl({ value: false, disabled: true }),
@@ -743,7 +742,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private save() {
-   if (this.isNoProofOfHomeChecked){
+    if (this.isNoProofOfHomeChecked) {
       this.handleFileRemoved(null);
     }
     this.setValidation();
@@ -760,6 +759,23 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (invalidControl) {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         invalidControl.focus();
+      }
+       //in case of upload dosuments
+       if(this.showAddressProofRequiredValidation){
+        const element = this.elementRef.nativeElement.querySelector(`#HOME_ADDRESS_PROOF`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center'});
+          element.focus();
+        }
+      }
+    
+       //in case of upload documents
+       if(this.showAddressProofRequiredValidation){
+        const element = this.elementRef.nativeElement.querySelector(`#HOME_ADDRESS_PROOF`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center'});
+          element.focus();
+        }
       }
     return of(false);
   }
@@ -888,7 +904,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       homeAddress.zip = homeAddressGroup?.controls['zip']?.value;
       homeAddress.addressTypeCode = AddressTypeCode.Home;
     }
-    else{
+    else {
       homeAddress.addressTypeCode = AddressTypeCode.UnHoused;
     }
 
@@ -984,6 +1000,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private saveContactInfo() {
     const contactInfoData: ContactInfo = {};
+    contactInfoData.address =[]
     const homeAddressGroup = this.contactInfoForm?.get('homeAddress') as FormGroup;
     const homelessFlag = this.getFlag(homeAddressGroup?.get('homelessFlag')?.value);
     const homeAddress = this.getHomeAddress();
@@ -1030,7 +1047,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       previousClientEligibilityId: this.prevClientCaseEligibilityId
     };
 
-    if(this.isCerForm && clientCaseEligibility?.emailAddressChangedFlag === StatusFlag.No){
+    if (this.isCerForm && clientCaseEligibility?.emailAddressChangedFlag === StatusFlag.No) {
       clientCaseEligibility.paperlessFlag = this.oldContactInfo?.clientCaseEligibility?.paperlessFlag;
     }
 
@@ -1047,17 +1064,17 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.isEdit) {
       const homeAddress1 = this.contactInfo?.address?.filter((address: ClientAddress) => address.addressTypeCode === AddressTypeCode.Home
-        || address.addressTypeCode === AddressTypeCode.UnHoused )[0];
+        || address.addressTypeCode === AddressTypeCode.UnHoused)[0];
       const mailingAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
       const homePhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.HomePhone)[0];
       const cellPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
       const workPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
       const otherPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
-     
-      if(mailingAddress1){
-      mailingAddress.clientAddressId = mailingAddress1?.clientAddressId ? mailingAddress1?.clientAddressId : "00000000-0000-0000-0000-000000000000" ;
-      mailingAddress.concurrencyStamp = mailingAddress1?.concurrencyStamp;
-       }
+
+      if (mailingAddress1) {
+        mailingAddress.clientAddressId = mailingAddress1?.clientAddressId ? mailingAddress1?.clientAddressId : "00000000-0000-0000-0000-000000000000";
+        mailingAddress.concurrencyStamp = mailingAddress1?.concurrencyStamp;
+      }
       homeAddress.clientAddressId = homeAddress1?.clientAddressId;
       homeAddress.concurrencyStamp = homeAddress1?.concurrencyStamp;
 
@@ -1088,10 +1105,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    if(mailingAddress){
+    if (mailingAddress) {
       contactInfoData.address?.push(mailingAddress)
     }
-    if(homeAddress){
+    if (homeAddress) {
       contactInfoData.address?.push(homeAddress)
     }
     contactInfoData.phone = [phoneAndEmail.homePhone, phoneAndEmail.cellPhone, phoneAndEmail.workPhone, phoneAndEmail.otherPhone];
@@ -1205,15 +1222,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   useOldOnClick(formName: string, value: string) {
     this.contactInfoForm.get(formName)?.patchValue(value);
-    if (formName === 'familyAndFriendsContact.contactPhoneNbr') {
-      if (value === '' || value === null) {
-        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
-        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
-      }
-      else {
-        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
-        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.enable();
-      }
+
+    if (formName.includes('mailingAddress')) {
+      this.validateMailingAddress();
+    } else if (formName.includes('homeAddress')) {
+      this.validateHomeAddress();
     }
   }
 
@@ -1343,7 +1356,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm.get('homeAddress.zip')?.patchValue(homeAddress?.zip);
       this.contactInfoForm.get('homeAddress.county')?.patchValue(homeAddress?.county);
       this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.patchValue(homeAddress?.sameAsMailingAddressFlag === StatusFlag.Yes);
-      if(homeAddress.addressTypeCode === AddressTypeCode.UnHoused){
+      if (homeAddress.addressTypeCode === AddressTypeCode.UnHoused) {
         this.contactInfoForm?.get('homeAddress.homelessFlag')?.patchValue(StatusFlag.Yes);
       }
       this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homeAddressProofFlag === StatusFlag.Yes);
@@ -1506,16 +1519,14 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showAddressProofRequiredValidation = false;
       this.showAddressProofSizeValidation = false;
 
-      if(container[0])
-      {
-      container[0].hidden=true
+      if (container[0]) {
+        container[0].hidden = true
       }
     }
-    else{
+    else {
 
-      if(container[0])
-      {
-        container[0].hidden=false
+      if (container[0]) {
+        container[0].hidden = false
       }
     }
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);
@@ -1554,9 +1565,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private setVisibilityByOtherPhoneNotApplicable(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.disable();
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.disable();
     }
     else {
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.enable();
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
     }
     this.loadPreferredContactMethod();
   }
@@ -1611,7 +1624,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('homeAddress.zip')?.enable();
     }
 
-    const isSameAsEmailSelected =  this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false;
+    const isSameAsEmailSelected = this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false;
     this.setSameAsMailingAddressFlagChanges(isSameAsEmailSelected);
     this.isNoMailAddressValidationRequired = false;
   }
@@ -1643,7 +1656,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setAddress(address: MailAddress | undefined, type: AddressTypeCode) {
     if (!address) return;
-    let zipCode = address?.zip4 ? `${address?.zip5}-${address?.zip4}`: address?.zip5;
+    let zipCode = address?.zip4 ? `${address?.zip5}-${address?.zip4}` : address?.zip5;
     const selectedAddress: ClientAddress = {
       address1: address?.address1 == '' ? address?.address2 : address?.address1,
       address2: address?.address1 == '' ? '' : address?.address2,
@@ -1730,7 +1743,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
         this.homeAddressIsNotValid = this.mailingAddressIsNotValid;
       }
-      else{
+      else {
         homeAddressGroup?.controls['city']?.enable();
       }
       homeAddressGroup?.controls['address1']?.disable();
@@ -1827,9 +1840,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.closeValidationPopup(type);
     }
   }
-  handleTypeCodeEvent(e:any)
-  {
-    this.documentTypeCode=e;
+  handleTypeCodeEvent(e: any) {
+    this.documentTypeCode = e;
   }
 
   handleFileSelected(e: SelectEvent) {
@@ -2106,21 +2118,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (phoneType === 'contactPhoneNbr') {
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.setValidators(null);
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.updateValueAndValidity();
-      if(this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.value === ''
-        ||this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.value === null){
-          this.contactInfoForm.get('familyAndFriendsContact.smsTextConsentFlag')?.patchValue(false);
-          this.contactInfoForm.get('familyAndFriendsContact.detailMsgConsentFlag')?.patchValue(false);
-          this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
-          this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
-      }
-      else{
-        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
-        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.enable();
-      }
     }
   }
 
-  removeEmailValidation(){
+  removeEmailValidation() {
     this.contactInfoForm?.get('email.email')?.setValidators(null);
     this.contactInfoForm?.get('email.email')?.updateValueAndValidity();
   }

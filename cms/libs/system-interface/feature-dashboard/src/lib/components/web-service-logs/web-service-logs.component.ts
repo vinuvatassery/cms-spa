@@ -7,10 +7,14 @@ import {
   OnChanges,
   Output,
   ViewEncapsulation,
-  OnDestroy
+  OnDestroy,
+  ViewChild,
+  TemplateRef,
+  ChangeDetectorRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject, Subscription } from 'rxjs';
@@ -19,16 +23,14 @@ import { Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-system-interface-web-service-logs',
   templateUrl: './web-service-logs.component.html',
-  styleUrls: ['./web-service-logs.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./web-service-logs.component.scss']
 })
 export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
   // UI Variables
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+defaultPageSize=20;
   // Input Variables
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -37,7 +39,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   @Input() activityEventLogList$: any;
   @Input() lovsList$: any;
   @Input() skipCount$: any;
-
   // Flags
   displayAll = true;
   columnsReordered = false;
@@ -52,6 +53,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // Observable Variables
   webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
   webLogListsLoader$ = this.systemInterfaceDashboardFacade.webLogsDataLoader$;
+  profilePhoto$ = this.systemInterfaceDashboardFacade.profilePhoto$;
   gridData$ = this.gridDataSubject.asObservable();
 
   // Output Events
@@ -62,11 +64,12 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   filteredByColumnDesc = '';
   selectedStatus = '';
   interfaceFilterDataList = null;
-
+  Usps:string ="USPS";
+ interfaceType:string ="RAMSELL";
   // Sorting Variables
-  sortColumn = 'startDate';
-  sortColumnDesc = 'startDate';
-  sortDir = 'Ascending';
+  sortColumn = 'Process Date';
+  sortColumnDesc = 'Process Date';
+  sortDir = 'Descending';
 
   // Filtering Variables
   statusFilter = '';
@@ -76,29 +79,41 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   public processArray: string[];
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
-
+  address:any;
+  errorherader: string="";
   // Filter Data
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  errorDialog: any;
+  @ViewChild('errorInformationDialogTemplate', { read: TemplateRef })
+  errorInformationDialogTemplate!: TemplateRef<any>;
 
+  @ViewChild('errorAddressDialogTemplate', { read: TemplateRef })
+  errorAddressDialogTemplate!: TemplateRef<any>;
+
+  failureDetail:string="";
   interfaceFilterDropDown: any = null;
   lovsSubscription: Subscription | undefined;
 
   constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade) {
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
+    private dialogService: DialogService) {
 
     this.statusArray = systemInterfaceDashboardFacade.getStatusArray()
-    this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray()
-    this.processArray = systemInterfaceDashboardFacade.getEecProcessTypeCodeArray()
+    this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray(this.interfaceType)
+    this.processArray = systemInterfaceDashboardFacade.getEecProcessTypeCodeArray(this.interfaceType)
+  
   }
 
   gridColumns: any = {
     process: 'Process',
-    startDate: 'ProcessDate',
+    startDate: 'Process Date',
     status: 'Status',
+    clientId:'Client Id',
     triggeredBy: 'Triggered By',
   };
 
   public dataStateChange(stateData: any): void {
+    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -125,11 +140,18 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
-    this.filter = [];
+    this.filter = "";
+    this.filteredBy="";
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
-    this.loadListGrid();
+    this.state = {
+      skip: 0,
+      take:this.defaultPageSize,
+      sort:this.sort ,
+      filter: { logic: 'and', filters: [] },
+    }; 
+    this.loadDefaultListGrid();
 
   }
 
@@ -159,13 +181,24 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
-      this.state?.take ?? 0,
+      this.state.take=this.defaultPageSize,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
 
+    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceType, !this.displayAll, param);
+    this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
 
-    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, !this.displayAll, param);
+  }
+  loadDefaultListGrid() {
+    this.updateStatusFilterValue(this.filter, this.statusArray, this.statusArrayDesc);
+
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state.take=this.defaultPageSize,
+      this.sortValue,
+      this.sortType);
+    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceType, !this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
 
@@ -175,7 +208,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.sortType = "desc"
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take:this.defaultPageSize,
       sort: this.sort,
     };
 
@@ -191,9 +224,10 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
   private initializeDropdownWithFirstValue() {
     this.lovsSubscription = this.lovsList$.subscribe((lovs: any) => {
+      
       this.interfaceFilterDataList = lovs;
       if (lovs && lovs.length > 0) {
-        this.interfaceFilterDropDown = lovs[0];
+        this.interfaceFilterDropDown = lovs[1];
         this.loadListGrid();
       }
     });
@@ -218,7 +252,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     }];
     this.state = {
       skip: this.skipCount$ ?? 0,
-      take: this.pageSizes[0]?.value,
+      take: this.defaultPageSize,
       sort: sort,
       filter: this.filterData,
     };
@@ -235,6 +269,12 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   onInterfaceSelectionChanged(event: any) {
+    this.processFilter='';
+    this.statusFilter='';
+    this.interfaceType=event.lovCode;
+    this.processArray = this.systemInterfaceDashboardFacade.getEecProcessTypeCodeArray(this.interfaceType);
+    this.statusArrayDesc = this.systemInterfaceDashboardFacade.getStatusDescriptionArray(this.interfaceType)
+  
     this.loadListGrid();
   }
 
@@ -265,5 +305,39 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   downloadFile(filePath: any) {
     this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
   }
+
+
+  Close() {
+      this.errorDialog.close();
+    
+  }
+ 
+ onViewInformation(error:string){
+   if(this.interfaceType==this.Usps)
+{
+  var header=error.split("#");
+  this.errorherader=header[1];
+  this.address=JSON.parse(header[0]);
+ this.failureDetail=error;
+ 
+  this.onErrorDetailClicked(
+    this.errorAddressDialogTemplate
+  );
+}else{
+  this.failureDetail=error;
+ 
+  this.onErrorDetailClicked(
+    this.errorInformationDialogTemplate
+  )
+}
+ }
+  public onErrorDetailClicked(template: TemplateRef<unknown>): void {
+    this.errorDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+ 
 
 }

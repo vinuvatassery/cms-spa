@@ -23,7 +23,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   @Input() claimsType: any;
   @Input() includeServiceSubTypeFilter = true;
   dentalOrMedicalServiceField:any;
-  @Input() duplicatePaymentInputObject:any;
+  @Input() duplicatePaymentInputObject: any;
   public state!: any;
   sortColumn = 'Entry Date';
   sortDir = 'Ascending';
@@ -46,7 +46,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   columns : any;
   dropDowncolumns : any;
   isFinancialClaimsRecentClaimGridLoaderShow = false;
-
+  selectedSearchColumn = 'ALL';
   selectedPaymentStatus: string | null = null;
   selectedPaymentMethod: string | null = null;
   selectedPaymentType: string | null = null;
@@ -165,6 +165,28 @@ loadFinancialRecentClaimListGrid() {
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
     };
+  }
+
+  setToDefault() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+
+    this.sortColumn = 'Entry Date';
+    this.sortDir = 'Ascending';
+    this.filter = '';
+    this.selectedSearchColumn = 'ALL';
+    this.isFiltered = false;
+    this.columnsReordered = false;
+
+    this.sortValue = 'entryDate';
+    this.sortType = 'asc';
+    this.sort = this.financialClaimsFacade.sortRecentClaimList;
+    this.searchValue = ''
+    this.loadFinancialRecentClaimListGrid();
+    this.cdr.detectChanges();
   }
 
   onColumnReorder($event: any) {

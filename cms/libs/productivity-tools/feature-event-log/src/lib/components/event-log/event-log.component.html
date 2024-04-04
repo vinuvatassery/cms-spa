@@ -120,7 +120,7 @@
           <div class="items-head">
             <p class="items-head_label">{{eventLog.eventDesc}}</p>
             <p class="items-head_info text-right">
-              {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by
+              {{eventLog.creationTime | date : 'MM/dd/yyyy'}} by
 
             <span class="items-head_info-user">
 
@@ -175,7 +175,7 @@
               <div class="items-head">
                 <p class="items-head_label">{{subEventLog.eventDesc}}</p>
                 <p class="items-head_info text-right">
-                  {{subEventLog.creationTime | date: 'MM-dd-yyyy'}} by
+                  {{subEventLog.creationTime | date: 'MM/dd/yyyy'}} by
                   <span class="items-head_info-user">
 
                     <common-user-photo-icon
@@ -208,6 +208,28 @@
         <!-- Event sub list items -->
       </li>
     </ul>
+
+    <div *ngIf="events.length <= 0" class="mt-1" >    
+      <div *ngFor="let skeletonCount of skeletonCounts" class="event_log_loader">
+        <kendo-skeleton  shape="rectangle"   animation="pulse"   class="event_bgloader" ></kendo-skeleton>
+      <div class="event_log_loader_first">
+        <kendo-skeleton shape="text"  animation="pulse"   width="20%"   ></kendo-skeleton>
+        <kendo-skeleton   shape="text"    animation="pulse"   width="40%" ></kendo-skeleton>
+      </div>
+
+      <div class="event_log_loader_second">
+        <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton> 
+        <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton> 
+        <kendo-skeleton shape="text" animation="pulse"  width="50%" ></kendo-skeleton>
+      </div>
+      </div>
+      <!-- <kendo-skeleton   shape="rectangle" animation="pulse" width="100%" height="50px" style="margin-bottom: 4px;">
+      </kendo-skeleton> -->
+      </div>
+    <!-- <div *ngIf="events.length <= 0">
+      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
+      class="event-list-skeleton-loader"></kendo-skeleton>
+    </div> -->
     <div class="filter-footer-event" *ngIf="filterBy.length > 0">
       <small>Filtered By: {{filterBy}} <a (click)="onEventLogFilterClearClicked()">Clear</a></small>
     </div>

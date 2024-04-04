@@ -12,6 +12,7 @@ import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
+
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorFacade {
 
@@ -19,6 +20,7 @@ export class FinancialVendorFacade {
   private vendorsSubject = new Subject<any>();
   private selectedVendorSubject = new Subject<any>();
   private vendorProfileSubject = new Subject<any>();
+  private vendorProfileForReminderPanelSubject = new Subject<any>();
   private vendorProfileSpecialHandlingSubject = new Subject<any>();
   private clinicVendorSubject = new Subject<any>();
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
@@ -33,6 +35,7 @@ export class FinancialVendorFacade {
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
+  vendorProfileForReminderPanel$ = this.vendorProfileForReminderPanelSubject.asObservable();
   clinicVendorList$ = this.clinicVendorSubject.asObservable();
   clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable();
   providePanelSubject$ = this.providePanelSubject.asObservable();
@@ -41,6 +44,7 @@ export class FinancialVendorFacade {
 
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
+
 
   public manufacturerListSubject = new Subject<any>();
   manufacturerList$ = this.manufacturerListSubject.asObservable();
@@ -62,6 +66,7 @@ export class FinancialVendorFacade {
   }];
   financialClinicProviderProfileSubject = new Subject();
 
+
   /** Constructor**/
   constructor(private readonly financialVendorDataService: FinancialVendorDataService,
     private readonly loaderService: LoaderService,
@@ -69,6 +74,7 @@ export class FinancialVendorFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly userManagementFacade: UserManagementFacade,
+  
   ) { }
 
   /** Public methods **/
@@ -151,6 +157,19 @@ export class FinancialVendorFacade {
       },
       error: (err) => {
         this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  getVendorProfileForReminderPanel(vendorId: string, tabCode: string): void {
+    this.financialVendorDataService.getVendorProfile(vendorId, tabCode).subscribe({
+      next: (vendorResponse: any) => {
+        if (vendorResponse) {
+          this.vendorProfileForReminderPanelSubject.next(vendorResponse);
+        }
+      },
+      error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
@@ -316,6 +335,7 @@ export class FinancialVendorFacade {
 
   getProviderList(providerPageAndSortedRequest: any) {
 
+
     this.showLoader();
     this.financialVendorDataService.getProvidersList(providerPageAndSortedRequest).subscribe({
       next: (response: any) => {
@@ -327,6 +347,7 @@ export class FinancialVendorFacade {
           this.hideLoader();
           this.providerListSubject.next(gridView);
           this.loadProviderDistinctUserIdsAndProfilePhoto(response["items"]);
+          this.loadProviderDistinctUserIdsAndProfilePhoto(response["items"]);
         }
       },
       error: (err) => {
@@ -334,6 +355,9 @@ export class FinancialVendorFacade {
       },
     });
   }
+
+
+
 
   loadProviderDistinctUserIdsAndProfilePhoto(data: any[]) {
     const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');

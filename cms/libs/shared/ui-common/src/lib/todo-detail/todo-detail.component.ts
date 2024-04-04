@@ -76,7 +76,7 @@ export class TodoDetailComponent implements OnInit {
       repeat: [''],
       endDate: [null],
       alertDesc: [''],
-      linkTo: ['',Validators.required],
+      linkTo: [''],
       clientId :[null],
       vendorId: [null]
     });
@@ -111,7 +111,7 @@ export class TodoDetailComponent implements OnInit {
         this.todoDetailsForm.controls["endDate"].setValue(null);
 
         }
-       if(res.entityTypeCode !=='CLIENT'){
+       if(res.entityTypeCode !=='CLIENT' && res.entityTypeCode != ""){
         this.showVendorSearch = true;
         this.showClientSearch = false;
         this.placeholderText = this.vendorPlaceHolderText;
@@ -128,7 +128,8 @@ export class TodoDetailComponent implements OnInit {
         })
         this.todoDetailsForm.controls['vendorId'].setValidators([Validators.required]);
         this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
-      }else{
+      }
+      else if(res.entityTypeCode =='CLIENT'){
         this.showVendorSearch = false;
         this.showClientSearch = true;
         this.placeholderText = this.clientPlaceHolderText;
@@ -233,6 +234,7 @@ export class TodoDetailComponent implements OnInit {
     })
     let entityTypeCode ='';
     let entityId =''
+    console.log(this.todoDetailsForm)
     this.todoDetailsForm.markAllAsTouched()
     this.isValidateForm =true;
     if(!this.todoDetailsForm.controls['clientId'].value?.clientId && this.showClientSearch){
@@ -246,7 +248,7 @@ export class TodoDetailComponent implements OnInit {
 if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
   entityTypeCode = 'CLIENT'
   entityId =  this.todoDetailsForm.controls['clientId'].value.clientId?.toString()
-}else{
+}else if(this.todoDetailsForm.controls['linkTo'].value !=='CLIENT' && this.todoDetailsForm.controls['linkTo'].value){
   entityTypeCode = 'VENDOR'
   entityId =  this.todoDetailsForm.controls['vendorId'].value.providerId?.toString()
 }
@@ -277,6 +279,11 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
 
   
   delete(){
+    this.createTodo$.subscribe(res =>{
+      if(res){
+      this.closeTodoDetailsClicked(true)
+      }
+    })
     this.onDeleteAlertClicked.emit(this.alertId)
    }
 

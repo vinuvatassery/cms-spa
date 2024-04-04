@@ -149,10 +149,10 @@ export class VendorHeaderToolsComponent {
         const contactWithValidEmail = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.emailAddress && contact.emailAddress.trim());
         this.toEmail = [];
         if (preferredContact) {
-          this.toEmail = [preferredContact.emailAddress.trim()];
+          this.toEmail = [];
           this.sendActions[1].isVisible = true;
         } else if (contactWithValidEmail) {
-          this.toEmail = [contactWithValidEmail.emailAddress.trim()];
+          this.toEmail = [];
           this.sendActions[1].isVisible = true;
         }
       }
@@ -234,12 +234,6 @@ export class VendorHeaderToolsComponent {
     }
   }
 
-  onTodoDetailsClicked( template: TemplateRef<unknown>): void {
-    this.todoDetailsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
  
     onSendNewLetterClicked(template: TemplateRef<unknown>): void {
       this.isSendNewLetterDialog = this.dialogService.open({

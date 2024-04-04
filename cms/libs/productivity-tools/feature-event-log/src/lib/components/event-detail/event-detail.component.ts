@@ -123,6 +123,7 @@ export class EventDetailComponent implements OnInit {
         sourceEntityId : this.entityId ? this.entityId.toString() : null,
         sourceEntityTypeCode: this.entityType,
         entityTypeCode: this.entityType,
+        entityId: this.entityId,
         parentEventLogId : this.parentEventLogId ? this.parentEventLogId : null,
         isSubEvent : this.isSubEvent
       };

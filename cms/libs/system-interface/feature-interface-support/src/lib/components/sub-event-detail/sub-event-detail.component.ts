@@ -18,35 +18,35 @@ import { Subject, first } from 'rxjs';
 export class SubEventDetailComponent implements OnInit {
     @Input() eventId: any;
     eventListString: string = "";
-    isLoading: boolean = false;
+    gridLoaderShow: boolean = false;
     subEventListsSubject = new Subject<any>();
     subEventLists$ = this.subEventListsSubject.asObservable();
     /** Constructor **/
     constructor(private systemInterfaceSupportFacade: SystemInterfaceSupportFacade) { }
 
     ngOnInit(): void {
-        this.loadSubEvent();
+        this.initializeGrid();
     }
 
     ngOnChanges(): void {
-        this.loadSubEvent();
+        this.initializeGrid();
       }
-    loadSubEvent() {
-        this.isLoading = true; // Set loading flag to true
+      initializeGrid() {
+        this.gridLoaderShow = true; // Set loading flag to true
         this.systemInterfaceSupportFacade.getSubEventsByParentId(this.eventId).subscribe({
-            next: (response) => {
-                const eventListString = response
-                .sort((a, b) => a.eventDesc.localeCompare(b.eventDesc))
-                .map(event => `${event?.eventDesc ?? ''}`)
-                .join('\n');
-              this.subEventListsSubject.next(response);
-              this.isLoading = false;
+            next: (response: any) => {
+                const gridView = {
+                    data: response["items"],
+                    total: response["totalCount"]
+                  }; 
+              this.subEventListsSubject.next(gridView);
+              this.gridLoaderShow = false;
             },
             error: () => {
-                this.isLoading = false;
+                this.gridLoaderShow = false;
             },
             complete: () => { 
-                this.isLoading = false;
+                this.gridLoaderShow = false;
             }
           });
 

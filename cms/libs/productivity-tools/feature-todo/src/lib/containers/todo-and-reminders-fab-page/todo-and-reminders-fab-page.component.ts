@@ -9,7 +9,7 @@ import {
   } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { FabMenuFacade, TodoFacade } from '@cms/productivity-tools/domain';
+import { FabMenuFacade, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { TodoListComponent } from '../../components/todo-list/todo-list.component';
 import { LovFacade } from '@cms/system-config/domain';
@@ -39,6 +39,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     @Output() isToDODetailsActionOpen!: boolean;
     todoGrid$ = this.todoFacade.todoGrid$
     loadAlertGrid$ = this.todoFacade.loadAlertGrid$;
+    loadTodoList$ = this.todoFacade.loadTodoList$;
     selectedAlertId! :any
     isEdit = false;
     isDelete = false;
@@ -58,7 +59,8 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       private readonly financialRefundFacade: FinancialVendorRefundFacade,
       private dialogService: DialogService, 
       private readonly financialVendorFacade : FinancialVendorFacade,
-      public readonly fabMenuFacade: FabMenuFacade  
+      public readonly fabMenuFacade: FabMenuFacade,
+      public readonly notificationFacade : NotificationFacade
     ) {}
     /** Lifecycle hooks **/
     ngOnInit(): void {        
@@ -89,8 +91,8 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       editTodoItem(event:any){
       
       }
-      onloadTodoGrid(payload: any, alertTypeCode:any){
-        this.todoFacade.loadAlerts(payload,alertTypeCode.alertType);
+      onloadTodoGrid(){
+        this.todoFacade.loadAlertsData();
       }
       onMarkAlertDoneGrid(selectedAlertId: any){
         this.todoFacade.markAlertAsDone(selectedAlertId);
@@ -192,6 +194,13 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
         this.deleteToDoDialog.close();
         this.onDeleteAlertGrid(this.selectedAlertId);
       }
+    }
+
+    onSnoozeReminder(event:any){ 
+      this.notificationFacade.snoozeReminder$.subscribe(res =>{
+        this.todoFacade.todoAndRemindersByClient(this.clientId)
+      })
+      this.notificationFacade.SnoozeReminder(event.reminderId,event.duration);
     }
 
   }

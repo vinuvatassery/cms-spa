@@ -1,0 +1,28 @@
+<section class="k-dialog-body">
+    <div [formGroup]="employerForm">
+      <p class="text-muted mb-2">
+        All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+        <div class="flex-col" >
+          <kendo-floatinglabel text="Employer Name">
+            <kendo-textbox aria-label="Employer Name" [fillMode]="formUiStyle.inputFillMode"
+              formControlName="employerName" [maxlength]="200">
+            </kendo-textbox>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!employerForm.controls['employerName'].valid">
+            Employer Name is required.
+          </kendo-formerror>
+        </div>
+        </div>
+    </div>
+    <kendo-dialog-actions>
+        <div class="justify-content-between" >
+          <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closePopup()"> Cancel
+            </button>
+            <button kendoButton [primary]="true" attr.aria-label="ADD " (click)="saveEmployer()"> ADD  </button>
+          </div>
+        </div>      
+      </kendo-dialog-actions>
+</section>

@@ -358,6 +358,10 @@ export class ContactDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/employers/employerName=${employerName}`);
   }
 
+  addEmployer(employerName : string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/employer/${employerName}`, employerName);
+  }
+
   loadEmployerIncomes(clientId: string, eligibilityId: string){
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${eligibilityId}/employer-income`);
   }

@@ -45,14 +45,17 @@ import { PlaceholderDirective } from './directives/placeholder.directive';
 import { FinancialDrugsDetailsComponent } from './financial-drugs-details/financial-drugs-details.component';
 import { FinancialPcaChosenAlertComponent } from './financial-pca-chosen-alert/financial-pca-chosen-alert.component';
 import { NdcCodePipe } from './pipes/ndc-code.pipe';
-import { CmsPharmacyClaimsDetailComponent } from './cms-pharmacy-claims-detail/cms-pharmacy-claims-detail.component';
-import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
-import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
+
+
+
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { GridNoRecordsComponent } from './grid-no-records/grid-no-records.component';
 import { ReadMoreComponent } from './read-more/read-more.component';
-import { AlertBannerComponent } from './alert-banner/alert-banner.component';
 import { DeleteTodoConfirmationComponent } from './delete-todo-confirmation/delete-todo-confirmation.component';
+import { AddEmployerComponent } from './add-employer/add-employer.component';
+import { CmsPharmacyClaimsDetailComponent } from './cms-pharmacy-claims-detail/cms-pharmacy-claims-detail.component';
+import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
+import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -98,8 +101,8 @@ import { DeleteTodoConfirmationComponent } from './delete-todo-confirmation/dele
     TodoDetailComponent,
     GridNoRecordsComponent,
     ReadMoreComponent,
-    AlertBannerComponent,
-    DeleteTodoConfirmationComponent
+    DeleteTodoConfirmationComponent,
+    AddEmployerComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -142,10 +145,10 @@ import { DeleteTodoConfirmationComponent } from './delete-todo-confirmation/dele
     CmsPharmacyClaimsDetailComponent,
     CmsPharmacyClaimsRecentClaimsComponent,
     TodoDetailComponent,
-    GridNoRecordsComponent, 
-    ReadMoreComponent, 
-    AlertBannerComponent,
-    DeleteTodoConfirmationComponent
+    GridNoRecordsComponent,
+    ReadMoreComponent,
+    DeleteTodoConfirmationComponent,
+    AddEmployerComponent
   ],
 })
 export class SharedUiCommonModule {}

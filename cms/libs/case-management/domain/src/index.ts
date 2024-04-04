@@ -23,7 +23,6 @@ export * from './lib/entities/verification';
 export * from './lib/entities/smoking-cessation';
 export * from './lib/entities/workflow';
 export * from './lib/entities/workflow-stage-completion-status';
-export * from './lib/entities/client-employer';
 export * from './lib/entities/client-sexual-identity';
 export * from './lib/entities/client-race';
 export * from './lib/entities/client-pronoun';
@@ -140,6 +139,7 @@ export * from './lib/enums/object-code.enum';
 export * from './lib/enums/pca-assignment-report.enum';
 export * from './lib/enums/medicare-coverage-type.enum';
 export * from './lib/enums/cer-review-status-code.enum';
+export * from './lib/enums/medicare-coverage-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
@@ -206,7 +206,6 @@ export * from './lib/application/dental-insurance.facade';
 export * from './lib/application/document.facade';
 export * from './lib/application/drug-pharmacy.facade';
 export * from './lib/application/drug-pharmacy.facade';
-export * from './lib/application/employment.facade';
 export * from './lib/application/eligibility-period.facade';
 export * from './lib/application/family-and-dependent.facade';
 export * from './lib/application/healthcare-provider.facade';

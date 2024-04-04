@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { UserManagementFacade } from '@cms/system-config/domain';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -67,14 +67,39 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   pharmacyPurchaseProfileSubscription = new Subscription();
   vendorRefundPaymentListProfilePhoto$ = this.financialVendorRefundFacade.vendorRefundPaymentListProfilePhotoSubject
   @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
+  selectedPaymentRequestType: any = '';
+  selectedPaymentMethod: any = '';
+  paymentRequestTypeData :any[] =[];
+  paymentRequestType$ = this.lovFacade.paymentRequestType$;
+  paymentType$ = this.lovFacade.paymentMethodType$;
+  paymentTypeData :any[] =[];
+
+  deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
+  deliveryMethodLovData: any[] = [];
+  selectedDeliveryMethod: any = '';
+
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentStatusLovData :any[] = [];
+  selectedPaymentStatus: any = ''
+
+
   constructor(
     public financialVendorRefundFacade:FinancialVendorRefundFacade,
     private readonly userManagementFacade: UserManagementFacade,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private lovFacade: LovFacade,
   ) { }
 
   ngOnInit(): void {
-    this.loadFinancialRecentRefundListGrid();
+    this.lovFacade.getCoPaymentRequestTypeLov();
+    this.lovFacade.getPaymentMethodLov();
+    this.getPaymentRequestTypeLov();
+    this.getPaymentTypeLov();
+    this.loadFinancialRecentRefundListGrid();   
+    this.lovFacade.getDeliveryMethodLovs(); 
+    this.getDeliveryMethodLovs();
+    this.lovFacade.getPaymentStatusLov();
+    this.getPaymentStatusLovs();
   }
 
   selectedKeysChange(selection: any) {
@@ -165,4 +190,62 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event.paymentRequestId)
   }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovDesc
+      }],
+        logic: "or"
+    });
+  }
+
+  getPaymentRequestTypeLov(){
+    this.paymentRequestType$.subscribe({
+        next: (data: any) => {
+          this.paymentRequestTypeData=data;
+        }
+      });
+  }
+
+  getPaymentTypeLov(){
+    this.paymentType$.subscribe({
+        next: (data: any) => {
+          this.paymentTypeData=data;
+        }
+      });
+  }
+
+  getDeliveryMethodLovs() {
+    this.deliveryMethodLov$.subscribe({
+      next: (data: any) => {
+        this.deliveryMethodLovData = data;
+      }
+    });
+  }
+
+  onPaymentListGridFilterChange(filterdata: any){
+    const paymentMethodDesc = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'paymentMethodDesc'); });
+    const paymentTypeDesc = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'paymentTypeDesc'); });
+    const rxqtype = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'rxqtype'); });
+    const paymentStatusDesc = filterdata.filters.find((item: any) => { return item.filters.some((filter: any) => filter.field == 'paymentStatusDesc'); });
+
+    if(!paymentMethodDesc) this.selectedPaymentMethod = '';
+    if(!paymentTypeDesc) this.selectedPaymentRequestType = '';
+    if(!rxqtype) this.selectedDeliveryMethod = ''
+    if(!paymentStatusDesc) this.selectedPaymentStatus = ''
+    
+    this.state.filter = filterdata;
+  }
+
+  getPaymentStatusLovs() {
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        this.paymentStatusLovData = data;
+      }
+    });
+  }
+
 }

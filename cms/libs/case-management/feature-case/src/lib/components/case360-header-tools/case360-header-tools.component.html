@@ -1,9 +1,5 @@
 <div class="tab-over-icon-btn" >
-  <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item"  (click)="onTodoDetailsClicked(todoDetailTemplate)">
-    <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true"
-     >playlist_add</span>
-  </button>
-  <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder"  (click)="onNewReminderClicked(NewReminderTemplate)">
+  <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder"  (click)="onNewReminderClicked()">
     <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true"
      >add_alarm</span>
   </button>
@@ -34,32 +30,19 @@
       </button>
     </ng-template>
   </kendo-dropdownbutton>
+  <!-- <button (click)="onPreviewTemplateClicked(viewTemplateDialog)">onPreviewTemplateClicked</button> -->
 </div>
 
 
-<!-- Create New To Do Modal Html-->
-<ng-template #todoDetailTemplate>
-  <kendo-dialog-titlebar (close)="onTodoDetailsClosed($event)">Create To Do Item for Donna </kendo-dialog-titlebar>
-  <productivity-tools-todo-detail 
-  (isModalTodoDetailsCloseClicked)="onTodoDetailsClosed($event)"
-  ></productivity-tools-todo-detail>
-</ng-template>
 
 
-<!-- Create New Reminder Popup -->
-<ng-template #NewReminderTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed()">Create New Reminder for 
-    {{clientHeader?.clientFullName}}</kendo-dialog-titlebar>
-  <productivity-tools-reminder-detail  
-   (isModalNewReminderCloseClicked)="onNewReminderClosed()">
-  </productivity-tools-reminder-detail>
-</ng-template>
- 
+
+
 
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
   <case-management-send-letter [mailingAddress$]="mailingAddress$" [informationalText]="informationalText" [templateHeader]="templateHeader"
-  [notificationGroup]="screenName" [templateLoadType] ="templateLoadType"
+  [notificationGroup]="screenName" [templateLoadType] ="templateLoadType" [communicationLetterTypeCode] ="letterCommunicationTypeCode"
   (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()" [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
   kendoTooltip></case-management-send-letter>
@@ -75,7 +58,7 @@
 <!-- Send New Email Modal -->
 <ng-template #sendNewEmailDialog>
   <case-management-send-email [ddlEmails$]="emailAddress$" 
-  [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
+  [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader" [communicationEmailTypeCode]="emailCommunicationTypeCode"
   [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName" [clientCaseId]="clientCaseId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
   [toEmail]="toEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
@@ -91,11 +74,17 @@
 <!-- New SMS Text Modal Html-->
 <ng-template #sendTextMessageDialog>
 <case-management-send-text-message [ddlMessageRecipients$] ="phoneNumbers$" [notificationGroup]="screenName" [entityId]="clientId"
-  (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDraftId]="notificationDraftId"
-  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
-  [clientCaseEligibilityId]="clientCaseEligibilityId" kendoTooltip></case-management-send-text-message>
-<case-management-send-text-message [ddlMessageRecipients$] ="phoneNumbers$" [notificationGroup]="screenName" [entityId]="clientId"
+[templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
   (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDraftId]="notificationDraftId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
   [clientCaseEligibilityId]="clientCaseEligibilityId" kendoTooltip></case-management-send-text-message>
 </ng-template>
+
+
+
+
+<!-- view template Modal Html-->
+<ng-template #viewTemplateDialog>
+  <kendo-dialog-titlebar (close)="handlePreviewTemplateClosed($event)">Preview Template </kendo-dialog-titlebar>
+ <case-management-preview-notification-templates></case-management-preview-notification-templates>
+  </ng-template>

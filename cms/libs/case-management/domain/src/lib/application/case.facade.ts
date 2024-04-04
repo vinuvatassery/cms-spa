@@ -120,7 +120,7 @@ export class CaseFacade {
   activeSession!: ActiveSessions[];
   userManagerprofilePhotoSubject = new Subject();
   userLastModifierProfilePhotoSubject = new Subject();
-
+  clientCustomName:string= '';
   constructor(
     private readonly caseDataService: CaseDataService,
     private readonly loggingService: LoggingService,
@@ -182,13 +182,6 @@ export class CaseFacade {
 
       case ClientProfileTabs.CLIENT_INCOME:
         this.router.navigate([redirectUrl + '/income/profile'], query);
-        break;
-        case ClientProfileTabs.CLIENT_SMOKING_CESS:
-          this.router.navigate([redirectUrl + '/smoking-cessation/profile'], query);
-          break;
-
-      case ClientProfileTabs.CLIENT_EMPLOYMENT:
-        this.router.navigate([redirectUrl + '/employment/profile'], query);
         break;
       case ClientProfileTabs.HEALTH_INSURANCE_STATUS:
       case ClientProfileTabs.HEALTH_INSURANCE_COPAY:
@@ -367,14 +360,17 @@ export class CaseFacade {
 
   loadClientProfileHeader(clientId: number): void {
     this.showLoader();
+    this.clientCustomName = '';
     this.caseDataService.loadClientProfileHeader(clientId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileHeaderSubject.next(clientProfileResponse);
+        this.clientCustomName = clientProfileResponse?.clientFullName + ' ' + clientProfileResponse?.clientId + ' ' + clientProfileResponse?.ssn + ' ' + clientProfileResponse?.dob
         this.hideLoader();
         if (clientProfileResponse) {
           const activeSession = {
             clientCaseId: clientProfileResponse?.clientCaseId,
             clientId: clientProfileResponse?.clientId,
+            sessionId: clientProfileResponse?.workflowSessionId
           };
           this.createActiveSession(activeSession);
         }

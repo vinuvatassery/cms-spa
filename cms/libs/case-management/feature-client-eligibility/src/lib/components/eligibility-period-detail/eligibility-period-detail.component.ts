@@ -2,13 +2,14 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** Internal Libraries **/
-import { ClientEligibilityFacade, EligibilityRequestType, AcceptedApplication, CaseFacade, EligibilityStatus } from '@cms/case-management/domain';
+import { ClientEligibilityFacade, EligibilityRequestType, AcceptedApplication, CaseFacade, EligibilityStatus, CaseStatusCode, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService, ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
 
 /** External Libraries**/
 import { IntlService } from '@progress/kendo-angular-intl';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-eligibility-period-detail',
@@ -62,7 +63,9 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     private readonly cd: ChangeDetectorRef,
     private loaderService: LoaderService,
     public intl: IntlService,
-    private configurationProvider: ConfigurationProvider
+    private configurationProvider: ConfigurationProvider,
+    private readonly workflowFacade: WorkflowFacade,
+    private readonly router: Router
   ) {}
 
   /** Lifecycle hooks **/
@@ -75,7 +78,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.getCurrentEligibility();
     this.loadLovs();
     this.getGroupData();
-
   }
 
   /** Public methods **/
@@ -121,6 +123,12 @@ export class EligibilityPeriodDetailComponent implements OnInit {
               this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Status changed and new Eligibility Period started!.")
               this.loaderService.hide();
               this.isModalSavedClicked.emit(true);
+              if( this.eligibilityPeriodForm.controls['eligibilityStatus'].value.toLowerCase() ===  CaseStatusCode.disenrolled.toLowerCase()){
+                this.workflowFacade.caseStatus = CaseStatusCode.disenrolled;             
+                this.workflowFacade.handleSendNewsLetterpopup(
+                  true
+                );
+              }
             }
             else{
               this.clientEligibilityFacade.showHideSnackBar(
@@ -245,7 +253,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     } else if (this.isCopyPeriod) {
       eligibilityRequestType = EligibilityRequestType.copyEligibility;
     } else {
-      eligibilityRequestType = EligibilityRequestType.acceptedEligibility;
+      eligibilityRequestType = EligibilityRequestType.newEligibilityPeriod;
     }
 
     this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId, eligibilityRequestType)

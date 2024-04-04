@@ -20,7 +20,20 @@
             </kendo-dropdownlist>
           </kendo-floatinglabel>
       </div>
-      <div *ngIf="isOpenLetterTemplate" class="mt-2">
+      <div *ngIf="isOpenLetterTemplate" class="mt-2 p-0 flex-col">
+        <div class="flex-col mb-2" *ngIf="getProfileName() == 'vendor'">
+          <kendo-floatinglabel text="Mail Code">
+            <kendo-dropdownlist
+              [fillMode]="formUiStyle.dropDownFillMode"
+              [data]="ddlMailCodes"
+              textField="mailCode"
+              valueField="mailCode"
+              [(ngModel)]="selectedMailCode"
+              (valueChange)="handleDdlMailCodesChange($event)"
+            >
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+      </div>
        <div class="flex-col mb-2">
           <p class="text-capital text-bold">Mailing Address</p>
           <span *ngIf="mailingAddress">
@@ -28,18 +41,11 @@
             <p *ngIf="mailingAddress?.address2 || mailingAddress?.city">{{ mailingAddress?.address2 }} </p>
             <p *ngIf="mailingAddress?.state || mailingAddress?.city || mailingAddress?.zip">{{ mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
           </span>
-          <div style="width:60%" *ngIf="!(mailingAddress)">
-            <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
-            <p></p>
-            <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
-            <p></p>
-            <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
-          </div>
         </div>
         <div class="flex-col">
           <p>
             Type the body of the letter. Click “Preview Letter” to see what the
-            client will receive. Attachments will not appear in the preview, but
+            {{getProfileName()}} will receive. Attachments will not appear in the preview, but
             will be printed with the letter.
           </p>
         </div>
@@ -86,7 +92,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Letter Draft Saved">
   <section class="k-dialog-body">
     <p>
-      To pick up where you left off, click “New Letter” from the client’s
+      To pick up where you left off, click “New Letter” from the {{getProfileName()}}’s
       profile.
     </p>
   </section>

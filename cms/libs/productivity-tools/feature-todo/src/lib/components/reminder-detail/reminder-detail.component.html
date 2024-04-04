@@ -6,7 +6,7 @@
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Due Date">
           <kendo-datepicker
-            format="MM-dd-yyyy"
+            format="MM/dd/yyyy"
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="dueDate"
             formatPlaceholder="formatPattern"
@@ -89,7 +89,8 @@
             valueField="providerId"
             [data]="providerSearchResult$ | async"
             [fillMode]="formUiStyle.dropDownFillMode"
-            [placeholder]="placeholderText"            
+            [placeholder]="placeholderText"   
+            [allowCustom]="allowCustom"         
             (filterChange)="loadVendorsBySearchText($event)"
             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
             [filterable]="true"

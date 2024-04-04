@@ -28,6 +28,7 @@ vendorHeaderTools!: VendorHeaderToolsComponent;
   newReminderDetailsDialog!:any
   @Output() openAddReminderEvent = new EventEmitter()
   @Output() openEditReminderEvent = new EventEmitter()
+  @Output() openEditTodoEvent = new EventEmitter()
   @Output() openDeleteReminderEvent = new EventEmitter()
   public list = [
     {
@@ -138,6 +139,10 @@ vendorHeaderTools!: VendorHeaderToolsComponent;
 
   onEditReminder(event:any){
     this.openEditReminderEvent.emit(event)
+  }
+
+  onEditTodo(event:any){
+    this.openEditTodoEvent.emit(event)
   }
 
   onDeleteReminder(event:any){

@@ -158,7 +158,7 @@ export class DrugPharmacyFacade {
         },
       });
     }
-  }
+  } 
 
   loadDrugsPurchased(): void {
     this.drugDataService.loadDrugsPurchased().subscribe({
@@ -355,7 +355,7 @@ export class DrugPharmacyFacade {
           total:response.totalCount,
         };
        this.drugPurchaseSubject.next(gridView);
-       this.loadDrugsDistinctUserIdsAndProfilePhoto(response.items);
+       this.loadDrugsDistinctUserIdsAndProfilePhoto(response.items);       
         this.loaderService.hide();
       },
       error: (err) => {
@@ -378,9 +378,9 @@ export class DrugPharmacyFacade {
         },
       });
     }
-  }
+  } 
 
-  updatedMakePharmaciesPrimary(clientPharmacyId: string){
+  updatedMakePharmaciesPrimary(clientPharmacyId: string){    
     this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Primary Pharmacy Updated Successfully');
   }
   reActivatePharmacies(clientPharmacyId: string,pharmacy: any,isShowHistoricalData?:boolean){

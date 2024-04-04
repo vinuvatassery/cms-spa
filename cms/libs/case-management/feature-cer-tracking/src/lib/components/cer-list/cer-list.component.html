@@ -61,8 +61,15 @@
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="eligibilityStatus" title="{{title$ | async}}" [width]="160">
-        <ng-template kendoGridFilterMenuTemplate
+    <kendo-grid-column field="eligibilityStatus" title="{{title$ | async}}" [width]="160" [style]="{ 'padding':'0px 0px' }">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span style="display: block; padding: 14px 12px;"
+          [style.backgroundColor]="getGridCellColor(dataItem.eligibilityStatus)"
+        >
+          {{ dataItem.eligibilityStatus }}
+        </span>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate
           let-column="column"
           let-filter="filter"
           let-filterService="filterService">

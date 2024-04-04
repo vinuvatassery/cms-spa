@@ -2,19 +2,19 @@
   <!-- List Item Repeatable -->
   <ng-container  *ngFor="let item of items">
     <li class="card-list_items"
-      aria-label="reminder menu item">
+      aria-label="reminder menu item"
+      [className]="getcssClassName()">
       <div class="card-type-icon">
         <span class="material-icons" aria-label="notification" aria-hidden="true">alarm</span>
       </div>
       <div class="card-list_details">
-        <p>
-          {{item.alertDesc}}
-        </p>
-        <p class="text-muted">{{item?.alertDueDate | date:'MM/dd/YYYY'}}</p>
+        <p>{{ item.alertDesc }}</p>
+        <p class="text-muted">{{ item?.alertDueDate | date:'MM/dd/YYYY'}} {{ formatTime(item?.repeatTime) }}</p>
+       
       </div>
-    <div>
+      <div *ngIf="item.customAlertFlag && item.customAlertFlag=='Y'">
       <kendo-dropdownbutton
-      [data]="data"
+      [data]="dataTwo"
       
       look="bare"
       aria-label="more actions"
@@ -25,26 +25,49 @@
     >
     <span class="material-icons" aria-label="More option"> more_vert    </span>
     <ng-template class="app-dropdown-action-list"
-     kendoDropDownButtonItemTemplate let-dataItem>
-      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text"
-       [class]="dataItem.buttonType" aria-hidden="false">
-        <span class="material-icons" aria-hidden="true"
-         [attr.aria-label]="dataItem.text"
-         >{{dataItem.icon}}</span>
-        <label>   {{ dataItem.text }} </label>
-    </button>    
-      </ng-template>
+    kendoDropDownButtonItemTemplate let-dataItem>
+     <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+       <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+       <label>   {{ dataItem.text }} </label>
+   </button>          
+     </ng-template>
     </kendo-dropdownbutton>
     </div>
  
   </li>
 </ng-container>
-<div style="text-align: center;" *ngIf="items?.length == 0">
+
+<div style="text-align: center;" *ngIf="items?.length == 0 && !nDays">
   <p>There is no data to display</p>
 </div>
-
-
 </ul>
 
-
- 
+<!-- Create New Reminder Popup -->
+<ng-template #NewReminderTemplate>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed(false)">
+    {{crudText}} Reminder  </kendo-dialog-titlebar>
+  <productivity-tools-reminder-detail
+  [isEdit]="isEdit" 
+  [isDelete]="isDelete"
+  [alertId] = "selectedAlertId"
+  (onGetTodoItem)="onGetTodoItemData($event)"
+  [getTodo$]="getTodo$"
+  [isFromNotificationPanel]="true"
+  [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+    (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"
+    [searchProviderSubject]="searchProviderSubject"
+    [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+    [providerSearchResult$]="providerSearchResult$"
+    [clientSubject]="clientSubject"
+    [clientSearchResult$]="clientSearchResult$"
+    [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+    (searchClientName)="searchClientName($event)"
+    (searchProvider)="searchProvider($event)"
+    (remainderFor)="remainderFor($event)"
+    (getReminderDetailsLov)="getReminderDetailsLov()"
+    ></productivity-tools-reminder-detail>
+</ng-template>
+<ng-template #deleteReminderTemplate> 
+  <productivity-tools-delete-reminder-confirmation
+    (isModalDeleteReminderCloseClicked)="onDeleteReminderClosed($event)"></productivity-tools-delete-reminder-confirmation>
+</ng-template>
