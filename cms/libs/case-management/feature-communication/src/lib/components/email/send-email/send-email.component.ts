@@ -419,6 +419,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Email Saved As Draft');
           }
           this.loaderService.hide();
+          this.navigateConditionally();
         },
         error: (err: any) => {
           this.loaderService.hide();
@@ -717,9 +718,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   getDraftedTemplate(){
     this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
       if(response.length>0){
-        this.selectedTemplateContent =response[0].requestBody;
-        this.updatedTemplateContent = response[0].requestBody;
-        this.ref.detectChanges();
+        this.handleDdlEmailValueChange(response[0]);
+        this.ref.detectChanges();        
       }
     });
   }

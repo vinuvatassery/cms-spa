@@ -67,6 +67,9 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
   emailSubject: any = '';
   triggerFrom: any = '';
   loginUserEmail:any;
+  saveForLaterHeadterText:string='';
+  saveForLaterModelText:string='';
+  confirmationModelText:string='';
   /** Constructor**/
   constructor(
     private route: ActivatedRoute,
@@ -235,6 +238,10 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.templateHeader = 'Send Disenrollment Email';
       this.emailSubject = "CAREAssist Disenrollment Notice";
       this.confirmPopupHeader = 'Send Disenrollment email to print?';
+      this.saveForLaterHeadterText = "Email Draft Saved";
+      this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
+      this.confirmationModelText="If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete.";
+ 
     }
     else {
       this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
@@ -243,6 +250,10 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.templateHeader = 'Send Disenrollment Letter';
       this.emailSubject = '';
       this.confirmPopupHeader = 'Send Disenrollment letter to print?';
+      this.saveForLaterHeadterText = "Letter Draft Saved";
+      this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+      this.confirmationModelText="If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete.";
+ 
     }
   }
 
@@ -254,6 +265,10 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.templateHeader = 'Send Approval Email';
       this.emailSubject = "CareAssist Approval Notice";
       this.confirmPopupHeader = 'Send Approval Email?';
+      this.saveForLaterHeadterText = "Email Draft Saved";
+      this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
+      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via  SMS text, and/or their online portal.";
+ 
     }
     else {
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
@@ -262,6 +277,10 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.templateHeader = 'Send Approval Letter';
       this.emailSubject = '';
       this.confirmPopupHeader = 'Send Approval Letter to Print?';
+      this.saveForLaterHeadterText = "Letter Draft Saved";
+      this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+ 
     }
   }
 
@@ -273,6 +292,10 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.templateHeader = 'Send Denial Email';
       this.emailSubject = "CAREAssist Denial Notice";
       this.confirmPopupHeader = 'Send Denial Email?';
+      this.saveForLaterHeadterText = "Email Draft Saved";
+      this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
+      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via SMS text, and/or their online portal.";
+ 
     }
     else {
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
@@ -281,6 +304,10 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.templateHeader = 'Send Denial Letter';
       this.emailSubject = '';
       this.confirmPopupHeader = 'Send Denial Letter to print?';
+      this.saveForLaterHeadterText = "Letter Draft Saved";
+      this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+  
     }
   }
 
@@ -292,6 +319,9 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.templateHeader = 'Send Pending Email';
       this.emailSubject = '';
       this.confirmPopupHeader = 'Send Pending Email to print';
+      this.saveForLaterHeadterText = "Email Draft Saved";
+      this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
+      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal";
     }
     else {
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
@@ -300,6 +330,9 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.templateHeader = 'Send Pending Letter';
       this.emailSubject = '';
       this.confirmPopupHeader = 'Send Pending Letter to print?';
+      this.saveForLaterHeadterText = "Letter Draft Saved";
+      this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal";
     }
   }
 
@@ -327,9 +360,15 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   getLoggedInUserProfileSubscriptionInit(){
-    this.loggedInUserProfileSubscription = this.userDataService.getProfile$.subscribe((profile:any)=>{
+    this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
-       this.loginUserEmail = profile[0]?.email;
+       if(profile[0]?.email){
+        const ccEmail ={
+          email: profile[0]?.email,
+          isDefault: true
+        };
+          this.loginUserEmail = ccEmail;
+       }
       }
     });
   }

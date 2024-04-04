@@ -231,6 +231,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter Saved As Draft');
           }
           this.loaderService.hide();
+          this.navigateConditionally();
         },
         error: (err: any) => {
           this.loaderService.hide();
@@ -500,8 +501,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   getDraftedTemplate(){
     this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
       if(response.length>0){
-        this.selectedTemplateContent =response[0].requestBody;
-        this.updatedTemplateContent = response[0].requestBody; 
+        this.handleDdlLetterValueChange(response[0]);
         this.ref.detectChanges();
       }
     });

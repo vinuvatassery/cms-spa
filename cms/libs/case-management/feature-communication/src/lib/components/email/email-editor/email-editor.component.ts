@@ -166,6 +166,7 @@ export class EmailEditorComponent implements OnInit {
     this.communicationFacade.loadClientAndVendorDefaultAttachments(documentTemplateId)
     .subscribe({
       next: (attachments: any) =>{
+        this.selectedAttachedFile =[];
         if (attachments.length > 0) {
           for (let file of attachments){
             this.selectedAttachedFile.push({
