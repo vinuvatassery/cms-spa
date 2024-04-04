@@ -60,11 +60,10 @@ export class TodoItemComponent implements OnInit {
     this.todoAndReminders$.subscribe((clientsTodoReminders :any) =>{
       const clientsTodo  = 
       clientsTodoReminders.filter((x:any) => x.alertTypeCode =="TODO")
-   console.log(clientsTodo)
       if(this.nDays=="DUE WITHIN 7 DAYS"){
            this.items = 
            clientsTodo.filter((x:any)=> this.formatDate(new Date(x.alertDueDate))>= this.formatDate(new Date()) 
-           && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 7) )
+           && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 6) )
       this.isDueWithIn7Days = true;
       this.isDueWithIn30Days = false;
       if(this.items.length <=0){
@@ -73,8 +72,8 @@ export class TodoItemComponent implements OnInit {
       }
       if(this.nDays=="DUE WITHIN 30 DAYS"){
           this.items = 
-          clientsTodo.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 8) 
-          && this.formatDate( new Date(x.alertDueDate)) <= this.addDays(new Date(), 30) )   
+          clientsTodo.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 7) 
+          && this.formatDate( new Date(x.alertDueDate)) <= this.addDays(new Date(), 29) )   
      this.isDueWithIn30Days = true
      this.isDueWithIn7Days = false;
      if(this.items.length <=0){
@@ -83,15 +82,28 @@ export class TodoItemComponent implements OnInit {
         }
       if(this.nDays=="DUE LATER"){
         this.items = 
-        clientsTodo.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 31) )
+        clientsTodo.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 30) )
         if(this.items.length <=0){
           this.noTodoAfter30Days.emit(true);
         }
+        this.isDueWithIn7Days = false;
+        this.isDueWithIn30Days = false;
       }
        this.cdr.detectChanges()
     })
   }
 
+  getcssClassName(){
+    if(this.isDueWithIn7Days){
+      return 'due-item-blocks red-item-block'
+    }
+    if(this.isDueWithIn30Days){
+      return'due-item-blocks canyon-item-block'
+    }
+   
+      return 'due-item-blocks'
+    
+  }
   formatDate(date:any){
     return new Date(this.intl.formatDate(date, this.dateFormat));
   }

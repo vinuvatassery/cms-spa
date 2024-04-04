@@ -38,7 +38,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
     'Last Year',
   ];
   public labelAlign: SeriesLabelsAlignment = 'circle';
-  dataCount = ['Claim Count', 'Claim Amount'];
+  dataCount = ['Claim Count', 'Dollar Amount'];
   @Input() isEditDashboard!: any;
   @Input() dashboardId!: any;
   @Output() removeWidget = new EventEmitter<string>();
@@ -108,10 +108,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
       CountOrAmount: this.selectedDataCount,
       TimeFrame: this.selectedTimeFrame,
     };
-    this.widgetFacade.loadPharmacyClaimsChart(
-      this.dashboardId,
-      payload
-    );
+    this.widgetFacade.loadPharmacyClaimsChart( this.dashboardId,      payload    );
     this.widgetFacade.pharmacyClaimsChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({

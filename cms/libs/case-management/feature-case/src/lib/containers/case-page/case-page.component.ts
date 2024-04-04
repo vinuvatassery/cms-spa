@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
+
 /** Internal Libraries **/
 import { CaseFacade, CaseScreenTab, WorkflowFacade, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
@@ -38,6 +39,7 @@ export class CasePageComponent implements OnInit {
   fplPercentage = -1;
   filterOperator = '';
   group :string = ''
+
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
@@ -69,6 +71,7 @@ export class CasePageComponent implements OnInit {
     this.loadColumnDroplist();
     this.loadCases();
     this.loadQueryParams();
+    this.loadQueryParams();
   }
 
   /** Private methods **/
@@ -81,7 +84,8 @@ export class CasePageComponent implements OnInit {
       this.caseFacade.loadDdlPrograms();
       this.lovFacade.getCaseOriginLovs();
   }
-
+  
+  
   /** Private Query String values **/
   loadQueryParams()
   {   

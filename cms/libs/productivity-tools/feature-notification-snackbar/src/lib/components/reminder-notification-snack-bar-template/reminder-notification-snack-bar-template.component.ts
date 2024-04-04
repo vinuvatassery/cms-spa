@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
@@ -7,6 +7,7 @@ import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSna
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'cms-reminder-notification-snack-bars',
@@ -22,7 +23,9 @@ entityId =""
 entityTypeCode =""
 vendorTypeCode =""
 alertId =""
-
+@Output() hideSnackBar = new EventEmitter();
+@Output() snoozeReminder = new EventEmitter();
+@Output() dismissReminder = new EventEmitter();
 @Input() snackBarMessage!:any
 @Input() dueDate!:any
 unviewedCount=9
@@ -45,27 +48,49 @@ isReminderExpand = false;
   public data = [
     {
       text: 'Edit Reminder',
+      icon: 'edit'
     },
     {
-      text: '15 Minutes',
+      text: '15 Minutes Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'15 Minutes'
     },
     {
-      text: '30 Minutes',
+      text: '30 Minutes Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'30 Minutes'
     },
     {
-      text: '1 hour',
+      text: '1 hour Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'1 hour'
     },
     {
-      text: '2 hours',
+      text: '2 hours Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'2 hours'
     }, 
     {
-      text: '1 day',
+      text: '1 day Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'1 day'
     },
     {
-      text: '3 days',
+      text: '3 days Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'3 days'
     },
     {
-      text: '7 days',
+      text: '7 days Snooze',
+      buttonType: 'btn-h-primary',
+      icon: 'snooze',
+      id:'7 days'
     },
   ];
 
@@ -92,12 +117,16 @@ isReminderExpand = false;
   , public cdr : ChangeDetectorRef
   ,  public intl: IntlService
   , public notificationFacade : NotificationFacade
+  , public signalrEventHandlerService : SignalrEventHandlerService
   ) {
       
   }
 
   ngOnInit(): void {
-
+    this.signalrEventHandlerService.remindersCount$.subscribe(res =>{
+      if(res>0)
+      this.unviewedCount = res;
+    })
   }
 
   ngDoCheck(){
@@ -109,8 +138,11 @@ isReminderExpand = false;
       this.alertId =this.snackBarMessage.alertExtraProperties.AlertId  
       this.alertText =this.snackBarMessage.alertText  
       this.dueDateText = this.snackBarMessage.dueDateText
-
+      this.snackBarMessage?.unviewedCount$?.subscribe((res : any) =>{
+        this.unviewedCount = res;
+       });
       } 
+
     this.cdr.detectChanges()
 
   }
@@ -118,13 +150,7 @@ isReminderExpand = false;
   public removePreviousMessage() {
     this.showSideReminderNotification();
     
-    const divMessage = document.getElementsByClassName(
-      'k-notification-container ng-star-inserted'
-    );
-    if (divMessage.length > 0) {
-      let currentMessage = divMessage.item(0);
-      currentMessage?.remove();
-    }
+    this.hideSnackBar.emit(); 
   }
 
   reminderContainerClicked() {
@@ -155,20 +181,36 @@ isReminderExpand = false;
     this.isEdit = true;
      this.onNewReminderOpenClicked(this.NewReminderTemplate)
     }
- }
- if(event.text == '15 Minutes'){
+ }else{
+  this.notificationFacade.snoozeReminder$.pipe(take(1)).subscribe(res =>{
+    if(res){
+      this.snoozeReminder.emit(this.selectedAlertId)
+      this.removePreviousMessage()
+    }
+  })
+ if(event.id == '15 Minutes'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false)
-  this.removePreviousMessage()
+ 
  }
- if(event.text == '30 Minutes'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,30)
+ if(event.id == '30 Minutes'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,30, false)
  }
- if(event.text == '1 hour'){
+ if(event.id == '1 hour'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
+ }
+ if(event.id == '2 hours'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
+ }
+ if(event.id == '3 days'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,3)
+ }
+ if(event.id == '1 day'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,1)
  }
- if(event.text == '2 hours'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1)
+ if(event.id == '2 days'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,2)
  }
+}
   }
 
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
@@ -198,11 +240,16 @@ isReminderExpand = false;
    this.newReminderDetailsDialog.close();
     this.isEdit = true;
     if(result){
-    this.todoFacade.getTodo$.subscribe(res =>{
-      this.snackBarMessage.alertText = res.alertDesc;
-      this.snackBarMessage.entityName = res.entityTypeCode == 'CLIENT' ? res.clientFullName : res.providerName
-    })
-    this.todoFacade.getTodoItem(this.alertId);
+      this.todoFacade.getTodo$.subscribe(res =>{
+        if(this.alertId == res.alertId){
+        this.snackBarMessage.alertText = res.alertDesc;
+        this.snackBarMessage.entityName = res.entityTypeCode == 'CLIENT' ? res.clientFullName : res.providerName
+        this.setDueDateText(res)
+        }
+      })
+      this.todoFacade.getTodoItem(this.alertId);
+  
+   
   }
 }
 
@@ -263,6 +310,51 @@ getVendorTabCode(vendorTypeCode :any) {
 
 dismissAlert(alertId:any){
   this.todoFacade.dismissAlert(alertId);
+  this.todoFacade.dismissAlert$.subscribe(res =>{
+    if(res){
+      this.dismissReminder.emit(this.alertId);
+      this.removePreviousMessage()
+    }
+
+  })
+
+}
+
+setDueDateText(res: any) {
+  let timeDifferenceMinutes = 0;
+  this.dueDateText =""
+  const repeatTime = res.repeatTime
+  const dueDate = this.intl.formatDate(res.alertDueDate, this.dateFormat);
+  const today = this.intl.formatDate(new Date(), this.dateFormat)
+  if (repeatTime && dueDate !== today) {
+    const times = repeatTime.split(':')
+    const duedateWithRepeatTime = new Date(new Date().getFullYear(), new Date().getMonth(),
+      new Date().getDate(), times[0], times[1])
+    const timeDifferenceMs = duedateWithRepeatTime.getTime() - new Date().getTime();
+    timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+
+
+    if (timeDifferenceMinutes >= 0 && timeDifferenceMinutes <= 15) {
+      this.dueDateText = "In " + timeDifferenceMinutes + " Mins"
+    }
+    if (timeDifferenceMinutes <= 0) {
+      this.dueDateText = timeDifferenceMinutes + " Mins Over Due"
+    }
+    if (timeDifferenceMinutes == 0) {
+      this.dueDateText = "Now"
+    }
+
+  }
+  if (dueDate == today && !repeatTime) {
+    this.dueDateText = "Today"
+  }
+
+  return {
+    timeDifferenceMinutes: timeDifferenceMinutes,
+    dueDate : dueDate,
+    today : today, 
+    repeatTime : repeatTime
+  };
 }
 
 }

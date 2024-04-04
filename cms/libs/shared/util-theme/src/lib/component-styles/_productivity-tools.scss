@@ -11,7 +11,7 @@
     }
   }
   .due-items-wrapper {
-    max-height: 67vh;
+    max-height: calc(100vh - 200px);
     overflow-y: auto;
     .due-item-blocks {
       width: 100%;

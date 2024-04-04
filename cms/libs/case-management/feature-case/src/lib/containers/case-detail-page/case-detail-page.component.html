@@ -78,12 +78,12 @@
         </ng-template>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
-            <input type="radio" [(ngModel)]="sendLetterFlag" value="Y" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
-            <kendo-label class="k-radio-label" id="yes" text="Yes"></kendo-label>
+            <input type="radio" [(ngModel)]="sendLetterFlag" id="sendEmailYes" value="Y" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
+            <kendo-label class="k-radio-label" for="sendEmailYes" text="Yes"></kendo-label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
-            <input type="radio" [(ngModel)]="sendLetterFlag" value="N" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
-            <kendo-label class="k-radio-label" id="No" text="No"></kendo-label>
+            <input type="radio" [(ngModel)]="sendLetterFlag"  id="sendEmailNo" value="N" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
+            <kendo-label class="k-radio-label" for="sendEmailNo" text="No"></kendo-label>
           </span>
         </div>
       </div>

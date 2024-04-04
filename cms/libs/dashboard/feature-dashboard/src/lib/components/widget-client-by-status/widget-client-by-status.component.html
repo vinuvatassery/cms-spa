@@ -1,40 +1,41 @@
 <div>
-   
+
       <div class="dash-header-with-filters">
             <h5>ACTIVE CLIENTS BY STATUS</h5>
-            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" textField="clientFullName" [valuePrimitive]="true" valueField="userId"  (valueChange)="clientsNavigate($event)" rounded="medium"
-                        [fillMode]="formUiStyle.inputFillMode" [data]="data" aria-label="Client FullName"
+            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" textField="clientFullName"
+                        [valuePrimitive]="true" valueField="userId" (valueChange)="clientsNavigate($event)"
+                        rounded="medium" [fillMode]="formUiStyle.inputFillMode" [data]="data"
                         [(ngModel)]="selectedActiveClientByStatus">
                   </kendo-dropdownlist></div>
       </div>
-     
-      <common-dashboard-loader-panel *ngIf="!activeClientsByStatus && !isEditDashboard" ></common-dashboard-loader-panel>
+
+      <common-dashboard-loader-panel *ngIf="!activeClientsByStatus && !isEditDashboard"></common-dashboard-loader-panel>
 
       <div class="dashboard-cards-container" *ngIf="activeClientsByStatus">
- 
 
-            <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartData?.chartArea"
-            (seriesClick)="onClick($event)">
-                  <ng-template kendoChartDonutCenterTemplate >
+
+            <kendo-chart class="dash_chart" *ngIf="activeClientsByStatus"
+                  [chartArea]="activeClientsByStatus?.chartData?.chartArea" (seriesClick)="onClick($event)">
+                  <ng-template kendoChartDonutCenterTemplate>
                         <h3>{{totalStatusCount}}</h3>
                         Clients
-                      </ng-template>
-                      <kendo-chart-legend [labels]="labels"  [markers]="markers"  >
+                  </ng-template>
+                  <kendo-chart-legend [labels]="labels" [markers]="markers">
                   </kendo-chart-legend>
                   <kendo-chart-area background="none"></kendo-chart-area>
                   <kendo-chart-tooltip>
-                    <ng-template kendoChartSeriesTooltipTemplate
-                                 let-value="value" let-category="category" let-series="series">
-                        {{ category }}
-                    </ng-template>
+                        <ng-template kendoChartSeriesTooltipTemplate let-value="value" let-category="category"
+                              let-series="series">
+                              {{ category }}
+                        </ng-template>
                   </kendo-chart-tooltip>
                   <kendo-chart-series>
-                    <kendo-chart-series-item   [autoFit]="true" *ngFor="let series of activeClientsByStatus?.chartData?.series; let outermost = last;"
-                                             [type]="series.type" [startAngle]="150"
-                                              [data]="series.data"
-                                             field="value" categoryField="category">                     
-                    </kendo-chart-series-item>
+                        <kendo-chart-series-item [autoFit]="true"
+                              *ngFor="let series of activeClientsByStatus?.chartData?.series; let outermost = last;"
+                              [type]="series.type" [startAngle]="150" [data]="series.data" field="value"
+                              categoryField="category">
+                        </kendo-chart-series-item>
                   </kendo-chart-series>
-                </kendo-chart> 
+            </kendo-chart>
       </div>
 </div>

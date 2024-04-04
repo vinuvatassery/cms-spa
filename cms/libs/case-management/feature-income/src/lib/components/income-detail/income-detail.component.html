@@ -29,7 +29,7 @@
           <kendo-multicolumncombobox textField="employerName" [fillMode]="formUiStyle.dropDownFillMode"
             placeholder="Employer Name" [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
             [filterable]="true" (filterChange)="loadEmployers($event)" [data]="employers$ | async"
-            formControlName="employerId" [valuePrimitive]="true"
+            formControlName="employerId" [valuePrimitive]="true" 
             valueField="employerId">
             <button kendoButton fillMode="clear" icon="image"></button>        
             <kendo-combobox-column>
@@ -38,6 +38,13 @@
               </ng-template>
             </kendo-combobox-column>        
           </kendo-multicolumncombobox>
+          <div class="d-flex align-items-center mt-2" >
+            <span class="fontsize_twel">Don’t see the Employer you’re looking for?</span>
+            <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" 
+              attr.aria-label="ADD NEW" (click)="addNewEmployerPopUpOpen()">
+             ADD NEW
+            </button>
+          </div>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="!IncomeDetailsForm.controls['employerId'].valid"> Employer Name is required.
         </kendo-formerror>
@@ -73,10 +80,11 @@
               formControlName="incomeStartDate" (valueChange)="startDateOnChange()" placeholder="" #incomeStartDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !IncomeDetailsForm.controls['incomeStartDate'].disabled && insuranceEndDateIsgreaterthanStartDate">Income Start Date is required.
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid 
+          && !IncomeDetailsForm.controls['incomeStartDate'].disabled && insuranceStartDateIsLessThanEndDate">Income Start Date is required.
           </kendo-formerror>
           <kendo-formerror
-          *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !insuranceEndDateIsgreaterthanStartDate && 
+          *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !insuranceStartDateIsLessThanEndDate  && 
           !IncomeDetailsForm.controls['incomeStartDate'].disabled">Start Date must be before End Date.</kendo-formerror>
 
         </div>
@@ -89,7 +97,7 @@
               #incomeEndDate>
             </kendo-datepicker>
             <kendo-formerror
-            *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate && 
+            *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid && !insuranceStartDateIsLessThanEndDate && 
             !IncomeDetailsForm.controls['incomeEndDate'].disabled">End date must be after Start date.</kendo-formerror>
           </kendo-floatinglabel>
 
@@ -191,7 +199,11 @@
   (sendDetailToIncomeList)="incomeDeleteHandle($event)"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
-  [clientCaseId]="clientCaseId"></case-management-remove-income-confirmation>
+  [clientCaseId]="clientCaseId"
+  (loadIncomeList)="loadIncomeListGrid($event)"></case-management-remove-income-confirmation>
+</kendo-dialog>
 
-
+<kendo-dialog kendoRippleContainer *ngIf="isAddNewEmployerOpen" (close)="addNewEmployerPopUpClose()"
+  class="app-c-modal app-c-modal-lg app-c-modal-np"  title="Add New Employer" kendoTooltip>
+  <common-add-employer (addEmployer)="addEmployer($event)" (closeEmployerPopup) = "addNewEmployerPopUpClose($event)"></common-add-employer>
 </kendo-dialog>

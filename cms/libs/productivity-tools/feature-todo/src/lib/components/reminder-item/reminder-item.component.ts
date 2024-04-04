@@ -58,7 +58,9 @@ export class ReminderItemComponent implements OnInit {
   isReminderOpenClicked = false
   reminderDialog! :any
   crudText ="Create New"
-  isDueWithIn7Days = true;
+  isDueWithIn7Days = false;
+  isDueWithIn30Days = false;
+  isDueWithAfter30Days = false;
   @Output() noReminderFor7Days = new EventEmitter<any>()
   @Output() noReminderFor30Days = new EventEmitter<any>()
   @Output() noReminderAfter30Days = new EventEmitter<any>()
@@ -165,7 +167,7 @@ export class ReminderItemComponent implements OnInit {
         this.items =data?.items ?  data?.items?.filter((item:any) => item.alertTypeCode == 'REMINDER').sort((a : any, b : any) => {
           const dateA = new Date(a.alertDueDate).getTime();
           const dateB = new Date(b.alertDueDate).getTime();
-          return dateA - dateB}) : []; // Sorting by alertDueDate in ascending order;
+          return dateB - dateA}) : []; // Sorting by alertDueDate in descending order;
         this.cdr.detectChanges();
       });
     this.todoAndReminders$?.subscribe((clientsTodoReminders :any) =>{
@@ -175,25 +177,32 @@ export class ReminderItemComponent implements OnInit {
       if(this.nDays=="DUE WITHIN 7 DAYS"){
            this.items = 
         clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.formatDate(new Date()) 
-                                        && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 7) )
+                                        && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 6) )
       this.isDueWithIn7Days = true
+      this.isDueWithIn30Days = false;
+         this.isDueWithAfter30Days = false;
       if(this.items.length<=0){
       this.noReminderFor7Days.emit(true)
       }
       }
       if(this.nDays=="DUE WITHIN 30 DAYS"){
           this.items = 
-        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 8) 
-                                    && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 30) )   
+        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 7) 
+                                    && this.formatDate(new Date(x.alertDueDate)) <= this.addDays(new Date(), 29) )   
          
          if(this.items.length<=0){
             this.noReminderFor30Days.emit(true);
          }
          this.isDueWithIn7Days = false;
+         this.isDueWithIn30Days = true;
+         this.isDueWithAfter30Days = false;
                                   }
       if(this.nDays=="DUE LATER"){
         this.items = 
-        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 31) )
+        clientsReminder.filter((x:any)=> this.formatDate(new Date(x.alertDueDate)) >= this.addDays(new Date(), 30) )
+        this.isDueWithIn7Days = false
+      this.isDueWithIn30Days = false;
+         this.isDueWithAfter30Days = true;
         if(this.items.length<=0){
         this.noReminderAfter30Days.emit(true)
         }
@@ -206,6 +215,16 @@ export class ReminderItemComponent implements OnInit {
   }
   formatDate(date:any){
     return new Date(this.intl.formatDate(date, this.dateFormat));
+  }
+
+  getcssClassName(){
+    if(this.isDueWithIn7Days){
+      return 'card-list_items red-item-block'
+    }
+    if(this.isDueWithIn30Days){
+      return' card-list_items canyon-item-block'
+    }  
+      return ' card-list_items'   
   }
 
   addDays(date: Date, days: any): Date {
@@ -238,12 +257,7 @@ export class ReminderItemComponent implements OnInit {
       }
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
-if(item.text == 'Delete'){ 
-      if (!this.isReminderOpenClicked) {
-          this.onDeleteAlertGridClicked.emit(gridItem.alertId);
-          this.isReminderOpenClicked = false
-        }
-    if(item.id == '3daysnooze'){ 
+    if(item.id == '3daysnooze'){
       const snoozeReminder={
         reminderId:gridItem.alertId,
         duration: 3
@@ -257,7 +271,9 @@ if(item.text == 'Delete'){
       }
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
-   }
+     if(item.text == 'Delete'){ 
+          this.onDeleteAlertGridClicked.emit(gridItem.alertId);
+      }
   }
   public loadNotificationsAndReminders() {
     this.isToDoGridLoaderShow.next(true);
@@ -330,5 +346,13 @@ if(item.text == 'Delete'){
     }
     onGetTodoItemData(event:any){
       this.todoFacade.getTodoItem(event)
+    }
+    formatTime(time: string): string {
+      if (!time) return ''; 
+      const [hours, minutes] = time.split(':').map(Number);
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12;
+      const formattedTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+      return formattedTime;
     }
 }

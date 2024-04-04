@@ -14,6 +14,7 @@ import { LovFacade } from '@cms/system-config/domain';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class FinancialPaymentComponent implements OnDestroy {
   /** Input Properties **/
   @Input() vendorId!: string;
@@ -83,7 +84,7 @@ export class FinancialPaymentComponent implements OnDestroy {
     private lovFacade :  LovFacade,
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
-    private route: Router,
+    private route: Router
 ) { }
     
   ngOnInit(): void {
@@ -304,6 +305,7 @@ export class FinancialPaymentComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.batchStatusLovSubscription.unsubscribe();
+    this.paymentBatchesProfilePhotoSubscription?.unsubscribe();
     this.paymentBatchesProfilePhotoSubscription?.unsubscribe();
   }
 }

@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef, ChangeDetectorRef, ViewChild,} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef, ChangeDetectorRef, ViewChild, EventEmitter, Output,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseStatusCode, CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ContactFacade, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
 import { Observable, Subscription, first } from 'rxjs';
@@ -18,6 +18,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   @Input() clientId: any
   @Input() loadedClientHeader!: Observable<any>;
   @Input() clientCaseId: any;
+  @Output() onNewReminderClickedEvent = new EventEmitter()
   /* Public properties */ 
   @ViewChild('notificationDraftEmailDialog', { read: TemplateRef })
   notificationDraftEmailDialog!: TemplateRef<any>;
@@ -27,6 +28,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   sendNewEmailDialog!: TemplateRef<any>;
   @ViewChild('sendTextMessageDialog', { read: TemplateRef })
   sendTextMessageDialog!: TemplateRef<any>;
+  @ViewChild('viewTemplateDialog', { read: TemplateRef })
+  viewTemplateDialog!: TemplateRef<any>;
   screenName = ScreenType.ClientProfile;
   emailScreenName = ScreenType.Case360PageEmail; 
   letterScreenName = ScreenType.Case360PageLetter; 
@@ -63,6 +66,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   private isSendNewLetterDialog : any;
+  private isPreviewTemplateDialog : any;
   private isSendNewEmailOpenedDialog : any;
   private isNewSMSTextOpenedDialog : any;
   private isIdCardOpenedDialog : any;  
@@ -83,7 +87,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
         this.currentCommunicationTypeCode = '';
-        this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        this.templateLoadType = this.letterCommunicationTypeCode = CommunicationEventTypeCode.ClientLetter;
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
@@ -101,7 +105,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
         this.currentCommunicationTypeCode ='';
-        this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        this.templateLoadType = this.emailCommunicationTypeCode = CommunicationEventTypeCode.ClientEmail;
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
@@ -313,11 +317,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       this.newReminderDetailsDialog.close()
     }
 
-  onNewReminderClicked(template: TemplateRef<unknown>): void {
-    this.newReminderDetailsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    }); 
+  onNewReminderClicked(): void {
+   this.onNewReminderClickedEvent.emit()
   }
 
   onTodoDetailsClosed(result: any) {
@@ -332,6 +333,22 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     }); 
   }
+
+
+  handlePreviewTemplateClosed(result: any) {
+  
+    if (result) {
+      this.isPreviewTemplateDialog.close(result);
+     
+    }
+  }
+  onPreviewTemplateClicked(template: TemplateRef<unknown>): void {
+    this.isPreviewTemplateDialog = this.dialogService.open({
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
+    }); 
+  }
+
 
   notificationDraftCheck(clientId: any, typeCode: string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
     this.loaderService.show();

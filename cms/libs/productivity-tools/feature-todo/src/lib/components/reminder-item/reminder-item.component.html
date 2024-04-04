@@ -3,17 +3,16 @@
   <ng-container  *ngFor="let item of items">
     <li class="card-list_items"
       aria-label="reminder menu item"
-      [className]="isDueWithIn7Days ? ' card-list_items red-item-block' : 'card-list_items canyon-item-block'">
+      [className]="getcssClassName()">
       <div class="card-type-icon">
         <span class="material-icons" aria-label="notification" aria-hidden="true">alarm</span>
       </div>
       <div class="card-list_details">
-        <p>
-          {{item.alertDesc}}
-        </p>
-        <p class="text-muted">{{item?.alertDueDate | date:'MM/dd/YYYY'}}</p>
+        <p>{{ item.alertDesc }}</p>
+        <p class="text-muted">{{ item?.alertDueDate | date:'MM/dd/YYYY'}} {{ formatTime(item?.repeatTime) }}</p>
+       
       </div>
-    <div>
+      <div *ngIf="item.customAlertFlag && item.customAlertFlag=='Y'">
       <kendo-dropdownbutton
       [data]="dataTwo"
       
@@ -45,7 +44,7 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #NewReminderTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
+  <kendo-dialog-titlebar (close)="onNewReminderClosed(false)">
     {{crudText}} Reminder  </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
   [isEdit]="isEdit" 

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade } from '@cms/case-management/domain';
-import { TodoFacade } from '@cms/productivity-tools/domain';
+import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 
 @Component({
   selector: 'productivity-tools-todo-and-reminders-page',
@@ -25,7 +25,8 @@ export class TodoAndRemindersPageComponent implements OnInit {
   constructor(public todoFacade : TodoFacade,
     private route : ActivatedRoute,
     private caseFacade : CaseFacade,
-    private cdr : ChangeDetectorRef) {  }
+    private cdr : ChangeDetectorRef
+    , private notificationFacade : NotificationFacade) {  }
     skeletonCounts = [
       1, 2
     ]
@@ -44,6 +45,7 @@ export class TodoAndRemindersPageComponent implements OnInit {
   @Output() editTodoItemEvent = new EventEmitter()
   @Output() onDeleteReminderAlertGridClicked = new EventEmitter();
   @Output() onEditReminderClickedEvent = new EventEmitter()
+  @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   showNoDataFor7Days= false;
   showNoDataFor30Days = false;
   showNoDataAfter30Days = false;
@@ -76,6 +78,10 @@ loadData(){
     this.noReminderFor7Days = false;
     this.noReminderFor30Days = false;
     this.noReminderAfter30Days = false;
+    if(res && res.length >0){
+    this.notificationFacade.viewNotifications(res).subscribe()
+    }
+
   })
 this.todoFacade.clientTodoAndRemindersLoader$.subscribe(res =>{
     this.showDataLoader = res
@@ -167,4 +173,7 @@ loadReminders(){
     }
   }
 
+  onSnoozeReminder(event:any){ 
+   this.onSnoozeReminderEvent.emit(event)
+  }
 }

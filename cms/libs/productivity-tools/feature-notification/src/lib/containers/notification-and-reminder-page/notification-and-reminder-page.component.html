@@ -1,5 +1,5 @@
 <kendo-tabstrip class="app-c-tab app-c-tab--color reminder_lists">
-      <kendo-tabstrip-tab [selected]="true">
+      <kendo-tabstrip-tab [selected]="focusedTab == 'NOTIFICATION'">
         <ng-template kendoTabTitle>
           <span
             class="material-icons mr-1"
@@ -17,7 +17,7 @@
          ></productivity-tools-notification-list>
         </ng-template>
       </kendo-tabstrip-tab>
-      <kendo-tabstrip-tab title="Reminders">
+      <kendo-tabstrip-tab title="Reminders" [selected]="focusedTab == 'REMINDER'">
         <ng-template kendoTabTitle>
           <span
             class="material-icons mr-1"

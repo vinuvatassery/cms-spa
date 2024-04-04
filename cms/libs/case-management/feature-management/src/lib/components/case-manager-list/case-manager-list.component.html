@@ -214,7 +214,7 @@
 </kendo-dialog>
 
 <kendo-dialog *ngIf="showReferralPopup"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  class="app-c-modal app-c-modal-sm app-c-modal-np" (close)="submitReferalEvent(false)">
   <case-management-case-manager-referral-request
   (submitReferalEvent)="submitReferalEvent($event)">
   </case-management-case-manager-referral-request>

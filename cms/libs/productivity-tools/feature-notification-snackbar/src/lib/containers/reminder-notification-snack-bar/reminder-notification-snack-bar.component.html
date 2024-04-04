@@ -2,29 +2,3 @@
  [ngClass]="{'expand_view': isReminderExpand === true, 'collapse_view' : isReminderExpand === false}" id="reminder_notify">
 
 </div>
-
-
-
-
-<ng-template #NewReminderTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">
-    Edit Reminder  </kendo-dialog-titlebar>
-  <productivity-tools-reminder-detail
-  [isEdit]="isEdit" 
-  [alertId] = "selectedAlertId"
-  (onGetTodoItem)="onGetTodoItemData($event)"
-  [getTodo$]="getTodo$"
-  [searchProviderSubject]="searchProviderSubject"
-   [entityTypeCodeSubject$]="entityTypeCodeSubject$"
-    (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"
-    [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
-    [providerSearchResult$]="  providerSearchResult$"
-    [clientSubject]="clientSubject"
-    [clientSearchResult$]="clientSearchResult$"
-    [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
-    (searchClientName)="searchClientName($event)"
-    (searchProvider)="searchProvider($event)"
-    (remainderFor)="remainderFor($event)"
-    (getReminderDetailsLov)="getReminderDetailsLov()"
-    ></productivity-tools-reminder-detail>
-</ng-template>

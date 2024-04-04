@@ -22,8 +22,9 @@
   [alertList$]="alertList$"
   (isLoadAlertBannerContainerEvent) = "getbannerAlertList($event)"
   (onMarkAlertAsDoneEvent) = "onMarkAlertAsDone($event)"
-  (onDeleteAlertEvent) = "onDeleteAlert($event)" 
+  (onDeleteAlertEvent) = "onDeleteToDoClicked($event)" 
   (openEditReminderEvent)="onEditReminder($event)"
+  (openEditTodoEvent)="openEditTodoClicked($event)"
   (openDeleteReminderEvent)="onDeleteReminder($event)"
 ></case-management-case360-header>
 
@@ -36,6 +37,7 @@
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   [clientCaseId]="clientCaseId"
   [loadedClientHeader]="clientProfileHeader$" 
+  (onNewReminderClickedEvent)="onNewReminderClicked()"
   (loadClientProfileInfoEvent)="loadClientProfileInfoEventHandler()"
   *ngIf="clientId && clientCaseEligibilityId"
   ></case-management-case360-header-tools>
@@ -153,7 +155,7 @@
 
 <ng-template #NewReminderTemplate>
   <kendo-dialog-titlebar 
-  (close)="onNewReminderClosed($event)"
+  (close)="onNewReminderClosed(false)"
 
   >{{crudText}} Reminder for {{clientName}} </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail 
@@ -163,3 +165,38 @@
   [getTodo$]="getTodo$"
     (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
 </ng-template>
+
+<ng-template #todoDetailTemplate>
+  <kendo-dialog-titlebar (close)="onCloseTodoClicked(false)">
+ {{!!this.selectedAlertId?  'Edit To-Do Item' : 'Create Custom To-Do Item'}}    </kendo-dialog-titlebar>
+  <productivity-tools-todo-detail 
+  [frequencyTypeCodeSubject$]="frequencyTypeCodeSubject$"
+  (isModalTodoDetailsCloseClicked)="onCloseTodoClicked($event)"
+  [clientSearchResult$]="clientSearchResult$"
+  (searchClientName)="searchClientName($event)"
+  (searchProvider)="searchProvider($event)"
+  [providerSearchResult$]="providerSearchResult$"
+  (onTodoItemCreateClick)="onTodoItemCreateClick($event)"
+  [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+  [getTodo$]="getTodo$"
+  [createTodo$]="createTodo$"
+  (onGetTodoItem)="onGetTodoItem($event)"
+  (getTodoItemsLov)="getTodoItemsLov()"
+  (onUpdateTodoItemClick)="onUpdateTodoItemClick($event)"
+  [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+  [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+  [alertId]="selectedAlertId"
+  [isEdit]="!!this.selectedAlertId"
+  [searchProviderSubject]="searchProviderSubject"
+  [clientSubject]="clientSubject"
+  (onDeleteAlertClicked)="onDeleteToDoClicked($event)"
+  
+  ></productivity-tools-todo-detail>
+</ng-template>
+
+<ng-template #deleteTodoTemplate>   
+  <productivity-tools-delete-todo-confirmation
+    (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" 
+    (isModalDeleteTodoClicked)="onConfirmDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+</ng-template>
+
