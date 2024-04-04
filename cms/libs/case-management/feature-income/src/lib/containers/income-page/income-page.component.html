@@ -286,9 +286,10 @@
         </form>
           <div *ngIf="noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === 'Y' || noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === 'Y'">
             <case-management-income-list [isProofOfSchoolDocumentUploaded] = "isProofOfSchoolDocumentUploaded"  [isCerForm]="isCerForm"  [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" 
-            (loadIncomeListEvent)="loadIncomeListHandle($event)"  (loadIncomeList)="loadIncomeListGrid($event)" 
+            (loadIncomeListEvent)="loadIncomeListGrid($event)"  (loadIncomeList)="loadIncomeListGrid($event)" 
             [lovProofOfIncomeByType$]="lovProofOfIncomeByType$" [incomeSourcelov$] = "incomeSourcelov$ " [incomeTypelov$]="incomeTypelov$"
-            [incomeFrequencylov$]="incomeFrequencylov$" [incomesLoader$] ="incomesLoader$"></case-management-income-list>
+            [incomeFrequencylov$]="incomeFrequencylov$" [incomesLoader$] ="incomesLoader$"[totalIncomeCalculated]="totalIncomeCalculated"
+            [fplPercentage]="fplPercentage"></case-management-income-list>
           </div>
           <kendo-formerror *ngIf="!isProofOfSchoolDocumentUploaded"> Proof of school upload is required
           </kendo-formerror>

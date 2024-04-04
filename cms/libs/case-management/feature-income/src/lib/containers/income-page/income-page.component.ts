@@ -89,7 +89,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   employerIncome:any;
   minDate = new Date();
   totalIncome:any = 0;
-  //address$ = this.contactFacade.address$;
+  totalIncomeCalculated:any = 0;
+  fplPercentage:any;
   paperlessFlag:String | null= null;
   workflowTypeCode:any;
   public actions = [
@@ -308,6 +309,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadIncomeSubscription() {
     this.incomeResponseSubscription = this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.totalIncome = incomeresponse.totalCount;
+      this.totalIncomeCalculated = incomeresponse.totalIncome
+      this.fplPercentage = incomeresponse.fplPercentage;
       this.incomeData = incomeresponse;
       let uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item: any) => !!item.documentPath);
       if (uploadedProofOfSchoolDependents?.length == this.incomeData?.dependents?.length) {
@@ -439,7 +442,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
             sortColumn : 'incomeSourceCodeDesc',
             sortType : 'asc',
           };
-          this.loadIncomeListHandle(gridDataRefinerValue)
+          this.loadIncomeListGrid(gridDataRefinerValue)
           if(this.isCerForm){
             this.incomeFacade.loadEmployerIncomes(this.clientId,this.clientCaseEligibilityId);
           }
@@ -454,15 +457,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.clientCaseEligibilityId,
       gridFilterParam,
       false
-    );
-  }
-
-  loadIncomeListHandle(gridDataRefinerValue: any): void {
-    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
-    this.loadIncomes(
-      this.clientId,
-      this.clientCaseEligibilityId,
-      gridFilterParam
     );
   }
 
@@ -598,7 +592,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         sortColumn : 'incomeSourceCodeDesc',
         sortType : 'asc',
       };
-      this.loadIncomeListHandle(gridDataRefinerValue)
+      this.loadIncomeListGrid(gridDataRefinerValue)
      }
     });
   }
@@ -725,7 +719,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       sortColumn : 'incomeSourceCodeDesc',
       sortType : 'asc',
     };
-    this.loadIncomeListHandle(gridDataRefinerValue);
+    this.loadIncomeListGrid(gridDataRefinerValue);
   }
   UploadDocumentValidation() {
     if (this.dependentsProofOfSchools?.length > 0) {
