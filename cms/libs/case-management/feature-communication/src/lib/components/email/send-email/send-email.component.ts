@@ -47,8 +47,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() informationalText!:string;
   @Input() templateHeader !:string;
   @Input() triggerFrom !: string;
-  @Input() loginUserEmail!: Array<any>;
+  @Input() loginUserEmail!: any;
   @Input() confirmPopupHeader!:string;
+  @Input() confirmationModelText!:string;
+  @Input() saveForLaterHeadterText!:string;
+  @Input() saveForLaterModelText!:string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -116,6 +119,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   loadTemplate$ = this.communicationFacade.loadTemplate$;
   isToEmailMissing: boolean = false;
   isEmailSubjectMissing:boolean = false;
+  isContentMissing:boolean = false;
   isFormValid:boolean = true;
   /** Private properties **/
 
@@ -368,6 +372,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Internal event methods **/
   onSaveForLaterTemplateClicked() {
+    this.selectedTemplate.templateContent = this.updatedTemplateContent;
     if(this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0){
       this.isToEmailMissing = true;
       this.isFormValid = false;
@@ -378,10 +383,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === '<p></p>'){
+      this.isContentMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
     if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = false;
     this.isOpenSendEmailClicked = true;
-    this.selectedTemplate.templateContent = this.updatedTemplateContent;
     this.selectedTemplate.toEmailAddress = this.selectedToEmails;
     if (!this.selectedTemplate.documentTemplateId) {
       this.selectedTemplate.documentTemplateId = this.selectedTemplate.notificationTemplateId;
@@ -619,19 +628,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
                 this.isBCCDropdownVisible = false;
               }
               this.selectedCCEmail = this.ccEmail;
-              if(this.loginUserEmail && this.loginUserEmail?.length > 0){
-                if(this.selectedCCEmail == undefined){
-                  this.selectedCCEmail = this.loginUserEmail?.map((item: any)=> item.email);
-                }else{
-                this.selectedCCEmail?.push(this.loginUserEmail?.map((item: any)=> item.email));
-                }
-              }
               this.defaultCCEmail = data.cc;
-              if(this.defaultCCEmail == undefined){
-                this.defaultCCEmail = this.loginUserEmail;
-              }else{
-                this.defaultCCEmail.push(this.loginUserEmail);
-              }
+              this.getLoginUserCcEmail();
               this.showToEmailLoader = false;
               if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
                 || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
@@ -668,13 +666,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.defaultCCEmail = event.cc;
       this.defaultBCCEmail = event.bcc;
       this.selectedCCEmail = event.cc?.map((item: any)=> item.email);
-      if(this.loginUserEmail && this.loginUserEmail?.length > 0){
-        if(this.selectedCCEmail == undefined){
-          this.selectedCCEmail = this.loginUserEmail?.map((item: any)=> item.email);
-        }else{
-        this.selectedCCEmail?.push(this.loginUserEmail?.map((item: any)=> item.email));
-        }
-      }
+      this.getLoginUserCcEmail();
       if (event?.bccEmail?.length > 0) {
         this.bccEmail = this.selectedBccEmail = event.bcc;
         this.isBCCDropdownVisible = false;
@@ -685,6 +677,40 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         'documentTemplateId': event.notificationTemplateId
       };
       this.ref.detectChanges();
+    }
+  }
+  getLoginUserCcEmail() {
+    if(this.loginUserEmail){
+      if(this.ccEmail == undefined){
+        const email = [];
+        email.push(this.loginUserEmail?.email);
+        this.ccEmail = email;
+      }else{
+        let emailExists = this.ccEmail?.includes(this.loginUserEmail?.email?.trim());
+        if(!emailExists){
+          this.ccEmail?.push(this.loginUserEmail?.email);
+        }
+      }
+      if(this.selectedCCEmail == undefined){
+        const email = [];
+        email.push(this.loginUserEmail?.email);
+        this.selectedCCEmail = email;
+      }else{
+        let emailExists = this.selectedCCEmail?.includes(this.loginUserEmail?.email?.trim());
+        if(!emailExists){
+          this.selectedCCEmail?.push(this.loginUserEmail?.email);
+        }
+      }
+      if(this.defaultCCEmail == undefined){
+        const email = [];
+          email.push(this.loginUserEmail);
+          this.defaultCCEmail = email;
+      }else{
+        let emailExists = this.defaultCCEmail?.includes(this.loginUserEmail?.email?.trim());
+        if(!emailExists){
+          this.defaultCCEmail.push(this.loginUserEmail);
+        }
+      }
     }
   }
 

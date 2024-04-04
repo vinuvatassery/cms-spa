@@ -38,6 +38,7 @@ export class EmailEditorComponent implements OnInit {
   @Input() clientCaseEligibilityId!:string;
   @Input() clientId!:any;
   @Input() communicationTypeCode!:any;
+  @Input() isContentMissing!: boolean;
   /** Output properties  **/
   @Output() cerEmailAttachments = new EventEmitter();
   @Output() editorValueChangeEvent = new EventEmitter();

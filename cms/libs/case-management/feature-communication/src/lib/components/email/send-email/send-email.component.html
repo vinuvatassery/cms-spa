@@ -76,6 +76,9 @@
          BCC
         </button>
         </div>
+        <div class="flex-col">
+          <small>The user sending the email will automatically be CC'd. Add only additional recipients.</small>
+        </div>
         <div class="flex-col" [style]="{'display': 'flex'}">
           <kendo-floatinglabel text="BCC" class="inline-search-loader" *ngIf="!isBCCDropdownVisible">
             <kendo-multiselect
@@ -109,7 +112,7 @@
             receive.
           </p>
         </div>
-        <div class="flex-col  ">
+        <div class="flex-col">
           <case-management-email-editor  
           [selectedTemplate]="selectedTemplate" 
           [selectedTemplateContent]="selectedTemplateContent"           
@@ -117,7 +120,8 @@
           [clientId]="entityId"
           [communicationTypeCode]="communicationEmailTypeCode"
           (editorValueChangeEvent) ="editorValueChange($event)"
-          (cerEmailAttachments)="cerEmailAttachments($event)"          
+          (cerEmailAttachments)="cerEmailAttachments($event)"     
+          [isContentMissing]="isContentMissing"     
           class="editor-lg-email"
           ></case-management-email-editor>
         </div>
@@ -173,12 +177,11 @@
 <kendo-dialog (close)="onCloseSaveForLaterClicked()"
   *ngIf="isShowSaveForLaterPopupClicked"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Email Draft Saved"
+  [title]="saveForLaterHeadterText"
 >
   <section class="k-dialog-body">
     <p>
-      To pick up where you left off, click “New Email” from the {{getProfileName()}}’s
-      profile.
+      {{saveForLaterModelText}}
     </p>
   </section>
   <kendo-dialog-actions>
@@ -245,7 +248,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   [title]="confirmPopupHeader"
 >  <section class="k-dialog-body">
-  <p class="text-muted mb-2">This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal</p>
+  <p class="text-muted mb-2">{{confirmationModelText}}</p>
 </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">

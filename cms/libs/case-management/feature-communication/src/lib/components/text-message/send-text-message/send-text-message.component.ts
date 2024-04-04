@@ -37,6 +37,10 @@ export class SendTextMessageComponent implements OnInit {
   @Input() templateLoadType!: string;
   @Input() informationalText!:string
   @Input() templateHeader !:string;
+  @Input() confirmPopupHeader!:string;
+  @Input() confirmationModelText!:string;
+  @Input() saveForLaterHeadterText!:string;
+  @Input() saveForLaterModelText!:string;
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();

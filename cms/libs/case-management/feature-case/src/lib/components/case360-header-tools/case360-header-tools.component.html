@@ -44,7 +44,8 @@
   <case-management-send-letter [mailingAddress$]="mailingAddress$" [informationalText]="informationalText" [templateHeader]="templateHeader"
   [notificationGroup]="screenName" [templateLoadType] ="templateLoadType" [communicationLetterTypeCode] ="letterCommunicationTypeCode"
   (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()" [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId"
-  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId" [confirmPopupHeader]="confirmPopupHeader"
+  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId" 
+  [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText"
   kendoTooltip></case-management-send-letter>
 </ng-template>
 
@@ -62,7 +63,8 @@
   [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName" [clientCaseId]="clientCaseId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
   [toEmail]="toEmail" [loginUserEmail]="loginUserEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()"
-  [confirmPopupHeader]="confirmPopupHeader" kendoTooltip></case-management-send-email>
+  [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText"
+   kendoTooltip></case-management-send-email>
 </ng-template>
 
 <!-- New ID Card Modal Html-->
@@ -75,10 +77,12 @@
 <!-- New SMS Text Modal Html-->
 <ng-template #sendTextMessageDialog>
 <case-management-send-text-message [ddlMessageRecipients$] ="phoneNumbers$" [notificationGroup]="screenName" [entityId]="clientId"
-[templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
+  [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
   (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDraftId]="notificationDraftId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
-  [clientCaseEligibilityId]="clientCaseEligibilityId" kendoTooltip></case-management-send-text-message>
+  [clientCaseEligibilityId]="clientCaseEligibilityId" 
+  [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText" 
+  kendoTooltip></case-management-send-text-message>
 </ng-template>
 
 

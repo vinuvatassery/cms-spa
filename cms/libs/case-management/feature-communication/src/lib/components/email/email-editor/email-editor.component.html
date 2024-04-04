@@ -213,6 +213,9 @@
       </kendo-toolbar-dropdownbutton>
     </kendo-toolbar>
   </kendo-editor>
+  <kendo-formerror *ngIf="isContentMissing">
+    Content is required.
+  </kendo-formerror>
   
   <!-- Attachment Panel -->
   <div class="panelbar-wrapper">

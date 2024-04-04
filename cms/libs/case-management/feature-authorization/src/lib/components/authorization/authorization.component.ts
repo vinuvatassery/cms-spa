@@ -64,7 +64,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   signedApplication!: AuthorizationApplicationSignature;
   incompleteDateValidation!: any;
   loginUserName!:any;
-  loginUserEmail: Array<any> = [];
+  loginUserEmail: any;
   isSendEmailSuccess: boolean = false;
   isCERApplicationSigned: boolean = false;
   private saveClickSubscription !: Subscription;
@@ -193,10 +193,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
           email: profile[0]?.email,
           isDefault: true
         };
-        let emailExists = this.loginUserEmail?.includes(ccEmail.email.trim());
-        if(!emailExists){
-          this.loginUserEmail.push(ccEmail);
-        }
+          this.loginUserEmail = ccEmail;
        }
       }
     });

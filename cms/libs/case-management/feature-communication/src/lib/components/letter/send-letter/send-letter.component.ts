@@ -44,6 +44,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   @Input() templateHeader !:string;
   @Input() triggerFrom !: string;
   @Input() confirmPopupHeader!:string;
+  @Input() confirmationModelText!:string;
+  @Input() saveForLaterHeadterText!:string;
+  @Input() saveForLaterModelText!:string;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
@@ -315,6 +318,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
+    this.communicationLetterTypeCode = CommunicationEventTypeCode.LetterTypeCode;
     let templateTypeCode = this.getApiTemplateTypeCode();
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, this.notificationGroup);
     formData.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');

@@ -89,11 +89,10 @@
 
 <!-- Save for Latter (Letter Draft) Modal -->
 <kendo-dialog *ngIf="isShowSaveForLaterPopupClicked" (close)="onCloseSaveForLaterClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Letter Draft Saved">
+  class="app-c-modal app-c-modal-sm app-c-modal-np" [title]="saveForLaterHeadterText">
   <section class="k-dialog-body">
     <p>
-      To pick up where you left off, click “New Letter” from the {{getProfileName()}}’s
-      profile.
+      {{saveForLaterModelText}}
     </p>
   </section>
   <kendo-dialog-actions>
@@ -137,7 +136,7 @@
 <kendo-dialog *ngIf="isShowSendLetterToPrintPopupClicked" (close)="onConfirmSendLetterToPrintDialogClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" [title]="confirmPopupHeader">
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal</p>
+    <p class="text-muted mb-2">{{confirmationModelText}}</p>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between  ">

@@ -65,6 +65,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   informationalText!:any;
   templateHeader!:any;
   confirmPopupHeader:any;
+  saveForLaterHeadterText:any;
+  saveForLaterModelText:any;
+  confirmationModelText:any;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   private isSendNewLetterDialog : any;
@@ -77,7 +80,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   clientHeader:any
   paperlessFlag:any;
   emailSubject:any;
-  loginUserEmail: Array<any> = [];
+  loginUserEmail: any;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -91,10 +94,12 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.LetterTypeCode;
-        this.letterCommunicationTypeCode = CommunicationEventTypeCode.LetterTypeCode;
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
+        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
         this.confirmPopupHeader = 'Send Letter to Print?';
+        this.confirmationModelText="This action cannot be undone.";
         this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -113,7 +118,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.EmailTypeCode;
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
+        this.saveForLaterHeadterText = "Email Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
         this.confirmPopupHeader = 'Send Email?';
+        this.confirmationModelText="This action cannot be undone.";
         this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -132,6 +140,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.SmsTypeCode;
         this.informationalText = "Select an existing template or draft custom text messages"
         this.templateHeader = 'Send New SMS Text';
+        this.saveForLaterHeadterText = "Sms Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Sms\" from the client's profile";
+        this.confirmPopupHeader = 'Send Sms?';
+        this.confirmationModelText="This action cannot be undone.";
         this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -443,10 +455,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
           email: profile[0]?.email,
           isDefault: true
         };
-        let emailExists = this.loginUserEmail?.includes(ccEmail.email.trim());
-        if(!emailExists){
-          this.loginUserEmail.push(ccEmail);
-        }
+          this.loginUserEmail = ccEmail;
        }
       }
     });
