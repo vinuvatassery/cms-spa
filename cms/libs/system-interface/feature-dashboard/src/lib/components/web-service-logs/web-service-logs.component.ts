@@ -318,18 +318,17 @@ defaultPageSize=20;
   }
  status:any;
  errorCode:any;
+ message:any;
  onViewInformation(error:string,status:string){
   
   this.status=status;
    if(this.interfaceType==this.Usps)
 {
 
-  var header=error.split("#");
-  this.errorCode=header[1];
-  this.errorherader=header[2];
-  this.address=JSON.parse(header[0]);
- this.failureDetail=error;
- 
+  var errorMessageparse=JSON.parse(error);
+  this.errorCode=errorMessageparse.requestStatusCode;
+  this.message=errorMessageparse.ErrorMessage;
+  this.address=errorMessageparse.Address; 
   this.onErrorDetailClicked(
     this.errorAddressDialogTemplate
   );

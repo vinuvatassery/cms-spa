@@ -86,12 +86,13 @@
         </ng-template>
 
         <ng-template kendoGridCellTemplate let-dataItem >        
-          <button *ngIf="dataItem.status === 'FAILED' || dataItem.status === 'WEBSERVICE_DOWN'" [attr.aria-label]="dataItem.status" kendoButton look="flat"
+          <button *ngIf="dataItem.status === 'FAILED' || dataItem.status === 'WEBSERVICE_DOWN'||dataItem.status === 'SUCCESS' " [attr.aria-label]="dataItem.status" kendoButton look="flat"
             class="card-link-button" (click)="onViewInformation(dataItem.exceptionDetails,dataItem.status)" >
              <span *ngIf="dataItem.status === 'FAILED'">Failed</span>
              <span *ngIf="dataItem.status === 'WEBSERVICE_DOWN'">Web Service Down</span>
+             <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
           </button>     
-          <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
+          
           <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span> 
         </ng-template>
       </kendo-grid-column>
@@ -178,12 +179,13 @@
 <ng-template #errorAddressDialogTemplate>
   <kendo-dialog-titlebar (close)="Close()">
     <span *ngIf="errorCode=='500'" > Web Service Down  ({{errorCode}})</span>
-    <span *ngIf="errorCode!='500'" > Web Service Error <span *ngIf="errorCode!='200'">({{errorCode}}) </span></span>
+    <span *ngIf="status=='FAILED'" > Address Validation Failed <span *ngIf="errorCode!='200'">({{errorCode}}) </span></span>
+    <span *ngIf="status=='SUCCESS'" > Address Validation Succeeded</span>
  
     </kendo-dialog-titlebar>
     <section class="k-dialog-body mb-2">
       <div >
-        <p  >{{errorherader}}  We can't validate the address below.</p>
+        <p  >{{message}} <span *ngIf="status!='SUCCESS'"> We can't validate the address below.</span></p>
           <div class="mt-2 ml-3">
           <p>  {{address?.Address1 | uppercase }}   </p>   
          <p> {{address?.Address2 | uppercase }}   </p>  
