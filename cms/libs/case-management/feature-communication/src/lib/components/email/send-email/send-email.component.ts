@@ -662,10 +662,16 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         });
     }
     else {
+      this.setDraftedTemplate(event);
+    }
+  }
+
+  setDraftedTemplate(event: any) {
+    if (event.typeCode === this.communicationEmailTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.selectedTemplate = event;
-      this.selectedTemplateContent = event.templateContent == undefined? event.requestBody : event.templateContent;
-      this.updatedTemplateContent = event.templateContent == undefined? event.requestBody : event.templateContent;
+      this.selectedTemplateContent = event.templateContent == undefined ? event.requestBody : event.templateContent;
+      this.updatedTemplateContent = event.templateContent == undefined ? event.requestBody : event.templateContent;
       this.isClearEmails = true;
       this.isShowToEmailLoader$.next(true);
       this.isOpenDdlEmailDetails = true;
@@ -676,7 +682,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.emailSubject = event.description;
       this.defaultCCEmail = event.cc;
       this.defaultBCCEmail = event.bcc;
-      this.selectedCCEmail = event.cc?.map((item: any)=> item.email);
+      this.selectedCCEmail = event.cc?.map((item: any) => item.email);
       this.getLoginUserCcEmail();
       if (event?.bccEmail?.length > 0) {
         this.bccEmail = this.selectedBccEmail = event.bcc;
@@ -689,7 +695,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       };
       this.ref.detectChanges();
     }
+    else {
+      this.selectedTemplate.notificationDraftId = event.notificationDraftId;
+    }
   }
+
   getLoginUserCcEmail() {
     if(this.loginUserEmail){
       if(this.ccEmail == undefined){
@@ -728,7 +738,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   getDraftedTemplate(){
     this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
       if(response.length>0){
-        this.handleDdlEmailValueChange(response[0]);
+        this.setDraftedTemplate(response[0])
         this.ref.detectChanges();        
       }
     });

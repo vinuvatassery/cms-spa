@@ -360,7 +360,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   getLoggedInUserProfileSubscriptionInit(){
-    this.userDataService.getProfile$.subscribe((profile:any)=>{
+    this.loggedInUserProfileSubscription = this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
        if(profile[0]?.email){
         const ccEmail ={

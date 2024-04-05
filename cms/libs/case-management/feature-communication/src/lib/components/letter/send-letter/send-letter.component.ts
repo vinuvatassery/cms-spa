@@ -510,7 +510,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   getDraftedTemplate(){
     this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
       if(response.length>0){
-        this.handleDdlLetterValueChange(response[0]);
+        this.setDraftedTemplate(response[0]);
         this.ref.detectChanges();
       }
     });
@@ -549,6 +549,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         });
     } 
     else {
+      this.setDraftedTemplate(event);
+    }
+  }
+
+  private setDraftedTemplate(event: any) {    
+    if (event.typeCode === this.communicationLetterTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.isOpenLetterTemplate = true;
       this.selectedTemplate = event;
@@ -560,10 +566,14 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         'description': event.description,
         'documentTemplateId': event.notificationTemplateId
       };
-      this.ref.detectChanges();
     }
+    else
+    {
+      this.selectedTemplate.notificationDraftId = event.notificationDraftId;
+    }
+    this.ref.detectChanges();
   }
-
+  
   private saveDraftEsignLetterRequest(draftTemplate: any) {
     this.loaderService.show();
     draftTemplate.entity = this.communicationLetterTypeCode;
