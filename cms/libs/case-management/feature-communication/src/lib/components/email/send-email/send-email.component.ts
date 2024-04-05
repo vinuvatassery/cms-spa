@@ -566,14 +566,24 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   getApiTemplateTypeCode(): string {
     let templateTypeCode = '';
     switch (this.communicationEmailTypeCode) {
-      case CommunicationEventTypeCode.PendingNoticeEmail:
-        templateTypeCode = CommunicationEventTypeCode.PendingEmailSent;
+      case CommunicationEventTypeCode.PendingNoticeEmail:        
+        if(this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview){
+          templateTypeCode = CommunicationEventTypeCode.CerPendingEmailSent;
+        }
+        else{
+          templateTypeCode = CommunicationEventTypeCode.PendingEmailSent;
+        }
         break;
       case CommunicationEventTypeCode.RejectionNoticeEmail:
         templateTypeCode = CommunicationEventTypeCode.RejectionEmailSent;
         break;
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
-        templateTypeCode = CommunicationEventTypeCode.ApprovalEmailSent;
+        if(this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview){
+          templateTypeCode = CommunicationEventTypeCode.CerApprovalEmailSent;
+        }
+        else{
+          templateTypeCode = CommunicationEventTypeCode.ApprovalEmailSent;
+        }
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentEmailSent;

@@ -319,7 +319,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
-    this.communicationLetterTypeCode = CommunicationEventTypeCode.LetterTypeCode;
     let templateTypeCode = this.getApiTemplateTypeCode();
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, this.notificationGroup);
     formData.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
@@ -367,13 +366,23 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     let templateTypeCode = '';
     switch (this.communicationLetterTypeCode) {
       case CommunicationEventTypeCode.PendingNoticeLetter:
-        templateTypeCode = CommunicationEventTypeCode.PendingLetterGenerated;
+        if(this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview){
+          templateTypeCode = CommunicationEventTypeCode.CerPendingLetterGenerated;
+        }
+        else{
+          templateTypeCode = CommunicationEventTypeCode.PendingLetterGenerated;
+        }
         break;
       case CommunicationEventTypeCode.RejectionNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.RejectionLetterGenerated;
         break;
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
-        templateTypeCode = CommunicationEventTypeCode.ApprovalLetterGenerated;
+        if(this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview){
+          templateTypeCode = CommunicationEventTypeCode.CerApprovalLetterGenerated;
+        }
+        else{
+          templateTypeCode = CommunicationEventTypeCode.ApprovalLetterGenerated;
+        }
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterGenerated;
