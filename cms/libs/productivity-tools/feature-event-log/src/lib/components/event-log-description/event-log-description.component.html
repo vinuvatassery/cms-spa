@@ -4,10 +4,10 @@
         <a *ngIf="item.isBaseUrlFlag && !item.isFilePathUrl" href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
 
         <span class="mb-1" *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl">{{data}}</span>
-        <a *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
+        <a *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" (click)="downloadOldAttachment(item.url)" title="{{item.title}}">{{item.text}}</a>
     </span>
     <span class="mb-1" *ngIf="getViewFlag() && (anchorArray.length<=0)">
-        {{data}} 
+        {{data}}
     </span>
     <a *ngIf="getViewFlag() && (anchorArray.length<=0)" (click)="OpenModalPopUp()" title="">{{viewText}}</a>
 </div>

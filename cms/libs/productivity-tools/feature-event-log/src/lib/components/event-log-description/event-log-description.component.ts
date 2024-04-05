@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { ConstantValue } from '@cms/productivity-tools/domain';
 
 @Component({
@@ -13,11 +13,13 @@ export class EventLogDescriptionComponent {
   @Input() completeWords: boolean = false;
   @Input() eventId:any;
 
+  @Output() downloadOldAttachmentEvent = new EventEmitter();
+
   urlSeparator:string= '!~!';
   titleOrlinkSeparator:string= '`';
   baseUrl:string='baseurl';
   anchorArray:any[]=[];
-  data:any="";  
+  data:any="";
   hasUrl:boolean=false;
   isViewLetter:boolean = false;
   isViewEmail:boolean = false;
@@ -27,7 +29,7 @@ export class EventLogDescriptionComponent {
   ViewLetter:string = "{View Letter}";
   ViewEmail:string = "{View Email}";
   ViewSmsText:string = "{View Text(s)}";
-  
+
   constructor() {}
 
   ngOnInit() {
@@ -42,7 +44,7 @@ export class EventLogDescriptionComponent {
     );
     return array.length > 0;
   }
-  
+
   formatContent()
   {
     this.anchorArray=[];
@@ -53,7 +55,6 @@ export class EventLogDescriptionComponent {
     }
     else if(this.content.indexOf(this.urlSeparator) !== -1 && this.content.indexOf(this.baseUrl) == -1)
     {
-      debugger;
       this.setAnchorWithOutBaseUrl(anchorArray);
     }
     else
@@ -66,33 +67,33 @@ export class EventLogDescriptionComponent {
   {
     this.data = anchorArray[0];
     anchorArray.forEach((item: any) => {
-        let itemDataArray = item.split(this.titleOrlinkSeparator); 
-        if(itemDataArray.length>1) 
+        let itemDataArray = item.split(this.titleOrlinkSeparator);
+        if(itemDataArray.length>1)
         {
           let object = {
             url : itemDataArray[0],
             text : itemDataArray[1],
             title : itemDataArray[1],
-            isBaseUrlFlag : false , 
-            isFilePathUrl : true     
+            isBaseUrlFlag : false ,
+            isFilePathUrl : true
           }
           this.anchorArray.push(object);
         }
     });
     this.hasUrl = anchorArray.length >1;
   }
-  
+
   setHasUrlConstructingData(anchorArray:any)
   {
     anchorArray.forEach((item: any) => {
-      if(item.indexOf(this.baseUrl) !== -1){    
-        let itemDataArray = item.split(this.titleOrlinkSeparator);      
+      if(item.indexOf(this.baseUrl) !== -1){
+        let itemDataArray = item.split(this.titleOrlinkSeparator);
         let object = {
           url : itemDataArray[0].replace(this.baseUrl,window.location.origin),
           text : itemDataArray[1],
           title : itemDataArray[1],
-          isBaseUrlFlag : true ,  
-          isFilePathUrl : false     
+          isBaseUrlFlag : true ,
+          isFilePathUrl : false
         }
         this.anchorArray.push(object);
         this.data += object.text;
@@ -102,15 +103,15 @@ export class EventLogDescriptionComponent {
           url : "",
           text : item,
           title : "",
-          isBaseUrlFlag : false,  
-          isFilePathUrl : false     
+          isBaseUrlFlag : false,
+          isFilePathUrl : false
         }
         this.anchorArray.push(object);
         this.data += object.text;
       }
     });
   }
-    
+
   setHasViewEmailAddressSMSTextFlag()
   {
     this.isViewLetter = this.content.indexOf(this.ViewLetter) !== -1;
@@ -139,7 +140,7 @@ export class EventLogDescriptionComponent {
     }
     return "";
   }
-  
+
   getViewFlag()
   {
     return (this.isViewEmail || this.isViewLetter || this.ViewSmsText);
@@ -152,5 +153,11 @@ export class EventLogDescriptionComponent {
   onCloseLetterEmailSmsTextClicked()
   {
     this.isViewLetterEmailTextDialog = false;
-  } 
+  }
+
+  downloadOldAttachment(path : any)
+  {
+    this.downloadOldAttachmentEvent.emit(path);
+  }
+
 }
