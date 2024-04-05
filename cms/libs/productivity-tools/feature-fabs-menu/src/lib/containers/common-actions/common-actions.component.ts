@@ -1,11 +1,11 @@
 /** Angular **/
 import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FabMenuFacade, NotificationStatsFacade, AlertEntityTypeCode, StatsTypeCode } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
-import { Subscription } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-common-actions',
@@ -18,7 +18,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
  
   clickedContact!: any;
   item: Array<DialItem> = [{}];
-  clientId : any;
   entityId : any;
   eventLogCount = 0;
   directMessageCount = 0;
@@ -27,6 +26,7 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
   updateStatsSubscription = new Subscription();
   getStatsSubscription = new Subscription();
   resetStatsSubscription = new Subscription();
+  navigationSubscription = new Subscription();
   
   constructor(
     private readonly router: Router,
@@ -35,7 +35,7 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
     public readonly fabMenuFacade : FabMenuFacade,
     public notificationStatsFacade : NotificationStatsFacade,
   ) {}
-
+  
   ngOnInit(): void {
     this.updateStatsSubscription = this.notificationStatsFacade.updateStats$.subscribe((response: any) => {
       if(response.data){
@@ -69,17 +69,31 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
     });
 
 
-    this.clientId = this.route.snapshot.params['id'];
-    if(this.clientId){
-      this.entityId = this.clientId.toString();
+    const clientId = this.route.snapshot.params['id'];
+    if(clientId){
+      this.entityId = clientId.toString();
       this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);
     }
+    this.addSessionChangeSubscription();
+  }
+
+  private addSessionChangeSubscription() {
+    this.navigationSubscription = this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+    ).subscribe(() => {
+       const newClientId = this.route.snapshot.queryParams['id'];
+      if (newClientId && newClientId !== this.entityId) {
+        this.entityId = newClientId.toString();
+        this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.updateStatsSubscription?.unsubscribe();
     this.getStatsSubscription?.unsubscribe();
     this.resetStatsSubscription?.unsubscribe();
+    this.navigationSubscription?.unsubscribe();
   }
   /** Internal event methods **/
   onDialItemClicked(event: any): void {
