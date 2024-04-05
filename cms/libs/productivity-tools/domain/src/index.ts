@@ -12,6 +12,7 @@ export * from './lib/infrastructure/todo.data.service';
 export * from './lib/infrastructure/event.data.service';
 export * from './lib/infrastructure/notification.data.service';
 export * from './lib/infrastructure/direct-message.data.service';
+export * from './lib/infrastructure/notification-stats.data.service';
 
 /** Facades **/
 export * from './lib/application/todo.facade';
@@ -19,7 +20,8 @@ export * from './lib/application/event-log.facade';
 export * from './lib/application/notification.facade';
 export * from './lib/application/direct-message.facade';
 export * from './lib/application/reminder.facade';
-export * from './lib/application/fab-menu.facade'
+export * from './lib/application/fab-menu.facade';
+export * from './lib/application/notification-stats.facade';
 
 /** Enums **/
 export * from './lib/enums/alert-type-code.enum'
@@ -27,3 +29,4 @@ export * from './lib/enums/alert-entity-type-code.enum'
 export * from './lib/enums/alert-frequency-type-code.enum'
 export * from './lib/enums/constant-value.enum'
 export * from './lib/enums/alert-due-on.enum'
+export * from './lib/enums/stats-type-code.enum'

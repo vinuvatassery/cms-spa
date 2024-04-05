@@ -237,7 +237,7 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
   loadEmployers(employerName :any): void {
     this.contactDataService.loadEmployers(employerName).subscribe({
       next: (employers) => {
-        this.employerSubject.next(employers);
+        this.employerSubject.next(employers);        
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)

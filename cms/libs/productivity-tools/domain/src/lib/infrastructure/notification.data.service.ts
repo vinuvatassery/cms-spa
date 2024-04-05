@@ -31,9 +31,9 @@ export class NotificationDataService {
     ]);
   }
 
-  loadNotificationsAndReminders() {
+  loadNotificationsAndReminders(isViewAll :boolean) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications`);
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications/${isViewAll}`);
   }
 
   viewNotifictaions(notifications: any[]) {

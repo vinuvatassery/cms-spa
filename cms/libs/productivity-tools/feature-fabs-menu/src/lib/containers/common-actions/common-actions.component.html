@@ -10,24 +10,24 @@
       <span class="material-icons" aria-label="Menu" aria-hidden="true"
         >menu</span
       >
-      <span class="app-c-badge badge-round-right badge-warn">5</span>
+      <span class="app-c-badge badge-round-right badge-warn">{{totalCount}}</span>
     </ng-template>
     <ng-template kendoDialItemTemplate>
       <div kendoTooltip position="left" class="app-c-fab-dial-items">
         <button
-          aria-label="To do and reminders notifications"
+          aria-label="To do and reminders"
           kendoButton
           [primary]="true"
-          title="To-Do & Reminders Notifications"
+          title="To-Do & Reminders"
           (click)="handleShowTodoRemindersClicked()"
         >
           <span
             class="material-icons"
-            aria-label="To-do & reminders notifications"
+            aria-label="To-do & reminders"
             aria-hidden="true"
             >notifications</span
           >
-          <span class="app-c-badge badge-round-right badge-warn">{{todoAndRemindersCount}}</span>
+          <span class="app-c-badge badge-round-right badge-warn">{{alertCount}}</span>
         </button>
         <button
           aria-label="Direct message"
@@ -46,7 +46,7 @@
             class="app-c-badge badge-round-right badge-warn"
             aria-label="Direct message count 2"
             aria-hidden="true"
-            >2</span
+            >{{directMessageCount}}</span
           >
         </button>
         <button
@@ -67,7 +67,7 @@
             class="app-c-badge badge-round-right badge-warn"
             aria-label="Event Log Count 1"
             aria-hidden="true"
-            >1</span
+            >{{eventLogCount}}</span
           >
         </button>
       </div>

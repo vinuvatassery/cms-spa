@@ -1,13 +1,16 @@
-.k-grid tr.dragging {
-  background-color: #f45c42;
-}
-
-.k-grid tr {
-  height: 53px;
-}
-.k-grid-header,
-.k-grouping-header,
-.k-grid-add-row,
-.k-grid-footer {
-  display: none;
+.recently-view{
+  .k-grid tr.dragging {
+    background-color: #f45c42;
+  }
+  
+  .k-grid tr {
+    height: 53px;
+  }
+  .k-grid-header,
+  .k-grouping-header,
+  .k-grid-add-row,
+  .k-grid-footer {
+    display: none;
+  }
+  
 }

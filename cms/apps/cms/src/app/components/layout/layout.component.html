@@ -17,7 +17,7 @@
   <div class="header-menu">
     <system-config-forms-and-documents  *ifPermission='["Layout_Documents_View_Only"]'></system-config-forms-and-documents >
     <productivity-tools-notification-panel  *ifPermission='["Layout_Notifications_View_Only"]'
-    (isLoadReminderAndNotificationEvent)="onloadReminderAndNotificationsGrid()"
+    (isLoadReminderAndNotificationEvent)="onloadReminderAndNotificationsGrid($event)"
     [notificationList$]="notificationList$" (onSnoozeReminderEvent)="onSnoozeReminder($event)"
     ></productivity-tools-notification-panel>
     <common-login-status></common-login-status>
