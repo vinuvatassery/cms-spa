@@ -12,6 +12,8 @@ import { TodoDataService } from '../infrastructure/todo.data.service';
 /** Services **/
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 import { LovFacade } from '@cms/system-config/domain';
+import { NotificationStatsFacade } from './notification-stats.facade';
+import { StatsTypeCode } from '../enums/stats-type-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class TodoFacade {
@@ -47,6 +49,7 @@ export class TodoFacade {
     private readonly signalrEventHandlerService: SignalrEventHandlerService,
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly notificationStatsFacade : NotificationStatsFacade,
     private loggingService : LoggingService,
     private lovFacade : LovFacade,
     private configurationProvider: ConfigurationProvider,
@@ -135,7 +138,9 @@ export class TodoFacade {
         this.curdAlertSubject.next(true);
         this.todoGridSubject.next(true);
         this.loadTodoListSubject.next(true); 
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message);
+        if(payload.entityId && payload.entityTypeCode)
+          this.notificationStatsFacade.updateStats(payload.entityId, payload.entityTypeCode, StatsTypeCode.Alert);
       },
       error: (err) => {
         this.loaderService.hide()
