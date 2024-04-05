@@ -308,7 +308,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private loadIncomeSubscription() {
     this.incomeResponseSubscription = this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
-      debugger;
       this.totalIncome = incomeresponse.totalCount;
       this.incomeData = incomeresponse;
       this.totalIncomeCalculated = incomeresponse.totalIncome;
