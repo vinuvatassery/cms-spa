@@ -85,6 +85,7 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       if (newClientId && newClientId !== this.entityId) {
         this.entityId = newClientId.toString();
         this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);
+        this.hideAllPanels();
       }
     });
   }
@@ -121,5 +122,10 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
     this.fabMenuFacade.isShownDirectMessage = false;
     this.fabMenuFacade.isShownEventLog = false;
     this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.Alert);
+  }
+  hideAllPanels(){
+    this.fabMenuFacade.isShownEventLog = false;
+    this.fabMenuFacade.isShownDirectMessage = false;
+    this.fabMenuFacade.isShownTodoReminders = false;
   }
 }
