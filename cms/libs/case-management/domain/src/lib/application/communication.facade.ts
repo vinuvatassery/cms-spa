@@ -169,7 +169,7 @@ export class CommunicationFacade {
     formData.append('languageCode', draftTemplate?.languageCode ?? '');
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('templateContent', draftTemplate?.templateContent ?? '');
-    formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
+    formData.append('notifcationDraftId', draftTemplate?.notificationDraftId ?? '');
     if (clientAndVendorAttachedFiles?.length > 0){
     let i = 0;
     clientAndVendorAttachedFiles.forEach((file: any) => {
@@ -224,7 +224,7 @@ export class CommunicationFacade {
       formData.append('description', data?.emailData?.description ?? '');
       formData.append('typeCode', data?.emailData?.typeCode ?? '');
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
-      formData.append('notifcationDraftId', data?.emailData?.notifcationDraftId ?? '');
+      formData.append('notificationDraftId', data?.emailData?.notificationDraftId ?? '');
     }
     if (data?.clientAndVendorEmailAttachedFiles?.length > 0) {
       let i = 0;
@@ -268,10 +268,10 @@ export class CommunicationFacade {
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
-    formData.append('typeCode', emailData?.templateCategoryCode ?? emailData?.typeCode);
+    formData.append('typeCode', emailData?.templateTypeCode ?? emailData?.typeCode);
     formData.append('entity', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
-    formData.append('notifcationDraftId', emailData?.notifcationDraftId ?? '');
+    formData.append('notificationDraftId', emailData?.notificationDraftId ?? '');
     if(clientAndVendorEmailAttachedFiles?.length > 0){
     let i = 0;
     clientAndVendorEmailAttachedFiles.forEach((file: any) => {

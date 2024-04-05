@@ -553,7 +553,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setDraftedTemplate(event: any) {    
+  private setDraftedTemplate(event: any) { 
     if (event.typeCode === this.communicationLetterTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.isOpenLetterTemplate = true;

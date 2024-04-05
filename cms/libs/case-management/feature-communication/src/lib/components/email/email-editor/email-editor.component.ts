@@ -147,8 +147,17 @@ export class EmailEditorComponent implements OnInit {
             }
           this.ref.detectChanges();
           this.cerEmailAttachments.emit(this.selectedAttachedFile);
-        }else{
-        this.loadClientVendorDefaultAttachment(this.selectedTemplate.documentTemplateId);
+        }
+        else
+        {
+          let templateId = null;
+          if(this.selectedTemplate.documentTemplateId === null){
+            templateId = this.selectedTemplate.notificationTemplateId
+          }
+          else {
+            templateId = this.selectedTemplate.documentTemplateId
+          }
+          this.loadClientVendorDefaultAttachment(templateId);
         }
     }
     
