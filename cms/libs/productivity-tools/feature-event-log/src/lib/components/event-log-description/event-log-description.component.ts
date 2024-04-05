@@ -11,6 +11,7 @@ export class EventLogDescriptionComponent {
   @Input() content: string = '';
   @Input() limit: number = 0;
   @Input() completeWords: boolean = false;
+  @Input() eventId:any;
 
   urlSeparator:string= '!~!';
   titleOrlinkSeparator:string= '`';
