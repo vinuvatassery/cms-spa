@@ -168,6 +168,16 @@ export class IncomeListComponent implements OnInit, OnDestroy {
         this.updateWorkFlowStatus(false);
       }
     })
+    this.incomeFacade.incomesResponse$.subscribe({
+      next: (incomeResponse: any) => {
+       this.fplPercentage = incomeResponse.fplPercentage;
+       this.totalIncomeCalculated =  incomeResponse.totalIncome;
+       this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        this.loggingService.logException(error);
+      }
+    });
   }
 
 ngOnDestroy(): void {
