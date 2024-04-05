@@ -29,7 +29,6 @@
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="time"
             formatPlaceholder="formatPattern"
-            [min]="currentTime"
             (keyup)="timeValidation()"
             (valueChange)="timeValidation()"
           ></kendo-timepicker>
