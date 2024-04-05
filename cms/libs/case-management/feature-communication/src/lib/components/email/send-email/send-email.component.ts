@@ -610,7 +610,28 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if(this.templateLoadType === undefined){
       this.templateLoadType = event.templateTypeCode;
     }
-    this.selectedTemplate = event;
+    this.selectedTemplate = event;    
+    if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
+      || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
+      || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail
+      || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail)
+      && (this.triggerFrom === WorkflowTypeCode.NewCase || this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview)) {
+        this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
+          if(response.length>0){
+            this.setDraftedTemplate(response[0])
+            this.ref.detectChanges();        
+          }
+          else{
+            this.loadNewTemplate(event);
+          }
+        });
+    }
+    else{
+      this.loadNewTemplate(event);
+    }
+  }
+
+  loadNewTemplate(event:any){
     if (event.documentTemplateId && !event.esignRequestId) {
       this.loaderService.show();
       this.communicationFacade.loadTemplateById(event.documentTemplateId)
@@ -642,13 +663,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.defaultCCEmail = data.cc;
               this.getLoginUserCcEmail();
               this.showToEmailLoader = false;
-              if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
-                || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
-                || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail
-                || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail)
-                && this.triggerFrom === WorkflowTypeCode.NewCase) {
-                this.getDraftedTemplate();
-              }
+             
               if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail  || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
                 this.getCCEmailList(this.entityId, this.loginUserId);
               }
@@ -665,7 +680,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.setDraftedTemplate(event);
     }
   }
-
   setDraftedTemplate(event: any) {
     if (event.typeCode === this.communicationEmailTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
@@ -734,16 +748,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  getDraftedTemplate(){
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
-      if(response.length>0){
-        this.setDraftedTemplate(response[0])
-        this.ref.detectChanges();        
-      }
-    });
-  }
-
+  
   openNewEmailClicked() {
     this.loaderService.show();
     this.communicationFacade.deleteNotificationDraft(this.notificationDraftId)

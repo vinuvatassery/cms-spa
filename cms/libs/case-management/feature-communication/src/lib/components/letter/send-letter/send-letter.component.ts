@@ -507,21 +507,34 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.ddlTemplates = [defaultOption, ...sortedOptions];
   }
 
-  getDraftedTemplate(){
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
-      if(response.length>0){
-        this.setDraftedTemplate(response[0]);
-        this.ref.detectChanges();
-      }
-    });
-  }
 
   handleDdlLetterValueChange(event: any) {
-    if(this.communicationLetterTypeCode === undefined){
-      this.communicationLetterTypeCode = event.templateTypeCode;
-    }
+    if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
+      || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
+      || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
+      || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter)
+      && (this.triggerFrom === WorkflowTypeCode.NewCase || this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview)) {
+        this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
+          if(response.length>0){
+            this.setDraftedTemplate(response[0]);
+            this.ref.detectChanges();
+          }
+          else
+          {
+            this.loadNewTemplate(event);
+          }
+        });
+    } 
+    else{
+      this.loadNewTemplate(event);
+    }   
+
+  }
+
+  loadNewTemplate(event:any){
     if (event.documentTemplateId) {
       this.loaderService.show();
+   
       this.communicationFacade.loadTemplateById(event.documentTemplateId)
         .subscribe({
           next: (data: any) => {
@@ -530,14 +543,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
               this.selectedTemplateContent = data.templateContent;
               this.updatedTemplateContent = data.templateContent;
               this.isOpenLetterTemplate = true;
-              this.loadMailingAddress();
-              if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter)
-                && this.triggerFrom === WorkflowTypeCode.NewCase) {
-                this.getDraftedTemplate();
-              }
+              this.loadMailingAddress();            
               this.ref.detectChanges();
             }
             this.loaderService.hide();
