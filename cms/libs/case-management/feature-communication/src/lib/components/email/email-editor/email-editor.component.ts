@@ -148,11 +148,20 @@ export class EmailEditorComponent implements OnInit {
             }
           this.ref.detectChanges();
           this.cerEmailAttachments.emit(this.selectedAttachedFile);
-        }else{
-          if(!this.isContentMissing){
-              this.loadClientVendorDefaultAttachment(this.selectedTemplate.documentTemplateId);
-          }
         }
+        else
+        {
+          if(!this.isContentMissing){
+          let templateId = null;
+          if(this.selectedTemplate.documentTemplateId === null){
+            templateId = this.selectedTemplate.notificationTemplateId
+          }
+          else {
+            templateId = this.selectedTemplate.documentTemplateId
+          }
+          this.loadClientVendorDefaultAttachment(templateId);
+        }
+      }
     }
     
     if ([CommunicationEventTypeCode.VendorEmail, CommunicationEventTypeCode.VendorLetter].includes(this.communicationTypeCode)) {
@@ -169,6 +178,7 @@ export class EmailEditorComponent implements OnInit {
     this.communicationFacade.loadClientAndVendorDefaultAttachments(documentTemplateId)
     .subscribe({
       next: (attachments: any) =>{
+        this.selectedAttachedFile =[];
         if (attachments.length > 0) {
           for (let file of attachments){
             this.selectedAttachedFile.push({

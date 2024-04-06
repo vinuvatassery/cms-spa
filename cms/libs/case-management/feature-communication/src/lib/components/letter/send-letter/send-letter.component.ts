@@ -242,6 +242,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter Saved As Draft');
           }
           this.loaderService.hide();
+          this.navigateConditionally();
         },
         error: (err: any) => {
           this.loaderService.hide();
@@ -357,7 +358,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
-    this.communicationLetterTypeCode = CommunicationEventTypeCode.LetterTypeCode;
     let templateTypeCode = this.getApiTemplateTypeCode();
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, this.notificationGroup);
     formData.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
@@ -405,13 +405,23 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     let templateTypeCode = '';
     switch (this.communicationLetterTypeCode) {
       case CommunicationEventTypeCode.PendingNoticeLetter:
-        templateTypeCode = CommunicationEventTypeCode.PendingLetterGenerated;
+        if(this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview){
+          templateTypeCode = CommunicationEventTypeCode.CerPendingLetterGenerated;
+        }
+        else{
+          templateTypeCode = CommunicationEventTypeCode.PendingLetterGenerated;
+        }
         break;
       case CommunicationEventTypeCode.RejectionNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.RejectionLetterGenerated;
         break;
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
-        templateTypeCode = CommunicationEventTypeCode.ApprovalLetterGenerated;
+        if(this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview){
+          templateTypeCode = CommunicationEventTypeCode.CerApprovalLetterGenerated;
+        }
+        else{
+          templateTypeCode = CommunicationEventTypeCode.ApprovalLetterGenerated;
+        }
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterGenerated;
@@ -536,22 +546,34 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.ddlTemplates = [defaultOption, ...sortedOptions];
   }
 
-  getDraftedTemplate(){
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
-      if(response.length>0){
-        this.selectedTemplateContent =response[0].requestBody;
-        this.updatedTemplateContent = response[0].requestBody; 
-        this.ref.detectChanges();
-      }
-    });
-  }
 
   handleDdlLetterValueChange(event: any) {
-    if(this.communicationLetterTypeCode === undefined){
-      this.communicationLetterTypeCode = event.templateTypeCode;
-    }
+    if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
+      || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
+      || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
+      || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter)
+      && (this.triggerFrom === WorkflowTypeCode.NewCase || this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview)) {
+        this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
+          if(response.length>0){
+            this.setDraftedTemplate(response[0]);
+            this.ref.detectChanges();
+          }
+          else
+          {
+            this.loadNewTemplate(event);
+          }
+        });
+    } 
+    else{
+      this.loadNewTemplate(event);
+    }   
+
+  }
+
+  loadNewTemplate(event:any){
     if (event.documentTemplateId) {
       this.loaderService.show();
+   
       this.communicationFacade.loadTemplateById(event.documentTemplateId)
         .subscribe({
           next: (data: any) => {
@@ -560,14 +582,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
               this.selectedTemplateContent = data.templateContent;
               this.updatedTemplateContent = data.templateContent;
               this.isOpenLetterTemplate = true;
-              this.loadMailingAddress();
-              if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter)
-                && this.triggerFrom === WorkflowTypeCode.NewCase) {
-                this.getDraftedTemplate();
-              }
+              this.loadMailingAddress();            
               this.ref.detectChanges();
             }
             this.loaderService.hide();
@@ -579,6 +594,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         });
     } 
     else {
+      this.setDraftedTemplate(event);
+    }
+  }
+
+  private setDraftedTemplate(event: any) { 
+    if (event.typeCode === this.communicationLetterTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.isOpenLetterTemplate = true;
       this.selectedTemplate = event;
@@ -598,10 +619,14 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         'description': event.description,
         'documentTemplateId': event.notificationTemplateId
       };
-      this.ref.detectChanges();
     }
+    else
+    {
+      this.selectedTemplate.notificationDraftId = event.notificationDraftId;
+    }
+    this.ref.detectChanges();
   }
-
+  
   private saveDraftEsignLetterRequest(draftTemplate: any) {
     this.loaderService.show();
     draftTemplate.entity = this.communicationLetterTypeCode;
