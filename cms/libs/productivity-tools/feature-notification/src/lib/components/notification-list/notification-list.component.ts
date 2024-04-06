@@ -45,22 +45,13 @@ export class NotificationListComponent {
         this.cdr.detectChanges();
       });
       this.searchTerm.valueChanges.subscribe((value) => {
-        const containsOnlyNumbers = /^\d+$/.test(value);
-        const tempDate = new Date(value);
-        const isDateFormat = !isNaN(tempDate.getTime());
-        if (containsOnlyNumbers) 
-        { 
-            this.searchTermTextEvent.emit(value);
-        } 
-        else if (isDateFormat) 
-        {
-            const formattedDate = this.intl.formatDate(tempDate, this.dateFormat);
-            this.searchTermTextEvent.emit(formattedDate);
+        if(!value){
+          this.notificationFacade.alertSearchLoaderVisibilitySubject.next(false)
         }
-       else 
-       {
-            this.searchTermTextEvent.emit(value?.trim());
-        }
+        const isDateSearch = value.includes('/');
+        value = this.formatSearchValue(value, isDateSearch);
+       if (isDateSearch && !value) return;
+       this.searchTermTextEvent.emit(value?.trim());
     });
     }
     constructor(
@@ -158,5 +149,27 @@ export class NotificationListComponent {
   }
   toggleDescription(message: any) {
     message.showFullDescription = !message.showFullDescription;
+  }
+  onApprovalSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    if (isDateSearch && !searchValue) return;
+
+  }
+  private isValidDate = (searchValue: any) =>
+    isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configurationProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+    return searchValue;
   }
 }

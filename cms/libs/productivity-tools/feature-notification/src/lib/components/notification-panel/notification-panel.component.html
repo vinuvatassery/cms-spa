@@ -67,7 +67,7 @@
               <div *ngIf="message.alertDesc.length <= 70">
                 <p [innerHTML]="sanitizeHtml(message.alertDesc)"></p>
               </div>
-            <p class="text-muted">{{message?.alertDueDate | date:'MM/dd/YYYY'}}</p>
+            <p class="text-muted">{{message?.alertDueDate | date:'MM/dd/YYYY'}}  {{ formatTime(message?.repeatTime) }}</p>
           </div>
           </div>
           <kendo-dropdownbutton
