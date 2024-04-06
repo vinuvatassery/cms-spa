@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, CommunicationFacade, NotificationTemplateCategoryCode, SmsNotification, CommunicationEventTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, CommunicationFacade, NotificationTemplateCategoryCode, SmsNotification, CommunicationEventTypeCode, EntityTypeCode } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -69,7 +69,7 @@ export class SendTextMessageComponent implements OnInit {
   loginUserId!: any;
   isRecipientMissing:boolean = false;
   isFormValid:boolean = true;
-
+  entityType= EntityTypeCode.Client;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -97,7 +97,7 @@ export class SendTextMessageComponent implements OnInit {
 
   loadClientAndVendorDraftSmsTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId,this.entityType,this.templateLoadType, this.communicationSmsTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {

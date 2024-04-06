@@ -34,6 +34,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   @Input() communicationLetterTypeCode!:any;
   @Input() clientCaseEligibilityId!: any;
   @Input() entityId!: any;
+  @Input() entityType!:any;
   @Input() isCerForm!: any;
   @Input() notificationGroup!: any;
   @Input() isContinueDraftClicked!: boolean;
@@ -110,7 +111,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   selectedMailingCode!: string;
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadTemplate();
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
     this.addSubscriptions();
@@ -159,7 +159,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   loadClientAndVendorDraftLetterTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId,this.entityType,this.templateLoadType, this.communicationLetterTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {
@@ -184,14 +184,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.isMailCodeMissing = false;
     this.selectedMailingCode = mailCode?.mailCode;
     this.isFormValid = true;
-  }
-
-  private loadTemplate(){
-    this.loadTemplate$.subscribe((response:any)=>{
-      if(response){
-        this.loadDropdownLetterTemplates();
-      }
-    });
   }
 
   private loadClientMailingAddress() {
@@ -233,6 +225,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     letterRequestFormdata.append('selectedMailCode', this.mailingAddress?.mailCode ?? '');
     letterRequestFormdata.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
     letterRequestFormdata.append('documentTemplateId', this.documentTemplate?.documentTemplateId ?? '');
+    letterRequestFormdata.append('entity', this.entityType ?? '');
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
         .subscribe({
@@ -553,7 +546,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
       || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter)
       && (this.triggerFrom === WorkflowTypeCode.NewCase || this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview)) {
-        this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
+        this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.entityType,this.templateLoadType,this.communicationLetterTypeCode).subscribe((response:any)=>{
           if(response.length>0){
             this.setDraftedTemplate(response[0]);
             this.ref.detectChanges();

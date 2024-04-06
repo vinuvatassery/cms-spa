@@ -267,13 +267,12 @@ export class CommunicationFacade {
   }
 
   prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[]) {
-    let subTypeCode = emailData?.templateTypeCode ?? emailData?.subTypeCode;
+    let subTypeCode = emailData?.subTypeCode ?? emailData?.subtypeCode;
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
     formData.append('typeCode', emailData?.templateCategoryCode ?? emailData?.typeCode);
     formData.append('subTypeCode',subTypeCode);
-    formData.append('entity', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('notificationDraftId', emailData?.notificationDraftId ?? '');
     if(clientAndVendorEmailAttachedFiles?.length > 0){
@@ -331,8 +330,8 @@ export class CommunicationFacade {
     return this.emailDataService.saveEmailNotificationForLater(formData);
   }
 
-  loadDraftNotificationRequest(entityId: string) {
-    return this.emailDataService.getDraftNotification(entityId);
+  loadDraftNotificationRequest(entityId: string,entityType:string,typeCode:string, subTypeCode: string) {
+    return this.emailDataService.getDraftNotification(entityId,entityType,typeCode,subTypeCode);
   }
 
   loadTemplateById(notificationTemplateId: string) {

@@ -12,7 +12,7 @@ import {
   AfterContentChecked,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommunicationEventTypeCode, CommunicationFacade, ContactFacade, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, CommunicationFacade, ContactFacade, EntityTypeCode, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
 import { CaseStatusCode, StatusFlag } from '@cms/shared/ui-common';
 import { UserDataService } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -70,6 +70,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
   saveForLaterHeadterText:string='';
   saveForLaterModelText:string='';
   confirmationModelText:string='';
+  entityType = EntityTypeCode.Client;
   /** Constructor**/
   constructor(
     private route: ActivatedRoute,
@@ -232,7 +233,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   setValueDisenrollment() {
     if (this.paperlessFlag === StatusFlag.Yes) {
-      this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
+      this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
       this.emailCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
       this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
       this.templateHeader = 'Send Disenrollment Email';
@@ -244,7 +245,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
  
     }
     else {
-      this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
+      this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
       this.letterCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
       this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
       this.templateHeader = 'Send Disenrollment Letter';

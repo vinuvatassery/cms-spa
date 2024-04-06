@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef, ChangeDetectorRef, ViewChild, EventEmitter, Output,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CaseStatusCode, CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ContactFacade, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
+import { CaseStatusCode, CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ContactFacade, EntityTypeCode, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
 import { Observable, Subscription, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -81,6 +81,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   paperlessFlag:any;
   emailSubject:any;
   loginUserEmail: any;
+  entityType= EntityTypeCode.Client;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -100,7 +101,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
         this.confirmPopupHeader = 'Send Letter to Print?';
         this.confirmationModelText="This action cannot be undone.";
-        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+        this.notificationDraftCheck(this.clientId,this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -122,7 +123,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
         this.confirmPopupHeader = 'Send Email?';
         this.confirmationModelText="This action cannot be undone.";
-        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+        this.notificationDraftCheck(this.clientId,this.templateLoadType , this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -144,7 +145,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.saveForLaterModelText="To pick up where you left off, click \"New Sms\" from the client's profile";
         this.confirmPopupHeader = 'Send Sms?';
         this.confirmationModelText="This action cannot be undone.";
-        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+        this.notificationDraftCheck(this.clientId,this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -214,7 +215,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
             this.templateHeader = 'Send Disenrollment Email';
             this.emailSubject = "CAREAssist Disenrollment Notice";
-            this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
+            this.notificationDraftCheck(this.clientId, this.templateLoadType,this.emailCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
           }
           else {
             this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
@@ -222,7 +223,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
             this.templateHeader = 'Send Disenrollment Letter';
             this.emailSubject = '';
-            this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, this.sendLetterDialog);
+            this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
           }
           this.ref.detectChanges();
         }
@@ -372,9 +373,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
 
-  notificationDraftCheck(clientId: any, typeCode: string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
+  notificationDraftCheck(clientId: any, typeCode: string,subTypeCode:string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(clientId)
+    this.communicationFacade.loadDraftNotificationRequest(clientId,this.entityType,typeCode,subTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {

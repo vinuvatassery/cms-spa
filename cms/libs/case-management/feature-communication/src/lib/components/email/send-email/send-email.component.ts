@@ -36,6 +36,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() toEmail: Array<string> = [];
   @Input() clientCaseEligibilityId!: any;
   @Input() entityId!: any;
+  @Input() entityType!:any;
   @Input() isCerForm!: any;
   @Input() communicationEmailTypeCode!: any;
   @Input() notificationGroup!: any;
@@ -145,7 +146,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadTemplate();
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
@@ -232,7 +232,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   loadClientAndVendorDraftEmailTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.entityType,this.templateLoadType,this.communicationEmailTypeCode)
       .subscribe({
         next: (data: any) => {
           if (data?.length > 0) {
@@ -255,14 +255,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
-  }
-
-  private loadTemplate(){
-    this.loadTemplate$.subscribe((response:any)=>{
-      if(response){
-        this.loadEmailTemplates();
-      }
-    });
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -528,7 +520,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   private getEmailPayload(selectedTemplate: any, templateTypeCode:string='') {
-
     return {
       templateTypeCode: templateTypeCode,
       subject: this.emailSubject,
@@ -536,7 +527,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       ccEmail: this.getSelectedEmails(this.selectedCCEmail,"CC"),
       bccEmail: this.isBCCDropdownVisible ? null : this.getSelectedEmails(this.selectedCCEmail,"BCC"),
       eligibilityId: this.clientCaseEligibilityId,
-      entity: this.notificationGroup,
+      entity: this.entityType,
       entityId: this.entityId,
       caseId: this.clientCaseId,
       userId: this.loginUserId,
@@ -639,7 +630,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail
       || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail)
       && (this.triggerFrom === WorkflowTypeCode.NewCase || this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview)) {
-        this.communicationFacade.loadDraftNotificationRequest(this.entityId).subscribe((response:any)=>{
+
+        this.communicationFacade.loadDraftNotificationRequest(this.entityId,this.entityType,this.templateLoadType,this.communicationEmailTypeCode).subscribe((response:any)=>{
           if(response.length>0){
             this.setDraftedTemplate(response[0])
             this.ref.detectChanges();        

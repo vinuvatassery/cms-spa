@@ -1,4 +1,5 @@
 export enum EntityTypeCode {
     Program = 'Program',
-    Vendor ='Vendor'
+    Vendor ='Vendor',
+    Client ='Client'
 }
