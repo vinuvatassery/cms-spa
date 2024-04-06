@@ -42,6 +42,7 @@ export class EmailEditorComponent implements OnInit {
   /** Output properties  **/
   @Output() cerEmailAttachments = new EventEmitter();
   @Output() editorValueChangeEvent = new EventEmitter();
+  @Output() contentValidateEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Public properties **/
   @ViewChild('anchor',{ read: ElementRef }) public anchor!: ElementRef;
@@ -148,7 +149,9 @@ export class EmailEditorComponent implements OnInit {
           this.ref.detectChanges();
           this.cerEmailAttachments.emit(this.selectedAttachedFile);
         }else{
-        this.loadClientVendorDefaultAttachment(this.selectedTemplate.documentTemplateId);
+          if(!this.isContentMissing){
+              this.loadClientVendorDefaultAttachment(this.selectedTemplate.documentTemplateId);
+          }
         }
     }
     
@@ -278,7 +281,13 @@ export class EmailEditorComponent implements OnInit {
   }
 
   editorValueChange(event: any){
-   this.editorValueChangeEvent.emit(event);
+    this.isContentMissing = false;
+    this.editorValueChangeEvent.emit(event);
+    this.contentValidateHandler(true);
+  }
+
+  contentValidateHandler(event: any){
+    this.contentValidateEvent.emit(true);
   }
 
   handleFileSelected(event: any) {
