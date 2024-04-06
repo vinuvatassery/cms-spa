@@ -375,4 +375,12 @@ export class NotificationPanelComponent implements OnInit {
    toggleDescription(message: any) {
     message.showFullDescription = !message.showFullDescription;
   }
+  formatTime (time: string): string {
+    if (!time) return ''; 
+    const [hours, minutes] = time.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+    return formattedTime;
+  }
 }
