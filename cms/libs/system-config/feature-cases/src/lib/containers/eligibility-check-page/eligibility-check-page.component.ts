@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SystemConfigOtherListsFacade } from '@cms/system-config/domain';
+import { SystemConfigCasesFacade } from '@cms/system-config/domain';
 import { State } from '@progress/kendo-data-query';
 
 @Component({
@@ -10,19 +10,19 @@ import { State } from '@progress/kendo-data-query';
 export class EligibilityCheckPageComponent {  
 
   state!: State;
-  sortType = this.systemConfigOtherListsFacade.sortType;
-  pageSizes = this.systemConfigOtherListsFacade.gridPageSizes;
-  gridSkipCount = this.systemConfigOtherListsFacade.skipCount;
-  sortValueAssisterGroup = this.systemConfigOtherListsFacade.sortValueAssisterGroup;
-  sortAssisterGroupGrid = this.systemConfigOtherListsFacade.sortAssisterGroupGrid;
-  assisterGroupService$ = this.systemConfigOtherListsFacade.loadAssisterGroupsListsService$; 
+  sortType = this.systemConfigCasesFacade.sortType;
+  pageSizes = this.systemConfigCasesFacade.gridPageSizes;
+  gridSkipCount = this.systemConfigCasesFacade.skipCount;
+  sortValueEligibilityChecklist = this.systemConfigCasesFacade.sortValueEligibilityChecklist;
+  sortEligibilityChecklistGrid = this.systemConfigCasesFacade.sortEligibilityChecklistGrid;
+  eligibilityChecklistService$ = this.systemConfigCasesFacade.loadEligibilityChecklistsListsService$; 
   /** Constructor **/
-  constructor(private readonly systemConfigOtherListsFacade: SystemConfigOtherListsFacade) { }
+  constructor(private readonly systemConfigCasesFacade: SystemConfigCasesFacade) { }
 
 
  
-  loadAssisterGroupLists(data: any){
-    this.systemConfigOtherListsFacade.loadAssisterGroupsLists();
+  loadEligibilityChecklistLists(data: any){
+    this.systemConfigCasesFacade.loadEligibilityChecklistsLists();
   }
 
 }

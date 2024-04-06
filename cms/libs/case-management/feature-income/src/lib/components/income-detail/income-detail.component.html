@@ -25,9 +25,9 @@
 
         </div>       
         <div class="flex-col">
-        <kendo-floatinglabel text="Employer Name">
+        <kendo-floatinglabel text="Name of Employer">
           <kendo-multicolumncombobox textField="employerName" [fillMode]="formUiStyle.dropDownFillMode"
-            placeholder="Employer Name" [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+            placeholder="Name of Employer" [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
             [filterable]="true" (filterChange)="loadEmployers($event)" [data]="employers$ | async"
             formControlName="employerId" [valuePrimitive]="true" 
             valueField="employerId">
@@ -43,7 +43,7 @@
           <div class="d-flex align-items-center mt-2" >
             <span class="fontsize_twel">Don’t see the Employer you’re looking for?</span>
             <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" 
-              attr.aria-label="ADD NEW" (click)="addNewEmployerPopUpOpen()">
+              aria-label="ADD NEW" (click)="addNewEmployerPopUpOpen()">
              ADD NEW
             </button>
           </div>

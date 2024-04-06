@@ -126,6 +126,7 @@
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   [entityId]="clientId"
   (cerEmailAttachments)="cerEmailAttachmentEvent($event)"
+  (contentValidateEvent)="contentValidateHandler($event)"
 ></case-management-send-email>
     <kendo-toolbar>
       <kendo-toolbar-buttongroup>

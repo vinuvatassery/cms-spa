@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode, VendorContactsFacade } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode, VendorContactsFacade, ScreenType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserDataService } from '@cms/system-config/domain';
@@ -120,7 +120,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isToEmailMissing: boolean = false;
   isEmailSubjectMissing:boolean = false;
   isContentMissing:boolean = false;
-  isFormValid:boolean = true;
+  isMailCodeMissing:boolean = false;
+  isFormValid: boolean = true;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -184,15 +185,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.showToEmailLoader = true;
     this.selectedMailCode = mailCode;
     this.emails = this.selectedToEmails = [];
-    this.vendorContactFacade.loadcontacts(mailCode.vendorAddressId, 0, 999999, 'EmailAddress', 'ASC', JSON.stringify([{
+    this.vendorContactFacade.loadcontacts(mailCode?.vendorAddressId, 0, 999999, 'EmailAddress', 'ASC', JSON.stringify([{
       filters: [
         { field: 'ActiveFlag', operator: 'eq', value: 'Y' }
       ]
     }])).subscribe(resp => {
-      this.emails = resp.items.map((contact: any) => contact.emailAddress);
+      this.emails = resp?.items?.map((contact: any) => contact?.emailAddress?.trim());
+      this.selectedToEmails = this.emails;
       this.showToEmailLoader = false;
       this.ref.detectChanges();
     });
+    this.isMailCodeMissing = false;
+    this.isFormValid = true;
   }
 
   handleEmailsChanged(values: any) {
@@ -383,10 +387,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
+    }
+
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      if(this.selectedMailCode?.mailCode === undefined || this.selectedMailCode?.mailCode === ''){
+      this.isMailCodeMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+      }
     }
     if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = false;
@@ -408,9 +420,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     const emailData = this.getEmailPayload(draftTemplate);
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
-
     emailFormData.append('vendorAddressId', this.selectedMailCode?.vendorAddressId ?? '');
-
+    emailFormData.append('selectedMailCode', this.selectedMailCode?.mailCode ?? '');
     this.communicationFacade.saveClientAndVendorNotificationForLater(emailFormData)
       .subscribe({
         next: (data: any) => {
@@ -471,6 +482,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         this.isEmailSubjectMissing = true;
         this.isFormValid = false;
         this.onSendEmailDailougeConfirmationClicked();
+      }
+      if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+        this.isContentMissing = true;
+        this.isFormValid = false;
+        this.onCloseSaveForLaterClicked();
+      }
+      if(this.notificationGroup === ScreenType.VendorProfile){
+        if(this.selectedMailCode?.mailCode === undefined || this.selectedMailCode?.mailCode === ''){
+        this.isMailCodeMissing = true;
+        this.isFormValid = false;
+        this.onCloseSaveForLaterClicked();
+        }
       }
       if(this.isFormValid){
       if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail) {
@@ -690,12 +713,15 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isShowToEmailLoader$.next(true);
       this.isOpenDdlEmailDetails = true;
       this.selectedMailCodeId = event.vendorAddressId;
-      this.loadMailingAddress();
+      // this.loadMailingAddress();
       this.selectedToEmails = [];
       this.selectedToEmails = event.to;
+      this.emails = this.selectedToEmails;
       this.emailSubject = event.description;
       this.defaultCCEmail = event.cc;
       this.defaultBCCEmail = event.bcc;
+      this.selectedCCEmail = event.cc?.map((item: any)=> item.email);
+      this.ccEmail = event?.ccEmail;
       this.selectedCCEmail = event.cc?.map((item: any) => item.email);
       this.getLoginUserCcEmail();
       if (event?.bccEmail?.length > 0) {
@@ -707,6 +733,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         'description': event.description,
         'documentTemplateId': event.notificationTemplateId
       };
+      this.selectedMailCode = event?.selectedMailCode;
       this.ref.detectChanges();
     }
     else {
@@ -973,7 +1000,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   editorValueChange(event: any){
-        this.updatedTemplateContent = event;
+    this.updatedTemplateContent = event;
+  }
+
+  contentValidateEvent(event: boolean){
+    this.isFormValid = event;
   }
 
 }

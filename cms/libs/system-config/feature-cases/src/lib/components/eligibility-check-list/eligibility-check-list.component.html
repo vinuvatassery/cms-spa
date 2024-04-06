@@ -5,7 +5,7 @@
                   class="material-icons sidebar-menu_icon"> settings </span> Eligibility Checklist
       </h1>
 
-      <button icon="add" kendoButton [primary]="true" aria-label="Funds" class="add-button-top"
+      <button icon="add" kendoButton [primary]="true" aria-label="CRITERION" class="add-button-top"
             (click)="onEligibilityChecklistDetailClicked()">
             CRITERION
       </button>
@@ -47,15 +47,18 @@
       </div>
 
       <div class="app-c-table">
-            <kendo-grid [data]="assisterGroupDataLists$ | async" [resizable]="true" [pageSize]="state.take"
-            [pageable]="true" [loading]="isAssisterGroupListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
+            <kendo-grid [data]="eligibilityChecklistDataLists$ | async" [resizable]="true" [pageSize]="state.take"
+            [pageable]="true" [loading]="isEligibilityChecklistListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
             [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
             (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
-                  <kendo-grid-column field="assisterGroup" title="Assister Group Name" [width]="160">
+                  <kendo-grid-column field="eligibilityCriterion" title="Eligibility Criterion" [width]="160">
                   </kendo-grid-column>
 
 
-
+                  <kendo-grid-column field="appearsOn" title="Appears On" [width]="130">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="allowExceptions" title="Allow exceptions?" [width]="130">
+                  </kendo-grid-column>
 
                   <kendo-grid-column field="lastModified" title="Last Modified" [width]="130">
                   </kendo-grid-column>
@@ -134,7 +137,7 @@
       </div>
 
       <div class="mt-2 block-section">
-            <button icon="add" kendoButton [primary]="true" aria-label="Funds"
+            <button icon="add" kendoButton [primary]="true" aria-label="CRITERION"
                   (click)="onEligibilityChecklistDetailClicked()">
                   CRITERION
             </button>

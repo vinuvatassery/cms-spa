@@ -46,5 +46,5 @@ export class ReadMoreComponent {
       this.limit = content.substr(0, this.limit).lastIndexOf(' ');
     }
     return `${content.substr(0, this.limit)}...`;
-  }
+  }  
 }

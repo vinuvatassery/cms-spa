@@ -67,6 +67,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   public homeAddressProofFile: any = undefined;
   showAddressProofSizeValidation = false;
   isCerForm = false;
+  duplicatePhoneFound = false;
+  otherPhoneDuplicate = false;
+  workPhoneDuplicate = false;
+  cellPhoneDuplicate = false;
+  homePhoneDuplicate = false;
   documentTypeCode!: string;
   prevClientCaseEligibilityId!: string;
   oldContactInfo!: ContactInfo;
@@ -613,6 +618,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       homePhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
       homePhoneGroup.controls['phoneNbr'].updateValueAndValidity();
     }
+    if(this.homePhoneDuplicate){
+      homePhoneGroup.controls['phoneNbr']?.setErrors({ 'invalid': true });
+    }
   }
 
   private setCellPhone(isPhoneChangedInCer: boolean) {
@@ -621,6 +629,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       cellPhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
       cellPhoneGroup.controls['phoneNbr'].updateValueAndValidity();
     }
+    if(this.cellPhoneDuplicate){
+      cellPhoneGroup.controls['phoneNbr']?.setErrors({ 'invalid': true });
+    }
   }
 
   private setWorkPhone(isPhoneChangedInCer: boolean) {
@@ -628,6 +639,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if ((workPhoneGroup.controls['applicableFlag']?.value ?? false) === false && (isPhoneChangedInCer || !this.isCerForm)) {
       workPhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
       workPhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+    }
+    if(this.workPhoneDuplicate){
+      workPhoneGroup.controls['phoneNbr']?.setErrors({ 'invalid': true });
     }
   }
 
@@ -641,6 +655,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         otherPhoneGroup.controls['otherPhoneNote'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
         otherPhoneGroup.controls['otherPhoneNote'].updateValueAndValidity();
       }
+    }
+    if(this.otherPhoneDuplicate){
+      otherPhoneGroup.controls['phoneNbr']?.setErrors({ 'invalid': true });
     }
   }
 
@@ -745,7 +762,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private save() {
     if (this.isNoProofOfHomeChecked) {
       this.handleFileRemoved(null);
-    }    
+    }
+    this.validateDuplicatePhone();
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
     const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.configurationProvider?.appSettings.uploadFileSizeLimit ?? 0);
@@ -759,22 +777,14 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (invalidControl) {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         invalidControl.focus();
-      }
-       //in case of upload dosuments
-       if(this.showAddressProofRequiredValidation){
-        const element = this.elementRef.nativeElement.querySelector(`#HOME_ADDRESS_PROOF`);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center'});
-          element.focus();
-        }
-      }
-    
-       //in case of upload documents
-       if(this.showAddressProofRequiredValidation){
-        const element = this.elementRef.nativeElement.querySelector(`#HOME_ADDRESS_PROOF`);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center'});
-          element.focus();
+      } else {
+        //in case of upload dosuments
+        if (this.showAddressProofRequiredValidation) {
+          const element = this.elementRef.nativeElement.querySelector(`#HOME_ADDRESS_PROOF`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.focus();
+          }
         }
       }
     return of(false);
@@ -1070,6 +1080,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       const cellPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
       const workPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
       const otherPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
+
 
       if (mailingAddress1) {
         mailingAddress.clientAddressId = mailingAddress1?.clientAddressId ? mailingAddress1?.clientAddressId : "00000000-0000-0000-0000-000000000000";
@@ -1480,6 +1491,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     (this.contactInfoForm.get('familyAndFriendsContact') as FormGroup)?.controls['noFriendOrFamilyContactFlag']?.valueChanges.subscribe(value => {
       this.setVisibilityByNoFriendsOrFamily(value);
     });
+
+    (this.contactInfoForm.get('familyAndFriendsContact') as FormGroup)?.controls['contactPhoneNbr']?.valueChanges.subscribe(value => {
+     const ffContactGroup = this.contactInfoForm.get('familyAndFriendsContact') as FormGroup;
+      let contactPhoneNbr =  ffContactGroup.controls['contactPhoneNbr'].value;
+      this.setVisibilityByContactPhoneNbr(contactPhoneNbr);
+    });
   }
 
   private sameAsMailingAddressChangeSubscription() {
@@ -1572,6 +1589,18 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
     }
     this.loadPreferredContactMethod();
+  }
+
+  private setVisibilityByContactPhoneNbr(poneNumber:any){
+    if(poneNumber === null
+    || poneNumber === ''){
+    this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
+    this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
+  }
+  else{
+    this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
+    this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.enable();
+  }
   }
 
   private setVisibilityByNoFriendsOrFamily(isChecked: boolean) {
@@ -2114,7 +2143,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.hasValidator) {
       this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.setValidators(null);
       this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.updateValueAndValidity();
-      return;
+      const phoneNumber = (this.contactInfoForm.get(phoneType) as FormGroup)?.controls['phoneNbr'];
+      const isValidPhoneNumber = phoneNumber?.value && phoneNumber?.valid && !((this.contactInfoForm?.get(phoneType) as FormGroup)?.controls['applicableFlag']?.value ?? false);
+      if(phoneNumber.value.trim().length == 10 && isValidPhoneNumber){
+        this.validateDuplicatePhone();
+      }
     }
     if (phoneType === 'contactPhoneNbr') {
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.setValidators(null);
@@ -2126,4 +2159,56 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contactInfoForm?.get('email.email')?.setValidators(null);
     this.contactInfoForm?.get('email.email')?.updateValueAndValidity();
   }
+  validateDuplicatePhone() {
+    const homePhone = (this.contactInfoForm.get('homePhone') as FormGroup).controls['phoneNbr'];
+    const cellPhone = (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'];
+    const workPhone = (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'];
+    const otherPhone = (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'];
+    if(homePhone.value.trim() == cellPhone.value.trim()
+       || homePhone.value.trim() == workPhone.value.trim()
+       || homePhone.value.trim() == otherPhone.value.trim() ){
+      this.homePhoneDuplicate=true;
+      homePhone.setErrors({ incorrect: true });
+    }else{
+      this.homePhoneDuplicate=false;
+      homePhone.setErrors(null);
+      homePhone.setValidators(null);
+      homePhone.updateValueAndValidity();
+    }
+    if(cellPhone.value.trim() == homePhone.value.trim()
+       || cellPhone.value.trim() == workPhone.value.trim()
+       || cellPhone.value.trim() == otherPhone.value.trim() ){
+      this.cellPhoneDuplicate = true;
+      cellPhone.setErrors({ incorrect: true });
+    }else{
+      this.cellPhoneDuplicate=false;
+      cellPhone.setErrors(null);
+      cellPhone.setValidators(null);
+      cellPhone.updateValueAndValidity();
+    }
+    if(workPhone.value.trim() == homePhone.value.trim()
+       || workPhone.value.trim() == cellPhone.value.trim()
+       || workPhone.value.trim() == otherPhone.value.trim() ){
+      this.workPhoneDuplicate=true;
+      workPhone.setErrors({ incorrect: true });
+    }else{
+      this.workPhoneDuplicate=false;
+      workPhone.setErrors(null);
+      workPhone.setValidators(null);
+      workPhone.updateValueAndValidity();
+    }
+    if(otherPhone.value.trim() == homePhone.value.trim()
+       || otherPhone.value.trim() == cellPhone.value.trim()
+       || otherPhone.value.trim() == workPhone.value.trim() ){
+      this.otherPhoneDuplicate=true;
+      otherPhone.setErrors({ incorrect: true });
+    }else{
+      this.otherPhoneDuplicate=false;
+      otherPhone.setErrors(null);
+      otherPhone.setValidators(null);
+      otherPhone.updateValueAndValidity();
+    }
+
+  }
+
 }

@@ -36,7 +36,7 @@ export class NotificationListComponent {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
     /** Lifecycle hooks **/
     ngOnInit(): void {
-      this.loadNotificationsAndReminders();
+      this.loadNotificationsAndReminders(true);
       this.notificationList$.subscribe((data: any) => {
         this.alertsData.items =data?.items ?  data?.items?.filter((item:any) => item.alertTypeCode == 'NOTIFICATION').sort((a : any, b : any) => {
           const dateA = new Date(a.alertDueDate).getTime();
@@ -93,9 +93,9 @@ export class NotificationListComponent {
    
     
   ];
-  public loadNotificationsAndReminders() {
+  public loadNotificationsAndReminders(isViewAll:boolean) {
     this.isToDoGridLoaderShow.next(true);
-    this.isLoadReminderAndNotificationEvent.emit({ });
+    this.isLoadReminderAndNotificationEvent.emit(isViewAll);
     this.notificationList$.subscribe((data: any) => {
       this.gridDataResult = data?.items;
       if (data?.totalCount >= 0 || data?.totalCount === -1) {

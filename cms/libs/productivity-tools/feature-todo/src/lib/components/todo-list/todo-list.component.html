@@ -80,7 +80,8 @@
       <ng-template kendoGridCellTemplate let-dataItem>
         <div class="d-flex">
           <span>{{dataItem.alertDueDate |date:'MM/dd/YYYY'}}</span>
-          <span [title]="alertRepeatDesc(dataItem.alertFrequencyCode)" class="material-icons loop-icon-size" aria-label="repeat" *ngIf="(dataItem.parentEntityTypeCode == 'PARENT_ALERT')">loop</span>
+          <span [title]="alertRepeatDesc(dataItem.alertFrequencyCode)" class="material-icons loop-icon-size" 
+          aria-label="repeat" *ngIf="(dataItem.parentEntityTypeCode == 'PARENT_ALERT') || (dataItem.alertFrequencyCode != 'NEVER')">loop</span>
         </div>
     </ng-template>
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">

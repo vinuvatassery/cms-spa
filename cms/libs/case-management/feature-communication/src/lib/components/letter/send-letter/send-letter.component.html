@@ -21,7 +21,7 @@
           </kendo-floatinglabel>
       </div>
       <div *ngIf="isOpenLetterTemplate" class="mt-2 p-0 flex-col">
-        <div class="flex-col mb-2" *ngIf="getProfileName() == 'vendor'">
+        <div class="flex-col mb-2" *ngIf="notificationGroup === 'VENDOR_PROFILE'">
           <kendo-floatinglabel text="Mail Code">
             <kendo-dropdownlist
               [fillMode]="formUiStyle.dropDownFillMode"
@@ -33,6 +33,9 @@
             >
             </kendo-dropdownlist>
           </kendo-floatinglabel>
+          <kendo-formerror *ngIf="isMailCodeMissing">
+            Mail Code is required.
+          </kendo-formerror>
       </div>
        <div class="flex-col mb-2">
           <p class="text-capital text-bold">Mailing Address</p>
@@ -58,6 +61,8 @@
           [communicationTypeCode]="communicationLetterTypeCode"
           (editorValueChangeEvent) ="editorValueChange($event)"
           (cerEmailAttachments)="cerEmailAttachments($event)"
+          [isContentMissing]="isContentMissing"
+          (contentValidateEvent)="contentValidateEvent($event)"
           ></case-management-email-editor>
         </div>
       </div>

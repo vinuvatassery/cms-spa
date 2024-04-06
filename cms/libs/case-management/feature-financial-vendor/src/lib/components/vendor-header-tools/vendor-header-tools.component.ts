@@ -45,8 +45,8 @@ export class VendorHeaderToolsComponent {
   vendorId: any;
   vendorTypeCode: any;
   emailSubject: any;
-  communicationLetterTypeCode: any = CommunicationEventTypeCode.VendorLetter;
-  communicationEmailTypeCode: string = CommunicationEventTypeCode.VendorEmail;
+  communicationLetterTypeCode!: string;
+  communicationEmailTypeCode!: string ;
   toEmail: Array<any> = [];
   vendorAddressId:any;
   notificationDraftId!: string;
@@ -56,6 +56,13 @@ export class VendorHeaderToolsComponent {
   notificationGroup!: string;
   isNewNotificationClicked: boolean = false;
   isContinueDraftClicked: boolean = false;
+  templateLoadType!:any;
+  confirmPopupHeader:any;
+  saveForLaterHeadterText:any;
+  saveForLaterModelText:any;
+  confirmationModelText:any;
+  informationalText!:any;
+  templateHeader!:any;
 @Output() openAddReminderEvent = new EventEmitter()
   public sendActions = [
     {
@@ -68,7 +75,14 @@ export class VendorHeaderToolsComponent {
         if(this.draftDropdownCheck === false){
           this.draftDropdownCheck = true;
           this.selectedTemplateName = templatename;
-          this.currentCommunicationTypeCode = this.communicationLetterTypeCode;
+          this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+          this.currentCommunicationTypeCode = CommunicationEventTypeCode.VendorLetter;
+          this.informationalText = "Select an existing template or draft a custom letter."
+          this.templateHeader = 'Send New Letter';
+          this.saveForLaterHeadterText = "Letter Draft Saved";
+          this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the vendor's profile";
+          this.confirmPopupHeader = 'Send Letter to Print?';
+          this.confirmationModelText="This action cannot be undone.";
           this.notificationDraftCheck(this.vendorId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
@@ -83,7 +97,14 @@ export class VendorHeaderToolsComponent {
         if(this.draftDropdownCheck === false){
           this.draftDropdownCheck = true;
           this.selectedTemplateName = templatename;
-          this.currentCommunicationTypeCode = this.communicationEmailTypeCode;
+          this.templateLoadType = CommunicationEventTypeCode.VendorEmail;
+          this.currentCommunicationTypeCode = CommunicationEventTypeCode.VendorEmail;
+          this.informationalText = "Select an existing template or draft a custom email."
+          this.templateHeader = 'Send New Email';
+          this.saveForLaterHeadterText = "Email Draft Saved";
+          this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the vendor's profile";
+          this.confirmPopupHeader = 'Send Email?';
+          this.confirmationModelText="This action cannot be undone.";
           this.notificationDraftCheck(this.vendorId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
@@ -98,7 +119,14 @@ export class VendorHeaderToolsComponent {
         if(this.draftDropdownCheck === false){
           this.draftDropdownCheck = true;
           this.selectedTemplateName = templatename;
-          this.currentCommunicationTypeCode = this.communicationLetterTypeCode;
+          this.templateLoadType = CommunicationEventTypeCode.ClientSMS;
+          this.currentCommunicationTypeCode = CommunicationEventTypeCode.VendorSMS;
+          this.informationalText = "Select an existing template or draft custom text messages"
+          this.templateHeader = 'Send New SMS Text';
+          this.saveForLaterHeadterText = "Sms Draft Saved";
+          this.saveForLaterModelText="To pick up where you left off, click \"New Sms\" from the vendor's profile";
+          this.confirmPopupHeader = 'Send Sms?';
+          this.confirmationModelText="This action cannot be undone.";
           this.notificationDraftCheck(this.vendorId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },

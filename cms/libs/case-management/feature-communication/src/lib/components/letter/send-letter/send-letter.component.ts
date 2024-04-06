@@ -104,6 +104,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   cancelDisplay:boolean = true;
   loadTemplate$ = this.communicationFacade.loadTemplate$;
   draftedTemplate:any='';
+  isContentMissing:boolean = false;
+  isMailCodeMissing:boolean = false;
+  isFormValid: boolean = true;
+  selectedMailingCode!: string;
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadTemplate();
@@ -177,6 +181,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   handleDdlMailCodesChange(mailCode: any) {
     this.mailingAddress = mailCode;
+    this.isMailCodeMissing = false;
+    this.selectedMailingCode = mailCode?.mailCode;
+    this.isFormValid = true;
   }
 
   private loadTemplate(){
@@ -217,8 +224,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
-    let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
-
+    let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId); 
+    letterRequestFormdata.append('address1', this.mailingAddress?.address1 ?? '');
+    letterRequestFormdata.append('address2', this.mailingAddress?.address2 ?? '');
+    letterRequestFormdata.append('city', this.mailingAddress?.city ?? '');
+    letterRequestFormdata.append('state', this.mailingAddress?.state ?? '');
+    letterRequestFormdata.append('zip', this.mailingAddress?.zip ?? '');
+    letterRequestFormdata.append('selectedMailCode', this.mailingAddress?.mailCode ?? '');
     letterRequestFormdata.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
     letterRequestFormdata.append('documentTemplateId', this.documentTemplate?.documentTemplateId ?? '');
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
@@ -246,8 +258,21 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   onSaveForLaterTemplateClicked() {
-    this.isShowSaveForLaterPopupClicked = true;
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+      this.isContentMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      if(this.mailingAddress === undefined || this.mailingAddress === ''){
+      this.isMailCodeMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+      }
+    }
+    if(this.isFormValid){
+    this.isShowSaveForLaterPopupClicked = true;
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
     {
       this.saveDraftEsignLetterRequest(this.selectedTemplate);
@@ -255,6 +280,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
       this.isShowSaveForLaterPopupClicked = false;
     }
+   }
   }
 
   onSendLetterToPrintDialogClicked(event: any) { 
@@ -307,6 +333,19 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+      this.isContentMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      if(this.selectedTemplate.selectedMailCode === undefined || this.selectedTemplate.selectedMailCode === ''){
+      this.isMailCodeMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+      }
+    }
+    if(this.isFormValid){
     this.loaderService.show();
     if(this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
       this.entityId = this.workflowFacade.clientId ?? 0;
@@ -315,6 +354,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }else{
       this.sendClientAndVendorLetterToPrint(this.entityId, this.clientCaseEligibilityId, draftTemplate, requestType, this.clientAndVendorAttachedFiles);
     }
+   }
   }
 
   private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
@@ -564,9 +604,17 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.isOpenLetterTemplate = true;
       this.selectedTemplate = event;
       this.selectedMailCodeId = event.vendorAddressId;
-      this.loadMailingAddress();
+      // this.loadMailingAddress();
       this.selectedTemplateContent = event.requestBody;
       this.updatedTemplateContent = event.requestBody;
+      this.selectedMailCode = event?.selectedMailCode;
+      this.mailingAddress = {
+        address1: event?.address1,
+        address2: event?.address2,
+        city: event?.city,
+        state: event?.state,
+        zip: event?.zip,
+      };
       this.documentTemplate = {
         'description': event.description,
         'documentTemplateId': event.notificationTemplateId
@@ -666,7 +714,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 loadMailingAddress() {
   if (this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
   {
-    if(this.notificationGroup == ScreenType.ClientProfile){
+    if(this.notificationGroup === ScreenType.ClientProfile){
       this.loadClientMailingAddress();
     }else{
     this.vendorContactFacade.loadMailCodes(this.entityId);
@@ -703,6 +751,10 @@ loadMailingAddress() {
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;
+}
+
+contentValidateEvent(event: boolean){
+  this.isFormValid = event;
 }
 
 }

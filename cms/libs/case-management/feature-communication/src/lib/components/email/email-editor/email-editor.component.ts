@@ -42,6 +42,7 @@ export class EmailEditorComponent implements OnInit {
   /** Output properties  **/
   @Output() cerEmailAttachments = new EventEmitter();
   @Output() editorValueChangeEvent = new EventEmitter();
+  @Output() contentValidateEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Public properties **/
   @ViewChild('anchor',{ read: ElementRef }) public anchor!: ElementRef;
@@ -150,6 +151,7 @@ export class EmailEditorComponent implements OnInit {
         }
         else
         {
+          if(!this.isContentMissing){
           let templateId = null;
           if(this.selectedTemplate.documentTemplateId === null){
             templateId = this.selectedTemplate.notificationTemplateId
@@ -159,6 +161,7 @@ export class EmailEditorComponent implements OnInit {
           }
           this.loadClientVendorDefaultAttachment(templateId);
         }
+      }
     }
     
     if ([CommunicationEventTypeCode.VendorEmail, CommunicationEventTypeCode.VendorLetter].includes(this.communicationTypeCode)) {
@@ -288,7 +291,13 @@ export class EmailEditorComponent implements OnInit {
   }
 
   editorValueChange(event: any){
-   this.editorValueChangeEvent.emit(event);
+    this.isContentMissing = false;
+    this.editorValueChangeEvent.emit(event);
+    this.contentValidateHandler(true);
+  }
+
+  contentValidateHandler(event: any){
+    this.contentValidateEvent.emit(true);
   }
 
   handleFileSelected(event: any) {

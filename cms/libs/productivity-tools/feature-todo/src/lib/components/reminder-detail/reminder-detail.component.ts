@@ -252,9 +252,8 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   prepareCommonPayload(){
-   const dueDate = new Date(this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat));
     return {
-      alertDueDate :  dueDate,
+      alertDueDate :  this.clientReminderForm.controls['dueDate'].value,
       alertDesc : this.clientReminderForm.controls['description'].value,
       entityTypeCode : this.entityTypeCode,
       entityId :this.entityId ,
@@ -392,21 +391,33 @@ export class ReminderDetailComponent implements OnInit {
   dueDateValidation(){
     const dueDate = new Date(this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat));
     const todayDate =  new Date(this.intl.formatDate(new Date(), this.dateFormat));
+    this.timeValidation()
     if ( this.clientReminderForm.controls['dueDate'].value && dueDate < todayDate) {
       this.clientReminderForm.controls['dueDate'].setErrors({ 'incorrect': true });
-    
       return;
     }
+    return true;
   }
 
   timeValidation(){
     const timeInMinutes = new Date(this.clientReminderForm.controls['time'].value).getMinutes();
     const timeInHours = new Date(this.clientReminderForm.controls['time'].value).getHours();
-    
-    if ( this.clientReminderForm.controls['time'].value && timeInMinutes < new Date().getMinutes() && timeInHours <  new Date().getHours() ) {
+    const dueDate = this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat);
+    const todayDate =  this.intl.formatDate(new Date(), this.dateFormat);
+   
+    if ( this.clientReminderForm.controls['dueDate'].value && dueDate == todayDate) {
+   {
+    if ( this.clientReminderForm.controls['time'].value && timeInMinutes < new Date().getMinutes() 
+    && timeInHours <  new Date().getHours() ) {
       this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
-    
       return;
     }
+  }
+}
+  else{
+    this.clientReminderForm.controls['time'].setErrors({ 'incorrect': null })
+    this.clientReminderForm.controls['time'].updateValueAndValidity();
+    return;
+  }
   }
 }
