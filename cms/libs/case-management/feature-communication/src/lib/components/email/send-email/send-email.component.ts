@@ -681,7 +681,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
   }
   setDraftedTemplate(event: any) {
-    if (event.typeCode === this.communicationEmailTypeCode) {
+    if (event.subTypeCode === this.communicationEmailTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.selectedTemplate = event;
       this.selectedTemplateContent = event.templateContent == undefined ? event.requestBody : event.templateContent;

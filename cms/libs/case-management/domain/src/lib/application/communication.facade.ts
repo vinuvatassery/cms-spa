@@ -220,9 +220,11 @@ export class CommunicationFacade {
       });
     }
     if (data?.emailData) {
+      let subTypeCode = data?.emailData?.subtypeCode?? data?.emailData?.subTypeCode 
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
       formData.append('description', data?.emailData?.description ?? '');
       formData.append('typeCode', data?.emailData?.typeCode ?? '');
+      formData.append('subTypeCode', subTypeCode ?? '');
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
       formData.append('notificationDraftId', data?.emailData?.notificationDraftId ?? '');
     }
@@ -265,10 +267,12 @@ export class CommunicationFacade {
   }
 
   prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[]) {
+    let subTypeCode = emailData?.templateTypeCode ?? emailData?.subTypeCode;
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
-    formData.append('typeCode', emailData?.templateTypeCode ?? emailData?.typeCode);
+    formData.append('typeCode', emailData?.templateCategoryCode ?? emailData?.typeCode);
+    formData.append('subTypeCode',subTypeCode);
     formData.append('entity', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('notificationDraftId', emailData?.notificationDraftId ?? '');

@@ -221,7 +221,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
     letterRequestFormdata.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
     letterRequestFormdata.append('documentTemplateId', this.documentTemplate?.documentTemplateId ?? '');
-
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
         .subscribe({
@@ -560,7 +559,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private setDraftedTemplate(event: any) { 
-    if (event.typeCode === this.communicationLetterTypeCode) {
+    if (event.subTypeCode === this.communicationLetterTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.isOpenLetterTemplate = true;
       this.selectedTemplate = event;
@@ -575,6 +574,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
     else
     {
+      if(this.selectedTemplate !== undefined)
       this.selectedTemplate.notificationDraftId = event.notificationDraftId;
     }
     this.ref.detectChanges();
