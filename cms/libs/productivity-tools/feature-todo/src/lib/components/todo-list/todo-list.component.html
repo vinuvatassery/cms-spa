@@ -1,6 +1,6 @@
 <!-- Case List table -->
 <div class="app-c-drag-row-table">
-  <kendo-grid [data]="gridToDoItemData$ | async" [columnMenu]="true" [sortable]="true" 
+  <kendo-grid [data]="gridToDoItemData$ | async" [sortable]="true" 
   (dataStateChange)="dataStateChange($event)"
   [loading]="(isToDoGridLoaderShow | async) === true"
   [sort]="toDoGridState.sort"
