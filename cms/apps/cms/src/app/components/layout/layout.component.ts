@@ -44,11 +44,11 @@ export class LayoutComponent {
     this.sizeChange(event);
   }
 
-  onloadReminderAndNotificationsGrid(){
-    this.notificationFacade.loadNotificationsAndReminders();
+  onloadReminderAndNotificationsGrid(isViewAll :boolean){
+    this.notificationFacade.loadNotificationsAndReminders(isViewAll);
   }
   
   onSnoozeReminder(event:any){ 
-    this.notificationFacade.SnoozeReminder(event.reminderId,event.duration);
+    this.notificationFacade.SnoozeReminder(event.reminderId,event.duration,event.isViewAll);
   }
 }

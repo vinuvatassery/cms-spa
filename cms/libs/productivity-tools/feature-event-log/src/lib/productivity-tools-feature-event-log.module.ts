@@ -11,6 +11,7 @@ import { EventDetailComponent } from './components/event-detail/event-detail.com
 import { EventAttachmentComponent } from './components/event-attachment/event-attachment.component';
 import { EventLogComponent } from './components/event-log/event-log.component';
 import { EventLogComponentFabPageComponent } from './containers/event-log-fab-page/event-log-fab-page.component';
+import { EventLogDescriptionComponent } from './components/event-log-description/event-log-description.component';
 
 @NgModule({
   imports: [
@@ -18,15 +19,20 @@ import { EventLogComponentFabPageComponent } from './containers/event-log-fab-pa
     ProductivityToolsDomainModule,
     SharedUiTpaModule,
     ProductivityToolsFeatureEventLogRoutingModule,
-    SharedUiCommonModule
+    SharedUiCommonModule,
   ],
   declarations: [
     EventLogComponent,
     EventDetailComponent,
     EventAttachmentComponent,
-    EventLogComponentFabPageComponent
+    EventLogComponentFabPageComponent,
+    EventLogDescriptionComponent,
   ],
-  exports: [EventLogComponent, EventDetailComponent, EventAttachmentComponent,
-    EventLogComponentFabPageComponent],
+  exports: [
+    EventLogComponent,
+    EventDetailComponent,
+    EventAttachmentComponent,
+    EventLogComponentFabPageComponent,
+  ],
 })
 export class ProductivityToolsFeatureEventLogModule {}

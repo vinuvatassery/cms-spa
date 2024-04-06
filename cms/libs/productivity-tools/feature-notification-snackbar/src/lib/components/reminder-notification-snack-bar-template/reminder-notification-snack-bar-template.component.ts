@@ -51,13 +51,13 @@ isReminderExpand = false;
       icon: 'edit'
     },
     {
-      text: '15 Minutes Snooze',
+      text: '15 Minute Snooze',
       buttonType: 'btn-h-primary',
       icon: 'snooze',
       id:'15 Minutes'
     },
     {
-      text: '30 Minutes Snooze',
+      text: '30 Minute Snooze',
       buttonType: 'btn-h-primary',
       icon: 'snooze',
       id:'30 Minutes'
@@ -69,7 +69,7 @@ isReminderExpand = false;
       id:'1 hour'
     },
     {
-      text: '2 hours Snooze',
+      text: '2 hour Snooze',
       buttonType: 'btn-h-primary',
       icon: 'snooze',
       id:'2 hours'
@@ -81,13 +81,13 @@ isReminderExpand = false;
       id:'1 day'
     },
     {
-      text: '3 days Snooze',
+      text: '3 day Snooze',
       buttonType: 'btn-h-primary',
       icon: 'snooze',
       id:'3 days'
     },
     {
-      text: '7 days Snooze',
+      text: '7 day Snooze',
       buttonType: 'btn-h-primary',
       icon: 'snooze',
       id:'7 days'

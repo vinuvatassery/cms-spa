@@ -23,14 +23,14 @@ export class NotificationAndReminderPageComponent {
       'Item  updated to Done successfully'
     );
   }
-  onloadReminderAndNotificationsGrid(){
-    this.notificationFacade.loadNotificationsAndReminders();
+  onloadReminderAndNotificationsGrid(isViewAll : boolean){
+    this.notificationFacade.loadNotificationsAndReminders(isViewAll);
   }
   onListenSearchTerm(searchedValue:any){
     if(searchedValue){
       this.notificationFacade.loadNotificatioBySearchText(searchedValue);
     }else {
-      this.onloadReminderAndNotificationsGrid();
+      this.onloadReminderAndNotificationsGrid(true);
     }
     
   }
