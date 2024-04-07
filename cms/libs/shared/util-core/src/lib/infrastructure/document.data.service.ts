@@ -95,4 +95,12 @@ export class DocumentDataService {
         responseType: 'blob'
       });
   }
+
+  getOldDocumentsViewDownload(docuemntPath: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${docuemntPath}/download`
+      , {
+        responseType: 'blob'
+      });
+  }
 }

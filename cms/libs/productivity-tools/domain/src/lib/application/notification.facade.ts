@@ -17,7 +17,7 @@ export class NotificationFacade {
   private snoozeReminderSubject = new Subject<any>();
   notificationList$ = this.notificationAndReminderListSubject.asObservable();
   snoozeReminder$ = this.snoozeReminderSubject.asObservable();
-  private alertSearchLoaderVisibilitySubject = new Subject<boolean>;
+   alertSearchLoaderVisibilitySubject = new Subject<boolean>;
   alertSearchLoaderVisibility$= this.alertSearchLoaderVisibilitySubject.asObservable();
 
   private todoAndReminderFabCountSubject = new Subject<boolean>;
@@ -50,8 +50,8 @@ export class NotificationFacade {
       );
   }
 
-  loadNotificationsAndReminders(): void {
-    this.notificationDataService.loadNotificationsAndReminders().subscribe({
+  loadNotificationsAndReminders(isViewAll?:any): void {
+    this.notificationDataService.loadNotificationsAndReminders(isViewAll).subscribe({
       next: (todoGridResponse: any) => {
         this.notificationAndReminderListSubject.next(todoGridResponse);
       },
@@ -96,14 +96,21 @@ export class NotificationFacade {
     }
   } 
   
-  SnoozeReminder(reminderId:any, duration:any, isFullDay= true){
+  SnoozeReminder(reminderId:any, duration:any,isViewAll =true, isFullDay= true){
     this.loaderService.show()
     this.notificationDataService.SnoozeReminder(reminderId,duration,isFullDay).subscribe({
       next: (snoozeResponse: any) => {
         this.loaderService.hide() 
         this.snoozeReminderSubject.next(true);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , snoozeResponse.message);
-        this.loadNotificationsAndReminders();
+        if(isViewAll== true)
+         {
+          this.loadNotificationsAndReminders();
+         }
+        else
+         {
+          this.loadNotificationsAndReminders(false);
+         }
       },
       error: (err) => {
         this.loaderService.hide()

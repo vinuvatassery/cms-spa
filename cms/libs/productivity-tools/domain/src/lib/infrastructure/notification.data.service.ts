@@ -31,9 +31,9 @@ export class NotificationDataService {
     ]);
   }
 
-  loadNotificationsAndReminders() {
+  loadNotificationsAndReminders(isViewAll :boolean) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications`);
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications/${isViewAll}`);
   }
 
   viewNotifictaions(notifications: any[]) {
@@ -42,7 +42,8 @@ export class NotificationDataService {
     );
   }
   searchNotifications(text: string){  
-    return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/search/${text}` );
+     const searchData = {text:text}
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/search`,searchData );
   }
 
   SnoozeReminder(reminderId:any,duration:any, isFullDay:boolean) {

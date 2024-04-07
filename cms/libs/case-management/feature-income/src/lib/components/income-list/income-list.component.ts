@@ -37,6 +37,8 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   @Input() incomeFrequencylov$: any;
   @Input() incomesLoader$: any
   @Input() isProofOfSchoolDocumentUploaded!: boolean;
+  @Input() totalIncomeCalculated:any;
+  @Input() fplPercentage:any;
 
   /** Output properties **/
   @Output() public sendDetailToIncomeList = new EventEmitter<any>();
@@ -157,16 +159,6 @@ export class IncomeListComponent implements OnInit, OnDestroy {
 
   /** Private methods **/
   private loadIncomes() {
-    this.incomeFacade.incomesResponse$.subscribe({
-      next: (incomeResponse: any) => {
-        this.incomesTotal = incomeResponse;
-        this.cdr.detectChanges();
-      },
-      error: (error: any) => {
-        this.loggingService.logException(error);
-      }
-    });
-
     this.incomes$.subscribe({
       next: (income: any) => {
         this.cerStarted = income.data.filter((x:any)=>x.cerStarted).length > 0;
@@ -176,6 +168,16 @@ export class IncomeListComponent implements OnInit, OnDestroy {
         this.updateWorkFlowStatus(false);
       }
     })
+    this.incomeFacade.incomesResponse$.subscribe({
+      next: (incomeResponse: any) => {
+       this.fplPercentage = incomeResponse.fplPercentage;
+       this.totalIncomeCalculated =  incomeResponse.totalIncome;
+       this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        this.loggingService.logException(error);
+      }
+    });
   }
 
 ngOnDestroy(): void {

@@ -7,6 +7,8 @@ import { Event } from '../entities/event';
 /** Data services **/
 import { EventDataService } from '../infrastructure/event.data.service';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
+import { NotificationStatsFacade } from './notification-stats.facade';
+import { StatsTypeCode } from '../enums/stats-type-code.enum';
 
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +29,8 @@ export class EventLogFacade {
   constructor(private readonly eventDataService: EventDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService) {}
+    private readonly loaderService: LoaderService,
+    private readonly notificationStatsFacade : NotificationStatsFacade) {}
 
   /** Public methods **/
 
@@ -92,6 +95,8 @@ export class EventLogFacade {
         this.hideLoader()
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response[1].message, response[0].message);
         this.addEventDataSubject.next(response);
+        if(eventData?.sourceEntityId && eventData?.sourceEntityTypeCode)
+          this.notificationStatsFacade.resetStats(eventData.sourceEntityId, StatsTypeCode.EventLog);
       },
       error: (err) => {
         this.hideLoader()

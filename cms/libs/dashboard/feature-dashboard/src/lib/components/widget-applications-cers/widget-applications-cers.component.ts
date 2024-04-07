@@ -46,7 +46,7 @@ export class WidgetApplicationsCersComponent {
   {
     const query = {
       queryParams: {
-        tab: CaseScreenTab.ALL,
+        tab: CaseScreenTab.MY_CASES,
         casestatus: CaseStatusCode.incomplete
       },
     };

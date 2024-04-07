@@ -262,7 +262,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     let firstName = this.appInfoForm.controls['firstName'].value ?? '';
     let lastName = this.appInfoForm.controls['lastName'].value ?? '';
     this.ApplicantNameChange.emit(firstName + '  ' + lastName);
-    const initialAjustment: CompletionChecklist[] = [];
+    const initialAdjustment: CompletionChecklist[] = [];
     const adjustControls =
       this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {
@@ -270,11 +270,13 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
         dataPointName: control.name,
         status: control.checked ? StatusFlag.Yes : StatusFlag.No,
       };
-      initialAjustment.push(data);
+      initialAdjustment.push(data);
     });
 
-    if (initialAjustment.length > 0) {
-      this.AdjustAttrChanged.emit(initialAjustment);
+    if (initialAdjustment.length > 0) {
+      this.noMiddleNameDataPointAdjustment(initialAdjustment, 'officialIdsNotApplicable', 'chkOfficialIdMiddleName');
+      this.noMiddleNameDataPointAdjustment(initialAdjustment, 'prmInsNotApplicable', 'chkPrmInsMiddleName');
+      this.AdjustAttrChanged.emit(initialAdjustment);
     }
   }
 
@@ -515,6 +517,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       this.appInfoForm.controls['officialIdLastName'].disable();
       this.appInfoForm.controls['officialIdMiddleName'].disable();
       this.appInfoForm.controls['officialIdFirstName'].disable();
+      this.appInfoForm.controls['chkOfficialIdMiddleName'].disable();
     } else {
       this.appInfoForm.controls['officialIdsNotApplicable'].setValue(false);
       this.appInfoForm.controls['officialIdFirstName'].setValue(
@@ -553,6 +556,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       this.appInfoForm.controls['prmInsFirstName'].disable();
       this.appInfoForm.controls['prmInsMiddleName'].disable();
       this.appInfoForm.controls['prmInsLastName'].disable();
+      this.appInfoForm.controls['chkPrmInsMiddleName'].disable();
     } else {
       this.appInfoForm.controls['prmInsNotApplicable'].setValue(false);
       this.appInfoForm.controls['prmInsFirstName'].setValue(
@@ -719,12 +723,14 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
   }
 
   private updateAdjustAttribute(dataPointName: string, status: StatusFlag) {
-    const data: CompletionChecklist = {
+    const data: CompletionChecklist[] = [{
       dataPointName: dataPointName,
       status: status,
-    };
+    }];
 
-    this.AdjustAttrChanged.emit([data]);
+    this.noMiddleNameDataPointAdjustment(data, 'officialIdsNotApplicable', 'chkOfficialIdMiddleName');
+    this.noMiddleNameDataPointAdjustment(data, 'prmInsNotApplicable', 'chkPrmInsMiddleName');
+    this.AdjustAttrChanged.emit(data);
   }
 
   private addAppInfoFormChangeSubscription() {
@@ -771,7 +777,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       const data: CompletionChecklist = {
         dataPointName: control.name,
         status: control.checked ? StatusFlag.Yes : StatusFlag.No,
-      };
+      };     
 
       initialAdjustment.push(data);
     });
@@ -783,11 +789,31 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
           ? StatusFlag.No
           : StatusFlag.Yes,
     });
+
+
     if (initialAdjustment.length > 0) {
+      this.noMiddleNameDataPointAdjustment(initialAdjustment, 'officialIdsNotApplicable', 'chkOfficialIdMiddleName');
+      this.noMiddleNameDataPointAdjustment(initialAdjustment, 'prmInsNotApplicable', 'chkPrmInsMiddleName');
       this.AdjustAttrChanged.emit(initialAdjustment);
     }
 
     this.updateInitialWorkflowCheckList();
+  }
+  
+  private noMiddleNameDataPointAdjustment(initialAdjustment: CompletionChecklist[], parentNotApplicable: string, childNotApplicable:string){
+    const offNotApplicable = initialAdjustment.find(adj => adj.dataPointName === parentNotApplicable && adj.status === StatusFlag.Yes);
+    if(offNotApplicable){
+        const middleNameIndex = initialAdjustment.findIndex(adj => adj.dataPointName === childNotApplicable);
+        if(middleNameIndex !== -1){
+          initialAdjustment[middleNameIndex].status = StatusFlag.Yes;
+        }
+        else{
+          initialAdjustment.push({
+            dataPointName: childNotApplicable,
+            status: StatusFlag.Yes,
+          });  
+        }
+    }
   }
 
   private updateInitialWorkflowCheckList(): void {

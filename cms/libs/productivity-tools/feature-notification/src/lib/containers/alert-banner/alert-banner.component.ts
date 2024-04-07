@@ -15,6 +15,8 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { AlertDueOn } from '@cms/productivity-tools/domain';
+import { NavigationStart, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'common-alert-banner',
   templateUrl: './alert-banner.component.html',
@@ -49,6 +51,7 @@ export class AlertBannerComponent implements OnInit {
   @Output() onEditReminderClicked = new EventEmitter<any>()
   @Output() onEditTodoClicked = new EventEmitter<any>()
   @Output()  onDeleteReminderClicked =  new EventEmitter<any>()
+  routeSubscription!: Subscription;
   public popoverAlertActions = [
     {
       buttonType:"btn-h-primary",
@@ -120,8 +123,19 @@ export class AlertBannerComponent implements OnInit {
   constructor(private configurationProvider : ConfigurationProvider,
               private readonly cdr: ChangeDetectorRef,
               private readonly intl: IntlService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private readonly router: Router,) {
               this.secondaryAlertList = new Array();
+              this.routeSubscription = this.router.events.subscribe(event => {
+                if (event instanceof NavigationStart) {
+                  let isNewEntityId = (this.entityId.toString() != event.url.toString().split("/")[4]); 
+                    this.entityId = event.url.toString().split("/")[4];  
+                    if(parseInt(this.entityId)>0 && isNewEntityId){
+                      this.isLoadAlertListEvent.emit(this.entityId)
+                      this.loadTodoAlertBannerData();
+                    } 
+                }
+            });
   }
 
   /** Lifecycle hooks **/
@@ -133,7 +147,7 @@ export class AlertBannerComponent implements OnInit {
       });
   } 
   ngDestroy(): void {
-    //this.alertList$.unsubscribe();
+    this.routeSubscription.unsubscribe();
   }  
   private loadTodoAlertBannerData(){
         this.alertList$.subscribe((data: any) => {
@@ -159,18 +173,20 @@ export class AlertBannerComponent implements OnInit {
 
 
   public DueOn(alertItem:any):any{
+    console.log(alertItem.alertDueDate);
     let dateNow = new Date();
     let dueDate = new Date(alertItem.alertDueDate); 
-         if (dueDate.toLocaleDateString() == dateNow.toLocaleDateString()) {
+         if (dueDate.getDate() == dateNow.getDate()) {
              return alertItem.alertTypeCode != 'TODO' ?  '(Due '+AlertDueOn.Today+')' : AlertDueOn.Today;
-          } else if(!(dueDate.toLocaleDateString() < dateNow.toLocaleDateString()) && 
-            (dueDate.toLocaleDateString() <= this.addDays(dateNow,1).toLocaleDateString())) {
+          } else if(!(dueDate.getDate() < dateNow.getDate()) && 
+            (dueDate.getDate() <= this.addDays(dateNow,1).getDate())) {
              return alertItem.alertTypeCode != 'TODO' ?  '(Due in 1 day)' : AlertDueOn.Tomorrow;
-           }else if(dueDate.toLocaleDateString() > dateNow.toLocaleDateString()){
+           }else if(dueDate.getDate() > dateNow.getDate()){
             return alertItem.alertTypeCode != 'TODO' ?  '(Due in '+this.differenceInDays(dueDate,dateNow)+ ' days)' :
             (this.intl.formatDate(new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
-           }else if (dueDate.toLocaleDateString() < dateNow.toLocaleDateString()){
-            return alertItem.alertTypeCode != 'TODO' ?  '(Overdue)' : '';
+           }else if (dueDate.getDate() < dateNow.getDate()){
+            return alertItem.alertTypeCode != 'TODO' ?  '(Overdue)' : 
+            (this.intl.formatDate(new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
            }
            return (this.intl.formatDate(
            new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
