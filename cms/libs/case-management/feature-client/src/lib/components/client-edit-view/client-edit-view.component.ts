@@ -517,6 +517,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       this.appInfoForm.controls['officialIdLastName'].disable();
       this.appInfoForm.controls['officialIdMiddleName'].disable();
       this.appInfoForm.controls['officialIdFirstName'].disable();
+      this.appInfoForm.controls['chkOfficialIdMiddleName'].disable();
     } else {
       this.appInfoForm.controls['officialIdsNotApplicable'].setValue(false);
       this.appInfoForm.controls['officialIdFirstName'].setValue(
@@ -555,6 +556,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       this.appInfoForm.controls['prmInsFirstName'].disable();
       this.appInfoForm.controls['prmInsMiddleName'].disable();
       this.appInfoForm.controls['prmInsLastName'].disable();
+      this.appInfoForm.controls['chkPrmInsMiddleName'].disable();
     } else {
       this.appInfoForm.controls['prmInsNotApplicable'].setValue(false);
       this.appInfoForm.controls['prmInsFirstName'].setValue(

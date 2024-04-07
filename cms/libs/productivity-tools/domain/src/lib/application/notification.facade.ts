@@ -17,7 +17,7 @@ export class NotificationFacade {
   private snoozeReminderSubject = new Subject<any>();
   notificationList$ = this.notificationAndReminderListSubject.asObservable();
   snoozeReminder$ = this.snoozeReminderSubject.asObservable();
-  private alertSearchLoaderVisibilitySubject = new Subject<boolean>;
+   alertSearchLoaderVisibilitySubject = new Subject<boolean>;
   alertSearchLoaderVisibility$= this.alertSearchLoaderVisibilitySubject.asObservable();
 
   private todoAndReminderFabCountSubject = new Subject<boolean>;
