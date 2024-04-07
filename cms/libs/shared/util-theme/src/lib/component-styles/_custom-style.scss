@@ -1135,12 +1135,16 @@ color: $app-primary-font-color;
 .field_with_info {
   display: flex;
   align-items: flex-end;
-
+&.notop_need{
+  >span.material-icons {  margin-top: 32px;}
+}
   >span.material-icons {
-    margin-bottom: 10px;
+    align-self: flex-start;
+    margin-top: 12px;
     margin-left: 10px;
     color: rgba($black, 0.6);
     font-size: $font-size-l;
+    
   }
   >div.autoSelect-search{
     width: 100%;
