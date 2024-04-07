@@ -244,9 +244,15 @@ export class ReminderDetailComponent implements OnInit {
   setLinkToAndEntity(){
     if(this.isShowEntityTypeCode && this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value =='CLIENT'){
       this.entityTypeCode = 'CLIENT'
+      if(!(this.clientReminderForm.controls['clientId'].value && this.clientReminderForm.controls['clientId'].value.clientId)){
+        this.clientReminderForm.controls['clientId'].setErrors({ 'required': true });
+      }
       this.entityId =  this.clientReminderForm.controls['clientId'].value.clientId?.toString()
     }else   if( this.isShowEntityTypeCode && this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value !=='VENDOR'){
       this.entityTypeCode = 'VENDOR'
+      if(!(this.clientReminderForm.controls['vendorId'].value && this.clientReminderForm.controls['vendorId'].value.vendorId)){
+        this.clientReminderForm.controls['vendorId'].setErrors({ 'required': true });
+      }
       this.entityId =  this.clientReminderForm.controls['vendorId'].value.providerId?.toString()
     }
   }
@@ -302,11 +308,11 @@ export class ReminderDetailComponent implements OnInit {
 
   public save() {
     this.isSubmitted = true;
+   this.clientReminderForm.markAllAsTouched();
     this.afterCrudOperationAddSubscription();
     this.setLinkToAndEntity();
     this.timeValidation();
     this.dueDateValidation();
-   this.clientReminderForm.markAllAsTouched();
    if (this.clientReminderForm.valid) {
    if(this.isEdit){
     this.updateReminder()
@@ -408,8 +414,8 @@ export class ReminderDetailComponent implements OnInit {
     if ( this.clientReminderForm.controls['dueDate'].value && dueDate == todayDate) {
    {
     if ( this.clientReminderForm.controls['time'].value &&
-    (timeInHours ==  new Date().getHours() && timeInMinutes <= new Date().getMinutes())
-    || timeInHours <  new Date().getHours() ) {
+    ((timeInHours ==  new Date().getHours() && timeInMinutes < new Date().getMinutes())
+    || timeInHours <  new Date().getHours())) {
       this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
       return;
     }

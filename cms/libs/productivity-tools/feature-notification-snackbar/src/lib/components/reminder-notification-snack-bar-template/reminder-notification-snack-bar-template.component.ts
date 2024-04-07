@@ -189,17 +189,17 @@ isReminderExpand = false;
     }
   })
  if(event.id == '15 Minutes'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false,false)
  
  }
  if(event.id == '30 Minutes'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,30, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,30,false, false)
  }
  if(event.id == '1 hour'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1,false, false)
  }
  if(event.id == '2 hours'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1,false, false)
  }
  if(event.id == '3 days'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,3)
