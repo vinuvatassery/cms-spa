@@ -151,7 +151,7 @@
 
         <kendo-grid-column title="File Download" [width]="130" [sortable]="false" [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button"
+            <button  [disabled]="dataItem.uploadStatus=='N'" [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button"
               kendoPopoverAnchor (click)="downloadFile(dataItem.fileId,dataItem.processTypeDesc)">
               Download
             </button>

@@ -98,10 +98,10 @@
       </kendo-grid-column>
       <kendo-grid-column *ngIf="interfaceType !='USPS'" title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button"
+          <button [disabled]="dataItem.uploadStatus=='N'" [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button" 
             kendoPopoverAnchor (click)="downloadFile(dataItem.fileId)">
-            Download
-          </button>
+            Download 
+          </button> 
         </ng-template>
       </kendo-grid-column>
 
