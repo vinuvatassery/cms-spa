@@ -311,7 +311,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   onNewTodoClicked():void {
     this.editToDoDialog = this.dialogService.open({
       content: this.todoDetailTemplateRef,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np mnl',
     }); 
   }
 

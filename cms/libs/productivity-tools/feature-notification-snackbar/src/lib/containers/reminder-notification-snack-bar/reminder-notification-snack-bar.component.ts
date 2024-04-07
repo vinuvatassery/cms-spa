@@ -211,7 +211,16 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
         this.dueDateText = "In " + timeDifferenceMinutes + " Mins"
       }
       if (timeDifferenceMinutes <= 0) {
-        this.dueDateText = timeDifferenceMinutes + " Mins Over Due"
+        this.dueDateText = 0-timeDifferenceMinutes + " Mins Over Due"
+        if(0-timeDifferenceMinutes >60){
+          var timeInHours =  Math.floor(0-timeDifferenceMinutes/60);
+          this.dueDateText = timeInHours +" Hrs Over Due"
+          if(timeInHours >24){
+           var timeInDays =  Math.floor(timeInHours/24);
+           this.dueDateText = timeInDays +" Days Over Due"
+          }
+        }
+
       }
       if (timeDifferenceMinutes == 0) {
         this.dueDateText = "Now"
