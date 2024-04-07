@@ -6,8 +6,13 @@
 }
 .sidePanel-event-log {
   .sidePanel_body {
-    max-height: calc(100vh - 264px);
+  
+    max-height: calc(100vh - 315px);
     overflow: auto;
+    @media (max-height:900px) {
+      max-height: calc(100vh - 175px);   
+    
+    }
   }
 }
 .sidePanel_header-right{
