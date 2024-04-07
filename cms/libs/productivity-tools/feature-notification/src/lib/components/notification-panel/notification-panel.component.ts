@@ -350,26 +350,37 @@ export class NotificationPanelComponent implements OnInit {
      if(item.id == '1daysnooze' ){
       const snoozeReminder={
         reminderId:gridItem.alertId,
-        duration: 1
+        duration: 1,
+        isViewAll :false
       }
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
     if(item.id == '3daysnooze'){ 
       const snoozeReminder={
         reminderId:gridItem.alertId,
-        duration: 3
+        duration: 3,
+        isViewAll :false
       }
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
     if(item.id == '7daysnooze'){ 
       const snoozeReminder={
         reminderId:gridItem.alertId,
-        duration: 7
+        duration: 7,
+        isViewAll :false
       }
       this.onSnoozeReminderEvent.emit(snoozeReminder);
     }
    }
    toggleDescription(message: any) {
     message.showFullDescription = !message.showFullDescription;
+  }
+  formatTime (time: string): string {
+    if (!time) return ''; 
+    const [hours, minutes] = time.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+    return formattedTime;
   }
 }

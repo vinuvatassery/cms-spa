@@ -1,13 +1,34 @@
 <div *ngIf="hasUrl">
     <span *ngFor="let item of anchorArray">
-        <span class="mb-1" *ngIf="!item.isUrlFlag">{{item.text}}</span>
-        <a *ngIf="item.isUrlFlag" href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
+        <span class="mb-1" *ngIf="(!item.isBaseUrlFlag && !item.isFilePathUrl)">{{item.text}}</span>
+        <a *ngIf="item.isBaseUrlFlag && !item.isFilePathUrl" href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
+
+        <span class="mb-1" *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl">{{data}}</span>
+        <a *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" (click)="downloadOldAttachment(item.url)" title="{{item.title}}">{{item.text}}</a>
     </span>
+    <span class="mb-1" *ngIf="getViewFlag() && (anchorArray.length<=0)">
+        {{data}}
+    </span>
+    <a *ngIf="getViewFlag() && (anchorArray.length<=0)" (click)="OpenModalPopUp()" title="">{{viewText}}</a>
 </div>
 <div *ngIf="!hasUrl">
-    <common-read-more
-        [content]="content"
-        [limit]="limit"
-        [completeWords]="completeWords">
-    </common-read-more> 
+    <common-read-more [content]="content" [limit]="limit" [completeWords]="completeWords">
+    </common-read-more>
 </div>
+<kendo-dialog *ngIf="isViewLetterEmailTextDialog" class="app-c-modal app-c-modal-xlg app-c-modal-xlg">
+    <kendo-dialog-titlebar (close)="onCloseLetterEmailSmsTextClicked()"> View </kendo-dialog-titlebar>
+    <section class="k-dialog-body newcase">
+        <p class="mb-2">
+            This is View Email, View Letter & View Text(s) dialog.
+        </p>
+    </section>
+    <kendo-dialog-actions>
+        <div class="justify-content-between">
+            <div class="justify-content-end">
+                <button aria-label="Close" kendoButton look="outline" (click)="onCloseLetterEmailSmsTextClicked()">
+                    CLOSE
+                </button>
+            </div>
+        </div>
+    </kendo-dialog-actions>
+</kendo-dialog>

@@ -58,34 +58,34 @@ export class DocumentFacade {
         })
     }
 
-    getExportFile(pageAndSortedRequest : any, path : string , fileName : string, apiType : string = ApiType.CaseApi): void {           
+    getExportFile(pageAndSortedRequest : any, path : string , fileName : string, apiType : string = ApiType.CaseApi): void {
         this.documentDataService.getExportFile(pageAndSortedRequest,path,apiType).subscribe({
-          next: (response: any) => {           
-            if (response) {      
-                this.exportButtonShowSubject.next(true)    
+          next: (response: any) => {
+            if (response) {
+                this.exportButtonShowSubject.next(true)
                 if(response?.size === 0)
                 {
                     this.showSnackBar(SnackBarNotificationType.WARNING, "No data")
                 }
                 else
-                {             
-                    const fileUrl = window.URL.createObjectURL(response);                 
-                    const documentName = fileName+'.xlsx';         
+                {
+                    const fileUrl = window.URL.createObjectURL(response);
+                    const documentName = fileName+'.xlsx';
                     const downloadLink = document.createElement('a');
                     downloadLink.href = fileUrl;
-                    downloadLink.download = documentName;             
-                    downloadLink.click();     
-                }          
+                    downloadLink.download = documentName;
+                    downloadLink.click();
+                }
             }
           },
-          error: (err) => {     
-            this.exportButtonShowSubject.next(true)          
+          error: (err) => {
+            this.exportButtonShowSubject.next(true)
             this.showSnackBar(SnackBarNotificationType.ERROR, err)
           },
         });
-       
+
       }
-      
+
     getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, selectedAllPaymentsList: any, batchId? : any, apiType: string = ApiType.CaseApi): void {
         this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, selectedAllPaymentsList, batchId, apiType).subscribe({
             next: (response: any) => {
@@ -130,4 +130,29 @@ export class DocumentFacade {
             }
         })
     }
+
+    viewOrDownloadOldAttachemntFile(isFileViewable: boolean, documentPath: string, documentName: string) {
+      if (documentPath === undefined || documentPath === '') {
+          return;
+      }
+      this.loaderService.show()
+      this.documentDataService.getOldDocumentsViewDownload(documentPath).subscribe({
+          next: (data: any) => {
+              const fileUrl = window.URL.createObjectURL(data);
+              if (isFileViewable === true) {
+                  window.open(fileUrl, "_blank");
+              } else {
+                  const downloadLink = document.createElement('a');
+                  downloadLink.href = fileUrl;
+                  downloadLink.download = documentName;
+                  downloadLink.click();
+              }
+              this.loaderService.hide();
+          },
+          error: (error: any) => {
+              this.loaderService.hide();
+              this.showSnackBar(SnackBarNotificationType.ERROR, error)
+          }
+      })
+  }
 }

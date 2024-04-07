@@ -49,6 +49,6 @@ export class LayoutComponent {
   }
   
   onSnoozeReminder(event:any){ 
-    this.notificationFacade.SnoozeReminder(event.reminderId,event.duration);
+    this.notificationFacade.SnoozeReminder(event.reminderId,event.duration,event.isViewAll);
   }
 }
