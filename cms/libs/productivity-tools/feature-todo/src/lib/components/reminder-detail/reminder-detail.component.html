@@ -106,6 +106,10 @@
                 </ng-template>
               </kendo-combobox-column>
             </kendo-multicolumncombobox>
+            <kendo-formerror
+            *ngIf="clientReminderForm?.hasError('required','vendorId') && isSubmitted && clientReminderForm.controls['linkTo'].valid">Vendor
+            is Required
+        </kendo-formerror>
           </div>
         </div>
       </div>
@@ -147,6 +151,11 @@
           </kendo-combobox-column>
           
         </kendo-multicolumncombobox>
+
+        <kendo-formerror
+        *ngIf="clientReminderForm?.hasError('required','clientId') && isSubmitted && clientReminderForm.controls['linkTo'].valid">Client
+        is Required
+    </kendo-formerror>
           </div>
         </div>
       
