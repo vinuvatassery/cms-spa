@@ -253,7 +253,7 @@ export class ReminderDetailComponent implements OnInit {
 
   prepareCommonPayload(){
     return {
-      alertDueDate :  this.clientReminderForm.controls['dueDate'].value,
+      alertDueDate :  this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat),
       alertDesc : this.clientReminderForm.controls['description'].value,
       entityTypeCode : this.entityTypeCode,
       entityId :this.entityId ,
@@ -407,8 +407,9 @@ export class ReminderDetailComponent implements OnInit {
    
     if ( this.clientReminderForm.controls['dueDate'].value && dueDate == todayDate) {
    {
-    if ( this.clientReminderForm.controls['time'].value && timeInMinutes < new Date().getMinutes() 
-    && timeInHours <  new Date().getHours() ) {
+    if ( this.clientReminderForm.controls['time'].value &&
+    (timeInHours ==  new Date().getHours() && timeInMinutes <= new Date().getMinutes())
+    || timeInHours <  new Date().getHours() ) {
       this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
       return;
     }

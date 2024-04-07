@@ -254,8 +254,8 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
 }
     const payload ={
       alertName :  this.todoDetailsForm.controls['title'].value,
-      alertDueDate : this.todoDetailsForm.controls['dueDate'].value,
-      alertEndDate : this.todoDetailsForm.controls['endDate'].value,  
+      alertDueDate : this.intl.formatDate(this.todoDetailsForm.controls['dueDate'].value, this.dateFormat),
+      alertEndDate : this.intl.formatDate(this.todoDetailsForm.controls['endDate'].value, this.dateFormat), 
       alertDesc : this.todoDetailsForm.controls['alertDesc'].value,
       entityTypeCode : entityTypeCode,
       entityId :entityId ,
