@@ -118,7 +118,7 @@ eventListLoader = false;
        this.eventAttachmentTypeList = response;
       }
     });
-    
+
   }
 
   /** Private methods **/
@@ -423,5 +423,12 @@ eventListLoader = false;
   showHideSearch()
   {
     this.isShownSearch = this.searchText.length > 0 ? true:false;
+  }
+
+  downloadOldAttachment(path : any)
+  {
+    let pathSplitArray = path.split('$');
+    let fileName = pathSplitArray[pathSplitArray.length-1];
+    this.documentFacade.viewOrDownloadOldAttachemntFile(false, path, fileName);
   }
 }
