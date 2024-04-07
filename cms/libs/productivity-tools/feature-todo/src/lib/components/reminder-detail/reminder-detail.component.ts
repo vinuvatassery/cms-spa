@@ -253,7 +253,7 @@ export class ReminderDetailComponent implements OnInit {
 
   prepareCommonPayload(){
     return {
-      alertDueDate :  this.clientReminderForm.controls['dueDate'].value,
+      alertDueDate :  this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat),
       alertDesc : this.clientReminderForm.controls['description'].value,
       entityTypeCode : this.entityTypeCode,
       entityId :this.entityId ,
