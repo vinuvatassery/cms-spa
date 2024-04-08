@@ -60,6 +60,8 @@ export class TodoListComponent implements OnInit {
   }];
   columns:any;
   filter!: any;
+  selectedEntitType = "";
+  entityTypeValue = null;
   @Input() pageSizes : any;
   @Input() loadAlertGrid$ : any;
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
@@ -318,6 +320,9 @@ export class TodoListComponent implements OnInit {
       }],
         logic: "or"
     });
+    const obj = this.entityTypeList.find((x: any) => x.lovCode === value.lovCode);
+    this.selectedEntitType = obj;
+    this.entityTypeValue = value;
   }
   private getEntityTypeLovs() {
     this.entityTypeCodeSubject$
