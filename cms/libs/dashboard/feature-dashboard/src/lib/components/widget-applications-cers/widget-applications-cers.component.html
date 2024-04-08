@@ -1,7 +1,7 @@
 
 
                <div class="dash-header-with-filters">
-                  <h5>APPLICATIONS & CERS</h5>
+                  <h2 class="heading_card">APPLICATIONS & CERS</h2>
             </div>         
 
     <common-dashboard-loader-panel *ngIf="!applicationCERStats[1]?.value && !applicationCERStats[1]?.value && !isEditDashboard" ></common-dashboard-loader-panel>
@@ -11,14 +11,14 @@
                         <label class="icon-frame orange-frame"><span class="material-icons">
                                     description
                               </span></label>
-                        <h4>New Applications</h4>
+                              <p class="cer_subhead">New Applications</p>
                   </div>
                   <div class="app-cars-col red-frame">
-                        <h4>{{applicationCERStats[1]?.value}}</h4>
+                        <p class="cer_subhead">{{applicationCERStats[1]?.value}}</p>
                         <a class="btm_texts" kendoRippleContainer (click)="todoitemsNavigate()">REVIEWS TO SEND <span class="material-icons"> chevron_right </span></a>
                   </div>
                   <div class="app-cars-col ">
-                        <h4>{{applicationCERStats[0]?.value}}</h4>
+                        <p class="cer_subhead">{{applicationCERStats[0]?.value}}</p>
                         <a class="btm_texts" (click)="myClientsNavigate()">INCOMPLETE <span class="material-icons"> chevron_right </span></a>
                   </div>
                    
@@ -28,14 +28,14 @@
                         <label class="icon-frame orange-frame"> <span class="material-icons">
                               book
                         </span></label>
-                        <h4>CERs</h4>
+                        <p class="cer_subhead">CERs</p>
                   </div>
                   <div class="app-cars-col red-frame">
-                        <h4>{{applicationCERStats[2]?.value}}</h4>
+                        <p class="cer_subhead">{{applicationCERStats[2]?.value}}</p>
                         <a class="btm_texts" (click)="cerTrackingNavigate()">RESTRICTED <span class="material-icons"> chevron_right </span></a>
                   </div>
                   <div class="app-cars-col">
-                        <h4>{{applicationCERStats[3]?.value}}</h4>
+                        <p class="cer_subhead">{{applicationCERStats[3]?.value}}</p>
                         <a class="btm_texts" (click)="todoitemsNavigate()">DUE THIS MONTH <span class="material-icons"> chevron_right </span></a>
                   </div>
                    

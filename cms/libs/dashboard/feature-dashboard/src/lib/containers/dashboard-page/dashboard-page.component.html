@@ -8,7 +8,7 @@
       </h1>
 
       <kendo-dropdownlist class="mt-1" [fillMode]="formUiStyle.dropDownFillMode" style="width: auto;"
-        placeholder="DashBoard" required [data]="userDashBoardsListData$ | async" textField="dashboardDesc"
+      placeholder="DashBoard" required [data]="userDashBoardsListData$ | async" textField="dashboardDesc" aria-label="DashBoard"
         valueField="dashboardId" [valuePrimitive]="true" [(ngModel)]="selectedDashBoard"
         (selectionChange)="dashBoardChange($event)">
       </kendo-dropdownlist>
@@ -17,7 +17,7 @@
 
 
     <div>
-      <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
+      <button kendoButton *ngIf="!isReorderEnable" title="Customize Dashboard"><span class="material-icons" aria-hidden="true"
           (click)="editDashboardClicked(configSubscriptionItems)"> dashboard </span></button>
       <div *ngIf="isReorderEnable">
         <button kendoButton (click)="editDashboardCancelClicked('true')" class="mr-1" [primary]="true"
