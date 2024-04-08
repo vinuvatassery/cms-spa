@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode, VendorContactsFacade, ScreenType } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode, VendorContactsFacade, ScreenType, EntityTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserDataService } from '@cms/system-config/domain';
@@ -123,6 +123,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isContentMissing:boolean = false;
   isMailCodeMissing:boolean = false;
   isFormValid: boolean = true;
+  variableName!: string;
+  typeName!: string;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -162,6 +164,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           this.loadEmailTemplates();
         }
     }
+    if(this.entityType == EntityTypeCode.Vendor){
+      this.variableName = 'Vendor';
+      this.typeName = 'VENDOR_VARIABLE'
+    }
+    if(this.entityType == EntityTypeCode.Client){
+      this.variableName = 'Client';
+      this.typeName = 'CLIENT_VARIABLE'
+    }
   }
 
   addSubscriptions() {
@@ -176,7 +186,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   loadMailingAddress() {
-    if (this.templateLoadType == CommunicationEventTypeCode.VendorEmail) {
+    if (this.entityType == EntityTypeCode.Vendor) {
       this.vendorContactFacade.loadMailCodes(this.entityId);
     }
   }
@@ -232,7 +242,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   loadClientAndVendorDraftEmailTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.entityType,this.templateLoadType,this.communicationEmailTypeCode)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.entityType, this.templateLoadType, this.communicationEmailTypeCode ?? '')
       .subscribe({
         next: (data: any) => {
           if (data?.length > 0) {
@@ -481,7 +491,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         this.onCloseSaveForLaterClicked();
       }
       if(this.notificationGroup === ScreenType.VendorProfile){
-        if(this.selectedMailCode?.mailCode === undefined || this.selectedMailCode?.mailCode === ''){
+        if(this.selectedMailCode === undefined || this.selectedMailCode === ''){
         this.isMailCodeMissing = true;
         this.isFormValid = false;
         this.onCloseSaveForLaterClicked();
@@ -640,7 +650,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.loadNewTemplate(event);
           }
         });
-    }
+    }else if((event.subTypeCode === CommunicationEventTypeCode.VendorEmail || event.subTypeCode === CommunicationEventTypeCode.ClientEmail) && (this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile)){
+      this.setDraftedTemplate(event);
+    } 
     else{
       this.loadNewTemplate(event);
     }
@@ -700,6 +712,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
   }
   setDraftedTemplate(event: any) {
+    if(this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile) {
+      this.communicationEmailTypeCode = event.subTypeCode;
+    } 
     if (event.subTypeCode === this.communicationEmailTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.selectedTemplate = event;
@@ -729,7 +744,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         'description': event.description,
         'documentTemplateId': event.notificationTemplateId
       };
-      this.selectedMailCode = event?.selectedMailCode;
+      this.selectedMailCode = {
+        'mailCode': event?.selectedMailCode,
+      };
       this.ref.detectChanges();
     }
     else {

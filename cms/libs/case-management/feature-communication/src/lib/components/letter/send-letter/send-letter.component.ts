@@ -12,7 +12,7 @@ import {
 
 
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode, WorkflowTypeCode, EntityTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 
@@ -109,6 +109,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   isMailCodeMissing:boolean = false;
   isFormValid: boolean = true;
   selectedMailingCode!: string;
+  variableName!: string;
+  typeName!: string;
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.getLoggedInUserProfile();
@@ -135,6 +137,14 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.ref.detectChanges();
       }
     });
+    if(this.entityType == EntityTypeCode.Vendor){
+      this.variableName = 'Vendor';
+      this.typeName = 'VENDOR_VARIABLE'
+    }
+    if(this.entityType == EntityTypeCode.Client){
+      this.variableName = 'Client';
+      this.typeName = 'CLIENT_VARIABLE'
+    }
   }
 
   getProfileName() {
@@ -159,7 +169,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   loadClientAndVendorDraftLetterTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId,this.entityType,this.templateLoadType, this.communicationLetterTypeCode)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.entityType, this.templateLoadType ?? '', this.communicationLetterTypeCode ?? '')
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {
@@ -331,7 +341,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.onCloseSaveForLaterClicked();
     }
     if(this.notificationGroup === ScreenType.VendorProfile){
-      if(this.selectedTemplate.selectedMailCode === undefined || this.selectedTemplate.selectedMailCode === ''){
+      if(this.mailingAddress === undefined || this.mailingAddress === ''){
       this.isMailCodeMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -555,11 +565,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             this.loadNewTemplate(event);
           }
         });
+    } else if((event.subTypeCode === CommunicationEventTypeCode.VendorLetter || event.subTypeCode === CommunicationEventTypeCode.ClientLetter) && (this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile)){
+      this.setDraftedTemplate(event);
     } 
     else{
       this.loadNewTemplate(event);
     }   
-
   }
 
   loadNewTemplate(event:any){
@@ -612,6 +623,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.documentTemplate = {
         'description': event.description,
         'documentTemplateId': event.notificationTemplateId
+      };
+      this.selectedMailCode = {
+        'mailCode': event?.selectedMailCode,
       };
     }
     else

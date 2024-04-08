@@ -40,6 +40,8 @@ export class EmailEditorComponent implements OnInit {
   @Input() communicationTypeCode!:any;
   @Input() isContentMissing!: boolean;
   @Input() notificationGroup!: string;
+  @Input() variableName!: string;
+  @Input() typeName!: string;
   /** Output properties  **/
   @Output() cerEmailAttachments = new EventEmitter();
   @Output() editorValueChangeEvent = new EventEmitter();

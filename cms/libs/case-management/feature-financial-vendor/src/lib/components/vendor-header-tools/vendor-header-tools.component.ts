@@ -86,7 +86,7 @@ export class VendorHeaderToolsComponent {
           this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the vendor's profile";
           this.confirmPopupHeader = 'Send Letter to Print?';
           this.confirmationModelText="This action cannot be undone.";
-          this.notificationDraftCheck(this.vendorId, this.entityType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+          this.notificationDraftCheck(this.vendorId, this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
     },
@@ -100,7 +100,7 @@ export class VendorHeaderToolsComponent {
         if(this.draftDropdownCheck === false){
           this.draftDropdownCheck = true;
           this.selectedTemplateName = templatename;
-          this.templateLoadType = CommunicationEventTypeCode.VendorEmail;
+          this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
           this.currentCommunicationTypeCode = CommunicationEventTypeCode.VendorEmail;
           this.notificationGroup = CommunicationEventTypeCode.EMAIL;
           this.informationalText = "Select an existing template or draft a custom email."
@@ -109,7 +109,7 @@ export class VendorHeaderToolsComponent {
           this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the vendor's profile";
           this.confirmPopupHeader = 'Send Email?';
           this.confirmationModelText="This action cannot be undone.";
-          this.notificationDraftCheck(this.vendorId, this.entityType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+          this.notificationDraftCheck(this.vendorId, this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
     },
@@ -132,7 +132,7 @@ export class VendorHeaderToolsComponent {
           this.saveForLaterModelText="To pick up where you left off, click \"New Sms\" from the vendor's profile";
           this.confirmPopupHeader = 'Send Sms?';
           this.confirmationModelText="This action cannot be undone.";
-          this.notificationDraftCheck(this.vendorId,  this.entityType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+          this.notificationDraftCheck(this.vendorId, this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
     },
@@ -204,20 +204,20 @@ export class VendorHeaderToolsComponent {
 
   notificationDraftCheck(vendorId: any, typeCode: string, subTypeCode:string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(vendorId,this.entityType,typeCode,subTypeCode)
+    this.communicationFacade.loadDraftNotificationRequest(vendorId, this.entityType, typeCode, '')
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {
           for (let template of data){
-            this.notificationDraftId = template.notifcationDraftId;
+            this.notificationDraftId = template.notificationDraftId;
            }
-          if(typeCode == CommunicationEventTypeCode.VendorEmail){
+          if(subTypeCode == CommunicationEventTypeCode.VendorEmail){
             this.notificationGroup = CommunicationEventTypeCode.EMAIL;
           }
-          if(typeCode == CommunicationEventTypeCode.VendorLetter){
+          if(subTypeCode == CommunicationEventTypeCode.VendorLetter){
             this.notificationGroup = CommunicationEventTypeCode.LETTER;
           }
-          if(typeCode === CommunicationEventTypeCode.VendorSMS){
+          if(subTypeCode === CommunicationEventTypeCode.VendorSMS){
             this.notificationGroup = CommunicationEventTypeCode.SMS;
           }
           this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);

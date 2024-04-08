@@ -379,20 +379,20 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   notificationDraftCheck(clientId: any, typeCode: string, subTypeCode:string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(clientId, this.entityType, typeCode, subTypeCode)
+    this.communicationFacade.loadDraftNotificationRequest(clientId, this.entityType, typeCode, null)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {
           for (let template of data){
-            this.notificationDraftId = template.notifcationDraftId;
+            this.notificationDraftId = template.notificationDraftId;
            }
-          if(typeCode == CommunicationEventTypeCode.EmailTypeCode){
+          if(subTypeCode == CommunicationEventTypeCode.EmailTypeCode){
             this.notificationGroup = CommunicationEventTypeCode.EMAIL;
           }
-          if(typeCode == CommunicationEventTypeCode.LetterTypeCode){
+          if(subTypeCode == CommunicationEventTypeCode.LetterTypeCode){
             this.notificationGroup = CommunicationEventTypeCode.LETTER;
           }
-          if(typeCode === CommunicationEventTypeCode.SmsTypeCode){
+          if(subTypeCode === CommunicationEventTypeCode.SmsTypeCode){
             this.notificationGroup = CommunicationEventTypeCode.SMS;
           }
           this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);

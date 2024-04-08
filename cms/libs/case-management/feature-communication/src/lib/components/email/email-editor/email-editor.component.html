@@ -87,13 +87,13 @@
       </div>
       <div class="var-list-block">
         <section>
-          <h5>Client Variables</h5>
+          <h5>{{variableName}} Variables</h5>
           <ul
             class="var-list-item"
             aria-label="client variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CLIENT_VARIABLE'" aria-label="client variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode === typeName" aria-label="client variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
         <section>
@@ -103,7 +103,7 @@
             aria-label="my variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode ==='CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
         <section>
