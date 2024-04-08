@@ -1,6 +1,6 @@
 
   <div class="dash-header-with-filters">
-    <h5>RECENTLY VIEWED</h5>
+    <h2 class="heading_card">RECENTLY VIEWED</h2>
   </div>
 
   <common-dashboard-loader-panel *ngIf="!gridData && !vendorGridData && !isEditDashboard">
@@ -27,6 +27,9 @@
           
         </ng-template>
       </kendo-grid-column>
+      <ng-template kendoGridNoRecordsTemplate>
+        <common-grid-no-records></common-grid-no-records>
+      </ng-template>
     </kendo-grid>
 
   <p> <strong>VENDORS</strong> </p>
@@ -44,6 +47,9 @@
       </button> 
       </ng-template>
     </kendo-grid-column>
+    <ng-template kendoGridNoRecordsTemplate>
+      <common-grid-no-records></common-grid-no-records>
+    </ng-template>
   </kendo-grid>
 </div>
 </div>
