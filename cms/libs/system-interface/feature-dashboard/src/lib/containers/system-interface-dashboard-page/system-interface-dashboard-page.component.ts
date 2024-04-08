@@ -153,8 +153,10 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.dashboardWrapperFacade.showLoader();
    this.userDashBoardLstSubscribe();
     this.initializeDashboard();
+   
   }
 
   initializeDashboard() {
@@ -222,8 +224,9 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
             
           });
           this.dashboardContentListDataSubject.next(SystemInterfaceDashboardPageComponent.dashBoardContentData);
-        
+          this.dashboardWrapperFacade.hideLoader();
       });
+      this.dashboardWrapperFacade.hideLoader();
   }
 
   dashBoardAllWidgetsSubscribe() {

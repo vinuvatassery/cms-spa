@@ -6,11 +6,10 @@
             [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
             (columnReorder)="onColumnReorder($event)"  
             [data]="gridNotificationCategoryData$ | async" class="grid_scroll">
-            <kendo-grid-column field="eventDesc" title="Notification Category" [width]="140">
-                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
-                        let-filterService="filterService">
+            <kendo-grid-column field="eventDesc" title="Notification Category" [width]="120">
+                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
-                              [filterService]="filterService" [extra]="false" operator="eq">
+                              [filterService]="filterService" [extra]="false" operator="contains">
                               <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
                               <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
                               <kendo-filter-contains-operator></kendo-filter-contains-operator>
@@ -18,7 +17,7 @@
                   </ng-template>
             </kendo-grid-column>
 
-            <kendo-grid-column field="activeFlag" title="Status" [width]="90">
+            <kendo-grid-column field="activeFlag" title="Status" [width]="100">
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                         let-filterService="filterService">
                         <kendo-dropdownlist [data]="['Active', 'Inactive']" [(ngModel)]="statusFilter"
@@ -99,7 +98,7 @@
 
 
 <div class="mt-1">
-      <button kendoButton class="mr-1" [primary]="true" aria-label="Notification Category" icon="add" [disabled]="!selectedGroup || !gridDataResult"
+      <button kendoButton class="mr-1" [primary]="true" aria-label="Notification Category" icon="add"
             (click)="onNotificationCategoryDetailsClicked()"> Notification Category</button>
 </div>
 <kendo-dialog *ngIf="isNotificationCategoryDetailPopup" (close)="onCloseNotificationCategoryDetailPopupClicked()"
