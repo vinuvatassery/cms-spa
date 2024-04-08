@@ -102,7 +102,7 @@
             (click)="onNotificationCategoryDetailsClicked()"> Notification Category</button>
 </div>
 <kendo-dialog *ngIf="isNotificationCategoryDetailPopup" (close)="onCloseNotificationCategoryDetailPopupClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      class="app-c-modal app-c-modal-md app-c-modal-np">
       <kendo-dialog-titlebar>{{ isEditNotificationCategory ? 'Edit Notification Category' : 'Add Notification Category'
             }}</kendo-dialog-titlebar>
       <notification-category-detail [isEditNotificationCategory]="isEditNotificationCategory"
