@@ -143,7 +143,7 @@ onDeleteAlertClicked(event:any){
     }
 
   getSessionInfoByEligibilityId(clientCaseEligibilityId:any){
-    debugger;
+    ;
     this.loaderService.show();
           this.caseFacade.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId).subscribe({
             next: (response: any) => {

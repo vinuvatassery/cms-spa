@@ -2163,9 +2163,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const cellPhone = (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'];
     const workPhone = (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'];
     const otherPhone = (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'];
-    if(homePhone.value.trim() !=='' && (homePhone.value.trim() == cellPhone.value.trim()
-       || homePhone.value.trim() == workPhone.value.trim()
-       || homePhone.value.trim() == otherPhone.value.trim()) ){
+    if(homePhone.value.trim() !==''
+       && !((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false)
+       && ( !((this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && homePhone.value.trim() == cellPhone.value.trim()
+       || !((this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && homePhone.value.trim() == workPhone.value.trim()
+       || !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && homePhone.value.trim() == otherPhone.value.trim()) ){
       this.homePhoneDuplicate=true;
       homePhone.setErrors({ incorrect: true });
     }else{
@@ -2174,9 +2176,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       homePhone.setValidators(null);
       homePhone.updateValueAndValidity();
     }
-    if(cellPhone.value.trim()!=='' && (cellPhone.value.trim() == homePhone.value.trim()
-       || cellPhone.value.trim() == workPhone.value.trim()
-       || cellPhone.value.trim() == otherPhone.value.trim()) ){
+    if(cellPhone.value.trim()!==''
+       && !((this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false)
+       && ( !((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && cellPhone.value.trim() == homePhone.value.trim()
+       || !((this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && cellPhone.value.trim() == workPhone.value.trim()
+       || !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && cellPhone.value.trim() == otherPhone.value.trim()) ){
       this.cellPhoneDuplicate = true;
       cellPhone.setErrors({ incorrect: true });
     }else{
@@ -2185,9 +2189,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       cellPhone.setValidators(null);
       cellPhone.updateValueAndValidity();
     }
-    if(workPhone.value.trim()!=='' && (workPhone.value.trim() == homePhone.value.trim()
-       || workPhone.value.trim() == cellPhone.value.trim()
-       || workPhone.value.trim() == otherPhone.value.trim()) ){
+    if(workPhone.value.trim()!==''
+       && !((this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false)
+       && ( !((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && workPhone.value.trim() == homePhone.value.trim()
+       || !((this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && workPhone.value.trim() == cellPhone.value.trim()
+       || !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && workPhone.value.trim() == otherPhone.value.trim()) ){
       this.workPhoneDuplicate=true;
       workPhone.setErrors({ incorrect: true });
     }else{
@@ -2196,9 +2202,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       workPhone.setValidators(null);
       workPhone.updateValueAndValidity();
     }
-    if(otherPhone.value.trim()!=='' && (otherPhone.value.trim() == homePhone.value.trim()
-       || otherPhone.value.trim() == cellPhone.value.trim()
-       || otherPhone.value.trim() == workPhone.value.trim()) ){
+    if(otherPhone.value.trim()!==''
+       && !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false)
+       && (!((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && otherPhone.value.trim() == homePhone.value.trim()
+       || !((this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && otherPhone.value.trim() == cellPhone.value.trim()
+       || !((this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && otherPhone.value.trim() == workPhone.value.trim()) ){
       this.otherPhoneDuplicate=true;
       otherPhone.setErrors({ incorrect: true });
     }else{

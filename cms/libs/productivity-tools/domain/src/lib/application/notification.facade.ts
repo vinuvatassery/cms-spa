@@ -16,6 +16,8 @@ export class NotificationFacade {
   private notificationAndReminderListSubject = new Subject<any>();
   private snoozeReminderSubject = new Subject<any>();
   notificationList$ = this.notificationAndReminderListSubject.asObservable();
+  private notificationAndReminderCountListSubject = new Subject<any>();
+  notificationListBell$ = this.notificationAndReminderCountListSubject.asObservable();
   snoozeReminder$ = this.snoozeReminderSubject.asObservable();
    alertSearchLoaderVisibilitySubject = new Subject<boolean>;
   alertSearchLoaderVisibility$= this.alertSearchLoaderVisibilitySubject.asObservable();
@@ -54,6 +56,11 @@ export class NotificationFacade {
     this.notificationDataService.loadNotificationsAndReminders(isViewAll).subscribe({
       next: (todoGridResponse: any) => {
         this.notificationAndReminderListSubject.next(todoGridResponse);
+        if(isViewAll)
+          {
+            this.notificationAndReminderCountListSubject.next(todoGridResponse)
+            
+          }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)

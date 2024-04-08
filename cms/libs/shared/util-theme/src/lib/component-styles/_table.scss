@@ -258,18 +258,17 @@ $pagination-height : 48px;
     .k-grid-header-sticky {
       background-color: $white !important;
       color: $app-primary-font-color !important;
-
       :hover {
         color: $app-primary-font-color !important;
-
+      }
+      .k-icon{
+        color: $app-primary-font-color !important;
       }
     }
-
+  
     .k-grid-header-menu {
       .k-icon {
-
         color: $app-primary-font-color !important;
-
       }
       .k-sort-icon {
         color: $app-primary-font-color !important;

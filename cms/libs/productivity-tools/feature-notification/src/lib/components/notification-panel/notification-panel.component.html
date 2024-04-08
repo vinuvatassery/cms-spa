@@ -92,7 +92,7 @@
           </kendo-dropdownbutton>
         </li>
       </ul>
-      <div class="text-center mt-1 mb-1 p-2" *ngIf="alertsData?.items.length === 0 && !itemsLoader">
+      <div class="text-center mt-1 mb-1 p-2" *ngIf="alertsData?.items?.length === 0 && !itemsLoader">
             <common-grid-no-records></common-grid-no-records>
       </div>
       <div *ngIf="itemsLoader" class="p-2">    
