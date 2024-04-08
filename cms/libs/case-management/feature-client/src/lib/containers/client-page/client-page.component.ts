@@ -1703,6 +1703,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public getFormOrder() {
     return ([
+      "cerReceivedDate",
       "firstName",
       "middleName",
       "lastName",

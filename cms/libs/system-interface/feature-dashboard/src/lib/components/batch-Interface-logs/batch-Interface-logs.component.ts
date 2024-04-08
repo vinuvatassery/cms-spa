@@ -124,7 +124,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   fileId: any;
   interfaceTypeCode: any;
   /** Lifecycle hooks **/
-
+closeallexpensions:any;
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade, private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider, private readonly lovFacade: LovFacade,
@@ -141,6 +141,9 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.lovFacade.getInterfaceExceptionLov();
     this.lovFacade.getInBatchInterfaceStatusLov();
+    this.activityEventLogLists$.subscribe((res:any)=>{
+      this.closeallexpensions=res.data;
+    })
   }
 
   ngOnChanges(): void {
@@ -340,9 +343,14 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
   public onDetailExpand(e: any): void {
     
+
     this.fileId = e.dataItem.fileId;
     this.interfaceTypeCode = e.dataItem.interfaceTypeCode;
     this.processTypeCode = e.dataItem.processTypeCode;
+      this.closeallexpensions.forEach((item: any, idx: number) => {
+        this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
+      });
+   
   }
 
   dropdownFilterChange(
@@ -371,8 +379,8 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     });
   }
 
-  downloadFile(filePath: any) {
-    this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
+  downloadFile(filePath: any,fileName:string) {
+    this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, fileName)
   }
 
   textToDisplay = "2 Weeks";
