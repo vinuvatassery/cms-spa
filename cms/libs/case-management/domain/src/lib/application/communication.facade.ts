@@ -11,6 +11,7 @@ import { LoggingService } from '@cms/shared/util-core';
 import { SmsNotification } from '../entities/sms-notification';
 import { DocumentDataService } from '../infrastructure/document.data.service';
 import { Subject } from 'rxjs';
+import { ScreenType } from '../enums/screen-type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CommunicationFacade {
@@ -152,7 +153,7 @@ export class CommunicationFacade {
   preparePreviewModelData(emailData: any) {
     const formData = new FormData();
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
-    formData.append('typeCode', emailData?.typeCode ?? '');
+    formData.append('typeCode', emailData?.templateCategoryCode ?? emailData?.typeCode);
     formData.append('subtypeCode', CommunicationEvents?.Email ?? '');
     formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
     formData.append('description', emailData?.description ?? '');
@@ -199,7 +200,7 @@ export class CommunicationFacade {
     return formData;
   }
 
-  createFormDataForEmail(data: {templateTypeCode:string, subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
+  createFormDataForEmail(data: {templateTypeCode:string, subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[]}) {
     const formData = new FormData();
     formData.append('templateTypeCode', data?.templateTypeCode ?? '');
     formData.append('requestSubject', data?.subject ?? '');
@@ -223,7 +224,7 @@ export class CommunicationFacade {
       let subTypeCode = data?.emailData?.subtypeCode?? data?.emailData?.subTypeCode 
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
       formData.append('description', data?.emailData?.description ?? '');
-      formData.append('typeCode', data?.emailData?.typeCode ?? '');
+      formData.append('typeCode', data?.emailData?.templateTypeCode ?? subTypeCode);
       formData.append('subTypeCode', subTypeCode ?? '');
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
       formData.append('notificationDraftId', data?.emailData?.notificationDraftId ?? '');
@@ -266,15 +267,16 @@ export class CommunicationFacade {
     return formData;
   }
 
-  prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[]) {
+  prepareClientAndVendorLetterData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[], entityType: string) {
     let subTypeCode = emailData?.subTypeCode ?? emailData?.subtypeCode;
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
-    formData.append('typeCode', emailData?.templateCategoryCode ?? emailData?.typeCode);
+    formData.append('typeCode', emailData?.subtypeCode ?? emailData?.typeCode);
     formData.append('subTypeCode',subTypeCode);
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('notificationDraftId', emailData?.notificationDraftId ?? '');
+    formData.append('entity', entityType ?? '');
     if(clientAndVendorEmailAttachedFiles?.length > 0){
     let i = 0;
     clientAndVendorEmailAttachedFiles.forEach((file: any) => {

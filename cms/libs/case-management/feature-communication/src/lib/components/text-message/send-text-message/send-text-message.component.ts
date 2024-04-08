@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, CommunicationFacade, NotificationTemplateCategoryCode, SmsNotification, CommunicationEventTypeCode, EntityTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, CommunicationFacade, SmsNotification, CommunicationEventTypeCode, EntityTypeCode } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -41,6 +41,8 @@ export class SendTextMessageComponent implements OnInit {
   @Input() confirmationModelText!:string;
   @Input() saveForLaterHeadterText!:string;
   @Input() saveForLaterModelText!:string;
+  @Input() triggerFrom !: string;
+  @Input() entityType!:any;
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
@@ -69,7 +71,6 @@ export class SendTextMessageComponent implements OnInit {
   loginUserId!: any;
   isRecipientMissing:boolean = false;
   isFormValid:boolean = true;
-  entityType= EntityTypeCode.Client;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,

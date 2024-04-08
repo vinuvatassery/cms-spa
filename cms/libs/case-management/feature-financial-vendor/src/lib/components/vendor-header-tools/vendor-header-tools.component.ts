@@ -64,7 +64,8 @@ export class VendorHeaderToolsComponent {
   informationalText!:any;
   templateHeader!:any;
   entityType= EntityTypeCode.Vendor;
-@Output() openAddReminderEvent = new EventEmitter()
+  triggerFrom= ScreenType.VendorProfile;
+  @Output() openAddReminderEvent = new EventEmitter()
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -78,13 +79,14 @@ export class VendorHeaderToolsComponent {
           this.selectedTemplateName = templatename;
           this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
           this.currentCommunicationTypeCode = CommunicationEventTypeCode.VendorLetter;
+          this.notificationGroup = CommunicationEventTypeCode.LETTER;
           this.informationalText = "Select an existing template or draft a custom letter."
           this.templateHeader = 'Send New Letter';
           this.saveForLaterHeadterText = "Letter Draft Saved";
           this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the vendor's profile";
           this.confirmPopupHeader = 'Send Letter to Print?';
           this.confirmationModelText="This action cannot be undone.";
-          this.notificationDraftCheck(this.vendorId,this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+          this.notificationDraftCheck(this.vendorId, this.entityType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
     },
@@ -100,13 +102,14 @@ export class VendorHeaderToolsComponent {
           this.selectedTemplateName = templatename;
           this.templateLoadType = CommunicationEventTypeCode.VendorEmail;
           this.currentCommunicationTypeCode = CommunicationEventTypeCode.VendorEmail;
+          this.notificationGroup = CommunicationEventTypeCode.EMAIL;
           this.informationalText = "Select an existing template or draft a custom email."
           this.templateHeader = 'Send New Email';
           this.saveForLaterHeadterText = "Email Draft Saved";
           this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the vendor's profile";
           this.confirmPopupHeader = 'Send Email?';
           this.confirmationModelText="This action cannot be undone.";
-          this.notificationDraftCheck(this.vendorId,this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+          this.notificationDraftCheck(this.vendorId, this.entityType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
     },
@@ -122,13 +125,14 @@ export class VendorHeaderToolsComponent {
           this.selectedTemplateName = templatename;
           this.templateLoadType = CommunicationEventTypeCode.ClientSMS;
           this.currentCommunicationTypeCode = CommunicationEventTypeCode.VendorSMS;
+          this.notificationGroup = CommunicationEventTypeCode.SMS;
           this.informationalText = "Select an existing template or draft custom text messages"
           this.templateHeader = 'Send New SMS Text';
           this.saveForLaterHeadterText = "Sms Draft Saved";
           this.saveForLaterModelText="To pick up where you left off, click \"New Sms\" from the vendor's profile";
           this.confirmPopupHeader = 'Send Sms?';
           this.confirmationModelText="This action cannot be undone.";
-          this.notificationDraftCheck(this.vendorId,  this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+          this.notificationDraftCheck(this.vendorId,  this.entityType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
     },

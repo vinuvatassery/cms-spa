@@ -665,9 +665,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               for (let email of this.toEmail) {
                 this.selectedToEmails.push(email?.trim());
               }
+              if (data.description === 'Draft Custom Email'){
+                this.emailSubject = '';
+              }else{
               if(!this.emailSubject){
               this.emailSubject = data.description;
               }
+            }
               const ccEmails = data.cc?.map((item: any)=> item.email);
               this.ccEmail = ccEmails;
               if (data?.bccEmail?.length > 0) {

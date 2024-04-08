@@ -37,8 +37,8 @@
 <!-- Send New Letter Popup -->
 <ng-template #sendLetterDialog>
   <case-management-send-letter templateHeader="Send Letter" [mailingAddress$]="mailCodes$" [informationalText]="informationalText" [templateHeader]="templateHeader"
-  [entityId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)" [templateLoadType] ="templateLoadType"
-  [notificationGroup]="screenName" [notificationDraftId]="notificationDraftId"
+  [entityId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)" [templateLoadType] ="templateLoadType" [entityType]="entityType"
+  [notificationGroup]="screenName" [notificationDraftId]="notificationDraftId" [triggerFrom]="triggerFrom"
   [communicationLetterTypeCode]="communicationLetterTypeCode" [isNewNotificationClicked]="isNewNotificationClicked"
   [isContinueDraftClicked]="isContinueDraftClicked" (loadInitialData)="loadMailingAddress()"
   [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText"
@@ -49,8 +49,8 @@
 <ng-template #sendNewEmailDialog>
   <case-management-send-email
   templateHeader="Send Email" [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
-  [communicationEmailTypeCode]="communicationEmailTypeCode" [emailSubject]="emailSubject" [notificationGroup]="screenName"
-  [entityId]="vendorId" [toEmail]="toEmail" [notificationDraftId]="notificationDraftId"
+  [communicationEmailTypeCode]="communicationEmailTypeCode" [emailSubject]="emailSubject" [notificationGroup]="screenName" [entityType]="entityType"
+  [entityId]="vendorId" [toEmail]="toEmail" [notificationDraftId]="notificationDraftId" [triggerFrom]="triggerFrom"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked"
   [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText"
   (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>

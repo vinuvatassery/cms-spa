@@ -82,6 +82,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   emailSubject:any;
   loginUserEmail: any;
   entityType= EntityTypeCode.Client;
+  triggerFrom= ScreenType.ClientProfile;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -95,6 +96,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.LetterTypeCode;
+        this.notificationGroup = CommunicationEventTypeCode.LETTER;
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
         this.saveForLaterHeadterText = "Letter Draft Saved";
@@ -117,6 +119,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.EmailTypeCode;
+        this.notificationGroup = CommunicationEventTypeCode.EMAIL;
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.saveForLaterHeadterText = "Email Draft Saved";
@@ -139,6 +142,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientSMS;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.SmsTypeCode;
+        this.notificationGroup = CommunicationEventTypeCode.SMS;
         this.informationalText = "Select an existing template or draft custom text messages"
         this.templateHeader = 'Send New SMS Text';
         this.saveForLaterHeadterText = "Sms Draft Saved";
@@ -373,9 +377,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
 
-  notificationDraftCheck(clientId: any, typeCode: string,subTypeCode:string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
+  notificationDraftCheck(clientId: any, typeCode: string, subTypeCode:string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(clientId,this.entityType,typeCode,subTypeCode)
+    this.communicationFacade.loadDraftNotificationRequest(clientId, this.entityType, typeCode, subTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {

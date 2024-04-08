@@ -225,8 +225,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     letterRequestFormdata.append('selectedMailCode', this.mailingAddress?.mailCode ?? '');
     letterRequestFormdata.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
     letterRequestFormdata.append('documentTemplateId', this.documentTemplate?.documentTemplateId ?? '');
-    letterRequestFormdata.append('entity', this.entityType ?? '');
-    let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
+    let draftEsignRequest = this.communicationFacade.prepareClientAndVendorLetterData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.entityType);
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
         .subscribe({
           next: (data: any) =>{
@@ -591,13 +590,15 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setDraftedTemplate(event: any) { 
+  private setDraftedTemplate(event: any) {
+    if(this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile) {
+      this.communicationLetterTypeCode = event.subTypeCode;
+    } 
     if (event.subTypeCode === this.communicationLetterTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.isOpenLetterTemplate = true;
       this.selectedTemplate = event;
       this.selectedMailCodeId = event.vendorAddressId;
-      // this.loadMailingAddress();
       this.selectedTemplateContent = event.requestBody;
       this.updatedTemplateContent = event.requestBody;
       this.selectedMailCode = event?.selectedMailCode;

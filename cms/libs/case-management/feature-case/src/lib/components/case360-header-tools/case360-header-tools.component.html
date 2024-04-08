@@ -44,7 +44,7 @@
   <case-management-send-letter [mailingAddress$]="mailingAddress$" [informationalText]="informationalText" [templateHeader]="templateHeader"
   [notificationGroup]="screenName" [templateLoadType] ="templateLoadType" [communicationLetterTypeCode] ="letterCommunicationTypeCode"
   (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()" [entityId]="clientId" 
-  [entityType]="entityType" [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [entityType]="entityType" [clientCaseEligibilityId]="clientCaseEligibilityId" [triggerFrom]="triggerFrom"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId" 
   [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText"
   kendoTooltip></case-management-send-letter>
@@ -59,7 +59,7 @@
 </ng-template>
 <!-- Send New Email Modal -->
 <ng-template #sendNewEmailDialog>
-  <case-management-send-email [ddlEmails$]="emailAddress$" 
+  <case-management-send-email [ddlEmails$]="emailAddress$" [triggerFrom]="triggerFrom"
   [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader" [communicationEmailTypeCode]="emailCommunicationTypeCode"
   [entityId]="clientId"  [entityType]="entityType"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName" [clientCaseId]="clientCaseId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
@@ -81,7 +81,7 @@
   [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
   (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDraftId]="notificationDraftId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
-  [clientCaseEligibilityId]="clientCaseEligibilityId" 
+  [clientCaseEligibilityId]="clientCaseEligibilityId" [triggerFrom]="triggerFrom" [entityType]="entityType"
   [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText" 
   kendoTooltip></case-management-send-text-message>
 </ng-template>

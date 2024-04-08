@@ -13,7 +13,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, DocumentFacade} from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, DocumentFacade, ScreenType} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
@@ -39,6 +39,7 @@ export class EmailEditorComponent implements OnInit {
   @Input() clientId!:any;
   @Input() communicationTypeCode!:any;
   @Input() isContentMissing!: boolean;
+  @Input() notificationGroup!: string;
   /** Output properties  **/
   @Output() cerEmailAttachments = new EventEmitter();
   @Output() editorValueChangeEvent = new EventEmitter();
@@ -117,7 +118,7 @@ export class EmailEditorComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    if (![CommunicationEventTypeCode.VendorEmail, CommunicationEventTypeCode.VendorLetter].includes(this.communicationTypeCode)) {
+    if (this.notificationGroup === ScreenType.ClientProfile) {
       this.loadClientAttachments(this.clientId);
     }
     this.loadFormsAndDocuemnts();
@@ -164,7 +165,7 @@ export class EmailEditorComponent implements OnInit {
       }
     }
     
-    if ([CommunicationEventTypeCode.VendorEmail, CommunicationEventTypeCode.VendorLetter].includes(this.communicationTypeCode)) {
+    if (this.notificationGroup === ScreenType.VendorProfile) {
       const optionIndex = this.editorUploadOptions.findIndex(i => i.id === 'attachfromclient');
       if (optionIndex > -1) {
         this.editorUploadOptions.splice(optionIndex, 1);
