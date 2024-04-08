@@ -414,11 +414,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (incomeDetail) {
       if(incomeDetail.noIncomeClientSignedDate !== null){this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValue(new Date(incomeDetail.noIncomeClientSignedDate));}
       if(incomeDetail.noIncomeSignatureNotedDate!== null){this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(new Date(incomeDetail.noIncomeSignatureNotedDate));}
-      this.noIncomeDetailsForm.controls['noIncomeNote'].setValue(incomeDetail.noIncomeNote);
-      if(this.setOption){
-        this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setValue(incomeDetail.clientDependentsMinorEmployedFlag);
-        this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setValue(incomeDetail.clientDependentsMinorAdditionalIncomeFlag);
-      }
     }
   }
 
