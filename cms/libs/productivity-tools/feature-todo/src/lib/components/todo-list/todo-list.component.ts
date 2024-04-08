@@ -60,8 +60,9 @@ export class TodoListComponent implements OnInit {
   }];
   columns:any;
   filter!: any;
-  selectedEntitType = "";
+  selectedEntityType = "";
   entityTypeValue = null;
+  filteredBy = "";
   @Input() pageSizes : any;
   @Input() loadAlertGrid$ : any;
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
@@ -252,6 +253,13 @@ export class TodoListComponent implements OnInit {
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
     this.loadTodoGrid();
+    const filterList = []
+    for(const filter of stateData.filter.filters)
+    {
+      filterList.push(this.columns[filter.filters[0].field]);
+    }
+    this.filteredBy =  filterList.toString();
+    if (!this.filteredBy.includes('Type')) this.selectedEntityType = '';
   }
    onToDoActionClicked(item: any,gridItem: any){ 
     if(item.id == 'done'){
@@ -321,7 +329,7 @@ export class TodoListComponent implements OnInit {
         logic: "or"
     });
     const obj = this.entityTypeList.find((x: any) => x.lovCode === value.lovCode);
-    this.selectedEntitType = obj;
+    this.selectedEntityType = obj;
     this.entityTypeValue = value;
   }
   private getEntityTypeLovs() {

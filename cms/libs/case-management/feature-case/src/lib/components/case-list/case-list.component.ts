@@ -329,11 +329,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.isFiltered = false
       this.selectedStatus ='';
       this.selectedGroup = '';
-
+      this.selectedHealthInsuranceType = '';
     }
     this.state=stateData;
     if (!this.filteredBy.includes('Status')) this.selectedStatus = '';
     if (!this.filteredBy.includes('Group')) this.selectedGroup = '';
+    if (!this.filteredBy.includes('Health Insurance Type')) this.selectedHealthInsuranceType = '';
     if(!isSearchBarFilter){
     this.saveGridState();
     }
