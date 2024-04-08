@@ -161,7 +161,7 @@ export class CommunicationFacade {
     return formData;
   }
 
-  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any,notificationGroup:any) {
+  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any,notificationGroup:any,entityId: any, entityType: any) {
     const formData = new FormData();
     formData.append('templateTypeCode', templateTypeCode ?? '');
     formData.append('entityTypeCode', notificationGroup ?? '');
@@ -171,6 +171,8 @@ export class CommunicationFacade {
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('templateContent', draftTemplate?.templateContent ?? '');
     formData.append('notifcationDraftId', draftTemplate?.notificationDraftId ?? '');
+    formData.append('entityId', entityId);
+    formData.append('entityType', entityType);
     if (clientAndVendorAttachedFiles?.length > 0){
     let i = 0;
     clientAndVendorAttachedFiles.forEach((file: any) => {
