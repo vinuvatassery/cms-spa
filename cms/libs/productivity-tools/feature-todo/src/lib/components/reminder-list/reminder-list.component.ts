@@ -191,6 +191,7 @@ export class ReminderListComponent implements  OnInit{
 
   onDeleteReminderAlert(event:any){
     this.isDelete = true;
+    this.isEdit = false
     this.reminderCrudText ="Delete"
     this.selectedAlertId = event;
     this.onNewReminderOpenClicked(this.reminderDetailsTemplate)
@@ -305,6 +306,7 @@ export class ReminderListComponent implements  OnInit{
 
   onEditReminder(event:any){
     this.isEdit = true;
+    this.isDelete =false
     this.reminderCrudText ="Edit"
     this.selectedAlertId = event;
     this.onNewReminderOpenClicked(this.reminderDetailsTemplate)

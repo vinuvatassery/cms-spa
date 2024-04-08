@@ -235,6 +235,7 @@ export class ReminderItemComponent implements OnInit {
     this.todoFacade.getTodoItem($event);
   }
   onActionClicked(item: any,gridItem: any){ 
+    
     this.selectedAlertId = gridItem.alertId
     if(item.text == 'Edit Reminder'){ 
       this.isEdit=true
@@ -245,6 +246,8 @@ export class ReminderItemComponent implements OnInit {
      }
      if(item.text == 'Delete Reminder'){
       this.isDelete= true 
+      this.isEdit= false
+      this.cdr.detectChanges()
       this.crudText = 'Delete'
        if (!this.isReminderOpenClicked) {
         this.onNewReminderOpenClicked(this.NewReminderTemplate)

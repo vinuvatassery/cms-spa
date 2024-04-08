@@ -53,43 +53,43 @@ isReminderExpand = false;
     {
       text: '15 Minute Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'15 Minutes'
     },
     {
       text: '30 Minute Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'30 Minutes'
     },
     {
       text: '1 hour Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'1 hour'
     },
     {
       text: '2 hour Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'2 hours'
     }, 
     {
       text: '1 day Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'1 day'
     },
     {
       text: '3 day Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'3 days'
     },
     {
       text: '7 day Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'7 days'
     },
   ];
@@ -196,10 +196,10 @@ isReminderExpand = false;
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,30,false, false)
  }
  if(event.id == '1 hour'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1,false, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,60,false, false)
  }
  if(event.id == '2 hours'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1,false, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,120,false, false)
  }
  if(event.id == '3 days'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,3)

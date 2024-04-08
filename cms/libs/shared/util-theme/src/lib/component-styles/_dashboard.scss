@@ -3,7 +3,12 @@
   gap: 10px;
 
 }
-
+.heading_card{
+  margin: 10px 0px;
+  font-weight: normal;
+  font-size: 1rem !important;
+  font-family: "Neue Helvetica Bold" !important;
+}
 .dashboard-wrapper {
   .app-c-drag-row-table.recently-view .k-grid .k-grid-content {
     min-height: 10px;
@@ -24,17 +29,17 @@
   cursor: pointer;
   transition: .2s;
   box-shadow: 0px 0px 0px 0px #00000014;
-&:hover{
-  box-shadow: 0px 4px 8px -1px #00000014;
-}
+  &:hover{
+    box-shadow: 0px 4px 8px -1px #00000014;
+  }
+
   p {
     letter-spacing: 0px;
-    color: #00000099;
-    text-transform: uppercase;
+    color: #333333; 
     font-family: $font-family-medium;
   }
 
-  h3 {
+  .mat-h3 {
     letter-spacing: 0px;
     color: #000000DE;
     font-family: $font-family-light;
@@ -266,7 +271,9 @@
   }
 
   .app-cars-first-col {
-    h4 {
+    border-right: 1px solid #cccccc;
+    margin-right: 8px;
+    .cer_subhead {
       margin-top: 8px;
       margin-bottom: 0px;
     }
@@ -304,7 +311,7 @@
     }
   }
 
-  h4 {
+  .cer_subhead {
     font-size: $font-size-xlg !important;
     margin: 0;
     margin-bottom: 8px;
@@ -364,7 +371,7 @@
     padding-bottom: 0;
   }
 
-  h4 {
+  .ins_type_head {
     font-size: $font-size-xlg-22 !important;
     margin: 0;
     font-family: $font-family-light;
@@ -382,7 +389,7 @@
   .light-blue-btn {
     padding: 12px 10px;
     word-wrap: break-word;
-
+    color: var(--hive-primary-palette-800);
     .k-button-text {
       word-wrap: break-word;
       white-space: pre-line;
@@ -401,7 +408,7 @@
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 10px;
 
-  h5 {
+  .slotshead {
     margin: 0px;
     font-family: $font-family;
     color: $black-9;
@@ -584,6 +591,8 @@ gridster .gridster-row {
       min-height: 28px;
       height: 28px;
       min-width: auto;
+      width: 100%;
+      display: none;
     }
     .k-i-x {
       display: none;
@@ -650,9 +659,14 @@ gridster .gridster-row {
         height: 100%;
         z-index: 1;
       }
+.dashboard_wrappers{
+  .k-picker-md .k-input-inner {
+    padding: 10px 16px;
+    width: 146px;
+}
 
-      .k-picker-md .k-input-inner {
-        padding: 10px 16px;
-        width: 146px;
-    }
-
+}
+    
+.status_icon{
+  font-size: 8vw;
+}

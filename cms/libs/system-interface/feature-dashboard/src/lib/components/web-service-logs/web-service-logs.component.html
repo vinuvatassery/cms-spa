@@ -96,12 +96,14 @@
           <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span> 
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column *ngIf="interfaceType !='USPS'" title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
+      <kendo-grid-column *ngIf="interfaceType !='USPS'" field="uploadStatus" title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button [disabled]="dataItem.uploadStatus=='N'" [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button" 
-            kendoPopoverAnchor (click)="downloadFile(dataItem.fileId)">
-            Download 
-          </button> 
+          <button kendoButton  [disabled]="dataItem.uploadStatus==='N'" title="Download" [attr.aria-label]="dataItem.status" [primary]="true" look="flat"  (click)="downloadFile(dataItem.fileId)"> <span class="material-icons">
+            file_download
+            </span>
+          </button>
+
+        
         </ng-template>
       </kendo-grid-column>
 

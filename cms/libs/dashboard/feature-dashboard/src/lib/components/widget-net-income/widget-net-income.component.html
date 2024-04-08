@@ -1,7 +1,8 @@
 
       <div class="dash-header-with-filters">
-            <h5>NET INCOME</h5>
-            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" value="Last Year" rounded="medium"
+            <h2 class="heading_card">NET INCOME</h2>
+            <div *ngIf="!isEditDashboard"><kendo-dropdownlist aria-label="clientFullName" size="small" value="Last Year" rounded="medium"
+          
                         [fillMode]="formUiStyle.inputFillMode" [data]="data">
                   </kendo-dropdownlist></div>
       </div>

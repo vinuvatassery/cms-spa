@@ -142,7 +142,7 @@ export class ReminderDetailComponent implements OnInit {
       vendorId :[null],
       clientId :[null],
       addToOutlookCalender: [false],
-      deleteFromOutlookCalender :[true]
+      deleteFromOutlookCalender :[false]
     });
    if(this.isDelete || this.isEdit){
    this.getTodo$.subscribe((res:any) =>{
@@ -150,7 +150,8 @@ export class ReminderDetailComponent implements OnInit {
       const repeatTime = res.repeatTime?.split(':')
       this.clientReminderForm.patchValue({
         description: res.alertDesc,
-        addToOutlookCalender: res.addToOutlookFlag =="Y",
+        addToOutlookCalender: res.addToOutlookFlag ==="Y",
+        deleteFromOutlookCalender : res.addToOutlookFlag === "Y",
         time : repeatTime? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), repeatTime[0], repeatTime[1]) : null
       })
     }

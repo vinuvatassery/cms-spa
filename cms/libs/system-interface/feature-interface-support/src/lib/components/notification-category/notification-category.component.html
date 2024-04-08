@@ -66,10 +66,10 @@
                   let-currentPage="currentPage">
                   <div class="grid-custom-paginationtemplates d-flex">
                         <div class="d-flex align-items-center">
-                              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                              <label class="mr-1" for="RowsPerPageNotify">Rows Per Page</label>
                               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
                                     [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
-                                    aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
+                                    aria-label="Rows Per Page" id="RowsPerPageNotify" [(value)]="state.take"
                                     (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                               <kendo-pager-info> </kendo-pager-info>
                               <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
@@ -102,7 +102,7 @@
             (click)="onNotificationCategoryDetailsClicked()"> Notification Category</button>
 </div>
 <kendo-dialog *ngIf="isNotificationCategoryDetailPopup" (close)="onCloseNotificationCategoryDetailPopupClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      class="app-c-modal app-c-modal-md app-c-modal-np">
       <kendo-dialog-titlebar>{{ isEditNotificationCategory ? 'Edit Notification Category' : 'Add Notification Category'
             }}</kendo-dialog-titlebar>
       <notification-category-detail [isEditNotificationCategory]="isEditNotificationCategory"

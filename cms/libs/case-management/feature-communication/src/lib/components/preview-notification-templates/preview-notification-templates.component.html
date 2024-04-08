@@ -1,4 +1,4 @@
-<section class="k-dialog-body break-word">
+<section class="k-dialog-body break-word" *ngIf="PreviewTemplateType === 'letter'">
       <div class="flex-row">
             <div class="flex-col">
                   <h5>To: </h5>
@@ -20,7 +20,10 @@
       </div>
      
 </section>
-<kendo-dialog-actions>
+
+
+
+<kendo-dialog-actions *ngIf="PreviewTemplateType === 'letter'">
       <div class="justify-content-between">
             <div class="justify-content-end">
                   <button kendoButton [primary]="true" aria-label="Cancel" look="outline">
@@ -30,3 +33,67 @@
             </div>
       </div>
 </kendo-dialog-actions>
+
+
+
+
+<section class="k-dialog-body break-word" *ngIf="PreviewTemplateType === 'sms'">
+      <p>Click "Re-send" to send the message(s) again</p>
+      <div class="flex-row">
+            <div class="flex-col">
+                  <h5><strong>Sent To:</strong>(000) 000-0000</h5> 
+            </div>
+           
+            <div class="flex-col">
+                 <div class="message_lists">
+                  <h5>MESSAGE !</h5>
+                  <p>Donec lobortis tellus nulla,at convience Template comes this place</p>
+
+                 </div>
+                 <div class="message_lists">
+                  <h5>MESSAGE !</h5>
+                  <p>Donec lobortis tellus nulla,at convience Template comes this place</p>
+
+                 </div>
+                 <div class="message_lists">
+                  <h5>MESSAGE !</h5>
+                  <p>Donec lobortis tellus nulla,at convience Template comes this place</p>
+
+                 </div>
+                 <div class="message_lists">
+                  <h5>MESSAGE !</h5>
+                  <p>Donec lobortis tellus nulla,at convience Template comes this place</p>
+
+                 </div>
+                 <div class="message_lists">
+                  <h5>MESSAGE !</h5>
+                  <p>Donec lobortis tellus nulla,at convience Template comes this place</p>
+
+                 </div>
+                 <div class="message_lists">
+                  <h5>MESSAGE !</h5>
+                  <p>Donec lobortis tellus nulla,at convience Template comes this place</p>
+
+                 </div>
+            </div>
+            
+
+      </div>
+     
+</section>
+
+
+<kendo-dialog-actions *ngIf="PreviewTemplateType === 'sms'">
+      <div class="justify-content-between">
+            <div>
+                  <p>Originally sent xx/xx/xxxx by <a>Lisa McAilifile</a></p>
+            </div>
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" aria-label="Cancel" look="outline">
+                        Cancel </button>
+                  <button kendoButton class="k-primary-button" [primary]="true" aria-label="Re-Send">Re-Send </button>
+
+            </div>
+      </div>
+</kendo-dialog-actions>
+
