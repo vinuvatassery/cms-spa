@@ -196,10 +196,10 @@ isReminderExpand = false;
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,30,false, false)
  }
  if(event.id == '1 hour'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1,false, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,60,false, false)
  }
  if(event.id == '2 hours'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1,false, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,120,false, false)
  }
  if(event.id == '3 days'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,3)
