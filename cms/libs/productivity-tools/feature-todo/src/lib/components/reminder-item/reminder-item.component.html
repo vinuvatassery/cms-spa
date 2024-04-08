@@ -8,7 +8,7 @@
         <span class="material-icons" aria-label="notification" aria-hidden="true">alarm</span>
       </div>
       <div class="card-list_details">
-        <p>{{ item.alertDesc }}</p>
+        <p>{{ item.entityName }}</p>
         <p class="text-muted">{{ item?.alertDueDate | date:'MM/dd/YYYY'}} {{ formatTime(item?.repeatTime) }}</p>
        
       </div>
