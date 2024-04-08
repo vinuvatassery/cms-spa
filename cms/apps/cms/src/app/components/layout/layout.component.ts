@@ -11,6 +11,7 @@ import { UserDataService } from '@cms/system-config/domain';
 export class LayoutComponent {
   commonReminderSnackbar$   = this.reminderNotificationSnackbarService.snackbar$
   notificationList$ = this.notificationFacade.notificationList$;
+  notificationListBell$ = this.notificationFacade.notificationListBell$
   constructor(private readonly userDataService: UserDataService,
     public notificationFacade: NotificationFacade, 
     private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService) {}

@@ -19,6 +19,7 @@
     <productivity-tools-notification-panel  *ifPermission='["Layout_Notifications_View_Only"]'
     (isLoadReminderAndNotificationEvent)="onloadReminderAndNotificationsGrid($event)"
     [notificationList$]="notificationList$" (onSnoozeReminderEvent)="onSnoozeReminder($event)"
+    [notificationListBell$]="notificationListBell$"
     ></productivity-tools-notification-panel>
     <common-login-status></common-login-status>
   </div>
