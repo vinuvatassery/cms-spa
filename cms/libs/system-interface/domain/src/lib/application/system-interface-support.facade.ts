@@ -15,17 +15,17 @@ export class SystemInterfaceSupportFacade {
 
   public sortValueSupportGroup = 'groupName';
   public sortSupportGroupList: SortDescriptor[] = [{
-    field: this.sortValueSupportGroup,
+    field: this.sortValueSupportGroup, dir: 'asc'
   }];
 
   public sortValueDistribution = 'firstName';
   public sortDistributionList: SortDescriptor[] = [{
-    field: this.sortValueDistribution,
+    field: this.sortValueDistribution, dir: 'asc'
   }];
 
   public sortValueNotificationCategory = 'eventDesc';
   public sortNotificationCategoryList: SortDescriptor[] = [{
-    field: this.sortValueNotificationCategory,
+    field: this.sortValueNotificationCategory, dir: 'asc'
   }];
 
   private supportGroupSubject = new Subject<any>();
@@ -272,14 +272,14 @@ export class SystemInterfaceSupportFacade {
           const errorMessage = err?.error?.error?.message;
 
           if (errorCode && errorCode.includes('DUPLICATE_NOTIFICATION_CATEGORY_EXISTS')) {
-              this.showHideSnackBar(SnackBarNotificationType.WARNING, errorMessage);
+            this.showHideSnackBar(SnackBarNotificationType.WARNING, errorMessage);
           } else {
-              this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
           }
 
           this.loaderService.hide();
           this.loggingService.logException(err);
-      },
+        },
       }
     );
   }
@@ -300,9 +300,9 @@ export class SystemInterfaceSupportFacade {
         const errorMessage = err?.error?.error?.message;
 
         if (errorCode && errorCode.includes('DUPLICATE_NOTIFICATION_CATEGORY_EXISTS')) {
-            this.showHideSnackBar(SnackBarNotificationType.WARNING, errorMessage);
+          this.showHideSnackBar(SnackBarNotificationType.WARNING, errorMessage);
         } else {
-            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         }
 
         this.loaderService.hide();

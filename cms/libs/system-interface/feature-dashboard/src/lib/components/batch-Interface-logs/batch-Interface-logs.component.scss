@@ -1,0 +1,5 @@
+button.card-link-button:disabled {
+    color: #999999; /* Change the text color to gray */
+    background-color: #dddddd; /* Change the background color to light gray */
+    cursor: not-allowed; /* Change the cursor to indicate it's not clickable */
+  }
