@@ -199,7 +199,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     const repeatTime = res.payload.alertExtraProperties.RepeatTime
     const dueDate = this.intl.formatDate(res.payload.alertExtraProperties.AlertDueDate, this.dateFormat);
     const today = this.intl.formatDate(new Date(), this.dateFormat)
-    if (repeatTime && dueDate !== today) {
+    if (repeatTime) {
       const times = repeatTime.split(':')
       const duedateWithRepeatTime = new Date(new Date().getFullYear(), new Date().getMonth(),
         new Date().getDate(), times[0], times[1])
