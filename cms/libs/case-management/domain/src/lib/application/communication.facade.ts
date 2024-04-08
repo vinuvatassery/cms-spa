@@ -226,7 +226,7 @@ export class CommunicationFacade {
       let subTypeCode = data?.emailData?.subtypeCode?? data?.emailData?.subTypeCode 
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
       formData.append('description', data?.emailData?.description ?? '');
-      formData.append('typeCode', data?.emailData?.templateTypeCode ?? subTypeCode);
+      formData.append('typeCode', data?.emailData?.typeCode);
       formData.append('subTypeCode', subTypeCode ?? '');
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
       formData.append('notificationDraftId', data?.emailData?.notificationDraftId ?? '');
@@ -274,7 +274,7 @@ export class CommunicationFacade {
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
-    formData.append('typeCode', emailData?.subtypeCode ?? emailData?.typeCode);
+    formData.append('typeCode', emailData?.typeCode);
     formData.append('subTypeCode',subTypeCode);
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('notificationDraftId', emailData?.notificationDraftId ?? '');
@@ -334,8 +334,8 @@ export class CommunicationFacade {
     return this.emailDataService.saveEmailNotificationForLater(formData);
   }
 
-  loadDraftNotificationRequest(entityId: string,entityType:string,typeCode:string, subTypeCode: string) {
-    return this.emailDataService.getDraftNotification(entityId,entityType,typeCode,subTypeCode);
+  loadDraftNotificationRequest(entityId: string,entityType:string,typeCode:string, subTypeCode: string | null) {
+    return this.emailDataService.getDraftNotification(entityId,entityType,typeCode, subTypeCode);
   }
 
   loadTemplateById(notificationTemplateId: string) {
