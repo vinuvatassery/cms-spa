@@ -248,9 +248,9 @@ export class ReminderDetailComponent implements OnInit {
         this.clientReminderForm.controls['clientId'].setErrors({ 'required': true });
       }
       this.entityId =  this.clientReminderForm.controls['clientId'].value.clientId?.toString()
-    }else   if( this.isShowEntityTypeCode && this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value !=='VENDOR'){
+    }else   if( this.isShowEntityTypeCode && this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value !=='CLIENT'){
       this.entityTypeCode = 'VENDOR'
-      if(!(this.clientReminderForm.controls['vendorId'].value && this.clientReminderForm.controls['vendorId'].value.vendorId)){
+      if(!(this.clientReminderForm.controls['vendorId'].value && this.clientReminderForm.controls['vendorId'].value.providerId)){
         this.clientReminderForm.controls['vendorId'].setErrors({ 'required': true });
       }
       this.entityId =  this.clientReminderForm.controls['vendorId'].value.providerId?.toString()
@@ -349,7 +349,6 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   providerSelectionChange(event : any){  
-    console.log(event)
     this.remainderFor.emit(event.providerName)
   }
   clientSelectionChange(event:any){
