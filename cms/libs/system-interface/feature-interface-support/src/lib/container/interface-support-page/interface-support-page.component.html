@@ -9,7 +9,7 @@
                   <div class="flex-col flex-col-12 mb-3">
 
                         <system-interface-support-group [SupportGroupGridLists$]="supportGroup$"
-                                           [supportGroupListsLoader$] ="supportGroupListsLoader$"
+                        [supportGroupListsLoader$] ="supportGroupListsLoader$"
                         [pageSizes]="pageSizes" [sortValue]="sortValueSupportGroup"
                         [sortType]="sortType" [sort]="sortSupportGroupList"  
                         (loadSupportGroupListEvent)="loadSupportGroup($event)"
@@ -24,8 +24,7 @@
                         (editSupportGroupEvent) ="handleEditSupportGroup($event)" 
                         (selectedRowEvent)="selectedGroupChangeEvent($event)"
                         [supportGroupProfilePhoto$]="supportGroupProfilePhoto$"
-                                                (selectedRowEvent)="selectedGroupChangeEvent($event)"  [pageSizes]="pageSizes"
-                                                        >
+                        (selectedRowEvent)="selectedGroupChangeEvent($event)"  [pageSizes]="pageSizes">
                   </system-interface-support-group>
                   </div>
 
@@ -34,14 +33,12 @@
                         <system-interface-distribution-lists
                         [distributionGridLists$]="distributionLists$"
                         [pageSizes]="pageSizes"
-                                                [sortValue]="sortValueDistribution"
+                        [sortValue]="sortValueDistribution"
                         [sortType]="sortType"
                         [sort]="sortDistributionList"
                         [selectedGroup]="selectedGroup"
                         (loadDistributionListEvent)="loadDistributionLists($event)"
-                        (loadSupportGroupListEvent)="loadSupportGroup($event)"
-                        >
-                        
+                        (loadSupportGroupListEvent)="loadSupportGroup($event)">
                         </system-interface-distribution-lists>
                   </div>
 

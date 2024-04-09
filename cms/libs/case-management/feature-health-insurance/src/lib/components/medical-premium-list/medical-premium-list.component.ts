@@ -10,6 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { FilterService } from '@progress/kendo-angular-grid';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-medical-premium-list',
@@ -50,8 +51,12 @@ export class MedicalPremiumListComponent implements OnInit {
   healthInsuranceTypeDesc:any;
   priorityDesc:any;
   premiumFrequencyDesc:any;
+  careassistPayingPremiumFlagValue:any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   showInsuranceRequired = this.healthInsurancePolicyFacade.showInsuranceRequired$;
+  yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
+  yesOrNoLovs: any = [];
+
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
   @Input() closeDeleteModal: boolean = false;
@@ -104,6 +109,7 @@ export class MedicalPremiumListComponent implements OnInit {
     private readonly healthInsurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly workflowFacade: WorkflowFacade,
     private readonly route: ActivatedRoute,
+    private readonly lovFacade: LovFacade,
     private readonly formBuilder: FormBuilder) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
@@ -111,6 +117,8 @@ export class MedicalPremiumListComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.priorityPopupShowSubscription();
+    this.loadYesOrNoLovsInit();
+    this.lovFacade.getYesOrNoLovs();
     if (this.isCerForm) {
       this.actions.push({
         buttonType: "btn-h-primary",
@@ -169,14 +177,8 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   dropdownFilterChange(field: string, value: any, filterService: FilterService): void {
-    filterService.filter({
-      filters: [{
-        field: field,
-        operator: "eq",
-        value: value.lovDesc
-      }],
-      logic: "or"
-    });
+  
+    let valueSet = value.lovDesc;
     if (field == "healthInsuranceTypeDesc") {
       this.healthInsuranceTypeDesc = value;
     }
@@ -186,6 +188,27 @@ export class MedicalPremiumListComponent implements OnInit {
     if (field == "premiumFrequencyDesc") {
       this.premiumFrequencyDesc = value;
     }
+    if (field == "careassistPayingPremiumFlag") {
+      this.careassistPayingPremiumFlagValue = value;
+      valueSet = value.lovCode;
+    }
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value: valueSet
+      }],
+      logic: "or"
+    });
+  }
+
+  private loadYesOrNoLovsInit() {
+    this.yesOrNoLov$
+      .subscribe({
+        next: (data: any) => {
+          this.yesOrNoLovs = data;
+        }
+      });
   }
 
   onDeleteConfirmOpenClicked() {

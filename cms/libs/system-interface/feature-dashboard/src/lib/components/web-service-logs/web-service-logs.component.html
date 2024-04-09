@@ -163,7 +163,11 @@
 </section>
 
 <ng-template #errorInformationDialogTemplate>
-  <kendo-dialog-titlebar (close)="Close()"> Failure Detail</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="Close()">
+    <span *ngIf="status=='SUCCESS'"> Success Detail</span>
+    <span *ngIf="status=='FAILED'"> Failure Detail</span>
+       
+    </kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
      
           <p class="text-muted mb-1">{{failureDetail}}</p>

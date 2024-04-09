@@ -55,7 +55,6 @@ export class EventLogDescriptionComponent {
     }
     else if(this.content.indexOf(this.urlSeparator) !== -1 && this.content.indexOf(this.baseUrl) == -1)
     {
-      debugger;
       this.setAnchorWithOutBaseUrl(anchorArray);
     }
     else

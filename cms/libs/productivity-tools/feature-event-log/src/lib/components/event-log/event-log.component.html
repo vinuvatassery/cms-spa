@@ -59,7 +59,7 @@
             <button kendoButton look="flat" aria-label="Filter" class="btn-h-primary" aria-hidden="false"
             (click)="onShowHideFilterEvent()" [ngClass]="{'k-selected': isShowFilter || isFilterApplied }">
               <span class="material-icons" aria-hidden="true" aria-label="Filter">filter_list</span>
-              <label> Filter {{isShowFilter}} </label>
+              <label> Filter</label>
             </button>
           </div>
           <div class="event-filters-field" *ngIf="isShowFilter" [formGroup]="eventLogFilterForm">

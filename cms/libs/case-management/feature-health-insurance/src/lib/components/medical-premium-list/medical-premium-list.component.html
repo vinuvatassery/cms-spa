@@ -175,15 +175,23 @@
         </kendo-grid-column>
        
         <kendo-grid-column field="careassistPayingPremiumFlag" title="CAREAssist paying premium?" [width]="200"
-          class="text-center">
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-            [extra]="false" operator="eq">
-            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-            <kendo-filter-eq-operator></kendo-filter-eq-operator>
-            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-            <kendo-filter-contains-operator></kendo-filter-contains-operator>
-          </kendo-grid-string-filter-menu>
+          class="text-center">        
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.careassistPayingPremiumFlag | yesOrNo }}
+          </ng-template>
+                  <ng-template kendoGridFilterMenuTemplate
+                  let-column="column"
+                  let-filter="filter"
+                  let-filterService="filterService"
+                  >
+                    <kendo-dropdownlist
+                    [data]="yesOrNoLovs"
+                    textField="lovDesc"
+                    valueField="lovCode"
+                    [value]="careassistPayingPremiumFlagValue"
+                    (valueChange)="dropdownFilterChange('careassistPayingPremiumFlag',$event, filterService)"
+                    >
+            </kendo-dropdownlist>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="Option" title="Options" [width]="75" [sticky]="true" class="text-center"  [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled">
