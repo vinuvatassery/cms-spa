@@ -659,9 +659,14 @@ gridster .gridster-row {
         height: 100%;
         z-index: 1;
       }
+.dashboard_wrappers{
+  .k-picker-md .k-input-inner {
+    padding: 10px 16px;
+    width: 146px;
+}
 
-      .k-picker-md .k-input-inner {
-        padding: 10px 16px;
-        width: 146px;
-    }
-
+}
+    
+.status_icon{
+  font-size: 8vw;
+}

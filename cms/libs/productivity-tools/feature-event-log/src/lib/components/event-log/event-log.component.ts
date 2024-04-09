@@ -43,7 +43,6 @@ export class EventLogComponent implements OnInit {
 
   /** Public properties **/
   eventAttachmentTypeList : any;
-  clientId = 0;
   parentEventLogId: any;
   eventList: any = [];
   SubEventList: any = [];
@@ -56,7 +55,7 @@ export class EventLogComponent implements OnInit {
   isAddEventDialogOpen: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   eventsdata$ = this.eventLogFacade.eventsdata$;
-
+  isFilterApplied = false;
   isEventFilterPopoverOpen = false;
   isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
@@ -103,12 +102,6 @@ eventListLoader = false;
   ngOnInit() {
     this.eventListLoader = true;
     this.loadEventsData();
-    if(this.entityType =='CLIENT')
-    {
-      this.clientId =   this.route.snapshot.queryParams['id'];
-      this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
-      this.entityId = this.clientId.toString();
-    };
     this.loadEvents();
     this.subscribeEvents();
     this.getEventList();
@@ -133,7 +126,25 @@ eventListLoader = false;
     };
     this.eventLogFacade.loadEvents(paginationData,this.entityId);
   }
+  onShowHideFilterEvent(){
+   
+    if(this.isShowFilter === true){
+      this.isShowFilter = false;
+    } else {
+      this.isShowFilter = true;
+    }
+    this.cd.detectChanges();
+  }
 
+  onShowFilterEventPopover(){
+    this.isEventFilterPopoverOpen = !this.isEventFilterPopoverOpen;
+    if(this.isShowFilter === false){
+      this.isShowFilter = false;
+    } else {
+      this.isShowFilter = true;
+    }
+    this.cd.detectChanges();
+  }
   private subscribeEvents() {
     this.events$.subscribe((data) => {
       this.events = data;
@@ -215,16 +226,19 @@ eventListLoader = false;
     this.filterBy = "";
     this.isEnableFilterBtn = false;
     this.isEventFilterPopoverOpen = false;
+    this.isFilterApplied = false;
     this.cd.detectChanges();
-    this.filterData = { logic: 'and', filters: [] };
+    this.filterData = { logic: 'and', filters: [] };  
     this.loadEventLogs();
+ 
   }
 
   onEventLogFilterFilterClicked()
   {
     this.setFilteredText();
-    this.loadEventLogs();
+    this.loadEventLogs(); 
     this.isEventFilterPopoverOpen = false;
+    this.isFilterApplied = true;
     this.cd.detectChanges();
   }
 

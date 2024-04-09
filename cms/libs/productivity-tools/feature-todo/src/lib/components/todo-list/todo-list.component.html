@@ -35,7 +35,7 @@
         </kendo-grid-string-filter-menu>
          </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="displayEntityTypeCode" title="Type" [width]="100">
+    <kendo-grid-column field="entityTypeCode" title="Type" [width]="100">
       <ng-template kendoGridCellTemplate let-dataItem>
       <span class="text-upper">  {{ dataItem.displayEntityTypeCode }}</span>
       </ng-template>
@@ -47,7 +47,8 @@
       [data]="entityTypeList"
       textField="lovDesc"
       valueField="lovCode"
-      [valuePrimitive]="false"
+      [value]="entityTypeValue"
+      [(ngModel)]="selectedEntityType"
       (valueChange)="dropdownFilterChange('entityTypeCode',$event, filterService)">
     </kendo-dropdownlist>
     </ng-template>

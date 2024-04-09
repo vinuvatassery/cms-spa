@@ -149,18 +149,7 @@
 
 </section>
 
-<div class="app-c-fab-container" position="left">
-  <kendo-floatingactionbutton class="app-c-fab" title="Event Log" aria-label="Event Log" #myFab (click)="handleShowEventLogClicked()">
-    <ng-template kendoFloatingActionButtonTemplate>
-      <span class="material-icons" aria-label="Event Log" >assignment</span>
-    </ng-template>
-  </kendo-floatingactionbutton>
-
-
-
-   <!-- Event Log Side Panel -->
-   <productivity-tools-event-log [entityId] = "vendorId" [entityType] = "'VENDOR'"  [eventAttachmentTypeLov$]="eventAttachmentTypeLov$"   *ngIf="isShownEventLog"  (closeAction)="handleShowEventLogClicked()"
- ></productivity-tools-event-log>
+ <router-outlet name="commonActions"></router-outlet> 
 
  <ng-template #providerDetailsTemplate>
   <cms-financial-claims-provider-info

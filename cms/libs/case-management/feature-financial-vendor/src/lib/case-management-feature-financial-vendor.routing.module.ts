@@ -26,6 +26,16 @@ const routes: Routes = [
     path: 'profile',
     component: FinancialVendorProfileComponent,
     data: { title: 'Vendor Profile', },
+    children: [
+      {
+        outlet: 'commonActions',
+        path: '',
+        loadChildren: () =>
+          import('@cms/productivity-tools/feature-fabs-menu').then(
+            (m) => m.ProductivityToolsFeatureFabsMenuModule
+          )   
+      }
+    ]
   } 
 ];
 

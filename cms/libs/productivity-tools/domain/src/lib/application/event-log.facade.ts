@@ -77,17 +77,6 @@ export class EventLogFacade {
     });
   }
 
-  loadDdlEvents() {
-    this.eventDataService.loadDdlEvents().subscribe({
-      next: (eventDdl) => {
-        this.ddlEventsSubject.next(eventDdl);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
   addEventData(eventData : any): void {
     this.showLoader()
     this.eventDataService.addEventData(eventData).subscribe({
