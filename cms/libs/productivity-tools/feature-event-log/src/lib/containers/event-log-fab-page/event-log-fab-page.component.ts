@@ -4,7 +4,7 @@ import {
   Component,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FabMenuFacade } from '@cms/productivity-tools/domain';
+import { AlertEntityTypeCode, FabMenuFacade } from '@cms/productivity-tools/domain';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -15,10 +15,9 @@ import { LovFacade } from '@cms/system-config/domain';
 export class EventLogComponentFabPageComponent
 {
   /** Public properties **/
-  clientId : any;
-  vendorId : any;
   entityId : any;
-
+  entityTypeCode: any;
+  clientCaseEligibilityId: any;
   eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$
   constructor(
     public readonly fabMenuFacade: FabMenuFacade,
@@ -28,13 +27,16 @@ export class EventLogComponentFabPageComponent
   }
 
   ngOnInit() {
-      this.clientId = this.route.snapshot.queryParams['id'];
-      this.vendorId = this.route.snapshot.queryParams['v_id'];
-      if(this.clientId){
-        this.entityId = this.clientId.toString();
+      const clientId = this.route.snapshot.params['id'];
+      const vendorId = this.route.snapshot.queryParams['v_id'];
+      if(clientId){
+        this.entityId = clientId.toString();
+        this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
+        this.entityTypeCode = AlertEntityTypeCode.Client;
       }
-      else if(this.vendorId){
-        this.entityId = this.vendorId.toString();
+      else if(vendorId){
+        this.entityId = vendorId.toString();
+        this.entityTypeCode = AlertEntityTypeCode.Vendor;
       }
       
   }

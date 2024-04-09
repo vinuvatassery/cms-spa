@@ -43,7 +43,6 @@ export class EventLogComponent implements OnInit {
 
   /** Public properties **/
   eventAttachmentTypeList : any;
-  clientId = 0;
   parentEventLogId: any;
   eventList: any = [];
   SubEventList: any = [];
@@ -103,12 +102,6 @@ eventListLoader = false;
   ngOnInit() {
     this.eventListLoader = true;
     this.loadEventsData();
-    if(this.entityType =='CLIENT')
-    {
-      this.clientId =   this.route.snapshot.queryParams['id'];
-      this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
-      this.entityId = this.clientId.toString();
-    };
     this.loadEvents();
     this.subscribeEvents();
     this.getEventList();
