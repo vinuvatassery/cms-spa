@@ -75,6 +75,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   insuranceStatusProfilePhotoSubject = new Subject();
   medicalHealthProfilePhoto$ = this.insurancePolicyFacade.medicalHealthProfilePhotoSubject;
   careassistPayingPremiumFlagValue:any;
+  otherCoveredOnPlanValue:any;
   yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
   yesOrNoLovs: any = [];
   public gridOptionData = [
@@ -212,6 +213,10 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     }
     if (field == "careassistPayingPremiumFlag") {
       this.careassistPayingPremiumFlagValue = value;
+      valueSet = value.lovCode;
+    }
+    if (field == "otherCoveredOnPlan") {
+      this.otherCoveredOnPlanValue = value;
       valueSet = value.lovCode;
     }
 
