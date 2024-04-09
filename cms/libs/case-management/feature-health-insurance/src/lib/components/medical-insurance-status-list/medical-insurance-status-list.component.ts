@@ -77,7 +77,10 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   careassistPayingPremiumFlagValue:any;
   otherCoveredOnPlanValue:any;
   yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
+  aptclov$ = this.lovFacade.aptclov$;
   yesOrNoLovs: any = [];
+  aptcLov:any;
+  aptcDescValue:any;
   public gridOptionData = [
     {
       buttonType:"btn-h-primary",
@@ -119,7 +122,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadYesOrNoLovsInit();
+    this.loadAptcLovsInit();
     this.lovFacade.getYesOrNoLovs();
+    this.lovFacade.getAptcLovs();
     this.state = {
       skip: this.insurancePolicyFacade.skipCount,
       take: this.insurancePolicyFacade.gridPageSizes[0]?.value
@@ -173,6 +178,16 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
       });
   }
 
+  private loadAptcLovsInit() {
+    this.aptclov$
+      .subscribe({
+        next: (data: any) => {
+          this.aptcLov = data;
+        }
+      });
+  }
+
+
   private loadHealthInsuranceLovs() {
     this.lovFacade.getHealthInsuranceTypeLovs();
     this.lovFacade.getPremiumFrequencyLovs();
@@ -218,6 +233,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     if (field == "otherCoveredOnPlan") {
       this.otherCoveredOnPlanValue = value;
       valueSet = value.lovCode;
+    }
+    if (field == "aptcDesc") {
+      this.otherCoveredOnPlanValue = value;
     }
 
     filterService.filter({
