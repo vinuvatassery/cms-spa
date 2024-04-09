@@ -18,7 +18,7 @@ export class IncomeFacade {
   public sortType = 'asc';
   public dateFields: Array<string> = [
     'incomeStartDate',
-    'incomeEndDate',    
+    'incomeEndDate',
   ];
 
   /** Private properties **/
@@ -194,12 +194,10 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
   }
 }
 
-  loadDependentsProofofSchools(): void {
-    this.contactDataService.loadDependentsProofofSchools().subscribe({
-      next: (dependentsProofofSchoolsResponse) => {
-        this.dependentsProofofSchoolsSubject.next(
-          dependentsProofofSchoolsResponse
-        );
+  loadDependentsProofofSchools(clientId:string,clientCaseEligibilityId:string): void {
+    this.contactDataService.loadDependentsProofofSchools(clientId,clientCaseEligibilityId).subscribe({
+      next: (response) => {
+        this.dependentsProofofSchoolsSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -207,7 +205,7 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
     });
   }
 
-  save(clientCaseEligibilityId : any, noIncomeData : any): Observable<any> {   
+  save(clientCaseEligibilityId : any, noIncomeData : any): Observable<any> {
     return this.contactDataService.updateNoIncomeData(clientCaseEligibilityId, noIncomeData);
   }
 
@@ -220,7 +218,7 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
     return this.contactDataService.saveIncome(clientId,formData);
   }
   editClientIncome(clientId : any, clientIncomeId : any, clientIncome:any, proofOfIncomeFile:any, documentTypeCode: any){
-    const formData: any = new FormData();    
+    const formData: any = new FormData();
     formData.append('proofOfIncomeFile',proofOfIncomeFile)
     formData.append('documentTypeCode', documentTypeCode);
     this.formDataAppendObject(formData, clientIncome);
@@ -237,7 +235,7 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
   loadEmployers(employerName :any): void {
     this.contactDataService.loadEmployers(employerName).subscribe({
       next: (employers) => {
-        this.employerSubject.next(employers);        
+        this.employerSubject.next(employers);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -257,7 +255,7 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
         continue;
       }
       else if (typeof obj[i] == 'object') {
-        if (this.dateFields.indexOf(i) >= 0) {         
+        if (this.dateFields.indexOf(i) >= 0) {
             fd.append(i, obj[i]);
         }
         else {
@@ -269,7 +267,7 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
       }
     }
   }
-  
+
   loadEmployerIncomes(clientId:string,clientCaseEligibilityId:string): void {
     this.contactDataService.loadEmployerIncomes(clientId,clientCaseEligibilityId).subscribe({
       next: (EmployerIncomesResponse: any) => {

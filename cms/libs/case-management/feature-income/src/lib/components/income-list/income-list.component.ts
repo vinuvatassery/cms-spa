@@ -207,11 +207,6 @@ ngOnDestroy(): void {
       this.isRemoveIncomeConfirmationPopupOpened = true;
     }
   }
-  private loadDependentsProofofSchools() {
-    this.incomeFacade.showLoader();
-    this.incomeFacade.loadDependentsProofofSchools();
-    this.incomeFacade.hideLoader();
-  }
 
   private includeAddIncomeButtonAndFooterNote() {
     if (this.data === ScreenType.Case360Page) {
@@ -341,8 +336,9 @@ ngOnDestroy(): void {
         this.showHideImageUploadLoader(true, dataItem);
         this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
           next: (response: any) => {
-            this.loadIncomeData();
-            this.loadDependentsProofofSchools();
+            if(response){
+              this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
+            }
             this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
             this.dependentFacade.hideLoader();
             this.showHideImageUploadLoader(false, dataItem);
@@ -397,8 +393,7 @@ ngOnDestroy(): void {
       this.incomeFacade.showLoader();
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
         next: (response: any) => {
-          this.loadIncomeData();
-          this.loadDependentsProofofSchools();
+          this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
           this.incomeFacade.hideLoader();
           this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Proof of school attachment removed successfully');
           this.sendDetailToIncomeList.next(true);
