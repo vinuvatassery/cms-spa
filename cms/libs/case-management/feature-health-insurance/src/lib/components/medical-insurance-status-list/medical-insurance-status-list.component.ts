@@ -74,6 +74,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   insuranceStatusProfilePhotoSubject = new Subject();
   medicalHealthProfilePhoto$ = this.insurancePolicyFacade.medicalHealthProfilePhotoSubject;
+  careassistPayingPremiumFlagValue:any;
+  yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
+  yesOrNoLovs: any = [];
   public gridOptionData = [
     {
       buttonType:"btn-h-primary",
@@ -114,6 +117,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadYesOrNoLovsInit();
+    this.lovFacade.getYesOrNoLovs();
     this.state = {
       skip: this.insurancePolicyFacade.skipCount,
       take: this.insurancePolicyFacade.gridPageSizes[0]?.value
@@ -158,6 +163,15 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     }
   }
 
+  private loadYesOrNoLovsInit() {
+    this.yesOrNoLov$
+      .subscribe({
+        next: (data: any) => {
+          this.yesOrNoLovs = data;
+        }
+      });
+  }
+
   private loadHealthInsuranceLovs() {
     this.lovFacade.getHealthInsuranceTypeLovs();
     this.lovFacade.getPremiumFrequencyLovs();
@@ -186,14 +200,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   }
 
   dropdownFilterChange(field: string, value: any, filterService: FilterService): void {
-    filterService.filter({
-      filters: [{
-        field: field,
-        operator: "eq",
-        value: value.lovDesc
-      }],
-      logic: "or"
-    });
+    let valueSet = value.lovDesc;;
     if (field == "healthInsuranceTypeDesc") {
       this.healthInsuranceTypeDesc = value;
     }
@@ -203,6 +210,19 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     if (field == "premiumFrequencyDesc") {
       this.premiumFrequencyDesc = value;
     }
+    if (field == "careassistPayingPremiumFlag") {
+      this.careassistPayingPremiumFlagValue = value;
+      valueSet = value.lovCode;
+    }
+
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value: valueSet
+      }],
+      logic: "or"
+    });
   }
   
   handleHealthInsuranceOpenClicked(value: string) {
