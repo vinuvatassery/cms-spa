@@ -1,6 +1,6 @@
 /** Angular **/
 
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input, ChangeDetectorRef, OnDestroy, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input, ElementRef } from '@angular/core';
 import {
   ClientProfile, ClientFacade, Client,
   ClientCaseEligibility, ClientPronoun, ClientGender,
