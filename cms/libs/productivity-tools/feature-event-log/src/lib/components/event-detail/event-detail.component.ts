@@ -51,7 +51,6 @@ export class EventDetailComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadDdlEvents();
     this.eventDescriptionWordCount();
     this.attachmentNoteWordCount()
     this.buildForm();
@@ -90,9 +89,6 @@ export class EventDetailComponent implements OnInit {
     this.attachmentNoteCounter = `${this.attachmentNoteCharachtersCount}/${this.attachmentNoteMaxLength}`;
   }
 
-  private loadDdlEvents() {
-    this.eventLogFacade.loadDdlEvents();
-  }
   closeEventDetails(isLoadEvent : boolean){
     this.closeEventDetailsClickedEmitter.emit(isLoadEvent);
   }
