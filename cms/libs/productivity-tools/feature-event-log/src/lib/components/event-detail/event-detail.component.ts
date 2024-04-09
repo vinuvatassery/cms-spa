@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 
@@ -8,6 +8,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
   templateUrl: './event-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventDetailComponent implements OnInit {
+export class EventDetailComponent implements OnInit, OnDestroy {
 
   @Output() public closeEventDetailsClickedEmitter = new EventEmitter<any>();
   @Input() eventsdata$: any;
@@ -40,26 +41,30 @@ export class EventDetailComponent implements OnInit {
   atatchmentValidator: boolean = false;
   attachmentValidatorSize: boolean = false;
   /** Public properties **/
-  ddlEvents$ = this.eventLogFacade.ddlEvents$;
   addEventdata$ = this.eventLogFacade.addEventdata$;
+  addEventdata$Subscription = new Subscription();
 
   /** Constructor **/
   constructor(private readonly eventLogFacade: EventLogFacade, private readonly formBuilder: FormBuilder,
     private readonly configurationProvider: ConfigurationProvider,
 
     ) {}
-
+  
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.eventDescriptionWordCount();
     this.attachmentNoteWordCount()
     this.buildForm();
-    this.addEventdata$.subscribe((response: any) => {
+    this.addEventdata$Subscription = this.addEventdata$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
        this.closeEventDetails(true);
 
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.addEventdata$Subscription?.unsubscribe();
   }
 
   /** Private methods **/

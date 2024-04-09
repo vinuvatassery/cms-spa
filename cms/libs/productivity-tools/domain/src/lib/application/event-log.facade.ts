@@ -15,13 +15,11 @@ import { StatsTypeCode } from '../enums/stats-type-code.enum';
 export class EventLogFacade {
   /** Private properties **/
   private eventsSubject = new Subject<any>();
-  private ddlEventsSubject = new Subject<any[]>();
   private eventsDataSubject = new Subject<any>();
   private addEventDataSubject = new Subject<any>();
 
   /** Public properties **/
   events$ = this.eventsSubject.asObservable();
-  ddlEvents$ = this.ddlEventsSubject.asObservable();
   eventsdata$ = this.eventsDataSubject.asObservable();
   addEventdata$ = this.addEventDataSubject.asObservable();
 

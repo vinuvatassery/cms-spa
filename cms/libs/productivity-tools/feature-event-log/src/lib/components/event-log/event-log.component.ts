@@ -5,6 +5,7 @@ import {
   Component,
   EventEmitter,
   OnInit,
+  OnDestroy,
   Output,
   TemplateRef,
   Input,
@@ -21,7 +22,7 @@ import { DocumentFacade } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-event-log',
@@ -29,7 +30,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./event-log.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventLogComponent implements OnInit {
+export class EventLogComponent implements OnInit, OnDestroy {
   @ViewChild('eventtFilterPopover', { read: ElementRef })
   public eventtFilterPopover!: ElementRef;
   @ViewChild('eventFilterCardBtn')
@@ -76,7 +77,10 @@ eventListLoader = false;
     ];
   searchValue = '';
   filterDataQueryArray:any[]=[];
-  skeletonCounts = [1, 2, 3, 4, 5]
+  skeletonCounts = [1, 2, 3, 4, 5];
+  eventAttachmentTypeLov$Subscription = new Subscription();
+  events$Subscription = new Subscription();
+  eventsdata$Subscription = new Subscription();
 
   public eventLogFilterForm: FormGroup = new FormGroup({
     caseworkerfilterbyoperator: new FormControl('', []),
@@ -97,16 +101,15 @@ eventListLoader = false;
     private readonly lovFacade: LovFacade,
     private documentFacade: DocumentFacade
   ) {}
-
+  
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.eventListLoader = true;
     this.loadEventsData();
     this.loadEvents();
     this.subscribeEvents();
     this.getEventList();
     this.lovFacade.getEventAttachmentTypeLov();
-    this.eventAttachmentTypeLov$.subscribe((response: any) => {
+    this.eventAttachmentTypeLov$Subscription = this.eventAttachmentTypeLov$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
        this.eventAttachmentTypeList = response;
       }
@@ -146,8 +149,10 @@ eventListLoader = false;
     this.cd.detectChanges();
   }
   private subscribeEvents() {
-    this.events$.subscribe((data) => {
+    this.eventListLoader = true;
+    this.events$Subscription = this.events$.subscribe((data) => {
       this.events = data;
+      this.eventListLoader = false;
       this.cd.detectChanges();
     });
   }
@@ -157,7 +162,8 @@ eventListLoader = false;
   }
 
   getEventList() {
-    this.eventsdata$.subscribe((response: any) => {
+    this.eventListLoader = true;
+    this.eventsdata$Subscription = this.eventsdata$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.eventResponseList = response;
         this.eventListLoader = false;
@@ -444,5 +450,11 @@ eventListLoader = false;
     let pathSplitArray = path.split('$');
     let fileName = pathSplitArray[pathSplitArray.length-1];
     this.documentFacade.viewOrDownloadOldAttachemntFile(false, path, fileName);
+  }
+
+  ngOnDestroy(): void {
+    this.eventAttachmentTypeLov$Subscription?.unsubscribe();
+    this.events$Subscription?.unsubscribe();
+    this.eventsdata$Subscription?.unsubscribe();
   }
 }
