@@ -176,15 +176,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.loadSupportGroupListGrid();
     this.lovFacade.getInterfaceSupportGroupLovs();
-
-    // // Emit event to select the first row after loading the grid
-    // this.gridSupportGroupData$.pipe(first()).subscribe((data) => {
-    //   if (data?.data?.length > 0) {
-    //     const firstRow = data.data[0];
-    //     this.selectedRowEvent.emit(firstRow);
-    //   }
-    // });
   }
+
+
+  
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -308,19 +303,15 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      // this.gridDataResult.data = filterBy(
-      //   this.gridDataResult.data,
-      //   this.filterData
-      // );
+     
       if (this.mySelection.length < 1)
-        this.selectedRowEvent.emit(this.gridDataResult.data[0]);
+        this.selectedGroup = this.gridDataResult.data[0];
       else
-        this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
+        this.selectedGroup = this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
 
-      if (this.mySelection.length < 1)
-        this.mySelection = [this.gridDataResult?.data[0]?.notificationGroupId];
-      else
-        this.mySelection = [this.selectedGroup?.notificationGroupId];
+      this.selectedRowEvent.emit(this.selectedGroup);
+      this.mySelection = [this.selectedGroup?.notificationGroupId];
+        
       this.gridSupportGroupDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isSupportGroupGridLoaderShow = false;
@@ -454,6 +445,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       this.supportGroupRemove$.pipe(first((response: any) => response != null))
         .subscribe((response: any) => {
           if (response ?? false) {
+            this.mySelection = [];
             this.loadSupportGroupListGrid()
           }
 
