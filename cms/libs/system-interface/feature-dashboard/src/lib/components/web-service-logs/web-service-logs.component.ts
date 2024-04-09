@@ -84,6 +84,9 @@ defaultPageSize=20;
   // Filter Data
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   errorDialog: any;
+  status:any;
+  errorCode:any;
+  message:any;
   @ViewChild('errorInformationDialogTemplate', { read: TemplateRef })
   errorInformationDialogTemplate!: TemplateRef<any>;
 
@@ -316,9 +319,7 @@ defaultPageSize=20;
       this.errorDialog.close();
     
   }
- status:any;
- errorCode:any;
- message:any;
+
  onViewInformation(error:string,status:string){
   
   this.status=status;
