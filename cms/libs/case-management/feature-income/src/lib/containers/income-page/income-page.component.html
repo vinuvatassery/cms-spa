@@ -291,7 +291,7 @@
             </div>
           </div>
         </form>
-          <div *ngIf="noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === 'Y' || noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === 'Y'">
+          <div class="mt-3" *ngIf="noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === 'Y' || noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === 'Y'">
             <case-management-income-list [isProofOfSchoolDocumentUploaded] = "isProofOfSchoolDocumentUploaded"  [isCerForm]="isCerForm"  [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId"
             (loadIncomeListEvent)="loadIncomeListHandle($event)"  (loadIncomeList)="loadIncomeListGrid($event)"
             [lovProofOfIncomeByType$]="lovProofOfIncomeByType$" [incomeSourcelov$] = "incomeSourcelov$ " [incomeTypelov$]="incomeTypelov$"
