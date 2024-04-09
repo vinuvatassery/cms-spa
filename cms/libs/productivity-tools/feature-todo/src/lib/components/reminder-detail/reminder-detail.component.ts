@@ -337,14 +337,19 @@ export class ReminderDetailComponent implements OnInit {
   }
   onLinkToChange(event:any){
     if(event == 'CLIENT'){
+      this.clientReminderForm.controls['vendorId'].reset()
       this.clientReminderForm.controls['clientId'].enable()
   this.showClientSearch = true;
   this.showVendorSearch = false;
   this.placeholderText= this.clientPlaceHolderText
+ 
     }else{
+    this.clientReminderForm.controls['clientId'].reset()
+    this.clientReminderForm.controls['vendorId'].reset()
     this.clientReminderForm.controls['vendorId'].enable()
       this.showClientSearch = false;
       this.showVendorSearch = true;
+  
     this.getPlaceHolderText(event);
     }
   }
