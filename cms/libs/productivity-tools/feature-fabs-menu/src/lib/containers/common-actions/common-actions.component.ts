@@ -84,6 +84,7 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Vendor);
     }
     this.addSessionChangeSubscription();
+    this.hideAllPanels();
   }
 
   private addSessionChangeSubscription() {
