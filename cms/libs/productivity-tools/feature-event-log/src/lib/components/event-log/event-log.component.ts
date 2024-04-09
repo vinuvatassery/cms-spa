@@ -212,15 +212,6 @@ eventListLoader = false;
     this.isAddEventDialogOpen.close();
   }
 
-  isShowReadMore(elementId: any) {
-    return true;
-    var el = document.getElementById(elementId);
-    var divHeight = el?.offsetHeight;
-    //var lineHeight = parseInt(el?.style?.lineHeight?.toString());
-    //var lines = divHeight?? 0 / lineHeight;
-    console.log('Lines: ' + el?.style?.lineHeight?.toString());
-  }
-
   onEventLogFilterClearClicked()
   {
     this.eventLogFilterForm.controls["caseworkerfilterbyoperator"].setValue('');
