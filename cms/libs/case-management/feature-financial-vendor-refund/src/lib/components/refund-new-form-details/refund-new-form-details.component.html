@@ -560,9 +560,9 @@
                                                 required</kendo-formerror>
                                         </ng-template>
                                         <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                                           <!-- // <span class="tableamountview"> <strong>$</strong> {{dataItem.totalOverSpendAmount | kendoNumber: 'n2'}}</span> -->
                                             <span class="tableamountview"> <strong>$</strong>
-                                                {{getSumOfColumn(item.prescriptionFillItems, 'refundedAmount') | number:
-                                                '2.' }} </span>
+                                                {{getSumOfColumn(item.prescriptionFillItems, 'refundedAmount') | kendoNumber: 'n2'}} </span>
                                         </ng-template>
                                     </kendo-grid-column>
                                     <ng-template kendoGridLoadingTemplate>
