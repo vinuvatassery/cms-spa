@@ -84,6 +84,9 @@ defaultPageSize=20;
   // Filter Data
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   errorDialog: any;
+  status:any;
+  errorCode:any;
+  message:any;
   @ViewChild('errorInformationDialogTemplate', { read: TemplateRef })
   errorInformationDialogTemplate!: TemplateRef<any>;
 
@@ -274,8 +277,13 @@ defaultPageSize=20;
     this.interfaceType=event.lovCode;
     this.processArray = this.systemInterfaceDashboardFacade.getEecProcessTypeCodeArray(this.interfaceType);
     this.statusArrayDesc = this.systemInterfaceDashboardFacade.getStatusDescriptionArray(this.interfaceType)
-  
+    this.state = {
+      skip: 0,
+      take:this.defaultPageSize,
+      sort: this.sort,
+    };
     this.loadListGrid();
+
   }
 
   dropdownFilterChange(
@@ -306,20 +314,22 @@ defaultPageSize=20;
     this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
   }
 
-
+  
   Close() {
       this.errorDialog.close();
     
   }
- 
- onViewInformation(error:string){
+
+ onViewInformation(error:string,status:string){
+  
+  this.status=status;
    if(this.interfaceType==this.Usps)
 {
-  var header=error.split("#");
-  this.errorherader=header[1];
-  this.address=JSON.parse(header[0]);
- this.failureDetail=error;
- 
+
+  var errorMessageparse=JSON.parse(error);
+  this.errorCode=errorMessageparse.requestStatusCode;
+  this.message=errorMessageparse.ErrorMessage;
+  this.address=errorMessageparse.Address; 
   this.onErrorDetailClicked(
     this.errorAddressDialogTemplate
   );

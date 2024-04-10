@@ -2,7 +2,8 @@
 
     <section class="k-dialog-body">
         <p class="text-muted">
-            {{ isEditSupportGroup ? 'Updates' : 'Adds' }} a {{ isEditSupportGroup ? 'existing' : 'new' }} support group to
+            {{ isEditSupportGroup ? 'Updates' : 'Adds' }} a {{ isEditSupportGroup ? 'existing' : 'new' }} support group
+            to
             interface support
         </p>
         <div class="flex-row">
@@ -14,8 +15,7 @@
                             valueField="lovDesc" [data]="interfaceSupportGroupLov | async" aria-label="State"
                             [valuePrimitive]="true" formControlName="groupCode"> </kendo-dropdownlist>
                     </kendo-floatinglabel>
-                    <kendo-formerror
-                        *ngIf="!notificationGroupForm.controls['groupCode'].valid">
+                    <kendo-formerror *ngIf="!notificationGroupForm.controls['groupCode'].valid">
                         Interface must be selected.</kendo-formerror>
                 </kendo-formfield>
             </div>
@@ -34,10 +34,15 @@
             <div class="flex-col ">
                 <kendo-formfield>
                     <kendo-floatinglabel text="Description">
-                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="groupDesc"
-                            aria-label="Description">
-                        </kendo-textbox>
+                        <kendo-textarea #tareaDescription [fillMode]="formUiStyle.inputFillMode"
+                            formControlName="groupDesc" resizable="auto" [maxlength]="tareamaxLength"
+                            aria-label="Description" (valueChange)="onTareaValueChange($event)">
+                            <kendo-textarea-suffix class="justify-content-end">
+                                <span class="counter">{{ tareaCounter }}</span>
+                            </kendo-textarea-suffix>
+                        </kendo-textarea>
                     </kendo-floatinglabel>
+
                     <kendo-formerror *ngIf="!notificationGroupForm.controls['groupDesc'].valid">
                         Description is required.
                     </kendo-formerror>

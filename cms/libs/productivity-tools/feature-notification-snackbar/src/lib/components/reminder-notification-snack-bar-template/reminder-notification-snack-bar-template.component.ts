@@ -53,43 +53,43 @@ isReminderExpand = false;
     {
       text: '15 Minute Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'15 Minutes'
     },
     {
       text: '30 Minute Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'30 Minutes'
     },
     {
       text: '1 hour Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'1 hour'
     },
     {
       text: '2 hour Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'2 hours'
     }, 
     {
       text: '1 day Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'1 day'
     },
     {
       text: '3 day Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'3 days'
     },
     {
       text: '7 day Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'7 days'
     },
   ];
@@ -189,17 +189,17 @@ isReminderExpand = false;
     }
   })
  if(event.id == '15 Minutes'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false,false)
  
  }
  if(event.id == '30 Minutes'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,30, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,30,false, false)
  }
  if(event.id == '1 hour'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,60,false, false)
  }
  if(event.id == '2 hours'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,120,false, false)
  }
  if(event.id == '3 days'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,3)
@@ -337,9 +337,18 @@ setDueDateText(res: any) {
     if (timeDifferenceMinutes >= 0 && timeDifferenceMinutes <= 15) {
       this.dueDateText = "In " + timeDifferenceMinutes + " Mins"
     }
-    if (timeDifferenceMinutes <= 0) {
-      this.dueDateText = timeDifferenceMinutes + " Mins Over Due"
-    }
+      if (timeDifferenceMinutes <= 0) {
+        this.dueDateText = 0-timeDifferenceMinutes + " Mins Over Due"
+        if(0-timeDifferenceMinutes >60){
+          var timeInHours =  Math.floor(0-timeDifferenceMinutes/60);
+          this.dueDateText = timeInHours +" Hrs Over Due"
+          if(timeInHours >24){
+           var timeInDays =  Math.floor(timeInHours/24);
+           this.dueDateText = timeInDays +" Days Over Due"
+          }
+        }
+
+      }
     if (timeDifferenceMinutes == 0) {
       this.dueDateText = "Now"
     }

@@ -6,11 +6,10 @@
             [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
             (columnReorder)="onColumnReorder($event)"  
             [data]="gridNotificationCategoryData$ | async" class="grid_scroll">
-            <kendo-grid-column field="eventDesc" title="Notification Category" [width]="140">
-                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
-                        let-filterService="filterService">
+            <kendo-grid-column field="eventDesc" title="Notification Category" [width]="120">
+                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
-                              [filterService]="filterService" [extra]="false" operator="eq">
+                              [filterService]="filterService" [extra]="false" operator="contains">
                               <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
                               <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
                               <kendo-filter-contains-operator></kendo-filter-contains-operator>
@@ -18,7 +17,7 @@
                   </ng-template>
             </kendo-grid-column>
 
-            <kendo-grid-column field="activeFlag" title="Status" [width]="90">
+            <kendo-grid-column field="activeFlag" title="Status" [width]="100">
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                         let-filterService="filterService">
                         <kendo-dropdownlist [data]="['Active', 'Inactive']" [(ngModel)]="statusFilter"
@@ -67,10 +66,10 @@
                   let-currentPage="currentPage">
                   <div class="grid-custom-paginationtemplates d-flex">
                         <div class="d-flex align-items-center">
-                              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                              <label class="mr-1" for="RowsPerPageNotify">Rows Per Page</label>
                               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
                                     [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
-                                    aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
+                                    aria-label="Rows Per Page" id="RowsPerPageNotify" [(value)]="state.take"
                                     (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                               <kendo-pager-info> </kendo-pager-info>
                               <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
@@ -89,9 +88,7 @@
             </ng-template>
             <!-- grid No data Template -->
             <ng-template kendoGridNoRecordsTemplate>
-                  <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-                  </div>
-                  <p>There is no data to display.</p>
+                  <common-grid-no-records></common-grid-no-records>
             </ng-template>
 
       </kendo-grid>
@@ -99,11 +96,11 @@
 
 
 <div class="mt-1">
-      <button kendoButton class="mr-1" [primary]="true" aria-label="Notification Category" icon="add" [disabled]="!selectedGroup || !gridDataResult"
+      <button kendoButton class="mr-1" [primary]="true" aria-label="Notification Category" icon="add"
             (click)="onNotificationCategoryDetailsClicked()"> Notification Category</button>
 </div>
 <kendo-dialog *ngIf="isNotificationCategoryDetailPopup" (close)="onCloseNotificationCategoryDetailPopupClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      class="app-c-modal app-c-modal-md app-c-modal-np">
       <kendo-dialog-titlebar>{{ isEditNotificationCategory ? 'Edit Notification Category' : 'Add Notification Category'
             }}</kendo-dialog-titlebar>
       <notification-category-detail [isEditNotificationCategory]="isEditNotificationCategory"

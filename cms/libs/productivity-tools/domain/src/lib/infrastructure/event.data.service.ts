@@ -30,10 +30,6 @@ export class EventDataService {
 
   }
 
-  loadDdlEvents() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
-  }
-
   private bindFormData(event: any): FormData {
     const eventFormData = new FormData();
     eventFormData.append("clientId", `${event?.clientId}` ?? '');

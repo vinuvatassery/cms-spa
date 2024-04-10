@@ -1135,12 +1135,16 @@ color: $app-primary-font-color;
 .field_with_info {
   display: flex;
   align-items: flex-end;
-
+&.notop_need{
+  >span.material-icons {  margin-top: 32px;}
+}
   >span.material-icons {
-    margin-bottom: 10px;
+    align-self: flex-start;
+    margin-top: 12px;
     margin-left: 10px;
     color: rgba($black, 0.6);
     font-size: $font-size-l;
+    
   }
   >div.autoSelect-search{
     width: 100%;
@@ -1381,14 +1385,14 @@ padding: 8px;
 
 .event-filters-field{
   padding-left: 1rem;
-  padding-right: 1rem;
-  max-height: 340px;
-  overflow-y: auto;
+  padding-right: 1rem; 
+
 }
 .event-filter-body{
   padding-top: 1rem;
   padding-bottom: 1rem;
- 
+  overflow-y: auto;
+  max-height: calc(100vh - 205px);
 }
 
 .reminder-list-skeleton-loader {
@@ -1485,4 +1489,13 @@ padding: 8px;
 100% {
     opacity: .1;
 }
+}
+
+.message_lists{
+  h5{
+    margin: 0px;
+  }
+  border:1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
 }

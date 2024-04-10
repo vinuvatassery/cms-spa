@@ -54,6 +54,7 @@ export class NotificationPanelComponent implements OnInit {
   @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
   @Output() onSnoozeReminderEvent = new EventEmitter<any>();
   @Input() notificationList$: any;
+  @Input() notificationListBell$ : any
   reminderFor = '';
   itemsLoader = false;
   isViewAll = true;
@@ -223,7 +224,7 @@ export class NotificationPanelComponent implements OnInit {
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
     this.newReminderDetailsDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     });
   }
 
@@ -306,6 +307,13 @@ export class NotificationPanelComponent implements OnInit {
     this.isToDoGridLoaderShow.next(true);
     this.isLoadReminderAndNotificationEvent.emit(isViewAll);
     this.notificationList$.subscribe((data: any) => {
+      this.gridDataResult = data?.items;
+      if (data?.totalCount >= 0 || data?.totalCount === -1) {    
+        this.isToDoGridLoaderShow.next(false);
+      }
+      this.notificationaAndReminderDataSubject.next(this.gridDataResult);
+    });
+    this.notificationListBell$.subscribe((data: any) => {
       this.gridDataResult = data?.items;
       if (data?.totalCount >= 0 || data?.totalCount === -1) {
       this.unViewedCount =  data.items.filter((item:any) => item.recentViewedFlag == 'N')?.length;

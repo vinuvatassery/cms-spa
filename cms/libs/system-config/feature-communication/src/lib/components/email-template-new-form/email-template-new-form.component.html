@@ -190,9 +190,63 @@
                                                             aria-label="indent"></kendo-toolbar-button>
                                                       <kendo-toolbar-button kendoEditorOutdentButton
                                                             aria-label="outdent"></kendo-toolbar-button>
+
                                                 </kendo-toolbar-buttongroup>
                                                 <kendo-toolbar-button kendoEditorInsertImageButton
                                                       aria-label="insert image"></kendo-toolbar-button>
+
+                                                      <kendo-toolbar-buttongroup>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorCreateLinkButton
+                                                            ></kendo-toolbar-button>
+                                                            <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
+                                                          </kendo-toolbar-buttongroup>
+                                                          <kendo-toolbar-button
+                                                            kendoEditorInsertFileButton
+                                                          ></kendo-toolbar-button>
+                                                          <kendo-toolbar-button
+                                                            kendoEditorInsertImageButton
+                                                          ></kendo-toolbar-button>
+                                                          <kendo-toolbar-button
+                                                            kendoEditorViewSourceButton
+                                                          ></kendo-toolbar-button>
+                                                          <kendo-toolbar-button
+                                                            kendoEditorCleanFormattingButton
+                                                          ></kendo-toolbar-button>
+                                                          <kendo-editor-insert-table-button></kendo-editor-insert-table-button>
+                                                          <kendo-toolbar-buttongroup>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorAddColumnBeforeButton
+                                                            ></kendo-toolbar-button>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorAddColumnAfterButton
+                                                            ></kendo-toolbar-button>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorAddRowBeforeButton
+                                                            ></kendo-toolbar-button>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorAddRowAfterButton
+                                                            ></kendo-toolbar-button>
+                                                          </kendo-toolbar-buttongroup>
+                                                          <kendo-toolbar-buttongroup>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorDeleteColumnButton
+                                                            ></kendo-toolbar-button>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorDeleteRowButton
+                                                            ></kendo-toolbar-button>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorDeleteTableButton
+                                                            ></kendo-toolbar-button>
+                                                          </kendo-toolbar-buttongroup>
+                                                          <kendo-toolbar-buttongroup>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorMergeCellsButton
+                                                            ></kendo-toolbar-button>
+                                                            <kendo-toolbar-button
+                                                              kendoEditorSplitCellButton
+                                                            ></kendo-toolbar-button>
+                                                          </kendo-toolbar-buttongroup>
                                                 <kendo-toolbar-dropdownbutton aria-label="attachment" icon="attachment">
                                                       <ng-template kendoDropDownButtonItemTemplate let-dataItem>
                                                             <label [for]="dataItem.id">{{ dataItem.text }}</label>

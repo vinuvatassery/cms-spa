@@ -163,6 +163,7 @@ export class VendorRefundInsurancePremiumListComponent
       skip: this.state?.skip ?? 0,
       take: this.defaultpageSize,
       sort: this.sort,
+      filter: this.state?.filter
     };
   }
   dropdownFilterChange(
@@ -197,18 +198,12 @@ export class VendorRefundInsurancePremiumListComponent
     }
   }
 
-  dataStateChange(stateData: any): void {    
-
-    this.tempStateData = stateData;  
-     this.openResetDialog(this.filterResetConfirmationDialogTemplate);
-  }
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
      
-    this.state.take = data.value;
-    this.state.skip = 0;
-    this.defaultpageSize = this.state.take ?? this.defaultpageSize;
+    this.state.take = data.take;
+    this.state.skip = data.skip;
     this.loadRefundClaimsListGrid();
   }
 
@@ -277,7 +272,16 @@ export class VendorRefundInsurancePremiumListComponent
     });
   }
   filterChange(filter: CompositeFilterDescriptor): void {
+   
     this.filterData = filter;
+    if(this.selectedInsuranceClaims.length >0){
+    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+    return;
+    }else{
+      this.state.filter =filter
+    this.loadRefundClaimsListGrid();
+    }
+
   }
   openResetDialog(template: TemplateRef<unknown>) {
     this.filterResetDialog = this.dialogService.open({
@@ -307,19 +311,13 @@ export class VendorRefundInsurancePremiumListComponent
 
   resetFilterClicked(action: any) {
     if (action) {
+      this.state.filter =this.filterData
       this.filterResetDialog.close();
-      this.loadRefundClaimsListGrid();
-
-       
-
-      this.sort = this.tempStateData.sort;
-      this.sortValue = this.tempStateData.sort[0]?.field ?? this.sortValue;
-      this.sortType = this.tempStateData.sort[0]?.dir ?? 'asc';
-      this.state = this.tempStateData;
-      this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-      this.tempStateData = null;
       this.selectedClaims = [];
       this.clearSelection();
+      this.loadRefundClaimsListGrid();
+
+    
     }
   }
   private clearSelection(): void {

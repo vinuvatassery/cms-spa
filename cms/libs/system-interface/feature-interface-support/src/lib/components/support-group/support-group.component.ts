@@ -11,7 +11,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, RowArgs, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor} from '@progress/kendo-data-query';
+import { State, CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subject, first } from 'rxjs';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -49,7 +49,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() supportGroupRemove$: any;
   @Input() supportGroupProfilePhoto$: any;
   @Input() supportGroupListsLoader$: any;
-    @Output() loadSupportGroupListEvent = new EventEmitter<any>();
+  @Output() loadSupportGroupListEvent = new EventEmitter<any>();
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
   @Output() deleteConfimedEvent = new EventEmitter<string>();
@@ -79,12 +79,13 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   editButtonEmitted = false;
   selectedSupportGroup!: any;
   selectedSearchColumn = 'ALL';
-
   gridSupportGroupDataSubject = new Subject<any>();
   public selectableSettings: SelectableSettings;
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
   statusFilter: any;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  public mySelection: any[] = [];
+  public isRowSelected = (e: RowArgs) => this.mySelection.indexOf(e.dataItem.notificationGroupId) >= 0;
   columns: any = {
     ALL: 'All Columns',
     groupCode: 'Interface',
@@ -176,13 +177,16 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.loadSupportGroupListGrid();
     this.lovFacade.getInterfaceSupportGroupLovs();
   }
+
+
+  
   ngOnChanges(): void {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    
+
     this.loadSupportGroupListGrid();
   }
 
@@ -299,24 +303,20 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      // this.gridDataResult.data = filterBy(
-      //   this.gridDataResult.data,
-      //   this.filterData
-      // );
+     
       if (this.mySelection.length < 1)
-        this.selectedRowEvent.emit(this.gridDataResult.data[0]);
+        this.selectedGroup = this.gridDataResult.data[0];
       else
-        this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
+        this.selectedGroup = this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
 
-      if (this.mySelection.length < 1)
-        this.mySelection = [this.gridDataResult?.data[0]?.notificationGroupId];
-      else
-        this.mySelection = [this.selectedGroup?.notificationGroupId];
+      this.selectedRowEvent.emit(this.selectedGroup);
+      this.mySelection = [this.selectedGroup?.notificationGroupId];
+        
       this.gridSupportGroupDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isSupportGroupGridLoaderShow = false;
       }
-    });
+    }); 
     //this.gridSupportGroupData$.subscribe((data) => { console.log(data) });
     this.isSupportGroupGridLoaderShow = false;
 
@@ -445,6 +445,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       this.supportGroupRemove$.pipe(first((response: any) => response != null))
         .subscribe((response: any) => {
           if (response ?? false) {
+            this.mySelection = [];
             this.loadSupportGroupListGrid()
           }
 
@@ -453,6 +454,5 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.onCloseSupportGroupDeleteClicked()
   }
 
-  public mySelection: any[] = [];
-  public isRowSelected = (e: RowArgs) => this.mySelection.indexOf(e.dataItem.notificationGroupId) >= 0;
+
 }

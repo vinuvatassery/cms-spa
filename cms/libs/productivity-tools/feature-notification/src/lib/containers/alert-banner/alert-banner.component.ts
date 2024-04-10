@@ -128,12 +128,14 @@ export class AlertBannerComponent implements OnInit {
               this.secondaryAlertList = new Array();
               this.routeSubscription = this.router.events.subscribe(event => {
                 if (event instanceof NavigationStart) {
-                  let isNewEntityId = (this.entityId.toString() != event.url.toString().split("/")[4]); 
+                  if(this.entityId != null){
+                    let isNewEntityId = (this.entityId?.toString() != event.url.toString().split("/")[4]); 
                     this.entityId = event.url.toString().split("/")[4];  
                     if(parseInt(this.entityId)>0 && isNewEntityId){
                       this.isLoadAlertListEvent.emit(this.entityId)
                       this.loadTodoAlertBannerData();
                     } 
+                  }
                 }
             });
   }

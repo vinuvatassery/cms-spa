@@ -16,9 +16,11 @@ import { Subscription, filter } from 'rxjs';
 export class CommonActionsComponent implements OnInit, OnDestroy{
   /** Public properties **/
  
+  readonly entityTypeCodeEnum = AlertEntityTypeCode;
   clickedContact!: any;
   item: Array<DialItem> = [{}];
-  entityId : any;
+  entityId: any;
+  entityTypeCode: any;
   eventLogCount = 0;
   directMessageCount = 0;
   alertCount = 0;
@@ -70,11 +72,19 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
 
 
     const clientId = this.route.snapshot.params['id'];
+    const vendorId = this.route.snapshot.queryParams['v_id'];
     if(clientId){
       this.entityId = clientId.toString();
+      this.entityTypeCode = AlertEntityTypeCode.Client;
       this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);
     }
+    else if (vendorId){
+      this.entityId = vendorId.toString();
+      this.entityTypeCode = AlertEntityTypeCode.Vendor;
+      this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Vendor);
+    }
     this.addSessionChangeSubscription();
+    this.hideAllPanels();
   }
 
   private addSessionChangeSubscription() {

@@ -30,7 +30,8 @@
       </button>
     </ng-template>
   </kendo-dropdownbutton>
-  <!-- <button (click)="onPreviewTemplateClicked(viewTemplateDialog)">onPreviewTemplateClicked</button> -->
+  <!-- <button (click)="onPreviewTemplateClicked(viewTemplateDialog)">onPreviewTemplateClicked</button>
+  <button (click)="onPreviewTemplateClicked(viewSMSTemplateDialog)">onPreviewSMSTemplateClicked</button> -->
 </div>
 
 
@@ -92,5 +93,11 @@
 <!-- view template Modal Html-->
 <ng-template #viewTemplateDialog>
   <kendo-dialog-titlebar (close)="handlePreviewTemplateClosed($event)">Preview Template </kendo-dialog-titlebar>
- <case-management-preview-notification-templates></case-management-preview-notification-templates>
+ <case-management-preview-notification-templates   (closePreviewTemplateEvent)="handlePreviewTemplateClosed($event)" [PreviewTemplateType]="'letter'"></case-management-preview-notification-templates>
   </ng-template>
+
+  <ng-template #viewSMSTemplateDialog>
+    <kendo-dialog-titlebar (close)="handlePreviewTemplateClosed($event)">View SMS Text(s) </kendo-dialog-titlebar>
+    
+   <case-management-preview-notification-templates (closePreviewTemplateEvent)="handlePreviewTemplateClosed($event)" [PreviewTemplateType]="'sms'"></case-management-preview-notification-templates>
+    </ng-template>

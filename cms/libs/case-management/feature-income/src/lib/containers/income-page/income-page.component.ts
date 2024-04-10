@@ -154,7 +154,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
-    this.addDiscardChangesSubscription();  
+    this.addDiscardChangesSubscription();
     //this.loadAddress();
   }
 
@@ -232,6 +232,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private save() {
     this.removeValidations();
     this.checkValidations();
+    this.UploadDocumentValidation();
     let cerFormValid = true;
     if (this.isCerForm) {
       cerFormValid = this.validateEmployerIncome()
@@ -287,7 +288,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdr.detectChanges();
     return of(false)
   }
-  
+
 
   /** Internal event methods **/
   onIncomeNoteValueChange(event: any): void {
@@ -303,7 +304,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Private Methods **/
   private loadIncomes(clientId: string, clientCaseEligibilityId: string, gridFilterParam: GridFilterParam, setOption: boolean = true): void {
     this.setOption = setOption;
-    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId, gridFilterParam, this.isCerForm);    
+    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId, gridFilterParam, this.isCerForm);
   }
 
   private loadIncomeSubscription() {
@@ -365,7 +366,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.No &&
      this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.No) {
-     
+
       this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValidators([
         Validators.required,
       ]);
@@ -410,7 +411,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setIncomeDetailFormValue(incomeDetail: any) {
-
     if (incomeDetail) {
       if(incomeDetail.noIncomeClientSignedDate !== null){this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValue(new Date(incomeDetail.noIncomeClientSignedDate));}
       if(incomeDetail.noIncomeSignatureNotedDate!== null){this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(new Date(incomeDetail.noIncomeSignatureNotedDate));}
@@ -419,8 +419,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setValue(incomeDetail.clientDependentsMinorEmployedFlag);
         this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setValue(incomeDetail.clientDependentsMinorAdditionalIncomeFlag);
       }
-    }else{
-      this.noIncomeDetailsForm.controls['noIncomeNote'].setValue('');
     }
   }
 
@@ -451,7 +449,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadIncomeListGrid(gridDataRefinerValue:any):void{
-    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
     this.loadIncomes(
       this.clientId,
       this.clientCaseEligibilityId,
@@ -461,7 +459,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadIncomeListHandle(gridDataRefinerValue: any): void {
-    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
     this.loadIncomes(
       this.clientId,
       this.clientCaseEligibilityId,
@@ -536,7 +534,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       Validators.required,
     ]);
     this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].updateValueAndValidity();
-      
+
     if(this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.No &&
     this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.No)
     {
@@ -544,7 +542,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       return this.noIncomeDetailsForm.valid;
     }
     else if((this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes ||
-    this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes) && 
+    this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes) &&
     this.incomeData.clientIncomes == null) {
       this.incomeFacade.incomeValidSubject.next(false);
       return false;
@@ -554,12 +552,12 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   validateEmployerIncome() {
     let valid = true;
-    this.employerIncome.forEach((ei: any) => { 
-      if (ei.cerReviewStatusCode ===   CerReviewStatusCode.Active || ei.cerReviewStatusCode ===  CerReviewStatusCode.InActive) 
+    this.employerIncome.forEach((ei: any) => {
+      if (ei.cerReviewStatusCode ===   CerReviewStatusCode.Active || ei.cerReviewStatusCode ===  CerReviewStatusCode.InActive)
       {
         ei.employerIncomeYesNoValid = true;
       }
-      else 
+      else
       {
         ei.employerIncomeYesNoValid = false;
         valid = false;
@@ -666,8 +664,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showHideImageUploadLoader(true, dataItem);
       this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
         next: (response: any) => {
-          this.loadIncomeData();
-          this.loadDependentsProofOfSchools();
+          if(response){
+            this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
+          }
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
           this.dependentFacade.hideLoader();
           this.showHideImageUploadLoader(false, dataItem);
@@ -692,8 +691,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.incomeFacade.showLoader();
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
         next: (response: any) => {
-          this.loadIncomeData();
-          this.loadDependentsProofOfSchools();
+          this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
           this.incomeFacade.hideLoader();
           this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
         },
@@ -705,11 +703,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       );
     }
   }
-  private loadDependentsProofOfSchools() {
-    this.incomeFacade.showLoader();
-    this.incomeFacade.loadDependentsProofofSchools();
-    this.incomeFacade.hideLoader();
-  }
+
   loadDependents(){
     this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
       if(response&&response.length>0){
@@ -834,14 +828,14 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.workflowFacade.addDynamicDataPoints([income]);
       this.workflowFacade.updateChecklist([income]);
 
-      // remove SignedDate and Note count       
+      // remove SignedDate and Note count
       const noIncomeNote: CompletionChecklist = {
         dataPointName: 'noIncomeNote',
-        status:  StatusFlag.No 
+        status:  StatusFlag.No
       };
       const noIncomeClientSignedDate: CompletionChecklist = {
         dataPointName: 'noIncomeClientSignedDate',
-        status: StatusFlag.No 
+        status: StatusFlag.No
       };
 
       this.workflowFacade.removeDynamicDataPoints([noIncomeClientSignedDate,noIncomeNote]);
@@ -857,16 +851,16 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.workflowFacade.removeDynamicDataPoints([income]);
       this.workflowFacade.updateChecklist([income]);
 
-       // Add SignedDate and Note count       
+       // Add SignedDate and Note count
        const noIncomeNote: CompletionChecklist = {
         dataPointName: 'noIncomeNote',
         status: (this.noIncomeDetailsForm.controls['noIncomeNote'].value !== null &&
-                this.noIncomeDetailsForm.controls['noIncomeNote'].value !== '')? StatusFlag.Yes : StatusFlag.No 
+                this.noIncomeDetailsForm.controls['noIncomeNote'].value !== '')? StatusFlag.Yes : StatusFlag.No
       };
       const noIncomeClientSignedDate: CompletionChecklist = {
         dataPointName: 'noIncomeClientSignedDate',
         status: (this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].value !== null &&
-                this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].value !== '')? StatusFlag.Yes : StatusFlag.No 
+                this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].value !== '')? StatusFlag.Yes : StatusFlag.No
       };
       this.workflowFacade.addDynamicDataPoints([noIncomeNote,noIncomeClientSignedDate]);
       this.workflowFacade.updateChecklist([noIncomeNote,noIncomeClientSignedDate]);
@@ -881,7 +875,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.employerIncome.forEach((income:any) => {
         const employerIncomeDataPoint: CompletionChecklist = {
           dataPointName: income.clientIncomeId,
-          status: (income.cerReviewStatusCode === CerReviewStatusCode.Active || income.cerReviewStatusCode === CerReviewStatusCode.InActive)? StatusFlag.Yes : StatusFlag.No 
+          status: (income.cerReviewStatusCode === CerReviewStatusCode.Active || income.cerReviewStatusCode === CerReviewStatusCode.InActive)? StatusFlag.Yes : StatusFlag.No
         };
         addEmployerIncomeDataPointList.push(employerIncomeDataPoint);
 
@@ -898,7 +892,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
             status:  StatusFlag.Yes
           };
           removeEmployerIncomeDataPointList.push(employerIncomeEndDateDataPoint);
-        }    
+        }
       })
       this.workflowFacade.addDynamicDataPoints(addEmployerIncomeDataPointList);
       this.workflowFacade.updateChecklist(addEmployerIncomeDataPointList);

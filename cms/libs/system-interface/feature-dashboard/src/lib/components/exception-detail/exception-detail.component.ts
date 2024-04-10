@@ -74,7 +74,6 @@ export class ExceptionDetailComponent implements OnInit, OnChanges {
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       JSON.stringify({ logic: 'and', filters: [] }));
-
     this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(this.fileId, this.interfaceTypeCode, this.processTypeCode, param).subscribe({
       next: (dataResponse) => {
         const gridView = {

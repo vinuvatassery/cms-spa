@@ -39,7 +39,7 @@
           >search</span
         >
       </button>
-      <button #eventFilterCardBtn kendoButton (click)="isEventFilterPopoverOpen = !isEventFilterPopoverOpen">
+      <button #eventFilterCardBtn kendoButton (click)="onShowFilterEventPopover()">
         <span class="material-icons" aria-label="More option" *ngIf="!isEventFilterPopoverOpen"> more_vert </span>
 
         <span class="material-icons" aria-label="Cancel" *ngIf="isEventFilterPopoverOpen"> cancel </span>
@@ -47,6 +47,7 @@
       <div class="event-filter_popover_wrapper" *ngIf="isEventFilterPopoverOpen" #eventtFilterPopover>
         <div class="event-filter-body">
           <div class="event-filters">
+            
             <button kendoButton look="flat" aria-label="Sort Ascending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('asc')" [selected]="sortType=='asc'">
               <span class="material-icons" aria-hidden="true" aria-label="Sort Ascending">arrow_upward</span>
               <label> Sort Ascending </label>
@@ -56,9 +57,9 @@
               <label> Sort Descending </label>
             </button>
             <button kendoButton look="flat" aria-label="Filter" class="btn-h-primary" aria-hidden="false"
-              (click)="isShowFilter = !isShowFilter" [toggleable]="isShowFilter">
+            (click)="onShowHideFilterEvent()" [ngClass]="{'k-selected': isShowFilter || isFilterApplied }">
               <span class="material-icons" aria-hidden="true" aria-label="Filter">filter_list</span>
-              <label> Filter </label>
+              <label> Filter</label>
             </button>
           </div>
           <div class="event-filters-field" *ngIf="isShowFilter" [formGroup]="eventLogFilterForm">
