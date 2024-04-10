@@ -138,7 +138,7 @@ export class EmailEditorComponent implements OnInit {
       if(this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
         this.loadUserDraftTemplateAttachment();
         this.loadLetterAttachment(this.selectedTemplate.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
-      }else if(this.selectedTemplate?.notifcationDraftId && this.selectedTemplate?.notificationRequestAttachments){
+      }else if(this.selectedTemplate?.notificationDraftId && this.selectedTemplate?.notificationRequestAttachments?.length > 0){
             for (let file of this.selectedTemplate?.notificationRequestAttachments){
               this.selectedAttachedFile.push({
                 document: file,
