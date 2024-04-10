@@ -678,6 +678,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.emailContentValue = data.templateContent;
               this.selectedTemplateContent = data.templateContent;
               this.updatedTemplateContent = data.templateContent;
+              this.emailSubject = data.description;
               this.loadMailingAddress();
               this.isClearEmails = true;
               this.isShowToEmailLoader$.next(true);
