@@ -150,14 +150,15 @@ export class CommunicationFacade {
     return formData;
   }
 
-  preparePreviewModelData(emailData: any) {
+  preparePreviewModelData(emailData: any, entityType: string) {
     const formData = new FormData();
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
-    formData.append('typeCode', emailData?.templateCategoryCode ?? emailData?.typeCode);
+    formData.append('typeCode', emailData?.subtypeCode);
     formData.append('subtypeCode', CommunicationEvents?.Email ?? '');
     formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
     formData.append('description', emailData?.description ?? '');
     formData.append('templateContent', emailData?.templateContent ?? '');
+    formData.append('entityType', entityType);
     return formData;
   }
 
@@ -166,7 +167,7 @@ export class CommunicationFacade {
     formData.append('templateTypeCode', templateTypeCode ?? '');
     formData.append('entityTypeCode', notificationGroup ?? '');
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
-    formData.append('typeCode', draftTemplate?.typeCode ?? '');
+    formData.append('typeCode', draftTemplate?.subtypeCode ?? '');
     formData.append('languageCode', draftTemplate?.languageCode ?? '');
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('templateContent', draftTemplate?.templateContent ?? '');
@@ -226,7 +227,7 @@ export class CommunicationFacade {
       let subTypeCode = data?.emailData?.subtypeCode?? data?.emailData?.subTypeCode 
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
       formData.append('description', data?.emailData?.description ?? '');
-      formData.append('typeCode', data?.emailData?.typeCode);
+      formData.append('typeCode', data?.emailData?.SubTypeCode);
       formData.append('subTypeCode', subTypeCode ?? '');
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
       formData.append('notificationDraftId', data?.emailData?.notificationDraftId ?? '');

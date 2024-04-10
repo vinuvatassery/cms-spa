@@ -313,7 +313,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   private generateClientTextTemplate(letterData: any, requestType: CommunicationEvents){
     this.loaderService.show();
-    let formData = this.communicationFacade.preparePreviewModelData(letterData);
+    let formData = this.communicationFacade.preparePreviewModelData(letterData, this.entityType);
     this.communicationFacade.generateTextTemplate(this.entityId ?? '', this.clientCaseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
@@ -370,14 +370,14 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           if (data) {
             this.currentLetterPreviewData = data;
             const fileUrl = window.URL.createObjectURL(data);
-            const documentName = this.getFileNameFromTypeCode(CommunicationEventTypeCode.ClientLetter);
+            const documentName = this.getFileNameFromTypeCode(draftTemplate?.subtypeCode);
             this.ref.detectChanges();
             const downloadLink = document.createElement('a');
             downloadLink.href = fileUrl;
             downloadLink.download = documentName;
             downloadLink.click();
             this.onCloseNewLetterClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated! Event Logged.');
           }
           this.loaderService.hide();
           this.navigateConditionally();
@@ -428,16 +428,22 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterGenerated;
         break;
-      case CommunicationEventTypeCode.VendorLetter:
-        templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
-        break;
-      case CommunicationEventTypeCode.LetterTypeCode:
-        templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
-        break;
         case CommunicationEventTypeCode.ApplicationAuthorizationLetter || CommunicationEventTypeCode.ApplicationAuthorizationLetter:
         templateTypeCode = CommunicationEventTypeCode.ApplicationAndCERLetterSent;
         break;
+        case CommunicationEventTypeCode.VendorLetter:
+          templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
+          break;
+        case CommunicationEventTypeCode.LetterTypeCode:
+          templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
+          break;
     }
+    // if(templateData.subTypeCode === CommunicationEventTypeCode.LetterTypeCode){
+    //   templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
+    // }
+    // if(templateData.subTypeCode === CommunicationEventTypeCode.VendorLetter){
+    //   templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
+    // }
     return templateTypeCode;
   }
 
@@ -550,6 +556,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
+    if(this.communicationLetterTypeCode === undefined || this.communicationLetterTypeCode === ''){
+      this.communicationLetterTypeCode = event.templateTypeCode;
+    }
     if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
       || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
       || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
@@ -736,7 +745,7 @@ loadMailingAddress() {
 
   getFileNameFromTypeCode(typeCode: string): string {
     switch (typeCode) {
-      case CommunicationEventTypeCode.ClientLetter:
+      case CommunicationEventTypeCode.LetterTypeCode:
         return "Client Letter_" + this.entityId + ".zip";
       case CommunicationEventTypeCode.VendorLetter:
         return "Vendor Letter+" + this.entityId + ".zip";
@@ -753,7 +762,7 @@ loadMailingAddress() {
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         return "Disenrollment Notice Letter.zip";
       default:
-        throw new Error('Invalid type code');
+        return "Letter_" + this.entityId + ".zip";
     }
   }
 

@@ -188,7 +188,7 @@ export class EmailEditorComponent implements OnInit {
               document: file,
               size: file.templateSize,
               name: file.description,
-              notificationAttachmentId: file.documentTemplateId,
+              notificationAttachmentId: file.notificationAttachmentId,
               typeCode: file.typeCode
             });
           }

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, EntityTypeCode, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserDataService } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Observable, Subscription } from 'rxjs';
 @Component({
@@ -66,6 +67,7 @@ export class VendorHeaderToolsComponent {
   entityType= EntityTypeCode.Vendor;
   triggerFrom= ScreenType.VendorProfile;
   @Output() openAddReminderEvent = new EventEmitter()
+  loginUserEmail: any;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -152,10 +154,12 @@ export class VendorHeaderToolsComponent {
   constructor(private route: Router,private activeRoute : ActivatedRoute,
     private readonly vendorContactFacade: VendorContactsFacade, private dialogService: DialogService,
     private readonly loaderService: LoaderService, private readonly loggingService: LoggingService,
-    private readonly ref: ChangeDetectorRef, private readonly communicationFacade: CommunicationFacade,) {
+    private readonly ref: ChangeDetectorRef, private readonly communicationFacade: CommunicationFacade,
+    private readonly userDataService: UserDataService,) {
   }
 
   ngOnInit(): void {
+    this.getLoggedInUserProfile();
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.vendorTypeCode = this.activeRoute.snapshot.queryParams['tab_code'];
     this.vendorProfile$.subscribe(vp =>{
@@ -346,6 +350,22 @@ export class VendorHeaderToolsComponent {
 
     onNewReminderClicked(){
    this.openAddReminderEvent.emit()
+    }
+
+    getLoggedInUserProfile(){
+      this.loaderService.show();
+      this.userDataService.getProfile$.subscribe((profile:any)=>{
+        if(profile?.length>0){
+         if(profile[0]?.email){
+          const ccEmail ={
+            email: profile[0]?.email,
+            isDefault: true
+          };
+            this.loginUserEmail = ccEmail;
+         }
+        }
+      });
+      this.loaderService.hide();
     }
     
 }

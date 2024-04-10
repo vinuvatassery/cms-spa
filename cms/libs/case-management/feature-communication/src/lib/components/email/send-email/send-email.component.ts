@@ -612,6 +612,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentEmailSent;
         break;
+        case CommunicationEventTypeCode.VendorLetter:
+          templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
+          break;
+        case CommunicationEventTypeCode.LetterTypeCode:
+          templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
+          break;
     }
     return templateTypeCode;
   }
@@ -631,6 +637,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    if(this.communicationEmailTypeCode === undefined || this.communicationEmailTypeCode === ''){
+      this.communicationEmailTypeCode = event.templateTypeCode;
+    }
     if(this.templateLoadType === undefined){
       this.templateLoadType = event.templateTypeCode;
     }
@@ -850,7 +859,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private generateClientTextTemplate(emailData: any, requestType: string) {
     this.loaderService.show();
-    let formData = this.communicationFacade.preparePreviewModelData(emailData);
+    let formData = this.communicationFacade.preparePreviewModelData(emailData, this.entityType);
     this.communicationFacade.generateTextTemplate(this.entityId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType ?? '')
       .subscribe({
         next: (data: any) => {
