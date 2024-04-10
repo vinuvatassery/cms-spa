@@ -29,9 +29,6 @@ import { CommunicationEvents } from '@cms/case-management/domain';
     @Output() newNotificationClickEvent = new EventEmitter();
     @Output() continueClickEvent = new EventEmitter();
 
-     /** Constructor **/
-     constructor(
-) { }
   
     /** Public properties **/
     buttonText!: string;
