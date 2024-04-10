@@ -1,6 +1,5 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { LoaderSize, LoaderThemeColor, LoaderType } from '@progress/kendo-angular-indicators';
 
 @Component({
   selector: 'case-management-preview-email',

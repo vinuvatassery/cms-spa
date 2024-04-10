@@ -84,9 +84,6 @@
      </kendo-popover>
 
   <!-- Banners -->
-  <!-- <case-management-case360-header-notifications
-  *ngIf="loadedClientHeader?.clientCaseEligibilityCerId && loadedClientHeader?.caseStatus!=='DISENROLLED'"
-  ></case-management-case360-header-notifications> -->
   <common-alert-banner *ngIf="loadedClientHeader?.clientId"
    [alertList$]="alertList$" [entityId]="loadedClientHeader?.clientId" 
   [entityType]='"CLIENT"'

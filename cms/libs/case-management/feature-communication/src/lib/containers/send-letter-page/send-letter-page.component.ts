@@ -12,7 +12,7 @@ import {
   AfterContentChecked,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommunicationEventTypeCode, CommunicationFacade, ContactFacade, ScreenType, WorkflowFacade, WorkflowTypeCode } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, CommunicationFacade, ContactFacade, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
 import { CaseStatusCode, StatusFlag } from '@cms/shared/ui-common';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription, first } from 'rxjs';

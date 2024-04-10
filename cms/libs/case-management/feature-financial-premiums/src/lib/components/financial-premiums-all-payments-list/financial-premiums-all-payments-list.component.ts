@@ -500,6 +500,7 @@ deletePremiumPayment(paymentId: string) {
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.updateGridFilterDateFormat(stateData, false);
+    this.clearIndividualSelectionOnClear(stateData);
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
     this.loadFinancialPremiumsPaymentsListGrid();
@@ -1047,4 +1048,36 @@ paymentClickHandler(dataItem: any) {
     queryParams: { bid:  dataItem.batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId,vid:dataItem.vendorId },
   });
 }
+
+columnName: any = "";
+clearIndividualSelectionOnClear(stateData: any)
+  {
+    if(stateData.filter?.filters.length > 0)
+      {
+        let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+        this.columnName = stateFilter.field;
+
+          this.filter = stateFilter.value;
+
+        this.isFiltered = true;
+        const filterList = []
+        for(const filter of stateData.filter.filters)
+        {
+          filterList.push(this.gridColumns[filter.filters[0].field]);
+        }
+        this.isFiltered =true;
+        this.filteredBy =  filterList.toString();
+      }
+      else
+      {
+        this.filter = "";
+        this.columnName = "";
+        this.isFiltered = false
+        this.selectedPaymentMethod = '';
+        this.selectedPaymentStatus = '';
+      }
+      this.state=stateData;
+      if (!this.filteredBy.includes(this.gridColumns.paymentStatusDesc)) this.selectedPaymentStatus = '';
+      if (!this.filteredBy.includes(this.gridColumns.paymentMethodDesc)) this.selectedPaymentMethod = '';
+  }
 }

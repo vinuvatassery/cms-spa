@@ -614,7 +614,6 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     }
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortValue = this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? "";
     this.columnName = filterList.length > 0 ? filterList[0]?.filters[0]?.field : "";
     this.state = stateData;
