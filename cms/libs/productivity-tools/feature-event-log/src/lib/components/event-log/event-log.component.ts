@@ -22,7 +22,7 @@ import { DocumentFacade } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-event-log',
@@ -41,6 +41,7 @@ export class EventLogComponent implements OnInit, OnDestroy {
   @Input() entityType: any;
   @Input() entityId: any;
   @Input() clientCaseEligibilityId: any;
+  @Input() navigationSubject!: Observable<any>;
 
   /** Public properties **/
   eventAttachmentTypeList : any;
@@ -81,6 +82,7 @@ eventListLoader = false;
   eventAttachmentTypeLov$Subscription = new Subscription();
   events$Subscription = new Subscription();
   eventsdata$Subscription = new Subscription();
+  navigationSubjectSubscription = new Subscription();
 
   public eventLogFilterForm: FormGroup = new FormGroup({
     caseworkerfilterbyoperator: new FormControl('', []),
@@ -114,7 +116,21 @@ eventListLoader = false;
        this.eventAttachmentTypeList = response;
       }
     });
+    this.navigationSubjectSubscription = this.navigationSubject.subscribe((data: any) => {
+      if (data !== undefined && data !== null) {
+        this.entityId = data.EntityId;
+        this.entityType = data.EntityTypeCode;
+        this.clientCaseEligibilityId = data.ClientCaseEligibilityId;
+        this.loadEvents();
+      }   
+    });
+  }
 
+  ngOnDestroy(): void {
+    this.eventAttachmentTypeLov$Subscription?.unsubscribe();
+    this.events$Subscription?.unsubscribe();
+    this.eventsdata$Subscription?.unsubscribe();
+    this.navigationSubjectSubscription?.unsubscribe();
   }
 
   /** Private methods **/
@@ -127,7 +143,7 @@ eventListLoader = false;
       sortType: 'desc',
       filter: JSON.stringify(this.filterData),
     };
-    this.eventLogFacade.loadEvents(paginationData,this.entityId);
+    this.eventLogFacade.loadEventLogs(paginationData,this.entityId);
   }
   onShowHideFilterEvent(){
    
@@ -318,7 +334,7 @@ eventListLoader = false;
       sortType: this.sortType ?? 'asc',
       filter: JSON.stringify(this.filterData.filters ?? [])
     };
-    this.eventLogFacade.loadEvents(gridDataRefinerValue, this.entityId);
+    this.eventLogFacade.loadEventLogs(gridDataRefinerValue, this.entityId);
   }
 
   sortByMethod(event:any)
@@ -441,11 +457,5 @@ eventListLoader = false;
     let pathSplitArray = path.split('$');
     let fileName = pathSplitArray[pathSplitArray.length-1];
     this.documentFacade.viewOrDownloadOldAttachemntFile(false, path, fileName);
-  }
-
-  ngOnDestroy(): void {
-    this.eventAttachmentTypeLov$Subscription?.unsubscribe();
-    this.events$Subscription?.unsubscribe();
-    this.eventsdata$Subscription?.unsubscribe();
   }
 }
