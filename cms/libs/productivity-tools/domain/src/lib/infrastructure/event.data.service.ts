@@ -15,7 +15,7 @@ export class EventDataService {
     private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
-  loadEvents(params: any, entityId:string) {
+  loadEventLogs(params: any, entityId:string) {
     return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${entityId}/by-entity-id`, params);
   }
 
