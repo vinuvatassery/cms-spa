@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
-import { ConstantValue } from '@cms/productivity-tools/domain';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'productivity-tools-event-log-description',
@@ -30,12 +30,13 @@ export class EventLogDescriptionComponent {
   ViewLetter:string = "{View Letter}";
   ViewEmail:string = "{View Email}";
   ViewSmsText:string = "{View Text(s)}";
-
-  constructor() {}
+  sanitizedHtml:any;
+  constructor(private sanitizer : DomSanitizer) {}
 
   ngOnInit() {
     this.formatContent();
     this.content = this.data;
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content);
   }
 
   setHasUrl(anchorArray:any)

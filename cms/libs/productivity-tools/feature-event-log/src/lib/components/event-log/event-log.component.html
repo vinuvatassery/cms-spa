@@ -198,8 +198,8 @@
                   [content]="subEventLog.eventLogDesc"
                   [limit]="250"
                   [completeWords]="false"
-                  [eventId]="eventLog.eventId"
-                  [userEventFlag]="eventLog.userEventFlag">
+                  [eventId]="subEventLog.eventId"
+                  [userEventFlag]="subEventLog.userEventFlag">
                 </productivity-tools-event-log-description>
 
                 <span *ngIf="subEventLog.userEventFlag && subEventLog.attachments?.length > 0"
