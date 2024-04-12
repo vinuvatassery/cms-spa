@@ -11,7 +11,7 @@
         >playlist_add_check</span
       >
       <div class="item-list-info">
-        <p>{{item?.alertName}}</p>
+        <p>{{item.entityName}}{{item.entityName ?  ' - ' : ''}}{{item?.alertName}}</p>
         <p>{{item.alertDueDate  | date:'MM/dd/yyyy'}}</p>
       </div>
       <kendo-dropdownbutton 
