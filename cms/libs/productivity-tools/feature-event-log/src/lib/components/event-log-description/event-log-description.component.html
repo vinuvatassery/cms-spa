@@ -1,9 +1,9 @@
 <div *ngIf="hasUrl">
     <span *ngFor="let item of anchorArray">
-        <span class="mb-1" *ngIf="(!item.isBaseUrlFlag && !item.isFilePathUrl)" [innerHtml]="item.text"></span>
+        <span class="mb-1" *ngIf="(!item.isBaseUrlFlag && !item.isFilePathUrl)" [innerHtml]="item.sanitizedHtml"></span>
         <a *ngIf="item.isBaseUrlFlag && !item.isFilePathUrl" href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
 
-        <span class="mb-1" *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" [innerHtml]="data"></span>
+        <span class="mb-1" *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" [innerHtml]="sanitizedHtml"></span>
         <a *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" (click)="downloadOldAttachment(item.url)" title="{{item.title}}">{{item.text}}</a>
     </span>
     <span class="mb-1" *ngIf="getViewFlag() && (anchorArray.length<=0)">

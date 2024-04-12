@@ -84,6 +84,7 @@ export class EventLogDescriptionComponent {
             url : itemDataArray[0],
             text : itemDataArray[1],
             title : itemDataArray[1],
+            sanitizedHtml : this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]),
             isBaseUrlFlag : false ,
             isFilePathUrl : true
           }
@@ -102,6 +103,7 @@ export class EventLogDescriptionComponent {
           url : itemDataArray[0].replace(this.baseUrl,window.location.origin),
           text : itemDataArray[1],
           title : itemDataArray[1],
+          sanitizedHtml : this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]),
           isBaseUrlFlag : true ,
           isFilePathUrl : false
         }
@@ -113,6 +115,7 @@ export class EventLogDescriptionComponent {
           url : "",
           text : item,
           title : "",
+          sanitizedHtml : this.sanitizer.bypassSecurityTrustHtml(item),
           isBaseUrlFlag : false,
           isFilePathUrl : false
         }
