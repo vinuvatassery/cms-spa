@@ -19,7 +19,6 @@ import { FilterService, GridDataResult, SelectableMode, SelectableSettings } fro
 import {CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
 import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
-import { Legend } from '@progress/kendo-angular-charts';
 @Component({
   selector: 'cms-financial-premiums-process-list',
   templateUrl: './financial-premiums-process-list.component.html',

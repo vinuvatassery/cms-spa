@@ -12,6 +12,7 @@ export class EventLogDescriptionComponent {
   @Input() limit: number = 0;
   @Input() completeWords: boolean = false;
   @Input() eventId:any;
+  @Input() userEventFlag:any;
 
   @Output() downloadOldAttachmentEvent = new EventEmitter();
 
@@ -47,19 +48,27 @@ export class EventLogDescriptionComponent {
 
   formatContent()
   {
-    this.anchorArray=[];
-    let anchorArray = this.content.split(this.urlSeparator);
-    this.hasUrl = this.setHasUrl(anchorArray);
-    if(this.content.indexOf(this.baseUrl) !== -1){
-      this.setHasUrlConstructingData(anchorArray);
-    }
-    else if(this.content.indexOf(this.urlSeparator) !== -1 && this.content.indexOf(this.baseUrl) == -1)
+    if(this.userEventFlag=="Y")
     {
-      this.setAnchorWithOutBaseUrl(anchorArray);
+      this.hasUrl = false;
+      this.data = this.content;
     }
     else
     {
-      this.setHasViewEmailAddressSMSTextFlag();
+      this.anchorArray=[];
+      let anchorArray = this.content.split(this.urlSeparator);
+      this.hasUrl = this.setHasUrl(anchorArray);
+      if(this.content.indexOf(this.baseUrl) !== -1){
+        this.setHasUrlConstructingData(anchorArray);
+      }
+      else if(this.content.indexOf(this.urlSeparator) !== -1 && this.content.indexOf(this.baseUrl) == -1)
+      {
+        this.setAnchorWithOutBaseUrl(anchorArray);
+      }
+      else
+      {
+        this.setHasViewEmailAddressSMSTextFlag();
+      }
     }
   }
 

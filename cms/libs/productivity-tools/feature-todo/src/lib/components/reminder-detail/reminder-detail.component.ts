@@ -52,6 +52,7 @@ export class ReminderDetailComponent implements OnInit {
 @Input() isDelete = false;
 @Input() alertId!:any
 @Input() getTodo$!:any
+@Input() isFromReminderSnacks = false
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$
   entityTypeCode =''
   entityId = ''
@@ -84,7 +85,7 @@ export class ReminderDetailComponent implements OnInit {
       this.onGetTodoItem.emit(this.alertId);
     }
 
-   if(!this.isFromNotificationPanel){
+   if(!this.isFromNotificationPanel && !this.isFromReminderSnacks){
     if(this.router.url.includes('vendors')){
       const vid = this.route.snapshot.queryParamMap.get('v_id')
       const tabcode = this.route.snapshot.queryParamMap.get('tab_code')

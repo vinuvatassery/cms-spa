@@ -20,7 +20,6 @@ import {
   ContactFacade,
   FinancialVendorFacade,
   FinancialVendorRefundFacade,
-  GridFilterParam,
   PaymentMethodCode,
   ServiceTypeCode,
 } from '@cms/case-management/domain';
