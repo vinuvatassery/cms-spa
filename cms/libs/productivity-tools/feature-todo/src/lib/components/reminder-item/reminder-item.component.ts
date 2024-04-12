@@ -171,6 +171,7 @@ export class ReminderItemComponent implements OnInit {
         this.cdr.detectChanges();
       });
     this.todoAndReminders$?.subscribe((clientsTodoReminders :any) =>{
+      
       const clientsReminder  = 
       clientsTodoReminders.filter((x:any) => x.alertTypeCode =="REMINDER")
    
