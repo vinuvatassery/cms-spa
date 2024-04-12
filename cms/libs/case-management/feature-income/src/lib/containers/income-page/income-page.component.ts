@@ -478,31 +478,33 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else
-            {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
+            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
+              else {
+                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
             }
           }
         })
       }
       else {
-        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
-        }
-        else
-        {
-          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
+        if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
+          else {
+            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
         }
       }
       this.cdr.detectChanges();
