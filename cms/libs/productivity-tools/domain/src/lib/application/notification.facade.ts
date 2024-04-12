@@ -53,10 +53,10 @@ export class NotificationFacade {
   }
 
   loadNotificationsAndReminders(isViewAll?:any): void {
-    this.notificationDataService.loadNotificationsAndReminders(isViewAll).subscribe({
+    this.notificationDataService.loadNotificationsAndReminders(isViewAll ?? false).subscribe({
       next: (todoGridResponse: any) => {
         this.notificationAndReminderListSubject.next(todoGridResponse);
-        if(isViewAll)
+        if(isViewAll === false)
           {
             this.notificationAndReminderCountListSubject.next(todoGridResponse)
             
