@@ -53,6 +53,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() confirmationModelText!:string;
   @Input() saveForLaterHeadterText!:string;
   @Input() saveForLaterModelText!:string;
+  @Input() emailSubject!: string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -101,7 +102,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   cerEmailAttachedFiles: any[] = [];
   userSelectedAttachment: any[] = [];
   clientAndVendorAttachedFiles: any[] = [];
-  @Input() emailSubject!: string;
   existingFile: any = [];
   loginUserId!: any;
   isSaveForLater: boolean = false;
@@ -125,6 +125,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isFormValid: boolean = true;
   variableName!: string;
   typeName!: string;
+  subjectMax = 200;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -470,41 +471,39 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onSendEmailConfirmationDialogClicked(event: any) {
-
-    
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.selectedTemplate.templateContent = this.updatedTemplateContent;
-      if(this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0){
+      if (this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0) {
         this.isToEmailMissing = true;
         this.isFormValid = false;
         this.onSendEmailDailougeConfirmationClicked();
       }
-      if(this.emailSubject === undefined || this.emailSubject === ''){
+      if (this.emailSubject === undefined || this.emailSubject === '') {
         this.isEmailSubjectMissing = true;
         this.isFormValid = false;
         this.onSendEmailDailougeConfirmationClicked();
       }
-      if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+      if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>') {
         this.isContentMissing = true;
         this.isFormValid = false;
         this.onCloseSaveForLaterClicked();
       }
-      if(this.notificationGroup === ScreenType.VendorProfile){
-        if(this.selectedMailCode === undefined || this.selectedMailCode === ''){
-        this.isMailCodeMissing = true;
-        this.isFormValid = false;
-        this.onCloseSaveForLaterClicked();
+      if (this.notificationGroup === ScreenType.VendorProfile) {
+        if (this.selectedMailCode === undefined || this.selectedMailCode === '') {
+          this.isMailCodeMissing = true;
+          this.isFormValid = false;
+          this.onCloseSaveForLaterClicked();
         }
       }
-      if(this.isFormValid){
-      if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail) {
-        this.initiateAdobeEsignProcess(this.selectedTemplate);
-      } else {
-        this.initiateSendEmailProcess(this.selectedTemplate);        
+      if (this.isFormValid) {
+        if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail) {
+          this.initiateAdobeEsignProcess(this.selectedTemplate);
+        } else {
+          this.initiateSendEmailProcess(this.selectedTemplate);
+        }
       }
     }
-  }
   }
 
   private getSelectedEmails(emailList: any, emailType: string){
@@ -574,16 +573,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       });
   }
 
-  navigateConditionally(){
-    switch (this.communicationEmailTypeCode) {
-      case CommunicationEventTypeCode.PendingNoticeEmail:
-        this.router.navigate([`/case-management/cases/`]);
-        break;
-      case CommunicationEventTypeCode.RejectionNoticeEmail:
-      case CommunicationEventTypeCode.ApprovalNoticeEmail:
-      case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
-        this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
-        break;
+  navigateConditionally() {
+    if (this.triggerFrom !== ScreenType.ClientProfile) {
+      switch (this.communicationEmailTypeCode) {
+        case CommunicationEventTypeCode.PendingNoticeEmail:
+          case CommunicationEventTypeCode.RejectionNoticeEmail:
+          this.router.navigate([`/case-management/cases/`]);
+          break;        
+        case CommunicationEventTypeCode.ApprovalNoticeEmail:
+        case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
+          this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
+          break;
+      }
     }
   }
   
@@ -637,11 +638,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
-    if(this.communicationEmailTypeCode === undefined || this.communicationEmailTypeCode === ''){
+    if(this.triggerFrom === ScreenType.ClientProfile){
       this.communicationEmailTypeCode = event.templateTypeCode;
-    }
-    if(this.templateLoadType === undefined){
-      this.templateLoadType = event.templateTypeCode;
     }
     this.selectedTemplate = event;    
     if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail

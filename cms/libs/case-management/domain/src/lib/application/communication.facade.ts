@@ -227,7 +227,7 @@ export class CommunicationFacade {
       let subTypeCode = data?.emailData?.subtypeCode?? data?.emailData?.subTypeCode 
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
       formData.append('description', data?.emailData?.description ?? '');
-      formData.append('typeCode', data?.emailData?.SubTypeCode);
+      formData.append('typeCode', data?.emailData?.typeCode);
       formData.append('subTypeCode', subTypeCode ?? '');
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
       formData.append('notificationDraftId', data?.emailData?.notificationDraftId ?? '');

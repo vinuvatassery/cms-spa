@@ -237,7 +237,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   private addEmailSubscription() {
     this.emailSubscription$ = this.emailAddress$.subscribe((email: any) => {
-      const isEmailOk = email.filter((email:any) => email.detailMsgFlag === StatusFlag.Yes && email.paperlessFlag === StatusFlag.Yes)?.length > 0;
+      const isEmailOk = email.filter((x:any)=>x.detailMsgFlag === StatusFlag.Yes)?.length > 0;
       this.sendActions[1].isVisible = isEmailOk;
       this.refreshButtonList();
       // Iterate over the list and push emails based on a condition

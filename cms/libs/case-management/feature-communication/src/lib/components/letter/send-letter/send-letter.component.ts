@@ -390,16 +390,18 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       });
   }
 
-  navigateConditionally(){
-    switch (this.communicationLetterTypeCode) {
-      case CommunicationEventTypeCode.PendingNoticeLetter:
-        this.router.navigate([`/case-management/cases/`]);
-        break;
-      case CommunicationEventTypeCode.RejectionNoticeLetter:
-      case CommunicationEventTypeCode.ApprovalNoticeLetter:
-      case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
-        this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
-        break;
+  navigateConditionally() {
+    if (this.triggerFrom !== ScreenType.ClientProfile) {
+      switch (this.communicationLetterTypeCode) {
+        case CommunicationEventTypeCode.PendingNoticeLetter:
+          case CommunicationEventTypeCode.RejectionNoticeLetter:
+          this.router.navigate([`/case-management/cases/`]);
+          break;        
+        case CommunicationEventTypeCode.ApprovalNoticeLetter:
+        case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
+          this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
+          break;
+      }
     }
   }
 
