@@ -1411,13 +1411,16 @@ padding: 8px;
 }
 
 .modalin_page{
-  .k-dialog-titlebar-actions{
-    display: none;
+  .template-header{
+    .k-dialog-titlebar-actions{
+      display: none;
+    }
+    &.k-dialog-titlebar{
+      padding-block: 0;
+      padding-inline: 0;
+    }
   }
-  .k-dialog-titlebar{
-    padding-block: 0;
-    padding-inline: 0;
-  }
+  
   .k-dialog-actions{
     border-color: #dbdbdb;
     margin-top: 20px;

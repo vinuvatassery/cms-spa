@@ -11,6 +11,7 @@ import { LoggingService } from '@cms/shared/util-core';
 import { SmsNotification } from '../entities/sms-notification';
 import { DocumentDataService } from '../infrastructure/document.data.service';
 import { Subject } from 'rxjs';
+import { ScreenType } from '../enums/screen-type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CommunicationFacade {
@@ -90,15 +91,15 @@ export class CommunicationFacade {
     });
   }
 
-  loadEmailTemplates(groupCode: string, categoryCode: string) {
+  loadEmailTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
     return this.emailDataService.loadEmailTemplates(
-      groupCode, categoryCode
+      groupCode, categoryCode, templateTypeCode
     );
   }
 
-  loadLetterTemplates(groupCode: string, categoryCode: string) {
+  loadLetterTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
     return this.emailDataService.loadEmailTemplates(
-      groupCode, categoryCode
+      groupCode, categoryCode, templateTypeCode
     );
   }
 
@@ -110,8 +111,8 @@ export class CommunicationFacade {
     return this.emailDataService.replaceAndGenerateTextTemplate(entityId, clientCaseEligibilityId, selectedTemplate, requestType);
   }
 
-  loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
-    return this.emailDataService.loadAttachmentPreview(clientId, clientCaseEligibilityId, templateId);
+  loadAttachmentPreview(attachmentPreviewDto: FormData) {
+    return this.emailDataService.loadAttachmentPreview(attachmentPreviewDto);
   }
 
   sendLetterToPrint(entityId: string, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
@@ -149,30 +150,33 @@ export class CommunicationFacade {
     return formData;
   }
 
-  preparePreviewModelData(emailData: any) {
+  preparePreviewModelData(emailData: any, entityType: string) {
     const formData = new FormData();
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
-    formData.append('typeCode', emailData?.typeCode ?? '');
+    formData.append('typeCode', emailData?.subtypeCode);
     formData.append('subtypeCode', CommunicationEvents?.Email ?? '');
     formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
     formData.append('description', emailData?.description ?? '');
     formData.append('templateContent', emailData?.templateContent ?? '');
+    formData.append('entityType', entityType);
     return formData;
   }
 
-  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any,notificationGroup:any) {
+  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any,notificationGroup:any,entityId: any, entityType: any) {
     const formData = new FormData();
     formData.append('templateTypeCode', templateTypeCode ?? '');
     formData.append('entityTypeCode', notificationGroup ?? '');
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
-    formData.append('typeCode', draftTemplate?.typeCode ?? '');
+    formData.append('typeCode', draftTemplate?.subtypeCode ?? '');
     formData.append('languageCode', draftTemplate?.languageCode ?? '');
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('templateContent', draftTemplate?.templateContent ?? '');
-    formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
-    if (clientAndVendorAttachedFiles[0]?.length > 0){
+    formData.append('notifcationDraftId', draftTemplate?.notificationDraftId ?? '');
+    formData.append('entityId', entityId);
+    formData.append('entityType', entityType);
+    if (clientAndVendorAttachedFiles?.length > 0){
     let i = 0;
-    clientAndVendorAttachedFiles[0].forEach((file: any) => {
+    clientAndVendorAttachedFiles.forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
@@ -199,7 +203,7 @@ export class CommunicationFacade {
     return formData;
   }
 
-  createFormDataForEmail(data: {templateTypeCode:string, subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
+  createFormDataForEmail(data: {templateTypeCode:string, subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[]}) {
     const formData = new FormData();
     formData.append('templateTypeCode', data?.templateTypeCode ?? '');
     formData.append('requestSubject', data?.subject ?? '');
@@ -220,15 +224,17 @@ export class CommunicationFacade {
       });
     }
     if (data?.emailData) {
+      let subTypeCode = data?.emailData?.subtypeCode?? data?.emailData?.subTypeCode 
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
       formData.append('description', data?.emailData?.description ?? '');
-      formData.append('typeCode', data?.emailData?.typeCode ?? '');
+      formData.append('typeCode', data?.emailData?.typeCode);
+      formData.append('subTypeCode', subTypeCode ?? '');
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
-      formData.append('notifcationDraftId', data?.emailData?.notifcationDraftId ?? '');
+      formData.append('notificationDraftId', data?.emailData?.notificationDraftId ?? '');
     }
-    if (data?.clientAndVendorEmailAttachedFiles[0]?.length > 0) {
+    if (data?.clientAndVendorEmailAttachedFiles?.length > 0) {
       let i = 0;
-      data?.clientAndVendorEmailAttachedFiles[0].forEach((file: any) => {
+      data?.clientAndVendorEmailAttachedFiles.forEach((file: any) => {
         if (file.rawFile == undefined || file.rawFile == null) {
           formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file.document.fileName);
           formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
@@ -264,17 +270,19 @@ export class CommunicationFacade {
     return formData;
   }
 
-  prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[]) {
+  prepareClientAndVendorLetterData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[], entityType: string) {
+    let subTypeCode = emailData?.subTypeCode ?? emailData?.subtypeCode;
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
-    formData.append('typeCode', emailData?.typeCode ?? '');
-    formData.append('entity', emailData?.typeCode ?? '');
+    formData.append('typeCode', emailData?.typeCode);
+    formData.append('subTypeCode',subTypeCode);
     formData.append('requestBody', emailData?.templateContent ?? '');
-    formData.append('notifcationDraftId', emailData?.notifcationDraftId ?? '');
-    if(clientAndVendorEmailAttachedFiles[0]?.length > 0){
+    formData.append('notificationDraftId', emailData?.notificationDraftId ?? '');
+    formData.append('entity', entityType ?? '');
+    if(clientAndVendorEmailAttachedFiles?.length > 0){
     let i = 0;
-    clientAndVendorEmailAttachedFiles[0].forEach((file: any) => {
+    clientAndVendorEmailAttachedFiles.forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file.document.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
@@ -327,8 +335,8 @@ export class CommunicationFacade {
     return this.emailDataService.saveEmailNotificationForLater(formData);
   }
 
-  loadDraftNotificationRequest(entityId: string, typeCode: string) {
-    return this.emailDataService.getDraftNotification(entityId, typeCode);
+  loadDraftNotificationRequest(entityId: string,entityType:string,typeCode:string, subTypeCode: string | null) {
+    return this.emailDataService.getDraftNotification(entityId,entityType,typeCode, subTypeCode);
   }
 
   loadTemplateById(notificationTemplateId: string) {
@@ -347,9 +355,9 @@ export class CommunicationFacade {
     return this.emailDataService.sendSms(smsNotification);
   }
 
-  loadNotificationTemplates(groupCode: string, categoryCode: string) {
+  loadNotificationTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
     return this.emailDataService.loadEmailTemplates(
-      groupCode, categoryCode
+      groupCode, categoryCode, templateTypeCode
     );
   }
 
@@ -379,7 +387,7 @@ export class CommunicationFacade {
     formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
     if (cerEmailAttachedFiles?.length > 0){
     let i = 0;
-    cerEmailAttachedFiles[0].forEach((file: any) => {
+    cerEmailAttachedFiles.forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));

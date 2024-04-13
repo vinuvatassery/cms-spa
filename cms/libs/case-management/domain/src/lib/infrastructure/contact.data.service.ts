@@ -236,7 +236,7 @@ export class ContactDataService {
 
   }
 
-  loadClientPaperLessStatus(clientId: number, clientCaseEligibilityId: string) {
+  loadClientPaperLessStatus(clientId: number | undefined, clientCaseEligibilityId: string | undefined) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/clients/${clientId}/emails/${clientCaseEligibilityId}`
