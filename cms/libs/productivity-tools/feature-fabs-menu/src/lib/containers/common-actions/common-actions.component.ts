@@ -41,7 +41,15 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.updateStatsSubscription = this.notificationStatsFacade.updateStats$.subscribe((response: any) => {
       if(response.data){
-        this.notificationStatsFacade.getStats(this.entityId, response.statsTypeCode);
+        // The Below logic handles resetting the right StatsTypeCode count. One example is, user adds Reminder with Event Log Panel open. 
+        if((response.statsTypeCode == StatsTypeCode.EventLog && this.fabMenuFacade.isShownEventLog) ||
+        (response.statsTypeCode == StatsTypeCode.DirectMessage && this.fabMenuFacade.isShownDirectMessage) ||
+        (response.statsTypeCode == StatsTypeCode.Alert && this.fabMenuFacade.isShownTodoReminders)){
+          this.notificationStatsFacade.resetStats(this.entityId, response.statsTypeCode);
+        }
+        else{
+          this.notificationStatsFacade.getStats(this.entityId, response.statsTypeCode);
+        }
       }
     });
 
@@ -84,7 +92,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Vendor);
     }
     this.addSessionChangeSubscription();
-    this.hideAllPanels();
   }
 
   private addSessionChangeSubscription() {
@@ -95,7 +102,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       if (newClientId && newClientId !== this.entityId) {
         this.entityId = newClientId.toString();
         this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);
-        this.hideAllPanels();
       }
     });
   }
@@ -132,10 +138,5 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
     this.fabMenuFacade.isShownDirectMessage = false;
     this.fabMenuFacade.isShownEventLog = false;
     this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.Alert);
-  }
-  hideAllPanels(){
-    this.fabMenuFacade.isShownEventLog = false;
-    this.fabMenuFacade.isShownDirectMessage = false;
-    this.fabMenuFacade.isShownTodoReminders = false;
   }
 }

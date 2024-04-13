@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
-import { ConstantValue } from '@cms/productivity-tools/domain';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'productivity-tools-event-log-description',
@@ -12,6 +12,7 @@ export class EventLogDescriptionComponent {
   @Input() limit: number = 0;
   @Input() completeWords: boolean = false;
   @Input() eventId:any;
+  @Input() userEventFlag:any;
 
   @Output() downloadOldAttachmentEvent = new EventEmitter();
 
@@ -29,12 +30,13 @@ export class EventLogDescriptionComponent {
   ViewLetter:string = "{View Letter}";
   ViewEmail:string = "{View Email}";
   ViewSmsText:string = "{View Text(s)}";
-
-  constructor() {}
+  sanitizedHtml:any;
+  constructor(private sanitizer : DomSanitizer) {}
 
   ngOnInit() {
     this.formatContent();
     this.content = this.data;
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content);
   }
 
   setHasUrl(anchorArray:any)
@@ -47,19 +49,27 @@ export class EventLogDescriptionComponent {
 
   formatContent()
   {
-    this.anchorArray=[];
-    let anchorArray = this.content.split(this.urlSeparator);
-    this.hasUrl = this.setHasUrl(anchorArray);
-    if(this.content.indexOf(this.baseUrl) !== -1){
-      this.setHasUrlConstructingData(anchorArray);
-    }
-    else if(this.content.indexOf(this.urlSeparator) !== -1 && this.content.indexOf(this.baseUrl) == -1)
+    if(this.userEventFlag=="Y")
     {
-      this.setAnchorWithOutBaseUrl(anchorArray);
+      this.hasUrl = false;
+      this.data = this.content;
     }
     else
     {
-      this.setHasViewEmailAddressSMSTextFlag();
+      this.anchorArray=[];
+      let anchorArray = this.content.split(this.urlSeparator);
+      this.hasUrl = this.setHasUrl(anchorArray);
+      if(this.content.indexOf(this.baseUrl) !== -1){
+        this.setHasUrlConstructingData(anchorArray);
+      }
+      else if(this.content.indexOf(this.urlSeparator) !== -1 && this.content.indexOf(this.baseUrl) == -1)
+      {
+        this.setAnchorWithOutBaseUrl(anchorArray);
+      }
+      else
+      {
+        this.setHasViewEmailAddressSMSTextFlag();
+      }
     }
   }
 
@@ -74,6 +84,7 @@ export class EventLogDescriptionComponent {
             url : itemDataArray[0],
             text : itemDataArray[1],
             title : itemDataArray[1],
+            sanitizedHtml : this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]),
             isBaseUrlFlag : false ,
             isFilePathUrl : true
           }
@@ -92,6 +103,7 @@ export class EventLogDescriptionComponent {
           url : itemDataArray[0].replace(this.baseUrl,window.location.origin),
           text : itemDataArray[1],
           title : itemDataArray[1],
+          sanitizedHtml : this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]),
           isBaseUrlFlag : true ,
           isFilePathUrl : false
         }
@@ -103,6 +115,7 @@ export class EventLogDescriptionComponent {
           url : "",
           text : item,
           title : "",
+          sanitizedHtml : this.sanitizer.bypassSecurityTrustHtml(item),
           isBaseUrlFlag : false,
           isFilePathUrl : false
         }

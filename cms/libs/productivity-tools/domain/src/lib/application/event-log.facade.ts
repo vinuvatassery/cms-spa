@@ -53,8 +53,8 @@ export class EventLogFacade {
     this.loaderService.hide();
   }
 
-  loadEvents(params: any, entityId:string): void {
-    this.eventDataService.loadEvents(params,entityId).subscribe({
+  loadEventLogs(params: any, entityId:string): void {
+    this.eventDataService.loadEventLogs(params,entityId).subscribe({
       next: (eventResponse) => {
         this.eventsSubject.next(eventResponse);
       },

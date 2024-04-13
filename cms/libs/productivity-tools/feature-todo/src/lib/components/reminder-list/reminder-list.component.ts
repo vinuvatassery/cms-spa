@@ -170,7 +170,7 @@ export class ReminderListComponent implements  OnInit{
     this.ReminderEventClicked.emit();
   }
   onloadReminderAndNotificationsGrid(){
-    this.notificationFacade.loadNotificationsAndReminders();
+    this.notificationFacade.loadNotificationsAndReminders(true);
   }
 
   onGetTodoItemData(event:any){

@@ -158,8 +158,9 @@
                 (downloadOldAttachmentEvent)="downloadOldAttachment($event)"
                 [content]="eventLog.eventLogDesc"
                 [limit]="250"
-                [completeWords]="true"
-                [eventId]="eventLog.eventId">
+                [completeWords]="false"
+                [eventId]="eventLog.eventId"
+                [userEventFlag]="eventLog.userEventFlag">
               </productivity-tools-event-log-description>
             </div>
             <span *ngIf="eventLog.userEventFlag && eventLog.attachments?.length > 0"
@@ -196,8 +197,9 @@
                 <productivity-tools-event-log-description
                   [content]="subEventLog.eventLogDesc"
                   [limit]="250"
-                  [completeWords]="true"
-                  [eventId]="eventLog.eventId">
+                  [completeWords]="false"
+                  [eventId]="subEventLog.eventId"
+                  [userEventFlag]="subEventLog.userEventFlag">
                 </productivity-tools-event-log-description>
 
                 <span *ngIf="subEventLog.userEventFlag && subEventLog.attachments?.length > 0"

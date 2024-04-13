@@ -1,10 +1,9 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input,Output, EventEmitter, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {CaseFacade,CaseStatusCode, CommunicationEventTypeCode, ContactFacade, WorkflowFacade, WorkflowTypeCode} from '@cms/case-management/domain';
+import {CaseFacade,CaseStatusCode, ContactFacade, WorkflowFacade, WorkflowTypeCode} from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { first } from 'rxjs';
 
 
 @Component({
