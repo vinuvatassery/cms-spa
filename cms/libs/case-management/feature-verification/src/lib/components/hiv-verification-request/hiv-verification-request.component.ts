@@ -352,12 +352,13 @@ export class HivVerificationRequestComponent implements OnInit{
       .subscribe({
         next: (attachments: any) => {
           if (attachments.length > 0) {
+            this.selectedAttachedFile=[];
             for (let file of attachments) {
               this.selectedAttachedFile.push({
                 document: file,
                 size: file.templateSize,
                 name: file.description,
-                documentTemplateId: file.documentTemplateId,
+                notificationAttachmentId: file.notificationAttachmentId,
                 typeCode: file.typeCode
               })
             }
@@ -374,7 +375,14 @@ export class HivVerificationRequestComponent implements OnInit{
 
   saveHivVerificationData(){
     this.verificationFacade.showLoader();
-    this.verificationFacade.save( this.clientHivVerification).subscribe({
+    const formData = new FormData();
+    formData.append('verificationToEmail', this.hivVerificationForm.controls["providerEmailAddress"].value ?? '');
+    formData.append('clientCaseEligibilityId', this.clientCaseEligibilityId ?? '');
+    formData.append('clientId', this?.clientId.toString() ?? '');
+    formData.append('verificationMethodCode', this.hivVerificationForm.controls["providerOption"].value ?? '');
+    formData.append('verificationTypeCode', VerificationTypeCode.HivVerificationForm ?? '');
+    formData.append('verificationStatusCode', VerificationStatusCode.Pending ?? '');
+    this.verificationFacade.save(formData).subscribe({
     next:(data)=>{
       if(data){
         this.isResendRequest = false;

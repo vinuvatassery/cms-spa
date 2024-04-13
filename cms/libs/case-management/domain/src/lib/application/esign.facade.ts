@@ -136,14 +136,18 @@ prepareHivVerificationdobeEsignFormData(clientHivVerification: ClientHivVerifica
     formData.append('typeCode', CommunicationEventTypeCode.HIVVerificationEmail ?? '');
     formData.append('requestBody', "");
     if(selectedAttachedFile?.length > 0){
+
     let i = 0;
     selectedAttachedFile.forEach((file: any) => { 
+    if(!selectedAttachedFile.includes(file?.document?.attachmentName) || !selectedAttachedFile.includes(file.document.description)){
       if(file.rawFile == undefined || file.rawFile == null){
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
         formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
+        formData.append('AttachmentDetails['+i+'][NotificationAttachmentId]', file.document.notificationAttachmentId == undefined ? file.document.notificationAttachmentId : file.document.notificationAttachmentId);
       i++;
       }
+   }
     });
   }
     return formData;
