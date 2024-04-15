@@ -111,6 +111,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   selectedMailingCode!: string;
   variableName!: string;
   typeName!: string;
+  vendorMailCodesubscription!: Subscription;
+  userDataSubscription!: Subscription;
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.getLoggedInUserProfile();
@@ -129,7 +131,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   addSubscriptions() {
-    this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+    this.vendorMailCodesubscription =  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
       this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
       if (this.selectedMailCodeId) {
         this.mailingAddress = this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == this.selectedMailCodeId);
@@ -155,11 +157,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.clientAddressSubscription.unsubscribe();
+    this.vendorMailCodesubscription?.unsubscribe();
+    this.userDataSubscription?.unsubscribe();
   }
 
   getLoggedInUserProfile(){
     this.loaderService.show();
-    this.userDataService.getProfile$.subscribe((profile:any)=>{
+    this.userDataSubscription = this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
         this.loginUserId= profile[0]?.loginUserId;
       }
@@ -437,15 +441,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
           break;
         case CommunicationEventTypeCode.LetterTypeCode:
-          templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
+          templateTypeCode = CommunicationEventTypeCode.ClientLetterCreatedt;
           break;
     }
-    // if(templateData.subTypeCode === CommunicationEventTypeCode.LetterTypeCode){
-    //   templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
-    // }
-    // if(templateData.subTypeCode === CommunicationEventTypeCode.VendorLetter){
-    //   templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
-    // }
     return templateTypeCode;
   }
 

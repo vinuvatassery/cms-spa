@@ -126,6 +126,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   variableName!: string;
   typeName!: string;
   subjectMax = 200;
+  vendorMailCodesubscription!: Subscription;
+  userDataSubscription!: Subscription;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -176,7 +178,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   addSubscriptions() {
-    this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+    this.vendorMailCodesubscription = this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
       this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
       if (this.selectedMailCodeId) {
         this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == this.selectedMailCodeId);
@@ -266,6 +268,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
+    this.vendorMailCodesubscription?.unsubscribe();
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -613,11 +616,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentEmailSent;
         break;
-        case CommunicationEventTypeCode.VendorLetter:
-          templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
+        case CommunicationEventTypeCode.VendorEmail:
+          templateTypeCode = CommunicationEventTypeCode.VendorEmailSent;
           break;
-        case CommunicationEventTypeCode.LetterTypeCode:
-          templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
+        case CommunicationEventTypeCode.ClientEmail:
+          templateTypeCode = CommunicationEventTypeCode.ClientEmailSent;
           break;
     }
     return templateTypeCode;
@@ -638,7 +641,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
-    if(this.triggerFrom === ScreenType.ClientProfile){
+    if(this.triggerFrom === ScreenType.ClientProfile || this.triggerFrom === ScreenType.VendorProfile){
       this.communicationEmailTypeCode = event.templateTypeCode;
     }
     this.selectedTemplate = event;    

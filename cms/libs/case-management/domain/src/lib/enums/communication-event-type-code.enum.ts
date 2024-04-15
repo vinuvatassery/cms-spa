@@ -58,6 +58,8 @@ export enum CommunicationEventTypeCode {
     DisenrollmentNoticeEmail = 'DISENROLLMENT_NOTICE_EMAIL',
     DisenrollmentEmailSent = 'DISENROLLMENT_EMAIL_SENT',
     VendorLetterCreated = 'VENDOR_LETTER_CREATED',
-    ClientANdVendorLetterSent = 'CLIENT_LETTER_CREATED',
+    ClientLetterCreatedt = 'CLIENT_LETTER_CREATED',
     ApplicationAndCERLetterSent = 'LETTER_SENT',
+    VendorEmailSent="VENDOR_EMAIL_SENT",
+    ClientEmailSent = "CLIENT_EMAIL_SENT"
   }
