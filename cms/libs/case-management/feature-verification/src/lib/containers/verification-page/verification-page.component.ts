@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { UserDataService } from '@cms/system-config/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-verification-page',
@@ -129,16 +130,17 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else
-            {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
+            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
+              else {
+                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
             }
           }
         })
@@ -149,8 +151,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             queryParamsHandling: "preserve"
           });
         }
-        else
-        {
+        else {
           this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
             queryParamsHandling: "preserve"
           });

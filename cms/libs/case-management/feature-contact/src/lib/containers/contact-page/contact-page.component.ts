@@ -745,6 +745,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         if (isSaved) {
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Info Saved Successfully!');
           this.workflowFacade.navigate(navigationType);
+          this.workflowFacade.paperLessFlagContactInfoChangeSubject.next(this.getFlag(this.contactInfoForm?.get('email.paperlessFlag')?.value));
         }
         else {
           this.workflowFacade.enableSaveButton();
@@ -771,8 +772,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isValid) {
       this.loaderService.show()
       return this.saveContactInfo();
-    }
-
+    }    
     const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.contactInfoForm, this.elementRef.nativeElement,null);
       if (invalidControl) {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1972,38 +1972,41 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else
-            {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
+            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
+              else {
+                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
             }
           }
         })
       }
       else {
-        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
-        }
-        else
-        {
-          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
+        if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
+          else {
+            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
         }
       }
     });
   }
 
-  private addSaveForLaterValidationsSubscription(): void {
+  private addSaveForLaterValidationsSubscription(): void {    
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      this.workflowFacade.paperLessFlagContactInfoChangeSubject.next(this.getFlag(this.contactInfoForm?.get('email.paperlessFlag')?.value));
       if (this.checkValidations() && this.contactInfoForm.valid) {
         this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }

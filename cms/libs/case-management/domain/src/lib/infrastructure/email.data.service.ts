@@ -86,9 +86,9 @@ export class EmailDataService {
     ]);
   }
 
-  loadEmailTemplates(groupCode: string, categoryCode: string) {
+  loadEmailTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${groupCode}/${categoryCode}/templates`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${groupCode}/${categoryCode}/templates?templateTypeCode=${templateTypeCode}`
     );
   }
 
@@ -104,9 +104,9 @@ export class EmailDataService {
       );
     }
 
-    loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${clientId}/${clientCaseEligibilityId}/${templateId}`
+    loadAttachmentPreview(attachmentPreviewDto: FormData) {
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/attachment/preview`, attachmentPreviewDto
         , {
           responseType: 'blob'
         });
@@ -169,9 +169,9 @@ export class EmailDataService {
       );
     }
 
-    getDraftNotification(entityId: string, typeCode: string) {
+    getDraftNotification(entityId: string, entityType:string, typeCode:string, subTypeCode:string | null) {
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/draft?entityId=${entityId}&typeCode=${typeCode}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/draft?entityId=${entityId}&entityType=${entityType}&typeCode=${typeCode}&subTypeCode=${subTypeCode}`
       );
     }
 

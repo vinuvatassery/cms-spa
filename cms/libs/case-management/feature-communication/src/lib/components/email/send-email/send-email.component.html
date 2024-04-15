@@ -20,7 +20,7 @@
         </kendo-floatinglabel>
       </div>
       <div *ngIf="isOpenDdlEmailDetails">
-        <div class="flex-col" *ngIf="getProfileName() == 'vendor'">
+        <div class="flex-col" *ngIf="notificationGroup === 'VENDOR_PROFILE'">
           <kendo-floatinglabel text="Mail Code">
             <kendo-dropdownlist
               [fillMode]="formUiStyle.dropDownFillMode"
@@ -32,6 +32,9 @@
             >
             </kendo-dropdownlist>
           </kendo-floatinglabel>
+          <kendo-formerror *ngIf="isMailCodeMissing">
+            Mail Code is required.
+          </kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="To" class="inline-search-loader">
@@ -46,6 +49,9 @@
         aria-label="to address"
         ></kendo-multiselect>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="isToEmailMissing">
+          To Email is required.
+        </kendo-formerror>
       </div>
         <div class="flex-col" [style]="{'display': 'flex'}">
           <kendo-floatinglabel text="CC" class="inline-search-loader" *ngIf="isCCDropdownVisible">
@@ -61,7 +67,8 @@
           ></kendo-multiselect>
           </kendo-floatinglabel>
           <kendo-floatinglabel text="CC" *ngIf="isCCDropdownVisible===false">
-            <kendo-textbox  placeholder="CC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+            <kendo-textbox  placeholder="CC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" 
+            [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
           <button [style]="{'height': 'fit-content','margin': 'auto','margin-top': '1.5rem','margin-left': '1rem'}"
           kendoButton
@@ -72,6 +79,9 @@
         >
          BCC
         </button>
+        </div>
+        <div class="flex-col">
+          <small>The user sending the email will automatically be CC'd. Add only additional recipients.</small>
         </div>
         <div class="flex-col" [style]="{'display': 'flex'}">
           <kendo-floatinglabel text="BCC" class="inline-search-loader" *ngIf="!isBCCDropdownVisible">
@@ -93,8 +103,12 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Subject">
-            <kendo-textbox  placeholder="Subject" [(ngModel)]="emailSubject" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+            <kendo-textbox  placeholder="Subject" [(ngModel)]="emailSubject" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode" 
+            [maxlength]="subjectMax" (valueChange)="handleSubjectChanged($event)">   </kendo-textbox>
           </kendo-floatinglabel>
+          <kendo-formerror *ngIf="isEmailSubjectMissing">
+            Subject is required.
+          </kendo-formerror>
         </div>
         <div class="flex-col mt-3">
           <p>
@@ -103,7 +117,7 @@
             receive.
           </p>
         </div>
-        <div class="flex-col  ">
+        <div class="flex-col">
           <case-management-email-editor  
           [selectedTemplate]="selectedTemplate" 
           [selectedTemplateContent]="selectedTemplateContent"           
@@ -111,7 +125,12 @@
           [clientId]="entityId"
           [communicationTypeCode]="communicationEmailTypeCode"
           (editorValueChangeEvent) ="editorValueChange($event)"
-          (cerEmailAttachments)="cerEmailAttachments($event)"          
+          (cerEmailAttachments)="cerEmailAttachments($event)"     
+          [isContentMissing]="isContentMissing"
+          (contentValidateEvent)="contentValidateEvent($event)"
+          [notificationGroup]="notificationGroup"
+          [variableName]="variableName"
+          [typeName]="typeName"
           class="editor-lg-email"
           ></case-management-email-editor>
         </div>
@@ -167,12 +186,11 @@
 <kendo-dialog (close)="onCloseSaveForLaterClicked()"
   *ngIf="isShowSaveForLaterPopupClicked"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Email Draft Saved"
+  [title]="saveForLaterHeadterText"
 >
   <section class="k-dialog-body">
     <p>
-      To pick up where you left off, click “New Email” from the {{getProfileName()}}’s
-      profile.
+      {{saveForLaterModelText}}
     </p>
   </section>
   <kendo-dialog-actions>
@@ -237,9 +255,9 @@
   *ngIf="isShowSendEmailConfirmationPopupClicked"
   (close)="onSendEmailDailougeConfirmationClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Send Email?"
+  [title]="confirmPopupHeader"
 >  <section class="k-dialog-body">
-  <p class="text-muted mb-2">This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal</p>
+  <p class="text-muted mb-2">{{confirmationModelText}}</p>
 </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
