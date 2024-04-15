@@ -182,7 +182,7 @@ defaultPageSize=20;
 
   loadListGrid() {
     this.updateStatusFilterValue(this.filter, this.statusArray, this.statusArrayDesc);
-debugger
+
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state.take=this.defaultPageSize,
