@@ -6,7 +6,7 @@
     (filterChange)="filterChange($event)" (columnReorder)="onColumnReorder($event)"
     [data]="gridDistributionData$ | async"  class="grid_scroll">
 
-    <kendo-grid-column field="email" title="Email" [width]="150">
+    <kendo-grid-column field="email" title="Email" [width]="200">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -37,7 +37,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="status" title="Status" [width]="100">
+    <kendo-grid-column field="status" title="Status" [width]="90">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.status === 'Y' ? 'Active' : 'Inactive' }}
       </ng-template>
@@ -54,7 +54,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="Option" title="Options"   [columnMenu]="false" [sortable]="false" [width]="100" class="text-center">
+    <kendo-grid-column field="Option" title="Options"   [columnMenu]="false" [sortable]="false" [width]="90" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="gridMoreActions" class="TableActionPopup app-dropdown-action more_action_wid"
           buttonClass="k-icon-button" aria-label="more actions" title="More option"

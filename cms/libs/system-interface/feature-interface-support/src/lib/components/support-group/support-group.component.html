@@ -22,7 +22,7 @@
 <p class="mb-1">Select a Support Group in the table below to view assigned Users and Notification Categories</p>
 
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="(supportGroupListsLoader$  | async) === true" [pageSize]="state.take"
+  <kendo-grid class="row_select_grid" [resizable]="true" [loading]="(supportGroupListsLoader$  | async) === true" [pageSize]="state.take"
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
     [filter]="state.filter" [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
@@ -89,7 +89,7 @@
         </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="80" class="text-center" [columnMenu]="false" [sortable]="false" [filterable]="false">
+    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="120" class="text-center" [columnMenu]="false" [sortable]="false" [filterable]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
         <common-user-photo-icon  
         [userId]="dataItem.lastModifierId" 
@@ -103,7 +103,7 @@
   
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="notificationGroupId" title="Options" [sticky]="true" [columnMenu]="false" [sortable]="false"  [width]="50"
+    <kendo-grid-column field="notificationGroupId" title="Options" [sticky]="true" [columnMenu]="false" [sortable]="false"  [width]="70"
       class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem let-notificationSupportId="field">
         <kendo-dropdownbutton [data]="gridMoreActionsSupport"

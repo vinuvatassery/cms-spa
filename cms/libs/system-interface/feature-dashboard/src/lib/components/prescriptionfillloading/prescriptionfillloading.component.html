@@ -1,37 +1,49 @@
-
 <div class="dash-header-with-filters">
   <h5>Prescription Fill Loading</h5>
-  </div> 
-  <div class="dashboard-cards-container"> 
-<div class="interface-chart-cards"   >
-    <h3 class="mb-1"></h3>
-    <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
+</div>
+<div class="dashboard-cards-container">
+  <div class="interface-chart-cards"> 
+    <common-dashboard-loader-panel *ngIf="isloader"></common-dashboard-loader-panel>
 
-    <div class="flex-row"   *ngIf="!isloader">
-      <div class="flex-col flex-col-8">
+    <div  *ngIf="!isloader">
+      <div class="flex-row ">
+        <div class="flex-col ">
 
-        <h5> Latest File Received: </h5>
-        <h3>{{prescriptionsFills.lastFileReceived |date : 'shortDate'}}</h3>
+          <span class="material-icons green-text-color greenbg_color status_icon" aria-hidden="true"
+            *ngIf="prescriptionsFills.totalRecordExceptions==0">
+            check_circle_outline
+          </span>
+          <span class="material-icons warn-text-color status_icon" aria-hidden="true"
+            *ngIf="prescriptionsFills.totalRecordExceptions!=0">
+            warning_amber
+          </span>
+        </div>
 
-        <h5> Total Record Received: </h5>
-        <h3>{{prescriptionsFills.totalFiles}}</h3>
+        <div class="flex-col mt-2">
+          <h5> Latest File Received: </h5>
+          <h3>{{prescriptionsFills.lastFileReceived |date : 'shortDate'}}</h3>
+        </div>
+        <div class="flex-col flex-col-6 mt-2">
+          <h5> Total Record Received: </h5>
+          <h3>{{prescriptionsFills.totalFiles}}</h3>
+        </div>
+        <div class="flex-col flex-col-6 mt-2">
+          <h5> File Record Failures: </h5>
+          <h3>{{prescriptionsFills.totalRecordExceptions}}</h3>
+        </div>
 
-        <h5> File Record Failures: </h5>
-        <h3>{{prescriptionsFills.totalRecordExceptions}}</h3>
 
-        <div class="mt-2"> <button kendoButton aria-label="View Details" [primary]="true" look="flat"[routerLink]="['/system-interface/activity-log/batch-files']"> View Details
+
+
+
+        <div class="flex-col mt-2"> 
+      
+          <button kendoButton aria-label="View Details"   look="flat"  class="card-link-button link_btn-with-arrow"
+            [routerLink]="['/system-interface/activity-log/batch-files']"> View Details <span  class="material-icons"> chevron_right </span>
           </button></div>
       </div>
-      <div class="flex-col flex-col-4 text-right">
 
-        <span class="material-icons green-text-color status_icon" aria-hidden="true" *ngIf="prescriptionsFills.totalRecordExceptions==0">
-          check_circle_outline
-        </span>
-        <span class="material-icons warn-text-color status_icon" aria-hidden="true" *ngIf="prescriptionsFills.totalRecordExceptions!=0">
-          warning_amber
-        </span>
-      </div>
     </div>
 
   </div>
-  </div>
+</div>

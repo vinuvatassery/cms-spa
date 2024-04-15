@@ -96,7 +96,7 @@
 
 
 <div class="mt-1">
-      <button kendoButton class="mr-1" [primary]="true" aria-label="Notification Category" icon="add"
+      <button kendoButton class="mr-1" [primary]="true" aria-label="Notification Category" icon="add" [disabled]="!selectedGroup || !gridDataResult"
             (click)="onNotificationCategoryDetailsClicked()"> Notification Category</button>
 </div>
 <kendo-dialog *ngIf="isNotificationCategoryDetailPopup" (close)="onCloseNotificationCategoryDetailPopupClicked()"
