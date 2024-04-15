@@ -541,7 +541,7 @@ updateSendEmailSuccessStatus(event:any){
 
 loadPendingEsignRequestInfo(){
   this.loaderService.show();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail : CommunicationEventTypeCode.ApplicationAuthorizationEmail)
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {
