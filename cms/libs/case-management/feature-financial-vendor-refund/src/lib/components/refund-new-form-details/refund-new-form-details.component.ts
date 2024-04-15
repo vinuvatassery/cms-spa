@@ -448,6 +448,11 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       }
     }
   }
+  pageSelectionChange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    //method to load grid data 
+  }
 
   subscribeLoadRefundClaimDataForRx() {
     this.pharmacySearchResultSubscription =
