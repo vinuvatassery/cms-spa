@@ -130,6 +130,9 @@
     padding: $size-0;
     height: auto;
 
+    &.link_btn-with-arrow{
+      text-decoration: none;
+    }
     .material-icons {
       margin-right: 4px;
     }
@@ -143,6 +146,10 @@
     }
 
     &.no-ul {
+      text-decoration: none;
+    }
+    &
+    .link_btn-with-arrow{
       text-decoration: none;
     }
   }

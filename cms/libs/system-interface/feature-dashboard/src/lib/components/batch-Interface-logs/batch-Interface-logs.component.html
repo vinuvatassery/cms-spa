@@ -80,7 +80,7 @@
             
        </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="startDate" title="Process Start Date" [width]="180" [sortable]="true">
+        <kendo-grid-column field="startDate" title="Process Start Date" [width]="200" [sortable]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a' }}
           </ng-template>
@@ -149,7 +149,7 @@
           </ng-template>
         </kendo-grid-column>       
 
-        <kendo-grid-column title="File Download" field="uploadStatus" [width]="130" [sortable]="false" [columnMenu]="false">
+        <kendo-grid-column title="File Download" field="uploadStatus" [width]="100" [sortable]="false" [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
           
 

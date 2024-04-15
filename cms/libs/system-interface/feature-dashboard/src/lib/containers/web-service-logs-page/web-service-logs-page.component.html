@@ -2,15 +2,15 @@
 <div class="app-l-inner-rapper pt-0" kendoRippleContainer>
   <!-- Main Title Section -->
   <div class="app-l-mainTittle" kendoRippleContainer>
-    <h2>
+    <h1 class="maintitle_withicon text-bold">
       <span class="material-icons sidebar-menu_icon" aria-hidden="true">
         receipt_long
       </span>
       Web Service File Log
-    </h2>
+    </h1>
   </div>
 
-  <div class="interface-chart-cards mt-2">
+  <div class="interface-chart-cards">
     <cms-system-interface-web-service-logs [activityEventLogList$]="activityEventLogLists$" [lovsList$]="webLogLovs$"
       [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
       (loadActivityLogListEvent)="loadActivityEventLog()"></cms-system-interface-web-service-logs>
