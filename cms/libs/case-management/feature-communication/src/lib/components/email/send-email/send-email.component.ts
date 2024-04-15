@@ -683,7 +683,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.isOpenDdlEmailDetails = true;
               this.selectedToEmails = [];
               for (let email of this.toEmail) {
+                if(this.selectedToEmails.filter((x:any) => x === email).length ===0){
                 this.selectedToEmails.push(email?.trim());
+                }
               }
               if (data.description === 'Draft Custom Email'){
                 this.emailSubject = '';
