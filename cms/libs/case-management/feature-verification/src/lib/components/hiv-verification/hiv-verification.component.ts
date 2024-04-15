@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit,Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit,Output, EventEmitter, OnChanges, ElementRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Internal Libraries **/
 import { CompletionChecklist, VerificationFacade, WorkflowFacade } from '@cms/case-management/domain';
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './hiv-verification.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HivVerificationComponent implements OnInit {
+export class HivVerificationComponent implements OnInit, OnChanges {
 
    /** Input properties **/
   @Input() hivVerificationForm!: FormGroup;
@@ -37,10 +37,11 @@ export class HivVerificationComponent implements OnInit {
   clientHivVerificationId!:string;
   removeHivVerification$ = this.verificationFacade.removeHivVerification$;
   private saveForLaterValidationSubscription !: Subscription;
-  constructor(private readonly cd: ChangeDetectorRef, 
+  constructor(private readonly cd: ChangeDetectorRef,
     private verificationFacade: VerificationFacade,
     private readonly lovFacade: LovFacade,
-    private readonly workflowFacade: WorkflowFacade){
+    private readonly workflowFacade: WorkflowFacade,
+    private elementRef: ElementRef){
 
   }
   ngOnInit(): void {
@@ -60,9 +61,27 @@ export class HivVerificationComponent implements OnInit {
     this.verificationFacade.showHideAttachment.next(true);
     this.addSaveForLaterValidationsSubscription();
   }
+
+  ngOnChanges() {
+    if(this.clientId != 0 && this.clientId != null && this.clientId != undefined){
+      this.verificationFacade.getHivCaseWorker(this.clientId).subscribe({
+        next: (response: any) => {
+          if(response!=null){
+            this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled=false;
+          }else{
+            this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled=true;
+          }
+          console.log(response);
+        },
+        error: (err: any) => {
+          this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled=true;
+        },
+      });
+    }
+  }
   providerChange(event:any){
     if(this.hivVerificationForm.controls["providerOption"].value=="UPLOAD_ATTACHMENT")
-    {      
+    {
       this.verificationFacade.showHideAttachment.next(true);
     }
 
@@ -91,7 +110,7 @@ export class HivVerificationComponent implements OnInit {
   }
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
-      if (val) {      
+      if (val) {
         this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });

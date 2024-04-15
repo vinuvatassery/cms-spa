@@ -110,4 +110,12 @@ export class VerificationFacade {
   loadHealthCareProviders(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated = false) {
     return this.verificationDataService.loadHealthCareProviders(clientId , skipcount ,maxResultCount  ,sort , sortType, showDeactivated);
   }
+
+  getHivCaseWorker(clientId : number,) {
+    return this.verificationDataService.getHivCaseWorker(clientId);
+  }
+
+  sendHivRequestCaseManager(clientId : number,) {
+    return this.verificationDataService.sendHivRequestCaseManager(clientId);
+  }
 }
