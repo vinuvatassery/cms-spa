@@ -240,6 +240,7 @@ export class ReminderItemComponent implements OnInit {
     this.selectedAlertId = gridItem.alertId
     if(item.text == 'Edit Reminder'){ 
       this.isEdit=true
+      this.isDelete = false;
       this.crudText = 'Edit'
        if (!this.isReminderOpenClicked) {
            this.onNewReminderOpenClicked(this.NewReminderTemplate)
