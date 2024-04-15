@@ -161,7 +161,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
         this.isDelete = event.type == 'delete'
         this.reminderDialog = this.dialogService.open({
           content: this.newReminderTemplate,
-          cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+          cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
         });
       
     }
