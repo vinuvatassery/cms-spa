@@ -6,6 +6,9 @@ const routes: Routes = [
         {
           path: '',
           component: InterfaceSupportPageComponent,
+          data: {
+            title: 'Interface Support',
+          },
         },
       
     ];

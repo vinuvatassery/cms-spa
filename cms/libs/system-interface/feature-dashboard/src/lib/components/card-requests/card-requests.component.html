@@ -7,7 +7,7 @@
       <h3 class="mb-1"></h3>
       <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
   
-      <kendo-chart   *ngIf="cardsRequestChart"  [series]="cardsRequestChart?.chartData?.series"
+      <kendo-chart class="dash_chart"  *ngIf="cardsRequestChart"  [series]="cardsRequestChart?.chartData?.series"
       [legend]="cardsRequestChart?.chartData?.legend" [title]="cardsRequestChart?.chartData?.title"
       [categoryAxis]="cardsRequestChart?.chartData?.categoryAxis"
       [valueAxis]="cardsRequestChart?.chartData?.valueAxis"

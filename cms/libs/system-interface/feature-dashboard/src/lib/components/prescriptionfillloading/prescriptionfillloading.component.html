@@ -7,19 +7,19 @@
 
     <div  *ngIf="!isloader">
       <div class="flex-row ">
-        <div class="flex-col ">
+        <div class="flex-col mt-2">
 
           <span class="material-icons green-text-color greenbg_color status_icon" aria-hidden="true"
             *ngIf="prescriptionsFills.totalRecordExceptions==0">
             check_circle_outline
           </span>
-          <span class="material-icons warn-text-color status_icon" aria-hidden="true"
+          <span class="material-icons warn-text-color warnbg_color status_icon" aria-hidden="true"
             *ngIf="prescriptionsFills.totalRecordExceptions!=0">
-            warning_amber
+            error_outline
           </span>
         </div>
 
-        <div class="flex-col mt-2">
+        <div class="flex-col mt-1">
           <h5> Latest File Received: </h5>
           <h3>{{prescriptionsFills.lastFileReceived |date : 'shortDate'}}</h3>
         </div>
