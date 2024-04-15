@@ -13,6 +13,9 @@
     {"text": "10", "value": 10},
     {"text": "20", "value": 20}   
   ],
+  "azureCommunication": {
+    "connectionString": "endpoint=https://orhive-acs-dev.unitedstates.communication.azure.com/;accesskey=ZlSD7k3aUNmqOgUBWMsJNei/jZJlIVd1HzNJ9o6jmIh+Ul5BlwjUD9j2brMD1h4lzj9oRvvi500Q0OT8X4W6Aw=='"
+  },
   "snackbarAnimationDuration":"600",
   "uploadFileSizeLimit":"26214400",
   "instrumentationKey": "d208c057-65ff-4fa0-9e47-b4d35712daa4",

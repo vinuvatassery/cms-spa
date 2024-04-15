@@ -6,11 +6,13 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { DirectMessage } from '../entities/direct-message';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class DirectMessageDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
   loadDirectMessages(): Observable<DirectMessage[]> {
@@ -43,4 +45,15 @@ export class DirectMessageDataService {
       
     ]);
   }
+  getTokenCommunicationUserIdsAndThreadIdIfExist(clientId:string){
+  return this.http.get(
+    `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/Clients/${clientId}`,);
+  }
+
+  saveChatThreadDetails(payload:any){
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/chat-thread`, payload);
+    }
+  
 }
+
