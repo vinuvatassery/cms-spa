@@ -1,5 +1,5 @@
  
-<kendo-dialog-titlebar  (close)="onCloseSendEmailClicked()"> {{templateHeader}} </kendo-dialog-titlebar>
+<kendo-dialog-titlebar class ="template-header"  (close)="onCloseSendEmailClicked()"> {{templateHeader}} </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
       {{informationalText}}
@@ -19,7 +19,7 @@
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
-      <div *ngIf="isOpenDdlEmailDetails">
+      <div *ngIf="isOpenDdlEmailDetails" class="mt-2 p-0 flex-col">
         <div class="flex-col" *ngIf="notificationGroup === 'VENDOR_PROFILE'">
           <kendo-floatinglabel text="Mail Code">
             <kendo-dropdownlist

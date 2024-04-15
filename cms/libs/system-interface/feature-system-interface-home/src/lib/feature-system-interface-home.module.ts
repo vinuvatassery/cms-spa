@@ -15,7 +15,10 @@ const routes: Routes = [
     loadChildren: () =>
       import('@cms/system-interface/feature-dashboard').then(
         (m) => m.SystemInterfaceFeatureDashboardModule
-      )     
+      ),    
+      data: {
+        title: '',
+      },
   },
   {
     path: 'support',
