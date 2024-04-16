@@ -179,7 +179,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   }
 
 
-  
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -303,23 +303,23 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-     
-      if (this.mySelection.length < 1)
-        this.selectedGroup = this.gridDataResult.data[0];
-      else
-        this.selectedGroup = this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
+
+      this.selectedGroup =
+        (this.mySelection.length < 1 && this.gridDataResult?.data.length > 0)
+          ? this.gridDataResult?.data[0]
+          : (this.mySelection[0] === undefined || this.mySelection.length === 0)
+            ? this.gridDataResult?.data[0]
+            : this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
 
       this.selectedRowEvent.emit(this.selectedGroup);
       this.mySelection = [this.selectedGroup?.notificationGroupId];
-        
+
       this.gridSupportGroupDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isSupportGroupGridLoaderShow = false;
       }
-    }); 
-    //this.gridSupportGroupData$.subscribe((data) => { console.log(data) });
+    });
     this.isSupportGroupGridLoaderShow = false;
-
   }
   onEditGroupDetailsClicked(notificationGroup: any) {
     this.selectedSupportGroup = notificationGroup;
