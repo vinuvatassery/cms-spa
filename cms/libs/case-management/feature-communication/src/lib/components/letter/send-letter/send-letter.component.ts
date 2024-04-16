@@ -239,6 +239,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     letterRequestFormdata.append('selectedMailCode', this.mailingAddress?.mailCode ?? '');
     letterRequestFormdata.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
     letterRequestFormdata.append('documentTemplateId', this.documentTemplate?.documentTemplateId ?? '');
+    let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
+    letterRequestFormdata.append('templateTypeCode', templateTypeCode);
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorLetterData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.entityType);
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
         .subscribe({
