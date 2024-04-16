@@ -21,6 +21,7 @@ import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSn
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UserDataService } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'case-management-send-letter',
@@ -63,7 +64,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly contactFacade: ContactFacade,
     private readonly vendorContactFacade: VendorContactsFacade,
     private readonly userDataService: UserDataService,
-    private readonly router: Router) { }
+    private readonly router: Router, 
+    private readonly sanitizer: DomSanitizer) { }
 
   /** Public properties **/
 
@@ -113,6 +115,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   typeName!: string;
   vendorMailCodesubscription!: Subscription;
   userDataSubscription!: Subscription;
+
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.getLoggedInUserProfile();
@@ -324,7 +327,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (data: any) =>{
           if (data) {
-            this.currentLetterPreviewData = data;
+            this.currentLetterPreviewData = this.getSanitizedHtml(data);
             this.ref.detectChanges();
             if(requestType === CommunicationEvents.SendLetter){
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
@@ -339,7 +342,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         },
       });
   }
-
+  private getSanitizedHtml(currentEmailData: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+  }
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
       this.isContentMissing = true;
