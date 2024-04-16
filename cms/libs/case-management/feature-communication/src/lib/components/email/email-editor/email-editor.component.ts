@@ -42,6 +42,7 @@ export class EmailEditorComponent implements OnInit {
   @Input() notificationGroup!: string;
   @Input() variableName!: string;
   @Input() typeName!: string;
+  @Input() templateLoadType!: string;
   /** Output properties  **/
   @Output() cerEmailAttachments = new EventEmitter();
   @Output() editorValueChangeEvent = new EventEmitter();
