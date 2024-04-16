@@ -309,17 +309,17 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private generateText(letterData: any, requestType: CommunicationEvents){
-    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
+    //if(this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
       this.generateClientTextTemplate(letterData, requestType);
-    }else{
-    this.entityId = this.workflowFacade.clientId ?? 0;
-    this.clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
-    }
+    // }else{
+    // this.entityId = this.workflowFacade.clientId ?? 0;
+    // this.f = this.workflowFacade.clientCaseEligibilityId ?? '';
+    // }
   }
 
   private generateClientTextTemplate(letterData: any, requestType: CommunicationEvents){
     this.loaderService.show();
-    let formData = this.communicationFacade.preparePreviewModelData(letterData, this.entityType);
+    let formData = this.communicationFacade.preparePreviewModelData(letterData, this.entityType, this.selectedMailCode?.mailCode);
     this.communicationFacade.generateTextTemplate(this.entityId ?? '', this.clientCaseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
@@ -369,7 +369,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     let {templateTypeCode, eventGroupCode} = this.getApiTemplateTypeCode();
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, eventGroupCode, this.notificationGroup,this.entityId, this.entityType);
     formData.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
-
+    formData.append('mailCode', this.selectedMailCode?.mailCode ?? '');      
     this.communicationFacade.sendLetterToPrint(entityId, clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
@@ -443,17 +443,22 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterGenerated;
         eventGroupCode = EventGroupCode.CER;
         break;
-        case CommunicationEventTypeCode.ApplicationAuthorizationLetter || CommunicationEventTypeCode.ApplicationAuthorizationLetter:
+        case CommunicationEventTypeCode.ApplicationAuthorizationLetter:
         templateTypeCode = CommunicationEventTypeCode.ApplicationAndCERLetterSent;
+        eventGroupCode = EventGroupCode.Application;
         break;
         case CommunicationEventTypeCode.VendorLetter:
           templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
-          eventGroupCode = EventGroupCode.VendorProfile;
+          eventGroupCode = EventGroupCode.Financial;
           break;
         case CommunicationEventTypeCode.LetterTypeCode:
           templateTypeCode = CommunicationEventTypeCode.ClientLetterCreatedt;
           eventGroupCode = EventGroupCode.ClientProfile;
           break;
+          case CommunicationEventTypeCode.CerAuthorizationLetter:
+            templateTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
+            eventGroupCode = EventGroupCode.CER;
+            break;
     }
     return {templateTypeCode, eventGroupCode};
   }
@@ -647,6 +652,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.selectedMailCode = {
         'mailCode': event?.selectedMailCode,
       };
+      this.selectedTemplate.notificationDraftId = event.notificationDraftId;
     }
     else
     {
