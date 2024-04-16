@@ -47,7 +47,7 @@ export class DirectMessageDataService {
   }
   getTokenCommunicationUserIdsAndThreadIdIfExist(clientId:string){
   return this.http.get(
-    `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/Clients/${clientId}`,);
+    `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/clients/${clientId}`,);
   }
 
   saveChatThreadDetails(payload:any){

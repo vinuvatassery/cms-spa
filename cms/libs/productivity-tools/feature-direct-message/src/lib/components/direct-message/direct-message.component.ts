@@ -12,6 +12,8 @@ import { ChatClient, ChatThreadClient, ChatThreadItem, ChatThreadProperties, Sen
 import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ActivatedRoute } from '@angular/router';
+import { CaseFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'productivity-tools-direct-message',
   templateUrl: './direct-message.component.html',
@@ -28,26 +30,45 @@ export class DirectMessageComponent implements OnInit {
   sendMsg: any = { id: '', message: '', sender: '', isOwner: false };
   chatThreadClient: any
   groupedMessages :any
+  id!:any
+  eid!:any
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  clientName=""
   constructor(private directMessageFacade: DirectMessageFacade
     , private changeDetection : ChangeDetectorRef
     ,  public intl: IntlService
-    ,  private configurationProvider: ConfigurationProvider,) {
+    ,  private configurationProvider: ConfigurationProvider
+    , private route : ActivatedRoute
+    , private caseFacade : CaseFacade) {
 
   }
   ngOnInit(): void {
-    this.directMessageFacade.tokenCommunicationUserIdThreadId$.subscribe(res => {
-      console.log(res)
-      this.tokenCommunicationUserThreadDetails = res.clientResponse;
-      this.threadId = res.threadId
-      this.createChat()
-      if(this.threadId){
-      this.chatThreadClient = this.directMessageFacade.getChatThreadClient(this.threadId, this.chatClient)
 
-        this.getListMessages()
-      }
-    })
+    this.route.queryParamMap.subscribe((params :any) =>{
+      this.clientId = params.get('id')
+      this.eid = params.get('e_id')
+      if(this.id){
+        this.caseFacade.clientProfileData$.subscribe(cp =>{
+          this.clientName = cp?.firstName
+       })
+       this.caseFacade.loadClientProfileWithOutLoader(this.eid);
+       this.directMessageFacade.tokenCommunicationUserIdThreadId$.subscribe(res => {
+        console.log(res)
+        this.tokenCommunicationUserThreadDetails = res.clientResponse;
+        this.threadId = res.threadId
+        this.createChat()
+        if(this.threadId){
+        this.chatThreadClient = this.directMessageFacade.getChatThreadClient(this.threadId, this.chatClient)
+  
+          this.getListMessages()
+        }
+      })
     this.directMessageFacade.getTokenCommunicationUserIdsAndThreadIdIfExist(this.clientId)
+
+      }
+     })
+
+
   }
   /** Output properties  **/
   @Output() closeAction = new EventEmitter();
