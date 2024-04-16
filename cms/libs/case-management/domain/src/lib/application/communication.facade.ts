@@ -162,9 +162,10 @@ export class CommunicationFacade {
     return formData;
   }
 
-  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any,notificationGroup:any,entityId: any, entityType: any) {
+  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any,eventGroupCode: string, notificationGroup:any,entityId: any, entityType: any) {
     const formData = new FormData();
     formData.append('templateTypeCode', templateTypeCode ?? '');
+    formData.append('eventGroupCode', eventGroupCode ?? '');
     formData.append('entityTypeCode', notificationGroup ?? '');
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
     formData.append('typeCode', draftTemplate?.subtypeCode ?? '');
@@ -203,9 +204,10 @@ export class CommunicationFacade {
     return formData;
   }
 
-  createFormDataForEmail(data: {templateTypeCode:string, subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[]}) {
+  createFormDataForEmail(data: {templateTypeCode:string, eventGroupCode: string, subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[]}) {
     const formData = new FormData();
     formData.append('templateTypeCode', data?.templateTypeCode ?? '');
+    formData.append('eventGroupCode', data?.eventGroupCode ?? '');
     formData.append('requestSubject', data?.subject ?? '');
     formData.append('loginUserId', data?.userId ?? '');
     formData.append('clientCaseId', data?.caseId ?? '');
