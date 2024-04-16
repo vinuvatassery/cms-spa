@@ -41,8 +41,8 @@
           <p class="text-capital text-bold">Mailing Address</p>
           <span *ngIf="mailingAddress">
             <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>
-            <p *ngIf="mailingAddress?.address2 || mailingAddress?.city">{{ mailingAddress?.address2 }} </p>
-            <p *ngIf="mailingAddress?.state || mailingAddress?.city || mailingAddress?.zip">{{ mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
+            <p *ngIf="mailingAddress?.address2">{{ mailingAddress?.address2 }} </p>
+            <p *ngIf="mailingAddress?.city || mailingAddress?.state || mailingAddress?.zip">{{ mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
           </span>
         </div>
         <div class="flex-col">
