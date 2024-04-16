@@ -56,15 +56,7 @@ cardsRequestChart: any;
             gap:2,
             spacing: .25
           },
-          {
-            data: res.data,
-
-            type: 'area',
-            color: '#f9dcbb',
-            style: 'smooth',
-            gap:2,
-            spacing: .25
-          },
+   
         ],
       },
     }

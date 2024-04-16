@@ -58,7 +58,7 @@
         </ng-template>
       </kendo-grid-column>
 
-      <kendo-grid-column field="startDate" title="Process Date" [width]="180">
+      <kendo-grid-column field="startDate" title="Process Date" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a' }}
         </ng-template>
@@ -78,7 +78,7 @@
  </ng-container>
      
 
-      <kendo-grid-column field="status" title="Status" [width]="180">
+      <kendo-grid-column field="status" title="Status" [width]="160">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-dropdownlist [data]="statusArrayDesc" [value]="statusFilter"
             (valueChange)="dropdownFilterChange('status',$event, filterService)">

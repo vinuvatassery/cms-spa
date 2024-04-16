@@ -129,16 +129,11 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     this.reminderNotificationSnackbarService.snackbar$.subscribe({
       next: (res) => {
         if (res) {
-          const { timeDifferenceMinutes, dueDate , today, repeatTime } = this.setDueDateText(res);
-          if ((repeatTime && timeDifferenceMinutes <= 15 && dueDate == today)
-            || !repeatTime
-            || new Date(dueDate) < new Date(today)) {
             if (!this.signalrEventHandlerService.snackBarAlertIds.includes(res.payload?.alertExtraProperties?.AlertId)) {
               this.signalrEventHandlerService.snackBarAlertIds.push(res.payload.alertExtraProperties?.AlertId)
               this.showNotifications(res)
 
-            }
-          }
+            }   
         }
       },
 
@@ -160,19 +155,24 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
 
       const payload = {
         ...res.payload,
-        dueDateText: this.dueDateText
       }
 
       notificationRef.content.instance.snackBarMessage = payload
       this.signalrEventHandlerService.remindersCountSubject.next(this.signalrEventHandlerService.snackBarAlertIds.length)
       this.snoozeReminderHandler(notificationRef);
       this.dismissReminderHandler(notificationRef);
+      this.editReminderHandler(notificationRef);
       notificationRef.content.instance.hideSnackBar.subscribe(() =>
         notificationRef.hide()
       );
     }
   }
 
+  editReminderHandler(notificationRef :any){
+    notificationRef.content.instance.editReminder.subscribe((event:any)=>{
+      this.updateSnackBarCount(event,notificationRef)
+    })
+  }
   dismissReminderHandler(notificationRef:any){
     notificationRef.content.instance.dismissReminder.subscribe((event:any)=>{
       this.updateSnackBarCount(event,notificationRef)

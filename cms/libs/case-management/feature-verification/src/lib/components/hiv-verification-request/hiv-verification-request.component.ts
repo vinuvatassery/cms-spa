@@ -377,7 +377,6 @@ export class HivVerificationRequestComponent implements OnInit{
     this.verificationFacade.showLoader();
     const formData = new FormData();
     formData.append('verificationToEmail', this.hivVerificationForm.controls["providerEmailAddress"].value ?? '');
-    formData.append('clientCaseEligibilityId', this.clientCaseEligibilityId ?? '');
     formData.append('clientId', this?.clientId.toString() ?? '');
     formData.append('verificationMethodCode', this.hivVerificationForm.controls["providerOption"].value ?? '');
     formData.append('verificationTypeCode', VerificationTypeCode.HivVerificationForm ?? '');
@@ -405,7 +404,7 @@ export class HivVerificationRequestComponent implements OnInit{
 
 loadPendingEsignRequestInfo(){
   this.verificationFacade.showLoader();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', 'HIV_VERIFICATION_EMAIL')
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {

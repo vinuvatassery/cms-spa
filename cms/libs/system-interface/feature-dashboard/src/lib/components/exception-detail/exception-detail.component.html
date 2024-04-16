@@ -1,13 +1,13 @@
 <kendo-grid [resizable]="true" [navigable]="true" [loading]="gridLoaderShow" [data]="batchLogExceptionLists$ | async" >
-  <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
+  <kendo-grid-column field="errorCode" title="Error Code" [width]="120">
   </kendo-grid-column>
-  <kendo-grid-column field="rowNo" title="File Row Number" [width]="120">
+  <kendo-grid-column field="rowNo" title="File Row Number" [width]="100">
   </kendo-grid-column>
-  <kendo-grid-column *ngIf="(this.interfaceTypeCode=='MODA'&&this.processTypeCode=='TPA_INVOICE') || (this.interfaceTypeCode=='RAMSELL'&&this.processTypeCode=='PRESCRIPTION_FILL_DATA')" field="clientId" title="{{clientColumnName}}" [width]="120">
+  <kendo-grid-column *ngIf="(this.interfaceTypeCode=='MODA'&&this.processTypeCode=='TPA_INVOICE') || (this.interfaceTypeCode=='RAMSELL'&&this.processTypeCode=='PRESCRIPTION_FILL_DATA')" field="clientId" title="{{clientColumnName}}" [width]="100">
   </kendo-grid-column>
-  <kendo-grid-column  field="keyRecordId" title="{{keyIdColumnHeader}}" [width]="120">
+  <kendo-grid-column  field="keyRecordId" title="{{keyIdColumnHeader}}" [width]="100">
   </kendo-grid-column>
-  <kendo-grid-column field="description" title="Description" [width]="180">
+  <kendo-grid-column field="description" title="Description" [width]="400">
   </kendo-grid-column>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">

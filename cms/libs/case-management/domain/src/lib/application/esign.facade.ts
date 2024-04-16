@@ -37,8 +37,8 @@ export class EsignFacade {
     return this.esignDataService.updateEsignRequestTemplate(formData);
   }
 
-  getEsignRequestInfo(clientCaseEligibilityId: string,){
-    return this.esignDataService.getEsignRequest(clientCaseEligibilityId);
+  getEsignRequestInfo(clientCaseEligibilityId: string, flowName: string){
+    return this.esignDataService.getEsignRequest(clientCaseEligibilityId, flowName);
   }
 
 prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: any[]) {

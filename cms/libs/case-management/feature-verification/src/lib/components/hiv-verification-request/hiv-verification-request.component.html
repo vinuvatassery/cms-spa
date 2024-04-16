@@ -131,7 +131,7 @@
 </section>
 
 <!-- Show this after send a request -->
-<section>
+<section *ngIf="(providerValue$ | async) === 'HEALTHCARE_PROVIDER'">
   <div *ngIf="isSendRequest || isResendRequest || isSendEmailClicked">
     <div class="flex-row mt-3 align-items-center">
       <div class="flex-col">

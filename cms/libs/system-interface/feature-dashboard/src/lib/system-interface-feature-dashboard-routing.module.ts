@@ -10,14 +10,23 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: SystemInterfaceDashboardPageComponent,
+    data: {
+      title: 'Dashboard',
+    },
   },
   {
     path: 'web-service-files',
     component: WebServiceLogsPageComponent,
+    data: {
+      title: 'Web Service File Log',
+    },
   }, 
   {
     path: 'batch-files',
     component: BatchInterfaceLogsPageComponent,
+    data: {
+      title: 'Batch File',
+    },
   },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 ];

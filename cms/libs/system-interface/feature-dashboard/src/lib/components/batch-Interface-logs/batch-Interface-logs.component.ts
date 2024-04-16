@@ -83,7 +83,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   gridColumns: any = {
     startDate: 'Process Start Date',
     endDate: 'End Date',
-    fileReceiveDate: 'File Receive Date',
+    fileReceiveDate: 'File Received Date',
     interfaceTypeDesc: 'Interface',
     processTypeDesc: 'Process',
     status: 'Status',
@@ -137,6 +137,7 @@ closeallexpensions:any;
       take: this.defaultPageSize,
       sort: this.sort,
     };
+    this.defaultGridState()
     this.loadActivityListGrid();
     this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.lovFacade.getInterfaceExceptionLov();
@@ -220,7 +221,7 @@ closeallexpensions:any;
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
-    if(this.filter.length==0)
+    if(this.filter?.length==0)
     {
      this.clearlovs();
     }
@@ -330,6 +331,7 @@ closeallexpensions:any;
     this.filteredByColumnDesc = '';
    this.sortColumn ='Process Start Date';
    this.columnChangeDesc = 'Default Columns';
+   this.filter=undefined;
     this.loadDefaultActivityListGrid();
 
   }

@@ -4,11 +4,21 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'activity-log',
+    path: '',
     loadChildren: () =>
       import('@cms/system-interface/feature-dashboard').then(
         (m) => m.SystemInterfaceFeatureDashboardModule
       )     
+  },
+  {
+    path: 'activity-log',
+    loadChildren: () =>
+      import('@cms/system-interface/feature-dashboard').then(
+        (m) => m.SystemInterfaceFeatureDashboardModule
+      ),    
+      data: {
+        title: '',
+      },
   },
   {
     path: 'support',

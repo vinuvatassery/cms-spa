@@ -140,6 +140,7 @@ export * from './lib/enums/pca-assignment-report.enum';
 export * from './lib/enums/medicare-coverage-type.enum';
 export * from './lib/enums/cer-review-status-code.enum';
 export * from './lib/enums/medicare-coverage-type.enum';
+export * from './lib/enums/event-group-code.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
