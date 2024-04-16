@@ -30,7 +30,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() distributionGridLists$: any;
-
+  @Input() supportGroupGridDataRefinerValue: any;
   @Output() loadDistributionListEvent = new EventEmitter<any>();
   @Output() loadSupportGroupListEvent = new EventEmitter<any>();
 
@@ -326,9 +326,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
       notificationGroupId: this.selectedGroup.notificationGroupId,
     };
-    this.loadSupportGroupListEvent.emit(gridDataRefinerValue);
+    this.loadSupportGroupListEvent.emit(this.supportGroupGridDataRefinerValue);
   }
-
+  
   onOpenMemberDeleteClicked() { this.isMemberDeletePopupShow = true; }
   onCloseMemberDeleteClicked() { this.isMemberDeletePopupShow = false; }
   onOpenMemberDeactivateClicked() { this.isMemberDeactivatePopupShow = true; }

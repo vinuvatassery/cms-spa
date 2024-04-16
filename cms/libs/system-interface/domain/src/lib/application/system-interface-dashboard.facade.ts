@@ -224,10 +224,6 @@ export class SystemInterfaceDashboardFacade {
     this.loaderService.show()
     this.getClientDocumentsViewDownload(documentId).subscribe({
       next: (data: any) => {
-if(data.type=='text/plain')
-{
-  this.showHideSnackBar(SnackBarNotificationType.WARNING, 'File creation failed as part of the failed process.');
-}else{
   const fileUrl = window.URL.createObjectURL(data);
   const downloadLink = document.createElement('a');
   downloadLink.href = fileUrl;
@@ -235,7 +231,7 @@ if(data.type=='text/plain')
   downloadLink.click();
   this.loaderService.hide();
   window.URL.revokeObjectURL(fileUrl);
-}       
+     
       },
       error: (error: any) => {
         this.loaderService.hide();

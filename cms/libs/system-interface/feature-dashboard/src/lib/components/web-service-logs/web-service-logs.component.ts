@@ -143,9 +143,10 @@ defaultPageSize=20;
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
-    this.filter = "";
-    this.filteredBy="";
+   this.filteredBy="";
+    this.processFilter="";
     this.filteredByColumnDesc = '';
+    this.filter=undefined;
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
     this.state = {
@@ -222,15 +223,15 @@ defaultPageSize=20;
   ngOnDestroy(): void {
     if (this.lovsSubscription) {
       this.lovsSubscription.unsubscribe();
-    }
+   }
   }
 
   private initializeDropdownWithFirstValue() {
     this.lovsSubscription = this.lovsList$.subscribe((lovs: any) => {
       
-      this.interfaceFilterDataList = lovs;
+      this.interfaceFilterDataList = lovs.sort((x:any)=>x.sequenceNbr);
       if (lovs && lovs.length > 0) {
-        this.interfaceFilterDropDown = lovs[1];
+        this.interfaceFilterDropDown =  lovs.find((x:any)=>x.lovCode==this.interfaceType);         
         this.loadListGrid();
       }
     });
@@ -282,6 +283,7 @@ defaultPageSize=20;
       take:this.defaultPageSize,
       sort: this.sort,
     };
+    this.filter=undefined;
     this.loadListGrid();
 
   }

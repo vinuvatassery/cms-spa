@@ -21,15 +21,15 @@
 
         <div class="flex-col mt-1">
           <h5> Latest File Received: </h5>
-          <h3>{{prescriptionsFills.lastFileReceived |date : 'shortDate'}}</h3>
+          <h3>{{prescriptionsFills?.lastFileReceived??'' |date : 'shortDate'}}</h3>
         </div>
         <div class="flex-col flex-col-6 mt-2">
           <h5> Total Record Received: </h5>
-          <h3>{{prescriptionsFills.totalFiles}}</h3>
+         <h3>{{prescriptionsFills?.totalFiles?? 0}}</h3>
         </div>
         <div class="flex-col flex-col-6 mt-2">
           <h5> File Record Failures: </h5>
-          <h3>{{prescriptionsFills.totalRecordExceptions}}</h3>
+          <h3>{{prescriptionsFills?.totalRecordExceptions ??0}}</h3>
         </div>
 
 

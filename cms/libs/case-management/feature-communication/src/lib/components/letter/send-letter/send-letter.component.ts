@@ -12,7 +12,7 @@ import {
 
 
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode, WorkflowTypeCode, EntityTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode, WorkflowTypeCode, EntityTypeCode, EventGroupCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 
@@ -113,7 +113,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   selectedMailingCode!: string;
   variableName!: string;
   typeName!: string;
-  
+  vendorMailCodesubscription!: Subscription;
+  userDataSubscription!: Subscription;
+
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.getLoggedInUserProfile();
@@ -132,7 +134,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   addSubscriptions() {
-    this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+    this.vendorMailCodesubscription =  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
       this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
       if (this.selectedMailCodeId) {
         this.mailingAddress = this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == this.selectedMailCodeId);
@@ -158,11 +160,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.clientAddressSubscription.unsubscribe();
+    this.vendorMailCodesubscription?.unsubscribe();
+    this.userDataSubscription?.unsubscribe();
   }
 
   getLoggedInUserProfile(){
     this.loaderService.show();
-    this.userDataService.getProfile$.subscribe((profile:any)=>{
+    this.userDataSubscription = this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
         this.loginUserId= profile[0]?.loginUserId;
       }
@@ -365,8 +369,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
-    let templateTypeCode = this.getApiTemplateTypeCode();
-    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, this.notificationGroup,this.entityId, this.entityType);
+    let {templateTypeCode, eventGroupCode} = this.getApiTemplateTypeCode();
+    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, eventGroupCode, this.notificationGroup,this.entityId, this.entityType);
     formData.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
 
     this.communicationFacade.sendLetterToPrint(entityId, clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
@@ -410,48 +414,51 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
   }
 
-  getApiTemplateTypeCode(): string {
+  getApiTemplateTypeCode(): { templateTypeCode: string, eventGroupCode: string } {
     let templateTypeCode = '';
+    let eventGroupCode = '';
     switch (this.communicationLetterTypeCode) {
       case CommunicationEventTypeCode.PendingNoticeLetter:
         if(this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview){
           templateTypeCode = CommunicationEventTypeCode.CerPendingLetterGenerated;
+          eventGroupCode = EventGroupCode.CER;
         }
         else{
           templateTypeCode = CommunicationEventTypeCode.PendingLetterGenerated;
+          eventGroupCode = EventGroupCode.Application;
         }
         break;
       case CommunicationEventTypeCode.RejectionNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.RejectionLetterGenerated;
+        eventGroupCode = EventGroupCode.Application;
         break;
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
         if(this.triggerFrom === WorkflowTypeCode.CaseEligibilityReview){
           templateTypeCode = CommunicationEventTypeCode.CerApprovalLetterGenerated;
+          eventGroupCode = EventGroupCode.CER;
         }
         else{
           templateTypeCode = CommunicationEventTypeCode.ApprovalLetterGenerated;
+          eventGroupCode = EventGroupCode.Application;
         }
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         templateTypeCode = CommunicationEventTypeCode.DisenrollmentLetterGenerated;
+        eventGroupCode = EventGroupCode.CER;
         break;
         case CommunicationEventTypeCode.ApplicationAuthorizationLetter || CommunicationEventTypeCode.ApplicationAuthorizationLetter:
         templateTypeCode = CommunicationEventTypeCode.ApplicationAndCERLetterSent;
         break;
         case CommunicationEventTypeCode.VendorLetter:
           templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
+          eventGroupCode = EventGroupCode.VendorProfile;
           break;
         case CommunicationEventTypeCode.LetterTypeCode:
-          templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
+          templateTypeCode = CommunicationEventTypeCode.ClientLetterCreatedt;
+          eventGroupCode = EventGroupCode.ClientProfile;
           break;
     }
-    // if(templateData.subTypeCode === CommunicationEventTypeCode.LetterTypeCode){
-    //   templateTypeCode = CommunicationEventTypeCode.ClientANdVendorLetterSent;
-    // }
-    // if(templateData.subTypeCode === CommunicationEventTypeCode.VendorLetter){
-    //   templateTypeCode = CommunicationEventTypeCode.VendorLetterCreated;
-    // }
-    return templateTypeCode;
+    return {templateTypeCode, eventGroupCode};
   }
 
   openNewLetterClicked(){

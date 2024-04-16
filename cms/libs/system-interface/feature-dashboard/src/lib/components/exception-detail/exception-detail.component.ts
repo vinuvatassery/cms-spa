@@ -51,7 +51,7 @@ export class ExceptionDetailComponent implements OnInit, OnChanges {
         this.keyIdColumnHeader = 'Claim Number';
         break;
       case 'KAISER':
-        this.keyIdColumnHeader = 'Hrn';
+        this.keyIdColumnHeader = 'HRN';
         break;
       case 'OHP':
         this.keyIdColumnHeader = 'Recipient Id';

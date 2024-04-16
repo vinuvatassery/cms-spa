@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription, first } from 'rxjs';
 /** Internal Libraries **/
-import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, EsignStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, EsignStatusCode, WorkflowTypeCode, CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -321,7 +321,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
 
 loadPendingEsignRequestInfo(){
   this.verificationFacade.showLoader();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', 'HIV_VERIFICATION_EMAIL')
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {

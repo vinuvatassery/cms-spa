@@ -41,9 +41,9 @@ export class EsignDataService {
       );
     }
 
-    getEsignRequest(clientCaseEligibilityId: string){
+    getEsignRequest(clientCaseEligibilityId: string, flowName: string){
       return this.http.get(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientCaseEligibilityId}`,
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientCaseEligibilityId}?flowName=${flowName}`,
       );
     }
 }
