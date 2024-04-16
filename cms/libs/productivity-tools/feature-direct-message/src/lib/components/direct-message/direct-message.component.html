@@ -14,7 +14,7 @@
   <div class="direct-chat-wrapper">
     <div class="chat-view-container">
       <ng-container *ngFor="let item of groupedMessages | keyvalue">
-        <label class="center-date">{{item.key}}</label>
+        <label class="center-date">{{ item.key}}</label>
         <ng-container *ngFor="let value of getVlauesWithKey(item.value)">
         <div class="chat-grey chat-left-side" *ngIf="!value.isOwner">
           <p>{{value.message}}</p>

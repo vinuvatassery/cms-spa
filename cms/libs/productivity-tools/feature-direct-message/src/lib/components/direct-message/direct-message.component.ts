@@ -14,10 +14,12 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade } from '@cms/case-management/domain';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'productivity-tools-direct-message',
   templateUrl: './direct-message.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DatePipe]
 })
 export class DirectMessageComponent implements OnInit {
 
@@ -30,7 +32,6 @@ export class DirectMessageComponent implements OnInit {
   sendMsg: any = { id: '', message: '', sender: '', isOwner: false };
   chatThreadClient: any
   groupedMessages :any
-  id!:any
   eid!:any
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   clientName=""
@@ -39,15 +40,15 @@ export class DirectMessageComponent implements OnInit {
     ,  public intl: IntlService
     ,  private configurationProvider: ConfigurationProvider
     , private route : ActivatedRoute
-    , private caseFacade : CaseFacade) {
-
+    , private caseFacade : CaseFacade
+    , private datePipe : DatePipe) {
   }
   ngOnInit(): void {
 
     this.route.queryParamMap.subscribe((params :any) =>{
       this.clientId = params.get('id')
       this.eid = params.get('e_id')
-      if(this.id){
+      if(this.clientId){
         this.caseFacade.clientProfileData$.subscribe(cp =>{
           this.clientName = cp?.firstName
        })
@@ -92,6 +93,74 @@ export class DirectMessageComponent implements OnInit {
   onCloseDirectMessageClicked() {
     this.closeAction.emit();
     this.isShownDirectMessage = !this.isShownDirectMessage;
+  }
+
+  async setupHandlers() {
+    this.getListMessages();
+    await this.chatClient.startRealtimeNotifications();
+    this.chatClient.on("chatMessageReceived", ((state: any) => {
+      this.addMessage(state);
+    }).bind(this));
+
+    this.chatClient.on("chatMessageEdited", ((state: any) => {
+      this.getListMessages();
+    }).bind(this));
+    this.chatClient.on("chatMessageDeleted", ((state: any) => {
+      this.getListMessages();
+    }).bind(this));
+    this.chatClient.on("typingIndicatorReceived", ((state: any) => {
+      console.log('TypingIndicatorReceived: ' + state.senderDisplayName)
+      console.log('CommunicationUser: ' + this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,)
+      // this.getListMessages();
+    }).bind(this));
+    this.chatClient.on("readReceiptReceived", ((state: any) => {
+      this.getListMessages();
+    }).bind(this));
+    this.chatClient.on("chatThreadCreated", ((state: any) => {
+      this.getListMessages();
+    }).bind(this));
+    this.chatClient.on("chatThreadDeleted", ((state: any) => {
+      this.getListMessages();
+    }).bind(this));
+    this.chatClient.on("chatThreadPropertiesUpdated", ((state: any) => {
+      this.getListMessages();
+    }).bind(this));
+    this.chatClient.on("participantsAdded", ((state: any) => {
+      this.getListMessages();
+    }).bind(this));
+    this.chatClient.on("participantsRemoved", ((state: any) => {
+      this.getListMessages();
+    }).bind(this));
+  }
+
+  addMessage(data: any) {
+    console.log(data);
+
+    if (!this.messages.some(x => x.id == data.id)) {
+      let msg = undefined;
+      if(this.checkJson(data.message)) {
+        let parsed = JSON.parse(data.message);
+        msg = {
+          id: data.id,
+          sender: data.senderDisplayName,
+          message: parsed.message,
+          isOwner: data.sender.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
+          createdOn: data.createdOn,
+          image: parsed.attachments[0].url.split('/').pop()
+        };
+      }
+      else {
+        msg = {
+          id: data.id,
+          sender: data.senderDisplayName,
+          message: data.message,
+          isOwner: data.sender.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
+          createdOn: data.createdOn,
+      };
+    }
+
+      this.messages.push(msg);
+    }
   }
 
   async createChat() {
@@ -202,6 +271,7 @@ export class DirectMessageComponent implements OnInit {
               isOwner: message.sender?.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
+              pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
               image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined 
             };
           }
@@ -213,6 +283,7 @@ export class DirectMessageComponent implements OnInit {
               isOwner: message.sender.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
+              pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
               image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined 
             };
             this.messages.push(msg);
@@ -226,7 +297,8 @@ export class DirectMessageComponent implements OnInit {
               message: message.content?.message,
               isOwner: message.sender?.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
-              formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat)
+              formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
+              pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
             };
           }
           else {
@@ -236,7 +308,8 @@ export class DirectMessageComponent implements OnInit {
               message: message.content.message,
               isOwner: message.sender.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
-              formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat)
+              formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
+              pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
             };
             this.messages.push(msg);
           }
@@ -246,7 +319,7 @@ export class DirectMessageComponent implements OnInit {
     this.messages = this.messages.sort((a:any, b:any) => a.createdOn!.getTime() - b.createdOn!.getTime());
     this.changeDetection.detectChanges();
     console.log(this.messages)
-     this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.formattedCreatedOn)
+     this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
     console.log(this.groupedMessages)
 
   }
@@ -269,6 +342,8 @@ export class DirectMessageComponent implements OnInit {
     return map;
 }
 
-
+getKey(item:any){
+  return item as unknown as any
+}
 
 }
