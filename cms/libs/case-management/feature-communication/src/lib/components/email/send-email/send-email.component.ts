@@ -22,6 +22,7 @@ import { UserDataService } from '@cms/system-config/domain';
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'case-management-send-email',
@@ -126,6 +127,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   variableName!: string;
   typeName!: string;
   subjectMax = 200;
+
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -145,7 +147,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly esignFacade: EsignFacade,
     private dialogService: DialogService,
     private readonly router: Router,
-    private readonly vendorContactFacade: VendorContactsFacade) { }
+    private readonly vendorContactFacade: VendorContactsFacade,
+    private readonly sanitizer: DomSanitizer) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -863,8 +866,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.currentEmailData = data;
-            this.emailContentValue = this.currentEmailData;
+            this.currentEmailData =  data;
+            this.emailContentValue =  this.getSanitizedHtml(this.currentEmailData);;
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -876,7 +879,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         },
       });
   }
-
+  private getSanitizedHtml(currentEmailData: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+  }
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
     this.isSaveForLater = true;
