@@ -210,6 +210,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.showToEmailLoader = false;
       this.ref.detectChanges();
     });
+    if(this.selectedToEmails){
+      this.isToEmailMissing = false;
+    }
     this.isMailCodeMissing = false;
     this.isFormValid = true;
   }
@@ -430,6 +433,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
     emailData.templateTypeCode = templateTypeCode;
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
+    emailFormData.append('description', this.emailSubject ?? '');
     emailFormData.append('vendorAddressId', this.selectedMailCode?.vendorAddressId ?? '');
     emailFormData.append('selectedMailCode', this.selectedMailCode?.mailCode ?? '');
     this.communicationFacade.saveClientAndVendorNotificationForLater(emailFormData)
@@ -481,35 +485,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.selectedTemplate.templateContent = this.updatedTemplateContent;
-      if (this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0) {
-        this.isToEmailMissing = true;
-        this.isFormValid = false;
-        this.onSendEmailDailougeConfirmationClicked();
-      }
-      if (this.emailSubject === undefined || this.emailSubject === '') {
-        this.isEmailSubjectMissing = true;
-        this.isFormValid = false;
-        this.onSendEmailDailougeConfirmationClicked();
-      }
-      if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>') {
-        this.isContentMissing = true;
-        this.isFormValid = false;
-        this.onCloseSaveForLaterClicked();
-      }
-      if (this.notificationGroup === ScreenType.VendorProfile) {
-        if (this.selectedMailCode === undefined || this.selectedMailCode === '') {
-          this.isMailCodeMissing = true;
-          this.isFormValid = false;
-          this.onCloseSaveForLaterClicked();
-        }
-      }
-      if (this.isFormValid) {
         if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail) {
           this.initiateAdobeEsignProcess(this.selectedTemplate);
         } else {
           this.initiateSendEmailProcess(this.selectedTemplate);
         }
-      }
     }
   }
 
@@ -561,6 +541,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
     const emailData = this.getEmailPayload(selectedTemplate, templateTypeCode, eventGroupCode);
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
+    emailFormData.append('description', this.emailSubject ?? selectedTemplate.description);
+    emailFormData.append('mailCode', this.selectedMailCode?.mailCode ?? '');  
     this.communicationFacade.initiateSendEmailRequest(emailFormData)
       .subscribe({
         next: (data: any) => {
@@ -649,9 +631,34 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onSendEmailConfirmationClicked() {
+    this.selectedTemplate.templateContent = this.updatedTemplateContent;
+    if (this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0) {
+      this.isToEmailMissing = true;
+      this.isFormValid = false;
+      this.onSendEmailDailougeConfirmationClicked();
+    }
+    if (this.emailSubject === undefined || this.emailSubject === '') {
+      this.isEmailSubjectMissing = true;
+      this.isFormValid = false;
+      this.onSendEmailDailougeConfirmationClicked();
+    }
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>') {
+      this.isContentMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
+    if (this.notificationGroup === ScreenType.VendorProfile) {
+      if (this.selectedMailCode === undefined || this.selectedMailCode === '') {
+        this.isMailCodeMissing = true;
+        this.isFormValid = false;
+        this.onCloseSaveForLaterClicked();
+      }
+    }
+    if (this.isFormValid) {
     this.isOpenSendEmailClicked = true;
     this.isShowPreviewEmailPopupClicked = false;
     this.isShowSendEmailConfirmationPopupClicked = true;
+    }
   }
 
   onCloseSendEmailClicked() {
