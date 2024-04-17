@@ -1,0 +1,37 @@
+ 
+
+  <kendo-dialog-titlebar  (close)="onUploadDocumentsClosed()"> Document's {{uploadDocumentTypeDetails?.text}}   </kendo-dialog-titlebar>
+ <section class="k-dialog-body newcase">
+      <p>Select file to upload a document</p>
+      <div *ngIf="uploadDocumentTypeDetails?.id === 'from_System'">
+
+      </div>
+      <div *ngIf="uploadDocumentTypeDetails?.id === 'from_Computer'">
+
+      </div>
+      <div *ngIf="uploadDocumentTypeDetails?.id === 'from_Client'">
+
+      </div>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button
+            aria-label="Cancel"
+            kendoButton
+            look="outline"
+            (click)="onUploadDocumentsClosed()"
+          >
+            Cancel
+          </button>
+          <button
+            aria-label="Upload"
+            kendoButton
+            [primary]="true"
+           
+          >
+            Upload
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>

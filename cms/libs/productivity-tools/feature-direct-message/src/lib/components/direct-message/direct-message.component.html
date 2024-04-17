@@ -93,7 +93,7 @@
           <button  kendoButton themeColor="primary" [toggleable]="true" aria-label="Format" fillMode="flat" title="Format" (click)="messageToolBarShow = !messageToolBarShow">
             <span class="material-icons " aria-hidden="true">    format_color_text    </span>
           </button>
-          <kendo-dropdownbutton   [data]="ListItemModel" themeColor="primary"  aria-label="Attach a File" title="Attach a File"  fillMode="flat">
+          <kendo-dropdownbutton   [data]="ListItemModel" themeColor="primary"  aria-label="Attach a File" title="Attach a File"  fillMode="flat" (itemClick)="onUploadDocumentsOpenClicked(UploadDocumentInDirectMessage, $event)">
            
               <span class="material-icons" aria-hidden="true">    attach_file   </span> 
           </kendo-dropdownbutton>
@@ -111,3 +111,8 @@
     </div>
   </div>
 </div>
+
+<ng-template #UploadDocumentInDirectMessage>
+ 
+ <productivity-tools-direct-message-upload-docs (uploadDocumentsClosedDialog)="onUploadDocumentsClosed($event)"  [uploadDocumentTypeDetails]="uploadDocumentTypeDetails"></productivity-tools-direct-message-upload-docs>
+</ng-template>
