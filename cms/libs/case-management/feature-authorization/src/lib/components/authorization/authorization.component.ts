@@ -126,7 +126,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   getNotificationTypeCode(sendEmailClick: boolean) {
     if(this.isCerForm){
       if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
-        this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        this.templateLoadType = CommunicationEventTypeCode.CerAuthorizationEmail;
         this.communicationEmailTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
         this.templateHeader = 'CER Authorization Email';
         this.emailSubject = this.templateHeader;
@@ -136,7 +136,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
       }else{
-        this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        this.templateLoadType = CommunicationEventTypeCode.CerAuthorizationLetter;
         this.communicationLetterTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
         this.templateHeader = 'CER Authorization Letter';
         this.emailSubject = this.templateHeader;
@@ -148,24 +148,24 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       }
     }else{
       if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
-        this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        this.templateLoadType = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
         this.communicationEmailTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
         this.saveForLaterHeadterText = "Email Draft Saved";
-        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+        this.saveForLaterModelText="You must send the  Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
       }else{
-        this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        this.templateLoadType = CommunicationEventTypeCode.ApplicationAuthorizationLetter;
         this.communicationLetterTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetter;
         this.templateHeader = 'Application Authorization Letter';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
         this.saveForLaterHeadterText = "Letter Draft Saved";
-        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+        this.saveForLaterModelText="You must send the  Authorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send Letter to Print?';
         this.confirmationModelText="This action cannot be undone.";
       }

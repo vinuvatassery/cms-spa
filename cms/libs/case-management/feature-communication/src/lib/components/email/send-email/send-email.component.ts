@@ -427,6 +427,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
     const emailData = this.getEmailPayload(draftTemplate);
+    let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
+    emailData.templateTypeCode = templateTypeCode;
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     emailFormData.append('vendorAddressId', this.selectedMailCode?.vendorAddressId ?? '');
     emailFormData.append('selectedMailCode', this.selectedMailCode?.mailCode ?? '');
@@ -628,12 +630,20 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         break;
       case CommunicationEventTypeCode.VendorEmail:
         templateTypeCode = CommunicationEventTypeCode.VendorEmailSent;
-        eventGroupCode = EventGroupCode.VendorProfile;
+        eventGroupCode = EventGroupCode.Financial;
         break;
       case 'CLIENT_EMAIL':
         templateTypeCode = CommunicationEventTypeCode.ClientEmailSent;
         eventGroupCode = EventGroupCode.ClientProfile;
         break;
+        case CommunicationEventTypeCode.ApplicationAuthorizationEmail:
+          templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
+          eventGroupCode = EventGroupCode.Application;
+          break;
+        case CommunicationEventTypeCode.CerAuthorizationEmail:
+          templateTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+          eventGroupCode = EventGroupCode.CER;
+          break;
     }
     return { templateTypeCode, eventGroupCode };
   }
@@ -750,7 +760,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isShowToEmailLoader$.next(true);
       this.isOpenDdlEmailDetails = true;
       this.selectedMailCodeId = event.vendorAddressId;
-      // this.loadMailingAddress();
       this.selectedToEmails = [];
       this.selectedToEmails = event.to;
       this.emails = this.selectedToEmails;
@@ -773,6 +782,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.selectedMailCode = {
         'mailCode': event?.selectedMailCode,
       };
+      this.selectedTemplate.notificationDraftId = event.notificationDraftId;
       this.ref.detectChanges();
     }
     else {
@@ -876,7 +886,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private generateClientTextTemplate(emailData: any, requestType: string) {
     this.loaderService.show();
-    let formData = this.communicationFacade.preparePreviewModelData(emailData, this.entityType);
+    let formData = this.communicationFacade.preparePreviewModelData(emailData, this.entityType, this.selectedMailCode?.mailCode);
     this.communicationFacade.generateTextTemplate(this.entityId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType ?? '')
       .subscribe({
         next: (data: any) => {

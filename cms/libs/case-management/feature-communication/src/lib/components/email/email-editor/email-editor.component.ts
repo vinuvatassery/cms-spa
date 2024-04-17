@@ -42,6 +42,7 @@ export class EmailEditorComponent implements OnInit {
   @Input() notificationGroup!: string;
   @Input() variableName!: string;
   @Input() typeName!: string;
+  @Input() templateLoadType!: string;
   /** Output properties  **/
   @Output() cerEmailAttachments = new EventEmitter();
   @Output() editorValueChangeEvent = new EventEmitter();
@@ -70,7 +71,6 @@ export class EmailEditorComponent implements OnInit {
   cerFormPreviewData:any;
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public uploadRemoveUrl = 'removeUrl';
-  stringValues: string[] = ['MyFullName', 'MyJobTitle', 'MyPhone', 'MyEmail'];
   public editorUploadOptions = [
     {
       buttonType:"btn-h-primary",
@@ -282,14 +282,12 @@ export class EmailEditorComponent implements OnInit {
   }
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {
-    if(item === 'MySignature'){
-      this.stringValues.forEach(value => {
-        editor.exec('insertText', { text: '{{' +value + '}}' });
-      });
+    if(item === 'MailCode' || item === 'MySignature'){
+      editor.exec('insertText', { text: '{{{' +item+ '}}}' });
     }else{
-    editor.exec('insertText', { text: '{{' +item + '}}' });
-    editor.value = editor.value.replace(/#CURSOR#/, item);
+      editor.exec('insertText', { text: '{{' +item + '}}' });
     }
+    editor.value = editor.value.replace(/#CURSOR#/, item);
     this.onSearchClosed();
   }
 

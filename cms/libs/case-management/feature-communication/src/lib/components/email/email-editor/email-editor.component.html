@@ -197,7 +197,7 @@
         kendoEditorInsertImageButton
         aria-label="insert image"
       ></kendo-toolbar-button>
-      <kendo-toolbar-buttongroup>
+      <kendo-toolbar-buttongroup *ngIf="templateLoadType !== 'LETTER'">
         <kendo-toolbar-button
           kendoEditorCreateLinkButton
         ></kendo-toolbar-button>

@@ -10,18 +10,18 @@
         <div class="flex-col mt-2">
 
           <span class="material-icons green-text-color greenbg_color status_icon" aria-hidden="true"
-            *ngIf="prescriptionsFills.totalRecordExceptions==0">
+            *ngIf="prescriptionsFills.status!='FAILED'">
             check_circle_outline
           </span>
           <span class="material-icons warn-text-color warnbg_color status_icon" aria-hidden="true"
-            *ngIf="prescriptionsFills.totalRecordExceptions!=0">
+            *ngIf="prescriptionsFills.status=='FAILED'">
             error_outline
           </span>
         </div>
 
         <div class="flex-col mt-1">
           <h5> Latest File Received: </h5>
-          <h3>{{prescriptionsFills?.lastFileReceived??'' |date : 'shortDate'}}</h3>
+          <h3>{{prescriptionsFills?.lastFileReceived??'' | date: 'MM/dd/YYYY hh:mm:ss a'}}</h3>
         </div>
         <div class="flex-col flex-col-6 mt-2">
           <h5> Total Record Received: </h5>

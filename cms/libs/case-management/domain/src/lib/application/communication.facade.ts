@@ -150,7 +150,7 @@ export class CommunicationFacade {
     return formData;
   }
 
-  preparePreviewModelData(emailData: any, entityType: string) {
+  preparePreviewModelData(emailData: any, entityType: string, mailCode: string) {
     const formData = new FormData();
     formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
     formData.append('typeCode', emailData?.subtypeCode);
@@ -158,7 +158,8 @@ export class CommunicationFacade {
     formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
     formData.append('description', emailData?.description ?? '');
     formData.append('templateContent', emailData?.templateContent ?? '');
-    formData.append('entityType', entityType);
+    formData.append('entityType', entityType ?? '');
+    formData.append('mailCode', mailCode ?? '');
     return formData;
   }
 
