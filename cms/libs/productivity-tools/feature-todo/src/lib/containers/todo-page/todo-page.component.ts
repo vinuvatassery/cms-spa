@@ -142,8 +142,7 @@ onDeleteAlertClicked(event:any){
       });
     }
 
-  getSessionInfoByEligibilityId(clientCaseEligibilityId:any){
-    ;
+  getSessionInfoByEligibilityId(clientCaseEligibilityId:any){   
     this.loaderService.show();
           this.caseFacade.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId).subscribe({
             next: (response: any) => {
@@ -164,4 +163,8 @@ onDeleteAlertClicked(event:any){
             }
           })
   }
+
+
+
+ 
 }

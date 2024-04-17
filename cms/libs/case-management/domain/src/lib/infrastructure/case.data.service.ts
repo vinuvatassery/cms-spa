@@ -60,6 +60,13 @@ export class CaseDataService {
 
   }
 
+  loadClientEligibility(clientId: number) {
+    return this.http.get<ClientProfileCase>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}`
+    );
+
+  }
+
   loadClientImportantInfo(clientCaseId: string) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientCaseId}/info`
