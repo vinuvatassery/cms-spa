@@ -292,7 +292,7 @@ section {
   color:  var(--hive-error-palette-400);
 }
 .warn-text-color{
-  color:  var(--hive-warn-palette-300);
+  color:  var(--hive-warn-palette-500);
 }
 .break-word{
   word-wrap: break-word;
@@ -301,4 +301,7 @@ section {
 // Watermark Disable 
 div[kendowatermarkoverlay]{
   display: none;
+}
+.text-justify{
+  text-align: justify;
 }

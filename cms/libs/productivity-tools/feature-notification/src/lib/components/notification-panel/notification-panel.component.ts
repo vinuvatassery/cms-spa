@@ -224,7 +224,7 @@ export class NotificationPanelComponent implements OnInit {
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
     this.newReminderDetailsDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     });
   }
 

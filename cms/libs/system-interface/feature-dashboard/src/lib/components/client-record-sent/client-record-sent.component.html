@@ -7,16 +7,14 @@
     <div class="interface-chart-cards">
       <h3 class="mb-1"></h3>
       <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
-      <kendo-chart  *ngIf="clientRecordSendChart" [series]="clientRecordSendChart?.chartData?.series"
+      <kendo-chart class="dash_chart" *ngIf="clientRecordSendChart" [series]="clientRecordSendChart?.chartData?.series"
         [legend]="clientRecordSendChart?.chartData?.legend" [title]="clientRecordSendChart?.chartData?.title"
         [categoryAxis]="clientRecordSendChart?.chartData?.categoryAxis"
         [valueAxis]="clientRecordSendChart?.chartData?.valueAxis"
         [tooltip]="clientRecordSendChart?.chartData?.tooltip">
       </kendo-chart>
       <div class="text-center pt-3" *ngIf="!clientRecordSendChart&&!isloader">
-        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-        </div>
-        <p>There is no data to display.</p>
+        <common-grid-no-records></common-grid-no-records>
       </div>
     </div>
  

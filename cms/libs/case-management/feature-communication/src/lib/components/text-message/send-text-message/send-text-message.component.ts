@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, CommunicationFacade, NotificationTemplateCategoryCode, SmsNotification, CommunicationEventTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, CommunicationFacade, SmsNotification, CommunicationEventTypeCode, EntityTypeCode } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -37,6 +37,12 @@ export class SendTextMessageComponent implements OnInit {
   @Input() templateLoadType!: string;
   @Input() informationalText!:string
   @Input() templateHeader !:string;
+  @Input() confirmPopupHeader!:string;
+  @Input() confirmationModelText!:string;
+  @Input() saveForLaterHeadterText!:string;
+  @Input() saveForLaterModelText!:string;
+  @Input() triggerFrom !: string;
+  @Input() entityType!:any;
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
@@ -63,7 +69,8 @@ export class SendTextMessageComponent implements OnInit {
   currentSmsData:any;
   selectedSmsTemplate!: any;
   loginUserId!: any;
-
+  isRecipientMissing:boolean = false;
+  isFormValid:boolean = true;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -91,7 +98,7 @@ export class SendTextMessageComponent implements OnInit {
 
   loadClientAndVendorDraftSmsTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationSmsTypeCode)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId,this.entityType,this.templateLoadType, this.communicationSmsTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {
@@ -158,11 +165,14 @@ export class SendTextMessageComponent implements OnInit {
 
   private loadSmsTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadNotificationTemplates(this.notificationGroup, NotificationTemplateCategoryCode.SMS) // define an enum for category
+    this.communicationFacade.loadNotificationTemplates(this.notificationGroup, this.templateLoadType, this.communicationSmsTypeCode ?? '') // define an enum for category
       .subscribe({
         next: (data: any) => {
           if (data) {
             this.ddlTemplates = data;
+            const defaultOption = this.ddlTemplates.find((option: any) => option.description === 'Draft Custom Sms');
+            const otherOptions = this.ddlTemplates.filter((option: any) => option.description !== 'Draft Custom Sms');
+            this.sortDropdownValues(defaultOption, otherOptions);
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -173,6 +183,29 @@ export class SendTextMessageComponent implements OnInit {
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
         },
       });
+  }
+
+  sortDropdownValues(defaultOption: any, otherOptions: any) {
+    // Sort the rest alphabetically and numerically
+    const sortedOptions = otherOptions.sort((a: any, b: any) => {
+      const isANumeric = !isNaN(Number(a.description.charAt(0))); // Check if option a starts with a number
+      const isBNumeric = !isNaN(Number(b.description.charAt(0))); // Check if option b starts with a number
+
+      // If both are alphabetic or both are numeric, sort them using localeCompare
+      if ((isANumeric && isBNumeric) || (!isANumeric && !isBNumeric)) {
+        return a.description?.localeCompare(b.description);
+      }
+      // If option a starts with a number and option b does not, put option b first
+      else if (isANumeric && !isBNumeric) {
+        return 1;
+      }
+      // If option b starts with a number and option a does not, put option a first
+      else {
+        return -1;
+      }
+    });
+    // Combine lists
+    this.ddlTemplates = [defaultOption, ...sortedOptions];
   }
 
   private updateSendMessageFlag() {
@@ -214,6 +247,12 @@ export class SendTextMessageComponent implements OnInit {
   }
 
   onSendMessagesClick() {
+    if(this.messageRecipient === undefined || this.messageRecipient === '' || this.messageRecipient?.length === 0){
+      this.isRecipientMissing = true;
+      this.isFormValid = false;
+      this.onCloseSendMessageConfirmClicked();
+    }
+    if(this.isFormValid){
     const sms: SmsNotification = {
       templateId: this.documentTemplate?.documentTemplateId ?? this.selectedSmsTemplate.notifcationDraftId,
       entity: this.notificationGroup,
@@ -224,6 +263,7 @@ export class SendTextMessageComponent implements OnInit {
       typeCode: CommunicationEventTypeCode.ClientSMS
     };
     this.sendSms(sms);
+  }
   }
 
   private sendSms(sms: SmsNotification) {
@@ -248,10 +288,17 @@ export class SendTextMessageComponent implements OnInit {
   }
 
   onSaveSmsForLaterClicked(){
+    if(this.messageRecipient === undefined || this.messageRecipient === '' || this.messageRecipient?.length === 0){
+      this.isRecipientMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
+    if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = true;
     this.smsEditorValueEvent.emit(this.currentSmsData);
     this.selectedSmsTemplate.messages = this.textMessageEditor.messages;
     this.saveClientAndVendorNotificationForLater(this.selectedSmsTemplate);
+    }
   }
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
@@ -376,5 +423,13 @@ export class SendTextMessageComponent implements OnInit {
       }
     })
     this.loaderService.hide();
+  }
+
+  handleRecipientChanged(recipient: any) {
+    this.messageRecipient = recipient;
+    if(this.messageRecipient){
+      this.isRecipientMissing = false;
+      this.isFormValid = true;
+    }
   }
 }

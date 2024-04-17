@@ -25,7 +25,6 @@ import {
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
-  ReminderSnackBarNotificationType,
   DocumentFacade,
 } from '@cms/shared/util-core';
 import {

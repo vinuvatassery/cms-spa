@@ -52,6 +52,7 @@ export class ReminderDetailComponent implements OnInit {
 @Input() isDelete = false;
 @Input() alertId!:any
 @Input() getTodo$!:any
+@Input() isFromReminderSnacks = false
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$
   entityTypeCode =''
   entityId = ''
@@ -84,7 +85,7 @@ export class ReminderDetailComponent implements OnInit {
       this.onGetTodoItem.emit(this.alertId);
     }
 
-   if(!this.isFromNotificationPanel){
+   if(!this.isFromNotificationPanel && !this.isFromReminderSnacks){
     if(this.router.url.includes('vendors')){
       const vid = this.route.snapshot.queryParamMap.get('v_id')
       const tabcode = this.route.snapshot.queryParamMap.get('tab_code')
@@ -142,7 +143,7 @@ export class ReminderDetailComponent implements OnInit {
       vendorId :[null],
       clientId :[null],
       addToOutlookCalender: [false],
-      deleteFromOutlookCalender :[true]
+      deleteFromOutlookCalender :[false]
     });
    if(this.isDelete || this.isEdit){
    this.getTodo$.subscribe((res:any) =>{
@@ -150,7 +151,8 @@ export class ReminderDetailComponent implements OnInit {
       const repeatTime = res.repeatTime?.split(':')
       this.clientReminderForm.patchValue({
         description: res.alertDesc,
-        addToOutlookCalender: res.addToOutlookFlag =="Y",
+        addToOutlookCalender: res.addToOutlookFlag ==="Y",
+        deleteFromOutlookCalender : res.addToOutlookFlag === "Y",
         time : repeatTime? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), repeatTime[0], repeatTime[1]) : null
       })
     }
@@ -336,14 +338,19 @@ export class ReminderDetailComponent implements OnInit {
   }
   onLinkToChange(event:any){
     if(event == 'CLIENT'){
+      this.clientReminderForm.controls['vendorId'].reset()
       this.clientReminderForm.controls['clientId'].enable()
   this.showClientSearch = true;
   this.showVendorSearch = false;
   this.placeholderText= this.clientPlaceHolderText
+ 
     }else{
+    this.clientReminderForm.controls['clientId'].reset()
+    this.clientReminderForm.controls['vendorId'].reset()
     this.clientReminderForm.controls['vendorId'].enable()
       this.showClientSearch = false;
       this.showVendorSearch = true;
+  
     this.getPlaceHolderText(event);
     }
   }

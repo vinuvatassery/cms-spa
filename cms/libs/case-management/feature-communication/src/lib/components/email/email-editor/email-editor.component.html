@@ -67,7 +67,7 @@
       <div class="variable-search-block">
         <div class="input-search mat-form-no-b-space">
           <div  class="medium-input-form sms-variable-search_input"  >
-            <kendo-textbox aria-label="input a variable"  placeholder="Search" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+            <kendo-textbox aria-label="input a variable"  placeholder="Search" [fillMode]="formUiStyle.inputFillMode" (valueChange)="onSearchChange($event)">   </kendo-textbox>
           </div>
         </div>
         <button
@@ -87,13 +87,13 @@
       </div>
       <div class="var-list-block">
         <section>
-          <h5>Client Variables</h5>
+          <h5>{{variableName}} Variables</h5>
           <ul
             class="var-list-item"
             aria-label="client variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CLIENT_VARIABLE'" aria-label="client variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode === typeName" aria-label="client variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
         <section>
@@ -103,7 +103,7 @@
             aria-label="my variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode ==='CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
         <section>
@@ -126,6 +126,7 @@
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   [entityId]="clientId"
   (cerEmailAttachments)="cerEmailAttachmentEvent($event)"
+  (contentValidateEvent)="contentValidateHandler($event)"
 ></case-management-send-email>
     <kendo-toolbar>
       <kendo-toolbar-buttongroup>
@@ -173,7 +174,7 @@
           aria-label="align justify"
         ></kendo-toolbar-button>
       </kendo-toolbar-buttongroup>
-
+      <kendo-toolbar-button kendoEditorViewSourceButton></kendo-toolbar-button>
       <kendo-toolbar-buttongroup>
         <kendo-toolbar-button
           kendoEditorInsertUnorderedListButton
@@ -196,11 +197,12 @@
         kendoEditorInsertImageButton
         aria-label="insert image"
       ></kendo-toolbar-button>
-      <kendo-toolbar-buttongroup>
+      <kendo-toolbar-buttongroup *ngIf="templateLoadType !== 'LETTER'">
         <kendo-toolbar-button
           kendoEditorCreateLinkButton
         ></kendo-toolbar-button>
         <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
+       
       </kendo-toolbar-buttongroup>
       <kendo-toolbar-dropdownbutton
       aria-label="attachment"
@@ -213,6 +215,9 @@
       </kendo-toolbar-dropdownbutton>
     </kendo-toolbar>
   </kendo-editor>
+  <kendo-formerror *ngIf="isContentMissing">
+    Content is required.
+  </kendo-formerror>
   
   <!-- Attachment Panel -->
   <div class="panelbar-wrapper">
@@ -220,9 +225,9 @@
     <kendo-panelbar-item *ngIf="selectedAttachedFile.length > 0" title="{{selectedAttachedFile.length}} attachment(s)">
       <ng-template kendoPanelBarContent>
         <div class="attachment-item-list" kendoTooltip *ngFor="let item of selectedAttachedFile;let index = index">
-          <a class="attachment-item_name" (click)="item.typeCode ==='CER_DEF_ATTACHMENT' ? clientAttachmentClick(item) : null">{{item.name}}</a>
+          <a class="attachment-item_name" (click)="clientAttachmentClick(item)">{{item.name}}</a>
           <span class="attachment-item_size">{{item.size | fileSize}}</span>
-          <button *ngIf="item.typeCode !=='CER_DEF_ATTACHMENT'"
+          <button
             kendoButton
             class="attachment-item_remove k-icon-button small-i-btn"
             title="Remove Attachment"
@@ -232,7 +237,7 @@
               class="material-icons"
               aria-label="Remove Attachment"
               aria-hidden="true"
-              (click)="item.typeCode ==='CER_ATTACHMENT' ? removeFile(item, index) : removeAddedFile(index)"
+              (click)=" removeAddedFile(index)"
               >close</span
             >
           </button>

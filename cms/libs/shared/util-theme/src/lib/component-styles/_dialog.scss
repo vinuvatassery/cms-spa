@@ -300,13 +300,14 @@
     .k-dialog {
       top: 50px;
     }
-
-    .k-window-content,
-    .k-dialog-content,
-    .k-prompt-container {
+   > .k-window, > .k-dialog{
+    > .k-window-content,
+    > .k-dialog-content,
+    > .k-prompt-container {
       max-height: inherit;
       padding: 0px;
     }
+  }
   }
 
   &-top {

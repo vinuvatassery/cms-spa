@@ -277,7 +277,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   onNewReminderClicked(): void {
     this.newReminderDetailsDialog = this.dialogService.open({
       content: this.reminderTemplate,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     });
   }
 

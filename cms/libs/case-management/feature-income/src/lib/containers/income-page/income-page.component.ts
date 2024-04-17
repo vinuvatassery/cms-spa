@@ -411,7 +411,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setIncomeDetailFormValue(incomeDetail: any) {
-
     if (incomeDetail) {
       if(incomeDetail.noIncomeClientSignedDate !== null){this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValue(new Date(incomeDetail.noIncomeClientSignedDate));}
       if(incomeDetail.noIncomeSignatureNotedDate!== null){this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(new Date(incomeDetail.noIncomeSignatureNotedDate));}
@@ -420,8 +419,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setValue(incomeDetail.clientDependentsMinorEmployedFlag);
         this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setValue(incomeDetail.clientDependentsMinorAdditionalIncomeFlag);
       }
-    }else{
-      this.noIncomeDetailsForm.controls['noIncomeNote'].setValue('');
     }
   }
 
@@ -481,31 +478,33 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else
-            {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
+            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
+              else {
+                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
             }
           }
         })
       }
       else {
-        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
-        }
-        else
-        {
-          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
+        if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
+          else {
+            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
+          }
         }
       }
       this.cdr.detectChanges();
@@ -667,8 +666,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showHideImageUploadLoader(true, dataItem);
       this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
         next: (response: any) => {
-          this.loadIncomeData();
-          this.loadDependentsProofOfSchools();
+          if(response){
+            this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
+          }
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
           this.dependentFacade.hideLoader();
           this.showHideImageUploadLoader(false, dataItem);
@@ -693,8 +693,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.incomeFacade.showLoader();
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
         next: (response: any) => {
-          this.loadIncomeData();
-          this.loadDependentsProofOfSchools();
+          this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
           this.incomeFacade.hideLoader();
           this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
         },
@@ -706,11 +705,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       );
     }
   }
-  private loadDependentsProofOfSchools() {
-    this.incomeFacade.showLoader();
-    this.incomeFacade.loadDependentsProofofSchools();
-    this.incomeFacade.hideLoader();
-  }
+
   loadDependents(){
     this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
       if(response&&response.length>0){

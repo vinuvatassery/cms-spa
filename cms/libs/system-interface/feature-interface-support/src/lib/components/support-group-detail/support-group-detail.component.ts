@@ -41,7 +41,10 @@ export class SupportGroupDetailComponent implements OnInit {
   isLoading = false;
   isValidateForm = false;
   supportGroup!: any;
-
+  tareaCharachtersCount!: number;
+  tareaCounter!: string;
+  tareamaxLength = 200;
+  tareaDescription = '';
 
   /** Constructor **/
   constructor(private formBuilder: FormBuilder,
@@ -54,6 +57,7 @@ export class SupportGroupDetailComponent implements OnInit {
     if (this.isEditSupportGroup) {
       this.bindDataToForm(this.selectedSupportGroup)
     }
+    this.tareaVariablesIntialization();
   }
 
   createSupportGroupForm() {
@@ -111,6 +115,17 @@ export class SupportGroupDetailComponent implements OnInit {
       }
 
     }
+  }
+/** Private methods **/
+private tareaVariablesIntialization() {
+  this.tareaCharachtersCount = this.tareaDescription
+    ? this.tareaDescription.length
+    : 0;
+  this.tareaCounter = `${this.tareaCharachtersCount}/${this.tareamaxLength}`;
+}
+  onTareaValueChange(event: any): void {
+    this.tareaCharachtersCount = event.length;
+    this.tareaCounter = `${this.tareaCharachtersCount}/${this.tareamaxLength}`;
   }
 
 }

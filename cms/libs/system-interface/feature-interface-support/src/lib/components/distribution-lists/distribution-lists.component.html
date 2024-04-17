@@ -6,7 +6,7 @@
     (filterChange)="filterChange($event)" (columnReorder)="onColumnReorder($event)"
     [data]="gridDistributionData$ | async"  class="grid_scroll">
 
-    <kendo-grid-column field="email" title="Email" [width]="150">
+    <kendo-grid-column field="email" title="Email" [width]="200">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -37,7 +37,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="status" title="Status" [width]="100">
+    <kendo-grid-column field="status" title="Status" [width]="90">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.status === 'Y' ? 'Active' : 'Inactive' }}
       </ng-template>
@@ -54,7 +54,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="Option" title="Options"   [columnMenu]="false" [sortable]="false" [width]="100" class="text-center">
+    <kendo-grid-column field="Option" title="Options"   [columnMenu]="false" [sortable]="false" [width]="90" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="gridMoreActions" class="TableActionPopup app-dropdown-action more_action_wid"
           buttonClass="k-icon-button" aria-label="more actions" title="More option"
@@ -76,9 +76,9 @@
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
         <div class="d-flex align-items-center">
-          <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+          <label class="mr-1" for="RowsPerPageDist">Rows Per Page</label>
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPageDist"
             [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
@@ -97,9 +97,7 @@
     </ng-template>
     <!-- grid No data Template -->
     <ng-template kendoGridNoRecordsTemplate>
-      <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-      </div>
-      <p>There is no data to display.</p>
+      <common-grid-no-records></common-grid-no-records>
     </ng-template>
 
   </kendo-grid>
@@ -112,7 +110,7 @@
     Member</button>
 </div>
 <kendo-dialog *ngIf="isMemberDetailPopup" (close)="onCloseMemberDetailPopupClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar>{{ isEditMode ? 'Edit Member' : 'Add Member' }} </kendo-dialog-titlebar>
 
   <distribution-detail

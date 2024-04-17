@@ -9,6 +9,7 @@ import { State } from '@progress/kendo-data-query';
 })
 export class InterfaceSupportPageComponent {
   selectedGroup: any;
+  supportGroupGridDataRefinerValue: any;
   state!: State;
   sortType = this.systemInterfaceSupportFacade.sortType;
   pageSizes = this.systemInterfaceSupportFacade.gridPageSizes;
@@ -57,6 +58,7 @@ export class InterfaceSupportPageComponent {
     this.systemInterfaceSupportFacade.loadDistributionGroup(event);
   }
   loadSupportGroup(event: any) {
+   this.supportGroupGridDataRefinerValue = event;
     this.systemInterfaceSupportFacade.loadSupportGroup(event);
   }
   handleAddSuppportGroup(event: any) {

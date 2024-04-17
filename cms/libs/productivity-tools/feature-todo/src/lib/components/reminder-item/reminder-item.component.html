@@ -8,7 +8,8 @@
         <span class="material-icons" aria-label="notification" aria-hidden="true">alarm</span>
       </div>
       <div class="card-list_details">
-        <p>{{ item.alertDesc }}</p>
+        <p>{{item.entityName}}{{item.entityName ? ' - ' : ''}}{{ item.alertDesc }}</p>
+        
         <p class="text-muted">{{ item?.alertDueDate | date:'MM/dd/YYYY'}} {{ formatTime(item?.repeatTime) }}</p>
        
       </div>
@@ -38,7 +39,7 @@
 </ng-container>
 
 <div style="text-align: center;" *ngIf="items?.length == 0 && !nDays">
-  <p>There is no data to display</p>
+  <common-grid-no-records></common-grid-no-records>
 </div>
 </ul>
 

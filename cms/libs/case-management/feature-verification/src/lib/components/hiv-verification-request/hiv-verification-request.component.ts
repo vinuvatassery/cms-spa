@@ -324,7 +324,7 @@ export class HivVerificationRequestComponent implements OnInit{
 
   loadHivVerificationEmail() {
     this.verificationFacade.showLoader();
-    this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail ?? '')
+    this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -352,12 +352,13 @@ export class HivVerificationRequestComponent implements OnInit{
       .subscribe({
         next: (attachments: any) => {
           if (attachments.length > 0) {
+            this.selectedAttachedFile=[];
             for (let file of attachments) {
               this.selectedAttachedFile.push({
                 document: file,
                 size: file.templateSize,
                 name: file.description,
-                documentTemplateId: file.documentTemplateId,
+                notificationAttachmentId: file.notificationAttachmentId,
                 typeCode: file.typeCode
               })
             }
@@ -374,7 +375,13 @@ export class HivVerificationRequestComponent implements OnInit{
 
   saveHivVerificationData(){
     this.verificationFacade.showLoader();
-    this.verificationFacade.save( this.clientHivVerification).subscribe({
+    const formData = new FormData();
+    formData.append('verificationToEmail', this.hivVerificationForm.controls["providerEmailAddress"].value ?? '');
+    formData.append('clientId', this?.clientId.toString() ?? '');
+    formData.append('verificationMethodCode', this.hivVerificationForm.controls["providerOption"].value ?? '');
+    formData.append('verificationTypeCode', VerificationTypeCode.HivVerificationForm ?? '');
+    formData.append('verificationStatusCode', VerificationStatusCode.Pending ?? '');
+    this.verificationFacade.save(formData).subscribe({
     next:(data)=>{
       if(data){
         this.isResendRequest = false;
@@ -397,7 +404,7 @@ export class HivVerificationRequestComponent implements OnInit{
 
 loadPendingEsignRequestInfo(){
   this.verificationFacade.showLoader();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', 'HIV_VERIFICATION_EMAIL')
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {

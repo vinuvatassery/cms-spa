@@ -10,8 +10,8 @@
       <span class="material-icons" aria-hidden="true"> alarm </span>
     </div>
     <div class="reminder-col-two">
-      <p class="reminder-description" role="region"  aria-label="title">
-        <button kendoButton look="flat" *ngIf="entityName" [attr.aria-label]="entityName" class="card-link-button" (click)="onEntityNameClick(entityId,entityTypeCode,vendorTypeCode)">
+      <p class="reminder-description" role="region"  aria-label="title" >
+        <button kendoButton look="flat" *ngIf="entityName" [attr.aria-label]="entityName" class="card-link-button" (click)="onEntityNameClick($event,entityId,entityTypeCode,vendorTypeCode)">
          {{ entityName }}   </button>
         {{alertText}}
         </p>
@@ -56,6 +56,7 @@
       [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
       (searchClientName)="searchClientName($event)"
       (searchProvider)="searchProvider($event)"
+      [isFromReminderSnacks]="true"
       (getReminderDetailsLov)="getReminderDetailsLov()"
       ></productivity-tools-reminder-detail>
   </ng-template>

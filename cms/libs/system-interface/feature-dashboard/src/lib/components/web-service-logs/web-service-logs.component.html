@@ -58,7 +58,7 @@
         </ng-template>
       </kendo-grid-column>
 
-      <kendo-grid-column field="startDate" title="Process Date" [width]="180">
+      <kendo-grid-column field="startDate" title="Process Date" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a' }}
         </ng-template>
@@ -78,7 +78,7 @@
  </ng-container>
      
 
-      <kendo-grid-column field="status" title="Status" [width]="180">
+      <kendo-grid-column field="status" title="Status" [width]="160">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-dropdownlist [data]="statusArrayDesc" [value]="statusFilter"
             (valueChange)="dropdownFilterChange('status',$event, filterService)">
@@ -96,12 +96,14 @@
           <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span> 
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column *ngIf="interfaceType !='USPS'" title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
+      <kendo-grid-column *ngIf="interfaceType !='USPS'" field="uploadStatus" title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button [disabled]="dataItem.uploadStatus=='N'" [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button" 
-            kendoPopoverAnchor (click)="downloadFile(dataItem.fileId)">
-            Download 
-          </button> 
+          <button kendoButton  [disabled]="dataItem.uploadStatus==='N'" title="Download" [attr.aria-label]="dataItem.status" [primary]="true" look="flat"  (click)="downloadFile(dataItem.fileId)"> <span class="material-icons">
+            file_download
+            </span>
+          </button>
+
+        
         </ng-template>
       </kendo-grid-column>
 
@@ -161,7 +163,11 @@
 </section>
 
 <ng-template #errorInformationDialogTemplate>
-  <kendo-dialog-titlebar (close)="Close()"> Failure Detail</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="Close()">
+    <span *ngIf="status=='SUCCESS'"> Success Detail</span>
+    <span *ngIf="status=='FAILED'"> Failure Detail</span>
+       
+    </kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
      
           <p class="text-muted mb-1">{{failureDetail}}</p>

@@ -1385,14 +1385,14 @@ padding: 8px;
 
 .event-filters-field{
   padding-left: 1rem;
-  padding-right: 1rem;
-  max-height: 340px;
-  overflow-y: auto;
+  padding-right: 1rem; 
+
 }
 .event-filter-body{
   padding-top: 1rem;
   padding-bottom: 1rem;
- 
+  overflow-y: auto;
+  max-height: calc(100vh - 205px);
 }
 
 .reminder-list-skeleton-loader {
@@ -1411,13 +1411,16 @@ padding: 8px;
 }
 
 .modalin_page{
-  .k-dialog-titlebar-actions{
-    display: none;
+  .template-header{
+    .k-dialog-titlebar-actions{
+      display: none;
+    }
+    &.k-dialog-titlebar{
+      padding-block: 0;
+      padding-inline: 0;
+    }
   }
-  .k-dialog-titlebar{
-    padding-block: 0;
-    padding-inline: 0;
-  }
+  
   .k-dialog-actions{
     border-color: #dbdbdb;
     margin-top: 20px;
@@ -1486,4 +1489,13 @@ padding: 8px;
 100% {
     opacity: .1;
 }
+}
+
+.message_lists{
+  h5{
+    margin: 0px;
+  }
+  border:1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
 }

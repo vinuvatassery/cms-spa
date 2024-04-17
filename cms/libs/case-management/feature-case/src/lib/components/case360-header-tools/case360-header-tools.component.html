@@ -30,7 +30,6 @@
       </button>
     </ng-template>
   </kendo-dropdownbutton>
-  <!-- <button (click)="onPreviewTemplateClicked(viewTemplateDialog)">onPreviewTemplateClicked</button> -->
 </div>
 
 
@@ -43,8 +42,10 @@
 <ng-template #sendLetterDialog>
   <case-management-send-letter [mailingAddress$]="mailingAddress$" [informationalText]="informationalText" [templateHeader]="templateHeader"
   [notificationGroup]="screenName" [templateLoadType] ="templateLoadType" [communicationLetterTypeCode] ="letterCommunicationTypeCode"
-  (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()" [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId"
-  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
+  (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()" [entityId]="clientId" 
+  [entityType]="entityType" [clientCaseEligibilityId]="clientCaseEligibilityId" [triggerFrom]="triggerFrom"
+  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId" 
+  [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText"
   kendoTooltip></case-management-send-letter>
 </ng-template>
 
@@ -57,11 +58,13 @@
 </ng-template>
 <!-- Send New Email Modal -->
 <ng-template #sendNewEmailDialog>
-  <case-management-send-email [ddlEmails$]="emailAddress$" 
+  <case-management-send-email [ddlEmails$]="emailAddress$" [triggerFrom]="triggerFrom"
   [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader" [communicationEmailTypeCode]="emailCommunicationTypeCode"
-  [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName" [clientCaseId]="clientCaseId"
+  [entityId]="clientId"  [entityType]="entityType"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName" [clientCaseId]="clientCaseId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
-  [toEmail]="toEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
+  [toEmail]="toEmail" [loginUserEmail]="loginUserEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()"
+  [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText"
+   kendoTooltip></case-management-send-email>
 </ng-template>
 
 <!-- New ID Card Modal Html-->
@@ -74,10 +77,12 @@
 <!-- New SMS Text Modal Html-->
 <ng-template #sendTextMessageDialog>
 <case-management-send-text-message [ddlMessageRecipients$] ="phoneNumbers$" [notificationGroup]="screenName" [entityId]="clientId"
-[templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
+  [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
   (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDraftId]="notificationDraftId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
-  [clientCaseEligibilityId]="clientCaseEligibilityId" kendoTooltip></case-management-send-text-message>
+  [clientCaseEligibilityId]="clientCaseEligibilityId" [triggerFrom]="triggerFrom" [entityType]="entityType"
+  [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText" 
+  kendoTooltip></case-management-send-text-message>
 </ng-template>
 
 
@@ -86,5 +91,11 @@
 <!-- view template Modal Html-->
 <ng-template #viewTemplateDialog>
   <kendo-dialog-titlebar (close)="handlePreviewTemplateClosed($event)">Preview Template </kendo-dialog-titlebar>
- <case-management-preview-notification-templates></case-management-preview-notification-templates>
+ <case-management-preview-notification-templates   (closePreviewTemplateEvent)="handlePreviewTemplateClosed($event)" [PreviewTemplateType]="'letter'"></case-management-preview-notification-templates>
   </ng-template>
+
+  <ng-template #viewSMSTemplateDialog>
+    <kendo-dialog-titlebar (close)="handlePreviewTemplateClosed($event)">View SMS Text(s) </kendo-dialog-titlebar>
+    
+   <case-management-preview-notification-templates (closePreviewTemplateEvent)="handlePreviewTemplateClosed($event)" [PreviewTemplateType]="'sms'"></case-management-preview-notification-templates>
+    </ng-template>

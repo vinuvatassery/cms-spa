@@ -55,18 +55,12 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes(clientId: string, clientCaseEligibilityId: string,gridFilterParam:GridFilterParam, isCerForm: boolean = false) {  
+  loadIncomes(clientId: string, clientCaseEligibilityId: string,gridFilterParam:GridFilterParam, isCerForm: boolean = false) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${clientCaseEligibilityId}/income?isCerForm=${isCerForm}`,gridFilterParam);
   }
 
-  loadDependentsProofofSchools() {
-    return of([
-      {
-        Name: 'John Wick',
-        Age: '32',
-        Relationship: '$1000.00',
-      },
-    ]);
+  loadDependentsProofofSchools(clientId: string, clientCaseEligibilityId: string) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${clientCaseEligibilityId}/dependents`);
   }
 
   loadDdlStates() {
@@ -242,7 +236,7 @@ export class ContactDataService {
 
   }
 
-  loadClientPaperLessStatus(clientId: number, clientCaseEligibilityId: string) {
+  loadClientPaperLessStatus(clientId: number | undefined, clientCaseEligibilityId: string | undefined) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/clients/${clientId}/emails/${clientCaseEligibilityId}`

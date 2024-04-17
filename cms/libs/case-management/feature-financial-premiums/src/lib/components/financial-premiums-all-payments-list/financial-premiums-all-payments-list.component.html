@@ -188,7 +188,8 @@
     <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist [data]="paymentStauses" textField="lovDesc"
-        valueField="lovDesc" [value]="selectedPaymentStatus" [valuePrimitive]="true"
+        valueField="lovDesc" [valuePrimitive]="true"
+        [(ngModel)]="selectedPaymentStatus"
         (valueChange)="dropdownFilterChange('paymentStatusDesc',$event, filterService)">
       </kendo-dropdownlist>
       </ng-template>

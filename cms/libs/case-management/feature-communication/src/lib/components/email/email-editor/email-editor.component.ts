@@ -13,7 +13,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, DocumentFacade} from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, DocumentFacade, ScreenType} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
@@ -38,9 +38,15 @@ export class EmailEditorComponent implements OnInit {
   @Input() clientCaseEligibilityId!:string;
   @Input() clientId!:any;
   @Input() communicationTypeCode!:any;
+  @Input() isContentMissing!: boolean;
+  @Input() notificationGroup!: string;
+  @Input() variableName!: string;
+  @Input() typeName!: string;
+  @Input() templateLoadType!: string;
   /** Output properties  **/
   @Output() cerEmailAttachments = new EventEmitter();
   @Output() editorValueChangeEvent = new EventEmitter();
+  @Output() contentValidateEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Public properties **/
   @ViewChild('anchor',{ read: ElementRef }) public anchor!: ElementRef;
@@ -65,7 +71,6 @@ export class EmailEditorComponent implements OnInit {
   cerFormPreviewData:any;
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public uploadRemoveUrl = 'removeUrl';
-  stringValues: string[] = ['MyFullName', 'MyJobTitle', 'MyPhone', 'MyEmail'];
   public editorUploadOptions = [
     {
       buttonType:"btn-h-primary",
@@ -100,6 +105,8 @@ export class EmailEditorComponent implements OnInit {
   ];
   clientAllDocumentList$!: any;  
   formsAndDocumentList$!: any;
+  searchText: string = '';
+  filteredOptions !: any;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -113,7 +120,7 @@ export class EmailEditorComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    if (![CommunicationEventTypeCode.VendorEmail, CommunicationEventTypeCode.VendorLetter].includes(this.communicationTypeCode)) {
+    if (this.notificationGroup === ScreenType.ClientProfile) {
       this.loadClientAttachments(this.clientId);
     }
     this.loadFormsAndDocuemnts();
@@ -131,25 +138,36 @@ export class EmailEditorComponent implements OnInit {
       if(this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
         this.loadUserDraftTemplateAttachment();
         this.loadLetterAttachment(this.selectedTemplate.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
-      }else if(this.selectedTemplate?.notifcationDraftId && this.selectedTemplate?.notificationRequestAttachments){
+      }else if(this.selectedTemplate?.notificationDraftId && this.selectedTemplate?.notificationRequestAttachments?.length > 0){
             for (let file of this.selectedTemplate?.notificationRequestAttachments){
               this.selectedAttachedFile.push({
                 document: file,
                 size: file.fileSize,
                 name: file.fileName,
                 path: file.filePath,
-                documentTemplateId: file.documentTemplateId,
+                notificationAttachmentId: file.documentTemplateId,
                 typeCode: file.typeCode
               })
             }
           this.ref.detectChanges();
           this.cerEmailAttachments.emit(this.selectedAttachedFile);
-        }else{
-        this.loadClientVendorDefaultAttachment(this.selectedTemplate.documentTemplateId);
         }
+        else
+        {
+          if(!this.isContentMissing){
+          let templateId = null;
+          if(this.selectedTemplate.documentTemplateId === null){
+            templateId = this.selectedTemplate.notificationTemplateId
+          }
+          else {
+            templateId = this.selectedTemplate.documentTemplateId
+          }
+          this.loadClientVendorDefaultAttachment(templateId);
+        }
+      }
     }
     
-    if ([CommunicationEventTypeCode.VendorEmail, CommunicationEventTypeCode.VendorLetter].includes(this.communicationTypeCode)) {
+    if (this.notificationGroup === ScreenType.VendorProfile) {
       const optionIndex = this.editorUploadOptions.findIndex(i => i.id === 'attachfromclient');
       if (optionIndex > -1) {
         this.editorUploadOptions.splice(optionIndex, 1);
@@ -163,15 +181,16 @@ export class EmailEditorComponent implements OnInit {
     this.communicationFacade.loadClientAndVendorDefaultAttachments(documentTemplateId)
     .subscribe({
       next: (attachments: any) =>{
+        this.selectedAttachedFile =[];
         if (attachments.length > 0) {
           for (let file of attachments){
             this.selectedAttachedFile.push({
               document: file,
               size: file.templateSize,
               name: file.description,
-              documentTemplateId: file.documentTemplateId,
+              notificationAttachmentId: file.notificationAttachmentId,
               typeCode: file.typeCode
-            })
+            });
           }
         this.ref.detectChanges();
         this.cerEmailAttachments.emit(this.selectedAttachedFile);
@@ -211,6 +230,7 @@ export class EmailEditorComponent implements OnInit {
           variables = variables.filter((option: any) => option.lovDesc !== 'Signature');
           }
           this.clientVariables = variables;
+          this.filteredOptions = this.clientVariables;
         }
       this.loaderService.hide();
     },
@@ -262,19 +282,23 @@ export class EmailEditorComponent implements OnInit {
   }
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {
-    if(item === 'MySignature'){
-      this.stringValues.forEach(value => {
-        editor.exec('insertText', { text: '{{' +value + '}}' });
-      });
+    if(item === 'MailCode' || item === 'MySignature'){
+      editor.exec('insertText', { text: '{{{' +item+ '}}}' });
     }else{
-    editor.exec('insertText', { text: '{{' +item + '}}' });
-    editor.value = editor.value.replace(/#CURSOR#/, item);
+      editor.exec('insertText', { text: '{{' +item + '}}' });
     }
+    editor.value = editor.value.replace(/#CURSOR#/, item);
     this.onSearchClosed();
   }
 
   editorValueChange(event: any){
-   this.editorValueChangeEvent.emit(event);
+    this.isContentMissing = false;
+    this.editorValueChangeEvent.emit(event);
+    this.contentValidateHandler(true);
+  }
+
+  contentValidateHandler(event: any){
+    this.contentValidateEvent.emit(true);
   }
 
   handleFileSelected(event: any) {
@@ -314,10 +338,12 @@ export class EmailEditorComponent implements OnInit {
 
   removeAddedFile(index: any){
     this.selectedAttachedFile.splice(index, 1);
+    this.cerEmailAttachments.emit(this.selectedAttachedFile);
   }
 
   clientAttachmentChange(event:any)
   {
+    if( event != undefined){
     const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.documentName);
     if(!isFileExists){
     this.uploadedAttachedFile = [{
@@ -325,7 +351,8 @@ export class EmailEditorComponent implements OnInit {
       size: event.documentSize,
       name: event.documentName,
       clientDocumentId: event.clientDocumentId,
-      uid: ''
+      uid: '',
+      documentPath: event.documentPath
     }];
     if(this.selectedAttachedFile.length == 0){
       this.selectedAttachedFile = this.uploadedAttachedFile;
@@ -339,9 +366,11 @@ export class EmailEditorComponent implements OnInit {
     }
     this.showClientAttachmentUpload = false;
   }
+  }
 
   formsAndDocumentChange(event:any)
   {
+    if(event !== undefined){
     const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.description);
     if(!isFileExists){
     this.uploadedAttachedFile = [{
@@ -349,7 +378,8 @@ export class EmailEditorComponent implements OnInit {
       size: event.templateSize,
       name: event.description,
       documentTemplateId: event.documentTemplateId,
-      uid: ''
+      uid: '',
+      templatePath: event.templatePath
     }];
     if(this.selectedAttachedFile.length == 0){
       this.selectedAttachedFile = this.uploadedAttachedFile;
@@ -362,12 +392,32 @@ export class EmailEditorComponent implements OnInit {
     this.cerEmailAttachments.emit(event);
     }
     this.showFormsAndDocumentsUpload = false;
+   }
   }
 
 clientAttachmentClick(item:any)
   {
+    if(!item?.rawFile){
     this.loaderService.show();
-    this.communicationFacade.loadAttachmentPreview(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', item?.documentTemplateId ?? null)
+    let templatePath = '';
+    if(item?.notificationAttachmentId){
+      templatePath = item?.document?.templatePath;
+    }else if(item?.documentTemplateId){
+      templatePath = item?.templatePath;
+    }else if(item?.clientDocumentId){
+      templatePath = item?.documentPath;
+    }else{
+      templatePath = item.path;
+    }
+    const formData = new FormData();
+    formData.append('notificationAttachmentId', item?.notificationAttachmentId ?? '');
+    formData.append('documentTemplateId', item?.documentTemplateId ?? '');
+    formData.append('clientDocumentId', item?.clientDocumentId ?? '');
+    formData.append('clientId', this.clientId ?? '');
+    formData.append('clientCaseEligibilityId', this.clientCaseEligibilityId ?? '');
+    formData.append('templatePath', templatePath ?? '');
+
+    this.communicationFacade.loadAttachmentPreview(formData)
         .subscribe({
           next: (data: any) =>{
          if (data) {
@@ -380,9 +430,10 @@ clientAttachmentClick(item:any)
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, "File is not found at location.");
         },
       });
+    }
   }
 
   getClientDocumentsViewDownload(clientDocumentId: string) {
@@ -539,5 +590,16 @@ clientAttachmentClick(item:any)
           this.loggingService.logException(err);
         },
       });
+  }
+
+  onSearchChange(searchText: string): void {
+    if(searchText){
+    this.searchText = searchText;
+    this.clientVariables = this.filteredOptions.filter((option: any) =>
+      option.lovDesc?.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+    }else{
+      this.clientVariables = this.filteredOptions;
+    }
   }
 }

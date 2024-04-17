@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialPremiumsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-premiums-send-report',

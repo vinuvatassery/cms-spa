@@ -1,9 +1,9 @@
 <div *ngIf="hasUrl">
     <span *ngFor="let item of anchorArray">
-        <span class="mb-1" *ngIf="(!item.isBaseUrlFlag && !item.isFilePathUrl)">{{item.text}}</span>
+        <span class="mb-1" *ngIf="(!item.isBaseUrlFlag && !item.isFilePathUrl)" [innerHtml]="item.sanitizedHtml"></span>
         <a *ngIf="item.isBaseUrlFlag && !item.isFilePathUrl" href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
 
-        <span class="mb-1" *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl">{{data}}</span>
+        <span class="mb-1" *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" [innerHtml]="sanitizedHtml"></span>
         <a *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" (click)="downloadOldAttachment(item.url)" title="{{item.title}}">{{item.text}}</a>
     </span>
     <span class="mb-1" *ngIf="getViewFlag() && (anchorArray.length<=0)">
@@ -11,7 +11,7 @@
     </span>
     <a *ngIf="getViewFlag() && (anchorArray.length<=0)" (click)="OpenModalPopUp()" title="">{{viewText}}</a>
 </div>
-<div *ngIf="!hasUrl">
+<div *ngIf="!hasUrl" class="text-justify">
     <common-read-more [content]="content" [limit]="limit" [completeWords]="completeWords">
     </common-read-more>
 </div>
