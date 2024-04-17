@@ -282,11 +282,7 @@ export class EmailEditorComponent implements OnInit {
   }
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {
-    if(item === 'MailCode' || item === 'MySignature'){
-      editor.exec('insertText', { text: '{{{' +item+ '}}}' });
-    }else{
-      editor.exec('insertText', { text: '{{' +item + '}}' });
-    }
+    editor.exec('insertText', { text: '{{' +item + '}}' });
     editor.value = editor.value.replace(/#CURSOR#/, item);
     this.onSearchClosed();
   }

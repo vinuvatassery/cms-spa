@@ -136,11 +136,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   addSubscriptions() {
     this.vendorMailCodesubscription =  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
       this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
-      if (this.selectedMailCodeId) {
-        this.mailingAddress = this.selectedMailCode = this.ddlMailCodes.find((address: any) =>  address.vendorAddressId == this.selectedMailCodeId);
-        this.selectedMailCodeId = null;
-        this.ref.detectChanges();
-      }
+      this.ref.detectChanges();
     });
     if(this.entityType == EntityTypeCode.Vendor){
       this.variableName = 'Vendor';
@@ -312,12 +308,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private generateText(letterData: any, requestType: CommunicationEvents){
-    //if(this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
-      this.generateClientTextTemplate(letterData, requestType);
-    // }else{
-    // this.entityId = this.workflowFacade.clientId ?? 0;
-    // this.f = this.workflowFacade.clientCaseEligibilityId ?? '';
-    // }
+    this.generateClientTextTemplate(letterData, requestType);
   }
 
   private generateClientTextTemplate(letterData: any, requestType: CommunicationEvents){
@@ -487,9 +478,22 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   onSendLetterToPrintClicked() {
+    this.selectedTemplate.templateContent = this.updatedTemplateContent;
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+      this.isContentMissing = true;
+      this.isFormValid = false;
+    }
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      if(this.mailingAddress === undefined || this.mailingAddress === ''){
+      this.isMailCodeMissing = true;
+      this.isFormValid = false;
+      }
+    }
+    if(this.isFormValid){
     this.isNewLetterClicked=true;
     this.isShowSendLetterToPrintPopupClicked=true;
     this.isShowPreviewLetterPopupClicked=false;
+    }
   }
 
   onCloseNewLetterClicked() {
