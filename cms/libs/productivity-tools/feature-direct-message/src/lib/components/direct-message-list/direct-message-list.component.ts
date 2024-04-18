@@ -141,13 +141,6 @@ dataStateChange(stateData: any): void {
   this.loadDirectMessageListGrid();
 }
 
-// updating the pagination infor based on dropdown selection
-pageSelectionChange(data: any) {
-  this.state.take = data.value;
-  this.state.skip = 0;
-  this.loadDirectMessageListGrid();
-}
-
 public filterChange(filter: CompositeFilterDescriptor): void {
   this.filterData = filter;
 }
@@ -170,6 +163,12 @@ gridDataHandle() {
   onClientFromClicked(clientId:any){
     this.router.navigate([`/case-management/cases/case360/${clientId}`]);
   } 
+    // updating the pagination infor based on dropdown selection
+    pageselectionchange(data: any) {
+      this.state.take = data.value;
+      this.state.skip = 0;
+      this.loadDirectMessageListGrid();
+    }
  
 }
 
