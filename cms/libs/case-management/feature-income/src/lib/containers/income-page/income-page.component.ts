@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, AfterView
 /** External libraries **/
 import {catchError, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode, WorkflowTypeCode, ContactFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode, WorkflowTypeCode, ContactFacade, CommunicationFacade } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
@@ -95,6 +95,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   workflowTypeCode:any;
   isOpenClientsAttachment=false;
   clientDependentId: any;
+  clientAllDocumentList$:any;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -137,7 +138,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly dependentFacade:FamilyAndDependentFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly router: Router,
-    private readonly contactFacade: ContactFacade
+    private readonly contactFacade: ContactFacade,
+    private readonly communicationFacade: CommunicationFacade
     ) { }
 
   /** Lifecycle hooks **/
@@ -942,6 +944,23 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
+  }
+
+  loadClientAttachments(clientId: any) {
+    this.loaderService.show();
+    this.communicationFacade.loadClientAttachments(clientId)
+      .subscribe({
+        next: (attachments: any) => {
+          if (attachments.totalCount > 0) {
+            this.clientAllDocumentList$ = attachments?.items;
+            this.cdr.detectChanges();
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+        },
+      });
   }
 
 }

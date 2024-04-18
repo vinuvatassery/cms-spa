@@ -325,7 +325,7 @@
   <kendo-dialog *ngIf="isOpenClientsAttachment" (close)="closeClientAttachmentsPopup($event)"
   class="app-c-modal app-c-modal-mdl app-c-modal-np">
   <kendo-dialog-titlebar>Client Attachments for Proof of School</kendo-dialog-titlebar>
- <app-client-attachment-model (closePopup)="closeClientAttachmentsPopup($event)"
+ <app-client-attachment-model [clientAllDocumentList$]="clientAllDocumentList$" (closePopup)="closeClientAttachmentsPopup($event)"
  (clientAttachment)="handleClientAttachment($event)" [clientId]="clientId">
  </app-client-attachment-model>
   </kendo-dialog>

@@ -6,7 +6,7 @@ import {
 import { Subject } from 'rxjs/internal/Subject';
 import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
-import { CompletionChecklist, ScreenType, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade, CaseFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ScreenType, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade, CaseFacade, CommunicationFacade } from '@cms/case-management/domain';
 import { DeleteRequest, SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSource, SnackBarNotificationType, } from '@cms/shared/util-core';
@@ -87,6 +87,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   cerStarted:any = true;
   isOpenClientsAttachment=false;
   clientDependentId: any;
+  clientAllDocumentList$:any;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -99,7 +100,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
       buttonType: "btn-h-primary",
       text: "Attach from client/'s attachments",
       id: "attachfromclient",
-      click: (event: any, dataItem: any): void => {debugger;
+      click: (event: any, dataItem: any): void => {
         //this.onProofSchoolDropdownOneBlur();
         this.isOpenClientsAttachment = true;
         this.clientDependentId = dataItem.clientDependentId;
@@ -140,7 +141,8 @@ export class IncomeListComponent implements OnInit, OnDestroy {
     private readonly dependentFacade: FamilyAndDependentFacade,
     private readonly cdr: ChangeDetectorRef,
     private caseFacade: CaseFacade,
-    private readonly configurationProvider: ConfigurationProvider,) { }
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly communicationFacade: CommunicationFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -151,7 +153,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
       this.isIncomeAvailable = response;
       this.cdr.detectChanges();
     })
-
+    this.loadClientAttachments(this.clientId);
   }
 
   ngOnChanges() {
@@ -318,7 +320,7 @@ ngOnDestroy(): void {
 
   }
 
-  handleFileSelected(event: any, dataItem: any) {debugger;
+  handleFileSelected(event: any, dataItem: any) {
     this.dependentFacade.showLoader();
 
     if (event && event.files.length > 0) {
@@ -480,4 +482,21 @@ ngOnDestroy(): void {
 
     }
 
+  loadClientAttachments(clientId: any) {
+    this.loaderService.show();
+    this.communicationFacade.loadClientAttachments(clientId)
+      .subscribe({
+        next: (attachments: any) => {
+          if (attachments.totalCount > 0) {
+            this.clientAllDocumentList$ = attachments?.items;
+            this.cdr.detectChanges();
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err)
+        },
+      });
+  }
 }
