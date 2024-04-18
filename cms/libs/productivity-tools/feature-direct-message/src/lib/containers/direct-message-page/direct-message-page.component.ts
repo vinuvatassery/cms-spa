@@ -32,8 +32,8 @@ export class DirectMessagePageComponent {
 
   /** Private methods **/
   loadDirectMessagesList(event: any): void {
-    if(event){
-      this.directMessageFacade.loadDirectMessagesLists();
+    if(event){ 
+      this.directMessageFacade.loadDirectMessagesLists(event);
     }
     
   }
