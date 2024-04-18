@@ -162,8 +162,8 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
       this.snoozeReminderHandler(notificationRef);
       this.dismissReminderHandler(notificationRef);
       this.editReminderHandler(notificationRef);
-      notificationRef.content.instance.hideSnackBar.subscribe(() =>
-        notificationRef.hide()
+      notificationRef.content.instance.hideSnackBar.subscribe((event:any) =>
+        this.updateSnackBarCount(event, notificationRef)
       );
     }
   }
