@@ -89,7 +89,12 @@ export class DirectMessageFacade {
     this.loaderService.show()
     this.directMessageDataService.loadDirectMessagesLists(param).subscribe({
       next: (Response) => {
-        this.directMessagesListSubject.next(Response);
+        this.loaderService.hide()
+        const gridView: any = {
+          data: Response.items,
+          total:Response.totalCount,
+        }; 
+        this.directMessagesListSubject.next(gridView);
       },
       error: (err) => {
         this.loaderService.hide()
