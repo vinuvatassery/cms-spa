@@ -1,0 +1,30 @@
+<form [formGroup]="ClientsAttachmentForm" novalidate>
+  <section class="k-dialog-body">
+    <p class="text-muted mb-2">
+      Select the file from the list of Client Attachments and then Attach the existing file.
+    </p>
+
+    <common-clients-attachment
+    [clientAttachmentForm]="ClientsAttachmentForm"
+    [clientDocumentList$]="clientAllDocumentList$"
+    (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
+    ></common-clients-attachment>
+
+    <kendo-formerror *ngIf="!isProofOfSchoolDocumentUploaded"> File upload is required
+    </kendo-formerror>
+
+  </section>
+
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline"  aria-label="Cancel"
+          (click)="closeIncomeDetailPoup()">
+          Cancel
+        </button>
+        <button kendoButton (click)="attachClientAttachment($event)" [primary]="true"> Attach </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+
+</form>

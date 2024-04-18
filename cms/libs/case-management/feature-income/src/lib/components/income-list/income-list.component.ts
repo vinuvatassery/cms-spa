@@ -85,6 +85,8 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   incomeListProfilePhoto$ = this.incomeFacade.incomeListProfilePhotoSubject;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   cerStarted:any = true;
+  isOpenClientsAttachment=false;
+  clientDependentId: any;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -97,8 +99,10 @@ export class IncomeListComponent implements OnInit, OnDestroy {
       buttonType: "btn-h-primary",
       text: "Attach from client/'s attachments",
       id: "attachfromclient",
-      click: (event: any, dataItem: any): void => {
-        this.onProofSchoolDropdownOneBlur();
+      click: (event: any, dataItem: any): void => {debugger;
+        //this.onProofSchoolDropdownOneBlur();
+        this.isOpenClientsAttachment = true;
+        this.clientDependentId = dataItem.clientDependentId;
       },
     },
     {
@@ -313,12 +317,13 @@ ngOnDestroy(): void {
     this.loadIncomeData(true);
 
   }
-  handleFileSelected(event: any, dataItem: any) {
+
+  handleFileSelected(event: any, dataItem: any) {debugger;
     this.dependentFacade.showLoader();
 
     if (event && event.files.length > 0) {
       const formData: any = new FormData();
-      let file = event.files[0].rawFile
+      let file = event.files[0].rawFile;
       if (file.size > this.configurationProvider.appSettings.uploadFileSizeLimit) {
         this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "File is too large. Cannot be more than 25 MB.", NotificationSource.UI);
       }
@@ -436,4 +441,43 @@ ngOnDestroy(): void {
       this.incomeFrequencyCodeDesc = value;
     }
   }
+
+  closeClientAttachmentsPopup($event: any) {
+    this.isOpenClientsAttachment = false;
+    this.clientDependentId = null;
+  }
+
+  handleClientAttachment($event:any){
+    this.incomeFacade.showLoader();
+    const attachedFile=$event.files[0];
+    const clientAttachment = {
+      "clientDocumentId" : $event.clientDocumentId,
+      "documentName": attachedFile.documentName,
+      "documentPath" : $event.documentPath,
+      "entityId": this.clientDependentId,
+      "concurrencyStamp" : $event.concurrencyStamp,
+      "clientId": this.clientId,
+      "clientCaseId": this.clientCaseId,
+      "clientCaseEligibilityId": this.clientCaseEligibilityId,
+      "documentTypeCode": "DEPENDENT_PROOF_OF_SCHOOL",
+      "size":$event.size,
+      "ContentTypeCode" : attachedFile.ContentTypeCode
+    };
+    this.dependentFacade.uploadDependentProofOfSchoolClientAttachment(clientAttachment).subscribe({
+      next: (response: any) => {
+        if(response){
+          this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
+        }
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
+        this.incomeFacade.hideLoader();
+        this.closeClientAttachmentsPopup(true);
+      },
+      error: (err: any) => {
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.incomeFacade.hideLoader();
+      }
+    });
+
+    }
+
 }

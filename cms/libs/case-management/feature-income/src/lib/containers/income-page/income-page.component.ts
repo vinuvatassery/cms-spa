@@ -93,6 +93,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   fplPercentage:any
   paperlessFlag:String | null= null;
   workflowTypeCode:any;
+  isOpenClientsAttachment=false;
+  clientDependentId: any;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -106,7 +108,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       text: "Attach from client/'s attachments",
       id: "attachFromClient",
       click: (event: any,dataItem: any): void => {
-        this.onBlur();
+        this.isOpenClientsAttachment = true;
+        this.clientDependentId = dataItem.clientDependentId;
       },
     },
 
@@ -902,4 +905,43 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.workflowFacade.updateChecklist(removeEmployerIncomeDataPointList);
     }
   }
+
+  closeClientAttachmentsPopup($event: any) {
+    this.isOpenClientsAttachment = false;
+    this.clientDependentId = null;
+  }
+
+  handleClientAttachment($event: any) {
+    this.incomeFacade.showLoader();
+    const attachedFile = $event.files[0];
+    const clientAttachment = {
+      "clientDocumentId": $event.clientDocumentId,
+      "documentName": attachedFile.documentName,
+      "documentPath": $event.documentPath,
+      "entityId": this.clientDependentId,
+      "concurrencyStamp": $event.concurrencyStamp,
+      "clientId": this.clientId,
+      "clientCaseId": this.clientCaseId,
+      "clientCaseEligibilityId": this.clientCaseEligibilityId,
+      "documentTypeCode": "DEPENDENT_PROOF_OF_SCHOOL",
+      "size": $event.size,
+      "ContentTypeCode": attachedFile.ContentTypeCode
+    };
+    this.dependentFacade.uploadDependentProofOfSchoolClientAttachment(clientAttachment).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.incomeFacade.loadDependentsProofofSchools(this.clientId, this.clientCaseEligibilityId);
+        }
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
+        this.incomeFacade.hideLoader();
+        this.closeClientAttachmentsPopup(true);
+      },
+      error: (err: any) => {
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.incomeFacade.hideLoader();
+      }
+    });
+
+  }
+
 }
