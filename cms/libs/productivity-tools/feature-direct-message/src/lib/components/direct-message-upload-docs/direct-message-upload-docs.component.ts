@@ -4,14 +4,13 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommunicationFacade, ScreenType } from '@cms/case-management/domain';
+import {CommunicationFacade,WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ConfigurationProvider, LoggingService } from 'libs/shared/util-core/src/lib/shared-util-core.module';
@@ -29,13 +28,13 @@ export class DirectMessageUploadDocsComponent {
   @Output() uploadDocumentsClosedDialog = new EventEmitter<any>();
   @Output() cerEmailAttachments = new EventEmitter();
   @Input() clientAttachmentForm!: FormGroup;
-  @Input() clientDocumentList$!: any;
   ddlEditorVariables$ = this.communicationFacade.ddlEditorVariables$;
   showClientAttachmentUpload: boolean = false;
   showFormsAndDocumentsUpload: boolean = false;
   showAttachmentUpload: boolean = false;
   attachedFiles: any;
   @Input() notificationGroup!: string;
+  @Input() clientCaseEligibilityId!:string;
   public uploadedAttachedFile: any[] = [];
   public selectedAttachedFile: any[] = [];
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
@@ -50,7 +49,9 @@ export class DirectMessageUploadDocsComponent {
   @Input() isContentMissing!: boolean;
   @Input() selectedTemplate!: any;
   @Input() selectedTemplateContent !:any;
-  @Input() clientId!:any;
+  cerFormPreviewData:any;
+   @Input() clientId!:any;
+  showAttachmentOptions = true;
   onUploadDocumentsClosed(){
     this.uploadDocumentsClosedDialog.emit();
   }
@@ -59,11 +60,13 @@ export class DirectMessageUploadDocsComponent {
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
+    private readonly workflowFacade : WorkflowFacade,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
    ) {}
    ngOnInit(): void {
+    this.loadClientAttachments('348');
     this.loadFormsAndDocuemnts();
     this.cerAuthorizationForm = this.formBuilder.group({
       clientsAttachment:[]
