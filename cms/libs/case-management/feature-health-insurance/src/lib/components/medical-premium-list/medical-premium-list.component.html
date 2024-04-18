@@ -126,6 +126,9 @@
       </ng-template>
     </kendo-grid-column>
         <kendo-grid-column field="premiumAmt" title="Premium Paid" [width]="110">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.premiumAmt | kendoNumber: 'n2'}}</span>
+          </ng-template>
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">

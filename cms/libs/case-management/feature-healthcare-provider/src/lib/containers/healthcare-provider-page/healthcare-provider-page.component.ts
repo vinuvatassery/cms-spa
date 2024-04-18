@@ -288,25 +288,26 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
      this.workFlowFacade.updateChecklist(workFlowdata);
    }
 
-   private addSaveForLaterSubscription(): void {
-     this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
-       this.save().subscribe((response: any) => {
-         if (response) {
-           this.loaderService.hide();
-           if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      this.save().subscribe((response: any) => {
+        if (response) {
+          this.loaderService.hide();
+          if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+            else {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
           }
-          else
-          {
-            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-         }
-       })
-     });
+        }
+      })
+    });
   }
 
   private addSaveForLaterValidationsSubscription(): void {
