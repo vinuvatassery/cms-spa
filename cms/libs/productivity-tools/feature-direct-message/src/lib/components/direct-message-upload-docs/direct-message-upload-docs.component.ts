@@ -13,8 +13,7 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommunicationFacade, ScreenType } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { ConfigurationProvider, LoggingService } from 'libs/shared/util-core/src/lib/shared-util-core.module';
+import { LoaderService, ConfigurationProvider,LoggingService,NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'productivity-tools-direct-message-upload-docs',
