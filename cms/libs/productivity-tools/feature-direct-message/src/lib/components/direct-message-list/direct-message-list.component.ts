@@ -93,7 +93,6 @@ loadDirectMessageList(
     sortType: sortTypeValue,
   };
   this.loadDirectMessageListEvent.emit(gridDataRefinerValue);
-  this.gridDataHandle();
 }
 
 onChange(data: any) {
