@@ -737,17 +737,9 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     this.addNewRefundRx();
   }
   if (this.selectedRefundType === ServiceTypeCode.insurancePremium) {
-    if (this.refundRXForm.invalid) {
-      this.scrollToValidationError();
-      return;
-    }
     this.insuraceAddRefundClickSubject.next(true);
   }
   if (this.selectedRefundType === ServiceTypeCode.tpa) {
-    if (this.refundRXForm.invalid) {
-      this.scrollToValidationError();
-      return;
-    }
     this.tpaAddRefundClickSubject.next(true)
   }
 
@@ -1172,7 +1164,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       this.scrollToValidationError();
       return;
     } else {
-    
+
       let selectedpharmacyClaimsDto = selectedpharmacyClaims.map(
         (obj: any) => ({
           paymentRequestId:
@@ -1272,7 +1264,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       invalidControl.focus();
     }
   }
-  
+
   validateFormat(cardnumber: any): string {
     const sanitizedValue = cardnumber.replace(/[^\d]/g, '');
     const regex = /^(\d{0,6})(\d{0,3})/;
