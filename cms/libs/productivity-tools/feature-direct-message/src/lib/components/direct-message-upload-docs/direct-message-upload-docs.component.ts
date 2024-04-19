@@ -10,6 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import {CommunicationFacade,WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { LoaderService, ConfigurationProvider,LoggingService,NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -49,7 +50,7 @@ export class DirectMessageUploadDocsComponent {
   @Input() selectedTemplate!: any;
   @Input() selectedTemplateContent !:any;
   cerFormPreviewData:any;
-   @Input() clientId!:any;
+   clientId:string | null =""
   showAttachmentOptions = true;
   onUploadDocumentsClosed(){
     this.uploadDocumentsClosedDialog.emit();
@@ -63,9 +64,15 @@ export class DirectMessageUploadDocsComponent {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
+    private route : ActivatedRoute,
    ) {}
    ngOnInit(): void {
-    this.loadClientAttachments('348');
+    this.route.queryParamMap.subscribe((params :any) =>{
+      this.clientId = params.get('id')
+      if(this.clientId){
+        this.loadClientAttachments(this.clientId)
+      }
+     })
     this.loadFormsAndDocuemnts();
     this.cerAuthorizationForm = this.formBuilder.group({
       clientsAttachment:[]
