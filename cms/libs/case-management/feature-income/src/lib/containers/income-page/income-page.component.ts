@@ -160,6 +160,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
     this.addDiscardChangesSubscription();
+    this.loadClientAttachments(this.clientId);
     //this.loadAddress();
   }
 
@@ -449,6 +450,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
           if(this.isCerForm){
             this.incomeFacade.loadEmployerIncomes(this.clientId,this.clientCaseEligibilityId);
           }
+          this.loadClientAttachments(this.clientId);
         }
       });
   }

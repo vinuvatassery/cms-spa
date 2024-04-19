@@ -7,10 +7,11 @@
     <common-clients-attachment
     [clientAttachmentForm]="ClientsAttachmentForm"
     [clientDocumentList$]="clientAllDocumentList$"
+    [floatingLabel]="floatingLabel"
     (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
     ></common-clients-attachment>
 
-    <kendo-formerror *ngIf="!isProofOfSchoolDocumentUploaded"> File upload is required
+    <kendo-formerror *ngIf="!isProofOfSchoolDocumentUploaded"> Proof of School selection is required.
     </kendo-formerror>
 
   </section>

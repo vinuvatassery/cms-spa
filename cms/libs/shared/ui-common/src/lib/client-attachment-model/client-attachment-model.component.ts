@@ -11,6 +11,7 @@ export class ClientAttachmentModelComponent implements OnInit {
   ClientsAttachmentForm!:FormGroup;
   public uploadedAttachedFile: any[] = [];
   public selectedAttachedFile: any[] = [];
+  public floatingLabel="Proof of school";
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
