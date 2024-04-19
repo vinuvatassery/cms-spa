@@ -185,11 +185,11 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.verificationFacade.getHivVerificationWithAttachment( this.clientId, this.clientCaseEligibilityId).subscribe({
       next:(data)=>{
         if(data?.clientHivVerificationId){
+          this.hivVerificationForm.controls["providerOption"].setValue(data?.verificationMethodCode);
+          this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
           if(data?.verificationMethodCode == "UPLOAD_ATTACHMENT")
           {
             this.verificationFacade.showAttachmentOptions.next(false);
-            this.hivVerificationForm.controls["providerOption"].setValue(data?.verificationMethodCode);
-            this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
             if (data?.hivVerification?.documentName) {
               this.verificationFacade.hivVerificationUploadedDocument.next(data);
               this.alreadyUploaded = true;

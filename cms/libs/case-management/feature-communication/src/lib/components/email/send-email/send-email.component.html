@@ -45,6 +45,7 @@
         [data]="emails"
         [(ngModel)]="selectedToEmails"
         [allowCustom]="true"
+        [readonly]="communicationEmailTypeCode === 'APPLICATION_AUTHORIZATION_EMAIL' || communicationEmailTypeCode === 'CER_AUTHORIZATION_EMAIL'"
         (valueChange)="handleEmailsChanged($event)"
         aria-label="to address"
         ></kendo-multiselect>

@@ -1,9 +1,10 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef,Output,EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef,Output,EventEmitter, OnDestroy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { VerificationFacade,
    ClientHivVerification,
@@ -32,7 +33,7 @@ import { UserDataService } from '@cms/system-config/domain';
   styleUrls: ['./hiv-verification-request.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HivVerificationRequestComponent implements OnInit{
+export class HivVerificationRequestComponent implements OnInit, OnDestroy{
   /** Input properties **/
   @Input() hivVerificationForm!: FormGroup;
   @Input() clientId!: number;
@@ -58,6 +59,7 @@ export class HivVerificationRequestComponent implements OnInit{
   uploadedAttachment: any = [];
   uploadedDate: any;
   uploadedBy: any;
+  providerValueSubscription !: Subscription;
 
   /** Public properties **/
   fileUploadRestrictions: FileRestrictions = {
@@ -129,13 +131,12 @@ export class HivVerificationRequestComponent implements OnInit{
 ){}
   /** Internal event methods **/
   ngOnInit(): void {
-    this.providerValue$.subscribe(data=>{
+    this.providerValueSubscription = this.providerValue$.subscribe(data=>{
       this.userId = this.hivVerificationForm.controls["userId"].value;
       this.providerOption = data;
       if(data=== ProviderOption.HealthCareProvider){
         if(this.emailSentDate || this.isSendEmailFailed){
           this.healthCareProviderExists = true;
-          this.providerEmail = this.isEmailFieldVisible ? this.providerEmail : this.providerEmail[0];
         }
         if(this.healthCareProviderExists){
           this.loadHivVerificationEmail();
@@ -443,5 +444,9 @@ getLoggedInUserProfile(){
     }
   })
   this.verificationFacade.hideLoader();
+}
+
+ngOnDestroy(): void {
+  this.providerValueSubscription?.unsubscribe();
 }
 }

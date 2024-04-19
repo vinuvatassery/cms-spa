@@ -387,7 +387,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.invalidSignatureDate$.next(value > today);
       }
       const isValid = value && value < today;
-      this.updateDataPoints('applicantSignedDate', isValid)
       this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
     })
   }
