@@ -56,7 +56,7 @@ export class SignalrEventHandlerService {
     return this.signalrService.signalrEvents$?.pipe(
       filter((event) => event.payload.eventType === eventType),
       map((event) => {       
-        
+        debugger
         this.reminderSnackBars.next(event.payload)
         // Send an acknowledgment to update the status of the message (if Ack enabled).
         if (event.payload.isAckEnabled) {
