@@ -680,6 +680,7 @@ export class ContactFacade {
         }
       },
       error: (err) => {
+        this.addClientPhoneSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
