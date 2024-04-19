@@ -39,8 +39,7 @@
       </kendo-formerror>
     </div>
     <div class="flex-col mb-2" *ngIf="currentSmsData">
-      <!-- <case-management-text-message-editor [templateContent] ="templateContent" [smsMessages]="smsMessages" [dataEvent]="smsEditorValueEvent" [currentValue]="currentSmsData" (editorValue)="handleSmsEditor($event)" ></case-management-text-message-editor> -->
-      <case-management-message-editor [messageList]="messageList" [templateContent]="templateContent" [smsMessages]="smsMessages"></case-management-message-editor>
+       <case-management-message-editor [messageList]="messageList" [templateContent]="templateContent" [smsMessages]="smsMessages"></case-management-message-editor>
     </div>
   </div>
 </section>
@@ -137,7 +136,7 @@ class="app-c-modal app-c-modal-sm app-c-modal-np">
         (click)="onSendMessagesClick()"
         aria-label="Send"
       >
-        Send
+      SEND MESSAGE(S)
       </button>
     </div>
   </div>

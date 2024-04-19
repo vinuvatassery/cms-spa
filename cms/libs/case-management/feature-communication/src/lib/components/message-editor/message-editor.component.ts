@@ -92,7 +92,14 @@ export class MessageEditorComponent implements OnInit, OnChanges {
 
 
   onDeleteMessageClicked(id: any) {
+    if(this.messageList.length === 1){
+      this.messageList.forEach((x:any)=>{
+        x.messageText = '';
+      })
+    }
+    else{
     this.messageList = this.messageList.filter((x:any)=> x.messageId != id);  
+    }
   }
 
 
@@ -116,7 +123,7 @@ export class MessageEditorComponent implements OnInit, OnChanges {
   }
 
   onSearchChange(searchText: string): void {
-    debugger
+
     if(searchText){
     this.clientVariables = this.allVariables.filter((option: any) =>
       option.lovDesc?.toLowerCase().includes(searchText.toLowerCase())

@@ -85,8 +85,7 @@
         </div>
         </kendo-popup>
         <button 
-          kendoButton
-          [disabled]="this.messageList.length <= 1"
+          kendoButton          
           class="k-danger-link"
           (click)="onDeleteMessageClicked(item.messageId)"
           aria-label="Delete"

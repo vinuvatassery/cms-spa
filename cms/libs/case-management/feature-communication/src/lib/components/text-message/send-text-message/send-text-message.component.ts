@@ -15,7 +15,6 @@ import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
-import { TextMessageEditorComponent } from '../text-message-editor/text-message-editor.component';
 import { UserDataService } from '@cms/system-config/domain';
 import { MessageEditorComponent } from '../../message-editor/message-editor.component';
 @Component({
@@ -25,7 +24,7 @@ import { MessageEditorComponent } from '../../message-editor/message-editor.comp
 })
 export class SendTextMessageComponent implements OnInit {
 
-  @ViewChild(TextMessageEditorComponent) textMessageEditor!: TextMessageEditorComponent;
+ 
   @ViewChild(MessageEditorComponent) messageEditor !: MessageEditorComponent;
   /** Input properties **/
   @Input() notificationGroup!: any;
@@ -48,9 +47,7 @@ export class SendTextMessageComponent implements OnInit {
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
-  @Output() loadInitialData = new EventEmitter();
-  @Output() sendMessageEvent = new EventEmitter<SmsNotification>();
-  @Output() smsEditorValueEvent = new EventEmitter<any>();
+  //@Output() smsEditorValueEvent = new EventEmitter<any>();
   /** Public properties **/
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any;
@@ -288,7 +285,7 @@ export class SendTextMessageComponent implements OnInit {
       Messages: messages,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       typeCode: CommunicationEventTypeCode.ClientSMS,
-      templateTypeCode: this.documentTemplate?.templateTypeCode ?? ''
+      templateTypeCode: this.documentTemplate?.templateTypeCode ?? this.selectedSmsTemplate.subTypeCode
     };
     this.sendSms(sms);
   }
@@ -365,7 +362,7 @@ export class SendTextMessageComponent implements OnInit {
               this.selectedSmsTemplate = template;
               this.handleSmsEditor(template);
               this.isOpenMessageTemplate=true;
-              this.smsEditorValueEvent.emit(template);
+              //this.smsEditorValueEvent.emit(template);
               this.ref.detectChanges();
             }
             this.loaderService.hide();
@@ -396,7 +393,7 @@ export class SendTextMessageComponent implements OnInit {
                 this.selectedSmsTemplate = template;
                 this.handleSmsEditor(template);
                 this.isOpenMessageTemplate=true;
-                this.smsEditorValueEvent.emit(template);
+                //this.smsEditorValueEvent.emit(template);
                 this.ref.detectChanges();
               }
               this.loaderService.hide();

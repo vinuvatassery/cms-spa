@@ -8,7 +8,6 @@ import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { CaseManagementFeatureCommunicationRoutingModule } from './case-management-feature-communication-routing.module';
 /** Components **/
 import { SendTextMessageComponent } from './components/text-message/send-text-message/send-text-message.component';
-import { TextMessageEditorComponent } from './components/text-message/text-message-editor/text-message-editor.component';
 import { SendTextMessageConfirmationComponent } from './components/text-message/send-text-message-confirmation/send-text-message-confirmation.component';
 import { TemplatePickerComponent } from './components/template-picker/template-picker.component';
 import { SendEmailComponent } from './components/email/send-email/send-email.component';
@@ -41,7 +40,6 @@ import { MessageEditorComponent } from './components/message-editor/message-edit
   ],
   declarations: [
     SendTextMessageComponent,
-    TextMessageEditorComponent,
     SendTextMessageConfirmationComponent,
     TemplatePickerComponent,
     SendEmailComponent,
@@ -66,7 +64,6 @@ import { MessageEditorComponent } from './components/message-editor/message-edit
   ],
   exports: [
     SendTextMessageComponent,
-    TextMessageEditorComponent,
     SendTextMessageConfirmationComponent,
     TemplatePickerComponent,
     SendEmailComponent,
