@@ -17,7 +17,7 @@ export * from './lib/components/letter/send-letter-confirmation/send-letter-conf
 export * from './lib/components/template-picker/template-picker.component';
 export * from './lib/components/text-message/send-text-message/send-text-message.component';
 export * from './lib/components/text-message/send-text-message-confirmation/send-text-message-confirmation.component';
-export * from './lib/components/text-message/text-message-editor/text-message-editor.component';
+export * from './lib/components/message-editor/message-editor.component';
 export * from './lib/containers/send-letter-page/send-letter-page.component';
 export * from './lib/containers/communication-page/communication-page.component';
 export * from './lib/components/disenrollment-letter-later/disenrollment-letter-later.component';
