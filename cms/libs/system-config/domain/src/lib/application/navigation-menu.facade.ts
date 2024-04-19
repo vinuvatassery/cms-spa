@@ -135,4 +135,17 @@ export class NavigationMenuFacade {
         this.hideLoader();   
   }
 
+  getDirectMessageCount() {
+    this.navigationMenuService.getPendingApprovalGeneralCount()
+    .subscribe(
+      {
+        next: (count: any) => {
+            this.pendingApprovalGeneralCountSubject.next(count);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
 }

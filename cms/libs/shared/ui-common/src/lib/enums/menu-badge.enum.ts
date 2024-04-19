@@ -3,4 +3,5 @@ export enum MenuBadge {
     fundsAndPcas = "FUNDSANDPCAS",
     pendingApprovals = "PENDING_APPROVALS",
     productivityTools = "PRODUCTIVITY_TOOLS",
+    directMessage = "DIRECT_MESSAGE",
 }
