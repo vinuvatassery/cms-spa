@@ -92,7 +92,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
   searchProviderSubject = this.financialVendorFacade.searchProviderSubject;
-
+   notificationReferences:  any[] =[]
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   unviewedCount = 0;
@@ -121,26 +121,39 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   }
 
   reminderSnackBarSubscribe() {
-    this.reminderSnackBar$.subscribe((res: any) => {
-      this.reminderNotificationSnackbarService
-        .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, res)
+    this.reminderSnackBar$.subscribe((res: any) => {      
+
+      const snackbarMessage: any = {
+        payload:res,
+        type: ReminderSnackBarNotificationType.LIGHT
+      };
+       
+
+      if (!this.signalrEventHandlerService.snackBarAlertIds.includes(snackbarMessage.payload?.alertExtraProperties?.AlertId)) {
+        this.signalrEventHandlerService.snackBarAlertIds.push(snackbarMessage.payload.alertExtraProperties?.AlertId)
+        this.showNotifications(snackbarMessage)
+
+      }   
+      else
+      {
+        const updatedNotificationReference = 
+        this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === snackbarMessage.payload?.alertExtraProperties?.AlertId)              
+        const payload = {
+          ...snackbarMessage.payload,
+        }
+  
+        updatedNotificationReference.content.instance.snackBarMessage = payload
+      
+      }
+
+     
     })
 
-    this.reminderNotificationSnackbarService.snackbar$.subscribe({
-      next: (res) => {
-        if (res) {
-            if (!this.signalrEventHandlerService.snackBarAlertIds.includes(res.payload?.alertExtraProperties?.AlertId)) {
-              this.signalrEventHandlerService.snackBarAlertIds.push(res.payload.alertExtraProperties?.AlertId)
-              this.showNotifications(res)
 
-            }   
-        }
-      },
-
-    });
 
   }
-  showNotifications(res: any) {
+  showNotifications(res: any) {    
+
     const notificationRef: NotificationRef = this.notificationService.show({
       content: ReminderNotificationSnackBarsTemplateComponent,
       appendTo: this.reminderNotificationTemplateContainer,
@@ -151,6 +164,8 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
       hideAfter: this.hideAfter,
       cssClass: 'reminder-notification-bar',
     });
+    
+    this.notificationReferences.push(notificationRef)
     if (notificationRef && notificationRef.content && notificationRef.content.instance) {
 
       const payload = {
@@ -171,6 +186,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   editReminderHandler(notificationRef :any){
     notificationRef.content.instance.editReminder.subscribe((event:any)=>{
       this.updateSnackBarCount(event,notificationRef)
+      notificationRef.hide()
     })
   }
   dismissReminderHandler(notificationRef:any){
@@ -188,6 +204,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
 
 
    updateSnackBarCount(alertId:any, notificationRef:any){
+    notificationRef.hide()
     this.signalrEventHandlerService.snackBarAlertIds = this.signalrEventHandlerService.snackBarAlertIds.filter(x => x !== alertId)
     if (notificationRef && notificationRef.content && notificationRef.content.instance) {
       this.signalrEventHandlerService.remindersCountSubject.next(this.signalrEventHandlerService.snackBarAlertIds.length)
@@ -252,9 +269,10 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   }
 
   reminderContainerClicked() {
+    
     this.showSideReminderNotification();
     const divMessage = document.getElementsByClassName(
-      'k-notification-container ng-star-inserted'
+      'k-notification-container'
     );
     if (divMessage.length > 1) {
       this.isReminderExpand = !this.isReminderExpand;
