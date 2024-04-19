@@ -949,20 +949,22 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadClientAttachments(clientId: any) {
-    this.loaderService.show();
-    this.communicationFacade.loadClientAttachments(clientId)
-      .subscribe({
-        next: (attachments: any) => {
-          if (attachments.totalCount > 0) {
-            this.clientAllDocumentList$ = attachments?.items;
-            this.cdr.detectChanges();
-          }
-          this.loaderService.hide();
-        },
-        error: (err: any) => {
-          this.loaderService.hide();
-        },
-      });
+    if(clientId!=null && clientId != undefined && clientId !=''){
+      this.loaderService.show();
+      this.communicationFacade.loadClientAttachments(clientId, "DEPENDENT_PROOF_OF_SCHOOL")
+        .subscribe({
+          next: (attachments: any) => {
+            if (attachments.totalCount > 0) {
+              this.clientAllDocumentList$ = attachments?.items;
+              this.cdr.detectChanges();
+            }
+            this.loaderService.hide();
+          },
+          error: (err: any) => {
+            this.loaderService.hide();
+          },
+        });
+    }
   }
 
 }

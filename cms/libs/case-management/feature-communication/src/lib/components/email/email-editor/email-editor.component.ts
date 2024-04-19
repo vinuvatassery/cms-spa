@@ -103,7 +103,7 @@ export class EmailEditorComponent implements OnInit {
       },
     },
   ];
-  clientAllDocumentList$!: any;  
+  clientAllDocumentList$!: any;
   formsAndDocumentList$!: any;
   searchText: string = '';
   filteredOptions !: any;
@@ -166,7 +166,7 @@ export class EmailEditorComponent implements OnInit {
         }
       }
     }
-    
+
     if (this.notificationGroup === ScreenType.VendorProfile) {
       const optionIndex = this.editorUploadOptions.findIndex(i => i.id === 'attachfromclient');
       if (optionIndex > -1) {
@@ -554,7 +554,7 @@ clientAttachmentClick(item:any)
 
   loadClientAttachments(clientId: any) {
     this.loaderService.show();
-    this.communicationFacade.loadClientAttachments(clientId)
+    this.communicationFacade.loadClientAttachments(clientId,null)
       .subscribe({
         next: (attachments: any) => {
           if (attachments.totalCount > 0) {
