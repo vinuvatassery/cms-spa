@@ -232,8 +232,14 @@ export class SendTextMessageComponent implements OnInit {
 
   /** Internal event methods **/
   onSaveForLaterClicked() {
-    this.isOpenSendMessageClicked = false;
-    this.isShowSaveForLaterPopupClicked = true;
+    if (this.messageRecipient === undefined || this.messageRecipient === '' || this.messageRecipient?.length === 0) {
+      this.isRecipientMissing = true;
+      this.isFormValid = false;
+    }
+    if (this.isFormValid) {
+      this.isOpenSendMessageClicked = false;
+      this.isShowSaveForLaterPopupClicked = true;
+    }
   }
 
   onEditMessagesClicked() {
@@ -242,8 +248,14 @@ export class SendTextMessageComponent implements OnInit {
   }
 
   onSendMessageConfirmClicked() {
+    if(this.messageRecipient === undefined || this.messageRecipient === '' || this.messageRecipient?.length === 0){
+      this.isRecipientMissing = true;
+      this.isFormValid = false;
+    }
+    if(this.isFormValid){
     this.isOpenSendMessageClicked = false;
     this.isShowSendMessageConfirmPopupClicked = true;
+    }
   }
 
   onCloseSendMessageClicked() {
@@ -270,12 +282,13 @@ export class SendTextMessageComponent implements OnInit {
     let messages =  this.messageEditor.messageList.reverse().map((item:any) => item.messageText);
     const sms: SmsNotification = {
       templateId: this.documentTemplate?.documentTemplateId ?? this.selectedSmsTemplate.notifcationDraftId,
-      entity: this.notificationGroup,
+      entity: this.entityType,
       entityId: this.entityId,
       recepients: this.messageRecipient?.phoneNbr ? [('+1' + this.messageRecipient?.phoneNbr)] : null,
       Messages: messages,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
-      typeCode: CommunicationEventTypeCode.ClientSMS
+      typeCode: CommunicationEventTypeCode.ClientSMS,
+      templateTypeCode: this.documentTemplate?.templateTypeCode ?? ''
     };
     this.sendSms(sms);
   }

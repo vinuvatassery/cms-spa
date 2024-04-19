@@ -21,6 +21,9 @@ export class MessageEditorComponent implements OnInit, OnChanges {
   showVariable:boolean = false;
   selectedVariableMessageId:any;
   tAreaMessageMaxLength = 140;
+  clientVariableExist:any =true;
+  caseWorkerVariableExist:any=true;
+  otherVariableExist:any=true;
 
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -113,11 +116,18 @@ export class MessageEditorComponent implements OnInit, OnChanges {
   }
 
   onSearchChange(searchText: string): void {
+    debugger
     if(searchText){
     this.clientVariables = this.allVariables.filter((option: any) =>
       option.lovDesc?.toLowerCase().includes(searchText.toLowerCase())
     );
+    this.clientVariableExist = this.clientVariables.filter((x:any)=>x.parentCode =='CLIENT_VARIABLE').length;
+    this.caseWorkerVariableExist = this.clientVariables.filter((x:any)=>x.parentCode =='CASE_WORKER_VARIABLE').length;
+    this.otherVariableExist = this.clientVariables.filter((x:any)=>x.parentCode =='OTHER_VARIABLE').length;
     }else{
+      this.clientVariableExist = true;
+      this.caseWorkerVariableExist = true;
+      this.otherVariableExist = true;
       this.clientVariables = this.allVariables;
     }
   }

@@ -51,7 +51,7 @@
             </button>
           </div>
           <div class="var-list-block">
-            <section>
+            <section *ngIf ="clientVariableExist">
               <h5>Client Variables</h5>
               <ul
                 class="var-list-item"
@@ -61,7 +61,7 @@
                 <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='CLIENT_VARIABLE'" aria-label="client variables item">{{ variable.lovDesc }}</li>
               </ul>
             </section>
-            <section>
+            <section *ngIf ="caseWorkerVariableExist">
               <h5>My Variables</h5>
               <ul
                 class="var-list-item"
@@ -71,7 +71,7 @@
                 <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ variable.lovDesc }}</li>
               </ul>
             </section>
-            <section>
+            <section *ngIf ="otherVariableExist">
               <h5>Other Variables</h5>
               <ul
                 class="var-list-item"
