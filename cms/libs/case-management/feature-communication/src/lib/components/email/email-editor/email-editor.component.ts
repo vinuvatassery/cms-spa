@@ -107,6 +107,9 @@ export class EmailEditorComponent implements OnInit {
   formsAndDocumentList$!: any;
   searchText: string = '';
   filteredOptions !: any;
+  typeCount!: number;
+  myCount!: number;
+  otherCount!: number;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -231,6 +234,9 @@ export class EmailEditorComponent implements OnInit {
           }
           this.clientVariables = variables;
           this.filteredOptions = this.clientVariables;
+          this.typeCount = this.clientVariables.filter((variable: any) => variable.parentCode === this.typeName).length;
+          this.myCount = this.clientVariables.filter((variable: any) => variable.parentCode === 'CASE_WORKER_VARIABLE').length;
+          this.otherCount = this.clientVariables.filter((variable: any) => variable.parentCode === 'OTHER_VARIABLE').length;
         }
       this.loaderService.hide();
     },
@@ -274,6 +280,9 @@ export class EmailEditorComponent implements OnInit {
 
   onSearchClosed() {
     this.isShowPopupClicked = false;
+    this.getFilteredVariableCount(this.filteredOptions);
+    this.searchText = "";
+    this.onSearchChange(this.searchText);
   }
 
   emailEditorValueEvent(emailData:any){
@@ -590,12 +599,22 @@ clientAttachmentClick(item:any)
 
   onSearchChange(searchText: string): void {
     if(searchText){
-    this.searchText = searchText;
-    this.clientVariables = this.filteredOptions.filter((option: any) =>
+      this.searchText = searchText;
+      this.clientVariables = this.filteredOptions.filter((option: any) =>
       option.lovDesc?.toLowerCase().includes(this.searchText.toLowerCase())
     );
+    this.typeCount = this.clientVariables.filter((variable: any) => variable.parentCode === this.typeName).length;
+    this.myCount = this.clientVariables.filter((variable: any) => variable.parentCode === 'CASE_WORKER_VARIABLE').length;
+    this.otherCount = this.clientVariables.filter((variable: any) => variable.parentCode === 'OTHER_VARIABLE').length;
     }else{
       this.clientVariables = this.filteredOptions;
     }
+    this.getFilteredVariableCount(this.clientVariables);
+  }
+
+  getFilteredVariableCount(clientVariables: any) {
+    this.typeCount = clientVariables.filter((variable: any) => variable.parentCode === this.typeName).length;
+    this.myCount = clientVariables.filter((variable: any) => variable.parentCode === 'CASE_WORKER_VARIABLE').length;
+    this.otherCount = clientVariables.filter((variable: any) => variable.parentCode === 'OTHER_VARIABLE').length;
   }
 }

@@ -73,6 +73,19 @@ export class NotificationFacade {
         },
       });
   }
+
+  getNotificationsCount(): void {
+    this.notificationDataService
+      .getNotificationsCount()
+      .subscribe({
+        next: (response: any) => {  
+            this.notificationAndReminderCountListSubject.next(response);         
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
   viewNotifications(notifictaions: any[]): Observable<any> {
     return this.notificationDataService.viewNotifictaions(notifictaions);
   }
