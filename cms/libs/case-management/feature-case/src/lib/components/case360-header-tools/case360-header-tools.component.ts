@@ -142,6 +142,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientSMS;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.SmsTypeCode;
+        this.smsCommunicationTypeCode = '';
         this.notificationGroup = CommunicationEventTypeCode.SMS;
         this.informationalText = "Select an existing template or draft custom text messages"
         this.templateHeader = 'Send New SMS Text';

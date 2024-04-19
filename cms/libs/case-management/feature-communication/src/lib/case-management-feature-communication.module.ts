@@ -29,6 +29,7 @@ import { DisEnrollmentLaterComponent } from './components/disenrollment-letter-l
 import { ApprovalLaterComponent } from './components/approval-letter-later/approval-letter-later.component';
 import { NotificationDraftConfirmationComponent } from './components/notification-draft-confirmation/notification-draft-confirmation.component';
 import { PreviewNotificationTemplatesComponent } from './components/preview-notification-templates/preview-notification-templates.component';
+import { MessageEditorComponent } from './components/message-editor/message-editor.component';
 
 @NgModule({
   imports: [
@@ -61,6 +62,7 @@ import { PreviewNotificationTemplatesComponent } from './components/preview-noti
     ApprovalLaterComponent,
     NotificationDraftConfirmationComponent,
     PreviewNotificationTemplatesComponent,
+    MessageEditorComponent,
   ],
   exports: [
     SendTextMessageComponent,

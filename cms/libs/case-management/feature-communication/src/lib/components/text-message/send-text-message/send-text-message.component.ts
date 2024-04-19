@@ -10,13 +10,14 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, CommunicationFacade, SmsNotification, CommunicationEventTypeCode, EntityTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, CommunicationFacade, SmsNotification, CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { TextMessageEditorComponent } from '../text-message-editor/text-message-editor.component';
 import { UserDataService } from '@cms/system-config/domain';
+import { MessageEditorComponent } from '../../message-editor/message-editor.component';
 @Component({
   selector: 'case-management-send-text-message',
   templateUrl: './send-text-message.component.html',
@@ -25,6 +26,7 @@ import { UserDataService } from '@cms/system-config/domain';
 export class SendTextMessageComponent implements OnInit {
 
   @ViewChild(TextMessageEditorComponent) textMessageEditor!: TextMessageEditorComponent;
+  @ViewChild(MessageEditorComponent) messageEditor !: MessageEditorComponent;
   /** Input properties **/
   @Input() notificationGroup!: any;
   @Input() entityId!: any;
@@ -71,6 +73,14 @@ export class SendTextMessageComponent implements OnInit {
   loginUserId!: any;
   isRecipientMissing:boolean = false;
   isFormValid:boolean = true;
+  messageList:
+  {
+    messageId: number,
+    messageText: string,
+    wordCount: number,
+    showVariables: boolean
+  }[] = [];
+
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -87,8 +97,10 @@ export class SendTextMessageComponent implements OnInit {
     if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftSmsTemplates();
     }else if(this.isNewNotificationClicked){
+      this.loadSmsTemplates();
       this.openNewSmsClicked();
-    }else{
+    }
+    else{
       this.loadSmsTemplates();
     }
   }
@@ -134,6 +146,7 @@ export class SendTextMessageComponent implements OnInit {
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
         },
       });
+      this.handleSmsEditor(true);
   }
 
   /** Private methods **/
@@ -170,8 +183,8 @@ export class SendTextMessageComponent implements OnInit {
         next: (data: any) => {
           if (data) {
             this.ddlTemplates = data;
-            const defaultOption = this.ddlTemplates.find((option: any) => option.description === 'Draft Custom Sms');
-            const otherOptions = this.ddlTemplates.filter((option: any) => option.description !== 'Draft Custom Sms');
+            const defaultOption = this.ddlTemplates.find((option: any) => option.description === 'Draft Custom Messages');
+            const otherOptions = this.ddlTemplates.filter((option: any) => option.description !== 'Draft Custom Messages');
             this.sortDropdownValues(defaultOption, otherOptions);
             this.ref.detectChanges();
           }
@@ -186,6 +199,7 @@ export class SendTextMessageComponent implements OnInit {
   }
 
   sortDropdownValues(defaultOption: any, otherOptions: any) {
+
     // Sort the rest alphabetically and numerically
     const sortedOptions = otherOptions.sort((a: any, b: any) => {
       const isANumeric = !isNaN(Number(a.description.charAt(0))); // Check if option a starts with a number
@@ -253,12 +267,13 @@ export class SendTextMessageComponent implements OnInit {
       this.onCloseSendMessageConfirmClicked();
     }
     if(this.isFormValid){
+    let messages =  this.messageEditor.messageList.reverse().map((item:any) => item.messageText);
     const sms: SmsNotification = {
       templateId: this.documentTemplate?.documentTemplateId ?? this.selectedSmsTemplate.notifcationDraftId,
       entity: this.notificationGroup,
       entityId: this.entityId,
       recepients: this.messageRecipient?.phoneNbr ? [('+1' + this.messageRecipient?.phoneNbr)] : null,
-      Messages: this.textMessageEditor.messages,
+      Messages: messages,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       typeCode: CommunicationEventTypeCode.ClientSMS
     };
@@ -295,8 +310,9 @@ export class SendTextMessageComponent implements OnInit {
     }
     if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = true;
-    this.smsEditorValueEvent.emit(this.currentSmsData);
-    this.selectedSmsTemplate.messages = this.textMessageEditor.messages;
+    let messages =  this.messageEditor.messageList.reverse().map((item:any) => item.messageText);
+    this.selectedSmsTemplate.messages = messages;
+
     this.saveClientAndVendorNotificationForLater(this.selectedSmsTemplate);
     }
   }
@@ -304,6 +320,7 @@ export class SendTextMessageComponent implements OnInit {
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
     let smsRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
+    smsRequestFormdata.append('entity', this.entityType ?? '');
     let draftNotificationRequest = this.communicationFacade.prepareClientAndVendorSmsData(smsRequestFormdata, draftTemplate, this.messageRecipient, []);
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftNotificationRequest)
         .subscribe({
@@ -385,7 +402,6 @@ export class SendTextMessageComponent implements OnInit {
       };
       this.selectedSmsTemplate = event;
       this.handleSmsEditor(event);
-      this.smsEditorValueEvent.emit(event);
       this.documentTemplate = {
         'description': event.description,
         'documentTemplateId': event.notificationTemplateId

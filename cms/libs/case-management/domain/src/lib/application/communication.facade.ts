@@ -312,12 +312,13 @@ export class CommunicationFacade {
   }
 
   prepareClientAndVendorSmsData(formData: FormData, draftTemplate: any, messageRecipient: any, arg2: undefined[]) {
+    let subTypeCode = draftTemplate?.subTypeCode ?? draftTemplate?.subtypeCode;
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('typeCode', draftTemplate?.typeCode ?? '');
+    formData.append('subTypeCode', subTypeCode ?? '');
     formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
-    formData.append('recepients', messageRecipient?.phoneNbr ?? '');
-    formData.append('entity', draftTemplate?.typeCode ?? '');
+    formData.append('recepients', messageRecipient?.phoneNbr ?? '');   
     let i = 0;
     draftTemplate.messages.forEach((msg: any) => {
       formData.append('messages[' + i + ']', msg);
