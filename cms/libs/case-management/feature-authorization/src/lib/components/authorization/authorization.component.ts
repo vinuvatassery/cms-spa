@@ -121,6 +121,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.addSaveSubscription();
     this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
+    this.loadAuthorization();
   }
 
   getNotificationTypeCode(sendEmailClick: boolean) {
@@ -441,6 +442,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.showCopyOfSignedApplicationSizeValidation.next(isLargeFile);
     this.updateDataPoints('copyOfSignedApplication', true);
     this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
+    this.saveDateAndSignedDoc();
   }
 
   handleFileRemoved(e: SelectEvent) {
@@ -530,10 +532,43 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       this.currentDate = event;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.value;
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+      this.saveDateAndSignedDoc();
     }
   }
 
-
+  saveDateAndSignedDoc() {
+    this.loaderService.show();
+    const authorization = {
+      clientCaseEligibilityId: this.clientCaseEligibilityId,
+      applicantSignedDate: this.intl.formatDate(this.authorizationForm?.get('applicantSignedDate')?.value, this.dateFormat),
+      signatureNotedDate: this.intl.formatDate(new Date(this.authorizationForm?.get('signatureNotedDate')?.value), this.dateFormat),
+      signedApplicationDocument: this.uploadedCopyOfSignedApplication ?? '',
+      signedApplication: {}
+    }
+    if (this.uploadedCopyOfSignedApplication) {
+      const documentId = this.copyOfSignedApplication?.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
+      authorization.signedApplication = {
+        documentId: documentId,
+        documentName: this.uploadedCopyOfSignedApplication.name,
+        documentSize: this.uploadedCopyOfSignedApplication.size,
+        documentTypeCode: this.documentTypeCode,
+      }
+    }
+    this.authorizationFacade.saveDateSignedAndSignedFile(authorization).subscribe({
+      next: (response) => {
+        if(response){
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Authorization Saved Successfully!");
+        }
+      },
+      error: (err) => {
+        this.loaderService.hide();
+        this.workflowFacade.enableSaveButton();
+        this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
 
 updateSendEmailSuccessStatus(event:any){
  this.isSendEmailSuccess = event;
@@ -541,7 +576,7 @@ updateSendEmailSuccessStatus(event:any){
 
 loadPendingEsignRequestInfo(){
   this.loaderService.show();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail : CommunicationEventTypeCode.ApplicationAuthorizationEmail)
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', '')
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {
@@ -608,5 +643,39 @@ onGetSignedApplicationClicked(){
         this.loggingService.logException(error);
       }
     });
+}
+
+loadAuthorization() {
+  this.loaderService.show()
+  this.authorizationFacade.bindAuthorizationDetails(this.clientCaseEligibilityId??'')
+  .subscribe({
+    next: (data: any) => {
+      if(data){
+        this.signedApplication = data;
+        this.authorizationForm?.get('applicantSignedDate')?.patchValue(new Date(data?.applicantSignedDate));
+        const signatureNotedDate = data?.signatureNotedDate ? formatDate(new Date(data?.signatureNotedDate), 'MM-dd-yyyy') : '';
+        this.authorizationForm?.get('signatureNotedDate')?.patchValue(signatureNotedDate);
+        this.dateSignatureNoted = signatureNotedDate;
+        if (data.signedApplication) {
+          this.copyOfSignedApplication = [
+            {
+              name: data?.signedApplication?.documentName,
+              size: data?.signedApplication?.documentSize,
+              src: data?.signedApplication?.documentPath,
+              uid: data?.signedApplication?.documentId,
+              documentId: data?.signedApplication?.documentId,
+            },
+          ];
+        }
+        this.updateInitialDataPoints(data?.applicantSignedDate, data.signedApplication);
+      }
+      this.loaderService.hide();
+    },
+    error: (error) => {
+      this.loaderService.hide();
+      this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
+      this.loggingService.logException(error);
+    }
+  });
 }
 }

@@ -50,7 +50,26 @@ export class AuthorizationFacade {
     }
 
     updateAuthorization(data: any) {
-        return this.authorizationDataService.updateAuthorization(data);
+        let formData = this.prepareFormData(data);
+        return this.authorizationDataService.updateAuthorization(formData);
+    }
+
+    prepareFormData(data: any) {
+        const formData: any = new FormData();
+        formData.append('ClientCaseEligibilityId', data?.clientCaseEligibilityId ?? '');
+        formData.append('ApplicantSignedDate', data?.applicantSignedDate ?? '');
+        formData.append('SignatureNotedDate', data?.signatureNotedDate ?? '');
+        formData.append('SignedApplicationDocument', data?.signedApplicationDocument ?? '');
+        formData.append('SignedApplication[DocumentId]', data?.signedApplication?.documentId ?? '');
+        formData.append('SignedApplication[DocumentName]', data?.signedApplication?.documentName ?? '');
+        formData.append('SignedApplication[DocumentSize]', data?.signedApplication?.documentSize ?? '');
+        formData.append('SignedApplication[DocumentTypeCode]', data?.signedApplication?.documentTypeCode ?? '');
+        return formData;
+    }
+
+    saveDateSignedAndSignedFile(data: any) {
+        let formData = this.prepareFormData(data);
+        return this.authorizationDataService.saveDateAndSignedDocument(formData);
     }
 
     getNoticeTemplate(documentTemplateTypeCode: string) {
@@ -66,4 +85,8 @@ export class AuthorizationFacade {
             },
         });
     }
+
+    bindAuthorizationDetails(clientCaseEligibility: any) {
+        return this.authorizationDataService.loadAuthorization(clientCaseEligibility);
+      }
 }
