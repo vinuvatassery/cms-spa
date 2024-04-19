@@ -186,7 +186,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   claimsType: any;
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
-  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
   sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;

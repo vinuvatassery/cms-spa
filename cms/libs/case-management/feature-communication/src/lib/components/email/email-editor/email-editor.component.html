@@ -87,7 +87,7 @@
       </div>
       <div class="var-list-block">
         <section>
-          <h5>{{variableName}} Variables</h5>
+          <h5 *ngIf="typeCount > 0">{{variableName}} Variables</h5>
           <ul
             class="var-list-item"
             aria-label="client variables"
@@ -97,7 +97,7 @@
           </ul>
         </section>
         <section>
-          <h5>My Variables</h5>
+          <h5 *ngIf="myCount > 0">My Variables</h5>
           <ul
             class="var-list-item"
             aria-label="my variables"
@@ -107,13 +107,13 @@
           </ul>
         </section>
         <section>
-          <h5>Other Variables</h5>
+          <h5 *ngIf="otherCount > 0">Other Variables</h5>
           <ul
             class="var-list-item"
             aria-label="other variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='OTHER_VARIABLE'" aria-label="other variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode ==='OTHER_VARIABLE'" aria-label="other variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
       </div>
@@ -174,7 +174,6 @@
           aria-label="align justify"
         ></kendo-toolbar-button>
       </kendo-toolbar-buttongroup>
-      <kendo-toolbar-button kendoEditorViewSourceButton></kendo-toolbar-button>
       <kendo-toolbar-buttongroup>
         <kendo-toolbar-button
           kendoEditorInsertUnorderedListButton

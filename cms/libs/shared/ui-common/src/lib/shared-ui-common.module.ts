@@ -22,6 +22,7 @@ import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 
 import { FileSizePipe } from './pipes/fileSize.pipe';
+import {LastMessageDateTimePipe} from './pipes/lastMessageDateTime.pipe';
 // directive
 import {
   KendoFileSelectDirective,
@@ -105,6 +106,7 @@ import { ClientAttachmentModelComponent } from './client-attachment-model/client
     ReadMoreComponent,
     DeleteTodoConfirmationComponent,
     AddEmployerComponent,
+    LastMessageDateTimePipe
   ],
   exports: [
     LoginStatusComponent,
@@ -151,7 +153,8 @@ import { ClientAttachmentModelComponent } from './client-attachment-model/client
     GridNoRecordsComponent,
     ReadMoreComponent,
     DeleteTodoConfirmationComponent,
-    AddEmployerComponent
+    AddEmployerComponent,
+    LastMessageDateTimePipe
   ],
 })
 export class SharedUiCommonModule {}

@@ -706,6 +706,10 @@ export class CaseFacade {
   getSessionInfoByCaseEligibilityId(clientCaseEligibilityId: any) {
     return this.caseDataService.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId);
   }
+
+  loadClientEligibility(clientId: any) {
+    return this.caseDataService.loadClientEligibility(clientId);
+  }
   updateCaseStatus(clientCaseId: any, caseStatusCode: any, clientCaseEligibilityId: any) {
     const caseData = {
       clientCaseEligibilityId: clientCaseEligibilityId,

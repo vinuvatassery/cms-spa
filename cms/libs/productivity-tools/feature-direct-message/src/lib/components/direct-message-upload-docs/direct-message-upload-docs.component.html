@@ -1,0 +1,70 @@
+ 
+
+  <kendo-dialog-titlebar  (close)="onUploadDocumentsClosed()"> Document's {{uploadDocumentTypeDetails?.text}}   </kendo-dialog-titlebar>
+ <section class="k-dialog-body newcase">
+      <p>Select file to upload a document</p>
+      <div *ngIf="uploadDocumentTypeDetails?.id === 'from_System'">
+        <kendo-floatinglabel  text="From System">
+          <kendo-multicolumncombobox
+            (valueChange)="formsAndDocumentChange($event)"
+            [data]="formsAndDocumentList$"
+            textField="description"
+            valueField="documentTemplateId"
+            autofocusfield
+            [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
+            [fillMode]="formUiStyle.dropDownFillMode"
+            [filterable]="true"
+         >
+            <kendo-combobox-column >
+              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+                <span  >{{ dataItem.description }}</span>
+              </ng-template>
+            </kendo-combobox-column>
+          </kendo-multicolumncombobox>
+        </kendo-floatinglabel>
+      </div>
+      <div *ngIf="uploadDocumentTypeDetails?.id === 'from_Computer'">
+        <kendo-upload  (select)="handleFileSelected($event)" [ngModel]="uploadedAttachedFile"(remove)="handleFileRemoved($event)"
+        #uploadsystemfile [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl" [restrictions]="uploadFileRestrictions.fileRestrictions">
+          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+            <span >
+              <span>{{ files[0].name }} </span> 
+              <br>
+              <span>{{   files[0].size | fileSize }}</span> 
+            </span>
+          </ng-template>
+        </kendo-upload>
+        <kendo-formhint >Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+      </div>
+      <div *ngIf="uploadDocumentTypeDetails?.id === 'from_Client'">
+        <common-clients-attachment
+      [clientAttachmentForm]="cerAuthorizationForm"
+      [clientDocumentList$]="clientAllDocumentList$"
+      (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
+  ></common-clients-attachment>
+</div>
+  </section>
+
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button
+            aria-label="Cancel"
+            kendoButton
+            look="outline"
+            (click)="onUploadDocumentsClosed()"
+          >
+            Cancel
+          </button>
+          <button
+            aria-label="Upload"
+            kendoButton
+            [primary]="true"
+           
+          >
+            Upload
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>

@@ -40,6 +40,7 @@ export * from './lib/pipes/phone.pipe';
 export * from './lib/pipes/yes-or-no.pipe';
 export * from './lib/pipes/tin.pipe';
 export * from './lib/pipes/ndc-code.pipe';
+export * from './lib/pipes/lastMessageDateTime.pipe';
 
 /** Directives **/
 export * from './lib/directives/kendo-componentsforaccessibility.directive';

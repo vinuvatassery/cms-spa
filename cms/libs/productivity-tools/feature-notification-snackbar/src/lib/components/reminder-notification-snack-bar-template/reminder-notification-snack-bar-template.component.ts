@@ -151,7 +151,7 @@ isReminderExpand = false;
   public removePreviousMessage() {
     this.showSideReminderNotification();
     
-    this.hideSnackBar.emit(); 
+    this.hideSnackBar.emit(this.alertId); 
   }
 
   reminderContainerClicked() {
@@ -246,24 +246,7 @@ isReminderExpand = false;
     if(result){
       this.todoFacade.getTodo$.subscribe(res =>{
         if(this.alertId == res.alertId){
-        this.snackBarMessage.alertText = res.alertDesc;
-        this.entityId = res.EntityId
-        this.snackBarMessage.alertExtraProperties.vendorTypeCode = res.entityTypeCode
-        this.snackBarMessage.alertExtraProperties.entityTypeCode  = res.entityTypeCode == 'CLIENT'? res.entityTypeCode :'VENDOR'
-        this.snackBarMessage.alertExtraProperties.EntityName = res.entityTypeCode == 'CLIENT' ? res.clientFullName : res.providerName
-         if(res.alertDueDateText == 'Future alert'){
-          this.editReminder.emit(res.alertId)
-          this.removePreviousMessage();
-         }else if(res.alertDueDateText?.includes('Due')) 
-         {
-          var mins =  res.alertDueDateText.split(" ")[2]
-          if(mins > 15){
-            this.editReminder.emit(res.alertId)
-            this.removePreviousMessage();
-            return;
-          }
-         }
-         this.snackBarMessage.alertExtraProperties.DueDateText = res.alertDueDateText
+          this.removePreviousMessage()
       
         }
       })

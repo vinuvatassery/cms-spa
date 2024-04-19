@@ -36,6 +36,11 @@ export class NotificationDataService {
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications/${isViewAll}`);
   }
 
+  getNotificationsCount() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications-count`);
+  }
+
   viewNotifictaions(notifications: any[]) {
     return this.http.post(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications-viewed`, notifications
