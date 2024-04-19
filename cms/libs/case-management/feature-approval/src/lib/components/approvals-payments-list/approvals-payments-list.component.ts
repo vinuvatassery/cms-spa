@@ -177,7 +177,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     private readonly configProvider: ConfigurationProvider
   ) {}
 
-  ngOnInit(): any {    
+  ngOnInit(): any {
     this.getPaymentTypeCode();
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.lovFacade.getPandingApprovalPaymentTypeLov();
@@ -274,7 +274,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   onOpenViewPaymentsBatchClicked(data?: any,isSendbackMode?:any) {
     if(this.userLevel == UserLevel.Level1Value){
       this.isSendbackMode = isSendbackMode;
-    }    
+    }
     this.isViewPaymentsBatchDialog = true;
     this.selectedApprovalId = data?.approvalId;
     this.dataItem=data;
@@ -344,7 +344,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.setGridValues(data);
   }
 
-  searchColumnChangeHandler(value: string) { 
+  searchColumnChangeHandler(value: string) {
     this.searchValue = '';
     this.filter = [];
     this.onApprovalSearch(this.searchValue);
@@ -507,7 +507,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.gridDataHandle();
     this.enableSubmitButtonMain();
   }
-  
+
   setApprovalLevelAndMaxApprovalAmount()
   {
     if(this.userManagementFacade.hasPermission([this.approvalPermissionCode]))
@@ -540,7 +540,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     dataItem.approveButtonDisabled = false;
     dataItem.sendBackButtonDisabled = true;
     this.pageValidationMessage = null;
-    dataItem.sendBackNotes = '';    
+    dataItem.sendBackNotes = '';
     if (
       dataItem.batchStatus === undefined ||
       dataItem.batchStatus === '' ||
@@ -558,7 +558,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.atleastOnePaymentInValidMsg=null;
       dataItem.atleastOnePaymentInValid = false;
       dataItem.paymentRequestIds = [];
-      
+
     } else if (dataItem.batchStatus == this.sendbackStatus) {
       dataItem.batchStatus = this.approveStatus;
       dataItem.sendBackNotesInValidMsg = '';
@@ -572,7 +572,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.assignRowDataToMainList(dataItem);
     this.ngDirtyInValid(dataItem, control, rowIndex);
     this.approveAndSendbackCount();
-    this.enableSubmitButtonMain();    
+    this.enableSubmitButtonMain();
   }
 
   onRowLevelSendbackClicked(
@@ -595,7 +595,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       if(this.userLevel == UserLevel.Level1Value){
         this.onOpenViewPaymentsBatchClicked(dataItem,true);
       }
-    } 
+    }
     else if (dataItem.batchStatus == this.sendbackStatus) {
       if(this.userLevel == UserLevel.Level1Value){
         this.isSendbackMode=false;
@@ -608,7 +608,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         dataItem.sendBackNotesInValid = false;
         dataItem.sendBackButtonDisabled = true;
       }
-    } 
+    }
     else {
       dataItem.batchStatus = this.sendbackStatus;
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
@@ -628,7 +628,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       this.ngDirtyInValid(dataItem, control, rowIndex);
       this.isApproveAllClicked = false;
       this.approveAndSendbackCount();
-      this.enableSubmitButtonMain();   
+      this.enableSubmitButtonMain();
     }
   }
 
@@ -778,11 +778,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   onOpenSubmitApprovalPaymentItemsClicked() {
     this.validateApprovalsPaymentsGridRecord();
     const atleastOnePaymentInValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.atleastOnePaymentInValid);
-    const isValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.sendBackNotesInValid);    
+    const isValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.sendBackNotesInValid);
     const totalCount = isValid.length + (this.userLevel == UserLevel.Level1Value ? atleastOnePaymentInValid.length : 0);
     if (totalCount > 0) {
       this.pageValidationMessage = totalCount + ' Validation error(s) found, please review each page for errors.';
-    } 
+    }
     else if (
       this.approvalsPaymentsGridUpdatedResult.filter((x: any) =>  x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus).length <= 0
     ) {
@@ -855,7 +855,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           if(currentPage.paymentRequestIds === undefined || currentPage.paymentRequestIds.length <1)
           {
               currentPage.atleastOnePaymentInValidMsg = this.atleastOnePaymentRequireMessage;
-              currentPage.atleastOnePaymentInValid = true; 
+              currentPage.atleastOnePaymentInValid = true;
           }
           else
           {
@@ -913,7 +913,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   approveAndSendbackCount() {
-    this.approveBatchCount = this.approvalsPaymentsGridUpdatedResult.filter((x: any)=>x.batchStatus==this.approveStatus).length;    
+    this.approveBatchCount = this.approvalsPaymentsGridUpdatedResult.filter((x: any)=>x.batchStatus==this.approveStatus).length;
     this.sendbackBatchCount =  this.approvalsPaymentsGridUpdatedResult.filter((x: any)=>x.batchStatus==this.sendbackStatus).length;
   }
 
@@ -943,7 +943,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           (item: any) => ({
             ...item,
             sendBackNotesInValidMsg: '',
-            sendBackNotesInValid: false,            
+            sendBackNotesInValid: false,
             batchStatus: '',
             sendBackNotes: '',
             paymentRequestIds:[],
@@ -1035,6 +1035,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   makeRequestData() {
     let bodyData = {
       approvalType: this.approvalTypeCode,
+      paymentType: this.selectedPaymentType,
       payments: [{}],
     };
     for (let element of this.selectedApprovalSendbackDataRows) {
@@ -1145,27 +1146,27 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.columnChangeDesc = 'Default Columns';
     this.loadApprovalPaymentsListGrid();
   }
-  
+
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 
-  onOpenSendbackDeselectingWarningDialogClicked(data?: any) {  
-    data.batchStatus= this.sendbackStatus; 
-    this.cd.detectChanges();           
+  onOpenSendbackDeselectingWarningDialogClicked(data?: any) {
+    data.batchStatus= this.sendbackStatus;
+    this.cd.detectChanges();
     this.dataItem=data;
     this.sendBackNotesChange(this.dataItem);
-    this.isWarningDialogShow = true;    
+    this.isWarningDialogShow = true;
   }
-  
+
   onSendbackDeselectingWarningDialogCancelClicked()
   {
     this.isWarningDialogShow=false;
     this.dataItem.batchStatus =this.sendbackStatus;
     this.sendBackNotesChange(this.dataItem);
     this.approveAndSendbackCount();
-    this.enableSubmitButtonMain(); 
+    this.enableSubmitButtonMain();
   }
 
   onSendbackDeselectingWarningDialogYesClicked()
@@ -1181,6 +1182,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.dataItem.paymentRequestIds = [];
     this.sendBackNotesChange(this.dataItem);
     this.approveAndSendbackCount();
-    this.enableSubmitButtonMain(); 
+    this.enableSubmitButtonMain();
   }
 }

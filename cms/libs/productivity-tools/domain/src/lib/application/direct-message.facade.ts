@@ -11,6 +11,8 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { DirectMessage } from '../entities/direct-message';
 /** Data services **/
 import { DirectMessageDataService } from '../infrastructure/direct-message.data.service';
+import { ChatClient, ChatThreadClient, ChatThreadItem, ChatThreadProperties } from '@azure/communication-chat';
+import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
 
 @Injectable({ providedIn: 'root' })
 export class DirectMessageFacade {
@@ -20,7 +22,7 @@ export class DirectMessageFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueDirectMsg = 'batch';
+  public sortValueDirectMsg = 'lastMessageTime';
   public sortDirectMsg: SortDescriptor[] = [{
     field: this.sortValueDirectMsg,
   }];
@@ -29,11 +31,11 @@ export class DirectMessageFacade {
   /** Private properties **/
   private directMessagesSubject = new Subject<DirectMessage[]>();
   private directMessagesListSubject = new Subject<any>();
-
+  private tokenCommunicationUserIdThreadIdSubject = new Subject<any>();
   /** Public properties **/
   directMessages$ = this.directMessagesSubject.asObservable();
   directMessagesLists$ = this.directMessagesListSubject.asObservable();
-
+  tokenCommunicationUserIdThreadId$ = this.tokenCommunicationUserIdThreadIdSubject.asObservable();
    // handling the snackbar & loader
    snackbarMessage!: SnackBar;
    snackbarSubject = new Subject<SnackBar>(); 
@@ -64,6 +66,14 @@ export class DirectMessageFacade {
     private readonly loaderService: LoaderService
   ) {}
 
+  getChatClient(userAccessToken :any){
+   var endpoint = parseConnectionString(this.configurationProvider.appSettings.azureCommunication.connectionString).endpoint;
+    return new ChatClient(endpoint, new AzureCommunicationTokenCredential(userAccessToken))
+  }
+
+  getChatThreadClient(threadId:any, chatClient:any){
+    return chatClient.getChatThreadClient(threadId);
+  }
   /** Public methods **/
   loadDirectMessages(): void {
     this.directMessageDataService.loadDirectMessages().subscribe({
@@ -75,14 +85,44 @@ export class DirectMessageFacade {
       },
     });
   }
-  loadDirectMessagesLists(): void {
-    this.directMessageDataService.loadDirectMessagesLists().subscribe({
+  loadDirectMessagesLists(param:any): void {
+    this.loaderService.show()
+    this.directMessageDataService.loadDirectMessagesLists(param).subscribe({
       next: (Response) => {
-        this.directMessagesListSubject.next(Response);
+        this.loaderService.hide()
+        const gridView: any = {
+          data: Response.items,
+          total:Response.totalCount,
+        }; 
+        this.directMessagesListSubject.next(gridView);
+      },
+      error: (err) => {
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  getTokenCommunicationUserIdsAndThreadIdIfExist(clientId:string){
+
+
+  this.directMessageDataService.getTokenCommunicationUserIdsAndThreadIdIfExist(clientId).subscribe({
+    next: (Response) => {
+      this.tokenCommunicationUserIdThreadIdSubject.next(Response);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  })
+  }
+
+  saveChatThreadDetails(payload:any){
+    this.directMessageDataService.saveChatThreadDetails(payload).subscribe({
+      next: (Response) => {
       },
       error: (err) => {
         console.error('err', err);
       },
-    });
+    })
   }
 }

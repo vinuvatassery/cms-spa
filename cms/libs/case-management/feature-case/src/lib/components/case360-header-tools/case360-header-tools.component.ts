@@ -220,6 +220,11 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
             this.templateHeader = 'Send Disenrollment Email';
             this.emailSubject = "CAREAssist Disenrollment Notice";
+            this.confirmPopupHeader = 'Send Disenrollment email to print?';
+            this.saveForLaterHeadterText = "Email Draft Saved";
+            this.saveForLaterModelText="You must send the  Disenrollment Email within 2 Days";
+            this.confirmationModelText="If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete.";
+
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.emailCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
           }
           else {
@@ -228,6 +233,12 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
             this.templateHeader = 'Send Disenrollment Letter';
             this.emailSubject = '';
+            this.confirmPopupHeader = 'Send Disenrollment letter to print?';
+            this.saveForLaterHeadterText = "Letter Draft Saved";
+            this.saveForLaterModelText="You must send the  Disenrollment Letter within 2 Days";
+            this.confirmationModelText="If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete.";
+
+
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
           }
           this.ref.detectChanges();

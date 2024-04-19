@@ -11,6 +11,7 @@ import { DirectMessageComponent } from './components/direct-message/direct-messa
 import { DirectMessageListComponent } from './components/direct-message-list/direct-message-list.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { DirectMessageFabComponent } from './containers/direct-message-fab/direct-message-fab.component';
+import { DirectMessageUploadDocsComponent } from './components/direct-message-upload-docs/direct-message-upload-docs.component';
 
 @NgModule({
   imports: [
@@ -18,19 +19,21 @@ import { DirectMessageFabComponent } from './containers/direct-message-fab/direc
     ProductivityToolsDomainModule,
     ProductivityToolsFeatureDirectMessageRoutingModule,
     SharedUiTpaModule,
-    SharedUiCommonModule
+    SharedUiCommonModule,
   ],
   declarations: [
     DirectMessagePageComponent,
     DirectMessageComponent,
     DirectMessageListComponent,
-    DirectMessageFabComponent
+    DirectMessageFabComponent,
+    DirectMessageUploadDocsComponent,
   ],
   exports: [
     DirectMessagePageComponent,
     DirectMessageComponent,
     DirectMessageListComponent,
-    DirectMessageFabComponent
+    DirectMessageFabComponent,
+    DirectMessageUploadDocsComponent,
   ],
 })
 export class ProductivityToolsFeatureDirectMessageModule {}

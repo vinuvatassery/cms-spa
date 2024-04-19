@@ -11,11 +11,11 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { CaseFacade, FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { AlertEntityTypeCode, AlertFrequencyTypeCode, AlertTypeCode, ConstantValue } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 /** Facades **/
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult,FilterService } from '@progress/kendo-angular-grid';
@@ -108,7 +108,9 @@ export class TodoListComponent implements OnInit {
   constructor( 
     private dialogService: DialogService,
     private configurationProvider: ConfigurationProvider,
-    private readonly router: Router
+    private readonly router: Router,
+    private caseFacade: CaseFacade,
+    private loaderService: LoaderService
   ) {}
 
   /** Lifecycle hooks **/
@@ -209,7 +211,8 @@ export class TodoListComponent implements OnInit {
   }
     onToDoClicked(gridItem: any) {
       if (gridItem && gridItem.entityTypeCode == this.entityTypes.Client) {
-        this.router.navigate([`/case-management/cases/case360/${gridItem?.entityId}`]);
+        this.getEligibilityInfoByEligibilityId(gridItem?.entityId)
+        //this.router.navigate([`/case-management/cases/case360/${gridItem?.entityId}`]);
       }
       else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Vendor) {
         this.getVendorProfile(gridItem.vendorTypeCode)
@@ -243,6 +246,56 @@ export class TodoListComponent implements OnInit {
     else if (gridItem && gridItem.entityTypeCode == this.entityTypes.CERComplete) {
       this.getSessionInfoByEligibilityEvent.emit(gridItem?.entityId);
     }
+  }
+
+  getEligibilityInfoByEligibilityId(clientId:any){   
+    this.loaderService.show();
+          this.caseFacade.loadClientEligibility(clientId).subscribe({
+            next: (response: any) => {
+              if (response) {      
+                         
+                this.loaderService.hide();
+                   const eligibilityId = response?.clientCaseEligibilityId       
+                 if(eligibilityId)
+                {     
+                this.clientNavigation(eligibilityId,response?.caseStatus,clientId)
+                }
+              }
+            },
+            error: (err: any) => {
+              this.loaderService.hide();
+              this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            }
+          })
+  }
+
+  clientNavigation(clientCaseEligibilityId:any,eligibilityStatusCode :  any,clientId : any){    
+    if(eligibilityStatusCode === 'ACCEPT')
+      {
+        this.router.navigate([`/case-management/cases/case360/${clientId}`]);
+      }
+      else
+      {
+            this.loaderService.show();
+            this.caseFacade.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId).subscribe({
+              next: (response: any) => {
+                if (response) {                
+                  this.loaderService.hide();
+                  this.router.navigate(['case-management/case-detail'], {
+                    queryParams: {
+                      sid: response.sessionId,
+                      eid: response.entityID,                   
+                      wtc: response?.workflowTypeCode
+                    },
+                  });
+                }
+              },
+              error: (err: any) => {
+                this.loaderService.hide();
+                this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+              }
+            })
+        }
   }
   dataStateChange(stateData: any): void { 
     this.sort = stateData.sort;

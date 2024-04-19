@@ -2,7 +2,7 @@
   <!-- Side Panel Header -->
   <div class="sidePanel_header">
     <div class="sidePanel_header-left">
-      <h3>Direct Message Donna</h3>
+      <h3>Direct Message {{clientName}}</h3>
     </div>
     <div class="sidePanel_header-right">
       <button kendoButton class="k-icon-button small-i-btn" title="Close" (click)="onCloseDirectMessageClicked()"
@@ -13,54 +13,56 @@
   </div>
   <div class="direct-chat-wrapper">
     <div class="chat-view-container">
-      <label class="center-date">MONDAY, OCTOBER 5, 2020</label>
-      <div class="chat-grey chat-left-side">
-        <p>Hi Lisa, can you help me renew eligibility next week?</p>
-        <div class="msg-attachment-wrapper">
-          <div class="attachment-container-list">
-            <span class="material-icons" aria-hidden="true">
-              attach_file
-              </span>
-               <span>AttachmentName.pdf</span>
+      <ng-container *ngFor="let item of groupedMessages | keyvalue">
+        <label class="center-date">{{ item.key}}</label>
+        <ng-container *ngFor="let value of getVlauesWithKey(item.value)">
+        <div class="chat-grey chat-left-side" *ngIf="!value.isOwner">
+          <p>{{value.message}}</p>
+          <div class="msg-attachment-wrapper" *ngIf="false">
+            <div class="attachment-container-list">
+              <span class="material-icons" aria-hidden="true">
+                attach_file
+                </span>
+                 <span>AttachmentName.pdf</span>
+            </div>
+            <div class="attachment-container-list">
+              <span class="material-icons" aria-hidden="true">
+                attach_file
+                </span>
+                 <span>AttachmentName.pdf</span>
+            </div>
+            <div class="attachment-container-list">
+              <span class="material-icons" aria-hidden="true">
+                attach_file
+                </span>
+                 <span>AttachmentName.pdf</span>
+            </div>
+            <div class="attachment-container-list">
+              <span class="material-icons" aria-hidden="true">
+                attach_file
+                </span>
+                 <span>AttachmentName.pdf</span>
+            </div>
+            <div class="attachment-container-list">
+              <span class="material-icons" aria-hidden="true">
+                attach_file
+                </span>
+                 <span>AttachmentName.pdf</span>
+            </div>
           </div>
-          <div class="attachment-container-list">
-            <span class="material-icons" aria-hidden="true">
-              attach_file
-              </span>
-               <span>AttachmentName.pdf</span>
+          <div class="time-status" *ngIf="false"><span class="chat-time">10:00 AM</span> <span class="chat-time">Mark as Unread</span>
           </div>
-          <div class="attachment-container-list">
-            <span class="material-icons" aria-hidden="true">
-              attach_file
-              </span>
-               <span>AttachmentName.pdf</span>
-          </div>
-          <div class="attachment-container-list">
-            <span class="material-icons" aria-hidden="true">
-              attach_file
-              </span>
-               <span>AttachmentName.pdf</span>
-          </div>
-          <div class="attachment-container-list">
-            <span class="material-icons" aria-hidden="true">
-              attach_file
-              </span>
-               <span>AttachmentName.pdf</span>
-          </div>
+         
         </div>
-        <div class="time-status"><span class="chat-time">10:00 AM</span> <span class="chat-time">Mark as Unread</span>
+        <div class="chat-green chat-right-side" *ngIf="value.isOwner">
+          <p>{{value.message}}</p>
+          <div class="time-status"><span class="chat-time">10:58 AM (Read)</span> </div>
         </div>
-       
-      </div>
-      <div class="chat-green chat-right-side">
-        <p>Hi Donna, I’m happy to help! Are you free on Monday at 10am?</p>
-        <div class="time-status"><span class="chat-time">10:58 AM (Read)</span> </div>
-      </div>
-      <div class="chat-grey chat-left-side">
-        <p>Hi Lisa, can you help me renew eligibility next week?</p>
-        <div class="time-status"><span class="chat-time">10:00 AM (Read)</span>  
-        </div>
-      </div>
+     
+      </ng-container>
+      </ng-container>
+    
+     
       <label class="center-date">MONDAY, OCTOBER 5, 2020</label>
       <div class="chat-green chat-right-side">
         <p>Hi Donna, I’m happy to help! Are you free on Monday at 10am?</p>
@@ -74,7 +76,7 @@
     </div>
     <div class="chat-bottom-container">
       <div class="chat-input">
-        <input type="text" placeholder="Direct Message Donna…" class="message-normal-text-box" *ngIf="!messageToolBarShow" />
+        <input type="text" placeholder="Direct Message Donna…" class="message-normal-text-box" *ngIf="!messageToolBarShow" [(ngModel)]="sendMsg.message"/>
         <kendo-editor [value]="value" class="message-editor" [iframe]="false" placeholder="Direct Message Donna…" *ngIf="messageToolBarShow">
           <kendo-toolbar [overflow]="true" >
             <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
@@ -93,7 +95,7 @@
           <button  kendoButton themeColor="primary" [toggleable]="true" aria-label="Format" fillMode="flat" title="Format" (click)="messageToolBarShow = !messageToolBarShow">
             <span class="material-icons " aria-hidden="true">    format_color_text    </span>
           </button>
-          <kendo-dropdownbutton   [data]="ListItemModel" themeColor="primary"  aria-label="Attach a File" title="Attach a File"  fillMode="flat">
+          <kendo-dropdownbutton   [data]="ListItemModel" themeColor="primary"  aria-label="Attach a File" title="Attach a File"  fillMode="flat" (itemClick)="onUploadDocumentsOpenClicked(UploadDocumentInDirectMessage, $event)">
            
               <span class="material-icons" aria-hidden="true">    attach_file   </span> 
           </kendo-dropdownbutton>
@@ -105,9 +107,16 @@
         
         </div>
         <div>
-          <small class="mr-1">CTRL + Enter to send</small> 
+          <button kendoButton (click)="sendMessage()"   themeColor="primary"  aria-label="Add to Event log" fillMode="flat" title="Add to Event log">
+            <span class="material-icons" aria-hidden="true">   send  </span>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #UploadDocumentInDirectMessage>
+ 
+ <productivity-tools-direct-message-upload-docs (uploadDocumentsClosedDialog)="onUploadDocumentsClosed($event)"  [uploadDocumentTypeDetails]="uploadDocumentTypeDetails"></productivity-tools-direct-message-upload-docs>
+</ng-template>
