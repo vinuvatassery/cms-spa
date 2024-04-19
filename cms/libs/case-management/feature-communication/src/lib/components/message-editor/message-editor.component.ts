@@ -12,10 +12,12 @@ export class MessageEditorComponent implements OnInit, OnChanges {
 
   formUiStyle: UIFormStyle = new UIFormStyle();
   
+    /** Input properties **/
   @Input() messageList!:any;
   @Input() templateContent!: any;
   @Input() smsMessages!:any;
 
+    /** Public properties **/
   clientVariables:any;
   allVariables:any;
   showVariable:boolean = false;
@@ -25,17 +27,41 @@ export class MessageEditorComponent implements OnInit, OnChanges {
   caseWorkerVariableExist:any=true;
   otherVariableExist:any=true;
 
+    /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef,
     private readonly loggingService: LoggingService,
     private readonly elementRef: ElementRef,) { }
-    
-  ngOnInit(): void {
   
-  this.loadClientVariables();
-    this.validateMessage();    
+    /** events **/
+    @HostListener("document:keydown", ["$event"])
+    public keydown(event: KeyboardEvent): void {
+      this.clientVariables = this.allVariables;   
+    }
+  
+    @HostListener("document:click", ["$event"])
+    public documentClick(event: any): void {
+      this.clientVariables = this.allVariables;
+      if (event.target?.children[0]?.id !== "insertVariable" && event.target.parentElement.id !== 'searchVariable') {
+        this.messageList.forEach((x: any) => {
+          x.showVariable = false;
+        });      
+      }
+      else{
+        this.messageList.forEach((x: any) => {
+            if(x.messageId != this.selectedVariableMessageId){
+              x.showVariable = false;
+            }
+        });
+      }
+    }
+
+    /** Public Methods **/
+  ngOnInit(): void {
+    this.loadClientVariables();
+    this.validateMessage();
   }
 
   ngOnChanges() {
@@ -53,19 +79,6 @@ export class MessageEditorComponent implements OnInit, OnChanges {
       }
     }
 
-  }
-
-  private validateMessage() {
-    if (this.messageList !== undefined && this.messageList.length === 0) {
-      this.messageList = [
-        {
-          messageId: this.getMessageId(),
-          messageText: this.templateContent,
-          wordCount: this.templateContent?.length ?? 0,
-          showVariables: false
-        },
-      ];
-    }
   }
 
   addNewMessageOnChange(message: string | null = null) {
@@ -102,20 +115,6 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     }
   }
 
-
-  private loadClientVariables() {
-    this.communicationFacade.loadCERAuthorizationEmailEditVariables(CommunicationEventTypeCode.TemplateVariable)
-      .subscribe({
-        next: (variables: any) => {
-          if (variables) {
-            this.clientVariables = variables;
-            this.allVariables = this.clientVariables
-          }
-          this.loaderService.hide();
-        },
-      });
-  }
-
   showVariables(item:any){
     item.showVariable = true;
     this.showVariable = true;
@@ -143,27 +142,6 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     item.wordCount = item.messageText?.length ?? 0;
   }
 
-  @HostListener("document:keydown", ["$event"])
-  public keydown(event: KeyboardEvent): void {
-    this.clientVariables = this.allVariables;   
-  }
-
-  @HostListener("document:click", ["$event"])
-  public documentClick(event: any): void {
-    this.clientVariables = this.allVariables;
-    if (event.target?.children[0]?.id !== "insertVariable" && event.target.parentElement.id !== 'searchVariable') {
-      this.messageList.forEach((x: any) => {
-        x.showVariable = false;
-      });      
-    }
-    else{
-      this.messageList.forEach((x: any) => {
-          if(x.messageId != this.selectedVariableMessageId){
-            x.showVariable = false;
-          }
-      });
-    }
-  }
 
 
   bindVariableToEditor(variable: any,item:any) {
@@ -188,6 +166,8 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     return cursorPosition;
   }  
 
+  /** Private Methods **/
+
   private getMessageId() {
     let isDuplicate = false;
     let id = this.getRandomInt(1, 100);
@@ -200,7 +180,33 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     return id;
   }
 
-  getRandomInt(min: number, max: number): number {
+  private getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  private validateMessage() {
+    if (this.messageList !== undefined && this.messageList.length === 0) {
+      this.messageList = [
+        {
+          messageId: this.getMessageId(),
+          messageText: this.templateContent,
+          wordCount: this.templateContent?.length ?? 0,
+          showVariables: false
+        },
+      ];
+    }
+  }
+
+  private loadClientVariables() {
+    this.communicationFacade.loadCERAuthorizationEmailEditVariables(CommunicationEventTypeCode.TemplateVariable)
+      .subscribe({
+        next: (variables: any) => {
+          if (variables) {
+            this.clientVariables = variables;
+            this.allVariables = this.clientVariables
+          }
+          this.loaderService.hide();
+        },
+      });
   }
 }

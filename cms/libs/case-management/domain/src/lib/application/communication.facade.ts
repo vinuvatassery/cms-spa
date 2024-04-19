@@ -318,7 +318,8 @@ export class CommunicationFacade {
     formData.append('typeCode', draftTemplate?.typeCode ?? '');
     formData.append('subTypeCode', subTypeCode ?? '');
     formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
-    formData.append('recepients', messageRecipient?.phoneNbr ?? '');   
+    formData.append('recepients', messageRecipient?.phoneNbr ?? ''); 
+    formData.append('formattedPhoneNbr',messageRecipient?.formattedPhoneNbr ?? '')
     let i = 0;
     draftTemplate.messages.forEach((msg: any) => {
       formData.append('messages[' + i + ']', msg);

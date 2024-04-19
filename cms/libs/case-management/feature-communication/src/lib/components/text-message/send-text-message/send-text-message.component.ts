@@ -93,7 +93,8 @@ export class SendTextMessageComponent implements OnInit {
     this.addPhoneNumbersSubscription();
     if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftSmsTemplates();
-    }else if(this.isNewNotificationClicked){
+    }else 
+    if(this.isNewNotificationClicked){
       this.loadSmsTemplates();
       this.openNewSmsClicked();
     }
@@ -150,14 +151,14 @@ export class SendTextMessageComponent implements OnInit {
   private addPhoneNumbersSubscription() {
     this.phoneNumbersSubscription$ = this.ddlMessageRecipients$
       .pipe(
-        map((ph) => ph.map((p: any) => ({ ...p, formattedPhoneNbr: `${this.formatPhoneNumber(p.phoneNbr)} - ${p.deviceTypeCode} ` })))
+        map((ph) => ph.map((p: any) => ({ ...p, formattedPhoneNbr: `${this.formatPhoneNumber(p.phoneNbr)} - ${p.deviceTypeCode}` })))
       )
       .subscribe((phoneResp: any) => {
         if (this.isClearPhoneNumbers) {
           this.phoneNumbers = [];
         } else {
           this.phoneNumbers = phoneResp.filter((phone: any) => phone.smsTextConsentFlag === StatusFlag.Yes);
-          this.isShowToPhoneNumbersLoader$.next(false);
+          this.isShowToPhoneNumbersLoader$.next(false);          
         }
         this.isClearPhoneNumbers = false;
       });
@@ -406,8 +407,10 @@ export class SendTextMessageComponent implements OnInit {
       }else{
       this.templateContent = event.templateContent;
       this.smsMessages = event.messages?.map((item: any)=> item);
+      this.messageRecipient = event.recepients;
+
       this.messageRecipient = {
-        'formattedPhoneNbr': this.formatPhoneNumber(event?.recepients),
+        'formattedPhoneNbr': event?.formattedPhoneNbr,
         'phoneNbr': event.recepients
       };
       this.selectedSmsTemplate = event;
@@ -457,5 +460,6 @@ export class SendTextMessageComponent implements OnInit {
       this.isRecipientMissing = false;
       this.isFormValid = true;
     }
+    this.ref.detectChanges();
   }
 }
