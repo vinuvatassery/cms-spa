@@ -17,6 +17,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
+import { Router } from '@angular/router';
 /** Facades **/ 
 @Component({
   selector: 'productivity-tools-direct-message-list',
@@ -55,7 +56,8 @@ export class DirectMessageListComponent implements OnInit, OnChanges{
  
  /** Constructor **/
  constructor(
-  private readonly cdr: ChangeDetectorRef, 
+  private readonly cdr: ChangeDetectorRef,
+  private readonly router: Router
 ) {}
 
 ngOnInit(): void {
@@ -67,8 +69,6 @@ ngOnChanges(): void {
     take: this.pageSizes[0]?.value,
     sort: this.sort,
   };
-
-  this.loadDirectMessageListGrid();
 }
 
 private loadDirectMessageListGrid(): void {
@@ -88,12 +88,11 @@ loadDirectMessageList(
   this.isDirectMessageGridLoaderShow = true;
   const gridDataRefinerValue = {
     skipCount: skipCountValue,
-    pagesize: maxResultCountValue,
-    sortColumn: sortValue,
+    maxResultCount: maxResultCountValue,
+    sorting: sortValue,
     sortType: sortTypeValue,
   };
   this.loadDirectMessageListEvent.emit(gridDataRefinerValue);
-  this.gridDataHandle();
 }
 
 onChange(data: any) {
@@ -141,13 +140,6 @@ dataStateChange(stateData: any): void {
   this.loadDirectMessageListGrid();
 }
 
-// updating the pagination infor based on dropdown selection
-pageSelectionChange(data: any) {
-  this.state.take = data.value;
-  this.state.skip = 0;
-  this.loadDirectMessageListGrid();
-}
-
 public filterChange(filter: CompositeFilterDescriptor): void {
   this.filterData = filter;
 }
@@ -167,6 +159,15 @@ gridDataHandle() {
   this.isDirectMessageGridLoaderShow = false;
 
 }
+  onClientFromClicked(clientId:any){
+    this.router.navigate([`/case-management/cases/case360/${clientId}`]);
+  } 
+    // updating the pagination infor based on dropdown selection
+    pageselectionchange(data: any) {
+      this.state.take = data.value;
+      this.state.skip = 0;
+      this.loadDirectMessageListGrid();
+    }
  
 }
 

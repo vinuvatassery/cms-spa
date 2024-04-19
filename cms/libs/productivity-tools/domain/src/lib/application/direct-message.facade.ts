@@ -22,7 +22,7 @@ export class DirectMessageFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueDirectMsg = 'batch';
+  public sortValueDirectMsg = 'lastMessageTime';
   public sortDirectMsg: SortDescriptor[] = [{
     field: this.sortValueDirectMsg,
   }];
@@ -85,14 +85,20 @@ export class DirectMessageFacade {
       },
     });
   }
-
-  loadDirectMessagesLists(): void {
-    this.directMessageDataService.loadDirectMessagesLists().subscribe({
+  loadDirectMessagesLists(param:any): void {
+    this.loaderService.show()
+    this.directMessageDataService.loadDirectMessagesLists(param).subscribe({
       next: (Response) => {
-        this.directMessagesListSubject.next(Response);
+        this.loaderService.hide()
+        const gridView: any = {
+          data: Response.items,
+          total:Response.totalCount,
+        }; 
+        this.directMessagesListSubject.next(gridView);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
