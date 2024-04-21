@@ -22,7 +22,7 @@
       [skip]="state.skip"
       [groupable]="false"
       [reorderable]="true"
-      [loading]="loader"
+      [loading]="(loader | async) === true"
       [resizable]="true"
       [columnMenu]="{ filter: true }"
       [sort]="state.sort"

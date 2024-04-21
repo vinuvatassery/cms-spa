@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { State } from '@progress/kendo-data-query';
-import { first, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { CaseFacade } from '@cms/case-management/domain';
@@ -65,7 +65,7 @@ export class PhoneListComponent implements OnChanges, OnDestroy {
   selectedclientPhoneId!: string;
   public state!: State;
   historychkBoxChecked = false;
-  loader = false;
+  loader = new BehaviorSubject(false);
   hasPhoneDeletePermission =false;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   userPhoneProfilrPhotoSubject = new Subject<any>();
@@ -141,7 +141,7 @@ export class PhoneListComponent implements OnChanges, OnDestroy {
     this.hasPhoneDeletePermission = this.userManage.hasPermission(["Client_Profile_Client_ContactInfo_Phone_Delete"]);
   }
   pageselectionchange(data: any) {
-    this.loader = true
+    this.loader.next(true);
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadClientPhonesList();
@@ -182,7 +182,7 @@ export class PhoneListComponent implements OnChanges, OnDestroy {
   /** grid event methods **/
 
   public dataStateChange(stateData: any): void {    
-    this.loader = true;
+    this.loader.next(true);
     this.sort = stateData.sort;
     this.sortValue = stateData?.sort[0]?.field ?? 'deviceTypeCode';
     this.sortType = stateData?.sort[0]?.dir ?? 'asc';
@@ -201,7 +201,7 @@ this.reloadEmailsEvent.emit();
       this.gridPhoneDataSubject.next(data);
 
       if (data?.total >= 0 || data?.total === -1) {
-        this.loader = false;
+        this.loader.next(false);
       }
     });
   }
@@ -234,20 +234,24 @@ this.reloadEmailsEvent.emit();
 
   addClientPhoneHandle(phoneData: any): void {
     this.editbuttonEmitted = true;
-    this.loader = true;
     this.addClientPhoneEvent.emit(phoneData);
 
     this.addClientPhoneResponse$
       .pipe(first((addResponse: any) => addResponse != null))
       .subscribe((addResponse: any) => {
         if (addResponse === true) {
-          this.loadClientPhonesList();
           this.onPhoneNumberDetailClosed();
+          this.loader.next(true);
+          this.loadClientPhonesList();
           if(phoneData?.preferredFlag === 'Y')
           {
           this.reloadEmails()
           }
         }
+        else{
+          this.loader.next(false);
+        }
+
       });
   }
 
@@ -277,7 +281,7 @@ this.reloadEmailsEvent.emit();
   }
 
   onPreferredPhoneClicked(clientPhoneId: string) {
-    this.loader = true;
+    this.loader.next(true);
     this.preferredClientPhoneEvent.emit(clientPhoneId);
     this.preferredClientPhone$
       .pipe(first((Response: any) => Response != null))
@@ -292,7 +296,7 @@ this.reloadEmailsEvent.emit();
 
   handleAcceptPhoneRemove(isDelete: boolean) {
     if (isDelete) {
-      this.loader = true;
+      this.loader.next(true);
       this.deletebuttonEmitted = false;
       this.removeClientPhoneEvent.emit(this.selectedclientPhoneId);
 
@@ -319,7 +323,7 @@ this.reloadEmailsEvent.emit();
 
   handleAcceptPhoneDeactivate(isDeactivate: boolean) {
     if (isDeactivate) {
-      this.loader = true;
+      this.loader.next(true);
       this.deletebuttonEmitted = false;
       this.deactivateClientPhoneEvent.emit(this.selectedclientPhoneId);
 
@@ -355,7 +359,7 @@ this.reloadEmailsEvent.emit();
       this.sortType,
       this.historychkBoxChecked
     );
-    this.loader = true;
+    this.loader.next(true);
   }
 
   phoneDeactivateandAddNewPhoneHandle(phoneData: any) {

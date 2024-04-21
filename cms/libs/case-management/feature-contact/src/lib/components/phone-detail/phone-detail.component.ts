@@ -1,16 +1,17 @@
-/** Angular **/import {  Component,  OnInit,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter,
+/** Angular **/import {  Component,  OnInit,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnDestroy,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** Facades  **/
 import { ContactFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-phone-detail',
   templateUrl: './phone-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneDetailComponent implements OnInit {
+export class PhoneDetailComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() isEditValue!: boolean;
   @Input() lovClientPhoneDeviceType$ : any
@@ -36,6 +37,7 @@ export class PhoneDetailComponent implements OnInit {
   otherNoteError =false
   noteCounter!: string;
   noteCharachtersCount!: number;
+  clientPhoneFormChangeSubscription = new Subscription;
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade,
     private formBuilder: FormBuilder) {}
@@ -44,6 +46,11 @@ export class PhoneDetailComponent implements OnInit {
   ngOnInit(): void {
     this.composePhoneForm()
     this.loadDdlPhoneType();
+    this.addClientPhoneFormChangeSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.clientPhoneFormChangeSubscription.unsubscribe();
   }
 
   /** Private methods **/
@@ -178,6 +185,13 @@ export class PhoneDetailComponent implements OnInit {
       }
       this.deactivateandAddClientPhoneEvent.emit(phoneData);
     }
+  }
+
+  private addClientPhoneFormChangeSubscription(){
+    this.clientPhoneFormChangeSubscription = this.clientPhoneForm.valueChanges
+    .subscribe(() => {
+       this.btnDisabled = false;
+    });
   }
 }
 

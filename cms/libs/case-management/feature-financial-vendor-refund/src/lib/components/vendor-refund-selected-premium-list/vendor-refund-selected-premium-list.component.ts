@@ -1,21 +1,21 @@
 /** Angular **/
-import {  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {  ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
- 
+import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-vendor-refund-selected-premium-list',
-  templateUrl: './vendor-refund-selected-premium-list.component.html', 
+  templateUrl: './vendor-refund-selected-premium-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
 
-  
+
    paymentStatusCode =null
    paymentStatusLovSubscription!:Subscription;
    paymentStatusType:any;
@@ -28,7 +28,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
    @Input() editPaymentRequestId:any
    isSpotPayment = false
   public state!: State;
-  filter!: any;  
+  filter!: any;
   @Output() insuranceRefundInformationConfirmClicked = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>()
   public totalAmountPaid =0;
@@ -49,8 +49,11 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
 
   @Input() insurancePremiumPaymentReqIds:any[] =[]
   public constructor(private formBuilder : FormBuilder,
-    private readonly changeDetectorRef: ChangeDetectorRef){
-    
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly scrollFocusValidationfacade: ScrollFocusValidationfacade,
+    private readonly elementRef: ElementRef,
+  ){
+
   }
 
 
@@ -60,7 +63,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   this.insuraceAddRefundClick$.subscribe((res:any) =>{
     this.changeDetectorRef.markForCheck()
     this.isSubmitted = true;
-    this.financialPremiumsRefundGridLists.forEach(x=>{      
+    this.financialPremiumsRefundGridLists.forEach(x=>{
       if(!x.refundAmount)
       {
         x.refundAmountError = "Refund amount is required"
@@ -75,9 +78,10 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
       }
     })
     let refundError =   this.financialPremiumsRefundGridLists.filter((x) =>{
-      return   !!x.refundAmountError 
+      return   !!x.refundAmountError
     })
     if (this.refundForm.invalid || (refundError && refundError.length >0)) {
+      this.scrollToValidationError()
       return;
     }else{
        const refundRequests :any[] =[]
@@ -141,8 +145,8 @@ initForm(){
    }else{
     dataItem.refundAmountError=""
    }
-   this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)       
-  
+   this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)
+
   }
 
 
@@ -167,7 +171,7 @@ initForm(){
     sort: [{ field: 'creationTime', dir: 'asc' }]
   };
   this.loadRefundInformationListGrid()
-  }  
+  }
 
   private loadRefundInformationListGrid(): void {
     const param = new GridFilterParam(
@@ -177,15 +181,15 @@ initForm(){
       JSON.stringify(this.filter))
       this.insuranceRefundInformation$.subscribe((res:any) =>{
         this.financialPremiumsRefundGridLists = res.data
-       this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)       
-       this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountDue).reduce((a, b) => a + b, 0)  
+       this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)
+       this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountDue).reduce((a, b) => a + b, 0)
        const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
        this.isSpotPayment = formData.isSpotPayment
        this.refundForm.patchValue({
         vp: formData.voucherPayabeNbr,
         creditNumber:formData.creditNumber,
         warantNumber:formData.refundWarantNumber ,
-        refundNote:formData.refundNote      
+        refundNote:formData.refundNote
        })
        if(formData.depositDate != null && formData.depositDate !="" && formData.depositDate !=undefined)
        {
@@ -193,7 +197,7 @@ initForm(){
        }
     })
     this.insuranceRefundInformationConfirmClicked.emit(
-      {...param, 
+      {...param,
         paymentRequestsId : this.insurancePremiumPaymentReqIds
       }
       );
@@ -215,13 +219,21 @@ initForm(){
     this.loadRefundInformationListGrid();
   }
 
-  
+
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event)
   }
 
-  
+
   onRefundNoteValueChange(event: any) {
     this.refundNoteValueLength = event.length
+  }
+
+  scrollToValidationError(){
+    const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.refundForm, this.elementRef.nativeElement,null);
+    if (invalidControl) {
+      invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      invalidControl.focus();
+    }
   }
 }

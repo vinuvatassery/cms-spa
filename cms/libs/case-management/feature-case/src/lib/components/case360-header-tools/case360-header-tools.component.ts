@@ -142,11 +142,12 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientSMS;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.SmsTypeCode;
+        this.smsCommunicationTypeCode = '';
         this.notificationGroup = CommunicationEventTypeCode.SMS;
         this.informationalText = "Select an existing template or draft custom text messages"
         this.templateHeader = 'Send New SMS Text';
         this.saveForLaterHeadterText = "Sms Draft Saved";
-        this.saveForLaterModelText="To pick up where you left off, click \"New Sms\" from the client's profile";
+        this.saveForLaterModelText="To pick up where you left off, click ''New SMS Text'' from the clients profile";
         this.confirmPopupHeader = 'Send Sms?';
         this.confirmationModelText="This action cannot be undone.";
         this.notificationDraftCheck(this.clientId,this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);

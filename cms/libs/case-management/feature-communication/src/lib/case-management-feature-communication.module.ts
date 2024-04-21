@@ -8,7 +8,6 @@ import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { CaseManagementFeatureCommunicationRoutingModule } from './case-management-feature-communication-routing.module';
 /** Components **/
 import { SendTextMessageComponent } from './components/text-message/send-text-message/send-text-message.component';
-import { TextMessageEditorComponent } from './components/text-message/text-message-editor/text-message-editor.component';
 import { SendTextMessageConfirmationComponent } from './components/text-message/send-text-message-confirmation/send-text-message-confirmation.component';
 import { TemplatePickerComponent } from './components/template-picker/template-picker.component';
 import { SendEmailComponent } from './components/email/send-email/send-email.component';
@@ -29,6 +28,7 @@ import { DisEnrollmentLaterComponent } from './components/disenrollment-letter-l
 import { ApprovalLaterComponent } from './components/approval-letter-later/approval-letter-later.component';
 import { NotificationDraftConfirmationComponent } from './components/notification-draft-confirmation/notification-draft-confirmation.component';
 import { PreviewNotificationTemplatesComponent } from './components/preview-notification-templates/preview-notification-templates.component';
+import { MessageEditorComponent } from './components/message-editor/message-editor.component';
 
 @NgModule({
   imports: [
@@ -40,7 +40,6 @@ import { PreviewNotificationTemplatesComponent } from './components/preview-noti
   ],
   declarations: [
     SendTextMessageComponent,
-    TextMessageEditorComponent,
     SendTextMessageConfirmationComponent,
     TemplatePickerComponent,
     SendEmailComponent,
@@ -61,10 +60,10 @@ import { PreviewNotificationTemplatesComponent } from './components/preview-noti
     ApprovalLaterComponent,
     NotificationDraftConfirmationComponent,
     PreviewNotificationTemplatesComponent,
+    MessageEditorComponent,
   ],
   exports: [
     SendTextMessageComponent,
-    TextMessageEditorComponent,
     SendTextMessageConfirmationComponent,
     TemplatePickerComponent,
     SendEmailComponent,
