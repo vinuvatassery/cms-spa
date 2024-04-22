@@ -3,7 +3,7 @@
     <div   
      >
       <div class="verificaton_email"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
-        <div  *ngIf="isEmailFieldVisible">
+        <div  *ngIf="!isResendRequest || !isSendRequest || !isSendEmailClicked">
         <kendo-floatinglabel text="Healthcare Provider’s Email Address">
           <kendo-textbox aria-label="healthcare providers email address"
             placeholder="Healthcare Provider’s Email Address" [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="providerEmail"
@@ -11,15 +11,14 @@
           </kendo-textbox>
         </kendo-floatinglabel>
         <kendo-formerror
-          *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value !== ''">Enter
-          valid Email Address.</kendo-formerror>
+          *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value !== ''">Not a valid email format.</kendo-formerror>
         <kendo-formerror
           *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value === ''">Healthcare Provider email is required.</kendo-formerror>
       </div>
       <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'"
       class="overlay-send-button">
-      <button kendoButton [primary]="true"   (click)="onSendRequestClicked()"
-        *ngIf="!isSendRequest || !isSendEmailClicked" aria-label="send request">
+      <button kendoButton [primary]="true" (click)="onSendRequestClicked()"
+        *ngIf="!isResendRequest || !isSendRequest || !isSendEmailClicked" aria-label="send request">
         Send request
       </button>
     </div>
@@ -130,8 +129,7 @@
 </section>
 
 <!-- Show this after send a request -->
-<section *ngIf="(providerValue$ | async) === 'HEALTHCARE_PROVIDER'">
-  <div *ngIf="isSendRequest || isResendRequest || isSendEmailClicked">
+<section *ngIf="((providerValue$ | async) === 'HEALTHCARE_PROVIDER') && (isSendRequest || isResendRequest || emailSentDate != null)">
     <div class="flex-row mt-3 align-items-center">
       <div class="flex-col">
         <span class="app-c-badge badge-primary">
@@ -147,17 +145,12 @@
             showOn="hover"
             >{{loginUserName}}</a>
           </span>
-        <!-- <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh attr.aria-label="{{hivVerificationForm.controls['requestedUserName'].value}}">
-          {{hivVerificationForm.controls["requestedUserName"].value}}
-        </button> -->
         <button kendoButton class="k-primary-link text-t-normal ml-2 text-underline" (click)="onResendRequestClicked()"
           aria-label="Re-send Request">
           Re-send Request
         </button>
       </div>
     </div>
-  </div>
   <div class="flex-col mt-2" *ngIf="isSendEmailFailed">
     <p  style="color:red">ERROR: {{errorMessage}}</p>
 </div>

@@ -135,14 +135,14 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
       this.userId = this.hivVerificationForm.controls["userId"].value;
       this.providerOption = data;
       if(data=== ProviderOption.HealthCareProvider){
-        if(this.emailSentDate || this.isSendEmailFailed){
-          this.healthCareProviderExists = true;
-        }
         if(this.healthCareProviderExists){
           this.loadHivVerificationEmail();
         if(this.hivVerificationForm.controls["providerEmailAddress"].value !== null && this.hivVerificationForm.controls["providerEmailAddress"].value !== ''){
           this.isSendRequest = true;
           this.sentDate = new Date(this.intl.formatDate(this.hivVerificationForm.controls["verificationStatusDate"].value, this.dateFormat))
+        }
+        if(this.emailSentDate || this.isSendEmailClicked){
+          this.isResendRequest = true;
         }
         if(this.isResendRequest || !this.isSendRequest){
           this.isEmailFieldVisible = true;
@@ -151,6 +151,9 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
         else{
           this.isEmailFieldVisible = false;
         }
+      }else{
+        this.isEmailFieldVisible = false;
+        this.isSendRequest = false;
       }
     }
       else{

@@ -556,6 +556,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.authorizationFacade.saveDateSignedAndSignedFile(authorization).subscribe({
       next: (response) => {
         if(response){
+          this.updateDataPoints('applicantSignedDate', false);
+          this.updateDataPoints('signatureNotedDate', false);
+          this.updateDataPoints('copyOfSignedApplication', false);
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Authorization Saved Successfully!");
         }
