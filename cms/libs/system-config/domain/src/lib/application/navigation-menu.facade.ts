@@ -32,6 +32,8 @@ export class NavigationMenuFacade {
   private pendingApprovalImportedClaimCountSubject = new Subject<any>();
   pendingApprovalImportedClaimCount$ = this.pendingApprovalImportedClaimCountSubject.asObservable();
 
+  private directMessageCountSubject = new Subject<any>();
+  directMessageCountCount$ = this.directMessageCountSubject.asObservable();
 
   /** constructor **/
   constructor(
@@ -136,11 +138,11 @@ export class NavigationMenuFacade {
   }
 
   getDirectMessageCount() {
-    this.navigationMenuService.getPendingApprovalGeneralCount()
+    this.navigationMenuService.getDirectMessageCount()
     .subscribe(
       {
         next: (count: any) => {
-            this.pendingApprovalGeneralCountSubject.next(count);
+            this.directMessageCountSubject.next(count);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
