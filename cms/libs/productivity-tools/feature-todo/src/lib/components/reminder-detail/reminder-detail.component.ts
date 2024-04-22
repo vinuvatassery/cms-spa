@@ -273,7 +273,7 @@ export class ReminderDetailComponent implements OnInit {
     }
   }
 
-  prepareRepeatPayload(){
+  prepareRepeatPayload(){    
     if(this.isEdit){
     return {
       ...this.prepareCommonPayload(),
@@ -422,14 +422,14 @@ export class ReminderDetailComponent implements OnInit {
     if ( this.clientReminderForm.controls['time'].value &&
     ((timeInHours ==  new Date().getHours() && timeInMinutes < new Date().getMinutes())
     || timeInHours <  new Date().getHours())) {
-      this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
+      //this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
       return;
     }
   }
 }
   else{
-    this.clientReminderForm.controls['time'].setErrors({ 'incorrect': null })
-    this.clientReminderForm.controls['time'].updateValueAndValidity();
+    //this.clientReminderForm.controls['time'].setErrors({ 'incorrect': null })
+    //this.clientReminderForm.controls['time'].updateValueAndValidity();
     return;
   }
   }

@@ -1,12 +1,13 @@
 <div class="flex-row  sms-temp-scroll">
-  <div class="flex-col mb-2" *ngFor="let item of tareaMessages; index as i">
+  <div class="flex-col mb-2" *ngFor="let item of messageList; index as i">
     <div class="sms-text-header">
       <h5>Message</h5>
       <div>
         <button
           kendoButton
           #anchorInsert
-          (click)="onToggleInsertVariableClicked(item, i)"
+          [attr.id] ="'insertVariable'"
+          (click)="showVariables(item)"
           class="text-t-normal"
           aria-label="Insert a variable"
           title="Insert a variable"
@@ -14,30 +15,30 @@
         >
           Insert a variable
           <span
+            [attr.id] ="'insertVariable'"
             class="material-icons"
             aria-label="dropdown arrow"
             aria-hidden="true"
             >arrow_drop_down</span
-          >
+          >  
         </button>
         <kendo-popup
         [attr.data-index]="i"
         #popupAsf
         [anchor]="anchorInsert.element" 
-        *ngIf="(i+1) === selectedItem"
+        *ngIf="item.showVariable"
           popupClass="content notification-inner"
         >
         <div class="sms-popup-content">
           <div class="sms-variable-search-block">
             <div class="input-search mat-form-no-b-space">
-              <div  class="medium-input-form sms-variable-search_input"  >
-                <kendo-textbox aria-label="input a variable"  placeholder="Search" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+              <div  class="medium-input-form sms-variable-search_input" >
+                <kendo-textbox aria-label="input a variable" [attr.id] ="'searchVariable'" (valueChange)="onSearchChange($event)" placeholder="Search" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
               </div>
             </div>
             <button
               kendoButton
               class="k-icon-button sms-variable-search_close"
-              (click)="onSearchClosed()"
               aria-label="Close"
               title="Close"
             >
@@ -50,7 +51,7 @@
             </button>
           </div>
           <div class="var-list-block">
-            <section>
+            <section *ngIf ="clientVariableExist">
               <h5>Client Variables</h5>
               <ul
                 class="var-list-item"
@@ -60,7 +61,7 @@
                 <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='CLIENT_VARIABLE'" aria-label="client variables item">{{ variable.lovDesc }}</li>
               </ul>
             </section>
-            <section>
+            <section *ngIf ="caseWorkerVariableExist">
               <h5>My Variables</h5>
               <ul
                 class="var-list-item"
@@ -70,7 +71,7 @@
                 <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ variable.lovDesc }}</li>
               </ul>
             </section>
-            <section>
+            <section *ngIf ="otherVariableExist">
               <h5>Other Variables</h5>
               <ul
                 class="var-list-item"
@@ -84,10 +85,9 @@
         </div>
         </kendo-popup>
         <button 
-          kendoButton
-          [disabled]="this.tareaMessages.length <= 1"
+          kendoButton          
           class="k-danger-link"
-          (click)="onDeleteMessageClicked(item.id)"
+          (click)="onDeleteMessageClicked(item.messageId)"
           aria-label="Delete"
         >
           Delete
@@ -100,14 +100,13 @@
         name="Message Description"
         [rows]="3"
         [cols]="40"
-        [maxlength]="tareaMessageMaxLength"
-        [id]="item.id"
-        [class]="'c-'+item.id"
-        (valueChange)="onMessageValueChange($event, item.id)"
-        [(ngModel)]="item.description"
+        [id]="item.messageId"
+        [class]="'c-'+item.messageId"
+        [(ngModel)]="item.messageText"
         aria-label="message description"
+        (valueChange)="onMessageValueChange(item)"
       >
-      <kendo-textarea-suffix class="justify-content-end"> <span  class="counter">  {{ item.wordCount }}/{{ tareaMessageMaxLength }} </span> </kendo-textarea-suffix>
+      <kendo-textarea-suffix class="justify-content-end"> <span  class="counter">  {{ item.wordCount }}/{{ tAreaMessageMaxLength }} </span> </kendo-textarea-suffix>
       </kendo-textarea>
    
     </kendo-floatinglabel>
@@ -118,8 +117,8 @@
       [primary]="true"
       look="flat"
       icon="add"
-      [disabled]="this.tareaMessages.length >=10 "
-      (click)="onAddNewMessageClicked()"
+      [disabled]="this.messageList.length >=10 "
+      (click)="addNewMessage()"
       aria-label="Message"
     >
       Message

@@ -217,7 +217,7 @@ export class CommunicationFacade {
     formData.append('clientCaseEligibilityId', data?.eligibilityId ?? '');
     formData.append('documentTemplateId', data?.emailData?.documentTemplateId ?? '');
     this.addCommaSeperatedEmailToFormData(formData, data?.toEmail, 'to');
-    formData.append('bcc',JSON.stringify(data?.bccEmail) ?? JSON.stringify('')); 
+    formData.append('bcc',JSON.stringify(data?.bccEmail) ?? JSON.stringify(''));
     if(data?.ccEmail){
       let i = 0;
       data?.ccEmail.forEach((item: any) =>{
@@ -227,7 +227,7 @@ export class CommunicationFacade {
       });
     }
     if (data?.emailData) {
-      let subTypeCode = data?.emailData?.subtypeCode?? data?.emailData?.subTypeCode 
+      let subTypeCode = data?.emailData?.subtypeCode?? data?.emailData?.subTypeCode
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
       formData.append('typeCode', data?.emailData?.typeCode);
       formData.append('subTypeCode', subTypeCode ?? '');
@@ -311,12 +311,14 @@ export class CommunicationFacade {
   }
 
   prepareClientAndVendorSmsData(formData: FormData, draftTemplate: any, messageRecipient: any, arg2: undefined[]) {
+    let subTypeCode = draftTemplate?.subTypeCode ?? draftTemplate?.subtypeCode;
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('typeCode', draftTemplate?.typeCode ?? '');
+    formData.append('subTypeCode', subTypeCode ?? '');
     formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
-    formData.append('recepients', messageRecipient?.phoneNbr ?? '');
-    formData.append('entity', draftTemplate?.typeCode ?? '');
+    formData.append('recepients', messageRecipient?.phoneNbr ?? ''); 
+    formData.append('formattedPhoneNbr',messageRecipient?.formattedPhoneNbr ?? '')
     let i = 0;
     draftTemplate.messages.forEach((msg: any) => {
       formData.append('messages[' + i + ']', msg);
@@ -363,9 +365,9 @@ export class CommunicationFacade {
     );
   }
 
-  loadClientAttachments(clientId: any) {
+  loadClientAttachments(clientId: any, typeCode: any) {
     return this.documentDataService.getDocumentsByClientCaseEligibilityId(
-      clientId, 0, 1000, '', 'asc', null, null
+      clientId, 0, 1000, '', 'asc', null, null, typeCode
     );
   }
 
