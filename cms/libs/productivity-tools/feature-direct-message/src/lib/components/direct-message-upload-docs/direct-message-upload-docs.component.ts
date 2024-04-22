@@ -41,8 +41,8 @@ export class DirectMessageUploadDocsComponent {
   public uploadRemoveUrl = 'removeUrl';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   formsAndDocumentList$!: any;
-  clientAllDocumentList$!: any; 
-  cerAuthorizationForm!:FormGroup; 
+  clientAllDocumentList$!: any;
+  cerAuthorizationForm!:FormGroup;
   isShowPopupClicked = false;
   @Input() communicationTypeCode!:any;
   @Input() isContentMissing!: boolean;
@@ -145,7 +145,7 @@ export class DirectMessageUploadDocsComponent {
         },
       });
   }
-  
+
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -153,10 +153,10 @@ export class DirectMessageUploadDocsComponent {
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
   }
-  
+
   loadClientAttachments(clientId: any) {
     this.loaderService.show();
-    this.communicationFacade.loadClientAttachments(clientId)
+    this.communicationFacade.loadClientAttachments(clientId,null)
       .subscribe({
         next: (attachments: any) => {
           if (attachments.totalCount > 0) {

@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, AfterView
 /** External libraries **/
 import {catchError, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode, WorkflowTypeCode, ContactFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode, WorkflowTypeCode, ContactFacade, CommunicationFacade } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
@@ -93,6 +93,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   fplPercentage:any
   paperlessFlag:String | null= null;
   workflowTypeCode:any;
+  isOpenClientsAttachment=false;
+  clientDependentId: any;
+  clientAllDocumentList$:any;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -106,7 +109,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       text: "Attach from client/'s attachments",
       id: "attachFromClient",
       click: (event: any,dataItem: any): void => {
-        this.onBlur();
+        this.isOpenClientsAttachment = true;
+        this.clientDependentId = dataItem.clientDependentId;
       },
     },
 
@@ -134,7 +138,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly dependentFacade:FamilyAndDependentFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly router: Router,
-    private readonly contactFacade: ContactFacade
+    private readonly contactFacade: ContactFacade,
+    private readonly communicationFacade: CommunicationFacade
     ) { }
 
   /** Lifecycle hooks **/
@@ -155,6 +160,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
     this.addDiscardChangesSubscription();
+    this.loadClientAttachments(this.clientId);
     //this.loadAddress();
   }
 
@@ -444,6 +450,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
           if(this.isCerForm){
             this.incomeFacade.loadEmployerIncomes(this.clientId,this.clientCaseEligibilityId);
           }
+          this.loadClientAttachments(this.clientId);
         }
       });
   }
@@ -902,4 +909,62 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.workflowFacade.updateChecklist(removeEmployerIncomeDataPointList);
     }
   }
+
+  closeClientAttachmentsPopup($event: any) {
+    this.isOpenClientsAttachment = false;
+    this.clientDependentId = null;
+  }
+
+  handleClientAttachment($event: any) {
+    this.incomeFacade.showLoader();
+    const attachedFile = $event.files[0];
+    const clientAttachment = {
+      "clientDocumentId": $event.clientDocumentId,
+      "documentName": attachedFile.documentName,
+      "documentPath": $event.documentPath,
+      "entityId": this.clientDependentId,
+      "concurrencyStamp": $event.concurrencyStamp,
+      "clientId": this.clientId,
+      "clientCaseId": this.clientCaseId,
+      "clientCaseEligibilityId": this.clientCaseEligibilityId,
+      "documentTypeCode": "DEPENDENT_PROOF_OF_SCHOOL",
+      "size": $event.size,
+      "ContentTypeCode": attachedFile.ContentTypeCode
+    };
+    this.dependentFacade.uploadDependentProofOfSchoolClientAttachment(clientAttachment).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.incomeFacade.loadDependentsProofofSchools(this.clientId, this.clientCaseEligibilityId);
+        }
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
+        this.incomeFacade.hideLoader();
+        this.closeClientAttachmentsPopup(true);
+      },
+      error: (err: any) => {
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.incomeFacade.hideLoader();
+      }
+    });
+
+  }
+
+  loadClientAttachments(clientId: any) {
+    if(clientId!=null && clientId != undefined && clientId !=''){
+      this.loaderService.show();
+      this.communicationFacade.loadClientAttachments(clientId, "DEPENDENT_PROOF_OF_SCHOOL")
+        .subscribe({
+          next: (attachments: any) => {
+            if (attachments.totalCount > 0) {
+              this.clientAllDocumentList$ = attachments?.items;
+              this.cdr.detectChanges();
+            }
+            this.loaderService.hide();
+          },
+          error: (err: any) => {
+            this.loaderService.hide();
+          },
+        });
+    }
+  }
+
 }

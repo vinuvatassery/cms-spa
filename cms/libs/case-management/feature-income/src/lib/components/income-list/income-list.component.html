@@ -134,8 +134,8 @@
         <kendo-grid-column *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center"
           [sticky]="true" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <common-user-photo-icon  
-            [userId]="dataItem?.creatorId" 
+            <common-user-photo-icon
+            [userId]="dataItem?.creatorId"
             [userFirstName]="dataItem?.userFirstName"
             [userLastName]="dataItem?.userLastName"
             [userProfilePhotoExists]="dataItem?.isUserProfilePhotoExist"
@@ -203,7 +203,7 @@
     <div class="flex-row">
       <div class="flex-col mt-1">
         <button kendoButton *ngIf="isAddIncomeButtonAndFooterNoteDisplay" [primary]="true" icon="add"
-          (click)="onIncomeClicked(false)" aria-label="Income" 
+          (click)="onIncomeClicked(false)" aria-label="Income"
           [disabled]="isCerForm? false : cerStarted ? true :(currentClientCaseEligibilityId !== '' && clientCaseEligibilityId !== currentClientCaseEligibilityId)? true : (isReadOnly$ | async) ? true : false">
           Income
         </button>
@@ -276,8 +276,8 @@
         </kendo-grid-column>
         <kendo-grid-column *ngIf="isClientProfileTab" field="by" title="By" [width]="80" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <common-user-photo-icon  
-            [userId]="dataItem?.creatorId" 
+            <common-user-photo-icon
+            [userId]="dataItem?.creatorId"
             [userFirstName]="dataItem?.userFirstName"
             [userLastName]="dataItem?.userLastName"
             [userProfilePhotoExists]="dataItem?.isUserProfilePhotoExist"
@@ -320,3 +320,12 @@
 
 
 </kendo-dialog>
+
+  <!-- Upload From Client's Modal -->
+  <kendo-dialog *ngIf="isOpenClientsAttachment" (close)="closeClientAttachmentsPopup($event)"
+  class="app-c-modal app-c-modal-mdl app-c-modal-np">
+  <kendo-dialog-titlebar>Client Attachments for Proof of School</kendo-dialog-titlebar>
+ <app-client-attachment-model [clientAllDocumentList$]="clientAllDocumentList$" (closePopup)="closeClientAttachmentsPopup($event)"
+ (clientAttachment)="handleClientAttachment($event)" [clientId]="clientId">
+ </app-client-attachment-model>
+  </kendo-dialog>
