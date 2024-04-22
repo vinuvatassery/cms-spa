@@ -12,9 +12,10 @@
     </div>
   </div>
   <div class="direct-chat-wrapper">
-    <div class="chat-view-container">
-      <ng-container *ngFor="let item of groupedMessages | keyvalue">
+    <div class="chat-view-container" #scrollMe>
+      <ng-container *ngFor="let item of groupedMessages | keyvalue:mySortingFunction">
         <label class="center-date">{{ item.key}}</label>
+        
         <ng-container *ngFor="let value of getVlauesWithKey(item.value)">
         <div class="chat-grey chat-left-side" *ngIf="!value.isOwner">
           <p>{{value.message}}</p>
@@ -50,33 +51,35 @@
                  <span>AttachmentName.pdf</span>
             </div>
           </div>
-          <div class="time-status" *ngIf="false"><span class="chat-time">10:00 AM</span> <span class="chat-time">Mark as Unread</span>
+          <div class="time-status" *ngIf="false"><span class="chat-time">{{value.createdOn | date:'h:mm a'}}</span> <span class="chat-time">Mark as Unread</span>
           </div>
          
         </div>
         <div class="chat-green chat-right-side" *ngIf="value.isOwner">
           <p>{{value.message}}</p>
-          <div class="time-status"><span class="chat-time">10:58 AM (Read)</span> </div>
+          <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}} (Read)</span> </div>
         </div>
      
       </ng-container>
       </ng-container>
-    
-     
-      <label class="center-date">MONDAY, OCTOBER 5, 2020</label>
-      <div class="chat-green chat-right-side">
-        <p>Hi Donna, I’m happy to help! Are you free on Monday at 10am?</p>
-        <div class="time-status"><span class="chat-time">10:58 AM (Read)</span>  </div>
-      </div>
-      <div class="chat-grey chat-left-side">
-        <p>Hi Lisa, can you help me renew eligibility next week?</p>
-        <div class="time-status"><span class="chat-time">10:00 AM</span> <span class="chat-time">Mark as Unread</span>
-        </div>
-      </div>
+
     </div>
+    <div *ngIf="false">
+      <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
+        <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60"
+          class="bg_rect_loader"></kendo-skeleton>
+        <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40"></kendo-skeleton>
+        <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
+          <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+          <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
+        </div>
+      </div>
+
+    </div>
+
     <div class="chat-bottom-container">
       <div class="chat-input">
-        <input type="text" placeholder="Direct Message Donna…" class="message-normal-text-box" *ngIf="!messageToolBarShow" [(ngModel)]="sendMsg.message"/>
+        <input type="text" placeholder="Direct Message Donna…" class="message-normal-text-box" *ngIf="!messageToolBarShow" [(ngModel)]="sendMsg.message"  (keydown.control.enter)="sendMessage()" />
         <kendo-editor [value]="value" class="message-editor" [iframe]="false" placeholder="Direct Message Donna…" *ngIf="messageToolBarShow">
           <kendo-toolbar [overflow]="true" >
             <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
@@ -91,26 +94,13 @@
         </kendo-editor>
       </div>
       <div class="chat-actions">
-        <div> 
-          <button  kendoButton themeColor="primary" [toggleable]="true" aria-label="Format" fillMode="flat" title="Format" (click)="messageToolBarShow = !messageToolBarShow">
-            <span class="material-icons " aria-hidden="true">    format_color_text    </span>
-          </button>
+        <div>        
           <kendo-dropdownbutton   [data]="ListItemModel" themeColor="primary"  aria-label="Attach a File" title="Attach a File"  fillMode="flat" (itemClick)="onUploadDocumentsOpenClicked(UploadDocumentInDirectMessage, $event)">
            
               <span class="material-icons" aria-hidden="true">    attach_file   </span> 
           </kendo-dropdownbutton>
-        
-
-          <button kendoButton themeColor="primary"  aria-label="Add to Event log" fillMode="flat" title="Add to Event log">
-            <span class="material-icons" aria-hidden="true">   assignment  </span>
-          </button>
-        
         </div>
-        <div>
-          <button kendoButton (click)="sendMessage()"   themeColor="primary"  aria-label="Add to Event log" fillMode="flat" title="Add to Event log">
-            <span class="material-icons" aria-hidden="true">   send  </span>
-          </button>
-        </div>
+     
       </div>
     </div>
   </div>
