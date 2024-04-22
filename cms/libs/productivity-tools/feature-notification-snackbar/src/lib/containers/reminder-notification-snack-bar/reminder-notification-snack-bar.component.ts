@@ -118,8 +118,20 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   ngOnInit(): void {
     this.removePreviousMessage();
     this.reminderSnackBarSubscribe();
+    this.deleteUpdateReminderSubscribe()
   }
 
+  deleteUpdateReminderSubscribe()
+  {
+    this.todoFacade.deleteReminderSnackbar$.subscribe((alertId: any) => {     
+      if(alertId)
+        {
+          const deleteReference = this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === alertId) 
+          deleteReference.hide()
+          this.updateSnackBarCount(alertId,deleteReference)
+        }
+    })
+  }
   reminderSnackBarSubscribe() {
     this.reminderSnackBar$.subscribe((res: any) => {      
 
