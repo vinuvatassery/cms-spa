@@ -31,6 +31,8 @@
           valueField="phoneNbr"
           [(ngModel)]="messageRecipient"
           (valueChange)="handleRecipientChanged($event)"
+          [ngClass]="ngDirtyInValid()"
+          id="toPhoneNumbers"
         >
         </kendo-dropdownlist>
       </kendo-floatinglabel>

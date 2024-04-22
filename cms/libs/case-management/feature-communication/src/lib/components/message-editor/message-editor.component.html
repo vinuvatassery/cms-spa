@@ -105,6 +105,7 @@
         [(ngModel)]="item.messageText"
         aria-label="message description"
         (valueChange)="onMessageValueChange(item)"
+        [maxlength]="tAreaMessageMaxLength"
       >
       <kendo-textarea-suffix class="justify-content-end"> <span  class="counter">  {{ item.wordCount }}/{{ tAreaMessageMaxLength }} </span> </kendo-textarea-suffix>
       </kendo-textarea>

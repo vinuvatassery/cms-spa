@@ -455,11 +455,36 @@ export class SendTextMessageComponent implements OnInit {
   }
 
   handleRecipientChanged(recipient: any) {
+    debugger
     this.messageRecipient = recipient;
     if(this.messageRecipient){
       this.isRecipientMissing = false;
       this.isFormValid = true;
+      this.ngDirtyInValid();
     }
     this.ref.detectChanges();
   }
+
+  ngDirtyInValid() {
+    if (!this.isFormValid) {
+      if (this.messageRecipient === undefined || this.messageRecipient === '') {
+        document.getElementById('toPhoneNumbers')?.classList.remove('ng-valid');
+        document.getElementById('toPhoneNumbers')?.classList.add('ng-invalid');
+        document.getElementById('toPhoneNumbers')?.classList.add('ng-dirty');
+      }
+      else {
+        document.getElementById('toPhoneNumbers')?.classList.remove('ng-invalid');
+        document.getElementById('toPhoneNumbers')?.classList.remove('ng-dirty');
+        document.getElementById('toPhoneNumbers')?.classList.add('ng-valid');
+      }
+    }
+    else{
+      document.getElementById('toPhoneNumbers')?.classList.remove('ng-invalid');
+      document.getElementById('toPhoneNumbers')?.classList.remove('ng-dirty');
+      document.getElementById('toPhoneNumbers')?.classList.add('ng-valid');
+    }
+    return 'ng-dirty ng-invalid';
+
+  }
+
 }
