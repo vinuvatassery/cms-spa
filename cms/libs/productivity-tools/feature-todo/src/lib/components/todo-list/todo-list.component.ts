@@ -407,6 +407,12 @@ export class TodoListComponent implements OnInit {
     this.loadTodoGrid();
   }
   alertRepeatDesc(desc: string){
-    return  ConstantValue.Repeat +" "+ desc.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+    return  ConstantValue.Repeat +" "+ this.convertToTitleCase(desc)
   }
+  convertToTitleCase(str: string): string {
+    return str.replace(/(?<!^)(?=[A-Z])|_/g, (match, isBeginning) => {
+      return match === '_' ? ' ' : isBeginning ? match.toUpperCase() : match.charAt(0).toUpperCase() + match.slice(1);
+    });
+  }
+  
 }
