@@ -677,6 +677,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
             this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
           }
           this.isProofOfSchoolDocumentUploaded = true;
+          this.loadClientAttachments(this.clientId);
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
           this.dependentFacade.hideLoader();
           this.showHideImageUploadLoader(false, dataItem);
@@ -701,6 +702,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.incomeFacade.showLoader();
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
         next: (response: any) => {
+          this.loadClientAttachments(this.clientId);
           this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
           this.incomeFacade.hideLoader();
           this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
@@ -937,6 +939,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         if (response) {
           this.incomeFacade.loadDependentsProofofSchools(this.clientId, this.clientCaseEligibilityId);
         }
+        this.loadClientAttachments(this.clientId);
+        this.isProofOfSchoolDocumentUploaded = true;
         this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
         this.incomeFacade.hideLoader();
         this.closeClientAttachmentsPopup(true);
