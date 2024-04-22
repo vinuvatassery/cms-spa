@@ -26,6 +26,7 @@ export class SendTextMessageComponent implements OnInit {
 
  
   @ViewChild(MessageEditorComponent) messageEditor !: MessageEditorComponent;
+
   /** Input properties **/
   @Input() notificationGroup!: any;
   @Input() entityId!: any;
@@ -47,7 +48,7 @@ export class SendTextMessageComponent implements OnInit {
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
-  //@Output() smsEditorValueEvent = new EventEmitter<any>();
+
   /** Public properties **/
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any;
@@ -363,7 +364,7 @@ export class SendTextMessageComponent implements OnInit {
               this.selectedSmsTemplate = template;
               this.handleSmsEditor(template);
               this.isOpenMessageTemplate=true;
-              //this.smsEditorValueEvent.emit(template);
+
               this.ref.detectChanges();
             }
             this.loaderService.hide();
@@ -394,7 +395,6 @@ export class SendTextMessageComponent implements OnInit {
                 this.selectedSmsTemplate = template;
                 this.handleSmsEditor(template);
                 this.isOpenMessageTemplate=true;
-                //this.smsEditorValueEvent.emit(template);
                 this.ref.detectChanges();
               }
               this.loaderService.hide();
@@ -406,7 +406,7 @@ export class SendTextMessageComponent implements OnInit {
           });
       }else{
       this.templateContent = event.templateContent;
-      this.smsMessages = event.messages?.map((item: any)=> item);
+      this.smsMessages = event.messages?.slice(0).reverse((item: any)=> item);
       this.messageRecipient = event.recepients;
 
       this.messageRecipient = {
@@ -455,7 +455,6 @@ export class SendTextMessageComponent implements OnInit {
   }
 
   handleRecipientChanged(recipient: any) {
-    debugger
     this.messageRecipient = recipient;
     if(this.messageRecipient){
       this.isRecipientMissing = false;
@@ -484,7 +483,6 @@ export class SendTextMessageComponent implements OnInit {
       document.getElementById('toPhoneNumbers')?.classList.add('ng-valid');
     }
     return 'ng-dirty ng-invalid';
-
   }
 
 }
