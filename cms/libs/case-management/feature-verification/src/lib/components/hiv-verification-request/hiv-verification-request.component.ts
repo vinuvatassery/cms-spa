@@ -448,7 +448,7 @@ getLoggedInUserProfile(){
   })
   this.verificationFacade.hideLoader();
 }
-sendHivRequestCaseManager(){debugger;
+sendHivRequestCaseManager(){;
     if(this.clientId != 0 && this.clientId != null && this.clientId != undefined){
       this.verificationFacade.showLoader();
       this.verificationFacade.sendHivRequestCaseManager(this.clientId).subscribe({
