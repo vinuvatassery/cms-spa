@@ -128,23 +128,26 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
         type: ReminderSnackBarNotificationType.LIGHT
       };
        
-
-      if (!this.signalrEventHandlerService.snackBarAlertIds.includes(snackbarMessage.payload?.alertExtraProperties?.AlertId)) {
-        this.signalrEventHandlerService.snackBarAlertIds.push(snackbarMessage.payload.alertExtraProperties?.AlertId)
-        this.showNotifications(snackbarMessage)
-
-      }   
-      else
+     if(snackbarMessage?.payload?.alertExtraProperties?.AlertId)
       {
-        const updatedNotificationReference = 
-        this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === snackbarMessage.payload?.alertExtraProperties?.AlertId)              
-        const payload = {
-          ...snackbarMessage.payload,
+
+        if (!this.signalrEventHandlerService.snackBarAlertIds.includes(snackbarMessage.payload?.alertExtraProperties?.AlertId)) {
+          this.signalrEventHandlerService.snackBarAlertIds.push(snackbarMessage.payload.alertExtraProperties?.AlertId)
+          this.showNotifications(snackbarMessage)
+
+        }   
+        else
+        {
+          const updatedNotificationReference = 
+          this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === snackbarMessage.payload?.alertExtraProperties?.AlertId)              
+          const payload = {
+            ...snackbarMessage.payload,
+          }
+    
+          updatedNotificationReference.content.instance.snackBarMessage = payload
+        
         }
-  
-        updatedNotificationReference.content.instance.snackBarMessage = payload
-      
-      }
+     }
 
      
     })
