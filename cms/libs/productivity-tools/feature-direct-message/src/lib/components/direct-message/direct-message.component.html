@@ -73,6 +73,7 @@
         <div class="time-status"><span class="chat-time">10:00 AM</span> <span class="chat-time">Mark as Unread</span>
         </div>
       </div>
+<div *ngIf="directMessageLoader">
 
       <div *ngFor="let skeletonCount of skeletonCounts" class="msg_loader">
         <div class="left-msgloader">
@@ -95,6 +96,8 @@
     </div>
   </div>
       </div>
+    </div>
+
     </div>
     <div class="chat-bottom-container">
       <div class="chat-input">

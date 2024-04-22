@@ -37,7 +37,8 @@ export class DirectMessageComponent implements OnInit {
   sendMsg: any = { id: '', message: '', sender: '', isOwner: false };
   chatThreadClient: any
   groupedMessages :any
-  eid!:any
+  eid!:any;
+  directMessageLoader = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   clientName=""
   constructor(private directMessageFacade: DirectMessageFacade
