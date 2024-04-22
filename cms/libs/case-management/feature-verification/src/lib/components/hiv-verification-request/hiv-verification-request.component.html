@@ -1,6 +1,6 @@
 <section [formGroup]="hivVerificationForm">
   <div *ngIf="!isSendRequest">
-    <div   
+    <div
      >
       <div class="verificaton_email"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
         <div  *ngIf="isEmailFieldVisible">
@@ -24,7 +24,7 @@
       </button>
     </div>
     </div>
-    
+
     </div>
     <div class="flex-row ">
       <div class="flex-col flex-col-8">
@@ -58,7 +58,7 @@
           </span>
         </div>
       </div>
-     
+
       <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Computer'" class="flex-col flex-col-6 ml-1  mt-2">
         <kendo-fileselect
             aria-label="proof of home address"
@@ -136,7 +136,7 @@
       <div class="flex-col">
         <span class="app-c-badge badge-primary">
           <span class="material-icons" aria-label="information" aria-hidden="true" #refresh>info_outline</span>
-          <span>You will receive a notification once the provider submits the HIV Verification</span>
+          <span>You will receive a notification once the Case Manager submits the HIV Verification</span>
         </span>
       </div>
       <div class="flex-col mt-1">

@@ -12,13 +12,13 @@ import { VerificationFacade,
   VerificationTypeCode,
   ProviderOption,
   ClientDocumentFacade,
-  HivVerificationDocument, 
+  HivVerificationDocument,
   WorkflowFacade,
   CompletionChecklist,
   ScreenType,
   CommunicationEventTypeCode,
   CommunicationFacade,
-  EsignFacade, 
+  EsignFacade,
   EsignStatusCode} from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
@@ -199,8 +199,11 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
     });
   }
 
-  
+
   onSendRequestClicked() {
+    if(this.providerOption === ProviderOption.CaseManager){
+      this.sendHivRequestCaseManager();
+    }
     if (this.providerOption ===ProviderOption.HealthCareProvider) {
       this.hivVerificationForm.markAllAsTouched();
       this.hivVerificationForm.controls["providerEmailAddress"].setValidators([Validators.required, Validators.email]);
@@ -223,7 +226,7 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
     this.isResendRequest = true;
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
   }
-  
+
   handleFileSelected(e: SelectEvent) {
     this.hivVerificationAttachment = undefined;
     this.hivVerificationAttachment = e.files[0].rawFile;
@@ -445,6 +448,26 @@ getLoggedInUserProfile(){
   })
   this.verificationFacade.hideLoader();
 }
+sendHivRequestCaseManager(){debugger;
+    if(this.clientId != 0 && this.clientId != null && this.clientId != undefined){
+      this.verificationFacade.showLoader();
+      this.verificationFacade.sendHivRequestCaseManager(this.clientId).subscribe({
+        next: (response: any) => {
+          if(response){
+            this.isSendRequest = true;
+            this.emailSentDate = this.intl.formatDate(new Date(), "MM/dd/yyyy");
+            this.cdr.detectChanges();
+            this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'HIV Verification sent successfully!');
+          }
+          this.verificationFacade.hideLoader();
+        },
+        error: (err: any) => {
+          this.verificationFacade.hideLoader();
+          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+    }
+  }
 
 ngOnDestroy(): void {
   this.providerValueSubscription?.unsubscribe();
