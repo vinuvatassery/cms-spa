@@ -11,8 +11,9 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 @Injectable({ providedIn: 'root' })
 export class DirectMessageDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient,
-    private configurationProvider : ConfigurationProvider) {}
+  constructor(private readonly http: HttpClient, 
+    private readonly configurationProvider: ConfigurationProvider
+    ) {}
 
   /** Public methods **/
   loadDirectMessages(): Observable<DirectMessage[]> {
@@ -31,19 +32,8 @@ export class DirectMessageDataService {
     ]);
   }
 
-  loadDirectMessagesLists()  {
-    return of([
-      { id: 1, 
-        from: 'Lorem ipsum', 
-        unreadMessage: 'Lorem ipsum dolor sit amet', 
-        lastReceived: '22/22/2023' },
-        { id: 1, 
-          from: 'Lorem ipsum', 
-          unreadMessage: 'Lorem ipsum dolor sit amet', 
-          lastReceived: '22/22/2023' },
-
-      
-    ]);
+  loadDirectMessagesLists(param:any)  {
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages`,param);
   }
   getTokenCommunicationUserIdsAndThreadIdIfExist(clientId:string){
   return this.http.get(

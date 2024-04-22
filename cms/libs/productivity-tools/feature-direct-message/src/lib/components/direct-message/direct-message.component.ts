@@ -6,6 +6,8 @@ import {
   Output,
   OnInit,
   ChangeDetectorRef,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { DirectMessageFacade } from '@cms/productivity-tools/domain';
 import { ChatClient, ChatThreadClient, ChatThreadItem, ChatThreadProperties, SendMessageOptions, SendMessageRequest } from '@azure/communication-chat';
@@ -13,6 +15,7 @@ import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { CaseFacade } from '@cms/case-management/domain';
 import { DatePipe } from '@angular/common';
 @Component({
@@ -22,7 +25,8 @@ import { DatePipe } from '@angular/common';
   providers: [DatePipe]
 })
 export class DirectMessageComponent implements OnInit {
-
+  @ViewChild('UploadDocumentInDirectMessage', { read: TemplateRef })
+  UploadDocumentInDirectMessage!: TemplateRef<any>;
   chatClient: ChatClient | any = null;
   tokenCommunicationUserThreadDetails: any;
   clientId = "AED5E0EE-AD19-4DC6-A797-A21A6934A6C3"
@@ -41,7 +45,8 @@ export class DirectMessageComponent implements OnInit {
     ,  private configurationProvider: ConfigurationProvider
     , private route : ActivatedRoute
     , private caseFacade : CaseFacade
-    , private datePipe : DatePipe) {
+    , private datePipe : DatePipe,
+    private dialogService: DialogService) {
   }
   ngOnInit(): void {
 
@@ -73,23 +78,29 @@ export class DirectMessageComponent implements OnInit {
   }
   /** Output properties  **/
   @Output() closeAction = new EventEmitter();
+  private notificationReminderDialog: any;
   public value = ``;
   /** Public properties **/
   isShownDirectMessage = false;
+  uploadDocumentTypeDetails:any;
   messageToolBarShow = false;
   ListItemModel = [
     {
       text: "Attach from System",
+      id:'from_System'
     },
     {
       text: "Attach from Computer",
+      id:'from_Computer'
     },
     {
       text: "Attach from Client’s Attachments",
+      id:'from_Client'
     },
 
   ];
   /** Internal event methods **/
+ 
   onCloseDirectMessageClicked() {
     this.closeAction.emit();
     this.isShownDirectMessage = !this.isShownDirectMessage;
@@ -345,5 +356,18 @@ export class DirectMessageComponent implements OnInit {
 getKey(item:any){
   return item as unknown as any
 }
+onUploadDocumentsOpenClicked(template: TemplateRef<unknown>, event:any): void {
+  this.uploadDocumentTypeDetails = event;
+  console.log(this.uploadDocumentTypeDetails);
+  this.notificationReminderDialog = this.dialogService.open({
+    content: template,
+    cssClass:
+      'app-c-modal app-c-modal-md app-c-modal-np',
+  });
+  
+} 
 
+onUploadDocumentsClosed(event: any) { 
+  this.notificationReminderDialog.close();
+}
 }

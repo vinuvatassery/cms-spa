@@ -180,9 +180,16 @@ export class DependentDataService {
     );
   }
 
+  uploadDependentProofOfSchoolClientsAttachment(clientAttachmentDetail: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/dependents/UploadProofOfSchoolClientAttachment`,
+      clientAttachmentDetail
+    );
+  }
+
   saveAndContinueDependents(clientId: number, clientCaseEligibilityId: string, request: any) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}/eligibility-periods/${clientCaseEligibilityId} `, 
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}/eligibility-periods/${clientCaseEligibilityId} `,
       request
     );
   }
