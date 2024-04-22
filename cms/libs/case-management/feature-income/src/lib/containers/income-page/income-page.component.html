@@ -69,7 +69,7 @@
                   <span class="app-radiobtnwidtext-wrapper">
                     <input type="radio" kendoRadioButton aria-labelledby="employerIncomeNo" id="employerIncomeNo_{{i}}"
                       name="employerIncomeNo_{{i}}" value="INACTIVE" [(ngModel)]="prvEmployer.cerReviewStatusCode"
-                      (change)="employerIncomeYesNoChange(prvEmployer)" [ngClass]="ngDirtyInValid(prvEmployer,'endDate_',i)" />
+                      (change)="employerIncomeYesNoChange(prvEmployer)" [ngClass]="ngDirtyInValid(prvEmployer,'employerIncomeNo_',i)" />
                     <kendo-label class="k-radio-label" for="employerIncomeNo_{{i}}" text="No"></kendo-label>
                   </span>
                 </div>
