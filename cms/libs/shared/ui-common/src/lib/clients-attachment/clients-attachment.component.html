@@ -1,6 +1,6 @@
-<section [formGroup]="clientAttachmentForm">
-  <kendo-floatinglabel  text="Client Documents">
-    
+<section [formGroup]="clientAttachmentForm" style="padding-left: 0px;">
+  <kendo-floatinglabel  text="{{floatingLabel}}">
+
     <kendo-multicolumncombobox
       (valueChange)="clientAttachmentChange($event)"
       [data]="clientDocumentList$"

@@ -16,9 +16,11 @@ import { Subscription, filter } from 'rxjs';
 export class CommonActionsComponent implements OnInit, OnDestroy{
   /** Public properties **/
  
+  readonly entityTypeCodeEnum = AlertEntityTypeCode;
   clickedContact!: any;
   item: Array<DialItem> = [{}];
-  entityId : any;
+  entityId: any;
+  entityTypeCode: any;
   eventLogCount = 0;
   directMessageCount = 0;
   alertCount = 0;
@@ -39,7 +41,15 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.updateStatsSubscription = this.notificationStatsFacade.updateStats$.subscribe((response: any) => {
       if(response.data){
-        this.notificationStatsFacade.getStats(this.entityId, response.statsTypeCode);
+        // The Below logic handles resetting the right StatsTypeCode count. One example is, user adds Reminder with Event Log Panel open. 
+        if((response.statsTypeCode == StatsTypeCode.EventLog && this.fabMenuFacade.isShownEventLog) ||
+        (response.statsTypeCode == StatsTypeCode.DirectMessage && this.fabMenuFacade.isShownDirectMessage) ||
+        (response.statsTypeCode == StatsTypeCode.Alert && this.fabMenuFacade.isShownTodoReminders)){
+          this.notificationStatsFacade.resetStats(this.entityId, response.statsTypeCode);
+        }
+        else{
+          this.notificationStatsFacade.getStats(this.entityId, response.statsTypeCode);
+        }
       }
     });
 
@@ -70,9 +80,16 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
 
 
     const clientId = this.route.snapshot.params['id'];
+    const vendorId = this.route.snapshot.queryParams['v_id'];
     if(clientId){
       this.entityId = clientId.toString();
+      this.entityTypeCode = AlertEntityTypeCode.Client;
       this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);
+    }
+    else if (vendorId){
+      this.entityId = vendorId.toString();
+      this.entityTypeCode = AlertEntityTypeCode.Vendor;
+      this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Vendor);
     }
     this.addSessionChangeSubscription();
   }
@@ -85,7 +102,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       if (newClientId && newClientId !== this.entityId) {
         this.entityId = newClientId.toString();
         this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);
-        this.hideAllPanels();
       }
     });
   }
@@ -122,10 +138,5 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
     this.fabMenuFacade.isShownDirectMessage = false;
     this.fabMenuFacade.isShownEventLog = false;
     this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.Alert);
-  }
-  hideAllPanels(){
-    this.fabMenuFacade.isShownEventLog = false;
-    this.fabMenuFacade.isShownDirectMessage = false;
-    this.fabMenuFacade.isShownTodoReminders = false;
   }
 }

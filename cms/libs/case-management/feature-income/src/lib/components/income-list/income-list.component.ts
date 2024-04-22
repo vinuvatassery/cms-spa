@@ -6,7 +6,7 @@ import {
 import { Subject } from 'rxjs/internal/Subject';
 import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
-import { CompletionChecklist, ScreenType, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade, CaseFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ScreenType, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade, CaseFacade, CommunicationFacade } from '@cms/case-management/domain';
 import { DeleteRequest, SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSource, SnackBarNotificationType, } from '@cms/shared/util-core';
@@ -85,6 +85,9 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   incomeListProfilePhoto$ = this.incomeFacade.incomeListProfilePhotoSubject;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   cerStarted:any = true;
+  isOpenClientsAttachment=false;
+  clientDependentId: any;
+  clientAllDocumentList$:any;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -98,7 +101,9 @@ export class IncomeListComponent implements OnInit, OnDestroy {
       text: "Attach from client/'s attachments",
       id: "attachfromclient",
       click: (event: any, dataItem: any): void => {
-        this.onProofSchoolDropdownOneBlur();
+        //this.onProofSchoolDropdownOneBlur();
+        this.isOpenClientsAttachment = true;
+        this.clientDependentId = dataItem.clientDependentId;
       },
     },
     {
@@ -136,7 +141,8 @@ export class IncomeListComponent implements OnInit, OnDestroy {
     private readonly dependentFacade: FamilyAndDependentFacade,
     private readonly cdr: ChangeDetectorRef,
     private caseFacade: CaseFacade,
-    private readonly configurationProvider: ConfigurationProvider,) { }
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly communicationFacade: CommunicationFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -147,7 +153,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
       this.isIncomeAvailable = response;
       this.cdr.detectChanges();
     })
-
+    this.loadClientAttachments(this.clientId);
   }
 
   ngOnChanges() {
@@ -206,11 +212,6 @@ ngOnDestroy(): void {
     if (modalType == 'delete') {
       this.isRemoveIncomeConfirmationPopupOpened = true;
     }
-  }
-  private loadDependentsProofofSchools() {
-    this.incomeFacade.showLoader();
-    this.incomeFacade.loadDependentsProofofSchools();
-    this.incomeFacade.hideLoader();
   }
 
   private includeAddIncomeButtonAndFooterNote() {
@@ -318,12 +319,13 @@ ngOnDestroy(): void {
     this.loadIncomeData(true);
 
   }
+
   handleFileSelected(event: any, dataItem: any) {
     this.dependentFacade.showLoader();
 
     if (event && event.files.length > 0) {
       const formData: any = new FormData();
-      let file = event.files[0].rawFile
+      let file = event.files[0].rawFile;
       if (file.size > this.configurationProvider.appSettings.uploadFileSizeLimit) {
         this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "File is too large. Cannot be more than 25 MB.", NotificationSource.UI);
       }
@@ -341,8 +343,9 @@ ngOnDestroy(): void {
         this.showHideImageUploadLoader(true, dataItem);
         this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
           next: (response: any) => {
-            this.loadIncomeData();
-            this.loadDependentsProofofSchools();
+            if(response){
+              this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
+            }
             this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
             this.dependentFacade.hideLoader();
             this.showHideImageUploadLoader(false, dataItem);
@@ -397,8 +400,7 @@ ngOnDestroy(): void {
       this.incomeFacade.showLoader();
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
         next: (response: any) => {
-          this.loadIncomeData();
-          this.loadDependentsProofofSchools();
+          this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
           this.incomeFacade.hideLoader();
           this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Proof of school attachment removed successfully');
           this.sendDetailToIncomeList.next(true);
@@ -439,6 +441,64 @@ ngOnDestroy(): void {
     }
     if (field == "incomeFrequencyCodeDesc") {
       this.incomeFrequencyCodeDesc = value;
+    }
+  }
+
+  closeClientAttachmentsPopup($event: any) {
+    this.isOpenClientsAttachment = false;
+    this.clientDependentId = null;
+  }
+
+  handleClientAttachment($event:any){
+    this.incomeFacade.showLoader();
+    const attachedFile=$event.files[0];
+    const clientAttachment = {
+      "clientDocumentId" : $event.clientDocumentId,
+      "documentName": attachedFile.documentName,
+      "documentPath" : $event.documentPath,
+      "entityId": this.clientDependentId,
+      "concurrencyStamp" : $event.concurrencyStamp,
+      "clientId": this.clientId,
+      "clientCaseId": this.clientCaseId,
+      "clientCaseEligibilityId": this.clientCaseEligibilityId,
+      "documentTypeCode": "DEPENDENT_PROOF_OF_SCHOOL",
+      "size":$event.size,
+      "ContentTypeCode" : attachedFile.ContentTypeCode
+    };
+    this.dependentFacade.uploadDependentProofOfSchoolClientAttachment(clientAttachment).subscribe({
+      next: (response: any) => {
+        if(response){
+          this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
+        }
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
+        this.incomeFacade.hideLoader();
+        this.closeClientAttachmentsPopup(true);
+      },
+      error: (err: any) => {
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.incomeFacade.hideLoader();
+      }
+    });
+
+    }
+
+  loadClientAttachments(clientId: any) {
+    if(clientId!=null && clientId != undefined && clientId !=''){
+      this.loaderService.show();
+      this.communicationFacade.loadClientAttachments(clientId, "DEPENDENT_PROOF_OF_SCHOOL")
+        .subscribe({
+          next: (attachments: any) => {
+            if (attachments.totalCount > 0) {
+              this.clientAllDocumentList$ = attachments?.items;
+              this.cdr.detectChanges();
+            }
+            this.loaderService.hide();
+          },
+          error: (err: any) => {
+            this.loaderService.hide();
+            this.loggingService.logException(err)
+          },
+        });
     }
   }
 }

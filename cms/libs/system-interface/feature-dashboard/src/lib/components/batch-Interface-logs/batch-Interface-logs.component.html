@@ -80,7 +80,7 @@
             
        </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="startDate" title="Process Start Date" [width]="180" [sortable]="true">
+        <kendo-grid-column field="startDate" title="Process Start Date" [width]="200" [sortable]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a' }}
           </ng-template>
@@ -94,7 +94,7 @@
           </ng-template>
         </kendo-grid-column>
 
-<kendo-grid-column field="fileReceiveDate" title="File Receive Date" [width]="180">
+<kendo-grid-column field="fileReceiveDate" title="File Received Date" [width]="180">
   <ng-template kendoGridCellTemplate let-dataItem>
     {{dataItem.fileReceiveDate | date: 'MM/dd/YYYY hh:mm:ss a'}}
   </ng-template>
@@ -149,11 +149,13 @@
           </ng-template>
         </kendo-grid-column>       
 
-        <kendo-grid-column title="File Download" [width]="130" [sortable]="false" [columnMenu]="false">
+        <kendo-grid-column title="File Download" field="uploadStatus" [width]="100" [sortable]="false" [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button"
-              kendoPopoverAnchor (click)="downloadFile(dataItem.fileId)">
-              Download
+          
+
+            <button kendoButton   [disabled]="dataItem.uploadStatus==='N'" [attr.aria-label]="dataItem.uploadStatus" title="Download" [attr.aria-label]="dataItem.status" [primary]="true" look="flat"  (click)="downloadFile(dataItem.fileId,dataItem.processTypeDesc)"> <span class="material-icons">
+              file_download
+              </span>
             </button>
           </ng-template>
         </kendo-grid-column>

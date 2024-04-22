@@ -5,7 +5,7 @@ import {
   EventEmitter,
   ChangeDetectionStrategy,
 } from '@angular/core';
-
+import {DomSanitizer} from '@angular/platform-browser';
 @Component({
   selector: 'common-read-more',
   templateUrl: './read-more.component.html',
@@ -19,12 +19,13 @@ export class ReadMoreComponent {
   isContentToggled: boolean = false;
   nonEditedContent: string = '';
   isShowReadMore: boolean = false;
-
-  constructor() {}
+  sanitizedHtml:any;
+  constructor(private sanitizer : DomSanitizer) {}
 
   ngOnInit() {
     this.nonEditedContent = this.content;
     this.setReadmoreDisplay();
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content); 
   }
 
   setReadmoreDisplay() {
@@ -39,6 +40,7 @@ export class ReadMoreComponent {
     this.content = this.isContentToggled
       ? this.nonEditedContent
       : this.formatContent(this.content);
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content); 
   }
 
   formatContent(content: string) {

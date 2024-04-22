@@ -8,7 +8,7 @@ import { ClientHivVerification } from '../entities/client-hiv-verification';
 @Injectable({ providedIn: 'root' })
 export class VerificationDataService {
     constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider){}
-    save(clientHivVerification: ClientHivVerification) {
+    save(clientHivVerification: FormData) {
         return this.http.post(
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification`,
           clientHivVerification

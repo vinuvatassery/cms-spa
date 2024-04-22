@@ -54,14 +54,7 @@ export class ClientRecordSentComponent {
       
               type: 'column',
               color: '#005994',
-            },
-            {
-              data: res.data,
-      
-              type: 'line',
-              color: '#005994',
-              style: 'smooth',
-            },
+            }
           ],
         },
       };

@@ -27,7 +27,7 @@
             </kendo-dropdownlist>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="employerName" title="Name of Employer" [width]="140">
+        <kendo-grid-column field="employerName" title="Name of Employer" [width]="180">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
               [extra]="false" operator="eq">
@@ -38,7 +38,7 @@
             </kendo-grid-string-filter-menu>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="incomeAmt" [title]="isClientProfileTab ? 'Gross Amount' : 'Gross Amount'" [width]="130">
+        <kendo-grid-column field="incomeAmt" [title]="isClientProfileTab ? 'Gross Amount' : 'Gross Amount'" [width]="160">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
               [extra]="false" operator="eq">
@@ -46,7 +46,7 @@
             </kendo-grid-string-filter-menu>
           </ng-template>
           <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> <strong>$</strong> {{dataItem.incomeAmt}}</span>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.incomeAmt | kendoNumber: 'n2'}}</span>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="incomeFrequencyCodeDesc" title="Frequency" [width]="120">
@@ -59,7 +59,7 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="incomeStartDate" [title]="isClientProfileTab ? 'Income Start Date' : 'Income Start Date'"
-          [width]="140">
+          [width]="180">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <common-grid-cell-date-range-filter [field]="'incomeStartDate'" [filter]="filter"
               [filterService]="filterService">
@@ -102,7 +102,7 @@
           </ng-template>
         </kendo-grid-column>
 
-        <kendo-grid-column field="incomeNote" title="Financial Justification or Income Note" [width]="220">
+        <kendo-grid-column field="incomeNote" title="Financial Justification or Income Note" [width]="300">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
               [extra]="false" operator="eq">
@@ -116,7 +116,7 @@
             ({{fplPercentage}}% FPL)
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="monthlyIncome" title="Monthly Income" [width]="140" format="{0:c2}" [sticky]="true">
+        <kendo-grid-column field="monthlyIncome" title="Monthly Income" [width]="180" format="{0:c2}" [sticky]="true">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
               [extra]="false" operator="eq">
@@ -134,8 +134,8 @@
         <kendo-grid-column *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center"
           [sticky]="true" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <common-user-photo-icon  
-            [userId]="dataItem?.creatorId" 
+            <common-user-photo-icon
+            [userId]="dataItem?.creatorId"
             [userFirstName]="dataItem?.userFirstName"
             [userLastName]="dataItem?.userLastName"
             [userProfilePhotoExists]="dataItem?.isUserProfilePhotoExist"
@@ -203,7 +203,7 @@
     <div class="flex-row">
       <div class="flex-col mt-1">
         <button kendoButton *ngIf="isAddIncomeButtonAndFooterNoteDisplay" [primary]="true" icon="add"
-          (click)="onIncomeClicked(false)" aria-label="Income" 
+          (click)="onIncomeClicked(false)" aria-label="Income"
           [disabled]="isCerForm? false : cerStarted ? true :(currentClientCaseEligibilityId !== '' && clientCaseEligibilityId !== currentClientCaseEligibilityId)? true : (isReadOnly$ | async) ? true : false">
           Income
         </button>
@@ -276,8 +276,8 @@
         </kendo-grid-column>
         <kendo-grid-column *ngIf="isClientProfileTab" field="by" title="By" [width]="80" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <common-user-photo-icon  
-            [userId]="dataItem?.creatorId" 
+            <common-user-photo-icon
+            [userId]="dataItem?.creatorId"
             [userFirstName]="dataItem?.userFirstName"
             [userLastName]="dataItem?.userLastName"
             [userProfilePhotoExists]="dataItem?.isUserProfilePhotoExist"
@@ -320,3 +320,12 @@
 
 
 </kendo-dialog>
+
+  <!-- Upload From Client's Modal -->
+  <kendo-dialog *ngIf="isOpenClientsAttachment" (close)="closeClientAttachmentsPopup($event)"
+  class="app-c-modal app-c-modal-mdl app-c-modal-np">
+  <kendo-dialog-titlebar>Client Attachments for Proof of School</kendo-dialog-titlebar>
+ <app-client-attachment-model [clientAllDocumentList$]="clientAllDocumentList$" (closePopup)="closeClientAttachmentsPopup($event)"
+ (clientAttachment)="handleClientAttachment($event)" [clientId]="clientId">
+ </app-client-attachment-model>
+  </kendo-dialog>

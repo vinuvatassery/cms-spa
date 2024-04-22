@@ -135,6 +135,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showCancelApplicationPopup();
     this.resetReadOnlyView();
     this.showSplitButtonSubscriptionInitializer();
+    this.paperLessFlagContactInfoChangeSubscription()
   }
 
   ngOnDestroy(): void {
@@ -147,6 +148,11 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showSplitButtonSubscription.unsubscribe();
   }
 
+  paperLessFlagContactInfoChangeSubscription(){
+    this.workflowFacade.paperLessFlagContactInfoChange$.subscribe((paperLessFlag:any)=>{
+      this.paperlessFlag = paperLessFlag;
+    })
+  }
   addSessionChangeSubscription() {
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -216,6 +222,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
+        
         this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
         this.clientId = JSON.parse(session.sessionData).clientId;
         this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
@@ -448,7 +455,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     })
   }
 
-  onUpdateCaseStatusClicked() {
+  onUpdateCaseStatusClicked() {    
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
       this.loaderService.show();

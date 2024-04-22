@@ -1,8 +1,9 @@
 
       <div class="dash-header-with-filters">
-            <h5>PROGRAM EXPENSES</h5>
+            <h2 class="heading_card" >PROGRAM EXPENSES</h2>
             <div *ngIf="!isEditDashboard">               
-                  <kendo-multiselect size="small" rounded="medium" class="mr-1"
+                  <kendo-label for="pname"></kendo-label>
+                  <kendo-multiselect size="small" rounded="medium" class="mr-1"  id="pname"
                        (valueChange)="onValueChange()"
                         [fillMode]="formUiStyle.inputFillMode"
                          [data]="dataExp" 
@@ -23,6 +24,10 @@
                                 <kendo-label for="chk"> All Expenses</kendo-label>
                               </span>
                             </ng-template> 
+                            <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                              <span class="k-icon k-font-icon k-i-caret-alt-down"></span>
+                             <span attr.aria-label="{{ dataItems.length }} item(s) selected"> {{ dataItems.length }} item(s) selected</span>
+                            </ng-template>
                             <ng-template kendoMultiSelectItemTemplate let-dataItem>
                               <span>
                                 <kendo-label for="chk-{{ dataItem.Value }}">
@@ -36,13 +41,13 @@
                               </span>
                               <span>{{ dataItem.Name }}</span>
                             </ng-template>
-                  </kendo-multiselect>
-                  <kendo-dropdownlist size="small" value="M" rounded="medium" class="mr-1"
+                  </kendo-multiselect>                
+                  <kendo-dropdownlist size="small" value="M" rounded="medium" class="mr-1" aria-label="Frequency"
                   [(ngModel)]="selectFrequency"
                         [fillMode]="formUiStyle.inputFillMode" [data]="dataMonth"  textField="Name" valueField="Value" [valuePrimitive]="true"
                         (valueChange)="frequecyValueChange($event)">
                   </kendo-dropdownlist>
-                  <kendo-dropdownlist size="small" [(ngModel)]="selectedTimeFrame" rounded="medium" class="mr-1"
+                  <kendo-dropdownlist size="small" [(ngModel)]="selectedTimeFrame" rounded="medium" class="mr-1" aria-label="Time Frame"
                         [fillMode]="formUiStyle.inputFillMode" [data]="dataYear"  (valueChange)="TimeFrameValueChange($event)">
                   </kendo-dropdownlist>
 

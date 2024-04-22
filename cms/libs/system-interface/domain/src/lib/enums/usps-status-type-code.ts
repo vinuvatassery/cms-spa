@@ -1,5 +1,5 @@
   export enum SystemInterfaceUspsStatusCodeDescription {
     FAILURE = "Failed",
-    SUCCESSFUL = "Success" ,
-    WEBSERVICE_DOWN="WebService Down"
+    WEBSERVICE_DOWN="Web Service Down",
+    SUCCESS="Success"
     };

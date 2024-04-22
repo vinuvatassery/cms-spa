@@ -56,7 +56,7 @@
         <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid && isSubmitted">
           Description is required.</kendo-formerror>
       </div>
-      <div class="flex-col mt-3 field_with_info" *ngIf="isShowEntityTypeCode">
+      <div class="flex-col field_with_info notop_need" *ngIf="isShowEntityTypeCode">
         <kendo-floatinglabel text="Link Reminder To">
           <kendo-dropdownlist aria-label="Link Reminder To"
            [fillMode]="formUiStyle.dropDownFillMode" 
@@ -106,6 +106,10 @@
                 </ng-template>
               </kendo-combobox-column>
             </kendo-multicolumncombobox>
+            <kendo-formerror
+            *ngIf="clientReminderForm?.hasError('required','vendorId') && isSubmitted && clientReminderForm.controls['linkTo'].valid">Vendor
+            is Required
+        </kendo-formerror>
           </div>
         </div>
       </div>
@@ -147,6 +151,11 @@
           </kendo-combobox-column>
           
         </kendo-multicolumncombobox>
+
+        <kendo-formerror
+        *ngIf="clientReminderForm?.hasError('required','clientId') && isSubmitted && clientReminderForm.controls['linkTo'].valid">Client
+        is Required
+    </kendo-formerror>
           </div>
         </div>
       

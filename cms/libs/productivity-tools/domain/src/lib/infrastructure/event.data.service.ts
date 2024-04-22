@@ -15,7 +15,7 @@ export class EventDataService {
     private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
-  loadEvents(params: any, entityId:string) {
+  loadEventLogs(params: any, entityId:string) {
     return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${entityId}/by-entity-id`, params);
   }
 
@@ -28,10 +28,6 @@ export class EventDataService {
     let eventFormData = this.bindFormData(eventData);
     return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/`, eventFormData)
 
-  }
-
-  loadDdlEvents() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
 
   private bindFormData(event: any): FormData {

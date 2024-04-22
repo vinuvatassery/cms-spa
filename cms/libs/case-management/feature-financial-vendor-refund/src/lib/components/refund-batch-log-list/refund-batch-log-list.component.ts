@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
@@ -186,7 +186,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   claimsType: any;
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
-  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
   sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;

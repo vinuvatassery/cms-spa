@@ -40,6 +40,7 @@ export * from './lib/pipes/phone.pipe';
 export * from './lib/pipes/yes-or-no.pipe';
 export * from './lib/pipes/tin.pipe';
 export * from './lib/pipes/ndc-code.pipe';
+export * from './lib/pipes/lastMessageDateTime.pipe';
 
 /** Directives **/
 export * from './lib/directives/kendo-componentsforaccessibility.directive';
@@ -67,3 +68,4 @@ export * from './lib/grid-no-records/grid-no-records.component';
 export * from './lib/read-more/read-more.component';
 export * from './lib/delete-todo-confirmation/delete-todo-confirmation.component';
 export * from './lib/directives/placeholder.directive';
+export * from './lib/client-attachment-model/client-attachment-model.component'

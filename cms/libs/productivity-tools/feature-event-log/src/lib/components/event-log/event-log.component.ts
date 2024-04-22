@@ -5,6 +5,7 @@ import {
   Component,
   EventEmitter,
   OnInit,
+  OnDestroy,
   Output,
   TemplateRef,
   Input,
@@ -21,7 +22,7 @@ import { DocumentFacade } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
-import { Observable } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-event-log',
@@ -29,7 +30,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./event-log.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventLogComponent implements OnInit {
+export class EventLogComponent implements OnInit, OnDestroy {
   @ViewChild('eventtFilterPopover', { read: ElementRef })
   public eventtFilterPopover!: ElementRef;
   @ViewChild('eventFilterCardBtn')
@@ -40,10 +41,10 @@ export class EventLogComponent implements OnInit {
   @Input() entityType: any;
   @Input() entityId: any;
   @Input() clientCaseEligibilityId: any;
+  @Input() navigationSubject!: Observable<any>;
 
   /** Public properties **/
   eventAttachmentTypeList : any;
-  clientId = 0;
   parentEventLogId: any;
   eventList: any = [];
   SubEventList: any = [];
@@ -56,7 +57,7 @@ export class EventLogComponent implements OnInit {
   isAddEventDialogOpen: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   eventsdata$ = this.eventLogFacade.eventsdata$;
-
+  isFilterApplied = false;
   isEventFilterPopoverOpen = false;
   isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
@@ -77,7 +78,11 @@ eventListLoader = false;
     ];
   searchValue = '';
   filterDataQueryArray:any[]=[];
-  skeletonCounts = [1, 2, 3, 4, 5]
+  skeletonCounts = [1, 2, 3, 4, 5];
+  eventAttachmentTypeLov$Subscription = new Subscription();
+  events$Subscription = new Subscription();
+  eventsdata$Subscription = new Subscription();
+  navigationSubjectSubscription = new Subscription();
 
   public eventLogFilterForm: FormGroup = new FormGroup({
     caseworkerfilterbyoperator: new FormControl('', []),
@@ -98,27 +103,34 @@ eventListLoader = false;
     private readonly lovFacade: LovFacade,
     private documentFacade: DocumentFacade
   ) {}
-
+  
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.eventListLoader = true;
     this.loadEventsData();
-    if(this.entityType =='CLIENT')
-    {
-      this.clientId =   this.route.snapshot.queryParams['id'];
-      this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
-      this.entityId = this.clientId.toString();
-    };
     this.loadEvents();
     this.subscribeEvents();
     this.getEventList();
     this.lovFacade.getEventAttachmentTypeLov();
-    this.eventAttachmentTypeLov$.subscribe((response: any) => {
+    this.eventAttachmentTypeLov$Subscription = this.eventAttachmentTypeLov$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
        this.eventAttachmentTypeList = response;
       }
     });
+    this.navigationSubjectSubscription = this.navigationSubject.subscribe((data: any) => {
+      if (data !== undefined && data !== null) {
+        this.entityId = data.EntityId;
+        this.entityType = data.EntityTypeCode;
+        this.clientCaseEligibilityId = data.ClientCaseEligibilityId;
+        this.loadEvents();
+      }   
+    });
+  }
 
+  ngOnDestroy(): void {
+    this.eventAttachmentTypeLov$Subscription?.unsubscribe();
+    this.events$Subscription?.unsubscribe();
+    this.eventsdata$Subscription?.unsubscribe();
+    this.navigationSubjectSubscription?.unsubscribe();
   }
 
   /** Private methods **/
@@ -131,12 +143,32 @@ eventListLoader = false;
       sortType: 'desc',
       filter: JSON.stringify(this.filterData),
     };
-    this.eventLogFacade.loadEvents(paginationData,this.entityId);
+    this.eventLogFacade.loadEventLogs(paginationData,this.entityId);
+  }
+  onShowHideFilterEvent(){
+   
+    if(this.isShowFilter === true){
+      this.isShowFilter = false;
+    } else {
+      this.isShowFilter = true;
+    }
+    this.cd.detectChanges();
   }
 
+  onShowFilterEventPopover(){
+    this.isEventFilterPopoverOpen = !this.isEventFilterPopoverOpen;
+    if(this.isShowFilter === false){
+      this.isShowFilter = false;
+    } else {
+      this.isShowFilter = true;
+    }
+    this.cd.detectChanges();
+  }
   private subscribeEvents() {
-    this.events$.subscribe((data) => {
+    this.eventListLoader = true;
+    this.events$Subscription = this.events$.subscribe((data) => {
       this.events = data;
+      this.eventListLoader = false;
       this.cd.detectChanges();
     });
   }
@@ -146,7 +178,8 @@ eventListLoader = false;
   }
 
   getEventList() {
-    this.eventsdata$.subscribe((response: any) => {
+    this.eventListLoader = true;
+    this.eventsdata$Subscription = this.eventsdata$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.eventResponseList = response;
         this.eventListLoader = false;
@@ -195,15 +228,6 @@ eventListLoader = false;
     this.isAddEventDialogOpen.close();
   }
 
-  isShowReadMore(elementId: any) {
-    return true;
-    var el = document.getElementById(elementId);
-    var divHeight = el?.offsetHeight;
-    //var lineHeight = parseInt(el?.style?.lineHeight?.toString());
-    //var lines = divHeight?? 0 / lineHeight;
-    console.log('Lines: ' + el?.style?.lineHeight?.toString());
-  }
-
   onEventLogFilterClearClicked()
   {
     this.eventLogFilterForm.controls["caseworkerfilterbyoperator"].setValue('');
@@ -215,16 +239,19 @@ eventListLoader = false;
     this.filterBy = "";
     this.isEnableFilterBtn = false;
     this.isEventFilterPopoverOpen = false;
+    this.isFilterApplied = false;
     this.cd.detectChanges();
-    this.filterData = { logic: 'and', filters: [] };
+    this.filterData = { logic: 'and', filters: [] };  
     this.loadEventLogs();
+ 
   }
 
   onEventLogFilterFilterClicked()
   {
     this.setFilteredText();
-    this.loadEventLogs();
+    this.loadEventLogs(); 
     this.isEventFilterPopoverOpen = false;
+    this.isFilterApplied = true;
     this.cd.detectChanges();
   }
 
@@ -307,7 +334,7 @@ eventListLoader = false;
       sortType: this.sortType ?? 'asc',
       filter: JSON.stringify(this.filterData.filters ?? [])
     };
-    this.eventLogFacade.loadEvents(gridDataRefinerValue, this.entityId);
+    this.eventLogFacade.loadEventLogs(gridDataRefinerValue, this.entityId);
   }
 
   sortByMethod(event:any)

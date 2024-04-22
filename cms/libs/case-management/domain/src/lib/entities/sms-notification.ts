@@ -6,4 +6,5 @@ export interface SmsNotification {
     Messages: string[];
     clientCaseEligibilityId: string;
     typeCode: string;
+    templateTypeCode:string;
 }

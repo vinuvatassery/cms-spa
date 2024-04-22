@@ -469,8 +469,8 @@ export class ContactFacade {
 }
 
   loadClientPaperLessStatus(
-    clientId: number,
-    clientCaseEligibilityId: string
+    clientId: number | undefined,
+    clientCaseEligibilityId: string | undefined
   ): void {
     this.showLoader();
     this.contactDataService
@@ -680,6 +680,7 @@ export class ContactFacade {
         }
       },
       error: (err) => {
+        this.addClientPhoneSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });

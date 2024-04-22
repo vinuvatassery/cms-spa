@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 /** Facades **/
@@ -77,7 +77,7 @@ export class DocumentListComponent implements OnInit {
   documentListUserProfilePhoto$ = this.documentFacade.documentListUserProfilePhotoSubject
   /** Constructor **/
   constructor(private documentFacade: DocumentFacade,
-    private caseFacade: CaseFacade,    
+    private caseFacade: CaseFacade,
     private route: ActivatedRoute, private readonly router: Router,public intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,) { }
 
@@ -173,7 +173,7 @@ export class DocumentListComponent implements OnInit {
       gridDataRefinerValue.sort,
       gridDataRefinerValue.sortType,
       gridDataRefinerValue.filter,
-      gridDataRefinerValue.columnName);//this.caseEligibilityId); 
+      gridDataRefinerValue.columnName);//this.caseEligibilityId);
     this.documentGridLoader$.subscribe((data: any) => {
       this.isGridLoaderShow = data;
     });

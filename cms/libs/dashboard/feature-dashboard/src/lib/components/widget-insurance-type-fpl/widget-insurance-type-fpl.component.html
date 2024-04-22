@@ -2,14 +2,14 @@
 
    
             <div class="dash-header-with-filters">
-            <h5>INSURANCE TYPE & FPL</h5>
+                  <h2 class="heading_card">INSURANCE TYPE & FPL</h2>
             </div>           
        <common-dashboard-loader-panel *ngIf="!this.insuranceTypeFPLStats && !isEditDashboard" ></common-dashboard-loader-panel>
                 
       <div class="dashboard-cards-container" *ngIf="this.insuranceTypeFPLStats?.length > 0">
             <div class="ins_type_fpl_row">
                   <div class="app-cars-col ">
-                        <div> <h4>OHP</h4>
+                        <div> <p class="ins_type_head">OHP</p>
                               <p class="text-muted">Clients over 138%</p>
                         </div>
                          <a (click)="allClientsNavigate('OHP')"> <h3> {{insuranceTypeFPLStats[0]?.value}} </h3> <span class="material-icons"> chevron_right </span></a>
@@ -17,7 +17,7 @@
             </div>
             <div class="ins_type_fpl_row">
                   <div class="app-cars-col ">
-                        <div>  <h4>Off Exchange</h4>
+                        <div>  <p class="ins_type_head">Off Exchange</p>
                               <p class="text-muted">Clients at or under 138%</p>
                         </div>
                         <a (click)="allClientsNavigate('OffExhange')"><h3> {{insuranceTypeFPLStats[1]?.value}} </h3> <span class="material-icons"> chevron_right </span></a>

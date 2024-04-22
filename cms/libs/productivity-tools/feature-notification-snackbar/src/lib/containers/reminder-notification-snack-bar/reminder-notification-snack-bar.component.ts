@@ -92,7 +92,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
   searchProviderSubject = this.financialVendorFacade.searchProviderSubject;
-
+   notificationReferences:  any[] =[]
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   unviewedCount = 0;
@@ -121,31 +121,39 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   }
 
   reminderSnackBarSubscribe() {
-    this.reminderSnackBar$.subscribe((res: any) => {
-      this.reminderNotificationSnackbarService
-        .manageSnackBar(ReminderSnackBarNotificationType.LIGHT, res)
+    this.reminderSnackBar$.subscribe((res: any) => {      
+
+      const snackbarMessage: any = {
+        payload:res,
+        type: ReminderSnackBarNotificationType.LIGHT
+      };
+       
+
+      if (!this.signalrEventHandlerService.snackBarAlertIds.includes(snackbarMessage.payload?.alertExtraProperties?.AlertId)) {
+        this.signalrEventHandlerService.snackBarAlertIds.push(snackbarMessage.payload.alertExtraProperties?.AlertId)
+        this.showNotifications(snackbarMessage)
+
+      }   
+      else
+      {
+        const updatedNotificationReference = 
+        this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === snackbarMessage.payload?.alertExtraProperties?.AlertId)              
+        const payload = {
+          ...snackbarMessage.payload,
+        }
+  
+        updatedNotificationReference.content.instance.snackBarMessage = payload
+      
+      }
+
+     
     })
 
-    this.reminderNotificationSnackbarService.snackbar$.subscribe({
-      next: (res) => {
-        if (res) {
-          const { timeDifferenceMinutes, dueDate , today, repeatTime } = this.setDueDateText(res);
-          if ((repeatTime && timeDifferenceMinutes <= 15 && dueDate == today)
-            || !repeatTime
-            || new Date(dueDate) < new Date(today)) {
-            if (!this.signalrEventHandlerService.snackBarAlertIds.includes(res.payload?.alertExtraProperties?.AlertId)) {
-              this.signalrEventHandlerService.snackBarAlertIds.push(res.payload.alertExtraProperties?.AlertId)
-              this.showNotifications(res)
 
-            }
-          }
-        }
-      },
-
-    });
 
   }
-  showNotifications(res: any) {
+  showNotifications(res: any) {    
+
     const notificationRef: NotificationRef = this.notificationService.show({
       content: ReminderNotificationSnackBarsTemplateComponent,
       appendTo: this.reminderNotificationTemplateContainer,
@@ -156,23 +164,31 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
       hideAfter: this.hideAfter,
       cssClass: 'reminder-notification-bar',
     });
+    
+    this.notificationReferences.push(notificationRef)
     if (notificationRef && notificationRef.content && notificationRef.content.instance) {
 
       const payload = {
         ...res.payload,
-        dueDateText: this.dueDateText
       }
 
       notificationRef.content.instance.snackBarMessage = payload
       this.signalrEventHandlerService.remindersCountSubject.next(this.signalrEventHandlerService.snackBarAlertIds.length)
       this.snoozeReminderHandler(notificationRef);
       this.dismissReminderHandler(notificationRef);
-      notificationRef.content.instance.hideSnackBar.subscribe(() =>
-        notificationRef.hide()
+      this.editReminderHandler(notificationRef);
+      notificationRef.content.instance.hideSnackBar.subscribe((event:any) =>
+        this.updateSnackBarCount(event, notificationRef)
       );
     }
   }
 
+  editReminderHandler(notificationRef :any){
+    notificationRef.content.instance.editReminder.subscribe((event:any)=>{
+      this.updateSnackBarCount(event,notificationRef)
+      notificationRef.hide()
+    })
+  }
   dismissReminderHandler(notificationRef:any){
     notificationRef.content.instance.dismissReminder.subscribe((event:any)=>{
       this.updateSnackBarCount(event,notificationRef)
@@ -188,6 +204,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
 
 
    updateSnackBarCount(alertId:any, notificationRef:any){
+    notificationRef.hide()
     this.signalrEventHandlerService.snackBarAlertIds = this.signalrEventHandlerService.snackBarAlertIds.filter(x => x !== alertId)
     if (notificationRef && notificationRef.content && notificationRef.content.instance) {
       this.signalrEventHandlerService.remindersCountSubject.next(this.signalrEventHandlerService.snackBarAlertIds.length)
@@ -199,7 +216,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     const repeatTime = res.payload.alertExtraProperties.RepeatTime
     const dueDate = this.intl.formatDate(res.payload.alertExtraProperties.AlertDueDate, this.dateFormat);
     const today = this.intl.formatDate(new Date(), this.dateFormat)
-    if (repeatTime && dueDate !== today) {
+    if (repeatTime) {
       const times = repeatTime.split(':')
       const duedateWithRepeatTime = new Date(new Date().getFullYear(), new Date().getMonth(),
         new Date().getDate(), times[0], times[1])
@@ -211,7 +228,16 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
         this.dueDateText = "In " + timeDifferenceMinutes + " Mins"
       }
       if (timeDifferenceMinutes <= 0) {
-        this.dueDateText = timeDifferenceMinutes + " Mins Over Due"
+        this.dueDateText = 0-timeDifferenceMinutes + " Mins Over Due"
+        if(0-timeDifferenceMinutes >60){
+          var timeInHours =  Math.floor(0-timeDifferenceMinutes/60);
+          this.dueDateText = timeInHours +" Hrs Over Due"
+          if(timeInHours >24){
+           var timeInDays =  Math.floor(timeInHours/24);
+           this.dueDateText = timeInDays +" Days Over Due"
+          }
+        }
+
       }
       if (timeDifferenceMinutes == 0) {
         this.dueDateText = "Now"
@@ -243,9 +269,10 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   }
 
   reminderContainerClicked() {
+    
     this.showSideReminderNotification();
     const divMessage = document.getElementsByClassName(
-      'k-notification-container ng-star-inserted'
+      'k-notification-container'
     );
     if (divMessage.length > 1) {
       this.isReminderExpand = !this.isReminderExpand;

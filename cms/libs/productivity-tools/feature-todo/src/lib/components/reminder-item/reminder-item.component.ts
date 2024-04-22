@@ -171,6 +171,7 @@ export class ReminderItemComponent implements OnInit {
         this.cdr.detectChanges();
       });
     this.todoAndReminders$?.subscribe((clientsTodoReminders :any) =>{
+      
       const clientsReminder  = 
       clientsTodoReminders.filter((x:any) => x.alertTypeCode =="REMINDER")
    
@@ -235,9 +236,11 @@ export class ReminderItemComponent implements OnInit {
     this.todoFacade.getTodoItem($event);
   }
   onActionClicked(item: any,gridItem: any){ 
+    
     this.selectedAlertId = gridItem.alertId
     if(item.text == 'Edit Reminder'){ 
       this.isEdit=true
+      this.isDelete = false;
       this.crudText = 'Edit'
        if (!this.isReminderOpenClicked) {
            this.onNewReminderOpenClicked(this.NewReminderTemplate)
@@ -245,6 +248,8 @@ export class ReminderItemComponent implements OnInit {
      }
      if(item.text == 'Delete Reminder'){
       this.isDelete= true 
+      this.isEdit= false
+      this.cdr.detectChanges()
       this.crudText = 'Delete'
        if (!this.isReminderOpenClicked) {
         this.onNewReminderOpenClicked(this.NewReminderTemplate)
@@ -301,7 +306,7 @@ export class ReminderItemComponent implements OnInit {
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
     this.newReminderDetailsDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     });
   }
   onNotificationsAndRemindersClosed() {

@@ -1,11 +1,12 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef, ChangeDetectorRef, ViewChild, EventEmitter, Output,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CaseStatusCode, CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ContactFacade, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
+import { CaseStatusCode, CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ContactFacade, EntityTypeCode, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
 import { Observable, Subscription, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserDataService } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-case360-header-tools',
   templateUrl: './case360-header-tools.component.html',
@@ -63,6 +64,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   templateLoadType!:any;
   informationalText!:any;
   templateHeader!:any;
+  confirmPopupHeader:any;
+  saveForLaterHeadterText:any;
+  saveForLaterModelText:any;
+  confirmationModelText:any;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   private isSendNewLetterDialog : any;
@@ -75,6 +80,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   clientHeader:any
   paperlessFlag:any;
   emailSubject:any;
+  loginUserEmail: any;
+  entityType= EntityTypeCode.Client;
+  triggerFrom= ScreenType.ClientProfile;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -86,11 +94,16 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode = '';
-        this.templateLoadType = this.letterCommunicationTypeCode = CommunicationEventTypeCode.ClientLetter;
+        this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        this.currentCommunicationTypeCode = CommunicationEventTypeCode.LetterTypeCode;
+        this.notificationGroup = CommunicationEventTypeCode.LETTER;
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
-        this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
+        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+        this.confirmPopupHeader = 'Send Letter to Print?';
+        this.confirmationModelText="This action cannot be undone.";
+        this.notificationDraftCheck(this.clientId,this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -104,11 +117,16 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode ='';
-        this.templateLoadType = this.emailCommunicationTypeCode = CommunicationEventTypeCode.ClientEmail;
+        this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        this.currentCommunicationTypeCode = CommunicationEventTypeCode.EmailTypeCode;
+        this.notificationGroup = CommunicationEventTypeCode.EMAIL;
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
-        this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
+        this.saveForLaterHeadterText = "Email Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
+        this.confirmPopupHeader = 'Send Email?';
+        this.confirmationModelText="This action cannot be undone.";
+        this.notificationDraftCheck(this.clientId,this.templateLoadType , this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -123,10 +141,16 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
         this.templateLoadType = CommunicationEventTypeCode.ClientSMS;
+        this.currentCommunicationTypeCode = CommunicationEventTypeCode.SmsTypeCode;
+        this.smsCommunicationTypeCode = '';
+        this.notificationGroup = CommunicationEventTypeCode.SMS;
         this.informationalText = "Select an existing template or draft custom text messages"
         this.templateHeader = 'Send New SMS Text';
-        this.currentCommunicationTypeCode = CommunicationEventTypeCode.ClientSMS;
-        this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
+        this.saveForLaterHeadterText = "Sms Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click ''New SMS Text'' from the clients profile";
+        this.confirmPopupHeader = 'Send Sms?';
+        this.confirmationModelText="This action cannot be undone.";
+        this.notificationDraftCheck(this.clientId,this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -146,7 +170,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute, 
     private dialogService: DialogService, private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService, private readonly loggingService: LoggingService,
-    private readonly ref: ChangeDetectorRef,private readonly workflowFacade: WorkflowFacade) {
+    private readonly ref: ChangeDetectorRef,private readonly workflowFacade: WorkflowFacade,
+    private readonly userDataService: UserDataService,) {
   }
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
@@ -156,6 +181,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   /* Internal Methods */
   ngOnInit(): void {
+    this.getLoggedInUserProfile();
     this.initialize();
     this.loadedClientHeader.subscribe(res => {
       this.clientHeader = res;
@@ -189,20 +215,31 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       if (response) {
         if (this.workflowFacade.caseStatus.toLowerCase() === CaseStatusCode.disenrolled.toLowerCase()) {    
           if (this.paperlessFlag === StatusFlag.Yes) {
-            this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
+            this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
             this.emailCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
             this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
             this.templateHeader = 'Send Disenrollment Email';
             this.emailSubject = "CAREAssist Disenrollment Notice";
-            this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
+            this.confirmPopupHeader = 'Send Disenrollment email to print?';
+            this.saveForLaterHeadterText = "Email Draft Saved";
+            this.saveForLaterModelText="You must send the  Disenrollment Email within 2 Days";
+            this.confirmationModelText="If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete.";
+
+            this.notificationDraftCheck(this.clientId, this.templateLoadType,this.emailCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
           }
           else {
-            this.templateLoadType = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
+            this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
             this.letterCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
             this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
             this.templateHeader = 'Send Disenrollment Letter';
             this.emailSubject = '';
-            this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, this.sendLetterDialog);
+            this.confirmPopupHeader = 'Send Disenrollment letter to print?';
+            this.saveForLaterHeadterText = "Letter Draft Saved";
+            this.saveForLaterModelText="You must send the  Disenrollment Letter within 2 Days";
+            this.confirmationModelText="If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete.";
+
+
+            this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
           }
           this.ref.detectChanges();
         }
@@ -212,14 +249,17 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   private addEmailSubscription() {
     this.emailSubscription$ = this.emailAddress$.subscribe((email: any) => {
-      const isEmailOk = email.filter((email:any) => email.detailMsgFlag === StatusFlag.Yes && email.paperlessFlag === StatusFlag.Yes)?.length > 0;
+      const isEmailOk = email.filter((x:any)=>x.detailMsgFlag === StatusFlag.Yes)?.length > 0;
       this.sendActions[1].isVisible = isEmailOk;
       this.refreshButtonList();
       // Iterate over the list and push emails based on a condition
       if(isEmailOk){
       email.forEach((item: any) => {
         if (item.detailMsgFlag === StatusFlag.Yes && item.paperlessFlag === StatusFlag.Yes) {
+          let emailExists = this.toEmail?.includes(item.email.trim());
+          if(!emailExists){
           this.toEmail.push(item.email.trim());
+          }
         }
       });
     }
@@ -336,7 +376,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
 
   handlePreviewTemplateClosed(result: any) {
-  
     if (result) {
       this.isPreviewTemplateDialog.close(result);
      
@@ -350,28 +389,28 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
 
-  notificationDraftCheck(clientId: any, typeCode: string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
+  notificationDraftCheck(clientId: any, typeCode: string, subTypeCode:string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(clientId, typeCode)
+    this.communicationFacade.loadDraftNotificationRequest(clientId, this.entityType, typeCode, '')
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {
           for (let template of data){
-            this.notificationDraftId = template.notifcationDraftId;
+            this.notificationDraftId = template.notificationDraftId;
            }
-          if(typeCode == CommunicationEventTypeCode.ClientEmail){
+          if(subTypeCode == CommunicationEventTypeCode.EmailTypeCode){
             this.notificationGroup = CommunicationEventTypeCode.EMAIL;
           }
-          if(typeCode == CommunicationEventTypeCode.ClientLetter){
+          if(subTypeCode == CommunicationEventTypeCode.LetterTypeCode){
             this.notificationGroup = CommunicationEventTypeCode.LETTER;
           }
-          if(typeCode === CommunicationEventTypeCode.ClientSMS){
+          if(subTypeCode === CommunicationEventTypeCode.SmsTypeCode){
             this.notificationGroup = CommunicationEventTypeCode.SMS;
           }
           this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);
           this.ref.detectChanges();
         }else{
-          this.loadNotificationTemplates(this.templateLoadType, templateName);
+          this.loadNotificationTemplates(subTypeCode, templateName);
         }
       this.loaderService.hide();
     },
@@ -383,16 +422,16 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   });
   }
 
-  loadNotificationTemplates(typeCode: string, templateName: TemplateRef<unknown>) {
-    if(typeCode == CommunicationEventTypeCode.ClientEmail || typeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail){
+  loadNotificationTemplates(subTypeCode: string, templateName: TemplateRef<unknown>) {
+    if(subTypeCode == CommunicationEventTypeCode.EmailTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail){
       templateName = this.sendNewEmailDialog;
       this.onSendNewEmailClicked(templateName);
     }
-    if(typeCode == CommunicationEventTypeCode.ClientLetter || typeCode == CommunicationEventTypeCode.DisenrollmentNoticeLetter){
+    if(subTypeCode == CommunicationEventTypeCode.LetterTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeLetter){
       templateName = this.sendLetterDialog;
       this.onSendNewLetterClicked(templateName);
     }
-    if(typeCode === CommunicationEventTypeCode.ClientSMS){
+    if(subTypeCode === CommunicationEventTypeCode.SmsTypeCode){
       templateName = this.sendTextMessageDialog;
       this.onNewSMSTextClicked(templateName);
     }
@@ -422,6 +461,22 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     this.isNewNotificationClicked = false;
     this.onDraftNotificationCloseClicked(CommunicationEvents.Close);
     this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.sendNewEmailDialog);
+  }
+
+  getLoggedInUserProfile(){
+    this.loaderService.show();
+    this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       if(profile[0]?.email){
+        const ccEmail ={
+          email: profile[0]?.email,
+          isDefault: true
+        };
+          this.loginUserEmail = ccEmail;
+       }
+      }
+    });
+    this.loaderService.hide();
   }
 
 }

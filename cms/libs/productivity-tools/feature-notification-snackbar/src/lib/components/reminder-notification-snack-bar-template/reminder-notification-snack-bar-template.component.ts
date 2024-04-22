@@ -26,6 +26,7 @@ alertId =""
 @Output() hideSnackBar = new EventEmitter();
 @Output() snoozeReminder = new EventEmitter();
 @Output() dismissReminder = new EventEmitter();
+@Output() editReminder = new EventEmitter();
 @Input() snackBarMessage!:any
 @Input() dueDate!:any
 unviewedCount=9
@@ -53,43 +54,43 @@ isReminderExpand = false;
     {
       text: '15 Minute Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'15 Minutes'
     },
     {
       text: '30 Minute Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'30 Minutes'
     },
     {
       text: '1 hour Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'1 hour'
     },
     {
       text: '2 hour Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'2 hours'
     }, 
     {
       text: '1 day Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'1 day'
     },
     {
       text: '3 day Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'3 days'
     },
     {
       text: '7 day Snooze',
       buttonType: 'btn-h-primary',
-      icon: 'snooze',
+      icon: 'clock',
       id:'7 days'
     },
   ];
@@ -137,7 +138,7 @@ isReminderExpand = false;
       this.entityTypeCode  = this.snackBarMessage.alertExtraProperties.EntityTypeCode
       this.alertId =this.snackBarMessage.alertExtraProperties.AlertId  
       this.alertText =this.snackBarMessage.alertText  
-      this.dueDateText = this.snackBarMessage.dueDateText
+      this.dueDateText = this.snackBarMessage.alertExtraProperties.DueDateText
       this.snackBarMessage?.unviewedCount$?.subscribe((res : any) =>{
         this.unviewedCount = res;
        });
@@ -150,7 +151,7 @@ isReminderExpand = false;
   public removePreviousMessage() {
     this.showSideReminderNotification();
     
-    this.hideSnackBar.emit(); 
+    this.hideSnackBar.emit(this.alertId); 
   }
 
   reminderContainerClicked() {
@@ -189,17 +190,17 @@ isReminderExpand = false;
     }
   })
  if(event.id == '15 Minutes'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,15,false,false)
  
  }
  if(event.id == '30 Minutes'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,30, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,30,false, false)
  }
  if(event.id == '1 hour'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,60,false, false)
  }
  if(event.id == '2 hours'){
-  this.notificationFacade.SnoozeReminder(this.selectedAlertId,1, false)
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,120,false, false)
  }
  if(event.id == '3 days'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,3)
@@ -210,13 +211,16 @@ isReminderExpand = false;
  if(event.id == '2 days'){
   this.notificationFacade.SnoozeReminder(this.selectedAlertId,2)
  }
+ if(event.id == '7 days'){
+  this.notificationFacade.SnoozeReminder(this.selectedAlertId,7)
+ }
 }
   }
 
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
     this.newReminderDetailsDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     });
   }
   
@@ -242,9 +246,8 @@ isReminderExpand = false;
     if(result){
       this.todoFacade.getTodo$.subscribe(res =>{
         if(this.alertId == res.alertId){
-        this.snackBarMessage.alertText = res.alertDesc;
-        this.snackBarMessage.entityName = res.entityTypeCode == 'CLIENT' ? res.clientFullName : res.providerName
-        this.setDueDateText(res)
+          this.removePreviousMessage()
+      
         }
       })
       this.todoFacade.getTodoItem(this.alertId);
@@ -261,7 +264,7 @@ isReminderExpand = false;
   }
 
 
-  onEntityNameClick(entityId :any, entityTypeCode:any,vendorTypeCode:any) {
+  onEntityNameClick(event:any,entityId :any, entityTypeCode:any,vendorTypeCode:any) {
     if (entityTypeCode == "CLIENT") {
       this.router.navigate([`/case-management/cases/case360/${entityId}`]);
     }
@@ -275,6 +278,7 @@ isReminderExpand = false;
       };
       this.router.navigate(['/financial-management/vendors/profile'], query )
     }
+    event.stopPropagation()
 }
 
 getVendorTabCode(vendorTypeCode :any) {
@@ -337,9 +341,18 @@ setDueDateText(res: any) {
     if (timeDifferenceMinutes >= 0 && timeDifferenceMinutes <= 15) {
       this.dueDateText = "In " + timeDifferenceMinutes + " Mins"
     }
-    if (timeDifferenceMinutes <= 0) {
-      this.dueDateText = timeDifferenceMinutes + " Mins Over Due"
-    }
+      if (timeDifferenceMinutes <= 0) {
+        this.dueDateText = 0-timeDifferenceMinutes + " Mins Over Due"
+        if(0-timeDifferenceMinutes >60){
+          var timeInHours =  Math.floor(0-timeDifferenceMinutes/60);
+          this.dueDateText = timeInHours +" Hrs Over Due"
+          if(timeInHours >24){
+           var timeInDays =  Math.floor(timeInHours/24);
+           this.dueDateText = timeInDays +" Days Over Due"
+          }
+        }
+
+      }
     if (timeDifferenceMinutes == 0) {
       this.dueDateText = "Now"
     }

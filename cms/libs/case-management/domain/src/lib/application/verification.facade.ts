@@ -65,9 +65,7 @@ export class VerificationFacade {
   providerValueChange(provider: string) {
     this.providerChange.next(provider);
   }
-  save(clientHivVerification: ClientHivVerification): Observable<any> {
-    clientHivVerification.clientCaseEligibilityId = '00000000-0000-0000-0000-000000000000'
-    clientHivVerification.clientCaseId = '00000000-0000-0000-0000-000000000000'
+  save(clientHivVerification: FormData): Observable<any> {
     return this.verificationDataService.save(clientHivVerification);
   }
   getHivVerification(clientId:any){

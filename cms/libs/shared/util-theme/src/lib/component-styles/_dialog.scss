@@ -300,13 +300,22 @@
     .k-dialog {
       top: 50px;
     }
-
-    .k-window-content,
-    .k-dialog-content,
-    .k-prompt-container {
+   > .k-window, > .k-dialog{
+    > .k-window-content,
+    > .k-dialog-content,
+    > .k-prompt-container {
       max-height: inherit;
       padding: 0px;
+      .k-editor-window{
+        width: 100%;
+        max-width: 600px;
+        .k-textarea.k-editor-textarea{
+          resize: vertical;
+
+        }
+      }
     }
+  }
   }
 
   &-top {

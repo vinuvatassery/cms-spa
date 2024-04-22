@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription, first } from 'rxjs';
 /** Internal Libraries **/
-import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, EsignStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, EsignStatusCode, WorkflowTypeCode, CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { UserDataService } from '@cms/system-config/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-verification-page',
@@ -130,16 +131,17 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else
-            {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
+            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
+                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
+              else {
+                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                  queryParamsHandling: "preserve"
+                });
+              }
             }
           }
         })
@@ -150,8 +152,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             queryParamsHandling: "preserve"
           });
         }
-        else
-        {
+        else {
           this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
             queryParamsHandling: "preserve"
           });
@@ -185,11 +186,11 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.verificationFacade.getHivVerificationWithAttachment( this.clientId, this.clientCaseEligibilityId).subscribe({
       next:(data)=>{
         if(data?.clientHivVerificationId){
+          this.hivVerificationForm.controls["providerOption"].setValue(data?.verificationMethodCode);
+          this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
           if(data?.verificationMethodCode == "UPLOAD_ATTACHMENT")
           {
             this.verificationFacade.showAttachmentOptions.next(false);
-            this.hivVerificationForm.controls["providerOption"].setValue(data?.verificationMethodCode);
-            this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
             if (data?.hivVerification?.documentName) {
               this.verificationFacade.hivVerificationUploadedDocument.next(data);
               this.alreadyUploaded = true;
@@ -321,7 +322,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
 
 loadPendingEsignRequestInfo(){
   this.verificationFacade.showLoader();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', 'HIV_VERIFICATION_EMAIL')
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {

@@ -42,7 +42,7 @@ isFiltered = false;
 public state!: any;
   /*** Input properties ***/
   @Input() cases: any;
-  @Input() healthInsuranceType: any;
+  @Input() healthInsuranceType: string = '';
   @Input() fplPercentage: any;
   @Input() filterOperator: any;
   @Input() pageSizes : any;
@@ -65,7 +65,7 @@ public state!: any;
     "group",
     "eilgibilityStartDate",
     "eligibilityEndDate",
-    "healthInsuranceType",
+    "insuranceType",
     "fplPercentage"
     ]
   columns : any = {
@@ -89,7 +89,7 @@ public state!: any;
     assignedCw:"Assigned to",
     dateOfBirth:"Date Of Birth",
     caseManager:"Case Manager",
-    healthInsuranceType : "Health Insurance Type",
+    insuranceType : "Health Insurance Type",
     fplPercentage : "FPL %"
   }
   columnDroplist : any = {
@@ -205,11 +205,12 @@ public state!: any;
     this.healthInsuranceType$
     .subscribe({
       next: (data: any) => {
-        data=data.filter((item:any) => !this.caseStatusCodes.includes(item.lovCode));
         data.forEach((item: any) => {
           item.lovDesc = item.lovDesc.toUpperCase();
         });
         this.healthinsuranceTypes=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
+        const obj = this.healthinsuranceTypes.find((x: any) => x.lovCode === this.healthInsuranceType);
+        this.selectedHealthInsuranceType = obj;
       }
     });
   }
@@ -328,11 +329,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.isFiltered = false
       this.selectedStatus ='';
       this.selectedGroup = '';
-
+      this.selectedHealthInsuranceType = '';
     }
     this.state=stateData;
     if (!this.filteredBy.includes('Status')) this.selectedStatus = '';
     if (!this.filteredBy.includes('Group')) this.selectedGroup = '';
+    if (!this.filteredBy.includes('Health Insurance Type')) this.selectedHealthInsuranceType = '';
     if(!isSearchBarFilter){
     this.saveGridState();
     }
@@ -607,12 +609,11 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     if(this.sortValue === "eligibilityStatusCode"){
       this.sortValue = "caseStatus";
     }
-    if(this.sortValue === "InsuranceType"){
+    if(this.sortValue === "insuranceType"){
       this.sortValue = "healthInsuranceType";
     }
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortValue = this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? "";
     this.columnName = filterList.length > 0 ? filterList[0]?.filters[0]?.field : "";
     this.state = stateData;
@@ -635,9 +636,16 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         this.selectedStatus = obj;
       }
     }
-    
-    
-    
-    
+    if(this.filteredBy?.includes('Health Insurance Type')){
+      const insuranceTypeFilter = filters
+        ?.flatMap((filter: any) => filter.filters)
+        ?.find((filter: any) => filter.field === 'insuranceType');
+      
+      if (insuranceTypeFilter && this.healthinsuranceTypes.length > 0) {
+        const filterValue = insuranceTypeFilter.value;
+        const obj = this.healthinsuranceTypes.find((x: any) => x.lovCode === filterValue);
+        this.selectedHealthInsuranceType = obj;
+      }
+    }
   }
 }

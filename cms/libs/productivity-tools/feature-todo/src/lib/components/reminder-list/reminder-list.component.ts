@@ -16,17 +16,18 @@ import { SnackBar, ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** Facades **/ 
-import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { AlertTypeCode, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
-import { FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { CaseFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { FormControl } from '@angular/forms';
 import { IntlService } from '@progress/kendo-angular-intl';
+
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
@@ -123,6 +124,7 @@ export class ReminderListComponent implements  OnInit{
     private loaderService: LoaderService,
     private dialogService: DialogService,
     private readonly Todofacade: TodoFacade,
+    private caseFacade: CaseFacade,
   private readonly router: Router,
     private cdr : ChangeDetectorRef,
     private lovFacade : LovFacade,
@@ -170,7 +172,7 @@ export class ReminderListComponent implements  OnInit{
     this.ReminderEventClicked.emit();
   }
   onloadReminderAndNotificationsGrid(){
-    this.notificationFacade.loadNotificationsAndReminders();
+    this.notificationFacade.loadNotificationsAndReminders(true);
   }
 
   onGetTodoItemData(event:any){
@@ -191,6 +193,7 @@ export class ReminderListComponent implements  OnInit{
 
   onDeleteReminderAlert(event:any){
     this.isDelete = true;
+    this.isEdit = false;
     this.reminderCrudText ="Delete"
     this.selectedAlertId = event;
     this.onNewReminderOpenClicked(this.reminderDetailsTemplate)
@@ -209,7 +212,7 @@ export class ReminderListComponent implements  OnInit{
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
     this.newReminderDetailsDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
       
     });
   }
@@ -305,6 +308,7 @@ export class ReminderListComponent implements  OnInit{
 
   onEditReminder(event:any){
     this.isEdit = true;
+    this.isDelete =false;
     this.reminderCrudText ="Edit"
     this.selectedAlertId = event;
     this.onNewReminderOpenClicked(this.reminderDetailsTemplate)
@@ -329,7 +333,8 @@ export class ReminderListComponent implements  OnInit{
   }
   onNavigationClicked(result: any) {
     if (result.entityTypeCode == this.entityTypes.Client) {
-      this.router.navigate([`/case-management/cases/case360/${result.entityId}`]);
+      this.getEligibilityInfoByEligibilityId(result?.entityId)
+      //this.router.navigate([`/case-management/cases/case360/${result.entityId}`]);
     }
     else if(result.entityTypeCode == this.entityTypes.Vendor)
     { 
@@ -343,7 +348,102 @@ export class ReminderListComponent implements  OnInit{
       };
       this.router.navigate(['/financial-management/vendors/profile'], query )
     }
+    else if (result.entityTypeCode == this.entityTypes.BatchSentBack) {
+      const urlPaths = {
+          [this.entityTypes.MedicalClaim]: '/financial-management/claims/medical/batch',
+          [this.entityTypes.DentalClaim]: '/financial-management/claims/dental/batch',
+          [this.entityTypes.MedicalPremium]: '/financial-management/premiums/medical/batch',
+          [this.entityTypes.DentalPremium]: '/financial-management/premiums/dental/batch',
+          [this.entityTypes.Pharmacy]: '/financial-management/pharmacy-claims/batch',
+      } as const;
+  
+      const entityType = result.displayEntityTypeCode;
+      const urlPath = urlPaths[entityType as keyof typeof urlPaths];
+  
+      if (urlPath) {
+          this.router.navigate([urlPath], { queryParams: { bid: result?.entityId } });
+      }
   }
+  else if (result.entityTypeCode == this.entityTypes.NewApplication) {     
+    this.getSessionInfoByEligibilityId(result?.entityId);
+  }
+  else if (result.entityTypeCode == this.entityTypes.CERComplete) {
+    this.getSessionInfoByEligibilityId(result?.entityId);
+  }
+  }
+
+  getSessionInfoByEligibilityId(clientCaseEligibilityId:any){
+    ;
+    this.loaderService.show();
+          this.caseFacade.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId).subscribe({
+            next: (response: any) => {
+              if (response) {                
+                this.loaderService.hide();
+                this.router.navigate(['case-management/case-detail'], {
+                  queryParams: {
+                    sid: response.sessionId,
+                    eid: response.entityID,                   
+                    wtc: response?.workflowTypeCode
+                  },
+                });
+              }
+            },
+            error: (err: any) => {
+              this.loaderService.hide();
+              this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            }
+          })
+  }
+
+  getEligibilityInfoByEligibilityId(clientId:any){   
+    this.loaderService.show();
+          this.caseFacade.loadClientEligibility(clientId).subscribe({
+            next: (response: any) => {
+              if (response) {                
+                this.loaderService.hide();
+                   const eligibilityId = response?.clientCaseEligibilityId       
+                 if(eligibilityId)
+                {     
+                this.clientNavigation(eligibilityId,response?.caseStatus,clientId)
+                }
+              }
+            },
+            error: (err: any) => {
+              this.loaderService.hide();
+              this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            }
+          })
+  }
+
+  clientNavigation(clientCaseEligibilityId:any,eligibilityStatusCode :  any,clientId : any){    
+    if(eligibilityStatusCode === 'ACCEPT')
+      {
+        this.router.navigate([`/case-management/cases/case360/${clientId}`]);
+      }
+      else
+      {
+            this.loaderService.show();
+            this.caseFacade.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId).subscribe({
+              next: (response: any) => {
+                if (response) {                
+                  this.loaderService.hide();
+                  this.router.navigate(['case-management/case-detail'], {
+                    queryParams: {
+                      sid: response.sessionId,
+                      eid: response.entityID,                   
+                      wtc: response?.workflowTypeCode
+                    },
+                  });
+                }
+              },
+              error: (err: any) => {
+                this.loaderService.hide();
+                this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+              }
+            })
+        }
+  }
+
   getVendorProfile(vendorTypeCode :any) {
     switch (vendorTypeCode) {
       case (FinancialVendorProviderTab.Manufacturers)  :

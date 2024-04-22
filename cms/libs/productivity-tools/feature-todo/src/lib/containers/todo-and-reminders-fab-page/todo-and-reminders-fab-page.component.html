@@ -24,7 +24,7 @@
 
 <!-- Create To Do Modal Html-->
 <ng-template #todoDetailTemplate>
-    <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">
+    <kendo-dialog-titlebar (close)="onCloseTodoClicked(false)">
    {{!!this.selectedAlertId?  'Edit To-Do Item' : 'Create Custom To-Do Item'}}    </kendo-dialog-titlebar>
     <productivity-tools-todo-detail 
     (isModalTodoDetailsCloseClicked)="onCloseTodoClicked($event)"

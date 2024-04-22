@@ -1,11 +1,11 @@
 <div class="dash-header-with-filters">
-  <h5>PHARMACY CLAIMS</h5>
+  <h2 class="heading_card">PHARMACY CLAIMS</h2>
   <div *ngIf="!isEditDashboard">
-    <kendo-dropdownlist size="small" value="Claims Count" rounded="medium" class="mr-1"
+    <kendo-dropdownlist size="small" value="Claims Count" aria-label="Claims Count" rounded="medium" class="mr-1"
       [fillMode]="formUiStyle.inputFillMode" [data]="dataCount" (valueChange)="dataCountChange($event)">
     </kendo-dropdownlist>
 
-    <kendo-dropdownlist size="small" value="This Month" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
+    <kendo-dropdownlist size="small" value="This Month" rounded="medium"  aria-label="This Month" [fillMode]="formUiStyle.inputFillMode"
       [data]="dataMonth" (valueChange)="dataMonthChange($event)">
     </kendo-dropdownlist>
   </div>
@@ -17,8 +17,9 @@
 
   <kendo-chart class="dash_chart"    >
     <ng-template kendoChartDonutCenterTemplate>
-      <h3 *ngIf="selectedDataCount == 'Claim Count'">{{claimCount}}</h3>
-      <h3 *ngIf="selectedDataCount !== 'Claim Count'"><strong>$</strong> {{claimAmount}}</h3>
+
+      <p class="mat-h3" *ngIf="selectedDataCount == 'Claim Count'">{{claimCount}}</p>
+      <p class="mat-h3" *ngIf="selectedDataCount !== 'Claim Count'"><strong>$</strong> {{claimAmount}}</p>
     </ng-template>
     <kendo-chart-legend [item]="pharmacyClaims?.chartData?.legend"  [margin]="10"     [markers]="markers" [labels]="labels">
       <kendo-chart-legend-item class="mt-1" margin="10"   ></kendo-chart-legend-item>

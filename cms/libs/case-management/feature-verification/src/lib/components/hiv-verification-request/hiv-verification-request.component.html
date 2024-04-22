@@ -14,8 +14,7 @@
           *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value !== ''">Enter
           valid Email Address.</kendo-formerror>
         <kendo-formerror
-          *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value === ''">Healthcare
-          Provider Email Address is required.</kendo-formerror>
+          *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value === ''">Healthcare Provider email is required.</kendo-formerror>
       </div>
       <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'"
       class="overlay-send-button">
@@ -131,7 +130,7 @@
 </section>
 
 <!-- Show this after send a request -->
-<section>
+<section *ngIf="(providerValue$ | async) === 'HEALTHCARE_PROVIDER'">
   <div *ngIf="isSendRequest || isResendRequest || isSendEmailClicked">
     <div class="flex-row mt-3 align-items-center">
       <div class="flex-col">

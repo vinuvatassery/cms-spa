@@ -18,7 +18,7 @@
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col mb-2" *ngIf="isOpenMessageTemplate">
+    <div class="flex-col mb-2" *ngIf="currentSmsData">
       <kendo-floatinglabel
         text="Send Messages to"
         aria-label="send messages to" class="inline-search-loader"
@@ -30,12 +30,16 @@
           textField="formattedPhoneNbr"
           valueField="phoneNbr"
           [(ngModel)]="messageRecipient"
+          (valueChange)="handleRecipientChanged($event)"
         >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="isRecipientMissing">
+        Send Messages to is required.
+      </kendo-formerror>
     </div>
     <div class="flex-col mb-2" *ngIf="currentSmsData">
-      <case-management-text-message-editor [templateContent] ="templateContent" [smsMessages]="smsMessages" [dataEvent]="smsEditorValueEvent" [currentValue]="currentSmsData" (editorValue)="handleSmsEditor($event)" ></case-management-text-message-editor>
+       <case-management-message-editor [messageList]="messageList" [templateContent]="templateContent" [smsMessages]="smsMessages"></case-management-message-editor>
     </div>
   </div>
 </section>
@@ -80,12 +84,11 @@
 *ngIf="isShowSaveForLaterPopupClicked"
 (close)="onCloseSaveForLaterClicked()"
 class="app-c-modal app-c-modal-sm app-c-modal-np"
-title="SMS Draft Saved"
+[title]="saveForLaterHeadterText"
 >
 <section class="k-dialog-body">
   <p class="mb-3">
-    To pick up where you left off, click “New SMS Text” from the client’s
-    profile.
+    {{saveForLaterModelText}}
   </p>
 </section>
 <kendo-dialog-actions>
@@ -108,10 +111,10 @@ title="SMS Draft Saved"
 <kendo-dialog
 *ngIf="isShowSendMessageConfirmPopupClicked" 
 class="app-c-modal app-c-modal-sm app-c-modal-np">
-<kendo-dialog-titlebar (close)="onCloseSendMessageConfirmClicked()">  Send SMS Text Message(s)? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="onCloseSendMessageConfirmClicked()"> {{confirmPopupHeader}} </kendo-dialog-titlebar>
 
 <section class="k-dialog-body">
-  <p class="mb-3">This action cannot be undone.</p>
+  <p class="mb-3">{{confirmationModelText}}</p>
 </section>
 <kendo-dialog-actions>
   <div class="justify-content-between">
@@ -133,7 +136,7 @@ class="app-c-modal app-c-modal-sm app-c-modal-np">
         (click)="onSendMessagesClick()"
         aria-label="Send"
       >
-        Send
+      SEND MESSAGE(S)
       </button>
     </div>
   </div>

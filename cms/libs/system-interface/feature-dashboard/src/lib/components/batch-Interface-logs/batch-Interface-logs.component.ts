@@ -83,7 +83,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   gridColumns: any = {
     startDate: 'Process Start Date',
     endDate: 'End Date',
-    fileReceiveDate: 'File Receive Date',
+    fileReceiveDate: 'File Received Date',
     interfaceTypeDesc: 'Interface',
     processTypeDesc: 'Process',
     status: 'Status',
@@ -124,7 +124,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   fileId: any;
   interfaceTypeCode: any;
   /** Lifecycle hooks **/
-
+closeallexpensions:any;
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade, private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider, private readonly lovFacade: LovFacade,
@@ -137,10 +137,14 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
       take: this.defaultPageSize,
       sort: this.sort,
     };
+    this.defaultGridState()
     this.loadActivityListGrid();
     this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.lovFacade.getInterfaceExceptionLov();
     this.lovFacade.getInBatchInterfaceStatusLov();
+    this.activityEventLogLists$.subscribe((res:any)=>{
+      this.closeallexpensions=res.data;
+    })
   }
 
   ngOnChanges(): void {
@@ -217,7 +221,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
-    if(this.filter.length==0)
+    if(this.filter?.length==0)
     {
      this.clearlovs();
     }
@@ -327,6 +331,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.filteredByColumnDesc = '';
    this.sortColumn ='Process Start Date';
    this.columnChangeDesc = 'Default Columns';
+   this.filter=undefined;
     this.loadDefaultActivityListGrid();
 
   }
@@ -340,9 +345,14 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
   public onDetailExpand(e: any): void {
     
+
     this.fileId = e.dataItem.fileId;
     this.interfaceTypeCode = e.dataItem.interfaceTypeCode;
     this.processTypeCode = e.dataItem.processTypeCode;
+      this.closeallexpensions.forEach((item: any, idx: number) => {
+        this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
+      });
+   
   }
 
   dropdownFilterChange(
@@ -371,8 +381,8 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     });
   }
 
-  downloadFile(filePath: any) {
-    this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
+  downloadFile(filePath: any,fileName:string) {
+    this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, fileName)
   }
 
   textToDisplay = "2 Weeks";

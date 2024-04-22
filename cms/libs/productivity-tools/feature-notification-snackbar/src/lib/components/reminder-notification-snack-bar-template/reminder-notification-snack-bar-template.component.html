@@ -1,26 +1,23 @@
 
-  <button class="reminder_list_show_btn" title="Reminder Notification List" 
+  <button class="reminder_list_show_btn" aria-label="Reminder Notification List" 
   kendoButton *ngIf="isReminderExpands">
    <span class="material-icons" aria-hidden="true"> alarm </span>
     <span class="app-c-badge badge-round-right badge-warn" role="region" 
     >{{unviewedCount}}</span></button>
+
   <div class="reminder-snack-bar-wrapper">
     <div class="reminder-col-one">
       <span class="material-icons" aria-hidden="true"> alarm </span>
     </div>
     <div class="reminder-col-two">
-      <p class="reminder-description" role="region"  aria-label="title">
-        <button kendoButton look="flat" *ngIf="entityName" 
-        [attr.aria-label]="entityName" class="card-link-button"
-        (click)="onEntityNameClick(entityId,entityTypeCode,vendorTypeCode)"
-         aria-label="todo item for">
-         {{ entityName }}
-        </button>
+      <p class="reminder-description" role="region"  aria-label="title" >
+        <button kendoButton look="flat" *ngIf="entityName" [attr.aria-label]="entityName" class="card-link-button" (click)="onEntityNameClick($event,entityId,entityTypeCode,vendorTypeCode)">
+         {{ entityName }}   </button>
         {{alertText}}
         </p>
-      <div class="flex-space-bw align-items-center mt-1">
+      <div class="reminder_btm_sectoin mt-1">
         <div>
-          <span aria-label="Today" role="region" > {{dueDateText}}</span>
+          <span [attr.aria-label]="dueDateText" role="region" > {{dueDateText}}</span>
         </div>
         <div class="d-flex">
           <kendo-dropdownbutton role="region" aria-label="Options" themeColor="primary" fillMode="flat" 
@@ -59,6 +56,7 @@
       [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
       (searchClientName)="searchClientName($event)"
       (searchProvider)="searchProvider($event)"
+      [isFromReminderSnacks]="true"
       (getReminderDetailsLov)="getReminderDetailsLov()"
       ></productivity-tools-reminder-detail>
   </ng-template>

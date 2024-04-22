@@ -25,7 +25,6 @@ import {
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
-  ReminderSnackBarNotificationType,
   DocumentFacade,
 } from '@cms/shared/util-core';
 import {
@@ -285,12 +284,7 @@ export class ApprovalPageComponent implements OnInit {
     this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
     this.importedClaimFacade.loadImportedClaimsLists(gridDataValue);
   }
-  notificationTriger() {
-    this.caseManagerFacade.NotifyShowHideSnackBar(
-      ReminderSnackBarNotificationType.LIGHT,
-      ' Generic reminder displays at 9AM on the day of the reminder Generic reminder displays at 9AM on the day of the reminder'
-    );
-  }
+ 
   loadApprovalsPaymentsMain(gridDataValue: any): void {
     if (
       !gridDataValue.selectedPaymentType ||

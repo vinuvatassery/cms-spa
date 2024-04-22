@@ -27,9 +27,9 @@ export class DocumentFacade {
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
-    dir: 'asc' 
+    dir: 'asc'
   }];
-  
+
   /** Public properties **/
   documents$ = this.documentsSubject.asObservable();
   documentsList$ = this.documentsListSubject.asObservable();
@@ -38,7 +38,7 @@ export class DocumentFacade {
   saveDocumentResponse$ = this.saveDocumentSubject.asObservable();
   updateDocumentResponse$ = this.updateDocumentSubject.asObservable();
   documentListUserProfilePhotoSubject = new Subject();
-  
+
   /** Constructor**/
   constructor(private readonly documentDataService: DocumentDataService,
     private loggingService : LoggingService,
@@ -58,7 +58,7 @@ export class DocumentFacade {
       },
     });
   }
-  
+
   saveDocument(doc: any) {
     this.loaderService.show();
     this.documentDataService.saveDocument(doc).subscribe({
@@ -103,10 +103,10 @@ export class DocumentFacade {
   }
 
   getDocumentsByClientCaseEligibilityId(
-    clientId: number, 
-    skipcount: number, 
-    maxResultCount: number, 
-    sort: string, 
+    clientId: number,
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
     sortType: string,
     filter: any,
     columnName: any
@@ -120,7 +120,8 @@ export class DocumentFacade {
         sort,
         sortType,
         filter,
-        columnName
+        columnName,
+        null
       )
       .subscribe({
         next: (documentsResponse: any) => {
@@ -158,8 +159,8 @@ export class DocumentFacade {
         },
       });
     }
-  } 
-  
+  }
+
   getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.documentDataService.getClientDocumentsViewDownload(clientDocumentId);
   }
