@@ -676,6 +676,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
           if(response){
             this.incomeFacade.loadDependentsProofofSchools(this.clientId,this.clientCaseEligibilityId);
           }
+          this.isProofOfSchoolDocumentUploaded = true;
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
           this.dependentFacade.hideLoader();
           this.showHideImageUploadLoader(false, dataItem);
