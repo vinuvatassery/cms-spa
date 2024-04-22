@@ -125,4 +125,13 @@ export class DirectMessageFacade {
       },
     })
   }
+  uploadAttachments(uploadRequest:any){
+    this.directMessageDataService.uploadAttachments(uploadRequest).subscribe({
+      next: (Response) => {
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    })
+  }
 }

@@ -370,4 +370,7 @@ onUploadDocumentsOpenClicked(template: TemplateRef<unknown>, event:any): void {
 onUploadDocumentsClosed(event: any) { 
   this.notificationReminderDialog.close();
 }
+getUploadedDocuments(uploadedRequest:any){
+  this.directMessageFacade.uploadAttachments(uploadedRequest);
+}
 }

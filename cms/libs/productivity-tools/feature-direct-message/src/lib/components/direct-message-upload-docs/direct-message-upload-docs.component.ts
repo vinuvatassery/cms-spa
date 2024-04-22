@@ -25,6 +25,7 @@ export class DirectMessageUploadDocsComponent {
   @ViewChild('popup', { read: ElementRef }) public popup!: ElementRef;
   @Input() uploadDocumentTypeDetails : any
   @Output() uploadDocumentsClosedDialog = new EventEmitter<any>();
+  @Output() uploadedDocuments = new EventEmitter<any>();
   @Output() cerEmailAttachments = new EventEmitter();
   @Input() clientAttachmentForm!: FormGroup;
   ddlEditorVariables$ = this.communicationFacade.ddlEditorVariables$;
@@ -36,6 +37,7 @@ export class DirectMessageUploadDocsComponent {
   @Input() clientCaseEligibilityId!:string;
   public uploadedAttachedFile: any[] = [];
   public selectedAttachedFile: any[] = [];
+  public selectedSystemAttachedFile: any[] = [];
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   attachedFileValidatorSize: boolean = false;
   public uploadRemoveUrl = 'removeUrl';
@@ -114,10 +116,10 @@ export class DirectMessageUploadDocsComponent {
       templatePath: event.templatePath
     }];
     if(this.selectedAttachedFile.length == 0){
-      this.selectedAttachedFile = this.uploadedAttachedFile;
+      this.selectedSystemAttachedFile = this.uploadedAttachedFile;
     }else{
       for (let file of this.uploadedAttachedFile){
-        this.selectedAttachedFile.push(file);
+        this.selectedSystemAttachedFile.push(file);
        }
       }
     this.uploadedAttachedFile = [];
@@ -198,5 +200,40 @@ export class DirectMessageUploadDocsComponent {
     }
     this.showClientAttachmentUpload = false;
   }
+  }
+  uploadAttachments(){
+    
+    let uploadRequest = {
+      uploadedAttachments:this.selectedAttachedFile,
+      systemAttachments:null,
+    }
+    let SystemAttachmentsRequests:any = [];
+    let SystemAttachmentsRequest = {
+      FileName:'',
+      FilePath:"",
+      TypeCode:'',
+      FileSize:0,
+      ClientDocumentId:'',
+      DocumentTemplateId:''
+    }
+    const formData = new FormData();
+    // formData.append('EntityId','121');
+    for(let i = 0; i < this.selectedAttachedFile.length; i++) {
+      formData.append("UploadedAttachments",JSON.stringify(this.selectedAttachedFile[i]) );
+  }
+  for(let i = 0; i < this.selectedSystemAttachedFile.length; i++) {
+    const element = this.selectedSystemAttachedFile[i];
+    SystemAttachmentsRequest.FileName = element.name;
+    SystemAttachmentsRequest.FilePath = element.templatePath,
+    SystemAttachmentsRequest.FileSize = element.size;
+    SystemAttachmentsRequest.DocumentTemplateId = element.documentTemplateId;
+    SystemAttachmentsRequest.TypeCode = element.document.typeCode;
+    SystemAttachmentsRequest.ClientDocumentId = element.document.parentTemplateId;
+    SystemAttachmentsRequests.push(SystemAttachmentsRequest);
+}
+    // formData.append('UploadedAttachments',JSON.stringify(this.selectedAttachedFile));
+    formData.append('SystemAttachments',JSON.stringify(SystemAttachmentsRequests));
+    // formData.append('TemplateTypeCode','DM_FROM_CLIENT');
+    this.uploadedDocuments.emit(formData);
   }
 }

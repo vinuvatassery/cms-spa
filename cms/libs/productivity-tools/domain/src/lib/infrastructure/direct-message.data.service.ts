@@ -44,6 +44,11 @@ export class DirectMessageDataService {
     return this.http.post(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/chat-thread`, payload);
     }
+
+    uploadAttachments(uploadRequest:any){
+      return this.http.post(
+        `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/attachment`, uploadRequest);
+      }
   
 }
 

@@ -118,5 +118,5 @@
 
 <ng-template #UploadDocumentInDirectMessage>
  
- <productivity-tools-direct-message-upload-docs (uploadDocumentsClosedDialog)="onUploadDocumentsClosed($event)"  [uploadDocumentTypeDetails]="uploadDocumentTypeDetails"></productivity-tools-direct-message-upload-docs>
+ <productivity-tools-direct-message-upload-docs (uploadDocumentsClosedDialog)="onUploadDocumentsClosed($event)" (uploadedDocuments)="getUploadedDocuments($event)"  [uploadDocumentTypeDetails]="uploadDocumentTypeDetails"></productivity-tools-direct-message-upload-docs>
 </ng-template>

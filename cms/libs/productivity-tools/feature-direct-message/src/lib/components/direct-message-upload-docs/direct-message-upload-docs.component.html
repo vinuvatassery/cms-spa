@@ -25,7 +25,7 @@
       </div>
       <div *ngIf="uploadDocumentTypeDetails?.id === 'from_Computer'">
         <kendo-upload  (select)="handleFileSelected($event)" [ngModel]="uploadedAttachedFile"(remove)="handleFileRemoved($event)"
-        #uploadsystemfile [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl" [restrictions]="uploadFileRestrictions.fileRestrictions">
+        #uploadsystemfile [ngModelOptions]="{standalone: true}" [multiple]="false" [removeUrl]="uploadRemoveUrl" [restrictions]="uploadFileRestrictions.fileRestrictions">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
             <span >
               <span>{{ files[0].name }} </span> 
@@ -62,7 +62,7 @@
             kendoButton
             [primary]="true"
            
-          >
+         (click)="uploadAttachments()" >
             Upload
           </button>
         </div>
