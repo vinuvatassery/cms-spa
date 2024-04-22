@@ -4,7 +4,7 @@
  <section class="k-dialog-body newcase">
       <p>Select file to upload a document</p>
       <div *ngIf="uploadDocumentTypeDetails?.id === 'from_System'">
-        <kendo-floatinglabel  text="From System">
+        <kendo-floatinglabel  text="Forms & Documents">
           <kendo-multicolumncombobox
             (valueChange)="formsAndDocumentChange($event)"
             [data]="formsAndDocumentList$"

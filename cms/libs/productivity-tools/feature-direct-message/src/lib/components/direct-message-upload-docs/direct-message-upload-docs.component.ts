@@ -10,6 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {CommunicationFacade,WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { LoaderService, ConfigurationProvider,LoggingService,NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -35,9 +36,9 @@ export class DirectMessageUploadDocsComponent {
   attachedFiles: any;
   @Input() notificationGroup!: string;
   @Input() clientCaseEligibilityId!:string;
-  public uploadedAttachedFile: any[] = [];
-  public selectedAttachedFile: any[] = [];
-  public selectedSystemAttachedFile: any[] = [];
+  public uploadedAttachedFile: any;
+  public selectedAttachedFile: any;
+  public selectedSystemAttachedFile: any;
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   attachedFileValidatorSize: boolean = false;
   public uploadRemoveUrl = 'removeUrl';
@@ -65,38 +66,29 @@ export class DirectMessageUploadDocsComponent {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
+    private route : ActivatedRoute,
    ) {}
    ngOnInit(): void {
-    this.loadClientAttachments('348');
+    this.route.queryParamMap.subscribe((params :any) =>{
+      this.clientId = params.get('id')
+      if(this.clientId){
+        this.loadClientAttachments(this.clientId);
+      }
+     })
+  
+   
     this.loadFormsAndDocuemnts();
     this.cerAuthorizationForm = this.formBuilder.group({
       clientsAttachment:[]
     });
   }
-  handleFileSelected(event: any) {
+  handleFileSelected(event: any) {  
+    this.selectedAttachedFile=event.files[0].rawFile;
     this.attachedFileValidatorSize=false;
-    for (let file of event.files){
-   if(file.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
-   {
-    this.attachedFileValidatorSize = true;
-    this.showAttachmentUpload = true;
-    event.files = [];
-    this.uploadedAttachedFile = [];
-   }
-  }
-  if(!this.attachedFileValidatorSize){
-  if(this.selectedAttachedFile.length == 0){
-    this.selectedAttachedFile = event.files;
-  }else{
-    for (let file of event.files){
-    const isFileExists = this.selectedAttachedFile?.some((item: any) => item.name === file.name);
-    if(!isFileExists){
-      this.selectedAttachedFile.push(file);
-     }
+    if(!this.attachedFileValidatorSize)
+    {
+     this.cerEmailAttachments.emit(this.selectedAttachedFile);
     }
-   }
-   this.cerEmailAttachments.emit(this.selectedAttachedFile);
-  }
    this.showAttachmentUpload = false;
   }
   handleFileRemoved(event: any) {
@@ -105,26 +97,7 @@ export class DirectMessageUploadDocsComponent {
   formsAndDocumentChange(event:any)
   {
     if(event !== undefined){
-    const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.description);
-    if(!isFileExists){
-    this.uploadedAttachedFile = [{
-      document: event,
-      size: event.templateSize,
-      name: event.description,
-      documentTemplateId: event.documentTemplateId,
-      uid: '',
-      templatePath: event.templatePath
-    }];
-    if(this.selectedAttachedFile.length == 0){
-      this.selectedSystemAttachedFile = this.uploadedAttachedFile;
-    }else{
-      for (let file of this.uploadedAttachedFile){
-        this.selectedSystemAttachedFile.push(file);
-       }
-      }
-    this.uploadedAttachedFile = [];
-    this.cerEmailAttachments.emit(event);
-    }
+    this.selectedSystemAttachedFile = event;
     this.showFormsAndDocumentsUpload = false;
    }
   }
@@ -178,62 +151,33 @@ export class DirectMessageUploadDocsComponent {
   clientAttachmentChange(event:any)
   {
     if( event != undefined){
-    const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.documentName);
-    if(!isFileExists){
-    this.uploadedAttachedFile = [{
-      document: event,
-      size: event.documentSize,
-      name: event.documentName,
-      clientDocumentId: event.clientDocumentId,
-      uid: '',
-      documentPath: event.documentPath
-    }];
-    if(this.selectedAttachedFile.length == 0){
-      this.selectedAttachedFile = this.uploadedAttachedFile;
-    }else{
-      for (let file of this.uploadedAttachedFile){
-        this.selectedAttachedFile.push(file);
-       }
-      }
-    this.uploadedAttachedFile = [];
-    this.cerEmailAttachments.emit(event);
-    }
-    this.showClientAttachmentUpload = false;
+      this.uploadedAttachedFile =  event;
+      this.showClientAttachmentUpload = false;
   }
   }
   uploadAttachments(){
-    
-    let uploadRequest = {
-      uploadedAttachments:this.selectedAttachedFile,
-      systemAttachments:null,
-    }
-    let SystemAttachmentsRequests:any = [];
-    let SystemAttachmentsRequest = {
-      FileName:'',
-      FilePath:"",
-      TypeCode:'',
-      FileSize:0,
-      ClientDocumentId:'',
-      DocumentTemplateId:''
-    }
+    let SystemAttachmentsRequests:any = {};
     const formData = new FormData();
-    // formData.append('EntityId','121');
-    for(let i = 0; i < this.selectedAttachedFile.length; i++) {
-      formData.append("UploadedAttachments",JSON.stringify(this.selectedAttachedFile[i]) );
-  }
-  for(let i = 0; i < this.selectedSystemAttachedFile.length; i++) {
-    const element = this.selectedSystemAttachedFile[i];
-    SystemAttachmentsRequest.FileName = element.name;
-    SystemAttachmentsRequest.FilePath = element.templatePath,
-    SystemAttachmentsRequest.FileSize = element.size;
-    SystemAttachmentsRequest.DocumentTemplateId = element.documentTemplateId;
-    SystemAttachmentsRequest.TypeCode = element.document.typeCode;
-    SystemAttachmentsRequest.ClientDocumentId = element.document.parentTemplateId;
-    SystemAttachmentsRequests.push(SystemAttachmentsRequest);
-}
-    // formData.append('UploadedAttachments',JSON.stringify(this.selectedAttachedFile));
-    formData.append('SystemAttachments',JSON.stringify(SystemAttachmentsRequests));
-    // formData.append('TemplateTypeCode','DM_FROM_CLIENT');
+  if (this.selectedAttachedFile){
+    formData.append("UploadedAttachments",this.selectedAttachedFile );
     this.uploadedDocuments.emit(formData);
+  }
+  else if(this.uploadedAttachedFile)
+    {
+
+     formData.append('SystemAttachments.FileName',this.uploadedAttachedFile.documentName);
+    formData.append('SystemAttachments.FilePath',this.uploadedAttachedFile.documentPath);
+    formData.append('SystemAttachments.FileSize',this.uploadedAttachedFile.documentSize);
+    formData.append('SystemAttachments.DocumentTemplateId',this.uploadedAttachedFile.documentTemplateId);
+    formData.append('SystemAttachments.ClientDocumentId',this.uploadedAttachedFile.clientDocumentId);
+    this.uploadedDocuments.emit(formData);
+  }
+  else if(this.selectedSystemAttachedFile){
+    formData.append('SystemAttachments.FileName',this.selectedSystemAttachedFile.description);
+    formData.append('SystemAttachments.FilePath',this.selectedSystemAttachedFile.templatePath);
+    formData.append('SystemAttachments.FileSize',this.selectedSystemAttachedFile.templateSize);
+    formData.append('SystemAttachments.DocumentTemplateId',this.selectedSystemAttachedFile.documentTemplateId);
+    this.uploadedDocuments.emit(formData);
+  }
   }
 }

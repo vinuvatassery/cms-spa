@@ -86,15 +86,15 @@ export class DirectMessageComponent implements OnInit {
   messageToolBarShow = false;
   ListItemModel = [
     {
-      text: "Attach from System",
+      text: "Attach From Forms & Documents",
       id:'from_System'
     },
     {
-      text: "Attach from Computer",
+      text: "Attach From Computer",
       id:'from_Computer'
     },
     {
-      text: "Attach from Client’s Attachments",
+      text: "Attach From Client's Attachment",
       id:'from_Client'
     },
 
