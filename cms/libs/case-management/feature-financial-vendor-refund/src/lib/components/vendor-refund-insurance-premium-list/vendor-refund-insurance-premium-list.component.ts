@@ -272,7 +272,7 @@ export class VendorRefundInsurancePremiumListComponent
     });
   }
   filterChange(filter: CompositeFilterDescriptor): void {
-   
+ 
     this.filterData = filter;
     if(this.selectedInsuranceClaims.length >0){
     this.openResetDialog(this.filterResetConfirmationDialogTemplate);
@@ -322,7 +322,10 @@ export class VendorRefundInsurancePremiumListComponent
   }
   private clearSelection(): void {
     if (this.grid) {
+      this.claimsCount.emit(0)
       this.selectedInsuranceClaims = [];
+      this.selectedClaimsChangeEvent.emit(this.selectedInsuranceClaims)
+
     }
   }
   ngOnDestroy(): void {
