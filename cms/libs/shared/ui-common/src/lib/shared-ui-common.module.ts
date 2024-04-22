@@ -57,6 +57,7 @@ import { AddEmployerComponent } from './add-employer/add-employer.component';
 import { CmsPharmacyClaimsDetailComponent } from './cms-pharmacy-claims-detail/cms-pharmacy-claims-detail.component';
 import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
 import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
+import { ClientAttachmentModelComponent } from './client-attachment-model/client-attachment-model.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -87,6 +88,7 @@ import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboar
     GridCellDateRangeFilterComponent,
     DocumentUploadComponent,
     ClientsAttachmentComponent,
+    ClientAttachmentModelComponent,
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
@@ -134,6 +136,7 @@ import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboar
     GridCellDateRangeFilterComponent,
     DocumentUploadComponent,
     ClientsAttachmentComponent,
+    ClientAttachmentModelComponent,
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,

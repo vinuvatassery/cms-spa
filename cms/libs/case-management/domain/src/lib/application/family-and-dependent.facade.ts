@@ -333,6 +333,10 @@ export class FamilyAndDependentFacade {
     return this.dependentDataService.uploadDependentProofOfSchool(eligibilityId, dependentId, dependentProof);
   }
 
+  uploadDependentProofOfSchoolClientAttachment(clientAttachmentDetail: any) {
+    return this.dependentDataService.uploadDependentProofOfSchoolClientsAttachment(clientAttachmentDetail);
+  }
+
   saveAndContinueDependents(clientId: number, clientCaseEligibilityId: string, request: any) {
     this.showLoader();
     return this.dependentDataService.saveAndContinueDependents(clientId, clientCaseEligibilityId, request)
