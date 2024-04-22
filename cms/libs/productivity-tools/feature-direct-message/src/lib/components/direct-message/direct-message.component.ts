@@ -33,6 +33,7 @@ export class DirectMessageComponent implements OnInit {
   thread: any
   threadId:any
   messages :any[] =[]
+  skeletonCounts = [1,2,3]
   sendMsg: any = { id: '', message: '', sender: '', isOwner: false };
   chatThreadClient: any
   groupedMessages :any

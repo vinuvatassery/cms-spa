@@ -73,6 +73,28 @@
         <div class="time-status"><span class="chat-time">10:00 AM</span> <span class="chat-time">Mark as Unread</span>
         </div>
       </div>
+
+      <div *ngFor="let skeletonCount of skeletonCounts" class="msg_loader">
+        <div class="left-msgloader">
+
+      
+        <kendo-skeleton  shape="rectangle"   animation="pulse"   class="msg_bgloader" ></kendo-skeleton>
+      <div class="msg_loader_second">
+        <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+        <kendo-skeleton shape="text" animation="pulse"  width="50%" ></kendo-skeleton>
+      </div>
+     
+    </div>
+    <div class="right-msgloader">
+
+      
+      <kendo-skeleton  shape="rectangle"   animation="pulse"   class="msg_bgloader" ></kendo-skeleton>
+    <div class="msg_loader_second">
+      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+      <kendo-skeleton shape="text" animation="pulse"  width="50%" ></kendo-skeleton>
+    </div>
+  </div>
+      </div>
     </div>
     <div class="chat-bottom-container">
       <div class="chat-input">
