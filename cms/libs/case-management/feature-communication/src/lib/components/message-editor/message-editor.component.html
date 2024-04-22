@@ -106,11 +106,15 @@
         aria-label="message description"
         (valueChange)="onMessageValueChange(item)"
         [maxlength]="tAreaMessageMaxLength"
+        [ngClass]="ngDirtyInValid(item)"
       >
       <kendo-textarea-suffix class="justify-content-end"> <span  class="counter">  {{ item.wordCount }}/{{ tAreaMessageMaxLength }} </span> </kendo-textarea-suffix>
       </kendo-textarea>
    
     </kendo-floatinglabel>
+    <kendo-formerror *ngIf="!item.isValid">
+      Messages {{i + 1}} is required.
+    </kendo-formerror>
   </div>
   <div class="flex-col mt-1 mb-1">
     <button
@@ -120,8 +124,7 @@
       icon="add"
       [disabled]="this.messageList.length >=10 "
       (click)="addNewMessage()"
-      aria-label="Message"
-    >
+      aria-label="Message">
       Message
     </button>
   </div>

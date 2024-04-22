@@ -71,12 +71,14 @@ export class SendTextMessageComponent implements OnInit {
   loginUserId!: any;
   isRecipientMissing:boolean = false;
   isFormValid:boolean = true;
+  isSubmitted:boolean = false;
   messageList:
   {
     messageId: number,
     messageText: string,
     wordCount: number,
-    showVariables: boolean
+    showVariables: boolean,
+    isValid:boolean
   }[] = [];
 
   /** Constructor **/
@@ -231,14 +233,40 @@ export class SendTextMessageComponent implements OnInit {
 
   /** Internal event methods **/
   onSaveForLaterClicked() {
+    this.isSubmitted = true;
     if (this.messageRecipient === undefined || this.messageRecipient === '' || this.messageRecipient?.length === 0) {
       this.isRecipientMissing = true;
       this.isFormValid = false;
     }
+    else{
+      this.isRecipientMissing = false;
+      this.isFormValid = true;
+    }
+
+    this.validateMessages();
+    
     if (this.isFormValid) {
       this.isOpenSendMessageClicked = false;
       this.isShowSaveForLaterPopupClicked = true;
     }
+  }
+
+  validateMessages(){
+    this.messageEditor.messageList.forEach((item:any)=>{
+      if(item.messageText === undefined || item.messageText === ''){
+        item.isValid = false;
+      }
+      else{
+        item.isValid = true;
+      }
+    });
+
+    if(this.isFormValid)
+    this.messageEditor.messageList.filter((x:any)=>{
+      if(!x.isValid){
+        this.isFormValid = false;
+      }
+     });
   }
 
   onEditMessagesClicked() {
@@ -247,10 +275,18 @@ export class SendTextMessageComponent implements OnInit {
   }
 
   onSendMessageConfirmClicked() {
+    this.isSubmitted = true;
     if(this.messageRecipient === undefined || this.messageRecipient === '' || this.messageRecipient?.length === 0){
       this.isRecipientMissing = true;
       this.isFormValid = false;
     }
+    else{
+      this.isRecipientMissing = false;
+      this.isFormValid = true;
+    }
+
+    this.validateMessages();
+
     if(this.isFormValid){
     this.isOpenSendMessageClicked = false;
     this.isShowSendMessageConfirmPopupClicked = true;
