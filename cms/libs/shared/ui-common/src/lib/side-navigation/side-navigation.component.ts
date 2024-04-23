@@ -230,7 +230,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   }
 
   private getDirectMessageCount(){
-    this.navigationMenuFacade.getDirectMessageCount();
+    //this.navigationMenuFacade.getDirectMessageCount();
     this.subscribeToDirectMessageCount();
   }
   subscribeToDirectMessageCount(){
