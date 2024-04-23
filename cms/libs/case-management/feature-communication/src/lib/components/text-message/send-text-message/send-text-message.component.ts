@@ -148,7 +148,7 @@ export class SendTextMessageComponent implements OnInit {
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
         },
       });
-      this.handleSmsEditor(true);
+      this.handleSmsEditor(false);
   }
 
   /** Private methods **/
