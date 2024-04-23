@@ -113,6 +113,7 @@ export class DirectMessageComponent implements OnInit {
     this.route.queryParamMap.subscribe((params :any) =>{
       this.clientId = params.get('id')
       this.eid = params.get('e_id')
+      this.showChatLoader = true;
       if(this.clientId){
         this.clientProfileSubscription$?.unsubscribe()
         this.clientProfileSubscription$ =   this.caseFacade.clientProfileData$.pipe(take(1)).subscribe((cp :any) =>{
