@@ -64,6 +64,20 @@ export class DirectMessageComponent implements OnInit {
    /** Public properties **/
  
    uploadDocumentTypeDetails:any;
+   ListModel = [
+    {
+      text: "Attach From Forms & Documents",
+      id:'from_System'
+    },
+    {
+      text: "Attach From Computer",
+      id:'from_Computer'
+    },
+    {
+      text: "Attach From Client's Attachment",
+      id:'from_Client'
+    }];
+
    ListItemModel = [
      {
        text: "Attach from System",
@@ -370,6 +384,9 @@ onUploadDocumentsOpenClicked(template: TemplateRef<unknown>, event:any): void {
 
 onUploadDocumentsClosed(event: any) { 
   this.notificationReminderDialog.close();
+}
+getUploadedDocuments(uploadedRequest:any){
+  this.directMessageFacade.uploadAttachments(uploadedRequest);
 }
 
 
