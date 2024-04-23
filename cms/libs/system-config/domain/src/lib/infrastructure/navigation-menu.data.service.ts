@@ -49,7 +49,7 @@ export class NavigationMenuService {
   
   getDirectMessageCount() {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/count`
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/count/0`
     );
   }
 }
