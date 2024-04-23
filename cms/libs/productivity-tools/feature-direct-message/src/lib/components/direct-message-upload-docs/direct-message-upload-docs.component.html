@@ -27,17 +27,14 @@
       </kendo-formerror>
       </div>
       <div *ngIf="uploadDocumentTypeDetails?.id === 'from_Computer'">
-        <kendo-upload  (select)="handleFileSelected($event)" [ngModel]="uploadedAttachedFile"(remove)="handleFileRemoved($event)"
-        #uploadsystemfile [ngModelOptions]="{standalone: true}" [multiple]="false" [removeUrl]="uploadRemoveUrl" [restrictions]="uploadFileRestrictions.fileRestrictions">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span >
-              <span>{{ files[0].name }} </span> 
-              <br>
-              <span>{{   files[0].size | fileSize }}</span> 
-            </span>
-          </ng-template>
-        </kendo-upload>
-        <kendo-formhint >Max file size 25MB</kendo-formhint>
+        <common-document-upload
+        [typeCode]="'DIRECT_MESSAGE'"
+        [file]="uploadedAttachedFile"
+        [isFileViewable]="true"
+        (handleFileSelectEvent)="handleFileSelected($event)"
+        (handleFileRemoveEvent)="handleFileRemoved($event)"
+        [isDownloadShow]="true">
+        </common-document-upload>
         <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         <kendo-formerror *ngIf="showAttachmentRequiredError">
           Attachment is required. Please select a file to upload.
