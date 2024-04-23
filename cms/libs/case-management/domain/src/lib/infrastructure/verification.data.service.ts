@@ -59,11 +59,19 @@ export class VerificationDataService {
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/hiv-verification/documents`);
       }
 
-      loadHealthCareProviders(clientId : number  , skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated :boolean) {     
+      loadHealthCareProviders(clientId : number  , skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated :boolean) {
         return this.http.get<any[]>(
           `${this.configurationProvider.appSettings.caseApiUrl}`+
           `/case-management/healthcare-providers?showDeactivated=${showDeactivated}&clientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
         );
-        
+
+      }
+
+      getHivCaseWorker(clientId:any){
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/hiv-caseWorker/${clientId}`);
+      }
+
+      sendHivRequestCaseManager(clientId:any){
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/hiv-casemanager-notification/${clientId}`);
       }
     }
