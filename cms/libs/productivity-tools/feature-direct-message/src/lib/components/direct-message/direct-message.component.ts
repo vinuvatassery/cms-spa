@@ -46,19 +46,25 @@ export class DirectMessageComponent implements OnInit {
   clientName=""
   threadCreationTime:any
   @ViewChild('scrollMe') private myScrollContainer?: ElementRef;
+  tokenSubscription! :Subscription
    /** Output properties  **/
    @Output() closeAction = new EventEmitter();
    public value = ``;
    showDataLoader = false;
    chatThreadClient:any
+   placeHolderText ="Direct Message"
    skeletonCounts = [
     1, 2
   ]
   forFirstTime =0
+  showLoader = false;
    /** Public properties **/
    isShownDirectMessage = false;
    messageToolBarShow = false;
    dataLoaderSubscription$! : Subscription
+   directMessageSubscription$! : Subscription
+  clientProfileSubscription$! : Subscription
+  clientProfileLoaderSubscription!:Subscription
    private notificationReminderDialog: any;
 
    /** Public properties **/
@@ -93,21 +99,35 @@ export class DirectMessageComponent implements OnInit {
       this.clientId = params.get('id')
       this.eid = params.get('e_id')
       if(this.clientId){
-        this.caseFacade.clientProfileData$.pipe(take(1)).subscribe((cp :any) =>{
+        this.clientProfileSubscription$?.unsubscribe()
+        this.clientProfileSubscription$ =   this.caseFacade.clientProfileData$.pipe(take(1)).subscribe((cp :any) =>{
           this.clientName = cp?.firstName
+          this.placeHolderText = "Direct Message" +" "+this.clientName+"..."
        })
        this.caseFacade.loadClientProfileWithOutLoader(this.eid);
-      
+       this.clientProfileLoaderSubscription?.unsubscribe()
+       this.clientProfileLoaderSubscription =this.caseFacade.clientProfileDataLoader$.subscribe(res =>{
+        this.showLoader = res;
+        this.changeDetection.detectChanges()
+      })
        this.dataLoaderSubscription$?.unsubscribe()
        this.dataLoaderSubscription$ = this.directMessageFacade.communicationDetailLoader$.subscribe((res:boolean) =>{
         this.showDataLoader = res;
        })
-       this.directMessageFacade.communicationDetail$.pipe(take(1)).subscribe((res:any) => {
-        this.communicationDetails = res.communicationDetails;
+       this.directMessageSubscription$?.unsubscribe()
+     this.directMessageSubscription$ =  this.directMessageFacade.communicationDetail$.pipe(take(1)).subscribe((res:any) => {
+      if(!res){
+        this.messages = []
+        this.groupedMessages = undefined
+        this.changeDetection.detectChanges()  
+        return;
+      } 
+      this.communicationDetails = res.communicationDetails;
         this.threadId = res.threadId
         this.threadCreationTime = res.creationTime
-        this.chatClient = this.directMessageFacade.getChatClient(this.communicationDetails.token)
+        this.chatClient = this.directMessageFacade.getChatClient(this.communicationDetails?.token)
         this.setupHandlers()
+      
         this.changeDetection.detectChanges()     
       })
           this.directMessageFacade.getCommunicationDetails(this.clientId)
@@ -131,9 +151,8 @@ export class DirectMessageComponent implements OnInit {
     this.forFirstTime =0;
     this.chatClient.on("chatMessageReceived", ((state: any) => {
       this.addMessage(state);
-      if(state.senderDisplayName != this.communicationDetails.clientUserName){
-        this.sendMessageonBehalfOfClient()
-        }
+        this.sendMessageonBehalfOfClient(state)
+      
     }).bind(this));
 
     this.chatClient.on("chatMessageEdited", ((state: any) => {
@@ -386,21 +405,24 @@ scrollToBottom(): void {
 }
 
 
-async sendMessageonBehalfOfClient() {
-
-   
-   this.directMessageFacade.comminicationToken$.subscribe(res =>{
-    console.log(res)
+async sendMessageonBehalfOfClient(state :any) {
+  
+  if(state.senderDisplayName == this.communicationDetails?.clientUserName){
+  return;
+  }
+   else{
+    this.tokenSubscription?.unsubscribe()
+    this.tokenSubscription = this.directMessageFacade.comminicationToken$.subscribe(res =>{
     this.directMessageFacade.sendMessage({
-      content: "Hi I Recived your Message",
+      content: "Event has been logged",
       senderDisplayName: this.communicationDetails.clientUserName,
-      type: 'html',
+      type: 'text',
       userToken : res.token,
       threadId: this.threadId,
      });
    })
    this.directMessageFacade.getAccessToken(this.communicationDetails.clientUsercommunicationUserId)
-
+  }
 }
 
 }
