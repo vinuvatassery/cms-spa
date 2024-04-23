@@ -34,6 +34,7 @@ export class DirectMessageFacade {
   private communicationDetailSubject = new Subject<any>();
   private communicationDetailLoaderSubject = new Subject<boolean>();
   private sendMessageSubject = new Subject<any>();
+  private uploadDocumentSubject = new Subject<any>();
   private comminicationTokenSubject = new Subject<any>();
   /** Public properties **/
   directMessages$ = this.directMessagesSubject.asObservable();
@@ -144,11 +145,18 @@ export class DirectMessageFacade {
     })
   }
   uploadAttachments(uploadRequest:any){
+    this.showLoader()
     this.directMessageDataService.uploadAttachments(uploadRequest).subscribe({
       next: (Response) => {
+        this.uploadDocumentSubject.next(Response);
+        if (Response) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Document upload successfully.');
+          this.loaderService.hide();
+        }
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+        this.loaderService.hide();
       },
     })
   }

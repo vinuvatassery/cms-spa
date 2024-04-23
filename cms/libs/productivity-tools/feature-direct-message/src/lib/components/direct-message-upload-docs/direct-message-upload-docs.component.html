@@ -22,6 +22,9 @@
             </kendo-combobox-column>
           </kendo-multicolumncombobox>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="showAttachmentRequiredError">
+          Attachment is required. Please select a file to upload.
+      </kendo-formerror>
       </div>
       <div *ngIf="uploadDocumentTypeDetails?.id === 'from_Computer'">
         <kendo-upload  (select)="handleFileSelected($event)" [ngModel]="uploadedAttachedFile"(remove)="handleFileRemoved($event)"
@@ -36,6 +39,9 @@
         </kendo-upload>
         <kendo-formhint >Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+        <kendo-formerror *ngIf="showAttachmentRequiredError">
+          Attachment is required. Please select a file to upload.
+      </kendo-formerror>
       </div>
       <div *ngIf="uploadDocumentTypeDetails?.id === 'from_Client'">
         <common-clients-attachment
@@ -43,6 +49,9 @@
       [clientDocumentList$]="clientAllDocumentList$"
       (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
   ></common-clients-attachment>
+  <kendo-formerror *ngIf="showAttachmentRequiredError">
+    Attachment is required. Please select a file to upload.
+</kendo-formerror>
 </div>
   </section>
 

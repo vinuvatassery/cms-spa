@@ -32,6 +32,7 @@ export class DirectMessageUploadDocsComponent {
   ddlEditorVariables$ = this.communicationFacade.ddlEditorVariables$;
   showClientAttachmentUpload: boolean = false;
   showFormsAndDocumentsUpload: boolean = false;
+  showAttachmentRequiredError: boolean = false;
   showAttachmentUpload: boolean = false;
   attachedFiles: any;
   @Input() notificationGroup!: string;
@@ -54,9 +55,6 @@ export class DirectMessageUploadDocsComponent {
   cerFormPreviewData:any;
    @Input() clientId!:any;
   showAttachmentOptions = true;
-  onUploadDocumentsClosed(){
-    this.uploadDocumentsClosedDialog.emit();
-  }
   constructor(
     private readonly communicationFacade: CommunicationFacade,
     private readonly configurationProvider: ConfigurationProvider,
@@ -82,13 +80,19 @@ export class DirectMessageUploadDocsComponent {
       clientsAttachment:[]
     });
   }
+  onUploadDocumentsClosed(){
+    this.uploadDocumentsClosedDialog.emit();
+  }
   handleFileSelected(event: any) {  
     this.selectedAttachedFile=event.files[0].rawFile;
+    this.showAttachmentRequiredError = false;
     this.attachedFileValidatorSize=false;
-    if(!this.attachedFileValidatorSize)
-    {
-     this.cerEmailAttachments.emit(this.selectedAttachedFile);
-    }
+    if (this.selectedAttachedFile.size > 25 * 1024 * 1024) {
+      this.attachedFileValidatorSize = true; 
+  } else {
+      this.attachedFileValidatorSize = false; 
+      this.cerEmailAttachments.emit(this.selectedAttachedFile); 
+  }
    this.showAttachmentUpload = false;
   }
   handleFileRemoved(event: any) {
@@ -96,9 +100,11 @@ export class DirectMessageUploadDocsComponent {
   }
   formsAndDocumentChange(event:any)
   {
+    this.showAttachmentRequiredError = true;
     if(event !== undefined){
     this.selectedSystemAttachedFile = event;
     this.showFormsAndDocumentsUpload = false;
+    this.showAttachmentRequiredError = false;
    }
   }
   loadFormsAndDocuemnts() {
@@ -150,14 +156,21 @@ export class DirectMessageUploadDocsComponent {
   }
   clientAttachmentChange(event:any)
   {
+    this.showAttachmentRequiredError = true;
     if( event != undefined){
       this.uploadedAttachedFile =  event;
       this.showClientAttachmentUpload = false;
+      this.showAttachmentRequiredError = false;
   }
   }
   uploadAttachments(){
     let SystemAttachmentsRequests:any = {};
     const formData = new FormData();
+    if (!this.selectedAttachedFile && !this.uploadedAttachedFile && !this.selectedSystemAttachedFile) {
+      this.showAttachmentRequiredError = true;
+      return;
+  }
+    this.showAttachmentRequiredError = false;
   if (this.selectedAttachedFile){
     formData.append("UploadedAttachments",this.selectedAttachedFile );
     this.uploadedDocuments.emit(formData);
@@ -179,5 +192,6 @@ export class DirectMessageUploadDocsComponent {
     formData.append('SystemAttachments.DocumentTemplateId',this.selectedSystemAttachedFile.documentTemplateId);
     this.uploadedDocuments.emit(formData);
   }
+  this.uploadDocumentsClosedDialog.emit()
   }
 }
