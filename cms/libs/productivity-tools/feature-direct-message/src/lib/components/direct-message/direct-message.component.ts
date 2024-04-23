@@ -54,10 +54,11 @@ export class DirectMessageComponent implements OnInit {
    chatThreadClient:any
    placeHolderText ="Direct Message"
    skeletonCounts = [
-    1, 2
+    1, 2 ,3,4,5,6
   ]
   forFirstTime =0
   showLoader = false;
+  showChatLoader = true;
    /** Public properties **/
    isShownDirectMessage = false;
    messageToolBarShow = false;
@@ -112,6 +113,7 @@ export class DirectMessageComponent implements OnInit {
     this.route.queryParamMap.subscribe((params :any) =>{
       this.clientId = params.get('id')
       this.eid = params.get('e_id')
+      this.showChatLoader = true;
       if(this.clientId){
         this.clientProfileSubscription$?.unsubscribe()
         this.clientProfileSubscription$ =   this.caseFacade.clientProfileData$.pipe(take(1)).subscribe((cp :any) =>{
@@ -132,6 +134,7 @@ export class DirectMessageComponent implements OnInit {
      this.directMessageSubscription$ =  this.directMessageFacade.communicationDetail$.pipe(take(1)).subscribe((res:any) => {
       if(!res){
         this.messages = []
+        this.showChatLoader = false;
         this.groupedMessages = undefined
         this.changeDetection.detectChanges()  
         return;
@@ -141,7 +144,7 @@ export class DirectMessageComponent implements OnInit {
         this.threadCreationTime = res.creationTime
         this.chatClient = this.directMessageFacade.getChatClient(this.communicationDetails?.token)
         this.setupHandlers()
-      
+        this.showChatLoader = false
         this.changeDetection.detectChanges()     
       })
           this.directMessageFacade.getCommunicationDetails(this.clientId)

@@ -14,8 +14,21 @@
       </button>
     </div>
   </div>
-  <div class="direct-chat-wrapper">
-    <div class="chat-view-container" #scrollMe>
+  <div *ngIf="showChatLoader">
+    <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
+      <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60"
+        class="bg_rect_loader"></kendo-skeleton>
+      <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40"></kendo-skeleton>
+      <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
+        <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+        <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
+      </div>
+    </div>
+
+  </div>
+  <div   class="direct-chat-wrapper">
+    <div  class="chat-view-container" #scrollMe>
+      <ng-container *ngIf="groupedMessages">
       <ng-container *ngFor="let item of groupedMessages | keyvalue:mySortingFunction">
         <label class="center-date">{{ item.key}}</label>
         
@@ -65,20 +78,9 @@
      
       </ng-container>
       </ng-container>
-
+    </ng-container>
     </div>
-    <div *ngIf="false">
-      <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
-        <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60"
-          class="bg_rect_loader"></kendo-skeleton>
-        <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40"></kendo-skeleton>
-        <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
-          <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
-          <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
-        </div>
-      </div>
-
-    </div>
+  
 
     <div class="chat-bottom-container">
       <div class="chat-input">
