@@ -97,9 +97,7 @@ export class DirectMessageUploadDocsComponent {
             else 
             {
             this.attachedFileValidatorSize = false; 
-            //this.cerEmailAttachments.emit(this.selectedAttachedFile); 
              }
-           // this.showAttachmentUpload = false;
     }
   }
   handleFileRemoved(event: any) {
