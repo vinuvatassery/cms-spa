@@ -203,7 +203,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           else
           {
             this.verificationFacade.showAttachmentOptions.next(true);
-          }         
+          }
         }
         else
         {
@@ -297,9 +297,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     if(this.clientId > 0){
     this.verificationFacade.showLoader();
     this.verificationFacade.loadHealthCareProviders(this.clientId , 0 , 10, '' , 'asc', false).subscribe({
-      next: (healthCareProvidersResponse : any) => {        
+      next: (healthCareProvidersResponse : any) => {
         if(healthCareProvidersResponse)
-        {      
+        {
           const items = healthCareProvidersResponse["items"];
           if(items.length > 0){
             this.healthCareProviderExists = true;
@@ -309,13 +309,14 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             this.loadPendingEsignRequestInfo();
           }else{
             this.healthCareProviderExists = false;
+            this.load();
           }
         }
         this.cdr.detectChanges();
         this.verificationFacade.hideLoader();
       },
-      error: (err) => {   
-        this.verificationFacade.hideLoader();   
+      error: (err) => {
+        this.verificationFacade.hideLoader();
         this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
