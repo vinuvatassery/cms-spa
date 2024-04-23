@@ -66,7 +66,7 @@ export class SendTextMessageComponent implements OnInit {
   documentTemplate!: any;
   messageRecipient!: any;
   templateTypeCode!: string;
-  currentSmsData:any;
+  currentSmsData:any = false;
   selectedSmsTemplate!: any;
   loginUserId!: any;
   isRecipientMissing:boolean = false;
@@ -91,6 +91,7 @@ export class SendTextMessageComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.currentSmsData = false;
     this.getLoggedInUserProfile();
     this.updateSendMessageFlag();
     this.addPhoneNumbersSubscription();
