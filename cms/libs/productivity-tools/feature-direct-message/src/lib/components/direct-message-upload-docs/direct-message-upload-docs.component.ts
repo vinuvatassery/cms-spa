@@ -105,6 +105,7 @@ export class DirectMessageUploadDocsComponent {
   handleFileRemoved(event: any) {
     this.selectedAttachedFile= undefined;
     this.showAttachmentRequiredError = true;
+     this.attachedFileValidatorSize=false;
     this.attachedFiles = null;
   }
   formsAndDocumentChange(event:any)
