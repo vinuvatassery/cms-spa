@@ -407,6 +407,6 @@ export class TodoListComponent implements OnInit {
     this.loadTodoGrid();
   }
   alertRepeatDesc(desc: string){
-    return  ConstantValue.Repeat +" "+ desc.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+    return  ConstantValue.Repeat +" "+ desc
   }
 }

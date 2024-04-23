@@ -1022,6 +1022,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   SendInsuranceVendorReports(result: any){
     if(result){
       this.financialPremiumsFacade.SendInsuranceVendorReports(this.selectedSendReportList?.SelectedSendReports);
+      this.onSendReportCloseClicked(true);
     }
   }
 }

@@ -443,7 +443,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
 
   sendInsuranceVendorReports(vendorPayments: any){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/email/insuranceVendorReport`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/premium-report/send`,
       vendorPayments
     );
   }
