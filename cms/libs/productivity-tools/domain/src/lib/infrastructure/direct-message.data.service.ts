@@ -35,15 +35,21 @@ export class DirectMessageDataService {
   loadDirectMessagesLists(param:any)  {
     return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages`,param);
   }
-  getTokenCommunicationUserIdsAndThreadIdIfExist(clientId:string){
+  getCommunicationDetails(clientId:string){
   return this.http.get(
     `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/clients/${clientId}`,);
   }
 
-  saveChatThreadDetails(payload:any){
+  sendMessage(payload:any){
     return this.http.post(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/chat-thread`, payload);
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/message/threads/${payload.threadId}`, payload);
     }
+
+  getAccessToken(communicationUserId:any){
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/access-token?communicationUserId=${communicationUserId}`,);
+  
+  }
   
 }
 

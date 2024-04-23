@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
-import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -118,7 +118,9 @@ isReminderExpand = false;
   , public cdr : ChangeDetectorRef
   ,  public intl: IntlService
   , public notificationFacade : NotificationFacade
-  , public signalrEventHandlerService : SignalrEventHandlerService
+  , public signalrEventHandlerService : SignalrEventHandlerService,
+  private loaderService: LoaderService,
+  private caseFacade: CaseFacade,
   ) {
       
   }
@@ -266,7 +268,8 @@ isReminderExpand = false;
 
   onEntityNameClick(event:any,entityId :any, entityTypeCode:any,vendorTypeCode:any) {
     if (entityTypeCode == "CLIENT") {
-      this.router.navigate([`/case-management/cases/case360/${entityId}`]);
+      //this.router.navigate([`/case-management/cases/case360/${entityId}`]);
+      this.getEligibilityInfoByEligibilityId(entityId)
     }
     else if (entityTypeCode == "VENDOR") {
       this.getVendorTabCode(vendorTypeCode)
@@ -279,6 +282,55 @@ isReminderExpand = false;
       this.router.navigate(['/financial-management/vendors/profile'], query )
     }
     event.stopPropagation()
+}
+getEligibilityInfoByEligibilityId(clientId:any){   
+  this.loaderService.show();
+        this.caseFacade.loadClientEligibility(clientId).subscribe({
+          next: (response: any) => {
+            if (response) {                
+              this.loaderService.hide();
+                 const eligibilityId = response?.clientCaseEligibilityId       
+               if(eligibilityId)
+              {     
+              this.clientNavigation(eligibilityId,response?.caseStatus,clientId)
+              }
+            }
+          },
+          error: (err: any) => {
+            this.loaderService.hide();
+            this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          }
+        })
+}
+
+
+clientNavigation(clientCaseEligibilityId:any,eligibilityStatusCode :  any,clientId : any){    
+  if(eligibilityStatusCode === 'ACCEPT')
+    {
+      this.router.navigate([`/case-management/cases/case360/${clientId}`]);
+    }
+    else
+    {
+          this.loaderService.show();
+          this.caseFacade.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId).subscribe({
+            next: (response: any) => {
+              if (response) {                
+                this.loaderService.hide();
+                this.router.navigate(['case-management/case-detail'], {
+                  queryParams: {
+                    sid: response.sessionId,
+                    eid: response.entityID,                   
+                    wtc: response?.workflowTypeCode
+                  },
+                });
+              }
+            },
+            error: (err: any) => {
+              this.loaderService.hide();
+              this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            }
+          })
+      }
 }
 
 getVendorTabCode(vendorTypeCode :any) {
