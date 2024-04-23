@@ -11,6 +11,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade } from '@cms/case-management/domain';
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-todo-and-reminders-page',
@@ -46,6 +47,10 @@ export class TodoAndRemindersPageComponent implements OnInit {
   @Output() onDeleteReminderAlertGridClicked = new EventEmitter();
   @Output() onEditReminderClickedEvent = new EventEmitter()
   @Output() onSnoozeReminderEvent = new EventEmitter<any>();
+  todoAndRemindersSubscription! : Subscription
+  todoAndRemindersLoaderSubscription! : Subscription
+  clientProfileLoaderSubscription! : Subscription
+  clientProfileDataSubscription! : Subscription
   showNoDataFor7Days= false;
   showNoDataFor30Days = false;
   showNoDataAfter30Days = false;
@@ -68,7 +73,8 @@ export class TodoAndRemindersPageComponent implements OnInit {
 }
 
 loadData(){
-  this.todoAndReminders$.subscribe(res =>{
+  this.todoAndRemindersSubscription?.unsubscribe()
+ this.todoAndRemindersSubscription = this.todoAndReminders$.subscribe(res =>{
     this.showNoDataFor7Days= false;
     this.showNoDataFor30Days = false;
     this.showNoDataAfter30Days = false;
@@ -83,15 +89,18 @@ loadData(){
     }
 
   })
-this.todoFacade.clientTodoAndRemindersLoader$.subscribe(res =>{
+  this.todoAndRemindersLoaderSubscription?.unsubscribe()
+this.todoAndRemindersLoaderSubscription = this.todoFacade.clientTodoAndRemindersLoader$.subscribe(res =>{
     this.showDataLoader = res
     this.cdr.detectChanges()
   
 })
-this.caseFacade.clientProfileDataLoader$.subscribe(res =>{
+this.clientProfileLoaderSubscription?.unsubscribe()
+this.clientProfileLoaderSubscription =this.caseFacade.clientProfileDataLoader$.subscribe(res =>{
   this.showLoader = res;
   this.cdr.detectChanges()
 })
+this.clientProfileDataSubscription?.unsubscribe()
 this.caseFacade.clientProfileData$.subscribe(cp =>{
    this.clientName = cp?.firstName
 })

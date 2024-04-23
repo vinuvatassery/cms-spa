@@ -118,6 +118,7 @@ export class DirectMessageFacade {
       this.communicationDetailLoaderSubject.next(false)
     },
     error: (err) => {
+      this.communicationDetailSubject.next(undefined);
       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
     }
   })

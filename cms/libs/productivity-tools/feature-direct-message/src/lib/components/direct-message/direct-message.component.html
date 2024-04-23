@@ -2,7 +2,10 @@
   <!-- Side Panel Header -->
   <div class="sidePanel_header">
     <div class="sidePanel_header-left">
+      <kendo-skeleton *ngIf="showLoader" shape="text" animation="pulse" width="30%"></kendo-skeleton>
+       <ng-container *ngIf="!showLoader">
       <h3>Direct Message {{clientName}}</h3>
+    </ng-container>
     </div>
     <div class="sidePanel_header-right">
       <button kendoButton class="k-icon-button small-i-btn" title="Close" (click)="onCloseDirectMessageClicked()"
@@ -79,8 +82,9 @@
 
     <div class="chat-bottom-container">
       <div class="chat-input">
-        <input type="text" placeholder="Direct Message Donna…" class="message-normal-text-box" *ngIf="!messageToolBarShow" [(ngModel)]="sendMsg.message"  (keydown.control.enter)="sendMessage()" />
-        <kendo-editor [value]="value" class="message-editor" [iframe]="false" placeholder="Direct Message Donna…" *ngIf="messageToolBarShow">
+        <input type="text" [placeholder]="placeHolderText" class="message-normal-text-box" *ngIf="!messageToolBarShow" [(ngModel)]="sendMsg.message"  (keydown.control.enter)="sendMessage()" />
+        <kendo-editor [value]="value" class="message-editor" [iframe]="false"
+         [placeholder]="placeHolderText" *ngIf="messageToolBarShow">
           <kendo-toolbar [overflow]="true" >
             <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
             <kendo-toolbar-button kendoEditorItalicButton></kendo-toolbar-button>
