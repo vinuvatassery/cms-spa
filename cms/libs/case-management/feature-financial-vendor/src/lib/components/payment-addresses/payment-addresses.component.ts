@@ -6,7 +6,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
 import { Subscription, take } from 'rxjs';
-import { LovFacade } from '@cms/system-config/domain';
+import { FabBadgeFacade, FabEntityTypeCode, LovFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
@@ -155,7 +155,8 @@ filter: any = [];
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
     public readonly  intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider,)
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly fabBadgeFacade: FabBadgeFacade)
     { }
 
   ngOnInit(): void {
@@ -489,6 +490,7 @@ filter: any = [];
     if(event){
       this.vendorcontactFacade.loadMailCodes(this.vendorId);
       this.checkMailCode();
+      this.fabBadgeFacade.reloadFabMenu(this.vendorId, FabEntityTypeCode.Vendor);
     }
   }
 }
