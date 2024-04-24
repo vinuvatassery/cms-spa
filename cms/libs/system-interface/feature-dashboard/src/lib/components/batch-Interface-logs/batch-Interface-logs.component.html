@@ -3,7 +3,7 @@
   <div class="flex-row">
     <div class="flex-col flex-space-bw align-items-center">
     
-          <div class="fmly-epdorpdown" style="min-width: 150px;">
+         
             <kendo-floatinglabel text="Interface">
             <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="this.lovsList$ | async"
@@ -15,20 +15,30 @@
               >
             </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <div class="table-sorted-info">
-              Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
-              <span class="sort-items" *ngIf="!filteredBy">No Filters</span>
-              <span class="sort-items" *ngIf="filteredBy">Filtered by {{filteredBy}}</span>
-              <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
-              <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
-              <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetGrid()">
-                <a>Set to Default</a>
-              </button>
-            </div>
-          </div>
+    
+           
         
-        <div>
-          <span class="app-checkboxwidtext-wrapper">
+        
+    </div>
+
+  </div>
+  <div class="flex-row mb-05">
+  <div class="flex-col flex-col-8 mt-1">
+    
+
+        <div class="table-sorted-info pb-0">
+          Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
+          <span class="sort-items" *ngIf="!filteredBy">No Filters</span>
+          <span class="sort-items" *ngIf="filteredBy">Filtered by {{filteredBy}}</span>
+          <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+          <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+          <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetGrid()">
+            <a>Set to Default</a>
+          </button>
+        </div>
+      </div>
+        <div class="flex-col flex-col-4 justify-content-end mt-1">
+          <span class="">
             <input
               type="checkbox"
               kendoCheckBox
@@ -42,17 +52,8 @@
             >
           </span>
         </div>
-    </div>
-  </div>
-    <!-- <div class="align-items-center mat-form-no-b-space bg-white mar-0 flex-row">
-      
-       
-      </div> -->
-      
-      <section class="table-filter-section mat-form-no-b-space bg-white">
-        </section>
 
-    
+      </div>
     <div class="app-c-table">
       <kendo-grid #grid  [loading]="(batchLogsDataLoader$  | async) === true" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
       [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort" [filter]="state.filter"
@@ -153,7 +154,7 @@
           <ng-template kendoGridCellTemplate let-dataItem>
           
 
-            <button kendoButton   [disabled]="dataItem.uploadStatus==='N'" [attr.aria-label]="dataItem.uploadStatus" title="Download" [attr.aria-label]="dataItem.status" [primary]="true" look="flat"  (click)="downloadFile(dataItem.fileId,dataItem.processTypeDesc)"> <span class="material-icons">
+            <button kendoButton   [disabled]="dataItem.uploadStatus==='N'" [attr.aria-label]="dataItem.uploadStatus" title="Download" [attr.aria-label]="dataItem.status" [primary]="true" look="flat"  (click)="downloadFile(dataItem.fileId,dataItem.processTypeDesc)"> <span aria-hidden="true" class="material-icons">
               file_download
               </span>
             </button>

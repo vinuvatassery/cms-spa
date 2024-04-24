@@ -1,11 +1,11 @@
 
 <div class="dash-header-with-filters">
-  <h5>Cards Request</h5>
-  </div>  
-  <div class="dashboard-cards-container">
-    <div class="interface-chart-cards">
-      <h3 class="mb-1"></h3>
-      <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
+  <h2 class="heading_card">Cards Request</h2>
+  </div> 
+  <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel> 
+  <div class="dashboard-cards-container" *ngIf="!isloader">
+  
+    
   
       <kendo-chart class="dash_chart"  *ngIf="cardsRequestChart"  [series]="cardsRequestChart?.chartData?.series"
       [legend]="cardsRequestChart?.chartData?.legend" [title]="cardsRequestChart?.chartData?.title"
@@ -17,5 +17,5 @@
       <div class="text-center pt-3" *ngIf="!cardsRequestChart&&!isloader">
         <common-grid-no-records></common-grid-no-records>
       </div>
-    </div>
+    
   </div> 

@@ -38,10 +38,12 @@ export class DirectMessageComponent implements OnInit {
   thread: any
   threadId:any
   messages :any[] =[]
+  skeletonCounts = [1,2,3]
   sendMsg: any = { id: '', message: '', sender: '', isOwner: false };
   keys:any[]=[]
   groupedMessages :any
-  eid!:any
+  eid!:any;
+  directMessageLoader = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   clientName=""
   threadCreationTime:any
@@ -53,9 +55,6 @@ export class DirectMessageComponent implements OnInit {
    showDataLoader = false;
    chatThreadClient:any
    placeHolderText ="Direct Message"
-   skeletonCounts = [
-    1, 2 ,3,4,5,6
-  ]
   forFirstTime =0
   showLoader = false;
   showChatLoader = true;

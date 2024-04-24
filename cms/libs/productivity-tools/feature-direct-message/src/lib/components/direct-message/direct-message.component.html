@@ -68,6 +68,30 @@
       </ng-container>
       </ng-container>
     </ng-container>
+    <div *ngIf="directMessageLoader">
+
+      <div *ngFor="let skeletonCount of skeletonCounts" class="msg_loader">
+        <div class="left-msgloader">
+
+      
+        <kendo-skeleton  shape="rectangle"   animation="pulse"   class="msg_bgloader" ></kendo-skeleton>
+      <div class="msg_loader_second">
+        <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+        <kendo-skeleton shape="text" animation="pulse"  width="50%" ></kendo-skeleton>
+      </div>
+     
+    </div>
+    <div class="right-msgloader">
+
+      
+      <kendo-skeleton  shape="rectangle"   animation="pulse"   class="msg_bgloader" ></kendo-skeleton>
+    <div class="msg_loader_second">
+      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+      <kendo-skeleton shape="text" animation="pulse"  width="50%" ></kendo-skeleton>
+    </div>
+  </div>
+      </div>
+    </div>
     </div>
   
 
@@ -99,7 +123,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <ng-template #UploadDocumentInDirectMessage>
  
