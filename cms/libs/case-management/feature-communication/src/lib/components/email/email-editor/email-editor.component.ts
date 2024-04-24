@@ -136,12 +136,7 @@ export class EmailEditorComponent implements OnInit {
   }
 
   ngOnChanges(){
-    if(this.selectedTemplate){
-      this.selectedAttachedFile = [];
-      if(this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
-        this.loadUserDraftTemplateAttachment();
-        this.loadLetterAttachment(this.selectedTemplate.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
-      }else if(this.selectedTemplate?.notificationDraftId && this.selectedTemplate?.notificationRequestAttachments?.length > 0){
+      if(this.selectedTemplate?.notificationDraftId && this.selectedTemplate?.notificationRequestAttachments?.length > 0){
             for (let file of this.selectedTemplate?.notificationRequestAttachments){
               this.selectedAttachedFile.push({
                 document: file,
@@ -167,7 +162,7 @@ export class EmailEditorComponent implements OnInit {
           }
           this.loadClientVendorDefaultAttachment(templateId);
         }
-      }
+      //}
     }
 
     if (this.notificationGroup === ScreenType.VendorProfile) {
@@ -497,7 +492,7 @@ clientAttachmentClick(item:any)
 
   private loadUserDraftTemplateAttachment() {
     this.loaderService.show();
-    this.communicationFacade.loadCERAuthorizationDraftAttachment(this.selectedTemplate.documentTemplateId)
+    this.communicationFacade.loadCERAuthorizationDraftAttachment(this.selectedTemplate.documentTemplateId ?? this.selectedTemplate?.notificationTemplateId)
       .subscribe({
         next: (attachments: any) => {
           if (attachments) {

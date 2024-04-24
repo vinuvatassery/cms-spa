@@ -61,6 +61,7 @@ export class MessageEditorComponent implements OnInit, OnChanges {
 
     /** Public Methods **/
   ngOnInit(): void {
+
     this.loadClientVariables();
     this.setInitialValueMessage();
   }
@@ -69,7 +70,9 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     if (this.messageList !== undefined && this.messageList.length > 0) {
       if (this.templateContent !== null && this.templateContent !== undefined) {
         this.messageList.forEach((item: any) => {
+          if(item.messageText === ''){
           item.messageText = this.templateContent;
+          }
         });
 
       }

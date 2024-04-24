@@ -78,6 +78,11 @@ export class HivVerificationComponent implements OnInit, OnChanges {
         },
       });
     }
+    if(!this.healthCareProviderExists){
+      this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=true;
+    }else{
+      this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=false;
+    }
   }
   providerChange(event:any){
     if(this.hivVerificationForm.controls["providerOption"].value=="UPLOAD_ATTACHMENT")
