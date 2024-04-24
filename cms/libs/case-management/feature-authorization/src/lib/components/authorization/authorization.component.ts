@@ -7,7 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 /** External Libraries **/
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserDataService } from '@cms/system-config/domain';
-import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, NavigationType, ScreenType, WorkflowFacade, ContactFacade, CommunicationFacade, EsignFacade, EsignStatusCode, CommunicationEventTypeCode } from '@cms/case-management/domain';
+import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, NavigationType, ScreenType, WorkflowFacade, ContactFacade, CommunicationFacade, EsignFacade, EsignStatusCode, CommunicationEventTypeCode, EntityTypeCode } from '@cms/case-management/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService, formatDate } from '@progress/kendo-angular-intl';
 import { SelectEvent } from '@progress/kendo-angular-upload';
@@ -91,6 +91,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   saveForLaterHeadterText:any;
   saveForLaterModelText:any;
   confirmationModelText:any;
+  entityType: string = EntityTypeCode.Client;
 
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
@@ -119,7 +120,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.buildForm();
     this.addApplicationSignatureDetailsSubscription();
     this.addSaveSubscription();
-    this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
     this.loadAuthorization();
   }
@@ -556,6 +556,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.authorizationFacade.saveDateSignedAndSignedFile(authorization).subscribe({
       next: (response) => {
         if(response){
+          this.updateDataPoints('applicantSignedDate', false);
+          this.updateDataPoints('signatureNotedDate', false);
+          this.updateDataPoints('copyOfSignedApplication', false);
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Authorization Saved Successfully!");
         }
@@ -613,7 +616,8 @@ loadCompletedEsignRequestInfo(){
     .subscribe({
       next: (data: any) =>{
         if (data?.clientDocumentId != null) {
-          this.signedClietDocumentId = data?.clientDocumentId;
+          this.clientCaseEligibilityId = data?.clientCaseEligibilityId;
+          this.loadAuthorization();
           this.isCERApplicationSigned = true;
           this.ref.detectChanges();
           }

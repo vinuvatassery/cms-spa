@@ -209,15 +209,14 @@ export class NotificationPanelComponent implements OnInit {
   }
 
   onNewReminderClosed(result: any) {
+    this.reminderFor ='';
+    this.isDelete = false;
+    this.isEdit = false;
+    this.crudText ="Create New"
     if (result) {
-      this.reminderFor ='';
-      this.isDelete = false;
-      this.isEdit = false;
-      this.crudText ="Create New"
       this.isLoadReminderAndNotificationEvent.emit(true)
     }
     this.isReminderOpenClicked = false
-
     this.newReminderDetailsDialog.close();
 
   }

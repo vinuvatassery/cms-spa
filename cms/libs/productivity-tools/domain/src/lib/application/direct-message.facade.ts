@@ -31,11 +31,18 @@ export class DirectMessageFacade {
   /** Private properties **/
   private directMessagesSubject = new Subject<DirectMessage[]>();
   private directMessagesListSubject = new Subject<any>();
-  private tokenCommunicationUserIdThreadIdSubject = new Subject<any>();
+  private communicationDetailSubject = new Subject<any>();
+  private communicationDetailLoaderSubject = new Subject<boolean>();
+  private sendMessageSubject = new Subject<any>();
+  private uploadDocumentSubject = new Subject<any>();
+  private comminicationTokenSubject = new Subject<any>();
   /** Public properties **/
   directMessages$ = this.directMessagesSubject.asObservable();
   directMessagesLists$ = this.directMessagesListSubject.asObservable();
-  tokenCommunicationUserIdThreadId$ = this.tokenCommunicationUserIdThreadIdSubject.asObservable();
+  communicationDetail$ = this.communicationDetailSubject.asObservable();
+  communicationDetailLoader$ = this.communicationDetailLoaderSubject.asObservable();
+  sendMessage$ = this.sendMessageSubject.asObservable();
+  comminicationToken$ = this.comminicationTokenSubject.asObservable();
    // handling the snackbar & loader
    snackbarMessage!: SnackBar;
    snackbarSubject = new Subject<SnackBar>(); 
@@ -66,12 +73,12 @@ export class DirectMessageFacade {
     private readonly loaderService: LoaderService
   ) {}
 
-  getChatClient(userAccessToken :any){
+  getChatClient(userAccessToken :any): ChatClient{
    var endpoint = parseConnectionString(this.configurationProvider.appSettings.azureCommunication.connectionString).endpoint;
     return new ChatClient(endpoint, new AzureCommunicationTokenCredential(userAccessToken))
   }
 
-  getChatThreadClient(threadId:any, chatClient:any){
+  getChatThreadClient(threadId:any, chatClient:ChatClient): ChatThreadClient{
     return chatClient.getChatThreadClient(threadId);
   }
   /** Public methods **/
@@ -103,25 +110,54 @@ export class DirectMessageFacade {
     });
   }
 
-  getTokenCommunicationUserIdsAndThreadIdIfExist(clientId:string){
-
-
-  this.directMessageDataService.getTokenCommunicationUserIdsAndThreadIdIfExist(clientId).subscribe({
+  getCommunicationDetails(clientId:string){
+  this.directMessageDataService.getCommunicationDetails(clientId).subscribe({
     next: (Response) => {
-      this.tokenCommunicationUserIdThreadIdSubject.next(Response);
+      this.communicationDetailLoaderSubject.next(true)
+      this.communicationDetailSubject.next(Response);
+      this.communicationDetailLoaderSubject.next(false)
     },
     error: (err) => {
-      console.error('err', err);
-    },
+      this.communicationDetailSubject.next(undefined);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+    }
   })
   }
-
-  saveChatThreadDetails(payload:any){
-    this.directMessageDataService.saveChatThreadDetails(payload).subscribe({
+  
+  sendMessage(payload:any){
+    this.directMessageDataService.sendMessage(payload).subscribe({
       next: (Response) => {
+        this.sendMessageSubject.next(Response);
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    })
+  }
+  
+  getAccessToken(communicationUserId:any){
+    this.directMessageDataService.getAccessToken(communicationUserId).subscribe({
+      next: (Response) => {
+        this.comminicationTokenSubject.next(Response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    })
+  }
+  uploadAttachments(uploadRequest:any){
+    this.showLoader()
+    this.directMessageDataService.uploadAttachments(uploadRequest).subscribe({
+      next: (Response) => {
+        this.uploadDocumentSubject.next(Response);
+        if (Response) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Document upload successfully.');
+          this.loaderService.hide();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+        this.loaderService.hide();
       },
     })
   }

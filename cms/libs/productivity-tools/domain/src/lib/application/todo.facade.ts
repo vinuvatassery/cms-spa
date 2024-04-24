@@ -21,6 +21,8 @@ export class TodoFacade {
   private todoSubject = new Subject<Todo[]>();
   private searchSubject = new Subject<any>();
   private todoGridSubject = new Subject<any>();
+  private deleteReminderSnackbarSubject = new Subject<any>();
+  deleteReminderSnackbar$ = this.deleteReminderSnackbarSubject.asObservable();
   private curdAlertSubject = new Subject<any>();
   private todoGetSubject = new Subject<any>();
   private loadAlertGridSubject = new Subject<any>();
@@ -160,6 +162,7 @@ export class TodoFacade {
         this.loadTodoListSubject.next(true); 
         this.loadAlertGridSubject.next(true); 
         this.todoGridSubject.next(true); 
+        this.deleteReminderSnackbarSubject.next(payload?.alertId)
       },
       error: (err) => {
         this.loaderService.hide()
@@ -203,6 +206,7 @@ export class TodoFacade {
             this.loadAlertGridSubject.next(true);
             this.bannerAlertListSubject.next(true);
             this.todoGridSubject.next(true);
+            this.deleteReminderSnackbarSubject.next(alertId)
           }
           
         },

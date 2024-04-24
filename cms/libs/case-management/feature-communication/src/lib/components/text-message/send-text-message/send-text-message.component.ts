@@ -26,6 +26,7 @@ export class SendTextMessageComponent implements OnInit {
 
  
   @ViewChild(MessageEditorComponent) messageEditor !: MessageEditorComponent;
+
   /** Input properties **/
   @Input() notificationGroup!: any;
   @Input() entityId!: any;
@@ -47,7 +48,7 @@ export class SendTextMessageComponent implements OnInit {
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
-  //@Output() smsEditorValueEvent = new EventEmitter<any>();
+
   /** Public properties **/
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any;
@@ -65,17 +66,19 @@ export class SendTextMessageComponent implements OnInit {
   documentTemplate!: any;
   messageRecipient!: any;
   templateTypeCode!: string;
-  currentSmsData:any;
+  currentSmsData:any = false;
   selectedSmsTemplate!: any;
   loginUserId!: any;
   isRecipientMissing:boolean = false;
   isFormValid:boolean = true;
+  isSubmitted:boolean = false;
   messageList:
   {
     messageId: number,
     messageText: string,
     wordCount: number,
-    showVariables: boolean
+    showVariables: boolean,
+    isValid:boolean
   }[] = [];
 
   /** Constructor **/
@@ -88,6 +91,7 @@ export class SendTextMessageComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.currentSmsData = false;
     this.getLoggedInUserProfile();
     this.updateSendMessageFlag();
     this.addPhoneNumbersSubscription();
@@ -144,7 +148,7 @@ export class SendTextMessageComponent implements OnInit {
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
         },
       });
-      this.handleSmsEditor(true);
+      this.handleSmsEditor(false);
   }
 
   /** Private methods **/
@@ -230,14 +234,40 @@ export class SendTextMessageComponent implements OnInit {
 
   /** Internal event methods **/
   onSaveForLaterClicked() {
+    this.isSubmitted = true;
     if (this.messageRecipient === undefined || this.messageRecipient === '' || this.messageRecipient?.length === 0) {
       this.isRecipientMissing = true;
       this.isFormValid = false;
     }
+    else{
+      this.isRecipientMissing = false;
+      this.isFormValid = true;
+    }
+
+    this.validateMessages();
+    
     if (this.isFormValid) {
       this.isOpenSendMessageClicked = false;
       this.isShowSaveForLaterPopupClicked = true;
     }
+  }
+
+  validateMessages(){
+    this.messageEditor.messageList.forEach((item:any)=>{
+      if(item.messageText === undefined || item.messageText === ''){
+        item.isValid = false;
+      }
+      else{
+        item.isValid = true;
+      }
+    });
+
+    if(this.isFormValid)
+    this.messageEditor.messageList.filter((x:any)=>{
+      if(!x.isValid){
+        this.isFormValid = false;
+      }
+     });
   }
 
   onEditMessagesClicked() {
@@ -246,10 +276,18 @@ export class SendTextMessageComponent implements OnInit {
   }
 
   onSendMessageConfirmClicked() {
+    this.isSubmitted = true;
     if(this.messageRecipient === undefined || this.messageRecipient === '' || this.messageRecipient?.length === 0){
       this.isRecipientMissing = true;
       this.isFormValid = false;
     }
+    else{
+      this.isRecipientMissing = false;
+      this.isFormValid = true;
+    }
+
+    this.validateMessages();
+
     if(this.isFormValid){
     this.isOpenSendMessageClicked = false;
     this.isShowSendMessageConfirmPopupClicked = true;
@@ -363,7 +401,7 @@ export class SendTextMessageComponent implements OnInit {
               this.selectedSmsTemplate = template;
               this.handleSmsEditor(template);
               this.isOpenMessageTemplate=true;
-              //this.smsEditorValueEvent.emit(template);
+
               this.ref.detectChanges();
             }
             this.loaderService.hide();
@@ -394,7 +432,6 @@ export class SendTextMessageComponent implements OnInit {
                 this.selectedSmsTemplate = template;
                 this.handleSmsEditor(template);
                 this.isOpenMessageTemplate=true;
-                //this.smsEditorValueEvent.emit(template);
                 this.ref.detectChanges();
               }
               this.loaderService.hide();
@@ -406,7 +443,7 @@ export class SendTextMessageComponent implements OnInit {
           });
       }else{
       this.templateContent = event.templateContent;
-      this.smsMessages = event.messages?.map((item: any)=> item);
+      this.smsMessages = event.messages?.slice(0).reverse((item: any)=> item);
       this.messageRecipient = event.recepients;
 
       this.messageRecipient = {
@@ -459,7 +496,30 @@ export class SendTextMessageComponent implements OnInit {
     if(this.messageRecipient){
       this.isRecipientMissing = false;
       this.isFormValid = true;
+      this.ngDirtyInValid();
     }
     this.ref.detectChanges();
   }
+
+  ngDirtyInValid() {
+    if (!this.isFormValid) {
+      if (this.messageRecipient === undefined || this.messageRecipient === '') {
+        document.getElementById('toPhoneNumbers')?.classList.remove('ng-valid');
+        document.getElementById('toPhoneNumbers')?.classList.add('ng-invalid');
+        document.getElementById('toPhoneNumbers')?.classList.add('ng-dirty');
+      }
+      else {
+        document.getElementById('toPhoneNumbers')?.classList.remove('ng-invalid');
+        document.getElementById('toPhoneNumbers')?.classList.remove('ng-dirty');
+        document.getElementById('toPhoneNumbers')?.classList.add('ng-valid');
+      }
+    }
+    else{
+      document.getElementById('toPhoneNumbers')?.classList.remove('ng-invalid');
+      document.getElementById('toPhoneNumbers')?.classList.remove('ng-dirty');
+      document.getElementById('toPhoneNumbers')?.classList.add('ng-valid');
+    }
+    return 'ng-dirty ng-invalid';
+  }
+
 }

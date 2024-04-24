@@ -46,4 +46,10 @@ export class NavigationMenuService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/count`
     );
   }
+  
+  getDirectMessageCount() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/count/0`
+    );
+  }
 }

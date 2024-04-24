@@ -182,7 +182,7 @@ export class DependentDataService {
 
   uploadDependentProofOfSchoolClientsAttachment(clientAttachmentDetail: any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/dependents/UploadProofOfSchoolClientAttachment`,
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/dependents/proof-of-school/upload`,
       clientAttachmentDetail
     );
   }

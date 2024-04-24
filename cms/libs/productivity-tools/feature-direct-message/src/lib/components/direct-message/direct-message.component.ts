@@ -8,9 +8,13 @@ import {
   ChangeDetectorRef,
   TemplateRef,
   ViewChild,
+  ElementRef,
+  Renderer2,
+  DoCheck
 } from '@angular/core';
+import { take,Subscription } from 'rxjs';
 import { DirectMessageFacade } from '@cms/productivity-tools/domain';
-import { ChatClient, ChatThreadClient, ChatThreadItem, ChatThreadProperties, SendMessageOptions, SendMessageRequest } from '@azure/communication-chat';
+import { ChatClient, ChatThreadClient,ChatMessageContent, ChatThreadItem, ChatThreadProperties, SendMessageOptions, SendMessageRequest } from '@azure/communication-chat';
 import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -24,81 +28,133 @@ import { DatePipe } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe]
 })
+
 export class DirectMessageComponent implements OnInit {
   @ViewChild('UploadDocumentInDirectMessage', { read: TemplateRef })
   UploadDocumentInDirectMessage!: TemplateRef<any>;
   chatClient: ChatClient | any = null;
-  tokenCommunicationUserThreadDetails: any;
-  clientId = "AED5E0EE-AD19-4DC6-A797-A21A6934A6C3"
+  communicationDetails: any;
+  clientId :any
   thread: any
   threadId:any
   messages :any[] =[]
   sendMsg: any = { id: '', message: '', sender: '', isOwner: false };
-  chatThreadClient: any
+  keys:any[]=[]
   groupedMessages :any
   eid!:any
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   clientName=""
+  threadCreationTime:any
+  @ViewChild('scrollMe') private myScrollContainer?: ElementRef;
+  tokenSubscription! :Subscription
+   /** Output properties  **/
+   @Output() closeAction = new EventEmitter();
+   public value = ``;
+   showDataLoader = false;
+   chatThreadClient:any
+   placeHolderText ="Direct Message"
+   skeletonCounts = [
+    1, 2 ,3,4,5,6
+  ]
+  forFirstTime =0
+  showLoader = false;
+  showChatLoader = true;
+   /** Public properties **/
+   isShownDirectMessage = false;
+   messageToolBarShow = false;
+   dataLoaderSubscription$! : Subscription
+   directMessageSubscription$! : Subscription
+  clientProfileSubscription$! : Subscription
+  clientProfileLoaderSubscription!:Subscription
+   private notificationReminderDialog: any;
+
+   /** Public properties **/
+ 
+   uploadDocumentTypeDetails:any;
+   ListModel = [
+    {
+      text: "Attach From Forms & Documents",
+      id:'from_System'
+    },
+    {
+      text: "Attach From Computer",
+      id:'from_Computer'
+    },
+    {
+      text: "Attach From Client's Attachment",
+      id:'from_Client'
+    }];
+
+   ListItemModel = [
+     {
+       text: "Attach from System",
+     },
+     {
+       text: "Attach from Computer",
+     },
+     {
+       text: "Attach from Client’s Attachments",
+     },
+ 
+   ];
   constructor(private directMessageFacade: DirectMessageFacade
     , private changeDetection : ChangeDetectorRef
     ,  public intl: IntlService
     ,  private configurationProvider: ConfigurationProvider
     , private route : ActivatedRoute
     , private caseFacade : CaseFacade
-    , private datePipe : DatePipe,
-    private dialogService: DialogService) {
+    , private datePipe : DatePipe
+    ,private dialogService: DialogService
+    , private renderer: Renderer2) {
   }
+
   ngOnInit(): void {
 
     this.route.queryParamMap.subscribe((params :any) =>{
       this.clientId = params.get('id')
       this.eid = params.get('e_id')
+      this.showChatLoader = true;
       if(this.clientId){
-        this.caseFacade.clientProfileData$.subscribe(cp =>{
+        this.clientProfileSubscription$?.unsubscribe()
+        this.clientProfileSubscription$ =   this.caseFacade.clientProfileData$.pipe(take(1)).subscribe((cp :any) =>{
           this.clientName = cp?.firstName
+          this.placeHolderText = "Direct Message" +" "+this.clientName+"..."
        })
        this.caseFacade.loadClientProfileWithOutLoader(this.eid);
-       this.directMessageFacade.tokenCommunicationUserIdThreadId$.subscribe(res => {
-        console.log(res)
-        this.tokenCommunicationUserThreadDetails = res.clientResponse;
-        this.threadId = res.threadId
-        this.createChat()
-        if(this.threadId){
-        this.chatThreadClient = this.directMessageFacade.getChatThreadClient(this.threadId, this.chatClient)
-  
-          this.getListMessages()
-        }
+       this.clientProfileLoaderSubscription?.unsubscribe()
+       this.clientProfileLoaderSubscription =this.caseFacade.clientProfileDataLoader$.subscribe(res =>{
+        this.showLoader = res;
+        this.changeDetection.detectChanges()
       })
-    this.directMessageFacade.getTokenCommunicationUserIdsAndThreadIdIfExist(this.clientId)
+       this.dataLoaderSubscription$?.unsubscribe()
+       this.dataLoaderSubscription$ = this.directMessageFacade.communicationDetailLoader$.subscribe((res:boolean) =>{
+        this.showDataLoader = res;
+       })
+       this.directMessageSubscription$?.unsubscribe()
+     this.directMessageSubscription$ =  this.directMessageFacade.communicationDetail$.pipe(take(1)).subscribe((res:any) => {
+      if(!res){
+        this.messages = []
+        this.showChatLoader = false;
+        this.groupedMessages = undefined
+        this.changeDetection.detectChanges()  
+        return;
+      } 
+      this.communicationDetails = res.communicationDetails;
+        this.threadId = res.threadId
+        this.threadCreationTime = res.creationTime
+        this.chatClient = this.directMessageFacade.getChatClient(this.communicationDetails?.token)
+        this.setupHandlers()
+        this.showChatLoader = false
+        this.changeDetection.detectChanges()     
+      })
+          this.directMessageFacade.getCommunicationDetails(this.clientId)
 
       }
      })
 
-
   }
-  /** Output properties  **/
-  @Output() closeAction = new EventEmitter();
-  private notificationReminderDialog: any;
-  public value = ``;
-  /** Public properties **/
-  isShownDirectMessage = false;
-  uploadDocumentTypeDetails:any;
-  messageToolBarShow = false;
-  ListItemModel = [
-    {
-      text: "Attach from System",
-      id:'from_System'
-    },
-    {
-      text: "Attach from Computer",
-      id:'from_Computer'
-    },
-    {
-      text: "Attach from Client’s Attachments",
-      id:'from_Client'
-    },
+ 
 
-  ];
   /** Internal event methods **/
  
   onCloseDirectMessageClicked() {
@@ -109,8 +165,11 @@ export class DirectMessageComponent implements OnInit {
   async setupHandlers() {
     this.getListMessages();
     await this.chatClient.startRealtimeNotifications();
+    this.forFirstTime =0;
     this.chatClient.on("chatMessageReceived", ((state: any) => {
       this.addMessage(state);
+        this.sendMessageonBehalfOfClient(state)
+      
     }).bind(this));
 
     this.chatClient.on("chatMessageEdited", ((state: any) => {
@@ -121,8 +180,7 @@ export class DirectMessageComponent implements OnInit {
     }).bind(this));
     this.chatClient.on("typingIndicatorReceived", ((state: any) => {
       console.log('TypingIndicatorReceived: ' + state.senderDisplayName)
-      console.log('CommunicationUser: ' + this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,)
-      // this.getListMessages();
+      console.log('CommunicationUser: ' + this.communicationDetails.loginUserCommunicationUserId,)
     }).bind(this));
     this.chatClient.on("readReceiptReceived", ((state: any) => {
       this.getListMessages();
@@ -155,9 +213,9 @@ export class DirectMessageComponent implements OnInit {
           id: data.id,
           sender: data.senderDisplayName,
           message: parsed.message,
-          isOwner: data.sender.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
+          isOwner: data.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
           createdOn: data.createdOn,
-          image: parsed.attachments[0].url.split('/').pop()
+          image: (parsed && parsed?.attachments)? parsed?.attachments[0].url.split('/').pop() : null
         };
       }
       else {
@@ -165,84 +223,59 @@ export class DirectMessageComponent implements OnInit {
           id: data.id,
           sender: data.senderDisplayName,
           message: data.message,
-          isOwner: data.sender.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
+          isOwner: data.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
           createdOn: data.createdOn,
       };
     }
 
       this.messages.push(msg);
+      this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
+      this.scrollToBottom()
+      this.changeDetection.detectChanges()
     }
-  }
-
-  async createChat() {
-    let users = [{
-      userId: this.tokenCommunicationUserThreadDetails.clientUsercommunicationUserId,
-      userName: this.tokenCommunicationUserThreadDetails.clientUserName
-    }, {
-      userId: this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
-      userName: this.tokenCommunicationUserThreadDetails.loginUserName
-    }];
-    this.chatClient = this.directMessageFacade.getChatClient(this.tokenCommunicationUserThreadDetails.token);
-   if(!this.threadId){
-    this.thread = await this.createChatThread(users, `${this.tokenCommunicationUserThreadDetails.clientUsercommunicationUserId + '-' + this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId}`);
-    this.threadId =this.thread.id
-    const payload = {
-      threadId: this.thread.id,
-      clientId: this.clientId,
-      cwCommunicationUserID: this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
-      clientCommunicationUserId: this.tokenCommunicationUserThreadDetails.clientUsercommunicationUserId,
-    }
-    this.directMessageFacade.saveChatThreadDetails(payload)
-  }
-
-  }
-
-  async createChatThread(users: any[], topicName: string): Promise<ChatThreadProperties> {
-    let createChatThreadRequest = {
-      topic: topicName
-    };
-    let createChatThreadOptions = {
-      participants: users.map((x) => {
-        return {
-          id: { communicationUserId: x.userId },
-          displayName: x.userName
-        }
-      }),
-
-    };
-    let createChatThreadResult = await this.chatClient.createChatThread(
-      createChatThreadRequest,
-      createChatThreadOptions
-    );
-    let threadId = createChatThreadResult.chatThread.id;
-    console.log(`Thread created:${threadId}`);
-
-    return createChatThreadResult.chatThread;
   }
 
   async sendMessage() {
+    let fileURL = "hi its a text";
+    if (this.sendMsg.file) { 
+      const attachmentMessageContent: ChatMessageContent = {
+        message: this.sendMsg.message,
+        attachments: [
+          {
+            attachmentType: 'image',
+            url: fileURL,
+            id: fileURL
+          },
+        ],
+      };
+
+       this.directMessageFacade.sendMessage(
+        {
+        content: JSON.stringify(attachmentMessageContent),
+        senderDisplayName: this.communicationDetails.loginUserName,
+        type: 'text',
+        threadId: this.threadId,
+        userToken : this.communicationDetails.token
+      }
+    );
+    }
     if (!this.sendMsg.message) {
       return;
-    }
-    let sendMessageRequest: SendMessageRequest =
-    {
-      content: this.sendMsg.message
+    }else{
+    const messageContent: ChatMessageContent = {
+      message: this.sendMsg.message
     };
-    let sendMessageOptions: SendMessageOptions =
-    {
-      senderDisplayName: this.tokenCommunicationUserThreadDetails.loginUserName,
-      type: 'html',
-    };
-    console.log(this.threadId)
-    console.log(this.chatClient)
-    this.chatThreadClient = this.directMessageFacade.getChatThreadClient(this.threadId, this.chatClient)
-    const sendChatMessageResult = this.chatThreadClient?.sendMessage(sendMessageRequest, { senderDisplayName: this.tokenCommunicationUserThreadDetails.loginUserName, type: 'text' });
-    if (!sendChatMessageResult) {
-      return;
-    }
-    const messageId = sendChatMessageResult.id;
-    this.sendMsg = { id: '', message: '', sender: '', isOwner: false };
-  }
+    this.directMessageFacade.sendMessage({
+                    content: JSON.stringify(messageContent),
+                    senderDisplayName: this.communicationDetails.loginUserName,
+                    type: 'text',
+                    userToken : this.communicationDetails.token,
+                    threadId: this.threadId,
+                  })
+    }            
+    this.sendMsg.message =""
+}
+
 
   checkJson(jsonString:string) {
     try {
@@ -253,24 +286,23 @@ export class DirectMessageComponent implements OnInit {
     }
   }
 
-  async getListMessages() {
-    this.messages = [];
+   async getListMessages() {
+      this.messages = [];
 
-    let currentDate = new Date();
+      let currentDate = new Date();
 
-    // Subtract one hour from the current time
+   //Subtract one hour from the current time
     let oneHourBefore = new Date(currentDate.getTime() - (4 * 60 * 60 * 1000));
+    this.chatThreadClient = this.chatClient.getChatThreadClient(this.threadId);
+   const messages = <any>this.chatThreadClient?.listMessages({startTime: this.threadCreationTime});
 
-    console.log(this.chatThreadClient)
-    const messages = <any>this.chatThreadClient?.listMessages({startTime: oneHourBefore});
-
-    console.log(messages)
+     console.log(messages)
     if (!messages) {
       return;
     }
 
-    for await (const message of messages) {
-      if (message.type == "text") {
+     for await (const message of messages) {     
+         if (message.type == "text") {
         let messageObj = this.messages.find((x:any) => x.id == message.id);
         if(this.checkJson(message.content.message)) {
           let parsed = JSON.parse(message.content.message);
@@ -279,7 +311,7 @@ export class DirectMessageComponent implements OnInit {
               id: message.id,
               sender: message.senderDisplayName,
               message: parsed.message,
-              isOwner: message.sender?.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
+              isOwner: message.sender?.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
@@ -291,7 +323,7 @@ export class DirectMessageComponent implements OnInit {
               id: message.id,
               sender: message.senderDisplayName,
               message: parsed.message ?? parsed.message,
-              isOwner: message.sender.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
+              isOwner: message.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
@@ -306,7 +338,7 @@ export class DirectMessageComponent implements OnInit {
               id: message.id,
               sender: message.senderDisplayName,
               message: message.content?.message,
-              isOwner: message.sender?.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
+              isOwner: message.sender?.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
@@ -317,7 +349,7 @@ export class DirectMessageComponent implements OnInit {
               id: message.id,
               sender: message.senderDisplayName,
               message: message.content.message,
-              isOwner: message.sender.communicationUserId == this.tokenCommunicationUserThreadDetails.loginUserCommunicationUserId,
+              isOwner: message.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
@@ -329,10 +361,14 @@ export class DirectMessageComponent implements OnInit {
     }
     this.messages = this.messages.sort((a:any, b:any) => a.createdOn!.getTime() - b.createdOn!.getTime());
     this.changeDetection.detectChanges();
-    console.log(this.messages)
      this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
-    console.log(this.groupedMessages)
+    this.keys =  Object.keys(this.groupedMessages).sort()
+    this.scrollToBottom()
+    this.changeDetection.detectChanges()
+   }
 
+   mySortingFunction = (a :any, b:any) => {
+    return new Date(a.key).getTime()-new Date(b.key).getTime();
   }
 
   getVlauesWithKey(value :any[] | unknown){
@@ -351,7 +387,7 @@ export class DirectMessageComponent implements OnInit {
          }
     });
     return map;
-}
+   }
 
 getKey(item:any){
   return item as unknown as any
@@ -367,7 +403,48 @@ onUploadDocumentsOpenClicked(template: TemplateRef<unknown>, event:any): void {
   
 } 
 
+
 onUploadDocumentsClosed(event: any) { 
   this.notificationReminderDialog.close();
 }
+getUploadedDocuments(uploadedRequest:any){
+  this.directMessageFacade.uploadAttachments(uploadedRequest);
 }
+
+
+scrollToBottom(): void {
+  try {
+
+    setTimeout(() => {
+      if (this.myScrollContainer && this.myScrollContainer.nativeElement) {
+        this.renderer.setProperty(this.myScrollContainer.nativeElement, 'scrollTop', this.myScrollContainer.nativeElement.scrollHeight);
+      }
+    }, 0);
+
+  } catch (err) { }
+}
+
+
+async sendMessageonBehalfOfClient(state :any) {
+  
+  if(state.senderDisplayName == this.communicationDetails?.clientUserName){
+  return;
+  }
+   else{
+    this.tokenSubscription?.unsubscribe()
+    this.tokenSubscription = this.directMessageFacade.comminicationToken$.subscribe(res =>{
+    this.directMessageFacade.sendMessage({
+      content: "Event has been logged",
+      senderDisplayName: this.communicationDetails.clientUserName,
+      type: 'text',
+      userToken : res.token,
+      threadId: this.threadId,
+     });
+   })
+   this.directMessageFacade.getAccessToken(this.communicationDetails.clientUsercommunicationUserId)
+  }
+}
+
+}
+
+

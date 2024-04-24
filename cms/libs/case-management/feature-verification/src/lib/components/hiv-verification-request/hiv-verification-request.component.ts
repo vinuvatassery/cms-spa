@@ -12,13 +12,13 @@ import { VerificationFacade,
   VerificationTypeCode,
   ProviderOption,
   ClientDocumentFacade,
-  HivVerificationDocument, 
+  HivVerificationDocument,
   WorkflowFacade,
   CompletionChecklist,
   ScreenType,
   CommunicationEventTypeCode,
   CommunicationFacade,
-  EsignFacade, 
+  EsignFacade,
   EsignStatusCode} from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
@@ -60,6 +60,8 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
   uploadedDate: any;
   uploadedBy: any;
   providerValueSubscription !: Subscription;
+  isSendEmailVisiable: boolean = false;
+  isResendClicked: boolean = false;
 
   /** Public properties **/
   fileUploadRestrictions: FileRestrictions = {
@@ -134,24 +136,31 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
     this.providerValueSubscription = this.providerValue$.subscribe(data=>{
       this.userId = this.hivVerificationForm.controls["userId"].value;
       this.providerOption = data;
+      this.providerEmail = this.providerEmail ?? '';
       if(data=== ProviderOption.HealthCareProvider){
         if(this.emailSentDate || this.isSendEmailFailed){
           this.healthCareProviderExists = true;
         }
         if(this.healthCareProviderExists){
+          if(!this.isResendClicked && this.emailSentDate){
+            this.isSendEmailVisiable = false;
+            this.isEmailFieldVisible = false;
+          }else if(this.isResendClicked){
+            this.isSendEmailVisiable = true;
+            this.isEmailFieldVisible = true;
+          }else{
+            this.isSendEmailVisiable = true;
+            this.isEmailFieldVisible = true;
+          }
           this.loadHivVerificationEmail();
         if(this.hivVerificationForm.controls["providerEmailAddress"].value !== null && this.hivVerificationForm.controls["providerEmailAddress"].value !== ''){
           this.isSendRequest = true;
           this.sentDate = new Date(this.intl.formatDate(this.hivVerificationForm.controls["verificationStatusDate"].value, this.dateFormat))
         }
-        if(this.isResendRequest || !this.isSendRequest){
-          this.isEmailFieldVisible = true;
-          this.isSendRequest = false;
-        }
-        else{
-          this.isEmailFieldVisible = false;
-        }
       }
+    } else if(data=== ProviderOption.CaseManager){
+      this.isSendEmailVisiable = true;
+      this.isEmailFieldVisible = false;
     }
       else{
         this.isEmailFieldVisible = false;
@@ -199,8 +208,11 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
     });
   }
 
-  
+
   onSendRequestClicked() {
+    if(this.providerOption === ProviderOption.CaseManager){
+      this.sendHivRequestCaseManager();
+    }
     if (this.providerOption ===ProviderOption.HealthCareProvider) {
       this.hivVerificationForm.markAllAsTouched();
       this.hivVerificationForm.controls["providerEmailAddress"].setValidators([Validators.required, Validators.email]);
@@ -218,12 +230,12 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
   }
 
   onResendRequestClicked() {
+    this.isResendClicked = true;
     this.isEmailFieldVisible = true;
-    this.isSendRequest = false;
-    this.isResendRequest = true;
+    this.isSendEmailVisiable = true;
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
   }
-  
+
   handleFileSelected(e: SelectEvent) {
     this.hivVerificationAttachment = undefined;
     this.hivVerificationAttachment = e.files[0].rawFile;
@@ -311,6 +323,7 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
           if (data) {
             this.loadPendingEsignRequestInfo();
             this.saveHivVerificationData();
+            this.isSendEmailVisiable = false;
             this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'HIV Verification sent successfully!');
             this.cdr.detectChanges();
           }
@@ -445,6 +458,26 @@ getLoggedInUserProfile(){
   })
   this.verificationFacade.hideLoader();
 }
+sendHivRequestCaseManager(){;
+    if(this.clientId != 0 && this.clientId != null && this.clientId != undefined){
+      this.verificationFacade.showLoader();
+      this.verificationFacade.sendHivRequestCaseManager(this.clientId).subscribe({
+        next: (response: any) => {
+          if(response){
+            this.isSendRequest = true;
+            this.emailSentDate = this.intl.formatDate(new Date(), "MM/dd/yyyy");
+            this.cdr.detectChanges();
+            this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'HIV Verification sent successfully!');
+          }
+          this.verificationFacade.hideLoader();
+        },
+        error: (err: any) => {
+          this.verificationFacade.hideLoader();
+          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+    }
+  }
 
 ngOnDestroy(): void {
   this.providerValueSubscription?.unsubscribe();

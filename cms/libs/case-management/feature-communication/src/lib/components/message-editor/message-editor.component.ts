@@ -16,6 +16,7 @@ export class MessageEditorComponent implements OnInit, OnChanges {
   @Input() messageList!:any;
   @Input() templateContent!: any;
   @Input() smsMessages!:any;
+  @Input() isSubmitted!:any;
 
     /** Public properties **/
   clientVariables:any;
@@ -60,15 +61,18 @@ export class MessageEditorComponent implements OnInit, OnChanges {
 
     /** Public Methods **/
   ngOnInit(): void {
+
     this.loadClientVariables();
-    this.validateMessage();
+    this.setInitialValueMessage();
   }
 
   ngOnChanges() {
     if (this.messageList !== undefined && this.messageList.length > 0) {
       if (this.templateContent !== null && this.templateContent !== undefined) {
         this.messageList.forEach((item: any) => {
+          if(item.messageText === ''){
           item.messageText = this.templateContent;
+          }
         });
 
       }
@@ -87,20 +91,20 @@ export class MessageEditorComponent implements OnInit, OnChanges {
         messageId: this.getMessageId(),
         messageText: message, 
         wordCount: message?.length,
-        showVariables: false
+        showVariables: false,
+        isValid : true
       });
     }   
   }
 
   addNewMessage() {
-    if (this.messageList.length < 10) {
       this.messageList.push({
         messageId: this.getMessageId(),
         messageText: this.templateContent ?? '', 
         wordCount: this.templateContent?.length,
-        showVariables: false
+        showVariables: false,
+        isValid : true
       });
-    }
   }
 
 
@@ -139,6 +143,9 @@ export class MessageEditorComponent implements OnInit, OnChanges {
   }
 
   onMessageValueChange(item: any): void {
+    if(item.messageText !== undefined && item.messageText !== ''){
+      item.isValid = true;
+    }
     item.wordCount = item.messageText?.length ?? 0;
   }
 
@@ -166,6 +173,21 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     return cursorPosition;
   }  
 
+  ngDirtyInValid(item:any){
+    if(this.isSubmitted){
+      if ((item.messageText === undefined || item.messageText === '') && !item.isValid) {
+        document.getElementById(item.messageId)?.classList.remove('ng-valid');
+        document.getElementById(item.messageId)?.classList.add('ng-invalid');
+        document.getElementById(item.messageId)?.classList.add('ng-dirty');
+      }
+      else {
+        document.getElementById(item.messageId)?.classList.remove('ng-invalid');
+        document.getElementById(item.messageId)?.classList.remove('ng-dirty');
+        document.getElementById(item.messageId)?.classList.add('ng-valid');
+      }
+    }
+    return 'ng-dirty ng-invalid';
+  }
   /** Private Methods **/
 
   private getMessageId() {
@@ -184,16 +206,9 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  private validateMessage() {
+  private setInitialValueMessage() {
     if (this.messageList !== undefined && this.messageList.length === 0) {
-      this.messageList = [
-        {
-          messageId: this.getMessageId(),
-          messageText: this.templateContent,
-          wordCount: this.templateContent?.length ?? 0,
-          showVariables: false
-        },
-      ];
+      this.addNewMessage()
     }
   }
 

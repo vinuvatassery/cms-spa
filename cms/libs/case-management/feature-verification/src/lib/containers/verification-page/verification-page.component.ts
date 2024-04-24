@@ -43,6 +43,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   isSendEmailFailed: boolean = false;
   isSendEmailClicked: boolean = false;
   workflowTypeCode:any;
+  isProviderAvailable: boolean = false;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
@@ -64,9 +65,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.buildForm();
     this.addSaveForLaterSubscription();
     this.addSaveSubscription();
-    this.verificationFacade.hivVerificationSave$.subscribe(data=>{
-      this.load();
-    });
     this.verificationFacade.isSaveandContinue$.subscribe(response=>{
       this.isNotUploaded = response;
       this.cdr.detectChanges();
@@ -74,6 +72,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
       this.showAttachmentOptions = response;
       this.cdr.detectChanges();
+    });
+    this.verificationFacade.hivVerificationSave$.subscribe(data=>{
+      this.load();
     });
   }
 
@@ -171,9 +172,8 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           this.clientCaseId = JSON.parse(session.sessionData)?.ClientCaseId
           this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+          this.getHealthcareProvider();
           this.verificationFacade.getClientHivDocuments(this.clientId);
-          this.load();
-          this.loadPendingEsignRequestInfo();
           this.cdr.detectChanges();
         }
       });
@@ -203,7 +203,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           else
           {
             this.verificationFacade.showAttachmentOptions.next(true);
-          }         
+          }
         }
         else
         {
@@ -297,22 +297,26 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     if(this.clientId > 0){
     this.verificationFacade.showLoader();
     this.verificationFacade.loadHealthCareProviders(this.clientId , 0 , 10, '' , 'asc', false).subscribe({
-      next: (healthCareProvidersResponse : any) => {        
+      next: (healthCareProvidersResponse : any) => {
         if(healthCareProvidersResponse)
-        {      
+        {
           const items = healthCareProvidersResponse["items"];
           if(items.length > 0){
             this.healthCareProviderExists = true;
             items.forEach((item: any) => {
               this.providerEmail = item?.emailAddress;
             });
-        this.cdr.detectChanges();
-          } 
+            this.loadPendingEsignRequestInfo();
+          }else{
+            this.healthCareProviderExists = false;
+            this.load();
+          }
         }
+        this.cdr.detectChanges();
         this.verificationFacade.hideLoader();
       },
-      error: (err) => {   
-        this.verificationFacade.hideLoader();   
+      error: (err) => {
+        this.verificationFacade.hideLoader();
         this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
@@ -341,10 +345,9 @@ loadPendingEsignRequestInfo(){
             this.isSendEmailFailed = true;
             this.errorMessage = data?.errorMessage;
           }
-            this.cdr.detectChanges();
-          }else{
-          this.getHealthcareProvider();
           }
+          this.load();
+          this.cdr.detectChanges();
           this.verificationFacade.hideLoader();
     },
     error: (err: any) => {
