@@ -93,7 +93,6 @@ export class DirectMessageFacade {
     });
   }
   loadDirectMessagesLists(param:any): void {
-    this.loaderService.show()
     this.directMessageDataService.loadDirectMessagesLists(param).subscribe({
       next: (Response) => {
         this.loaderService.hide()
@@ -104,7 +103,6 @@ export class DirectMessageFacade {
         this.directMessagesListSubject.next(gridView);
       },
       error: (err) => {
-        this.loaderService.hide()
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
