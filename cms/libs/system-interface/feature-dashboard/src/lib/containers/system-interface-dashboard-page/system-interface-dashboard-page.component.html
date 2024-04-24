@@ -4,20 +4,20 @@
   <!-- Main Title Section -->
   <div >
   <div class="app-l-mainTittle justify-content-between" kendoRippleContainer>
-    <h2>
+    <h1 class="maintitle_withicon text-bold">
       <span class="material-icons sidebar-menu_icon" aria-hidden="true">
         insights
       </span>
       System Interface Dashboard
-    </h2>
+    </h1>
     <div style="float: right">
-      <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
+      <button kendoButton *ngIf="!isReorderEnable" title="Customize Dashboard"><span class="material-icons" aria-hidden="true"
           (click)="editDashboardClicked(configSubscriptionItems)"> dashboard </span></button>
       <div *ngIf="isReorderEnable">
         <button kendoButton (click)="editDashboardCancelClicked('true')" class="mr-1" [primary]="true"
           aria-label="Save">
           Save</button>
-        <button kendoButton fillMode="outline" (click)="editDashboardCancelClicked('false')"> Cancel </button>
+        <button kendoButton fillMode="outline" arial-label="Cancel" (click)="editDashboardCancelClicked('false')"> Cancel </button>
       </div>
     </div>
    
@@ -30,11 +30,11 @@
       <gridster-item *ngFor="let item of dashboardContentListData$ | async"
         [item]="item?.widgetProperties?.componentData">
         <div class="dashboard-cards-wrapper">
-          <button *ngIf="isReorderEnable" kendoButton class="widget_remove_btn" (click)="removeWidget(item)"><span
+          <button *ngIf="isReorderEnable" kendoButton arial-label="Remove" class="widget_remove_btn" (click)="removeWidget(item)"><span  aria-hidden="true"
               class="material-icons">
               remove
             </span></button>
-          <button class="drag-button drag-handler" *ngIf="isReorderEnable"> <span class="material-icons"> drag_indicator
+          <button class="drag-button drag-handler" arial-label="Drag"  *ngIf="isReorderEnable"> <span class="material-icons" aria-hidden="true"> drag_indicator
             </span> </button>
           <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
             [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
