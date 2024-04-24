@@ -42,7 +42,7 @@ export class EsignFacade {
   }
 
 prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: any[]) {
-    formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
+    formData.append('notificationTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('esignRequestId', emailData?.esignRequestId ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('typeCode', emailData?.typeCode ?? '');
@@ -66,7 +66,7 @@ prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: 
 }
 
 prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAttachedFiles: any[]) {
-      formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
+      formData.append('notificationTemplateId', draftTemplate?.documentTemplateId ?? '');
       formData.append('esignRequestId', draftTemplate?.esignRequestId ?? '');
       formData.append('systemCode', draftTemplate?.systemCode ?? '');
       formData.append('typeCode', draftTemplate?.typeCode ?? '');
@@ -82,6 +82,9 @@ prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAtt
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath);
         formData.append('AttachmentDetails['+i+'][typeCode]', file.typeCode);
+        formData.append('AttachmentDetails['+i+'][clientDocumentId]', file?.document?.clientDocumentId ?? '');
+        formData.append('AttachmentDetails['+i+'][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
+        formData.append('AttachmentDetails['+i+'][notificationAttachmentId]', file?.notificationAttachmentId ?? '');
         i++;
         }else{
           formData.append('attachments', file.rawFile); 

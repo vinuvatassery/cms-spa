@@ -45,6 +45,10 @@ export class DirectMessageDataService {
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/message/threads/${payload.threadId}`, payload);
     }
 
+    uploadAttachments(uploadRequest:any){
+      return this.http.post(
+        `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/attachment`, uploadRequest);
+      }
   getAccessToken(communicationUserId:any){
     return this.http.get(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/access-token?communicationUserId=${communicationUserId}`,);

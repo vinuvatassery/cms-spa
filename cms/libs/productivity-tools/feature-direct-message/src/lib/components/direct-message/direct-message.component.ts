@@ -48,21 +48,42 @@ export class DirectMessageComponent implements OnInit {
   clientName=""
   threadCreationTime:any
   @ViewChild('scrollMe') private myScrollContainer?: ElementRef;
+  tokenSubscription! :Subscription
    /** Output properties  **/
    @Output() closeAction = new EventEmitter();
    public value = ``;
    showDataLoader = false;
    chatThreadClient:any
+   placeHolderText ="Direct Message"
   forFirstTime =0
+  showLoader = false;
+  showChatLoader = true;
    /** Public properties **/
    isShownDirectMessage = false;
    messageToolBarShow = false;
    dataLoaderSubscription$! : Subscription
+   directMessageSubscription$! : Subscription
+  clientProfileSubscription$! : Subscription
+  clientProfileLoaderSubscription!:Subscription
    private notificationReminderDialog: any;
 
    /** Public properties **/
  
    uploadDocumentTypeDetails:any;
+   ListModel = [
+    {
+      text: "Attach From Forms & Documents",
+      id:'from_System'
+    },
+    {
+      text: "Attach From Computer",
+      id:'from_Computer'
+    },
+    {
+      text: "Attach From Client's Attachment",
+      id:'from_Client'
+    }];
+
    ListItemModel = [
      {
        text: "Attach from System",
@@ -91,22 +112,38 @@ export class DirectMessageComponent implements OnInit {
     this.route.queryParamMap.subscribe((params :any) =>{
       this.clientId = params.get('id')
       this.eid = params.get('e_id')
+      this.showChatLoader = true;
       if(this.clientId){
-        this.caseFacade.clientProfileData$.pipe(take(1)).subscribe((cp :any) =>{
+        this.clientProfileSubscription$?.unsubscribe()
+        this.clientProfileSubscription$ =   this.caseFacade.clientProfileData$.pipe(take(1)).subscribe((cp :any) =>{
           this.clientName = cp?.firstName
+          this.placeHolderText = "Direct Message" +" "+this.clientName+"..."
        })
        this.caseFacade.loadClientProfileWithOutLoader(this.eid);
-      
+       this.clientProfileLoaderSubscription?.unsubscribe()
+       this.clientProfileLoaderSubscription =this.caseFacade.clientProfileDataLoader$.subscribe(res =>{
+        this.showLoader = res;
+        this.changeDetection.detectChanges()
+      })
        this.dataLoaderSubscription$?.unsubscribe()
        this.dataLoaderSubscription$ = this.directMessageFacade.communicationDetailLoader$.subscribe((res:boolean) =>{
         this.showDataLoader = res;
        })
-       this.directMessageFacade.communicationDetail$.pipe(take(1)).subscribe((res:any) => {
-        this.communicationDetails = res.communicationDetails;
+       this.directMessageSubscription$?.unsubscribe()
+     this.directMessageSubscription$ =  this.directMessageFacade.communicationDetail$.pipe(take(1)).subscribe((res:any) => {
+      if(!res){
+        this.messages = []
+        this.showChatLoader = false;
+        this.groupedMessages = undefined
+        this.changeDetection.detectChanges()  
+        return;
+      } 
+      this.communicationDetails = res.communicationDetails;
         this.threadId = res.threadId
         this.threadCreationTime = res.creationTime
-        this.chatClient = this.directMessageFacade.getChatClient(this.communicationDetails.token)
+        this.chatClient = this.directMessageFacade.getChatClient(this.communicationDetails?.token)
         this.setupHandlers()
+        this.showChatLoader = false
         this.changeDetection.detectChanges()     
       })
           this.directMessageFacade.getCommunicationDetails(this.clientId)
@@ -130,9 +167,8 @@ export class DirectMessageComponent implements OnInit {
     this.forFirstTime =0;
     this.chatClient.on("chatMessageReceived", ((state: any) => {
       this.addMessage(state);
-      if(state.senderDisplayName != this.communicationDetails.clientUserName){
-        this.sendMessageonBehalfOfClient()
-        }
+        this.sendMessageonBehalfOfClient(state)
+      
     }).bind(this));
 
     this.chatClient.on("chatMessageEdited", ((state: any) => {
@@ -370,6 +406,9 @@ onUploadDocumentsOpenClicked(template: TemplateRef<unknown>, event:any): void {
 onUploadDocumentsClosed(event: any) { 
   this.notificationReminderDialog.close();
 }
+getUploadedDocuments(uploadedRequest:any){
+  this.directMessageFacade.uploadAttachments(uploadedRequest);
+}
 
 
 scrollToBottom(): void {
@@ -385,21 +424,24 @@ scrollToBottom(): void {
 }
 
 
-async sendMessageonBehalfOfClient() {
-
-   
-   this.directMessageFacade.comminicationToken$.subscribe(res =>{
-    console.log(res)
+async sendMessageonBehalfOfClient(state :any) {
+  
+  if(state.senderDisplayName == this.communicationDetails?.clientUserName){
+  return;
+  }
+   else{
+    this.tokenSubscription?.unsubscribe()
+    this.tokenSubscription = this.directMessageFacade.comminicationToken$.subscribe(res =>{
     this.directMessageFacade.sendMessage({
-      content: "Hi I Recived your Message",
+      content: "Event has been logged",
       senderDisplayName: this.communicationDetails.clientUserName,
-      type: 'html',
+      type: 'text',
       userToken : res.token,
       threadId: this.threadId,
      });
    })
    this.directMessageFacade.getAccessToken(this.communicationDetails.clientUsercommunicationUserId)
-
+  }
 }
 
 }

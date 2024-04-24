@@ -370,10 +370,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           if (data.length > 0) {
             this.ddlTemplates = data;
-            for (let template of this.ddlTemplates) {
-              template.description = template.requestSubject;
-              template.documentTemplateId = template.esignRequestId;
-            }
+            this.handleDdlEmailValueChange(this.ddlTemplates[0]);
             this.ref.detectChanges();
           } else {
             this.loadEmailTemplates();
@@ -754,7 +751,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile) {
       this.communicationEmailTypeCode = event.subTypeCode;
     }
-    if (event.subTypeCode === this.communicationEmailTypeCode) {
+    if (event.subTypeCode === this.communicationEmailTypeCode || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.selectedTemplate = event;
       this.selectedTemplateContent = event.templateContent == undefined ? event.requestBody : event.templateContent;
@@ -766,18 +763,15 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.selectedToEmails = [];
       this.selectedToEmails = event.to;
       this.emails = this.selectedToEmails;
-      this.emailSubject = event.description;
-      this.defaultCCEmail = event.cc;
+      this.emailSubject = event.description ?? event?.requestSubject;
       this.defaultBCCEmail = event.bcc;
-      this.selectedCCEmail = event.cc?.map((item: any) => item.email);
-      this.ccEmail = event?.ccEmail;
       if (event?.bccEmail?.length > 0) {
         this.bccEmail = this.selectedBccEmail = event.bcc;
         this.isBCCDropdownVisible = false;
       }
       this.showToEmailLoader = false;
       this.documentTemplate = {
-        'description': event.description,
+        'description': event.description ?? event?.requestSubject,
         'documentTemplateId': event.notificationTemplateId
       };
       this.selectedMailCode = {

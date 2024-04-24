@@ -29,7 +29,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   //add menu badges on this variable
   menuBadges = [
     { key: 'TO_DO_ITEMS', value: 5 },
-    { key: 'DIRECT_MESSAGES', value: 10 },
+    { key: MenuBadge.directMessage, value: 0 },
     { key: MenuBadge.productivityTools, value: 0 },
     { key: MenuBadge.financialManagement, value: 0 },
     { key: MenuBadge.fundsAndPcas, value: 0 },
@@ -209,6 +209,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   private getMenuCount() {
     this.getPcaAssignmentMenuCount();
     this.getPendingApprovalMenuCount();
+    this.getDirectMessageCount();
   }
 
   private getPcaAssignmentMenuCount() {
@@ -228,6 +229,21 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
     });
   }
 
+  private getDirectMessageCount(){
+    //this.navigationMenuFacade.getDirectMessageCount();
+    this.subscribeToDirectMessageCount();
+  }
+  subscribeToDirectMessageCount(){
+    this.navigationMenuFacade.directMessageCountCount$.subscribe({
+      next: (messageCount) => {
+        if (messageCount) {
+          this.directMessageCount = messageCount;
+          this.setProductivityToolsCount();
+          this.setBadgeValue(MenuBadge.directMessage, this.directMessageCount);
+        }
+      },
+    });
+  }
   getUserRole() {
     if (
       this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL2)
@@ -280,10 +296,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
     this.productivityToolsCount =
       this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount;
     this.setBadgeValue(MenuBadge.pendingApprovals, this.pendingApprovalCount);
-    this.setBadgeValue(
-      MenuBadge.productivityTools,
-      this.productivityToolsCount
-    );
+    this.setBadgeValue(MenuBadge.productivityTools, this.productivityToolsCount);
   }
 
   

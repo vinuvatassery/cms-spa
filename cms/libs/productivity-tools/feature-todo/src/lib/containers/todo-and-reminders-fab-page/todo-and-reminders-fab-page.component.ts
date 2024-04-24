@@ -14,6 +14,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { TodoListComponent } from '../../components/todo-list/todo-list.component';
 import { LovFacade } from '@cms/system-config/domain';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { Subscription } from 'rxjs';
   
   @Component({
     selector: 'productivity-tools-todo-and-reminders-fab-page',
@@ -53,6 +54,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     isToDODeleteActionOpen = false
     reminderDialog :any
     crudText ="Create New"
+    crudAlertSubscription!: Subscription
     constructor( private route: ActivatedRoute,
       public readonly todoFacade: TodoFacade,
       public lovFacade : LovFacade,
@@ -76,7 +78,8 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
             this.isShowTodoReminders = false
             this.showRemindersList = true
         }
-        this.todoFacade.curdAlert$.subscribe(res =>{
+        this.crudAlertSubscription?.unsubscribe()
+         this.crudAlertSubscription = this.todoFacade.curdAlert$.subscribe(res =>{
           if(this.clientId){
           this.todoFacade.todoAndRemindersByClient(this.clientId)
           }
