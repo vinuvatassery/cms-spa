@@ -61,5 +61,7 @@ export enum CommunicationEventTypeCode {
     ClientLetterCreatedt = 'CLIENT_LETTER_CREATED',
     ApplicationAndCERLetterSent = 'LETTER_SENT',
     VendorEmailSent="VENDOR_EMAIL_SENT",
-    ClientEmailSent = "CLIENT_EMAIL_SENT"
+    ClientEmailSent = "CLIENT_EMAIL_SENT",
+    HivVerificationAccepted = "HIV_VERIF_ACCEPTED",
+    HivVerificationRejected = "HIV_VERIF_REJECTED"
   }
