@@ -209,10 +209,10 @@ export class DirectMessageUploadDocsComponent {
     this.uploadDocumentsClosedDialog.emit();
   }
   else if(this.selectedSystemAttachedFile){
-    formData.append('SystemAttachments.FileName',this.selectedSystemAttachedFile.description);
-    formData.append('SystemAttachments.FilePath',this.selectedSystemAttachedFile.templatePath);
-    formData.append('SystemAttachments.FileSize',this.selectedSystemAttachedFile.templateSize);
-    formData.append('SystemAttachments.DocumentTemplateId',this.selectedSystemAttachedFile.documentTemplateId);
+    formData.append('FormsAndDocumentsAttachments.FileName',this.selectedSystemAttachedFile.description);
+    formData.append('FormsAndDocumentsAttachments.FilePath',this.selectedSystemAttachedFile.templatePath);
+    formData.append('FormsAndDocumentsAttachments.FileSize',this.selectedSystemAttachedFile.templateSize);
+    formData.append('FormsAndDocumentsAttachments.DocumentTemplateId',this.selectedSystemAttachedFile.documentTemplateId);
     this.uploadedDocuments.emit(formData);
     this.uploadDocumentsClosedDialog.emit();
   }
