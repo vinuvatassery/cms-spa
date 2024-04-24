@@ -29,7 +29,7 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
   getStatsSubscription = new Subscription();
   resetStatsSubscription = new Subscription();
   navigationSubscription = new Subscription();
-  
+  directMessageStatsSubscription = new Subscription();
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
@@ -59,10 +59,10 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
         if(eventLogStats && eventLogStats.length > 0){
           this.eventLogCount = eventLogStats[0].statsCount;
         }
-        let directMessageStats = res.filter((stat:any) => stat.statsTypeCode == StatsTypeCode.DirectMessage);
-        if(directMessageStats && directMessageStats.length > 0){
-          this.directMessageCount = directMessageStats[0].statsCount;
-        }
+        // let directMessageStats = res.filter((stat:any) => stat.statsTypeCode == StatsTypeCode.DirectMessage);
+        // if(directMessageStats && directMessageStats.length > 0){
+        //   this.directMessageCount = directMessageStats[0].statsCount;
+        // }
         let alertStats = res.filter((stat:any) => stat.statsTypeCode == StatsTypeCode.Alert);
         if(alertStats && alertStats.length > 0){
           this.alertCount = alertStats[0].statsCount;
@@ -78,6 +78,14 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       }
     });
 
+    this.directMessageStatsSubscription = this.notificationStatsFacade.directMessageStats$.subscribe((response: any) => {
+      if(response.data){
+        this.directMessageCount = response.data;
+        this.totalCount = this.eventLogCount + this.directMessageCount + this.alertCount;
+        this.cd.detectChanges();
+      }
+    });
+  
 
     const clientId = this.route.snapshot.params['id'];
     const vendorId = this.route.snapshot.queryParams['v_id'];
@@ -85,6 +93,7 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       this.entityId = clientId.toString();
       this.entityTypeCode = AlertEntityTypeCode.Client;
       this.notificationStatsFacade.updateStats(this.entityId, AlertEntityTypeCode.Client);
+     // this.notificationStatsFacade.directMessageStats(this.entityId,StatsTypeCode.DirectMessage)
     }
     else if (vendorId){
       this.entityId = vendorId.toString();
@@ -111,6 +120,7 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
     this.getStatsSubscription?.unsubscribe();
     this.resetStatsSubscription?.unsubscribe();
     this.navigationSubscription?.unsubscribe();
+    this.directMessageStatsSubscription?.unsubscribe();
   }
   /** Internal event methods **/
   onDialItemClicked(event: any): void {

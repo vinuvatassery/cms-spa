@@ -35,4 +35,7 @@ export class NotificationStatsDataService {
     };
     return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notification-statistics/reset-stats`, statsDto);
   }
+  directMessageStats(entityId:string) {
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/count/${entityId}`);
+  }
 }
