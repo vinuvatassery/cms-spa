@@ -6,6 +6,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
 import { VendorContacts, VendorContactsFacade, Contacts, EmailAddressTypeCode, PhoneTypeCode, PaymentsFacade, ContactFacade} from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { FabBadgeFacade, FabEntityTypeCode } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-contact-address-details',
   templateUrl: './contact-address-details.component.html',
@@ -50,7 +51,8 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     private vendorContactsFacade: VendorContactsFacade,
     private readonly paymentsFacade: PaymentsFacade,
     private readonly loaderService: LoaderService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private fabBadgeFacade: FabBadgeFacade
   ) {
     this.contactForm = this.formBuilder.group({
       mailcode: [this.contact.mailCode, Validators.required],
@@ -104,6 +106,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
               this.contactFacade.hideLoader();
               this.isContactDetailPopupClose.emit(true);
               this.vendorContactsFacade.loadVendorAllContacts(this.vendorId);
+              this.fabBadgeFacade.reloadFabMenu(this.vendorId, FabEntityTypeCode.Vendor);
             }
           },
           error: (error: any) => {
@@ -134,6 +137,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
             this.loaderService.hide();
             this.isContactDetailPopupClose.emit(true);
             this.vendorContactsFacade.loadVendorAllContacts(this.vendorId);
+            this.fabBadgeFacade.reloadFabMenu(this.vendorId, FabEntityTypeCode.Vendor);
           }
         },
         error: (error: any) => {

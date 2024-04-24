@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AlertEntityTypeCode, FabMenuFacade } from '@cms/productivity-tools/domain';
-import { LovFacade } from '@cms/system-config/domain';
+import { FabBadgeFacade, LovFacade } from '@cms/system-config/domain';
 import { Subject, Subscription, filter } from 'rxjs';
 
 @Component({
@@ -22,11 +22,15 @@ export class EventLogComponentFabPageComponent implements OnInit, OnDestroy
   entityTypeCode: any;
   clientCaseEligibilityId: any;
   eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$;
-  navigationSubscription = new Subscription();
   navigationSubject: Subject<any> = new Subject<any>();
+
+  
+  navigationSubscription = new Subscription();
+  reloadFabBadgeSubscription = new Subscription();
 
   constructor(
     public readonly fabMenuFacade: FabMenuFacade,
+    public readonly fabBadgeFacade: FabBadgeFacade,
     private readonly lovFacade: LovFacade,
     private readonly router: Router,
     private route: ActivatedRoute,
@@ -46,10 +50,12 @@ export class EventLogComponentFabPageComponent implements OnInit, OnDestroy
         this.entityTypeCode = AlertEntityTypeCode.Vendor;
       }
       this.addSessionChangeSubscription();
+      this.addReloadFabBadgeSubscription();
   }
   
   ngOnDestroy(): void {
     this.navigationSubscription?.unsubscribe();
+    this.reloadFabBadgeSubscription?.unsubscribe();
   }
 
   private addSessionChangeSubscription() {
@@ -65,6 +71,19 @@ export class EventLogComponentFabPageComponent implements OnInit, OnDestroy
           EntityId: this.entityId,
           ClientCaseEligibilityId: this.clientCaseEligibilityId,
           EntityTypeCode: this.entityTypeCode,
+        }
+        this.navigationSubject.next(data);
+      }
+    });
+  }
+
+  private addReloadFabBadgeSubscription(){
+    this.reloadFabBadgeSubscription = this.fabBadgeFacade.fabMenuReload$.subscribe((entity: any) => {
+      if(this.fabMenuFacade.isShownEventLog) {
+        const data = {
+          EntityId: entity.entityId,
+          ClientCaseEligibilityId: this.route.snapshot.queryParams['e_id'],
+          EntityTypeCode: entity.entityTypeCode,
         }
         this.navigationSubject.next(data);
       }
