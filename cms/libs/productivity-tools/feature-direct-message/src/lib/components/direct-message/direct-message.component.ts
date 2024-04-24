@@ -53,9 +53,6 @@ export class DirectMessageComponent implements OnInit {
    public value = ``;
    showDataLoader = false;
    chatThreadClient:any
-   skeletonCounts = [
-    1, 2
-  ]
   forFirstTime =0
    /** Public properties **/
    isShownDirectMessage = false;

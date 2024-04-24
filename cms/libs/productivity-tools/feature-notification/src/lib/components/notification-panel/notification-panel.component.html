@@ -72,7 +72,7 @@
           </div>
           <kendo-dropdownbutton
             [data]="dataTwo"
-            
+            *ngIf="message.alertTypeCode == 'REMINDER'"
             title="More option"
             look="bare"
             aria-label="more actions"
@@ -80,7 +80,7 @@
             [popupSettings]="{ popupClass: popupClass1, animate: true }"
             (itemClick)="onActionClicked($event,message)"
           >
-          <span *ngIf="message.alertTypeCode == 'REMINDER'"
+          <span 
            class="material-icons" aria-label="More option"> more_vert    </span>
           <ng-template class="app-dropdown-action-list"
            kendoDropDownButtonItemTemplate let-dataItem>
