@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { CaseFacade, CommunicationEventTypeCode } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, HivVerificationApprovalFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DocumentFacade } from '@cms/shared/util-core';
+import { DocumentFacade, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
@@ -16,11 +16,14 @@ export class HivVerificationListComponent implements OnInit {
   @ViewChild('submitRequestModalDialog', { read: TemplateRef })
   submitRequestModalDialog!: TemplateRef<any>;
   
+  /** Output Properties **/
   @Output() getHivVerification = new EventEmitter<any>();
   @Output() saveHivVerificationApproval = new EventEmitter<any>();
   @Output() selectedItemEligibilityIdSet = new EventEmitter<any>();
 
+  /** Input Properties **/
   @Input() hivVerificationApproval$: any;
+
   hivVerificationApproval:any;
   tAreaCessationMaxLength: any = 250;
   acceptStatus: string = 'ACCEPT';
@@ -57,7 +60,7 @@ export class HivVerificationListComponent implements OnInit {
     /** Constructor **/
     constructor(private readonly cd: ChangeDetectorRef, private readonly router: Router,
       public readonly documentFacade: DocumentFacade, 
-      private dialogService: DialogService, private caseFacade: CaseFacade){}
+      private dialogService: DialogService, private notificationSnackbarService: NotificationSnackbarService){}
     
   ngOnInit(): void {
     this.getHivVerification.emit(true);
@@ -128,6 +131,10 @@ export class HivVerificationListComponent implements OnInit {
   openInNewTabOrDownload(View: boolean , item : any){
     if(item.documentId !== null){
       this.documentFacade.viewOrDownloadFile(View,item.documentId,item.fileName)
+    }
+    else{
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 
+        'Not found any attached documents.', NotificationSource.UI);
     }
   }
 
