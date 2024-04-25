@@ -116,4 +116,7 @@ export class VerificationFacade {
   sendHivRequestCaseManager(clientId : number,) {
     return this.verificationDataService.sendHivRequestCaseManager(clientId);
   }
+  getClientHivVerification(clientId : number,) {
+    return this.verificationDataService.getClientHivVerification(clientId);
+  }
 }

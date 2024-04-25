@@ -74,4 +74,8 @@ export class VerificationDataService {
       sendHivRequestCaseManager(clientId:any){
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/hiv-casemanager-notification/${clientId}`);
       }
+
+      getClientHivVerification(clientId:any){
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification?clientId=${clientId}`);
+      }
     }
