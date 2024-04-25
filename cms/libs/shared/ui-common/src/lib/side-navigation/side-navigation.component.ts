@@ -40,6 +40,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   paymentCount = 0;
   generalCount = 0;
   importedClaimCount = 0;
+  hivVerificationCount = 0;
 
   pendingApprovalCount = 0;
   directMessageCount = 0;
@@ -288,13 +289,21 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
         }
       },
     });
+    this.navigationMenuFacade.hivVerificationCount$.subscribe({
+      next:(hivVerificationCount) =>{
+        if(hivVerificationCount){
+          this.hivVerificationCount = hivVerificationCount;
+          this.setProductivityToolsCount();
+        }
+      }
+    })
   }
 
   private setProductivityToolsCount() {
     this.pendingApprovalCount =
       this.paymentCount + this.generalCount + this.importedClaimCount;
     this.productivityToolsCount =
-      this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount;
+      this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount + this.hivVerificationCount;
     this.setBadgeValue(MenuBadge.pendingApprovals, this.pendingApprovalCount);
     this.setBadgeValue(MenuBadge.productivityTools, this.productivityToolsCount);
   }
