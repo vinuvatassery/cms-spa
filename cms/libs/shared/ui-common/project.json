@@ -4,13 +4,13 @@
   "projectType": "library",
   "sourceRoot": "libs/shared/ui-common/src",
   "prefix": "common",
+  "tags": ["domain:shared", "type:ui"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
       "outputs": ["{workspaceRoot}/dist/libs/shared/ui-common"],
       "options": {
-        "project": "libs/shared/ui-common/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/shared/ui-common/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -31,7 +31,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/shared/ui-common/src/**/*.ts",
@@ -39,6 +39,5 @@
         ]
       }
     }
-  },
-  "tags": ["domain:shared", "type:ui"]
+  }
 }

@@ -4,6 +4,7 @@
   "projectType": "library",
   "sourceRoot": "libs/case-management/feature-financial-claims/src",
   "prefix": "cms",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
@@ -11,8 +12,7 @@
         "{workspaceRoot}/dist/libs/case-management/feature-financial-claims"
       ],
       "options": {
-        "project": "libs/case-management/feature-financial-claims/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/case-management/feature-financial-claims/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -39,7 +39,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
@@ -48,6 +48,5 @@
         ]
       }
     }
-  },
-  "tags": []
+  }
 }

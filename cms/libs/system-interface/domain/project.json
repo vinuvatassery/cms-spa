@@ -3,15 +3,14 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/system-interface/domain/src",
   "prefix": "system-interface",
-  "tags": ["domain:system-interface", "type:domain-logic"],
   "projectType": "library",
+  "tags": ["domain:system-interface", "type:domain-logic"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
       "outputs": ["{workspaceRoot}/dist/libs/system-interface/domain"],
       "options": {
-        "project": "libs/system-interface/domain/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/system-interface/domain/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -23,7 +22,6 @@
       },
       "defaultConfiguration": "production"
     },
-
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
@@ -31,9 +29,9 @@
         "jestConfig": "libs/system-interface/domain/jest.config.ts",
         "passWithNoTests": true
       }
-    }, 
+    },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [

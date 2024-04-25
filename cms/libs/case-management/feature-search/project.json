@@ -4,13 +4,13 @@
   "projectType": "library",
   "sourceRoot": "libs/case-management/feature-search/src",
   "prefix": "case-management",
+  "tags": ["domain:case-management", "type:feature"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
       "outputs": ["{workspaceRoot}/dist/libs/case-management/feature-search"],
       "options": {
-        "project": "libs/case-management/feature-search/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/case-management/feature-search/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -33,7 +33,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/case-management/feature-search/src/**/*.ts",
@@ -41,6 +41,5 @@
         ]
       }
     }
-  },
-  "tags": ["domain:case-management", "type:feature"]
+  }
 }

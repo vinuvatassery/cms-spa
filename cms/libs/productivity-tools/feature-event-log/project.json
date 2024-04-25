@@ -4,6 +4,7 @@
   "projectType": "library",
   "sourceRoot": "libs/productivity-tools/feature-event-log/src",
   "prefix": "productivity-tools",
+  "tags": ["domain:productivity-tools", "type:feature"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
@@ -11,8 +12,7 @@
         "{workspaceRoot}/dist/libs/productivity-tools/feature-event-log"
       ],
       "options": {
-        "project": "libs/productivity-tools/feature-event-log/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/productivity-tools/feature-event-log/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -35,7 +35,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/productivity-tools/feature-event-log/src/**/*.ts",
@@ -43,6 +43,5 @@
         ]
       }
     }
-  },
-  "tags": ["domain:productivity-tools", "type:feature"]
+  }
 }

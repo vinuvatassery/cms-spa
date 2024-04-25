@@ -3,9 +3,8 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/productivity-tools/feature-notification-snackbar/src",
   "prefix": "cms",
-  "tags": ["domain:productivity-tools", "type:feature"],
   "projectType": "library",
-  
+  "tags": ["domain:productivity-tools", "type:feature"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
@@ -13,8 +12,7 @@
         "{workspaceRoot}/dist/libs/productivity-tools/feature-notification-snackbar"
       ],
       "options": {
-        "project": "libs/productivity-tools/feature-notification-snackbar/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/productivity-tools/feature-notification-snackbar/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -41,7 +39,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [

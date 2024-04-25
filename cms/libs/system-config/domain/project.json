@@ -4,13 +4,13 @@
   "projectType": "library",
   "sourceRoot": "libs/system-config/domain/src",
   "prefix": "system-config",
+  "tags": ["domain:system-config", "type:domain-logic"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
       "outputs": ["{workspaceRoot}/dist/libs/system-config/domain"],
       "options": {
-        "project": "libs/system-config/domain/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/system-config/domain/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -31,7 +31,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/system-config/domain/src/**/*.ts",
@@ -39,6 +39,5 @@
         ]
       }
     }
-  },
-  "tags": ["domain:system-config", "type:domain-logic"]
+  }
 }

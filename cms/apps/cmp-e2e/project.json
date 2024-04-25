@@ -3,6 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/cmp-e2e/src",
   "projectType": "application",
+  "tags": [],
+  "implicitDependencies": ["cmp"],
   "targets": {
     "e2e": {
       "executor": "@nx/cypress:cypress",
@@ -17,13 +19,11 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["apps/cmp-e2e/**/*.{js,ts}"]
       }
     }
-  },
-  "tags": [],
-  "implicitDependencies": ["cmp"]
+  }
 }

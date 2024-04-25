@@ -4,13 +4,13 @@
   "projectType": "library",
   "sourceRoot": "libs/productivity-tools/domain/src",
   "prefix": "productivity-tools",
+  "tags": ["domain:productivity-tools", "type:domain-logic"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
       "outputs": ["{workspaceRoot}/dist/libs/productivity-tools/domain"],
       "options": {
-        "project": "libs/productivity-tools/domain/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/productivity-tools/domain/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -31,7 +31,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/productivity-tools/domain/src/**/*.ts",
@@ -39,6 +39,5 @@
         ]
       }
     }
-  },
-  "tags": ["domain:productivity-tools", "type:domain-logic"]
+  }
 }

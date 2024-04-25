@@ -3,15 +3,14 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/system-config/feature-cases/src",
   "prefix": "system-config",
-  "tags": [],
   "projectType": "library",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
       "options": {
-        "project": "libs/system-config/feature-cases/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/system-config/feature-cases/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -38,12 +37,12 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
           "libs/system-config/feature-cases/**/*.ts",
-          "libs/system-config/feature-cases/**/*.html", 
+          "libs/system-config/feature-cases/**/*.html"
         ]
       }
     }

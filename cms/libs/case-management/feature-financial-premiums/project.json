@@ -4,6 +4,7 @@
   "projectType": "library",
   "sourceRoot": "libs/case-management/feature-financial-premiums/src",
   "prefix": "cms",
+  "tags": [],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
@@ -20,7 +21,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
@@ -29,6 +30,5 @@
         ]
       }
     }
-  },
-  "tags": []
+  }
 }

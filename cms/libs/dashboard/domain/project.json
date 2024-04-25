@@ -4,13 +4,13 @@
   "projectType": "library",
   "sourceRoot": "libs/dashboard/domain/src",
   "prefix": "dashboard",
+  "tags": ["domain:dashboard", "type:domain-logic"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
       "outputs": ["{workspaceRoot}/dist/libs/dashboard/domain"],
       "options": {
-        "project": "libs/dashboard/domain/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/dashboard/domain/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -31,7 +31,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/dashboard/domain/src/**/*.ts",
@@ -39,6 +39,5 @@
         ]
       }
     }
-  },
-  "tags": ["domain:dashboard", "type:domain-logic"]
+  }
 }

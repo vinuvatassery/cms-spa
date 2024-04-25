@@ -3,8 +3,8 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/productivity-tools/feature-fabs-menu/src",
   "prefix": "cms",
-  "tags": ["domain:productivity-tools", "type:feature"],
   "projectType": "library",
+  "tags": ["domain:productivity-tools", "type:feature"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
@@ -12,8 +12,7 @@
         "{workspaceRoot}/dist/libs/productivity-tools/feature-fabs-menu"
       ],
       "options": {
-        "project": "libs/productivity-tools/feature-fabs-menu/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/productivity-tools/feature-fabs-menu/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -40,7 +39,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [

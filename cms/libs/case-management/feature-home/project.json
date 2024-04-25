@@ -4,6 +4,7 @@
   "projectType": "library",
   "sourceRoot": "libs/case-management/feature-home/src",
   "prefix": "cms",
+  "tags": [],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
@@ -14,7 +15,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/case-management/feature-home/src/**/*.ts",
@@ -22,6 +23,5 @@
         ]
       }
     }
-  },
-  "tags": []
+  }
 }

@@ -4,13 +4,13 @@
   "projectType": "library",
   "sourceRoot": "libs/shared/util-core/src",
   "prefix": "core",
+  "tags": ["domain:shared", "type:util"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
       "outputs": ["{workspaceRoot}/dist/libs/shared/util-core"],
       "options": {
-        "project": "libs/shared/util-core/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/shared/util-core/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -31,7 +31,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/shared/util-core/src/**/*.ts",
@@ -39,6 +39,5 @@
         ]
       }
     }
-  },
-  "tags": ["domain:shared", "type:util"]
+  }
 }

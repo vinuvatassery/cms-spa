@@ -4,6 +4,7 @@
   "projectType": "library",
   "sourceRoot": "libs/case-management/feature-verification/src",
   "prefix": "case-management",
+  "tags": ["domain:case-management", "type:feature"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
@@ -11,8 +12,7 @@
         "{workspaceRoot}/dist/libs/case-management/feature-verification"
       ],
       "options": {
-        "project": "libs/case-management/feature-verification/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true
+        "project": "libs/case-management/feature-verification/ng-package.json"
       },
       "configurations": {
         "production": {
@@ -35,7 +35,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/case-management/feature-verification/src/**/*.ts",
@@ -43,6 +43,5 @@
         ]
       }
     }
-  },
-  "tags": ["domain:case-management", "type:feature"]
+  }
 }

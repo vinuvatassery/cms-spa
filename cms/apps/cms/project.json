@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/cms/src",
   "prefix": "cms",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -80,9 +81,13 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["apps/cms/src/**/*.ts", "apps/cms/src/**/*.html"]
+        "lintFilePatterns": [
+          "apps/cms/src/**/*.ts",
+          "apps/cms/src/**/*.html",
+          "package.json"
+        ]
       }
     },
     "test": {
@@ -93,6 +98,5 @@
         "passWithNoTests": true
       }
     }
-  },
-  "tags": []
+  }
 }
