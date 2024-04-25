@@ -134,10 +134,10 @@
   <ng-template #submitRequestModalDialog>
    
     <kendo-dialog-titlebar  (close)="onCloseSubmitConfirmClicked()">
-      Submit Item(s)?</kendo-dialog-titlebar>  
+      {{submitButtonText}}</kendo-dialog-titlebar>  
       <section class="k-dialog-body newcase">
         <p  class="mb-1">
-          Hiv verification status submitted
+          {{confirmationBodyText}}
         </p>       
       </section> 
       <kendo-dialog-actions>
@@ -157,7 +157,7 @@
               [primary]="true"
               (click)="saveHivVerification()"
             >
-              SUBMIT
+              {{confirmButtonText}}
             </button>
           </div>
         </div>
