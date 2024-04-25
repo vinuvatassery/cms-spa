@@ -14,18 +14,7 @@
       </button>
     </div>
   </div>
-  <div *ngIf="showChatLoader">
-    <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
-      <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60"
-        class="bg_rect_loader"></kendo-skeleton>
-      <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40"></kendo-skeleton>
-      <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
-        <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
-        <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
-      </div>
-    </div>
-
-  </div>
+ 
   <div   class="direct-chat-wrapper">
     <div  class="chat-view-container" #scrollMe>
       <ng-container *ngIf="groupedMessages">
@@ -37,38 +26,48 @@
 
         <div class="chat-grey chat-left-side" *ngIf="!value.isOwner">
           <div class="time-status"><span class="chat-time">{{value.sender}}</span> </div>
-          <p>{{value.message}}</p>
+          <p *ngIf="value.message">{{value.message}}</p>
           <div class="msg-attachment-wrapper" *ngIf="value.attachments">
-            <div class="attachment-container-list" *ngFor="let attachment of value.attachments">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
+            <div  *ngFor="let attachment of value.attachments"> 
+            <div class="attachment-container-list">
+              <span class="material-icons attach" aria-hidden="true" *ngIf="!downloadAttachmentLoader">  attach_file  </span>
+              <span class="material-icons download" aria-hidden="true" *ngIf="!downloadAttachmentLoader">    file_download   </span>
+              <span class=" k-icon k-i-loading k-input-loading-icon mr-1" *ngIf="downloadAttachmentLoader"></span>
                  <span>{{attachment.id}}</span>
             </div>
-    
+          </div>
           </div>
           <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}}</span> 
           </div>
          
         </div>
         <div class="chat-green chat-right-side" *ngIf="value.isOwner">
-          <p *ngIf="value.message">{{value.message}}</p>
+          <div class="app-c-avatar avatar-sm">
+            <img src="../assets/images/avatar-1.png" alt="Profile Avatar" class="profile-avatar" hidden />
+            <span class="profile-text-avatar">AK</span>
+          </div>
+          <div class="msg_right"> 
+            <p *ngIf="value.message">{{value.message}}</p>
           <div class="msg-attachment-wrapper" *ngIf="value.attachments">
-            <div class="attachment-container-list" *ngFor="let attachment of value.attachments">
-              <span class="material-icons" aria-hidden="true" (click)="download(attachment)">
-                attach_file
-                </span>
+            <div  *ngFor="let attachment of value.attachments">
+
+           
+            <div class="attachment-container-list" (click)="download(attachment)" > 
+              <span class="material-icons attach" aria-hidden="true" *ngIf="!downloadAttachmentLoader">  attach_file  </span>
+              <span class="material-icons download" aria-hidden="true" *ngIf="!downloadAttachmentLoader">    file_download   </span>
+              <span class=" k-icon k-i-loading k-input-loading-icon mr-1" *ngIf="downloadAttachmentLoader"></span>
                  <span>{{attachment.id}}</span>
             </div>
-    
+          </div>
           </div>
           <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}} (Read)</span> </div>
+        </div>
         </div>
      
       </ng-container>
       </ng-container>
     </ng-container>
-    <div *ngIf="directMessageLoader">
+    <div *ngIf="showChatLoader">
 
       <div *ngFor="let skeletonCount of skeletonCounts" class="msg_loader">
         <div class="left-msgloader">

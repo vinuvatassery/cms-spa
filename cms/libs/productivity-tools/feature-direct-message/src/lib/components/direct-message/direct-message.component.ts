@@ -53,6 +53,7 @@ export class DirectMessageComponent implements OnInit {
    @Output() closeAction = new EventEmitter();
    public value = ``;
    showDataLoader = false;
+   downloadAttachmentLoader = false;
    chatThreadClient:any
    placeHolderText ="Direct Message"
   forFirstTime =0
