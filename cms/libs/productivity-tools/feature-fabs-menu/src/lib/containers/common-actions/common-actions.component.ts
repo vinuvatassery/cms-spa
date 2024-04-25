@@ -2,7 +2,6 @@
 import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FabMenuFacade, NotificationStatsFacade, StatsTypeCode } from '@cms/productivity-tools/domain';
-import { SignalrEventHandlerService } from '@cms/shared/util-common';
 import { FabBadgeFacade, FabEntityTypeCode } from '@cms/system-config/domain';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
@@ -30,7 +29,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
   getStatsSubscription = new Subscription();
   resetStatsSubscription = new Subscription();
   navigationSubscription = new Subscription();
-  directMessageStatsSubscription = new Subscription();
   reloadFabBadgeSubscription = new Subscription();
   constructor(
     private readonly router: Router,
@@ -51,14 +49,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       }
     });
 
-    this.directMessageStatsSubscription = this.notificationStatsFacade.directMessageStats$.subscribe((response: any) => {
-      if(response.data){
-        this.directMessageCount = response.data;
-        this.totalCount = this.eventLogCount + this.directMessageCount + this.alertCount;
-        this.cd.detectChanges();
-      }
-    });
-
     this.reloadFabBadgeSubscription = this.fabBadgeFacade.fabMenuReload$.subscribe((entity: any) => {
       this.notificationStatsFacade.updateStats(entity.entityId, entity.entityTypeCode);
     });
@@ -70,7 +60,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       this.entityId = clientId.toString();
       this.entityTypeCode = FabEntityTypeCode.Client;
       this.notificationStatsFacade.updateStats(this.entityId, FabEntityTypeCode.Client);
-     // this.notificationStatsFacade.directMessageStats(this.entityId,StatsTypeCode.DirectMessage)
     }
     else if (vendorId){
       this.entityId = vendorId.toString();
@@ -97,7 +86,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
     this.getStatsSubscription?.unsubscribe();
     this.resetStatsSubscription?.unsubscribe();
     this.navigationSubscription?.unsubscribe();
-    this.directMessageStatsSubscription?.unsubscribe();
     this.reloadFabBadgeSubscription?.unsubscribe();
   }
   /** Internal event methods **/
@@ -118,7 +106,8 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
     this.fabMenuFacade.isShownDirectMessage = !this.fabMenuFacade.isShownDirectMessage;
     this.fabMenuFacade.isShownEventLog = false;
     this.fabMenuFacade.isShownTodoReminders = false;
-    this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.DirectMessage);
+    //Commenting out the below section since for direct messages there is no need to reset the count to zero.
+    //this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.DirectMessage);
   }
 
   handleShowTodoRemindersClicked() {
@@ -137,11 +126,12 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
             this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.EventLog);    
           }
         }
-        else if(this.fabMenuFacade.isShownDirectMessage){
-          if (response.statsTypeCode == StatsTypeCode.DirectMessage || response.statsTypeCode == ''){
-            this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.DirectMessage);    
-          }
-        }
+        //Commenting out the below section since for direct messages there is no need to reset the count to zero.
+        // else if(this.fabMenuFacade.isShownDirectMessage){
+        //   if (response.statsTypeCode == StatsTypeCode.DirectMessage || response.statsTypeCode == ''){
+        //     this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.DirectMessage);    
+        //   }
+        // }
         else if(this.fabMenuFacade.isShownTodoReminders){
           if (response.statsTypeCode == StatsTypeCode.Alert || response.statsTypeCode == ''){
             this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.Alert);    
@@ -161,10 +151,12 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
         if(eventLogStats && eventLogStats.length > 0){
           this.eventLogCount = eventLogStats[0].statsCount;
         }
-        // let directMessageStats = res.filter((stat:any) => stat.statsTypeCode == StatsTypeCode.DirectMessage);
-        // if(directMessageStats && directMessageStats.length > 0){
-        //   this.directMessageCount = directMessageStats[0].statsCount;
-        // }
+
+        let directMessageStats = res.filter((stat:any) => stat.statsTypeCode == StatsTypeCode.DirectMessage);
+        if(directMessageStats && directMessageStats.length > 0){
+          this.directMessageCount = directMessageStats[0].statsCount;
+        }
+        
         let alertStats = res.filter((stat:any) => stat.statsTypeCode == StatsTypeCode.Alert);
         if(alertStats && alertStats.length > 0){
           this.alertCount = alertStats[0].statsCount;
