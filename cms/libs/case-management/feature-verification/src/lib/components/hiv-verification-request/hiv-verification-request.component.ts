@@ -137,32 +137,34 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
       this.userId = this.hivVerificationForm.controls["userId"].value;
       this.providerOption = data;
       this.providerEmail = this.providerEmail ?? '';
+      this.emailSentDate = null;
       if(data=== ProviderOption.HealthCareProvider){
-        if(this.emailSentDate || this.isSendEmailFailed){
-          this.healthCareProviderExists = true;
-        }
-        if(this.healthCareProviderExists){
-          if(!this.isResendClicked && this.emailSentDate){
-            this.isSendEmailVisiable = false;
-            this.isEmailFieldVisible = false;
-          }else if(this.isResendClicked){
-            this.isSendEmailVisiable = true;
-            this.isEmailFieldVisible = true;
-          }else{
-            this.isSendEmailVisiable = true;
-            this.isEmailFieldVisible = true;
-          }
-          this.loadHivVerificationEmail();
-        if(this.hivVerificationForm.controls["providerEmailAddress"].value !== null && this.hivVerificationForm.controls["providerEmailAddress"].value !== ''){
-          this.isSendRequest = true;
-          this.sentDate = new Date(this.intl.formatDate(this.hivVerificationForm.controls["verificationStatusDate"].value, this.dateFormat))
-        }
-      }
+        this.loadPendingEsignRequestInfo();
+      //   if(this.emailSentDate || this.isSendEmailFailed){
+      //     this.healthCareProviderExists = true;
+      //   }
+      //   if(this.healthCareProviderExists){
+
+      //     if(!this.isResendClicked && this.emailSentDate){
+      //       this.isSendEmailVisiable = false;
+      //       this.isEmailFieldVisible = false;
+      //     }else if(this.isResendClicked){
+      //       this.isSendEmailVisiable = true;
+      //       this.isEmailFieldVisible = true;
+      //     }else{
+      //       this.isSendEmailVisiable = true;
+      //       this.isEmailFieldVisible = true;
+      //       this.isSendRequest = false;
+      //     }
+      //     this.loadHivVerificationEmail();
+      //   if(this.hivVerificationForm.controls["providerEmailAddress"].value !== null && this.hivVerificationForm.controls["providerEmailAddress"].value !== ''){
+      //     this.isSendRequest = true;
+      //     this.sentDate = new Date(this.intl.formatDate(this.hivVerificationForm.controls["verificationStatusDate"].value, this.dateFormat))
+      //   }
+      // }
     } else if(data=== ProviderOption.CaseManager){
-      this.isSendEmailVisiable = true;
-      this.isEmailFieldVisible = false;
-    }
-      else{
+      this.getClientHivVerification();
+    }else{
         this.isEmailFieldVisible = false;
         this.isSendRequest = false;
         this.isResendRequest = false;
@@ -230,10 +232,20 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
   }
 
   onResendRequestClicked() {
-    this.isResendClicked = true;
-    this.isEmailFieldVisible = true;
-    this.isSendEmailVisiable = true;
-    this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
+
+    //this.isResendClicked = true;
+    //this.isEmailFieldVisible = true;
+    //this.isSendEmailVisiable = true;
+    //this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
+    if(this.providerOption === ProviderOption.CaseManager){
+      this.sendHivRequestCaseManager();
+    }else if(this.providerOption === ProviderOption.HealthCareProvider){
+      this.isResendClicked = true;
+      this.isEmailFieldVisible = true;
+      this.isSendEmailVisiable = true;
+      this.isSendRequest = false;
+    }
+
   }
 
   handleFileSelected(e: SelectEvent) {
@@ -438,6 +450,15 @@ loadPendingEsignRequestInfo(){
             this.isSendEmailFailed = true;
             this.errorMessage = data?.errorMessage;
           }
+            this.isEmailFieldVisible = false;
+            this.isSendRequest = true;
+            this.cdr.detectChanges();
+          }else{
+            this.isEmailFieldVisible = true;
+            this.isSendEmailVisiable = true;
+            this.isSendRequest = false;
+            this.isResendRequest = false;
+            this.emailSentDate = null;
             this.cdr.detectChanges();
           }
           this.verificationFacade.hideLoader();
@@ -458,7 +479,7 @@ getLoggedInUserProfile(){
   })
   this.verificationFacade.hideLoader();
 }
-sendHivRequestCaseManager(){;
+sendHivRequestCaseManager(){
     if(this.clientId != 0 && this.clientId != null && this.clientId != undefined){
       this.verificationFacade.showLoader();
       this.verificationFacade.sendHivRequestCaseManager(this.clientId).subscribe({
@@ -478,6 +499,35 @@ sendHivRequestCaseManager(){;
       });
     }
   }
+
+  getClientHivVerification(){
+    if(this.clientId != 0 && this.clientId != null && this.clientId != undefined){
+      this.verificationFacade.showLoader();
+      this.verificationFacade.getClientHivVerification(this.clientId).subscribe({
+        next: (response: any) => {
+          if(response){
+            this.isSendRequest = true;
+            this.loginUserName = response?.requestedUserName;
+            this.emailSentDate = this.intl.formatDate(new Date(response?.hivVerification?.verificationStatusDate),"MM/dd/yyyy");
+
+          }else{
+            this.isSendRequest = false;
+            this.isResendRequest=false;
+            this.emailSentDate=null;
+            this.isEmailFieldVisible = false;
+          }
+          this.cdr.detectChanges();
+          this.verificationFacade.hideLoader();
+        },
+        error: (err: any) => {
+          this.isSendRequest = false;
+          this.verificationFacade.hideLoader();
+          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+    }
+  }
+
 
 ngOnDestroy(): void {
   this.providerValueSubscription?.unsubscribe();

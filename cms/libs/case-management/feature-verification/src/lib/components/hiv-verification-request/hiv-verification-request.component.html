@@ -18,7 +18,7 @@
       <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'"
       class="overlay-send-button">
       <button kendoButton [primary]="true" (click)="onSendRequestClicked()"
-        *ngIf="isSendEmailVisiable" aria-label="send request">
+        aria-label="send request">
         Send request
       </button>
     </div>
@@ -27,10 +27,7 @@
     </div>
     <div class="flex-row ">
       <div class="flex-col flex-col-8">
-        <kendo-formhint *ngIf="providerOption === 'CASE_MANAGER'">Their Case Manager will receive a notification to
-          provide HIV
-          Verification. Once they submit the form, you will receive a notification
-          to approve or deny it.</kendo-formhint>
+        <kendo-formhint *ngIf="providerOption === 'CASE_MANAGER'">The Case Manager will receive a notification to provide HIV Verification. When they submit the form, you will receive a notification to approve or deny it.</kendo-formhint>
         <kendo-formhint *ngIf="isEmailFieldVisible">Their provider will receive an email to fill and sign an HIV
           Verification form.
           Once they submit the form, you will receive a notification to approve or deny it.</kendo-formhint>
@@ -129,7 +126,7 @@
 </section>
 
 <!-- Show this after send a request -->
-<section *ngIf="((providerValue$ | async) === 'HEALTHCARE_PROVIDER') && (isSendRequest || isResendRequest || emailSentDate != null)">
+<section *ngIf="(providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER') && (isSendRequest || isResendRequest || emailSentDate != null)">
     <div class="flex-row mt-3 align-items-center">
       <div class="flex-col">
         <span class="app-c-badge badge-primary">

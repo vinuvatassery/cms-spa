@@ -78,10 +78,12 @@ export class HivVerificationComponent implements OnInit, OnChanges {
         },
       });
     }
-    if(!this.healthCareProviderExists){
+    if(!this.healthCareProviderExists && this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null){
       this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=true;
     }else{
-      this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=false;
+      if(this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null){
+        this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=false;
+      }
     }
   }
   providerChange(event:any){
