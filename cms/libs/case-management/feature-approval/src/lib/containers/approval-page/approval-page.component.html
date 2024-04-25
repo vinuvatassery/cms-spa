@@ -120,6 +120,21 @@
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="Imported Claims">
+      <ng-template kendoTabTitle>
+        Other <span class="tab-batch-notify">{{hivVerificationCount}}</span></ng-template
+      >
+      <ng-template kendoTabContent>
+        <div class="nm-20 approval_container">
+
+          <case-management-hiv-verification-list (getHivVerification)="GetHivVerification()"
+          [hivVerificationApproval$]="hivVerificationApproval$" (saveHivVerificationApproval) ="updateHiveVerificationApproval($event)"
+          (selectedItemEligibilityIdSet)="selectedItemEligibilityIdSet($event)">
+
+          </case-management-hiv-verification-list>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
   </kendo-tabstrip>
 
   <ng-template #providerDetailsTemplate>

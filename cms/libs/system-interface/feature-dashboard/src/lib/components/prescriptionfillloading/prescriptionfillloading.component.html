@@ -1,9 +1,10 @@
 <div class="dash-header-with-filters">
-  <h5>Prescription Fill Loading</h5>
+  <h2 class="heading_card">Prescription Fill Loading</h2>
 </div>
-<div class="dashboard-cards-container">
-  <div class="interface-chart-cards"> 
-    <common-dashboard-loader-panel *ngIf="isloader"></common-dashboard-loader-panel>
+<common-dashboard-loader-panel *ngIf="isloader"></common-dashboard-loader-panel>
+<div class="dashboard-cards-container" *ngIf="!isloader">
+  
+
 
     <div  *ngIf="!isloader">
       <div class="flex-row ">
@@ -20,16 +21,18 @@
         </div>
 
         <div class="flex-col mt-1">
-          <h5> Latest File Received: </h5>
-          <h3>{{prescriptionsFills?.lastFileReceived??'' | date: 'MM/dd/YYYY hh:mm:ss a'}}</h3>
+          <p class="pres_subhead">Latest File Received:</p> 
+          <p class="pres_subhead_value">{{prescriptionsFills?.lastFileReceived??'' | date: 'MM/dd/YYYY hh:mm:ss a'}}</p>
         </div>
         <div class="flex-col flex-col-6 mt-2">
-          <h5> Total Record Received: </h5>
-         <h3>{{prescriptionsFills?.totalFiles?? 0}}</h3>
+          <p class="pres_subhead">Total Record Received:</p> 
+         
+         <p class="pres_subhead_value">{{prescriptionsFills?.totalFiles?? 0}}</p>
         </div>
         <div class="flex-col flex-col-6 mt-2">
-          <h5> File Record Failures: </h5>
-          <h3>{{prescriptionsFills?.totalRecordExceptions ??0}}</h3>
+         
+          <p class="pres_subhead">File Record Failures: </p> 
+          <p class="pres_subhead_value">{{prescriptionsFills?.totalRecordExceptions ??0}}</p>
         </div>
 
 
@@ -39,11 +42,11 @@
         <div class="flex-col mt-2"> 
       
           <button kendoButton aria-label="View Details"   look="flat"  class="card-link-button link_btn-with-arrow"
-            [routerLink]="['/system-interface/activity-log/batch-files']"> View Details <span  class="material-icons"> chevron_right </span>
+            [routerLink]="['/system-interface/activity-log/batch-files']"> View Details <span  class="material-icons" aria-hidden="true"> chevron_right </span>
           </button></div>
       </div>
 
-    </div>
+   
 
   </div>
 </div>

@@ -682,3 +682,17 @@ gridster .gridster-row {
   border-radius: 4px;
   padding: 4px;
 }
+
+.pres_subhead {
+  font-size: $font-size-l !important;
+  margin: 0;
+  margin-bottom: 8px;
+  font-family: $font-family-medium;
+}
+
+.pres_subhead_value {
+  font-size: $font-size-xlg !important;
+  margin: 0;
+  margin-bottom: 8px;
+  font-family: $font-family-light;
+}

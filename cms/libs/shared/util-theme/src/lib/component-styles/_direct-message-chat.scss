@@ -34,7 +34,7 @@
         p {
           background: $success-green-dark;
           padding: 10px;
-          border-radius: 6px 6px 6px 0px;
+          border-radius: 10px 10px 0px 6px;
           color: $white;
         }
       }
@@ -48,7 +48,7 @@
         p {
           background: rgba($color: $black, $alpha: 0.04);
           padding: 10px;
-          border-radius: 6px 6px 6px 0px;
+          border-radius: 10px 10px 6px 0px;
           color: $black;
         }
       }

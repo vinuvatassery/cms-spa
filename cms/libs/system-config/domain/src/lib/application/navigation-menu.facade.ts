@@ -35,6 +35,11 @@ export class NavigationMenuFacade {
   private directMessageCountSubject = new Subject<any>();
   directMessageCountCount$ = this.directMessageCountSubject.asObservable();
 
+  hivVerificationCountSubject = new Subject<any>();
+  hivVerificationCount$ = this.hivVerificationCountSubject.asObservable();
+
+
+
   /** constructor **/
   constructor(
     private readonly navigationMenuService: NavigationMenuService,
@@ -118,6 +123,20 @@ export class NavigationMenuFacade {
       {
         next: (count: any) => {
             this.pendingApprovalImportedClaimCountSubject.next(count);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
+  getHivVerificationCount() {
+    this.navigationMenuService.getHivVerificationCount()
+    .subscribe(
+      {
+        next: (count: any) => {
+            this.hivVerificationCountSubject.next(count);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  

@@ -22,6 +22,8 @@ import {
   CaseManagerFacade,
   ApprovalLimitPermissionCode,
   PendingApprovalPaymentTypeCode,
+  HivVerificationApprovalFacade,
+  CaseFacade,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -37,6 +39,7 @@ import {
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -70,6 +73,7 @@ export class ApprovalPageComponent implements OnInit {
   pendingApprovalPaymentCount! : any;
   pendingApprovalGeneralCount = 0;
   pendingApprovalImportedClaimCount = 0;
+  hivVerificationCount =0;
   state!: State;
   approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ = this.importedClaimFacade.approvalsImportedClaimsLists$;
@@ -90,6 +94,8 @@ export class ApprovalPageComponent implements OnInit {
   submitImportedClaims$ = this.importedClaimFacade.submitImportedClaims$;
   savePossibleMatchData$ = this.importedClaimFacade.savePossibleMatchData$;
   approvalPaymentProfilePhoto$ = this.pendingApprovalPaymentFacade.approvalPaymentProfilePhotoSubject
+  hivVerificationCount$ = this.navigationMenuFacade.hivVerificationCount$;
+  hivVerificationApproval$ = this.hivVerificationApprovalFacade.hivVerificationApproval$;
 
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
@@ -111,7 +117,10 @@ export class ApprovalPageComponent implements OnInit {
   insuranceVendorForm: FormGroup;
   insuranceProviderForm: FormGroup;
   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
+  loadWorkflow$ = this.hivVerificationApprovalFacade.loadWorkflow$;
   permissionLevels:any[]=[];
+  statusUpdatedEligibilityId!:any;
+
   /** Constructor **/
   constructor(
     private readonly caseManagerFacade: CaseManagerFacade,
@@ -130,7 +139,10 @@ export class ApprovalPageComponent implements OnInit {
     public lovFacade: LovFacade,
     private dialogService: DialogService,
     private drugService: DrugsFacade,
-    private insurancePlanFacade : InsurancePlanFacade
+    private insurancePlanFacade : InsurancePlanFacade,
+    private readonly hivVerificationApprovalFacade: HivVerificationApprovalFacade,
+    private readonly caseFacade: CaseFacade,
+    private readonly router: Router
   ) {
     this.healthCareForm = this.formBuilder.group({});
     this.drugForm = this.formBuilder.group({});
@@ -150,6 +162,28 @@ export class ApprovalPageComponent implements OnInit {
     this.loadPendingApprovalGeneralCount();
     this.loadPendingApprovalImportedClaimCount();
     this.loadPendingApprovalPaymentCount();
+    this.loadHivVerificationCountInit();
+    this.navigationMenuFacade.getHivVerificationCount();
+    this.loadWorkFlowSubscriptionInit();
+  }
+
+  loadWorkFlowSubscriptionInit() {
+    this.loadWorkflow$.subscribe((response: any) => {
+        this.caseFacade.getSessionInfoByCaseEligibilityId(this.statusUpdatedEligibilityId).subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.router.navigate(['case-management/case-detail'], {
+                queryParams: {
+                  sid: response.sessionId,
+                  eid: response.entityID,
+                  wtc: response?.workflowTypeCode
+                },
+              });
+            }
+          },
+
+        })
+    });
   }
 
   loadPendingApprovalGeneralCount()
@@ -183,12 +217,34 @@ export class ApprovalPageComponent implements OnInit {
       this.cd.detectChanges();
     });
   }
+
+  loadHivVerificationCountInit()
+  {
+    this.hivVerificationCount$.subscribe((response: any) => {
+        this.hivVerificationCount = response;
+      this.cd.detectChanges();
+    });
+  }
+  
+  GetHivVerification(){
+    this.hivVerificationApprovalFacade.getHivVerificationApproval();
+  }
+
+  updateHiveVerificationApproval(event: any){
+    this.statusUpdatedEligibilityId = event.eligibilityId;
+    this.hivVerificationApprovalFacade.updateHivVerificationApproval(event);
+  }
+  selectedItemEligibilityIdSet(eligibilityId:any){
+    this.statusUpdatedEligibilityId = eligibilityId;
+    this.hivVerificationApprovalFacade.loadWorkflowSubject.next(true);
+  }
+
   permissionServiceAndLevelArray:any[]=[];
 
   loadTabCount(){
     this.loadPendingApprovalPaymentLevel();
     this.navigationMenuFacade.getPendingApprovalGeneralCount();
-    this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
+    this.navigationMenuFacade.getPendingApprovalImportedClaimCount(); 
     this.pendingApprovalPaymentCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalPaymentCount = response;

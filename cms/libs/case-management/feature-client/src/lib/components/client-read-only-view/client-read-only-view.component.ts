@@ -16,7 +16,7 @@ import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationP
 import { Subject, Subscription, of } from 'rxjs';
 
 import { IntlService } from '@progress/kendo-angular-intl';
-import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
+import { ScrollFocusValidationfacade, FabBadgeFacade, FabEntityTypeCode } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-client-read-only-view',
   templateUrl: './client-read-only-view.component.html',
@@ -62,7 +62,8 @@ export class ClientReadOnlyViewComponent implements OnInit{
       private caseFacade: CaseFacade,
       private intl: IntlService,
       private configurationProvider: ConfigurationProvider,
-      private scrollFocusValidationfacade: ScrollFocusValidationfacade){}
+      private scrollFocusValidationfacade: ScrollFocusValidationfacade,
+      private fabBadgeFacade: FabBadgeFacade){}
    /** Lifecycle hooks **/
  ngOnInit(): void {
   this.loadReadOnlyClientInfoEvent.emit();
@@ -226,7 +227,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
             this.onCloseEditClientInformationClicked();
             this.onUpdateApplicantInfo.emit();
             this.clientFacade.reloadClientHeader();
-            this.clientFacade.reloadClientHeader();
+            this.fabBadgeFacade.reloadFabMenu(this.clientId, FabEntityTypeCode.Client);
           },
           error: (error: any) => {
             this.loaderService.hide();

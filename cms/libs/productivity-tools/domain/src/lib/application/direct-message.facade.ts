@@ -43,6 +43,7 @@ export class DirectMessageFacade {
   communicationDetailLoader$ = this.communicationDetailLoaderSubject.asObservable();
   sendMessage$ = this.sendMessageSubject.asObservable();
   comminicationToken$ = this.comminicationTokenSubject.asObservable();
+  uploadDocument$ = this.uploadDocumentSubject.asObservable();
    // handling the snackbar & loader
    snackbarMessage!: SnackBar;
    snackbarSubject = new Subject<SnackBar>(); 
@@ -159,4 +160,26 @@ export class DirectMessageFacade {
       },
     })
   }
+
+
+downloadChatAttachment(documentName: string, filePath:string) {
+  console.log(filePath)
+   filePath = filePath.replace("'\'",'$')
+   console.log(filePath)
+  this.directMessageDataService.downloadDocument(documentName, filePath).subscribe({
+        next: (data: any) => {
+            const fileUrl = window.URL.createObjectURL(data);
+          
+                const downloadLink = document.createElement('a');
+                downloadLink.href = fileUrl;
+                downloadLink.download = documentName;
+                downloadLink.click();
+            },
+        error: (error: any) => {
+          
+        }
+    })
+
 }
+}
+
