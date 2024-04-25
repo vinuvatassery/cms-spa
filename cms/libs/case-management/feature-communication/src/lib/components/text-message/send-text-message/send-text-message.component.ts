@@ -66,7 +66,7 @@ export class SendTextMessageComponent implements OnInit {
   documentTemplate!: any;
   messageRecipient!: any;
   templateTypeCode!: string;
-  currentSmsData:any;
+  currentSmsData:any = false;
   selectedSmsTemplate!: any;
   loginUserId!: any;
   isRecipientMissing:boolean = false;
@@ -91,6 +91,7 @@ export class SendTextMessageComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.currentSmsData = false;
     this.getLoggedInUserProfile();
     this.updateSendMessageFlag();
     this.addPhoneNumbersSubscription();
@@ -147,7 +148,7 @@ export class SendTextMessageComponent implements OnInit {
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
         },
       });
-      this.handleSmsEditor(true);
+      this.handleSmsEditor(false);
   }
 
   /** Private methods **/
@@ -314,7 +315,7 @@ export class SendTextMessageComponent implements OnInit {
       this.onCloseSendMessageConfirmClicked();
     }
     if(this.isFormValid){
-    let messages =  this.messageEditor.messageList.reverse().map((item:any) => item.messageText);
+    let messages =  this.messageEditor.messageList.map((item:any) => item.messageText);
     const sms: SmsNotification = {
       templateId: this.documentTemplate?.documentTemplateId ?? this.selectedSmsTemplate.notifcationDraftId,
       entity: this.entityType,
@@ -358,7 +359,7 @@ export class SendTextMessageComponent implements OnInit {
     }
     if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = true;
-    let messages =  this.messageEditor.messageList.reverse().map((item:any) => item.messageText);
+    let messages =  this.messageEditor.messageList.map((item:any) => item.messageText);
     this.selectedSmsTemplate.messages = messages;
 
     this.saveClientAndVendorNotificationForLater(this.selectedSmsTemplate);
@@ -442,7 +443,7 @@ export class SendTextMessageComponent implements OnInit {
           });
       }else{
       this.templateContent = event.templateContent;
-      this.smsMessages = event.messages?.slice(0).reverse((item: any)=> item);
+      this.smsMessages = event.messages?.slice(0).map((item: any)=> item);
       this.messageRecipient = event.recepients;
 
       this.messageRecipient = {

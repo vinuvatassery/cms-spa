@@ -190,6 +190,7 @@ export * from './lib/infrastructure/financial-management/financial-funding-sourc
 export * from './lib/infrastructure/financial-management/financial-pca.data.service';
 export * from './lib/infrastructure/financial-management/pca-assignments.data.service';
 export * from './lib/infrastructure/approval/pending-approval-general.data.service';
+export * from './lib/infrastructure/approval/hiv-verification-approval.facade';
 
 
 
@@ -248,5 +249,6 @@ export * from './lib/application/financial-management/pca-assignments.facade';
 export * from './lib/application/approval/pending-approval-payment.facade';
 export * from './lib/application/approval/pending-approval-general.facade';
 export * from './lib/application/approval/imported-claim.facade';
+export * from './lib/application/approval/hiv-verification-approval.facade';
 
 

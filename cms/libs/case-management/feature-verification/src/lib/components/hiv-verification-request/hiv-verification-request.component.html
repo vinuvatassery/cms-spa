@@ -3,7 +3,7 @@
     <div
      >
       <div class="verificaton_email"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
-        <div  *ngIf="!isResendRequest || !isSendRequest || !isSendEmailClicked">
+        <div  *ngIf="isSendEmailVisiable && isEmailFieldVisible">
         <kendo-floatinglabel text="Healthcare Provider’s Email Address">
           <kendo-textbox aria-label="healthcare providers email address"
             placeholder="Healthcare Provider’s Email Address" [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="providerEmail"
@@ -18,7 +18,7 @@
       <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'"
       class="overlay-send-button">
       <button kendoButton [primary]="true" (click)="onSendRequestClicked()"
-        *ngIf="!isResendRequest || !isSendRequest || !isSendEmailClicked" aria-label="send request">
+        *ngIf="isSendEmailVisiable" aria-label="send request">
         Send request
       </button>
     </div>

@@ -32,6 +32,13 @@ export class NavigationMenuFacade {
   private pendingApprovalImportedClaimCountSubject = new Subject<any>();
   pendingApprovalImportedClaimCount$ = this.pendingApprovalImportedClaimCountSubject.asObservable();
 
+  private directMessageCountSubject = new Subject<any>();
+  directMessageCountCount$ = this.directMessageCountSubject.asObservable();
+
+  hivVerificationCountSubject = new Subject<any>();
+  hivVerificationCount$ = this.hivVerificationCountSubject.asObservable();
+
+
 
   /** constructor **/
   constructor(
@@ -124,6 +131,20 @@ export class NavigationMenuFacade {
     );
   }
 
+  getHivVerificationCount() {
+    this.navigationMenuService.getHivVerificationCount()
+    .subscribe(
+      {
+        next: (count: any) => {
+            this.hivVerificationCountSubject.next(count);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
       if(type == SnackBarNotificationType.ERROR)
@@ -135,4 +156,17 @@ export class NavigationMenuFacade {
         this.hideLoader();   
   }
 
+  getDirectMessageCount() {
+    this.navigationMenuService.getDirectMessageCount()
+    .subscribe(
+      {
+        next: (count: any) => {
+            this.directMessageCountSubject.next(count);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
 }

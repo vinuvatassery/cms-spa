@@ -34,6 +34,7 @@ export class DirectMessageFacade {
   private communicationDetailSubject = new Subject<any>();
   private communicationDetailLoaderSubject = new Subject<boolean>();
   private sendMessageSubject = new Subject<any>();
+  private uploadDocumentSubject = new Subject<any>();
   private comminicationTokenSubject = new Subject<any>();
   /** Public properties **/
   directMessages$ = this.directMessagesSubject.asObservable();
@@ -42,6 +43,7 @@ export class DirectMessageFacade {
   communicationDetailLoader$ = this.communicationDetailLoaderSubject.asObservable();
   sendMessage$ = this.sendMessageSubject.asObservable();
   comminicationToken$ = this.comminicationTokenSubject.asObservable();
+  uploadDocument$ = this.uploadDocumentSubject.asObservable();
    // handling the snackbar & loader
    snackbarMessage!: SnackBar;
    snackbarSubject = new Subject<SnackBar>(); 
@@ -92,18 +94,16 @@ export class DirectMessageFacade {
     });
   }
   loadDirectMessagesLists(param:any): void {
-    this.loaderService.show()
     this.directMessageDataService.loadDirectMessagesLists(param).subscribe({
       next: (Response) => {
         this.loaderService.hide()
         const gridView: any = {
-          data: Response.items,
-          total:Response.totalCount,
+          data: Response.items == undefined ? [] : Response.items,
+          total:Response.totalCount == undefined ? 0:  Response.totalCount,
         }; 
         this.directMessagesListSubject.next(gridView);
       },
       error: (err) => {
-        this.loaderService.hide()
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
@@ -117,6 +117,7 @@ export class DirectMessageFacade {
       this.communicationDetailLoaderSubject.next(false)
     },
     error: (err) => {
+      this.communicationDetailSubject.next(undefined);
       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
     }
   })
@@ -143,4 +144,42 @@ export class DirectMessageFacade {
       }
     })
   }
+  uploadAttachments(uploadRequest:any){
+    this.showLoader()
+    this.directMessageDataService.uploadAttachments(uploadRequest).subscribe({
+      next: (Response) => {
+        this.uploadDocumentSubject.next(Response);
+        if (Response) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Document upload successfully.');
+          this.loaderService.hide();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+        this.loaderService.hide();
+      },
+    })
+  }
+
+
+downloadChatAttachment(documentName: string, filePath:string) {
+  console.log(filePath)
+   filePath = filePath.replace("'\'",'$')
+   console.log(filePath)
+  this.directMessageDataService.downloadDocument(documentName, filePath).subscribe({
+        next: (data: any) => {
+            const fileUrl = window.URL.createObjectURL(data);
+          
+                const downloadLink = document.createElement('a');
+                downloadLink.href = fileUrl;
+                downloadLink.download = documentName;
+                downloadLink.click();
+            },
+        error: (error: any) => {
+          
+        }
+    })
+
 }
+}
+
