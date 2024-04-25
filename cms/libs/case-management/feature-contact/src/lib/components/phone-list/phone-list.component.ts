@@ -70,6 +70,7 @@ export class PhoneListComponent implements OnChanges, OnDestroy {
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   userPhoneProfilrPhotoSubject = new Subject<any>();
   clientPhonesDataSubscription = new Subscription();
+  clientPhoneList : any;
   // gridOption: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public gridOption = [
@@ -198,9 +199,9 @@ this.reloadEmailsEvent.emit();
 
   gridDataHandle() {
     this.clientPhonesDataSubscription = this.clientPhonesData$.subscribe((data: any) => {
-      this.gridPhoneDataSubject.next(data);
-
+      this.gridPhoneDataSubject.next(data); 
       if (data?.total >= 0 || data?.total === -1) {
+        this.clientPhoneList = data.data;
         this.loader.next(false);
       }
     });

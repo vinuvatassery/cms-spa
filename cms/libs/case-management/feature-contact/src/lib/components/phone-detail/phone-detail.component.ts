@@ -3,7 +3,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** Facades  **/
 import { ContactFacade } from '@cms/case-management/domain';
-import { StatusFlag } from '@cms/shared/ui-common';
+import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subscription } from 'rxjs';
 @Component({
@@ -15,6 +15,7 @@ export class PhoneDetailComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() isEditValue!: boolean;
   @Input() lovClientPhoneDeviceType$ : any
+  @Input() clientPhoneList: any;
   @Input() selectedPhoneData: any
   @Input() deactivateFlag!: boolean;
   @Output() addClientPhoneEvent = new EventEmitter<any>();
@@ -30,6 +31,7 @@ export class PhoneDetailComponent implements OnInit, OnDestroy {
   isDeactivatePhoneNumberPopup = true;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   displayPhoneNote = false
+  preferredRequired = false
   clientPhoneForm!: FormGroup;
   isFormSubmitted =false;
   btnDisabled = false;
@@ -44,6 +46,7 @@ export class PhoneDetailComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    console.log(this.clientPhoneList);
     this.composePhoneForm()
     this.loadDdlPhoneType();
     this.addClientPhoneFormChangeSubscription();
@@ -126,7 +129,12 @@ export class PhoneDetailComponent implements OnInit, OnDestroy {
     else {
       this.otherNoteError = false;
     }
-
+    if(this.displayPhoneNote && !this.clientPhoneForm?.controls["preferredFlag"].value) {
+      this.preferredRequired = true;
+    }
+    else {
+      this.preferredRequired = false;
+    }
     if (this.clientPhoneForm.valid && !this.otherNoteError)
     {
       this.btnDisabled = true;
@@ -139,6 +147,14 @@ export class PhoneDetailComponent implements OnInit, OnDestroy {
         smsTextConsentFlag: this.getFlag(this.clientPhoneForm?.controls["smsTextConsentFlag"].value),
         preferredFlag: this.getFlag(this.clientPhoneForm?.controls["preferredFlag"].value),
         otherPhoneNote: this.clientPhoneForm?.controls["otherPhoneNote"].value,
+      }
+      this.validate();
+      if (this.preferredRequired && phoneData.preferredFlag === 'N')
+      {
+        return;
+      }
+      else{
+       this.preferredRequired = false;
       }
       this.addClientPhoneEvent.emit(phoneData);
     }
@@ -192,6 +208,22 @@ export class PhoneDetailComponent implements OnInit, OnDestroy {
     .subscribe(() => {
        this.btnDisabled = false;
     });
+  }
+  validate(){
+    let phone = this.clientPhoneList.find((s:any) => s.typeCode == this.clientPhoneForm.controls["deviceTypeCode"].value && !s.endDate && s.preferredFlag === 'Y' )
+    if(phone)
+    {
+     this.preferredRequired = true;
+    }
+    else{
+      this.preferredRequired = false;
+    }
+  }
+  prefferedContactChange(){
+    if(this.getFlag(this.clientPhoneForm?.controls["preferredFlag"].value) == 'Y')
+      {
+        this.preferredRequired = false;
+      }
   }
 }
 
