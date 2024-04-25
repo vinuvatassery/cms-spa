@@ -30,9 +30,11 @@ export class HivVerificationListComponent implements OnInit {
   rejectStatus: string = 'REJECT';
   hasDisabledSubmit = true;
   formValid = true;
-  submit ="SUBMIT";
-  saveToApplication="SAVED TO APPLICATION"
-  submitButtonText:any ="SUBMIT"
+  submit ="Submit";
+  saveToApplication="Saved To Application"
+  submitButtonText:any ="Submit"
+  confirmationBodyText!:any;
+  confirmButtonText!:any;
   toSave:
   {
     clientHivVerificationId: any,
@@ -107,7 +109,7 @@ export class HivVerificationListComponent implements OnInit {
         x.toSave = false;
       }
     });
-    this.hasDisabledSubmit = !(this.hivVerificationApproval.filter((x:any)=> x.toSave).length>0);
+    this.hasDisabledSubmit = this.hivVerificationApproval.filter((x:any) => x.toSave).length === 0;
     
   }
 
@@ -142,9 +144,17 @@ export class HivVerificationListComponent implements OnInit {
     this.formValid = true;
     this.validateItems();  
     let saveItems = this.hivVerificationApproval.filter((x:any)=> x.toSave);
-    this.formValid =   !(saveItems.filter((x:any) => x.reasonForRejectionInValid).length>0);   
+    this.formValid =   saveItems.some((x:any) => !x.reasonForRejectionInValid);   
+    if(saveItems[0].status === this.acceptStatus){
+      this.confirmationBodyText = "The HIV verification will be accepted and added to their application and attachments";
+      this.confirmButtonText = "SAVE";
+    }
+    else if(saveItems[0].status === this.rejectStatus){
+      this.confirmationBodyText = "The HIV verification will be rejected and added to their profile attachments.  This action cannot be undone";
+      this.confirmButtonText = "REJECT" ;
+    }
     if(this.formValid){
-      this.onSubmitConfirmClicked(this.submitRequestModalDialog);     
+      this.onSubmitConfirmClicked(this.submitRequestModalDialog);        
     }   
   }
 
