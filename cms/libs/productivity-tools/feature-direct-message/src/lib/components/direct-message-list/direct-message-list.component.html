@@ -22,7 +22,8 @@
     [sort]="state.sort"
     [skip]="state.skip"
     [pageSize]="state.take"
-    [pageable]="true">
+    [pageable]="true"
+    [loading]="(isDirectMessageGridLoaderShow | async) === true">
       <kendo-grid-column field="clientFullName" title="From" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" aria-label="Message From" 

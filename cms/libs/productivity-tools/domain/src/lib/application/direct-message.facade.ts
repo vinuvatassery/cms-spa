@@ -94,18 +94,16 @@ export class DirectMessageFacade {
     });
   }
   loadDirectMessagesLists(param:any): void {
-    this.loaderService.show()
     this.directMessageDataService.loadDirectMessagesLists(param).subscribe({
       next: (Response) => {
         this.loaderService.hide()
         const gridView: any = {
-          data: Response.items,
-          total:Response.totalCount,
+          data: Response.items == undefined ? [] : Response.items,
+          total:Response.totalCount == undefined ? 0:  Response.totalCount,
         }; 
         this.directMessagesListSubject.next(gridView);
       },
       error: (err) => {
-        this.loaderService.hide()
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
