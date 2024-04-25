@@ -12,7 +12,8 @@ export class FabBadgeFacade {
 
     reloadFabMenu(entityId: any, entityTypeCode: FabEntityTypeCode){
         const entity = {entityId, entityTypeCode};
-        this.fabMenuReloadSubject.next(entity);
+        setTimeout(() => {
+            this.fabMenuReloadSubject.next(entity)
+        }, 2000);
     }
-
 }
