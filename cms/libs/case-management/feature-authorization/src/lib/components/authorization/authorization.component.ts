@@ -118,10 +118,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   {
     this.loadUserContactInfo(this.clientId, this.clientCaseEligibilityId);
     this.buildForm();
-    this.addApplicationSignatureDetailsSubscription();
+    //this.addApplicationSignatureDetailsSubscription();
     this.addSaveSubscription();
     this.addDiscardChangesSubscription();
-    this.loadAuthorization();
   }
 
   getNotificationTypeCode(sendEmailClick: boolean) {
@@ -133,7 +132,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
         this.saveForLaterHeadterText = "Email Draft Saved";
-        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+        this.saveForLaterModelText="You must send the  Cer Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
       }else{
@@ -143,7 +142,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
         this.saveForLaterHeadterText = "Letter Draft Saved";
-        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+        this.saveForLaterModelText="You must send the  CerAuthorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send Letter to Print?';
         this.confirmationModelText="This action cannot be undone.";
       }
@@ -599,6 +598,9 @@ loadPendingEsignRequestInfo(){
           }
             this.ref.detectChanges();
           }
+          else{
+            this.loadAuthorization();
+          }
           this.loaderService.hide();
     },
     error: (err: any) => {
@@ -650,7 +652,7 @@ onGetSignedApplicationClicked(){
 
 loadAuthorization() {
   this.loaderService.show()
-  this.authorizationFacade.bindAuthorizationDetails(this.clientCaseEligibilityId??'')
+  this.authorizationFacade.bindAuthorizationDetails(this.clientCaseEligibilityId ?? '', CommunicationEventTypeCode.CopyOfSignedApplication ?? '')
   .subscribe({
     next: (data: any) => {
       if(data){

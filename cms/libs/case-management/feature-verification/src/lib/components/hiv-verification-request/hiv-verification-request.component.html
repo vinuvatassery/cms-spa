@@ -11,7 +11,7 @@
           </kendo-textbox>
         </kendo-floatinglabel>
         <kendo-formerror
-          *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value !== ''">Not a valid email format.</kendo-formerror>
+          *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value !== ''">Invalid Email Address.</kendo-formerror>
         <kendo-formerror
           *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value === ''">Healthcare Provider email is required.</kendo-formerror>
       </div>

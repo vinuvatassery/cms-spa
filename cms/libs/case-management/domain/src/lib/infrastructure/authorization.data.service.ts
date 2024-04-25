@@ -9,8 +9,8 @@ export class AuthorizationDataService {
     constructor(private readonly http: HttpClient,
         private configurationProvider: ConfigurationProvider) { }
 
-    loadAuthorization(eligibilityId: string) {
-        return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/authorization/application-signature?clientCaseEligibilityId=${eligibilityId}`);
+    loadAuthorization(eligibilityId: string, typeCode: string) {
+        return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/authorization/application-signature?clientCaseEligibilityId=${eligibilityId}&typeCode=${typeCode}`);
     }
 
     updateAuthorization(formData: any){
