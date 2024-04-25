@@ -98,8 +98,8 @@ export class DirectMessageFacade {
       next: (Response) => {
         this.loaderService.hide()
         const gridView: any = {
-          data: Response.items,
-          total:Response.totalCount,
+          data: Response.items == undefined ? [] : Response.items,
+          total:Response.totalCount == undefined ? 0:  Response.totalCount,
         }; 
         this.directMessagesListSubject.next(gridView);
       },
