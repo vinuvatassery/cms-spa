@@ -44,7 +44,8 @@ export class HivVerificationListComponent implements OnInit {
     templateTypeCode:any,
     resentEmail:any,
     clientId:any
-    eligibilityId:any
+    eligibilityId:any,
+    clientDocumentId:any
   } = {
     clientHivVerificationId: undefined,
     status: undefined,
@@ -53,7 +54,8 @@ export class HivVerificationListComponent implements OnInit {
     templateTypeCode:undefined,
     resentEmail:undefined,
     clientId:undefined,
-    eligibilityId:undefined
+    eligibilityId:undefined,
+    clientDocumentId: undefined
   };
 
   private submitRequestDialogService: any;
@@ -182,6 +184,7 @@ export class HivVerificationListComponent implements OnInit {
     this.toSave.templateTypeCode = this.getTemplateTypeCode(hivVerification[0].status);
     this.toSave.clientId =  hivVerification[0].clientId;
     this.toSave.eligibilityId = hivVerification[0].clientCaseEligibilityId;
+    this.toSave.clientDocumentId = hivVerification[0].clientDocumentId;
     this.saveHivVerificationApproval.emit({toSave:this.toSave, hivVerification:hivVerification});
     this.onCloseSubmitConfirmClicked();
   }
