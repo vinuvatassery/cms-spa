@@ -172,8 +172,8 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           this.clientCaseId = JSON.parse(session.sessionData)?.ClientCaseId
           this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
-          this.getHealthcareProvider();
           this.verificationFacade.getClientHivDocuments(this.clientId);
+          this.load();
           this.cdr.detectChanges();
         }
       });
@@ -290,73 +290,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.hivVerificationForm.controls['computerAttachment'].updateValueAndValidity();
     this.hivVerificationForm.controls["attachmentType"].removeValidators(Validators.required);
     this.hivVerificationForm.controls['attachmentType'].updateValueAndValidity();
-
   }
-
-  getHealthcareProvider() {
-    if(this.clientId > 0){
-    this.verificationFacade.showLoader();
-    this.verificationFacade.loadHealthCareProviders(this.clientId , 0 , 10, '' , 'asc', false).subscribe({
-      next: (healthCareProvidersResponse : any) => {
-        if(healthCareProvidersResponse)
-        {
-          const items = healthCareProvidersResponse["items"];
-          if(items.length > 0){
-            this.healthCareProviderExists = true;
-            items.forEach((item: any) => {
-              this.providerEmail = item?.emailAddress;
-            });
-            this.loadPendingEsignRequestInfo();
-          }else{
-            this.healthCareProviderExists = false;
-            this.load();
-          }
-        }
-        this.cdr.detectChanges();
-        this.verificationFacade.hideLoader();
-      },
-      error: (err) => {
-        this.verificationFacade.hideLoader();
-        this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-      },
-    });
-  }
-}
-
-loadPendingEsignRequestInfo(){
-  this.verificationFacade.showLoader();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', 'HIV_VERIFICATION_EMAIL')
-    .subscribe({
-      next: (data: any) =>{
-        if (data?.esignRequestId != null) {
-          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.InProgress){
-            this.isSendEmailClicked=true;
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
-            this.providerEmail = data?.to.map((x: any)=>x);
-            this.getLoggedInUserProfile();
-          }
-          else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
-            this.isSendEmailClicked=true;
-            this.providerEmail = data?.to.map((x: any)=>x);
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
-            this.getLoggedInUserProfile();
-          }else if(data?.esignRequestStatusCode == EsignStatusCode.Failed){
-            this.providerEmail = data?.to.map((x: any)=>x);
-            this.isSendEmailFailed = true;
-            this.errorMessage = data?.errorMessage;
-          }
-          }
-          this.load();
-          this.cdr.detectChanges();
-          this.verificationFacade.hideLoader();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      this.loggingService.logException(err);
-    },
-  });
-}
 
 getLoggedInUserProfile(){
   this.verificationFacade.showLoader();
