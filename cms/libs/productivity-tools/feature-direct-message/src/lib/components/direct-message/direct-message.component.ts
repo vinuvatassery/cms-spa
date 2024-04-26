@@ -178,8 +178,6 @@ export class DirectMessageComponent implements OnInit {
     await this.chatClient.startRealtimeNotifications();
     this.chatClient.on("chatMessageReceived", ((state: any) => {
       this.addMessage(state)
-      
-      
     }).bind(this));
 
     this.chatClient.on("chatMessageEdited", ((state: any) => {
@@ -212,7 +210,6 @@ export class DirectMessageComponent implements OnInit {
 
   addMessage(data:any){
     if (!this.messages.some(x => x.id == data.id)) {
-    
       let msg = undefined;
       if(this.checkJson(data.message)) {
         let parsed = JSON.parse(data.message);
@@ -230,7 +227,6 @@ export class DirectMessageComponent implements OnInit {
           formattedCreatedOn :  this.intl.formatDate(data.createdOn,this.dateFormat),
           pipedCreatedOn: this.datePipe.transform(data.createdOn,'EEEE, MMMM d, y'),
           showDownloadLoader : false
-
         };
       }
       else {
@@ -242,13 +238,10 @@ export class DirectMessageComponent implements OnInit {
           createdOn: data.createdOn,
       };
     }
-
       this.messages.push(msg);
       this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
       this.scrollToBottom()
       this.changeDetection.detectChanges()
-     
-
     }
   }
 

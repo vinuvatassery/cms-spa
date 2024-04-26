@@ -105,7 +105,7 @@
         <input type="text" [placeholder]="placeHolderText"
          class="message-normal-text-box" *ngIf="!messageToolBarShow" 
          [(ngModel)]="sendMsg.message"  (keydown.control.enter)="sendMessage()"
-         [disabled]="disableChatInput" />
+         [disabled]="disableChatInput || showChatLoader" />
         <kendo-editor [value]="value" class="message-editor" [iframe]="false"
          [placeholder]="placeHolderText" *ngIf="messageToolBarShow">
           <kendo-toolbar [overflow]="true" >
@@ -122,7 +122,7 @@
       </div>
       <div class="chat-actions">
         <div>
-          <kendo-dropdownbutton [disabled]="disableChatInput" [data]="ListModel" themeColor="primary" aria-label="Attach a File" title="Attach a File"
+          <kendo-dropdownbutton [disabled]="disableChatInput || showChatLoader" [data]="ListModel" themeColor="primary" aria-label="Attach a File" title="Attach a File"
             fillMode="flat" (itemClick)="onUploadDocumentsOpenClicked(UploadDocumentInDirectMessage, $event)">
 
             <span class="material-icons" aria-hidden="true"> attach_file </span>
