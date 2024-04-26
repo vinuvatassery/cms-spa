@@ -63,11 +63,10 @@
       </div>
       <div class="flex-col mt-3 mb-3"  *ngIf="isDeleted === false && !deactivateFlag">
         <span class="app-checkboxwidtext-wrapper">
-          <input formControlName="preferredFlag" type="checkbox" kendoCheckBox aria-labelledby="preferredContactMethod" (change)="prefferedContactChange()" 
+          <input formControlName="preferredFlag" type="checkbox" kendoCheckBox aria-labelledby="preferredContactMethod"
             id="preferredContactMethod" />
           <label class="k-checkbox-label" for="preferredContactMethod">Preferred contact method</label>
         </span>
-        <kendo-formerror *ngIf="preferredRequired">Preferred contact is required</kendo-formerror>
       </div>
     </div>
   </section>
