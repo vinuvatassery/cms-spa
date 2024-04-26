@@ -140,7 +140,7 @@ export class DirectMessageComponent implements OnInit {
        })
        this.directMessageSubscription$?.unsubscribe()
      this.directMessageSubscription$ =  this.directMessageFacade.communicationDetail$.pipe(take(1)).subscribe((res:any) => {
-      if(!res.communicationDetails){
+      if(!res?.communicationDetails){
         this.messages = []
         this.showChatLoader = false;
         this.groupedMessages = undefined
@@ -277,6 +277,13 @@ export class DirectMessageComponent implements OnInit {
     const messageContent: ChatMessageContent = {
       message:  JSON.stringify(message)
     };
+
+    var clientMessage ={ message : "Hi i received your message.",
+      loginUserId :  this.communicationDetails.clientUsercommunicationUserId
+}
+const clientMessageContent: ChatMessageContent = {
+message:  JSON.stringify(clientMessage)
+};
     this.directMessageFacade.sendMessage({
                     content: JSON.stringify(messageContent),
                     senderDisplayName: this.communicationDetails.loginUserName,
@@ -284,7 +291,8 @@ export class DirectMessageComponent implements OnInit {
                     userToken : this.communicationDetails.token,
                     threadId: this.threadId,
                     clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId, 
-                    clientDisplayName : this.communicationDetails.clientUserName
+                    clientDisplayName : this.communicationDetails.clientUserName,
+                    clientMessage : JSON.stringify(clientMessageContent)
                   })
     }            
     this.sendMsg.message =""
