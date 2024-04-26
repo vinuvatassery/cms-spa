@@ -16,7 +16,7 @@
           *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value === ''">Healthcare Provider email is required.</kendo-formerror>
       </div>
       <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'"
-      class="overlay-send-button">
+      class="overlay-send-button mt-1">
       <button kendoButton [primary]="true" (click)="onSendRequestClicked()"
         aria-label="send request">
         Send request
