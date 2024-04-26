@@ -112,8 +112,8 @@
         </kendo-panelbar-item>
       </kendo-panelbar>
 
-      <div class="d-flex align-items-center" *ngIf ="hivVerificationApproval?.length === 0">
-        <label class="mr-1" for="MedicalInsRowsPerPage">No information to display</label>
+      <div class="text-center" *ngIf ="hivVerificationApproval?.length === 0">
+    <common-grid-no-records></common-grid-no-records>
 
       </div>
     </div>
