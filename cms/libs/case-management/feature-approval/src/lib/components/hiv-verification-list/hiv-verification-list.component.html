@@ -112,8 +112,8 @@
         </kendo-panelbar-item>
       </kendo-panelbar>
 
-      <div class="d-flex align-items-center" *ngIf ="hivVerificationApproval?.length === 0">
-        <label class="mr-1" for="MedicalInsRowsPerPage">No information to display</label>
+      <div class="text-center" *ngIf ="hivVerificationApproval?.length === 0">
+    <common-grid-no-records></common-grid-no-records>
 
       </div>
     </div>
@@ -134,10 +134,10 @@
   <ng-template #submitRequestModalDialog>
    
     <kendo-dialog-titlebar  (close)="onCloseSubmitConfirmClicked()">
-      Submit Item(s)?</kendo-dialog-titlebar>  
+      {{submitButtonText}}</kendo-dialog-titlebar>  
       <section class="k-dialog-body newcase">
         <p  class="mb-1">
-          Hiv verification status submitted
+          {{confirmationBodyText}}
         </p>       
       </section> 
       <kendo-dialog-actions>
@@ -157,7 +157,7 @@
               [primary]="true"
               (click)="saveHivVerification()"
             >
-              SUBMIT
+              {{confirmButtonText}}
             </button>
           </div>
         </div>

@@ -405,8 +405,8 @@ export class ReminderDetailComponent implements OnInit {
     const todayDate =  new Date(this.intl.formatDate(new Date(), this.dateFormat));
     this.timeValidation()
     if ( this.clientReminderForm.controls['dueDate'].value && dueDate < todayDate) {
-      this.clientReminderForm.controls['dueDate'].setErrors({ 'incorrect': true });
-      return;
+      //this.clientReminderForm.controls['dueDate'].setErrors({ 'incorrect': true });
+      //return;
     }
     return true;
   }
@@ -423,7 +423,7 @@ export class ReminderDetailComponent implements OnInit {
     ((timeInHours ==  new Date().getHours() && timeInMinutes < new Date().getMinutes())
     || timeInHours <  new Date().getHours())) {
       //this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
-      return;
+      //return;
     }
   }
 }

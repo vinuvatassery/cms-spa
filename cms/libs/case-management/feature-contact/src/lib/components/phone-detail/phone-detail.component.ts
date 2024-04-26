@@ -126,7 +126,6 @@ export class PhoneDetailComponent implements OnInit, OnDestroy {
     else {
       this.otherNoteError = false;
     }
-
     if (this.clientPhoneForm.valid && !this.otherNoteError)
     {
       this.btnDisabled = true;

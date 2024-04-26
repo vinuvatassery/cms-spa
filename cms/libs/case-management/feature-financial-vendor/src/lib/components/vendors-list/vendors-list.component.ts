@@ -102,7 +102,7 @@ dropDowncolumns : any = [
     "columnCode": "tin",
     "columnDesc": "TIN"   ,
     "vendorTypeCode": "ALL",
-  }    
+  }
 
 ]
 
@@ -202,6 +202,10 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     }
 
     if(this.selectedColumn ==="vendorName")
+    {
+      operator = "contains"
+    }
+    if(this.selectedColumn ==="tin")
     {
       operator = "contains"
     }

@@ -18,7 +18,7 @@ export class HivVerificationListComponent implements OnInit {
   
   /** Output Properties **/
   @Output() getHivVerification = new EventEmitter<any>();
-  @Output() saveHivVerificationApproval = new EventEmitter<any>();
+  @Output() saveHivVerificationApproval = new EventEmitter<{toSave:any, hivVerification:any}>();
   @Output() selectedItemEligibilityIdSet = new EventEmitter<any>();
 
   /** Input Properties **/
@@ -30,9 +30,11 @@ export class HivVerificationListComponent implements OnInit {
   rejectStatus: string = 'REJECT';
   hasDisabledSubmit = true;
   formValid = true;
-  submit ="SUBMIT";
-  saveToApplication="SAVED TO APPLICATION"
-  submitButtonText:any ="SUBMIT"
+  submit ="Submit";
+  saveToApplication="Saved To Application"
+  submitButtonText:any ="Submit"
+  confirmationBodyText!:any;
+  confirmButtonText!:any;
   toSave:
   {
     clientHivVerificationId: any,
@@ -107,7 +109,7 @@ export class HivVerificationListComponent implements OnInit {
         x.toSave = false;
       }
     });
-    this.hasDisabledSubmit = !(this.hivVerificationApproval.filter((x:any)=> x.toSave).length>0);
+    this.hasDisabledSubmit = this.hivVerificationApproval.filter((x:any) => x.toSave).length === 0;
     
   }
 
@@ -129,8 +131,8 @@ export class HivVerificationListComponent implements OnInit {
   }
 
   openInNewTabOrDownload(View: boolean , item : any){
-    if(item.documentId !== null){
-      this.documentFacade.viewOrDownloadFile(View,item.documentId,item.fileName)
+    if(item.clientDocumentId !== null){
+      this.documentFacade.viewOrDownloadFile(View,item.clientDocumentId,item.fileName)
     }
     else{
       this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 
@@ -142,9 +144,17 @@ export class HivVerificationListComponent implements OnInit {
     this.formValid = true;
     this.validateItems();  
     let saveItems = this.hivVerificationApproval.filter((x:any)=> x.toSave);
-    this.formValid =   !(saveItems.filter((x:any) => x.reasonForRejectionInValid).length>0);   
+    this.formValid =   saveItems.some((x:any) => !x.reasonForRejectionInValid);   
+    if(saveItems[0].status === this.acceptStatus){
+      this.confirmationBodyText = "The HIV verification will be accepted and added to their application and attachments";
+      this.confirmButtonText = "SAVE";
+    }
+    else if(saveItems[0].status === this.rejectStatus){
+      this.confirmationBodyText = "The HIV verification will be rejected and added to their profile attachments.  This action cannot be undone";
+      this.confirmButtonText = "REJECT" ;
+    }
     if(this.formValid){
-      this.onSubmitConfirmClicked(this.submitRequestModalDialog);     
+      this.onSubmitConfirmClicked(this.submitRequestModalDialog);        
     }   
   }
 
@@ -163,16 +173,16 @@ export class HivVerificationListComponent implements OnInit {
   }
 
   saveHivVerification() {
-    let saveItems = this.hivVerificationApproval.filter((x: any) => x.toSave);
-    this.toSave.clientHivVerificationId = saveItems[0].clientHivVerificationId;
-    this.toSave.reasonForRejection = saveItems[0].reasonForRejection;
-    this.toSave.status = saveItems[0].status;
-    this.toSave.assignedCwName = saveItems[0].assignedCwName;
-    this.toSave.resentEmail = saveItems[0].resentEmail?? false;
-    this.toSave.templateTypeCode = this.getTemplateTypeCode( saveItems[0].status);
-    this.toSave.clientId =  saveItems[0].clientId;
-    this.toSave.eligibilityId = saveItems[0].clientCaseEligibilityId;
-    this.saveHivVerificationApproval.emit(this.toSave);
+    let hivVerification = this.hivVerificationApproval.filter((x: any) => x.toSave);
+    this.toSave.clientHivVerificationId = hivVerification[0].clientHivVerificationId;
+    this.toSave.reasonForRejection = hivVerification[0].reasonForRejection;
+    this.toSave.status = hivVerification[0].status;
+    this.toSave.assignedCwName = hivVerification[0].assignedCwName;
+    this.toSave.resentEmail = hivVerification[0].resentEmail?? false;
+    this.toSave.templateTypeCode = this.getTemplateTypeCode(hivVerification[0].status);
+    this.toSave.clientId =  hivVerification[0].clientId;
+    this.toSave.eligibilityId = hivVerification[0].clientCaseEligibilityId;
+    this.saveHivVerificationApproval.emit({toSave:this.toSave, hivVerification:hivVerification});
     this.onCloseSubmitConfirmClicked();
   }
 

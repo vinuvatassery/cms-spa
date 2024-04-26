@@ -153,16 +153,8 @@ export class EmailEditorComponent implements OnInit {
         else
         {
           if(!this.isContentMissing){
-          let templateId = null;
-          if(this.selectedTemplate.documentTemplateId === null){
-            templateId = this.selectedTemplate.notificationTemplateId
-          }
-          else {
-            templateId = this.selectedTemplate.documentTemplateId
-          }
-          this.loadClientVendorDefaultAttachment(templateId);
+          this.loadClientVendorDefaultAttachment(this.selectedTemplate.documentTemplateId ?? this.selectedTemplate.notificationTemplateId);
         }
-      //}
     }
 
     if (this.notificationGroup === ScreenType.VendorProfile) {
