@@ -181,7 +181,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   private load(){
-    this.verificationFacade.showLoader();
+    this.loaderService.show();
     this.verificationFacade.getHivVerificationWithAttachment( this.clientId, this.clientCaseEligibilityId).subscribe({
       next:(data)=>{
         if(data?.clientHivVerificationId){
@@ -210,7 +210,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           this.verificationFacade.showAttachmentOptions.next(true);
         }
 
-        this.verificationFacade.hideLoader();
+        this.loaderService.hide();
       },
       error:(error)=>{
         if (error) {
@@ -218,7 +218,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             SnackBarNotificationType.ERROR,
             error
           );
-          this.verificationFacade.hideLoader();
+          this.loaderService.hide();
         }
       }
     });

@@ -60,7 +60,6 @@ export class CommonActionsComponent implements OnInit, OnDestroy{
       this.entityId = clientId.toString();
       this.entityTypeCode = FabEntityTypeCode.Client;
       this.notificationStatsFacade.updateStats(this.entityId, FabEntityTypeCode.Client);
-      this.notificationStatsFacade.directMessageStats(this.entityId,StatsTypeCode.DirectMessage)
     }
     else if (vendorId){
       this.entityId = vendorId.toString();

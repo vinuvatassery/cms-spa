@@ -6,9 +6,8 @@ import { PendingApprovalGeneralService } from "../../infrastructure/approval/pen
 import { NavigationMenuFacade } from "@cms/system-config/domain";
 
 @Injectable({ providedIn: 'root' })
-export class HivVerificationApprovalFacade {
-  
-  acceptStatus: string = 'ACCEPT';
+export class HivVerificationApprovalFacade { 
+
 
   private hivVerificationApprovalSubject = new Subject<any>();
   hivVerificationApproval$ = this.hivVerificationApprovalSubject.asObservable();
@@ -64,11 +63,9 @@ export class HivVerificationApprovalFacade {
       this.hivVerificationApprovalService.updateHivVerificationApproval(hivVerification).subscribe(
         {
           next: (response: any) => {
-            this.hideLoader();     
-            this.getHivVerificationApproval();  
-            if(hivVerification.status=== this.acceptStatus){
-              this.loadWorkflowSubject.next(true);   
-            }
+            this.hideLoader();                 
+            this.loadWorkflowSubject.next(true);   
+            this.navigationMenuFacade.getHivVerificationCount();
             this.notificationSnackbarService.manageSnackBar(
               SnackBarNotificationType.SUCCESS,
               response.message

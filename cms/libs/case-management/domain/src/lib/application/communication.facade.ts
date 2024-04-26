@@ -379,12 +379,14 @@ export class CommunicationFacade {
     return this.emailDataService.saveEmailNotificationForLater(formData);
   }
 
-  prepareEsignLetterData(draftTemplate: any, entityId: any, loginUserId: string, cerEmailAttachedFiles: any[]) {
+  prepareEsignLetterData(draftTemplate: any, entityId: any, loginUserId: string, cerEmailAttachedFiles: any[], entityType: string) {
     const formData = new FormData();
+    let subTypeCode = draftTemplate?.subTypeCode ?? draftTemplate?.subtypeCode;
     formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
     formData.append('typeCode', draftTemplate?.typeCode ?? '');
     formData.append('entityId', entityId ?? '');
-    formData.append('entity', draftTemplate?.entity ?? '');
+    formData.append('entity', entityType ?? '');
+    formData.append('subTypeCode',subTypeCode)
     formData.append('loginUserId', loginUserId ?? '');
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('requestBody', draftTemplate?.templateContent ?? '');
