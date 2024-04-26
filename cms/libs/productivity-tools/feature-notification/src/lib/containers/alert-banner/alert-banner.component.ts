@@ -185,7 +185,7 @@ export class AlertBannerComponent implements OnInit {
             (dueDate <= this.addDays(dateNow,1))) {
              return alertItem.alertTypeCode != 'TODO' ?  '(Due in 1 day)' : AlertDueOn.Tomorrow;
            }else if(dueDate > dateNow){
-            return alertItem.alertTypeCode != 'TODO' ?  '(Due in '+(this.differenceInDays(dueDate,dateNow)+1)+ ' days)' :
+            return alertItem.alertTypeCode != 'TODO' ?  '(Due in '+(this.differenceInDays(dueDate,dateNow))+ ' days)' :
             (this.intl.formatDate(new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
            }else if (dueDate < dateNow){
             return alertItem.alertTypeCode != 'TODO' ?  '(Overdue)' : 
