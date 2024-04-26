@@ -66,6 +66,7 @@ export class DirectMessageComponent implements OnInit {
    directMessageSubscription$! : Subscription
   clientProfileSubscription$! : Subscription
   clientProfileLoaderSubscription!:Subscription
+  uploadDocumentSubscription!:Subscription
    private notificationReminderDialog: any;
    disableChatInput = false;
    /** Public properties **/
@@ -176,7 +177,6 @@ export class DirectMessageComponent implements OnInit {
     this.getListMessages();
     await this.chatClient.startRealtimeNotifications();
     this.chatClient.on("chatMessageReceived", ((state: any) => {
-      console.log('on message recieved')
       this.addMessage(state)
       
       
@@ -189,8 +189,6 @@ export class DirectMessageComponent implements OnInit {
       this.getListMessages();
     }).bind(this));
     this.chatClient.on("typingIndicatorReceived", ((state: any) => {
-      console.log('TypingIndicatorReceived: ' + state.senderDisplayName)
-      console.log('CommunicationUser: ' + this.communicationDetails.loginUserCommunicationUserId,)
     }).bind(this));
     this.chatClient.on("readReceiptReceived", ((state: any) => {
       this.getListMessages();
@@ -212,17 +210,6 @@ export class DirectMessageComponent implements OnInit {
     }).bind(this));
   }
 
-  // cwAddMessage(data: any) {
-  //   console.log(data);
-  //   this.addMessage(data)
-  //   this.caseWorkerSentMessage = false;
-  // }
-
-  // clientAddMessage(data:any){
-  //   console.log('in client')
-  //   this.addMessage(data)
-  // }
-
   addMessage(data:any){
     if (!this.messages.some(x => x.id == data.id)) {
     
@@ -242,7 +229,7 @@ export class DirectMessageComponent implements OnInit {
           senderDisplayName : data.senderDisplayName,
           formattedCreatedOn :  this.intl.formatDate(data.createdOn,this.dateFormat),
           pipedCreatedOn: this.datePipe.transform(data.createdOn,'EEEE, MMMM d, y'),
-             
+          showDownloadLoader : false
 
         };
       }
@@ -257,7 +244,6 @@ export class DirectMessageComponent implements OnInit {
     }
 
       this.messages.push(msg);
-      console.log(this.messages)
       this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
       this.scrollToBottom()
       this.changeDetection.detectChanges()
@@ -317,8 +303,6 @@ message:  JSON.stringify(clientMessage)
     let oneHourBefore = new Date(currentDate.getTime() - (4 * 60 * 60 * 1000));
     this.chatThreadClient = this.chatClient.getChatThreadClient(this.threadId);
    const messages = <any>this.chatThreadClient?.listMessages({startTime: this.threadCreationTime});
-
-     console.log(messages)
     if (!messages) {
       return;
     }
@@ -328,8 +312,6 @@ message:  JSON.stringify(clientMessage)
         let messageObj = this.messages.find((x:any) => x.id == message.id);
         if(this.checkJson(message.content.message)) {
           let parsed = JSON.parse(message.content.message);
-          console.log(parsed)
-          console.log(messageObj)
           var mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
           if (messageObj) {
             messageObj  = {
@@ -392,8 +374,6 @@ message:  JSON.stringify(clientMessage)
 
     }
     this.messages = this.messages.sort((a:any, b:any) => a.createdOn!.getTime() - b.createdOn!.getTime());
-    console.log(this.messages)
-    
     this.changeDetection.detectChanges();
      this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
     this.keys =  Object.keys(this.groupedMessages).sort()
@@ -429,7 +409,6 @@ getKey(item:any){
 }
 onUploadDocumentsOpenClicked(template: TemplateRef<unknown>, event:any): void {
   this.uploadDocumentTypeDetails = event;
-  console.log(this.uploadDocumentTypeDetails);
   this.notificationReminderDialog = this.dialogService.open({
     content: template,
     cssClass:
@@ -443,28 +422,39 @@ onUploadDocumentsClosed(event: any) {
   this.notificationReminderDialog.close();
 }
 getUploadedDocuments(uploadedRequest:any){
-  this.directMessageFacade.uploadDocument$.subscribe((res:any) =>{
+  this.uploadDocumentSubscription?.unsubscribe()
+  this.uploadDocumentSubscription = this.directMessageFacade.uploadDocument$.subscribe((res:any) =>{
     var message ={ message : "",
       loginUserId :  this.communicationDetails.loginUserId
 }
+      var filepaths = res.filePath.split('$')
+      var fileName = filepaths[filepaths.length -1]
       const attachmentMessageContent: ChatMessageContent = {
         message: JSON.stringify(message),
         attachments: [
           {
             attachmentType: 'image',
             url: res.filePath,
-            id:  res.fileName
+            id:  fileName
           },
         ],
       };
-
+      var clientMessage ={ message : "Hi i received your message.",
+      loginUserId :  this.communicationDetails.clientUsercommunicationUserId
+}
+const clientMessageContent: ChatMessageContent = {
+message:  JSON.stringify(clientMessage)
+};
        this.directMessageFacade.sendMessage(
         {
         content: JSON.stringify(attachmentMessageContent),
         senderDisplayName: this.communicationDetails.loginUserName,
         type: 'text',
         threadId: this.threadId,
-        userToken : this.communicationDetails.token
+        userToken : this.communicationDetails.token,
+        clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId, 
+                    clientDisplayName : this.communicationDetails.clientUserName,
+                    clientMessage : JSON.stringify(clientMessageContent)
       }
     );
     });
@@ -485,11 +475,12 @@ scrollToBottom(): void {
 }
 
 
-
-download(attachment:any){
+download(value :any, attachment:any){
+  value.showDownloadLoader = true;
   this.directMessageFacade.downloadAttachmentLoader$.subscribe((res:boolean)=>{
     this.downloadAttachmentLoader = res;
     this.changeDetection.detectChanges()
+    value.showDownloadLoader = false;
   })
   this.directMessageFacade.downloadChatAttachment(attachment.id, attachment.url)
 }

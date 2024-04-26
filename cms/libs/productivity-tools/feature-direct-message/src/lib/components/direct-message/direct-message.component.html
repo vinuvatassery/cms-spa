@@ -29,10 +29,10 @@
           <p *ngIf="value.message">{{value.message}}</p>
           <div class="msg-attachment-wrapper" *ngIf="value.attachments">
             <div  *ngFor="let attachment of value.attachments"> 
-            <div class="attachment-container-list" (click)="download(attachment)">
-              <span class="material-icons attach" aria-hidden="true" *ngIf="!downloadAttachmentLoader">  attach_file  </span>
-              <span class="material-icons download" aria-hidden="true" *ngIf="!downloadAttachmentLoader">    file_download   </span>
-              <span class=" k-icon k-i-loading k-input-loading-icon mr-1" *ngIf="downloadAttachmentLoader"></span>
+            <div class="attachment-container-list" (click)="download(value,attachment)">
+              <span class="material-icons attach" aria-hidden="true" *ngIf="!value.showDownloadLoader">  attach_file  </span>
+              <span class="material-icons download" aria-hidden="true" *ngIf="!value.showDownloadLoader">    file_download   </span>
+              <span class=" k-icon k-i-loading k-input-loading-icon mr-1" *ngIf="value.showDownloadLoader"></span>
                  <span>{{attachment.id}}</span>
             </div>
           </div>
@@ -56,10 +56,10 @@
             <div  *ngFor="let attachment of value.attachments">
 
            
-            <div class="attachment-container-list" (click)="download(attachment)" > 
-              <span class="material-icons attach" aria-hidden="true" *ngIf="!downloadAttachmentLoader">  attach_file  </span>
-              <span class="material-icons download" aria-hidden="true" *ngIf="!downloadAttachmentLoader">    file_download   </span>
-              <span class=" k-icon k-i-loading k-input-loading-icon mr-1" *ngIf="downloadAttachmentLoader"></span>
+            <div class="attachment-container-list" (click)="download(value,attachment)" > 
+              <span class="material-icons attach" aria-hidden="true" *ngIf="!value.showDownloadLoader">  attach_file  </span>
+              <span class="material-icons download" aria-hidden="true" *ngIf="!value.showDownloadLoader">    file_download   </span>
+              <span class=" k-icon k-i-loading k-input-loading-icon mr-1" *ngIf="value.showDownloadLoader"></span>
                  <span>{{attachment.id}}</span>
             </div>
           </div>
@@ -122,7 +122,7 @@
       </div>
       <div class="chat-actions">
         <div>
-          <kendo-dropdownbutton [data]="ListModel" themeColor="primary" aria-label="Attach a File" title="Attach a File"
+          <kendo-dropdownbutton [disabled]="disableChatInput" [data]="ListModel" themeColor="primary" aria-label="Attach a File" title="Attach a File"
             fillMode="flat" (itemClick)="onUploadDocumentsOpenClicked(UploadDocumentInDirectMessage, $event)">
 
             <span class="material-icons" aria-hidden="true"> attach_file </span>
