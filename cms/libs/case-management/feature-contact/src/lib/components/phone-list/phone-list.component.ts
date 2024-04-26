@@ -198,8 +198,7 @@ this.reloadEmailsEvent.emit();
 
   gridDataHandle() {
     this.clientPhonesDataSubscription = this.clientPhonesData$.subscribe((data: any) => {
-      this.gridPhoneDataSubject.next(data);
-
+      this.gridPhoneDataSubject.next(data); 
       if (data?.total >= 0 || data?.total === -1) {
         this.loader.next(false);
       }

@@ -25,6 +25,7 @@ import { ApprovalsExpectationReasonComponent } from './components/approvals-expe
 import { ApprovalsGeneralListDetailCaseReassignmentComponent } from './components/approvals-general-list-detail-casereassignment/approvals-general-list-detail-casereassignment.component';
 import { ApprovalsGeneralListDetailExceptionsComponent } from './components/approvals-general-list-detail-exceptions/approvals-general-list-detail-exceptions.component';
 import { ApprovalsGeneralListDetailAddtomasterlistComponent } from './components/approvals-general-list-detail-addtomasterlist/approvals-general-list-detail-addtomasterlist.component';
+import { HivVerificationListComponent } from './components/hiv-verification-list/hiv-verification-list.component';
 
 @NgModule({
   imports: [
@@ -33,7 +34,7 @@ import { ApprovalsGeneralListDetailAddtomasterlistComponent } from './components
     SharedUiCommonModule,
     SharedUiTpaModule,
     CaseManagementFeatureApprovalRoutingModule,
-    CaseManagementFeatureFinancialClaimsModule
+    CaseManagementFeatureFinancialClaimsModule,
   ],
   declarations: [
     ApprovalListComponent,
@@ -53,6 +54,7 @@ import { ApprovalsGeneralListDetailAddtomasterlistComponent } from './components
     ApprovalsGeneralListDetailCaseReassignmentComponent,
     ApprovalsGeneralListDetailExceptionsComponent,
     ApprovalsGeneralListDetailAddtomasterlistComponent,
+    HivVerificationListComponent,
   ],
   exports: [
     ApprovalListComponent,

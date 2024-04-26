@@ -340,7 +340,7 @@
                                     </tr>
                                     <tr>
                                         <td>Original Warrant #</td>
-                                        <td>{{item.warrantNbr }}</td>
+                                        <td>{{item.originalWarrantNumber }}</td>
                                     </tr>
                                     <tr>
                                         <td>Original Payment Method</td>
@@ -510,7 +510,9 @@
                                     </kendo-grid-column>
                                     <kendo-grid-column editor="numeric" [width]="100" field="qtyRefunded"
                                         title="Qty Refunded" [editable]="true" [sticky]="true" [width]="130">
+
                                         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                        <kendo-floatinglabel>
                                             <kendo-numerictextbox id="qtyRefunded{{tblIndex}}-{{rowIndex}}"
                                                 name="qtyRefunded{{tblIndex}}-{{rowIndex}}"
                                                 [fillMode]="formUiStyle.inputFillMode" aria-label="Qty Refunded"
@@ -518,6 +520,7 @@
                                                 [(ngModel)]="dataItem.qtyRefunded"
                                                 [ngClass]="ngDirtyInValid(dataItem,'qtyRefunded',tblIndex,rowIndex)">
                                             </kendo-numerictextbox>
+                                        </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="isAddClicked && !dataItem.qtyRefundedValid">Qty
                                                 Refunded is required</kendo-formerror>
                                             <kendo-formerror *ngIf="isAddClicked && dataItem.qtyRefundedGtRxQty">Qty
@@ -527,6 +530,7 @@
                                     <kendo-grid-column field="daySupplyRefunded" title="Days Supply Refunded"
                                         [width]="160" [sticky]="true">
                                         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                            <kendo-floatinglabel >
                                             <kendo-numerictextbox id="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
                                                 name="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
                                                 [fillMode]="formUiStyle.inputFillMode" aria-label="Days Supply Refunded"
@@ -535,7 +539,7 @@
                                                 [decimals]="0"
                                                 [ngClass]="ngDirtyInValid(dataItem,'daySupplyRefunded',tblIndex,rowIndex)">
                                             </kendo-numerictextbox>
-
+                                        </kendo-floatinglabel>
                                             <kendo-formerror
                                                 *ngIf="isAddClicked && !dataItem.daySupplyRefundedValid">Days Supply
                                                 Refunded is required</kendo-formerror>
@@ -546,19 +550,20 @@
                                                 Refunded cannot be more than the RX supply per Rx qty</kendo-formerror>
                                         </ng-template>
                                     </kendo-grid-column>
-                                    <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150"
-                                        [sticky]="true">
-                                        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                            <kendo-numerictextbox id="refundedAmount{{tblIndex}}-{{rowIndex}}"
-                                                name="refundedAmount{{tblIndex}}-{{rowIndex}}"
-                                                [fillMode]="formUiStyle.inputFillMode" aria-label="Refund Amount"
-                                                placeholder="Refund Amount" [min]="0"
-                                                [(ngModel)]="dataItem.refundedAmount"
-                                                [ngClass]="ngDirtyInValid(dataItem,'refundedAmount',tblIndex,rowIndex)">
-                                            </kendo-numerictextbox>
-                                            <kendo-formerror *ngIf="!dataItem.refundedAmountValid">Refund Amount is
-                                                required</kendo-formerror>
-                                        </ng-template>
+                                    <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150" [sticky]="true">
+                                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                        <kendo-floatinglabel  class="amount-with-symbol">
+                                        <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                                        <kendo-numerictextbox id="refundedAmount{{tblIndex}}-{{rowIndex}}"
+                                            name="refundedAmount{{tblIndex}}-{{rowIndex}}"
+                                            [fillMode]="formUiStyle.inputFillMode" aria-label="Refund Amount"
+                                            placeholder="Refund Amount" [min]="0"
+                                            [(ngModel)]="dataItem.refundedAmount"
+                                            [ngClass]="ngDirtyInValid(dataItem,'refundedAmount',tblIndex,rowIndex)">
+                                        </kendo-numerictextbox>
+                                        </kendo-floatinglabel>
+                                        <kendo-formerror *ngIf="!dataItem.refundedAmountValid">Refund Amount is required</kendo-formerror>
+                                        </ng-template> 
                                         <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
                                            <!-- // <span class="tableamountview"> <strong>$</strong> {{dataItem.totalOverSpendAmount | kendoNumber: 'n2'}}</span> -->
                                             <span class="tableamountview"> <strong>$</strong>

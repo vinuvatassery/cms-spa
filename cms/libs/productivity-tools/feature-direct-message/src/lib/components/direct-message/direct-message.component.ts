@@ -110,6 +110,10 @@ export class DirectMessageComponent implements OnInit {
   ngOnInit(): void {
 
     this.route.queryParamMap.subscribe((params :any) =>{
+      let id =  params.get('id')
+      if(id== this.clientId){
+        return;
+      }
       this.clientId = params.get('id')
       this.eid = params.get('e_id')
       this.showChatLoader = true;
@@ -143,8 +147,9 @@ export class DirectMessageComponent implements OnInit {
         this.threadCreationTime = res.creationTime
         this.chatClient = this.directMessageFacade.getChatClient(this.communicationDetails?.token)
         this.setupHandlers()
-        this.showChatLoader = false
+       
         this.changeDetection.detectChanges()     
+        this.showChatLoader = false
       })
           this.directMessageFacade.getCommunicationDetails(this.clientId)
 
@@ -164,7 +169,6 @@ export class DirectMessageComponent implements OnInit {
   async setupHandlers() {
     this.getListMessages();
     await this.chatClient.startRealtimeNotifications();
-    this.forFirstTime =0;
     this.chatClient.on("chatMessageReceived", ((state: any) => {
       this.addMessage(state);
         this.sendMessageonBehalfOfClient(state)
@@ -214,7 +218,9 @@ export class DirectMessageComponent implements OnInit {
           message: parsed.message,
           isOwner: data.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
           createdOn: data.createdOn,
-          image: (parsed && parsed?.attachments)? parsed?.attachments[0].url.split('/').pop() : null
+          image: (parsed && parsed?.attachments)? parsed?.attachments[0].url.split('/').pop() : null,
+          attachments: (parsed && parsed?.attachments)? parsed?.attachments : undefined
+
         };
       }
       else {
@@ -235,29 +241,7 @@ export class DirectMessageComponent implements OnInit {
   }
 
   async sendMessage() {
-    let fileURL = "hi its a text";
-    if (this.sendMsg.file) { 
-      const attachmentMessageContent: ChatMessageContent = {
-        message: this.sendMsg.message,
-        attachments: [
-          {
-            attachmentType: 'image',
-            url: fileURL,
-            id: fileURL
-          },
-        ],
-      };
-
-       this.directMessageFacade.sendMessage(
-        {
-        content: JSON.stringify(attachmentMessageContent),
-        senderDisplayName: this.communicationDetails.loginUserName,
-        type: 'text',
-        threadId: this.threadId,
-        userToken : this.communicationDetails.token
-      }
-    );
-    }
+ 
     if (!this.sendMsg.message) {
       return;
     }else{
@@ -305,6 +289,8 @@ export class DirectMessageComponent implements OnInit {
         let messageObj = this.messages.find((x:any) => x.id == message.id);
         if(this.checkJson(message.content.message)) {
           let parsed = JSON.parse(message.content.message);
+          console.log(parsed)
+          console.log(messageObj)
           if (messageObj) {
             messageObj  = {
               id: message.id,
@@ -326,7 +312,8 @@ export class DirectMessageComponent implements OnInit {
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
-              image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined 
+              image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined,
+              attachments: (parsed && parsed?.attachments)? parsed?.attachments : undefined
             };
             this.messages.push(msg);
           }
@@ -357,14 +344,19 @@ export class DirectMessageComponent implements OnInit {
           }
         }
       }
+
+
     }
     this.messages = this.messages.sort((a:any, b:any) => a.createdOn!.getTime() - b.createdOn!.getTime());
+    console.log(this.messages)
+    
     this.changeDetection.detectChanges();
      this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
     this.keys =  Object.keys(this.groupedMessages).sort()
     this.scrollToBottom()
     this.changeDetection.detectChanges()
-   }
+  
+  }
 
    mySortingFunction = (a :any, b:any) => {
     return new Date(a.key).getTime()-new Date(b.key).getTime();
@@ -407,6 +399,28 @@ onUploadDocumentsClosed(event: any) {
   this.notificationReminderDialog.close();
 }
 getUploadedDocuments(uploadedRequest:any){
+  this.directMessageFacade.uploadDocument$.subscribe((res:any) =>{
+      const attachmentMessageContent: ChatMessageContent = {
+        message: "",
+        attachments: [
+          {
+            attachmentType: 'image',
+            url: res.filePath,
+            id:  res.fileName
+          },
+        ],
+      };
+
+       this.directMessageFacade.sendMessage(
+        {
+        content: JSON.stringify(attachmentMessageContent),
+        senderDisplayName: this.communicationDetails.loginUserName,
+        type: 'text',
+        threadId: this.threadId,
+        userToken : this.communicationDetails.token
+      }
+    );
+    });
   this.directMessageFacade.uploadAttachments(uploadedRequest);
 }
 
@@ -433,7 +447,7 @@ async sendMessageonBehalfOfClient(state :any) {
     this.tokenSubscription?.unsubscribe()
     this.tokenSubscription = this.directMessageFacade.comminicationToken$.subscribe(res =>{
     this.directMessageFacade.sendMessage({
-      content: "Event has been logged",
+      content: "Hi i recieved your message.",
       senderDisplayName: this.communicationDetails.clientUserName,
       type: 'text',
       userToken : res.token,
@@ -444,6 +458,10 @@ async sendMessageonBehalfOfClient(state :any) {
   }
 }
 
+
+download(attachment:any){
+  this.directMessageFacade.downloadChatAttachment(attachment.id, attachment.url)
+}
 }
 
 

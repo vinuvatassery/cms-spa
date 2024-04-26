@@ -33,46 +33,35 @@
         <label class="center-date">{{ item.key}}</label>
         
         <ng-container *ngFor="let value of getVlauesWithKey(item.value)">
+  
+
         <div class="chat-grey chat-left-side" *ngIf="!value.isOwner">
+          <div class="time-status"><span class="chat-time">{{value.sender}}</span> </div>
           <p>{{value.message}}</p>
-          <div class="msg-attachment-wrapper" *ngIf="false">
-            <div class="attachment-container-list">
+          <div class="msg-attachment-wrapper" *ngIf="value.attachments">
+            <div class="attachment-container-list" *ngFor="let attachment of value.attachments">
               <span class="material-icons" aria-hidden="true">
                 attach_file
                 </span>
-                 <span>AttachmentName.pdf</span>
+                 <span>{{attachment.id}}</span>
             </div>
-            <div class="attachment-container-list">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
-                 <span>AttachmentName.pdf</span>
-            </div>
-            <div class="attachment-container-list">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
-                 <span>AttachmentName.pdf</span>
-            </div>
-            <div class="attachment-container-list">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
-                 <span>AttachmentName.pdf</span>
-            </div>
-            <div class="attachment-container-list">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
-                 <span>AttachmentName.pdf</span>
-            </div>
+    
           </div>
-          <div class="time-status" *ngIf="false"><span class="chat-time">{{value.createdOn | date:'h:mm a'}}</span> <span class="chat-time">Mark as Unread</span>
+          <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}}</span> 
           </div>
          
         </div>
         <div class="chat-green chat-right-side" *ngIf="value.isOwner">
-          <p>{{value.message}}</p>
+          <p *ngIf="value.message">{{value.message}}</p>
+          <div class="msg-attachment-wrapper" *ngIf="value.attachments">
+            <div class="attachment-container-list" *ngFor="let attachment of value.attachments">
+              <span class="material-icons" aria-hidden="true" (click)="download(attachment)">
+                attach_file
+                </span>
+                 <span>{{attachment.id}}</span>
+            </div>
+    
+          </div>
           <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}} (Read)</span> </div>
         </div>
      

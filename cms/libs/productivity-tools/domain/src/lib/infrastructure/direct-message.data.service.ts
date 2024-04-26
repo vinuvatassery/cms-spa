@@ -55,5 +55,12 @@ export class DirectMessageDataService {
   
   }
   
+  downloadDocument(documentName: string, documentPath:string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/file-download?documentName=${documentName}&documentPath=${documentPath}`
+     , {
+        responseType: 'blob'} );
+}
+
 }
 

@@ -36,9 +36,9 @@ export class AuthorizationFacade {
         this.loaderService.hide();
     }
 
-    loadAuthorization(eligibilityId: string) {
+    loadAuthorization(eligibilityId: string, typeCode: string) {
         this.showLoader();
-        return this.authorizationDataService.loadAuthorization(eligibilityId).subscribe({
+        return this.authorizationDataService.loadAuthorization(eligibilityId, typeCode).subscribe({
             next: (response) => {
                 this.hideLoader();
                 this.authApplicationSignatureSubject.next(response);
@@ -86,7 +86,7 @@ export class AuthorizationFacade {
         });
     }
 
-    bindAuthorizationDetails(clientCaseEligibility: any) {
-        return this.authorizationDataService.loadAuthorization(clientCaseEligibility);
+    bindAuthorizationDetails(clientCaseEligibility: any, typeCode: string) {
+        return this.authorizationDataService.loadAuthorization(clientCaseEligibility, typeCode);
       }
 }
