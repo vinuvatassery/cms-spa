@@ -9,11 +9,8 @@
             format="MM/dd/yyyy"
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="dueDate"
-            formatPlaceholder="formatPattern"
-            [min]="currentDate" 
-            placeholder=""
-            (keyup)="dueDateValidation()"
-            (valueChange)="dueDateValidation()"
+            formatPlaceholder="formatPattern"           
+            placeholder=""            
           >
           </kendo-datepicker>
           <kendo-formerror *ngIf="clientReminderForm.controls['dueDate'].hasError('incorrect')">
