@@ -25,6 +25,7 @@
           <kendo-timepicker
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="time"
+            format="hh:mm a"
             formatPlaceholder="formatPattern"
             (keyup)="timeValidation()"
             (valueChange)="timeValidation()"
