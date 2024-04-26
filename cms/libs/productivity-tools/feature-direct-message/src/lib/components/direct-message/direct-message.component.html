@@ -45,8 +45,8 @@
           <div class="app-c-avatar avatar-sm">
             <common-user-photo-icon  
             [userId]="value.loginUserId" 
-            [userFirstName]="value.senderDisplayName"
-            [userLastName]="value.senderDisplayName"
+            [userFirstName]="value.senderDisplayName.split(' ')[0]"
+            [userLastName]="value.senderDisplayName.split(' ')[1]"
             [linkType]="'profileIcon'"
            ></common-user-photo-icon>
           </div>
