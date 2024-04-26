@@ -131,7 +131,8 @@
       <div class="flex-col">
         <span class="app-c-badge badge-primary">
           <span class="material-icons" aria-label="information" aria-hidden="true" #refresh>info_outline</span>
-          <span>You will receive a notification once the Case Manager submits the HIV Verification</span>
+          <span *ngIf="providerOption === 'CASE_MANAGER'">You will receive a notification once the Case Manager submits the HIV Verification</span>
+          <span *ngIf="providerOption === 'HEALTHCARE_PROVIDER'">You will receive a notification once the provider submits the HIV Verification</span>
         </span>
       </div>
       <div class="flex-col mt-1">
