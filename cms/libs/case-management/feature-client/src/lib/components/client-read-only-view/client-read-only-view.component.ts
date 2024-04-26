@@ -309,6 +309,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
     this.appInfoForm.controls["firstName"].updateValueAndValidity();
     this.appInfoForm.controls["dateOfBirth"].setValidators([Validators.required]);
     this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
+    this.dateValidate();
     if (this.appInfoForm.controls["chkmiddleName"].value) {
       this.appInfoForm.controls["middleName"].removeValidators(Validators.required);;
       this.appInfoForm.controls["middleName"].updateValueAndValidity();
@@ -354,6 +355,16 @@ export class ClientReadOnlyViewComponent implements OnInit{
       if (hasError) {
         this.appInfoForm.controls['ssn'].setErrors(hasError);
       }
+    }
+  }
+
+  dateValidate() {
+    debugger;
+    const signedDate = this.appInfoForm.controls['dateOfBirth'].value;
+    const todayDate = new Date();
+    if (signedDate && signedDate > todayDate) {
+      this.appInfoForm.controls['dateOfBirth'].setErrors(null);
+      this.appInfoForm.controls['dateOfBirth'].setErrors({ incorrect: true });
     }
   }
 
