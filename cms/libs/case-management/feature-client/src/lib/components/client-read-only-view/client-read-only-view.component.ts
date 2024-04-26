@@ -359,7 +359,6 @@ export class ClientReadOnlyViewComponent implements OnInit{
   }
 
   dateValidate() {
-    debugger;
     const signedDate = this.appInfoForm.controls['dateOfBirth'].value;
     const todayDate = new Date();
     if (signedDate && signedDate > todayDate) {
