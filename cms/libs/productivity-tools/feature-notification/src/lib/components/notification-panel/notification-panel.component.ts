@@ -81,6 +81,7 @@ export class NotificationPanelComponent implements OnInit {
   isReminderOpenClicked = false
   getTodo$ = this.todoFacade.getTodo$
   crudText ="Create New"
+  notificationAndReminderPageTab : any;
   public data = [
     {
       buttonType: 'btn-h-primary',
@@ -164,7 +165,8 @@ export class NotificationPanelComponent implements OnInit {
       });
       this.notificationAndReminderDataList$.subscribe((data: any) => {
        if(data){
-       this.onNotificationsAndRemindersOpenClicked(this.notificationsAndRemindersDialog);
+        this.notificationAndReminderPageTab = data;
+        this.onNotificationsAndRemindersOpenClicked(this.notificationsAndRemindersDialog);
        }
         this.cdr.detectChanges();
       });

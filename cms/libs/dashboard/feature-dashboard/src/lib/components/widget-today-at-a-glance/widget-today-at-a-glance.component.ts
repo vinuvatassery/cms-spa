@@ -28,6 +28,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
   @Input() isEditDashboard!: any;
   @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
+  @Input() focusedTab:any = 'REMINDER';
   isNotificationsAndRemindersOpened = false;
   constructor(private widgetFacade: WidgetFacade , private readonly router: Router,
     private readonly cd: ChangeDetectorRef,
@@ -73,14 +74,15 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
     this.router.navigate([`/productivity-tools/direct-message`]);
   }
 
-  remindersNavigate()
+  remindersNavigate(tab: any)
   {
-    this.notificationFacade.loadNotificationsAndReminders();
+    this.notificationFacade.loadNotificationsAndReminders(tab);
+  
   }
 
-  notificationsNavigate()
+  notificationsNavigate(tab: any)
   {
-    this.notificationFacade.loadNotificationsAndReminders();
+    this.notificationFacade.loadNotificationsAndReminders(tab);
   }
   onNotificationsAndRemindersOpenClicked(template: TemplateRef<unknown>): void {
     this.notificationReminderDialog = this.dialogService.open({

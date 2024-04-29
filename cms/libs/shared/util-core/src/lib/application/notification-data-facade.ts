@@ -26,7 +26,7 @@ export class NotificationDataFacade {
         this.snackbarService.manageSnackBar(type, subtitle);
     }
 
-    loadNotificationsAndReminders(): void {
-     this.notificationAndReminderListDataSubject.next(true);
+    loadNotificationsAndReminders(tab: any): void {
+     this.notificationAndReminderListDataSubject.next(tab);
       }
 }
