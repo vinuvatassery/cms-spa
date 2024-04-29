@@ -168,7 +168,7 @@
   <kendo-dialog-titlebar 
   (close)="onNewReminderClosed(false)"
 
-  >{{crudText}} Reminder for {{vendorName}} </kendo-dialog-titlebar>
+  >{{crudText}} Reminder  {{isDelete? ' ?' :  'for '+vendorName}}  </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail 
   [isEdit]="isEdit"
   [isDelete]="isDelete"
