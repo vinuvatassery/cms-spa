@@ -491,12 +491,12 @@ sendHivRequestCaseManager(){
       this.verificationFacade.getClientHivVerification(this.clientId).subscribe({
         next: (response: any) => {
           if(response){
-            if(response?.verificationMethodCode === ProviderOption.CaseManager)
+            if(response?.hivVerification?.verificationMethodCode === ProviderOption.CaseManager)
             {
             this.isSendRequest = true;
             this.loginUserName = response?.requestedUserName;
             this.emailSentDate = this.intl.formatDate(new Date(response?.hivVerification?.verificationStatusDate),"MM/dd/yyyy");
-            }   
+            }
           }else{
             this.isSendRequest = false;
             this.isResendRequest=false;
