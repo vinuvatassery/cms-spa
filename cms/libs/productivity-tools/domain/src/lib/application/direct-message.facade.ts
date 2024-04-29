@@ -106,6 +106,7 @@ export class DirectMessageFacade {
         this.directMessagesListSubject.next(gridView);
       },
       error: (err) => {
+        this.loaderService.hide();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
