@@ -36,6 +36,7 @@ export class DirectMessageFacade {
   private sendMessageSubject = new Subject<any>();
   private uploadDocumentSubject = new Subject<any>();
   private comminicationTokenSubject = new Subject<any>();
+  private downloadAttachmentLoaderSubject = new Subject<boolean>();
   /** Public properties **/
   directMessages$ = this.directMessagesSubject.asObservable();
   directMessagesLists$ = this.directMessagesListSubject.asObservable();
@@ -44,6 +45,7 @@ export class DirectMessageFacade {
   sendMessage$ = this.sendMessageSubject.asObservable();
   comminicationToken$ = this.comminicationTokenSubject.asObservable();
   uploadDocument$ = this.uploadDocumentSubject.asObservable();
+  downloadAttachmentLoader$ = this.downloadAttachmentLoaderSubject.asObservable();
    // handling the snackbar & loader
    snackbarMessage!: SnackBar;
    snackbarSubject = new Subject<SnackBar>(); 
@@ -125,8 +127,11 @@ export class DirectMessageFacade {
   
   sendMessage(payload:any){
     this.directMessageDataService.sendMessage(payload).subscribe({
-      next: (Response) => {
-        this.sendMessageSubject.next(Response);
+      next: (response:any) => {
+        this.sendMessageSubject.next(response);
+        if(!payload.isClient){
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+        }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -163,11 +168,11 @@ export class DirectMessageFacade {
 
 
 downloadChatAttachment(documentName: string, filePath:string) {
-  console.log(filePath)
-   filePath = filePath.replace("'\'",'$')
-   console.log(filePath)
+   this.downloadAttachmentLoaderSubject.next(true)
   this.directMessageDataService.downloadDocument(documentName, filePath).subscribe({
         next: (data: any) => {
+          this.downloadAttachmentLoaderSubject.next(false)
+
             const fileUrl = window.URL.createObjectURL(data);
           
                 const downloadLink = document.createElement('a');

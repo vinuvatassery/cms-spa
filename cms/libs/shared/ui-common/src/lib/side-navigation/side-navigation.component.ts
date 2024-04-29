@@ -262,6 +262,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
     this.navigationMenuFacade.getPendingApprovalGeneralCount();
     this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
     this.subscribeToPendingApprovalCount();
+    this.navigationMenuFacade.getHivVerificationCount();
   }
 
   private subscribeToPendingApprovalCount() {
@@ -301,9 +302,9 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
 
   private setProductivityToolsCount() {
     this.pendingApprovalCount =
-      this.paymentCount + this.generalCount + this.importedClaimCount;
+      this.paymentCount + this.generalCount + this.importedClaimCount + this.hivVerificationCount;
     this.productivityToolsCount =
-      this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount + this.hivVerificationCount;
+      this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount;
     this.setBadgeValue(MenuBadge.pendingApprovals, this.pendingApprovalCount);
     this.setBadgeValue(MenuBadge.productivityTools, this.productivityToolsCount);
   }
