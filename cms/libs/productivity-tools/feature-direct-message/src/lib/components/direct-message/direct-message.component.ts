@@ -12,7 +12,7 @@ import {
   Renderer2,
   DoCheck
 } from '@angular/core';
-import { take,Subscription } from 'rxjs';
+import { take,Subscription, first } from 'rxjs';
 import { DirectMessageFacade } from '@cms/productivity-tools/domain';
 import { ChatClient, ChatThreadClient,ChatMessageContent, ChatThreadItem, ChatThreadProperties, SendMessageOptions, SendMessageRequest } from '@azure/communication-chat';
 import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
@@ -289,13 +289,12 @@ message:  JSON.stringify(clientMessage)
 
    async getListMessages() {
       this.messages = [];
-
       let currentDate = new Date();
 
    //Subtract one hour from the current time
     let oneHourBefore = new Date(currentDate.getTime() - (4 * 60 * 60 * 1000));
     this.chatThreadClient = this.chatClient.getChatThreadClient(this.threadId);
-   const messages = <any>this.chatThreadClient?.listMessages({startTime: this.threadCreationTime});
+   const messages = <any>this.chatThreadClient?.listMessages({});
     if (!messages) {
       return;
     }
@@ -416,7 +415,9 @@ onUploadDocumentsClosed(event: any) {
 }
 getUploadedDocuments(uploadedRequest:any){
   this.uploadDocumentSubscription?.unsubscribe()
-  this.uploadDocumentSubscription = this.directMessageFacade.uploadDocument$.subscribe((res:any) =>{
+  this.uploadDocumentSubscription = this.directMessageFacade.uploadDocument$
+  .pipe(first((res: any) => res != null))
+  .subscribe((res:any) =>{
     var message ={ message : "",
       loginUserId :  this.communicationDetails.loginUserId
 }

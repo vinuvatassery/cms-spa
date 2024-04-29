@@ -153,6 +153,8 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   isPageChanged: boolean = false;
   selectedDeletePremiumsList!: any;
   showExportLoader = false;
+  insuranceReportsResponse$ = this.financialPremiumsFacade.insuranceReportsResponse$;
+
   public premiumsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -1023,6 +1025,11 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     if(result){
       this.financialPremiumsFacade.SendInsuranceVendorReports(this.selectedSendReportList?.SelectedSendReports);
       this.onSendReportCloseClicked(true);
+      this.insuranceReportsResponse$.subscribe((response: any) => {
+        if (response) {
+         this.onBatchPremiumsGridSelectedCancelClicked();
+        }
+      });
     }
   }
 }

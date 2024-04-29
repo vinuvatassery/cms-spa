@@ -10,7 +10,7 @@ export class VerificationDataService {
     constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider){}
     save(clientHivVerification: FormData) {
         return this.http.post(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification`,
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/save`,
           clientHivVerification
         );
       }
