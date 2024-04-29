@@ -28,6 +28,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
   @Input() isSendEmailClicked!: boolean;
   @Input() loginUserId!: any;
   @Output() onAttachmentConfirmationEvent = new EventEmitter();
+  @Output() checkCaseManagerAndHealthCareProviderExists = new EventEmitter();
 
   /** Public properties **/
   rdoVerificationMethod!: string;
@@ -45,7 +46,6 @@ export class HivVerificationComponent implements OnInit, OnChanges {
 
   }
   ngOnInit(): void {
-
     this.lovFacade.getVerificationMethodLovs();
     this.hivVerificationForm?.get('providerOption')?.valueChanges.subscribe(val => {
       this.cd.detectChanges();
@@ -63,47 +63,9 @@ export class HivVerificationComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if(this.clientId != 0 && this.clientId != null && this.clientId != undefined){
-      this.verificationFacade.showLoader();
-      this.verificationFacade.getHivCaseWorker(this.clientId).subscribe({
-        next: (response: any) => {
-          if(response!=null){
-            this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled=false;
-          }else{
-            this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled=true;
-          }
-        },
-        error: (err: any) => {
-          this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled=true;
-        },
-      });
-
-      this.verificationFacade.loadHealthCareProviders(this.clientId , 0 , 10, '' , 'asc', false).subscribe({
-        next: (healthCareProvidersResponse : any) => {
-          if(healthCareProvidersResponse)
-          {
-            const items = healthCareProvidersResponse["items"];
-            if(items.length > 0){
-              this.healthCareProviderExists = true;
-              items.forEach((item: any) => {
-                this.providerEmail = item?.emailAddress;
-              });
-            }else{
-              this.healthCareProviderExists = false;
-            }
-            if(!this.healthCareProviderExists && this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null){
-              this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=true;
-            }else{
-              if(this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null){
-                this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=false;
-              }
-            }
-          }
-          this.verificationFacade.hideLoader();
-        },
-      });
-    }
+    
   }
+  
   providerChange(event:any){
     if(this.hivVerificationForm.controls["providerOption"].value=="UPLOAD_ATTACHMENT")
     {
@@ -121,6 +83,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
   onHivRemoveConfirmation(){
     this.verificationFacade.removeHivVerificationAttachment(this.clientHivVerificationId,this.clientId);
     this.hivVerificationForm.controls["providerOption"].setValue("");
+    this.checkCaseManagerAndHealthCareProviderExists.emit(true);
     this.verificationFacade.showHideAttachment.next(false);
     this.cd.detectChanges();
     this.updateVerificationCount(false);
