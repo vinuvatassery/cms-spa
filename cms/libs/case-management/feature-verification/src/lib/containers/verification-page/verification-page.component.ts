@@ -1,10 +1,10 @@
 /** Angular **/
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
-import { forkJoin, mergeMap, of, Subscription, first } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, first, catchError } from 'rxjs';
 /** Internal Libraries **/
-import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, EsignStatusCode, WorkflowTypeCode, CommunicationEventTypeCode } from '@cms/case-management/domain';
+import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, WorkflowTypeCode, VerificationStatusCode } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -57,6 +57,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     private readonly intl: IntlService,
     private readonly userDataService: UserDataService,
     private readonly configurationProvider: ConfigurationProvider,
+    private elementRef: ElementRef
 ) { }
 
   /** Lifecycle Hooks **/
@@ -173,11 +174,89 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.verificationFacade.getClientHivDocuments(this.clientId);
-          this.load();
+          this.checkCaseManagerAndHealthCareProviderExists(false);          
           this.cdr.detectChanges();
         }
       });
       this.verificationFacade.hideLoader();
+  }
+
+
+
+  checkCaseManagerAndHealthCareProviderExists(event: any) {
+    this.loaderService.show();
+    const caseManagerAndProvider = forkJoin({
+      caseManager: this.caseManagerExists(),
+      healthCareProvider: this.HealthCareProviderExists()
+    });
+
+    caseManagerAndProvider.subscribe((response: any) => {caseManagerAndProvider
+      if (response) {
+        //case manager check.
+        if (response.caseManager != null) {
+          this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = false;
+        } else {
+          this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
+        }
+
+        //health care provider check.
+        if (response.healthCareProvider) {
+          const items = response.healthCareProvider["items"];
+          if (items.length > 0) {
+            this.healthCareProviderExists = true;
+            items.forEach((item: any) => {
+              this.providerEmail = item?.emailAddress;
+            });
+          } else {
+            this.healthCareProviderExists = false;
+          }
+          if (!this.healthCareProviderExists && this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null) {
+            this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = true;
+          } else {
+            if (this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null) {
+              this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = false;
+            }
+          }
+        }
+        this.loaderService.hide();
+
+        if (!event) {
+          this.load();
+        }
+      }
+    })
+
+  }
+
+  caseManagerExists(){
+    return this.verificationFacade.getHivCaseWorker(this.clientId) .pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.verificationFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(false);
+        }
+        return of(false);
+      })
+    );
+  }
+
+  HealthCareProviderExists(){
+    return this.verificationFacade.loadHealthCareProviders(this.clientId , 0 , 10, '' , 'asc', false) .pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.verificationFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(false);
+        }
+        return of(false);
+      })
+    );
+      
   }
 
   private load(){
@@ -197,6 +276,11 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             else {
               this.verificationFacade.hivVerificationUploadedDocument.next(undefined);
               this.alreadyUploaded = false;
+            }
+            if(data?.verificationStatusCode === VerificationStatusCode.Approved){
+              this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled=true;
+              this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=true;
+             
             }
             this.cdr.detectChanges();
           }
@@ -238,7 +322,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         return of(true)
       }
     }
-
     return of(false)
   }
   private validateForm(){
@@ -262,7 +345,19 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.clientHivVerification = event;
   }
   private saveHivVerification() {
-    return this.verificationFacade.saveHivVerification(this.clientHivVerification);
+     return this.verificationFacade.saveHivVerification(this.clientHivVerification)
+     .pipe(
+          catchError((error: any) => {
+            if (error) {
+              this.verificationFacade.showHideSnackBar(
+                SnackBarNotificationType.ERROR,
+                error
+              );
+              return of(false);
+            }
+            return of(false);
+          })
+        );
   }
   validateUploadAttachemnt()
   {

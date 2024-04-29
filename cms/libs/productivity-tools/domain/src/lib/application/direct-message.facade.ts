@@ -131,8 +131,10 @@ export class DirectMessageFacade {
       next: (response:any) => {
         this.sendMessageSubject.next(response);
         if(!payload.isClient){
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+          if(response){
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
         }
+      }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -156,7 +158,6 @@ export class DirectMessageFacade {
       next: (Response) => {
         this.uploadDocumentSubject.next(Response);
         if (Response) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Document upload successfully.');
           this.loaderService.hide();
         }
       },
