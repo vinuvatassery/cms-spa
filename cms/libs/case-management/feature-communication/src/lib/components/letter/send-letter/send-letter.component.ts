@@ -121,7 +121,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
     this.addSubscriptions();
-    if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter) {
+    if (this.templateLoadType === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.templateLoadType === CommunicationEventTypeCode.CerAuthorizationLetter) {
+      this.loadClientAndVendorDraftLetterTemplates();
+    }else{
       if(this.isContinueDraftClicked){
         this.loadClientAndVendorDraftLetterTemplates();
       }else if(this.isNewNotificationClicked){
@@ -352,8 +354,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     if(this.isFormValid){
     this.loaderService.show();
     if(this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
-      this.entityId = this.workflowFacade.clientId ?? 0;
-      this.clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
       this.sendClientAndVendorLetterToPrint(this.entityId, this.clientCaseEligibilityId, draftTemplate, requestType, this.cerEmailAttachedFiles);
     }else{
       this.sendClientAndVendorLetterToPrint(this.entityId, this.clientCaseEligibilityId, draftTemplate, requestType, this.clientAndVendorAttachedFiles);
@@ -452,7 +452,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           eventGroupCode = EventGroupCode.ClientProfile;
           break;
           case CommunicationEventTypeCode.CerAuthorizationLetter:
-            templateTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
+            templateTypeCode = CommunicationEventTypeCode.CerLetterSent;
             eventGroupCode = EventGroupCode.CER;
             break;
     }
@@ -674,7 +674,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   private saveDraftEsignLetterRequest(draftTemplate: any) {
     this.loaderService.show();
     draftTemplate.entity = this.communicationLetterTypeCode;
-    let formData = this.communicationFacade.prepareEsignLetterData(draftTemplate, this.entityId,this.loginUserId, this.cerEmailAttachedFiles);
+    let formData = this.communicationFacade.prepareEsignLetterData(draftTemplate, this.entityId, this.loginUserId, this.cerEmailAttachedFiles, this.entityType);
     this.communicationFacade.saveEsignLetterForLater(formData)
         .subscribe({
           next: (data: any) =>{

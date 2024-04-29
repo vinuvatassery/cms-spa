@@ -12,7 +12,7 @@ import {
   Renderer2,
   DoCheck
 } from '@angular/core';
-import { take,Subscription } from 'rxjs';
+import { take,Subscription, first } from 'rxjs';
 import { DirectMessageFacade } from '@cms/productivity-tools/domain';
 import { ChatClient, ChatThreadClient,ChatMessageContent, ChatThreadItem, ChatThreadProperties, SendMessageOptions, SendMessageRequest } from '@azure/communication-chat';
 import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
@@ -53,6 +53,7 @@ export class DirectMessageComponent implements OnInit {
    @Output() closeAction = new EventEmitter();
    public value = ``;
    showDataLoader = false;
+   downloadAttachmentLoader = false;
    chatThreadClient:any
    placeHolderText ="Direct Message"
   forFirstTime =0
@@ -65,8 +66,9 @@ export class DirectMessageComponent implements OnInit {
    directMessageSubscription$! : Subscription
   clientProfileSubscription$! : Subscription
   clientProfileLoaderSubscription!:Subscription
+  uploadDocumentSubscription!:Subscription
    private notificationReminderDialog: any;
-
+   disableChatInput = false;
    /** Public properties **/
  
    uploadDocumentTypeDetails:any;
@@ -118,6 +120,9 @@ export class DirectMessageComponent implements OnInit {
       this.eid = params.get('e_id')
       this.showChatLoader = true;
       if(this.clientId){
+        if(this.chatClient){
+        this.chatClient.stopRealtimeNotifications()
+        }
         this.clientProfileSubscription$?.unsubscribe()
         this.clientProfileSubscription$ =   this.caseFacade.clientProfileData$.pipe(take(1)).subscribe((cp :any) =>{
           this.clientName = cp?.firstName
@@ -125,6 +130,7 @@ export class DirectMessageComponent implements OnInit {
        })
        this.caseFacade.loadClientProfileWithOutLoader(this.eid);
        this.clientProfileLoaderSubscription?.unsubscribe()
+       this.disableChatInput = false;
        this.clientProfileLoaderSubscription =this.caseFacade.clientProfileDataLoader$.subscribe(res =>{
         this.showLoader = res;
         this.changeDetection.detectChanges()
@@ -135,17 +141,18 @@ export class DirectMessageComponent implements OnInit {
        })
        this.directMessageSubscription$?.unsubscribe()
      this.directMessageSubscription$ =  this.directMessageFacade.communicationDetail$.pipe(take(1)).subscribe((res:any) => {
-      if(!res){
+      if(!res?.communicationDetails){
         this.messages = []
         this.showChatLoader = false;
         this.groupedMessages = undefined
+        this.disableChatInput = true;
         this.changeDetection.detectChanges()  
         return;
       } 
       this.communicationDetails = res.communicationDetails;
         this.threadId = res.threadId
         this.threadCreationTime = res.creationTime
-        this.chatClient = this.directMessageFacade.getChatClient(this.communicationDetails?.token)
+        this.chatClient = this.directMessageFacade.getChatClient(res.communicationDetails?.token)
         this.setupHandlers()
        
         this.changeDetection.detectChanges()     
@@ -170,9 +177,7 @@ export class DirectMessageComponent implements OnInit {
     this.getListMessages();
     await this.chatClient.startRealtimeNotifications();
     this.chatClient.on("chatMessageReceived", ((state: any) => {
-      this.addMessage(state);
-        this.sendMessageonBehalfOfClient(state)
-      
+      this.addMessage(state)
     }).bind(this));
 
     this.chatClient.on("chatMessageEdited", ((state: any) => {
@@ -182,8 +187,6 @@ export class DirectMessageComponent implements OnInit {
       this.getListMessages();
     }).bind(this));
     this.chatClient.on("typingIndicatorReceived", ((state: any) => {
-      console.log('TypingIndicatorReceived: ' + state.senderDisplayName)
-      console.log('CommunicationUser: ' + this.communicationDetails.loginUserCommunicationUserId,)
     }).bind(this));
     this.chatClient.on("readReceiptReceived", ((state: any) => {
       this.getListMessages();
@@ -205,22 +208,25 @@ export class DirectMessageComponent implements OnInit {
     }).bind(this));
   }
 
-  addMessage(data: any) {
-    console.log(data);
-
+  addMessage(data:any){
     if (!this.messages.some(x => x.id == data.id)) {
       let msg = undefined;
       if(this.checkJson(data.message)) {
         let parsed = JSON.parse(data.message);
+        var mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
         msg = {
           id: data.id,
           sender: data.senderDisplayName,
-          message: parsed.message,
+          message: mesg.message,
           isOwner: data.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
           createdOn: data.createdOn,
           image: (parsed && parsed?.attachments)? parsed?.attachments[0].url.split('/').pop() : null,
-          attachments: (parsed && parsed?.attachments)? parsed?.attachments : undefined
-
+          attachments: (parsed && parsed?.attachments)? parsed?.attachments : undefined,
+          loginUserId : mesg.loginUserId,
+          senderDisplayName : data.senderDisplayName,
+          formattedCreatedOn :  this.intl.formatDate(data.createdOn,this.dateFormat),
+          pipedCreatedOn: this.datePipe.transform(data.createdOn,'EEEE, MMMM d, y'),
+          showDownloadLoader : false
         };
       }
       else {
@@ -232,7 +238,6 @@ export class DirectMessageComponent implements OnInit {
           createdOn: data.createdOn,
       };
     }
-
       this.messages.push(msg);
       this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
       this.scrollToBottom()
@@ -241,19 +246,32 @@ export class DirectMessageComponent implements OnInit {
   }
 
   async sendMessage() {
- 
+   
     if (!this.sendMsg.message) {
       return;
     }else{
+      var message ={ message : this.sendMsg.message,
+               loginUserId :  this.communicationDetails.loginUserId
+      }
     const messageContent: ChatMessageContent = {
-      message: this.sendMsg.message
+      message:  JSON.stringify(message)
     };
+
+    var clientMessage ={ message : "Hi i received your message.",
+      loginUserId :  this.communicationDetails.clientUsercommunicationUserId
+}
+const clientMessageContent: ChatMessageContent = {
+message:  JSON.stringify(clientMessage)
+};
     this.directMessageFacade.sendMessage({
                     content: JSON.stringify(messageContent),
                     senderDisplayName: this.communicationDetails.loginUserName,
                     type: 'text',
                     userToken : this.communicationDetails.token,
                     threadId: this.threadId,
+                    clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId, 
+                    clientDisplayName : this.communicationDetails.clientUserName,
+                    clientMessage : JSON.stringify(clientMessageContent)
                   })
     }            
     this.sendMsg.message =""
@@ -271,15 +289,12 @@ export class DirectMessageComponent implements OnInit {
 
    async getListMessages() {
       this.messages = [];
-
       let currentDate = new Date();
 
    //Subtract one hour from the current time
     let oneHourBefore = new Date(currentDate.getTime() - (4 * 60 * 60 * 1000));
     this.chatThreadClient = this.chatClient.getChatThreadClient(this.threadId);
-   const messages = <any>this.chatThreadClient?.listMessages({startTime: this.threadCreationTime});
-
-     console.log(messages)
+   const messages = <any>this.chatThreadClient?.listMessages({});
     if (!messages) {
       return;
     }
@@ -289,13 +304,12 @@ export class DirectMessageComponent implements OnInit {
         let messageObj = this.messages.find((x:any) => x.id == message.id);
         if(this.checkJson(message.content.message)) {
           let parsed = JSON.parse(message.content.message);
-          console.log(parsed)
-          console.log(messageObj)
+          var mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
           if (messageObj) {
             messageObj  = {
               id: message.id,
               sender: message.senderDisplayName,
-              message: parsed.message,
+              message: mesg.message,
               isOwner: message.sender?.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
@@ -304,16 +318,19 @@ export class DirectMessageComponent implements OnInit {
             };
           }
           else {
+           
             let msg = {
               id: message.id,
               sender: message.senderDisplayName,
-              message: parsed.message ?? parsed.message,
+              message: mesg.message ?? mesg.message,
               isOwner: message.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
               image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined,
-              attachments: (parsed && parsed?.attachments)? parsed?.attachments : undefined
+              attachments: (parsed && parsed?.attachments)? parsed?.attachments : undefined,
+              loginUserId : mesg.loginUserId,
+              senderDisplayName : message.senderDisplayName
             };
             this.messages.push(msg);
           }
@@ -339,6 +356,7 @@ export class DirectMessageComponent implements OnInit {
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
+              senderDisplayName : message.senderDisplayName
             };
             this.messages.push(msg);
           }
@@ -348,8 +366,6 @@ export class DirectMessageComponent implements OnInit {
 
     }
     this.messages = this.messages.sort((a:any, b:any) => a.createdOn!.getTime() - b.createdOn!.getTime());
-    console.log(this.messages)
-    
     this.changeDetection.detectChanges();
      this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
     this.keys =  Object.keys(this.groupedMessages).sort()
@@ -385,7 +401,6 @@ getKey(item:any){
 }
 onUploadDocumentsOpenClicked(template: TemplateRef<unknown>, event:any): void {
   this.uploadDocumentTypeDetails = event;
-  console.log(this.uploadDocumentTypeDetails);
   this.notificationReminderDialog = this.dialogService.open({
     content: template,
     cssClass:
@@ -399,25 +414,41 @@ onUploadDocumentsClosed(event: any) {
   this.notificationReminderDialog.close();
 }
 getUploadedDocuments(uploadedRequest:any){
-  this.directMessageFacade.uploadDocument$.subscribe((res:any) =>{
+  this.uploadDocumentSubscription?.unsubscribe()
+  this.uploadDocumentSubscription = this.directMessageFacade.uploadDocument$
+  .pipe(first((res: any) => res != null))
+  .subscribe((res:any) =>{
+    var message ={ message : "",
+      loginUserId :  this.communicationDetails.loginUserId
+}
+      var filepaths = res.filePath.split('$')
+      var fileName = filepaths[filepaths.length -1]
       const attachmentMessageContent: ChatMessageContent = {
-        message: "",
+        message: JSON.stringify(message),
         attachments: [
           {
             attachmentType: 'image',
             url: res.filePath,
-            id:  res.fileName
+            id:  fileName
           },
         ],
       };
-
+      var clientMessage ={ message : "Hi i received your message.",
+      loginUserId :  this.communicationDetails.clientUsercommunicationUserId
+}
+const clientMessageContent: ChatMessageContent = {
+message:  JSON.stringify(clientMessage)
+};
        this.directMessageFacade.sendMessage(
         {
         content: JSON.stringify(attachmentMessageContent),
         senderDisplayName: this.communicationDetails.loginUserName,
         type: 'text',
         threadId: this.threadId,
-        userToken : this.communicationDetails.token
+        userToken : this.communicationDetails.token,
+        clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId, 
+                    clientDisplayName : this.communicationDetails.clientUserName,
+                    clientMessage : JSON.stringify(clientMessageContent)
       }
     );
     });
@@ -438,28 +469,13 @@ scrollToBottom(): void {
 }
 
 
-async sendMessageonBehalfOfClient(state :any) {
-  
-  if(state.senderDisplayName == this.communicationDetails?.clientUserName){
-  return;
-  }
-   else{
-    this.tokenSubscription?.unsubscribe()
-    this.tokenSubscription = this.directMessageFacade.comminicationToken$.subscribe(res =>{
-    this.directMessageFacade.sendMessage({
-      content: "Hi i recieved your message.",
-      senderDisplayName: this.communicationDetails.clientUserName,
-      type: 'text',
-      userToken : res.token,
-      threadId: this.threadId,
-     });
-   })
-   this.directMessageFacade.getAccessToken(this.communicationDetails.clientUsercommunicationUserId)
-  }
-}
-
-
-download(attachment:any){
+download(value :any, attachment:any){
+  value.showDownloadLoader = true;
+  this.directMessageFacade.downloadAttachmentLoader$.subscribe((res:boolean)=>{
+    this.downloadAttachmentLoader = res;
+    this.changeDetection.detectChanges()
+    value.showDownloadLoader = false;
+  })
   this.directMessageFacade.downloadChatAttachment(attachment.id, attachment.url)
 }
 }

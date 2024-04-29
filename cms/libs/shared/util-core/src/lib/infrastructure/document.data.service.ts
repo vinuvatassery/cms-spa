@@ -98,7 +98,7 @@ export class DocumentDataService {
 
   getOldDocumentsViewDownload(docuemntPath: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${docuemntPath}/download`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${docuemntPath}/download`
       , {
         responseType: 'blob'
       });
