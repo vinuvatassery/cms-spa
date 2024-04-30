@@ -433,7 +433,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
     emailData.templateTypeCode = templateTypeCode;
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
-    emailFormData.append('description', this.emailSubject ?? '');
+    emailFormData.append('description', draftTemplate.description ?? '');
     emailFormData.append('vendorAddressId', this.selectedMailCode?.vendorAddressId ?? '');
     emailFormData.append('selectedMailCode', this.selectedMailCode?.mailCode ?? '');
     this.communicationFacade.saveClientAndVendorNotificationForLater(emailFormData)
@@ -763,7 +763,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.selectedToEmails = [];
       this.selectedToEmails = event.to;
       this.emails = this.selectedToEmails;
-      this.emailSubject = event.description ?? event?.requestSubject;
+      this.emailSubject = event?.requestSubject ?? event.description;
       this.defaultBCCEmail = event.bcc;
       if (event?.bccEmail?.length > 0) {
         this.bccEmail = this.selectedBccEmail = event.bcc;

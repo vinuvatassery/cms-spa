@@ -182,7 +182,7 @@ export class CommunicationFacade {
       if (file.rawFile == undefined || file.rawFile == null) {
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
-        formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode ?? file?.document?.documentTypeCode);
+        formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode == undefined ? file?.document?.documentTypeCode : (file.typeCode == undefined && file?.document?.documentTypeCode == undefined ? '' : file.typeCode));
         formData.append('systemAttachments[' + i + '][clientDocumentId]', file?.document?.clientDocumentId ?? '');
         formData.append('systemAttachments[' + i + '][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
         i++;
@@ -238,11 +238,11 @@ export class CommunicationFacade {
       let i = 0;
       data?.clientAndVendorEmailAttachedFiles.forEach((file: any) => {
         if (file.rawFile == undefined || file.rawFile == null) {
-          formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file.document.fileName);
-          formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
-          formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode ?? file?.document?.documentTypeCode);
-          formData.append('systemAttachments[' + i + '][clientDocumentId]', file.document.clientDocumentId ?? '');
-          formData.append('systemAttachments[' + i + '][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file.document.documentTemplateId : '');
+          formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
+          formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file?.document));
+          formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode ?? '');
+          formData.append('systemAttachments[' + i + '][clientDocumentId]', file?.document?.clientDocumentId ?? '');
+          formData.append('systemAttachments[' + i + '][documentTemplateId]', file?.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
           i++;
         } else {
           formData.append('uploadedAttachments', file.rawFile);
