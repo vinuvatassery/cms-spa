@@ -166,11 +166,14 @@ export class ReminderDetailComponent implements OnInit {
       }
 
      if(this.isEdit && res){
+      this.clientReminderForm.controls['linkTo'].disable()
       this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
       this.entityTypeCode= res.entityTypeCode
       this.entityId = res.entityId
       this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
      if(res.entityTypeCode !=='CLIENT'){
+      this.clientReminderForm.controls['vendorId'].disable()    
+
       this.showVendorSearch = true;
       this.showClientSearch = false;
       this.placeholderText = this.vendorPlaceHolderText;
@@ -193,6 +196,8 @@ export class ReminderDetailComponent implements OnInit {
       this.clientReminderForm.controls['vendorId'].updateValueAndValidity();
      
     }else{
+      this.clientReminderForm.controls['clientId'].disable()    
+
       this.showVendorSearch = false;
       this.showClientSearch = true;
       this.placeholderText = this.clientPlaceHolderText;

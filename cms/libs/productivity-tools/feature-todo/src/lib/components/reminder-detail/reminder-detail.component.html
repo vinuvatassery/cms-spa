@@ -199,15 +199,16 @@
       look="outline"
       aria-label="Cancel"
       (click)="onCloseReminderClicked()"
+      class="mr-2"
     >
       Cancel
     </button>
-    <button *ngIf="!isDelete" kendoButton [primary]="true" (click)="save()"  class="mr-2"
-    aria-label="Create" >
+    <button *ngIf="!isDelete" kendoButton [primary]="true" (click)="save()"  
+    aria-label="Create" class="mr-2" >
       {{isEdit ? 'Update': 'Create'}} 
     </button>
     <div>
-      <button *ngIf="isDelete"  kendoButton aria-label="Delete" 
+      <button *ngIf="isEdit || isDelete"  kendoButton aria-label="Delete" 
       class="k-error-button" (click)="delete()">  Delete     </button>
       
       </div>
