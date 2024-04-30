@@ -194,31 +194,26 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
       this.sendHivRequestCaseManager();
     }
     if (this.providerOption ===ProviderOption.HealthCareProvider) {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const isValid = emailPattern.test(this.hivVerificationForm.controls["providerEmailAddress"].value);
+    if(isValid){
       this.loadHivVerificationEmail();
       this.hivVerificationForm.markAllAsTouched();
       this.hivVerificationForm.controls["providerEmailAddress"].setValidators([Validators.required, Validators.email]);
       this.hivVerificationForm.controls["providerEmailAddress"].updateValueAndValidity();
-    }
+  }else{
+    this.hivVerificationForm.controls['providerEmailAddress'].setErrors({ 'invalidEmail': true });
   }
+ }
+}
 
   healthcareProviderData(){
-  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const isValid = emailPattern.test(this.hivVerificationForm.controls["providerEmailAddress"].value);
-    if(isValid){
-      this.isSendRequest = true;
-      this.populateModel();
-      this.save();
-    }else{
-      this.hivVerificationForm.controls['providerEmailAddress'].setErrors({ 'invalidEmail': true });
-    }
+    this.isSendRequest = true;
+    this.populateModel();
+    this.save();
   }
 
   onResendRequestClicked() {
-
-    //this.isResendClicked = true;
-    //this.isEmailFieldVisible = true;
-    //this.isSendEmailVisiable = true;
-    //this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
     if(this.providerOption === ProviderOption.CaseManager){
       this.sendHivRequestCaseManager();
     }else if(this.providerOption === ProviderOption.HealthCareProvider){

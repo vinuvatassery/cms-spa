@@ -583,12 +583,12 @@ loadPendingEsignRequestInfo(){
       next: (data: any) =>{
         if (data != null && data?.esignRequestId != null) {
           if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.InProgress){
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
             this.isSendEmailClicked=true;
             this.getLoggedInUserProfile();
           }
           else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
             this.isSendEmailClicked=true;
             this.isCERApplicationSigned = true;
             this.loadCompletedEsignRequestInfo();
