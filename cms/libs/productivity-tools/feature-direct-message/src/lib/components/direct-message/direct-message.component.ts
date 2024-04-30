@@ -257,7 +257,7 @@ export class DirectMessageComponent implements OnInit {
       message:  JSON.stringify(message)
     };
 
-    var clientMessage ={ message : "Hi i received your message.",
+    var clientMessage ={ message : "Hi I received your message.",
       loginUserId :  this.communicationDetails.clientUsercommunicationUserId
 }
 const clientMessageContent: ChatMessageContent = {
@@ -299,7 +299,7 @@ message:  JSON.stringify(clientMessage)
       return;
     }
 
-     for await (const message of messages) {     
+     for await (const message of messages) {           
          if (message.type == "text") {
         let messageObj = this.messages.find((x:any) => x.id == message.id);
         if(this.checkJson(message.content.message)) {
@@ -433,7 +433,7 @@ getUploadedDocuments(uploadedRequest:any){
           },
         ],
       };
-      var clientMessage ={ message : "Hi i received your message.",
+      var clientMessage ={ message : "Hi I received your message.",
       loginUserId :  this.communicationDetails.clientUsercommunicationUserId
 }
 const clientMessageContent: ChatMessageContent = {
