@@ -452,7 +452,7 @@ message:  JSON.stringify(clientMessage)
       }
     );
     });
-  this.directMessageFacade.uploadAttachments(uploadedRequest);
+  this.directMessageFacade.uploadAttachments(uploadedRequest,this.threadId);
 }
 
 
