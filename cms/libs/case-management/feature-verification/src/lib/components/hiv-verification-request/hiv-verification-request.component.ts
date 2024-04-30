@@ -60,8 +60,10 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
   uploadedDate: any;
   uploadedBy: any;
   providerValueSubscription !: Subscription;
+  healthCareProviderSubscription!:Subscription;
   isSendEmailVisiable: boolean = false;
   isResendClicked: boolean = false;
+  isHealthCareValid: boolean = true;
 
   /** Public properties **/
   fileUploadRestrictions: FileRestrictions = {
@@ -151,7 +153,6 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
     });
     this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
       this.showAttachmentOptions = response;
-      this.uploadedAttachment = [];
       this.cdr.detectChanges();
     });
     this.verificationFacade.showHideAttachment$.subscribe(response=>{
@@ -185,10 +186,21 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
         this.cdr.detectChanges();
         this.updateVerificationCount(true);
       }
+      else{
+        this.uploadedAttachment =[];
+      }
     });
+
+    this.initHealthCareProviderInvalidSubject();
   }
 
-
+  initHealthCareProviderInvalidSubject() {
+      this.healthCareProviderSubscription = this.verificationFacade.healthcareInvalid$.subscribe((response: any) => {
+      this.isHealthCareValid = !response;
+      this.cdr.detectChanges();
+    })
+  }
+  
   onSendRequestClicked() {
     if(this.providerOption === ProviderOption.CaseManager){
       this.sendHivRequestCaseManager();
@@ -227,7 +239,7 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
       this.isSendEmailVisiable = true;
       this.isSendRequest = false;
     }
-
+    this.isHealthCareValid = true;
   }
 
   handleFileSelected(e: SelectEvent) {
@@ -518,5 +530,6 @@ sendHivRequestCaseManager(){
 
 ngOnDestroy(): void {
   this.providerValueSubscription?.unsubscribe();
+  this.healthCareProviderSubscription.unsubscribe();
 }
 }

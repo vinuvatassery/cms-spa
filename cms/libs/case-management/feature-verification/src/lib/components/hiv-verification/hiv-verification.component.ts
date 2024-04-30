@@ -70,6 +70,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
     if(this.hivVerificationForm.controls["providerOption"].value=="UPLOAD_ATTACHMENT")
     {
       this.verificationFacade.showHideAttachment.next(true);
+      this.verificationFacade.showAttachmentOptions.next(true);
     }
 
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
