@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription, first, catchError } from 'rxjs';
 /** Internal Libraries **/
-import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, WorkflowTypeCode, VerificationStatusCode, VerificationTypeCode } from '@cms/case-management/domain';
+import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, WorkflowTypeCode, VerificationStatusCode } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
