@@ -321,21 +321,22 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   private save() {
     this.validateForm();
     this.cdr.detectChanges();
-    if (this.hivVerificationForm.valid &&  this.isHealthCareValid) {
+    if (this.hivVerificationForm.valid) {
       if (this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && !this.isNotUploaded) {
         this.loaderService.show()
-        this.verificationFacade.isSaveandContinueSubject.next(true);
-        return this.saveHivVerification();
+        this.verificationFacade.isSaveandContinueSubject.next(true);        
       }
-      else if (this.hivVerificationForm.controls["providerOption"].value !== 'UPLOAD_ATTACHMENT' || this.alreadyUploaded) {
-        return of(true)
+      else if (this.hivVerificationForm.controls["providerOption"].value !== 'UPLOAD_ATTACHMENT') {
+        let hivVerification = {'verificationMethodCode': this.hivVerificationForm.controls["providerOption"].value,
+          'clientId':this.clientId, 'clientCaseEligibilityId': this.clientCaseEligibilityId};
+        this.clientHivVerification = hivVerification;
       }
+      return this.saveHivVerification()
     }
     return of(false)
   }
 
   private validateForm() {
-    this.isHealthCareValid = true;
     this.hivVerificationForm.markAllAsTouched();
     this.hivVerificationForm.controls["providerOption"].setValidators([Validators.required])
     this.hivVerificationForm.controls["providerOption"].updateValueAndValidity();
@@ -345,27 +346,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     }
     else {
       this.resetValidations();
-    }
-
-    if(this.hivVerificationForm.controls['providerOption'].value == 'HEALTHCARE_PROVIDER'){
-      if(this.currentHivUploadedDocument?.verificationMethodCode != 'HEALTHCARE_PROVIDER'){
-        this.isHealthCareValid = false;
-      }
-      else{
-        if(this.currentHivUploadedDocument?.verificationStatusCode != VerificationStatusCode.Accept){
-          this.isHealthCareValid = false;
-        }
-        else{
-          if (this.currentHivUploadedDocument?.hivVerification?.documentId === null 
-            || this.currentHivUploadedDocument?.hivVerification?.documentId === undefined){
-              this.isHealthCareValid = false;
-          }
-        }
-      }
-    }
-    if(!this.isHealthCareValid){
-      this.verificationFacade.healthcareInvalidSubject.next(true);
-    }
+    }   
 
     this.hivVerificationForm.updateValueAndValidity();
   }
@@ -377,16 +358,15 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     return this.verificationFacade.saveHivVerification(this.clientHivVerification)
       .pipe(
         catchError((error: any) => {
-          if (error) {
-            this.verificationFacade.showHideSnackBar(
-              SnackBarNotificationType.ERROR,
-              error
-            );
+          if (error) {           
+            this.verificationFacade.healthcareInvalidSubject.next(true);
             return of(false);
           }
+          this.verificationFacade.healthcareInvalidSubject.next(true);
           return of(false);
-        })
-      );
+        }),
+
+      )
   }
   validateUploadAttachemnt() {
     if (this.showAttachmentOptions) {
