@@ -120,7 +120,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
-    this.addSubscriptions();
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      this.addSubscriptions();
+    }
     if (this.templateLoadType === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.templateLoadType === CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadClientAndVendorDraftLetterTemplates();
     }else{
@@ -133,13 +135,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       }
     }
     this.isNewLetterClicked =  this.notificationGroup ? true : false;
-  }
-
-  addSubscriptions() {
-    this.vendorMailCodesubscription =  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
-      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
-      this.ref.detectChanges();
-    });
     if(this.entityType == EntityTypeCode.Vendor){
       this.variableName = 'Vendor';
       this.typeName = 'VENDOR_VARIABLE'
@@ -148,6 +143,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.variableName = 'Client';
       this.typeName = 'CLIENT_VARIABLE'
     }
+  }
+
+  addSubscriptions() {
+    this.vendorMailCodesubscription =  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+      this.ref.detectChanges();
+    });
   }
 
   getProfileName() {
