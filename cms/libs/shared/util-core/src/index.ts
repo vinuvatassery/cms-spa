@@ -13,3 +13,4 @@ export * from './lib/application/services/app-loader.service';
 export * from './lib/application/services/notification-snackbar-service';
 export * from './lib/application/services/reminder-notification-snackbar-service';
 export * from './lib/application/document-facade';
+export * from './lib/application/notification-data-facade';
