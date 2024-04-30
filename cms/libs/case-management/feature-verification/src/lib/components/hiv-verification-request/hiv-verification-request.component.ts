@@ -23,7 +23,6 @@ import { VerificationFacade,
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 import { StatusFlag } from '@cms/shared/ui-common';
-import { filter } from 'rxjs';
 import { UserDataService } from '@cms/system-config/domain';
 
 
@@ -60,8 +59,10 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
   uploadedDate: any;
   uploadedBy: any;
   providerValueSubscription !: Subscription;
+  healthCareProviderSubscription!:Subscription;
   isSendEmailVisiable: boolean = false;
   isResendClicked: boolean = false;
+  isHealthCareValid: boolean = true;
 
   /** Public properties **/
   fileUploadRestrictions: FileRestrictions = {
@@ -151,7 +152,6 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
     });
     this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
       this.showAttachmentOptions = response;
-      this.uploadedAttachment = [];
       this.cdr.detectChanges();
     });
     this.verificationFacade.showHideAttachment$.subscribe(response=>{
@@ -185,9 +185,20 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
         this.cdr.detectChanges();
         this.updateVerificationCount(true);
       }
+      else{
+        this.uploadedAttachment =[];
+      }
     });
+
+    this.initHealthCareProviderInvalidSubject();
   }
 
+  initHealthCareProviderInvalidSubject() {
+      this.healthCareProviderSubscription = this.verificationFacade.healthcareInvalid$.subscribe((response: any) => {
+      this.isHealthCareValid = !response;
+      this.cdr.detectChanges();
+    })
+  }
 
   onSendRequestClicked() {
     if(this.providerOption === ProviderOption.CaseManager){
@@ -222,7 +233,7 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
       this.isSendEmailVisiable = true;
       this.isSendRequest = false;
     }
-
+    this.isHealthCareValid = true;
   }
 
   handleFileSelected(e: SelectEvent) {
@@ -513,5 +524,6 @@ sendHivRequestCaseManager(){
 
 ngOnDestroy(): void {
   this.providerValueSubscription?.unsubscribe();
+  this.healthCareProviderSubscription.unsubscribe();
 }
 }
