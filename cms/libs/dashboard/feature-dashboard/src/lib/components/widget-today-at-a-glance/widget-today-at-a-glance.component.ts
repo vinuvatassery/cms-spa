@@ -61,7 +61,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
 
   todoitemsNavigate()
   {
-    this.router.navigate([`/productivity-tools/todo-items`]);
+    this.router.navigate([`/productivity-tools/todo-items/list`]);
   }
 
   pendingApprovalsNavigate()
