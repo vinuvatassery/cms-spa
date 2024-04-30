@@ -288,11 +288,10 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
    }
 
   endDateValidation(){
-    const endDate = this.todoDetailsForm.controls['endDate'].value;
-    const dueDate = this.todoDetailsForm.controls['dueDate'].value;
-    if (endDate < dueDate && this.todoDetailsForm.controls['endDate'].value) {
+    const endDate = new Date(this.todoDetailsForm.controls['endDate'].value).toDateString();
+    const dueDate = new Date(this.todoDetailsForm.controls['dueDate'].value).toDateString();
+    if ((endDate < dueDate || endDate == dueDate)  && this.todoDetailsForm.controls['endDate'].value) {
       this.todoDetailsForm.controls['endDate'].setErrors({ 'incorrect': true });
-    
       return;
     }
   }
