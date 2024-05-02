@@ -1,13 +1,28 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { CpAppComponent } from './containers/app.component';
 import { AppRoutingModule } from './app-routing.module';
-
+import { FeatureClientPortalHomeModule } from "@cms/feature-client-portal-home";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
+import { SharedUtilCoreModule } from '@cms/shared/util-core'; 
+import { CpLayoutComponent } from './components/layout/layout.component'; 
+import { ICON_SETTINGS } from '@progress/kendo-angular-icons';
+const COMPONENTS = [CpAppComponent, CpLayoutComponent, ];
 @NgModule({
-  declarations: [AppComponent, NxWelcomeComponent],
-  imports: [BrowserModule, AppRoutingModule],
-  providers: [],
-  bootstrap: [AppComponent],
+
+    declarations: [COMPONENTS],
+    imports: [
+      BrowserModule,
+      BrowserAnimationsModule,
+      HttpClientModule,
+      SharedUtilCoreModule,
+      SharedUiTpaModule, 
+      AppRoutingModule, 
+      FeatureClientPortalHomeModule  
+    ],
+    providers: [ { provide: LOCALE_ID, useValue: 'en-US' }, { provide: ICON_SETTINGS, useValue: { type: 'font' } } ],
+    bootstrap: [CpAppComponent],
 })
 export class AppModule {}

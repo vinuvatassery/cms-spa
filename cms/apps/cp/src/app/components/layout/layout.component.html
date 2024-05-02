@@ -1,0 +1,32 @@
+
+<!-- <common-loader-component></common-loader-component> -->
+<a href="#main-content" class="skip_content">Skip to main content</a>
+<h1 hidden>Client Portal</h1>
+<header class="app-l-header" kendoTooltip>
+  <div class="header_menu-left_most_section"  >
+ 
+    <div class="header-logo"  >
+     
+      <img src="./../../../assets/images/ORCares-Logo.png"  alt="ORCares Logo"  class="branding-logo" />
+    </div>
+  </div>
+
+ 
+</header>
+
+<section class="app-l-container" id="main-content"  kendoRippleContainer>
+ 
+         
+      <client-portal-cp-navigation></client-portal-cp-navigation>
+
+
+ 
+  </section>
+  <section class="app-l-body-container"   role="main" id="main">
+    <section class="app-l-body" kendoTooltip>
+      <ng-content select="[cpbody]" ></ng-content>
+    </section>
+  </section>
+ 
+<div kendoDialogContainer></div>
+ 
