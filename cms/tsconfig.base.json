@@ -108,12 +108,21 @@
       "@cms/case-management/feature-verification": [
         "libs/case-management/feature-verification/src/index.ts"
       ],
+      "@cms/client-portal-domain": ["libs/client-portal/domain/src/index.ts"],
+      "@cms/client-portal/feature-user-login-signup": [
+        "libs/client-portal/feature-user-login-signup/src/index.ts"
+      ],
+      "@cms/component/signin": ["component/signin/src/index.ts"],
       "@cms/dashboard/domain": ["libs/dashboard/domain/src/index.ts"],
       "@cms/dashboard/feature-dashboard": [
         "libs/dashboard/feature-dashboard/src/index.ts"
       ],
       "@cms/dashboard/feature-home": [
         "libs/dashboard/feature-home/src/index.ts"
+      ],
+      "@cms/domain": ["libs/client-portal/src/index.ts"],
+      "@cms/feature-client-portal-home": [
+        "libs/client-portal/feature-client-portal-home/src/index.ts"
       ],
       "@cms/feature-productivity-tools": [
         "libs/case-management/feature-productivity-tools/src/index.ts"
