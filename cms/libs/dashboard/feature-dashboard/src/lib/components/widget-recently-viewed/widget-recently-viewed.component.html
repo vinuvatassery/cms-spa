@@ -1,12 +1,11 @@
 
   <div class="dash-header-with-filters">
-    <h2 class="heading_card">RECENTLY VIEWED</h2>
   </div>
 
   <common-dashboard-loader-panel *ngIf="!gridData && !vendorGridData && !isEditDashboard">
   </common-dashboard-loader-panel>
 <div  *ngIf="gridData || vendorGridData">
-  <p> <strong>Recently Viewed Clients</strong>  </p>
+  <p> <strong>RECENTLY VIEWED CLIENT</strong>  </p>
     <div class="app-c-drag-row-table recently-view">
     <kendo-grid [data]="gridData" >
       <kendo-grid-column field="clientName" [width]="100"> </kendo-grid-column>
@@ -32,7 +31,7 @@
       </ng-template>
     </kendo-grid>
 
-  <p> <strong>Recently Viewed Vendors</strong> </p>
+  <p> <strong>RECENTLY VIEWED VENDOR</strong> </p>
   <kendo-grid [data]="vendorGridData" >
     <kendo-grid-column field="vendorName" [width]="195"> </kendo-grid-column>
     <kendo-grid-column field="tin" [width]="180">
