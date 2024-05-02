@@ -405,7 +405,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
     let typeParam = { type: 'INSURANCE', insuranceStatusType: 'ALL' }
-    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.maxResultCount, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
