@@ -459,6 +459,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
       this.loaderService.show();
+      this.clientCaseEligibilityId = this.clientCaseEligibilityId == null ? this.workflowFacade.clientCaseEligibilityId : this.clientCaseEligibilityId;
       this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId).subscribe({
         next: (casesResponse: any) => {
           this.loaderService.hide();

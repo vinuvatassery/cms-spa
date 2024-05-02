@@ -204,6 +204,7 @@ export class TodoDetailComponent implements OnInit {
     this.todoDetailsForm.controls['repeat'].enable();
     this.todoDetailsForm.controls['endDate'].enable();
     this.todoDetailsForm.controls['repeat'].setValidators(Validators.required)
+    this.endDateValidation();
   }
   /** Private methods **/
   private tareaVaribalesIntialization() {
@@ -288,12 +289,13 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
    }
 
   endDateValidation(){
-    const endDate = this.todoDetailsForm.controls['endDate'].value;
-    const dueDate = this.todoDetailsForm.controls['dueDate'].value;
-    if (endDate < dueDate && this.todoDetailsForm.controls['endDate'].value) {
+    const endDate = this.intl.formatDate(this.todoDetailsForm.controls['endDate'].value,this.dateFormat);
+    const dueDate = this.intl.formatDate(this.todoDetailsForm.controls['dueDate'].value,this.dateFormat);
+    if ((endDate < dueDate || endDate == dueDate)  && this.todoDetailsForm.controls['endDate'].value) {
       this.todoDetailsForm.controls['endDate'].setErrors({ 'incorrect': true });
-    
       return;
+    }else{
+      this.todoDetailsForm.controls['endDate'].clearValidators();
     }
   }
 
