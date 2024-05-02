@@ -7,7 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { SharedUtilCoreModule } from '@cms/shared/util-core'; 
-import { CpLayoutComponent } from './components/layout/layout.component'; 
+import { CpLayoutComponent } from './components/layout/layout.component';
+// import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { ICON_SETTINGS } from '@progress/kendo-angular-icons';
 const COMPONENTS = [CpAppComponent, CpLayoutComponent, ];
 @NgModule({
