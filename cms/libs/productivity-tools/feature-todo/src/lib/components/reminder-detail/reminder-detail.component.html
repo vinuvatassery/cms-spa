@@ -192,6 +192,11 @@
 </section>
 <kendo-dialog-actions kendoTooltip>
   <div class="justify-content-between">
+    <div>
+    <button *ngIf="isEdit"  kendoButton aria-label="Delete" 
+    class="k-danger-link" (click)="delete()">  Delete     </button>
+    
+    </div>
   <div class="justify-content-end">
     <button
       kendoButton
@@ -199,6 +204,7 @@
       look="outline"
       aria-label="Cancel"
       (click)="onCloseReminderClicked()"
+      class="mr-2"
     >
       Cancel
     </button>
@@ -207,7 +213,7 @@
       {{isEdit ? 'Update': 'Create'}} 
     </button>
     <div>
-      <button *ngIf="isEdit || isDelete"  kendoButton aria-label="Delete" 
+      <button *ngIf="isDelete"  kendoButton aria-label="Delete" 
       class="k-error-button" (click)="delete()">  Delete     </button>
       
       </div>
