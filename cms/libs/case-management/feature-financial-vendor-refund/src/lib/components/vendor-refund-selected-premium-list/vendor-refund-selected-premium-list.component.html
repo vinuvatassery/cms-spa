@@ -70,10 +70,10 @@
   [loading]="(refundInformationLoader$ | async) === true"
   [sortable]="true"
   [columnMenu]="{ filter: true }"
-  [skip]="state.skip" 
+  [skip]="state.skip"
   [sort]="state.sort"
   [filter]="state.filter"
-  (dataStateChange)="dataStateChange($event)" 
+  (dataStateChange)="dataStateChange($event)"
   (filterChange)="filterChange($event)"
   >
   <kendo-grid-column field="coverageStartDate" title="Coverage Dates" [width]="200">
@@ -216,7 +216,7 @@
                 <div class="flex-col flex-col-3">
                     <kendo-floatinglabel text="Voucher Payable">
                         <kendo-textbox aria-label="VP"  [fillMode]="formUiStyle.inputFillMode"
-                        formControlName="vp" >
+                        formControlName="vp" [maxlength]="13" >
                         </kendo-textbox>
                     </kendo-floatinglabel>
                     <kendo-formerror *ngIf="refundForm?.hasError('required','vp') && isSubmitted">Voucher Payable is required.

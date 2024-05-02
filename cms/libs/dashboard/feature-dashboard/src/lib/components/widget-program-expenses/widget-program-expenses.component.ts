@@ -63,7 +63,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
 
   dataYear  = ['Current Year','Last Year']
   selectFrequency ="M"
-  selectedTimeFrame = 'Current Year'
+  selectedTimeFrame = 'Last Year'
   @Input() isEditDashboard!: any; 
   @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();

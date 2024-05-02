@@ -21,6 +21,7 @@ export class VerificationFacade {
   showHideAttachment = new BehaviorSubject<boolean>(false);
   isSaveandContinueSubject = new BehaviorSubject<boolean>(true);
   formChangeEventSubject = new BehaviorSubject<boolean>(false);
+  healthcareInvalidSubject = new BehaviorSubject<boolean>(false);
 
 
   /** Public properties **/
@@ -31,6 +32,7 @@ export class VerificationFacade {
   clientHivDocumentsList$ = this.clientHivDocumentsListSubject.asObservable();
   isSaveandContinue$ = this.isSaveandContinueSubject.asObservable();
   formChangeEvent$ = this.formChangeEventSubject.asObservable();
+  healthcareInvalid$ = this.healthcareInvalidSubject.asObservable();
 
 
 

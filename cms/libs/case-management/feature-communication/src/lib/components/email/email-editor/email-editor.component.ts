@@ -311,7 +311,14 @@ export class EmailEditorComponent implements OnInit {
     for (let file of event.files){
     const isFileExists = this.selectedAttachedFile?.some((item: any) => item.name === file.name);
     if(!isFileExists){
-      this.selectedAttachedFile.push(file);
+      let uploadedFile = {
+        'rawFile': file.rawFile,
+        'size': file.size,
+        'name': file.name,
+        'uid': file.uid,
+        'documentPath': ''
+      };
+      this.selectedAttachedFile.push(uploadedFile);
      }
     }
    }
@@ -335,7 +342,7 @@ export class EmailEditorComponent implements OnInit {
 
   clientAttachmentChange(event:any)
   {
-    if( event != undefined){
+    if(event != undefined){
     const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.documentName);
     if(!isFileExists){
     this.uploadedAttachedFile = [{
@@ -354,7 +361,7 @@ export class EmailEditorComponent implements OnInit {
        }
       }
     this.uploadedAttachedFile = [];
-    this.cerEmailAttachments.emit(event);
+    this.cerEmailAttachments.emit(this.selectedAttachedFile[0]);
     }
     this.showClientAttachmentUpload = false;
   }
@@ -381,7 +388,7 @@ export class EmailEditorComponent implements OnInit {
        }
       }
     this.uploadedAttachedFile = [];
-    this.cerEmailAttachments.emit(event);
+    this.cerEmailAttachments.emit(this.selectedAttachedFile[0]);
     }
     this.showFormsAndDocumentsUpload = false;
    }

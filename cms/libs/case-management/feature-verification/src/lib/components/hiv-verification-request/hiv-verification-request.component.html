@@ -1,7 +1,7 @@
 <section [formGroup]="hivVerificationForm">
   <div *ngIf="!isSendRequest">
     <div
-     >
+     > 
       <div class="verificaton_email"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
         <div  *ngIf="isSendEmailVisiable && isEmailFieldVisible">
         <kendo-floatinglabel text="Healthcare Provider’s Email Address">
@@ -125,8 +125,37 @@
   </div>
 </section>
 
-<!-- Show this after send a request -->
-<section *ngIf="(providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER') && (isSendRequest || isResendRequest || emailSentDate != null)">
+
+  <section *ngIf="(providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER') && (isSendRequest || isResendRequest || emailSentDate != null)">
+   <div *ngIf="providerOption === 'HEALTHCARE_PROVIDER' && uploadedAttachment.length >0" class="attachment-from-client-lists-wrapper mt-2">
+    <div class="attachment-from-client-lists-container">
+      <div class="attachment-from-client-lists">
+        <span class="material-icons" aria-hidden="true">
+          file_present
+        </span>
+        <div>
+          <span>{{uploadedAttachment[0]?.name}}</span>
+        </div>  
+        <kendo-dropdownbutton [data]="data"  title="More option" look="bare"
+              aria-label="more actions" class="more_input small-i-btn app-dropdown-action"
+              [popupSettings]="{ popupClass: popupClass1,  animate: true }">
+              <span class="material-icons" aria-label="More option"> more_vert    </span>
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+                <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+                  aria-hidden="false" (click)="dataItem.click">
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                  <label> {{ dataItem.text }} </label>
+                </button>
+              </ng-template>
+            </kendo-dropdownbutton>    
+      </div>     
+    </div>
+  </div>
+  <kendo-formerror *ngIf="!isHealthCareValid"> HIV Verification is required.
+  </kendo-formerror>
+  
+
+
     <div class="flex-row mt-3 align-items-center">
       <div class="flex-col">
         <span class="app-c-badge badge-primary">

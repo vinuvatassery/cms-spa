@@ -6,7 +6,7 @@
   <common-dashboard-loader-panel *ngIf="!gridData && !vendorGridData && !isEditDashboard">
   </common-dashboard-loader-panel>
 <div  *ngIf="gridData || vendorGridData">
-  <p> <strong>CLIENTS</strong>  </p>
+  <p> <strong>Recently Viewed Clients</strong>  </p>
     <div class="app-c-drag-row-table recently-view">
     <kendo-grid [data]="gridData" >
       <kendo-grid-column field="clientName" [width]="100"> </kendo-grid-column>
@@ -32,7 +32,7 @@
       </ng-template>
     </kendo-grid>
 
-  <p> <strong>VENDORS</strong> </p>
+  <p> <strong>Recently Viewed Vendors</strong> </p>
   <kendo-grid [data]="vendorGridData" >
     <kendo-grid-column field="vendorName" [width]="195"> </kendo-grid-column>
     <kendo-grid-column field="tin" [width]="180">

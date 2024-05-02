@@ -106,6 +106,7 @@ export class DirectMessageFacade {
         this.directMessagesListSubject.next(gridView);
       },
       error: (err) => {
+        this.loaderService.hide();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
@@ -151,9 +152,9 @@ export class DirectMessageFacade {
       }
     })
   }
-  uploadAttachments(uploadRequest:any){
+  uploadAttachments(uploadRequest:any , threadId :string){
     this.showLoader()
-    this.directMessageDataService.uploadAttachments(uploadRequest).subscribe({
+    this.directMessageDataService.uploadAttachments(uploadRequest, threadId).subscribe({
       next: (Response) => {
         this.uploadDocumentSubject.next(Response);
         if (Response) {
