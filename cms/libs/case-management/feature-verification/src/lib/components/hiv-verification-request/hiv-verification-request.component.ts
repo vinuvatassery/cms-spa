@@ -176,6 +176,7 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
             uid: data?.hivVerification?.documentId,
             documentId: data?.hivVerification?.documentId,
             clientHivVerificationId: data?.clientHivVerificationId,
+            verificationStatusCode: data?.verificationStatusCode
           },
         ];
         this.uploadedAttachment = documentData;

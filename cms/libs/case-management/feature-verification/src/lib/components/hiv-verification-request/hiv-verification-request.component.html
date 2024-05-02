@@ -125,9 +125,9 @@
   </div>
 </section>
 
-
   <section *ngIf="(providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER') && (isSendRequest || isResendRequest || emailSentDate != null)">
-   <div *ngIf="providerOption === 'HEALTHCARE_PROVIDER' && uploadedAttachment.length >0" class="attachment-from-client-lists-wrapper mt-2">
+   <div *ngIf="providerOption === 'HEALTHCARE_PROVIDER' && uploadedAttachment.length >0 
+    && uploadedAttachment[0].verificationStatusCode === 'ACCEPT'" class="attachment-from-client-lists-wrapper mt-2">
     <div class="attachment-from-client-lists-container">
       <div class="attachment-from-client-lists">
         <span class="material-icons" aria-hidden="true">
@@ -190,3 +190,4 @@
     <common-user-profile-card [userId]="loginUserId"></common-user-profile-card>
   </ng-template>
 </kendo-popover>
+
