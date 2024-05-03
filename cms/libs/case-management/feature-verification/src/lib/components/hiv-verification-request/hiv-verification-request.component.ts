@@ -40,6 +40,7 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
   @Input() clientCaseId!: any;
   @Input() clientCaseEligibilityId!: any;
   @Input() healthCareProviderExists!: any;
+  @Input() isCaseManagerExists!: any;
   @Input() providerEmail!: any;
   @Input() emailSentDate!: any;
   @Input() loginUserName!: any;
@@ -496,12 +497,23 @@ sendHivRequestCaseManager(){
             this.isSendRequest = true;
             this.loginUserName = response?.requestedUserName;
             this.emailSentDate = this.intl.formatDate(new Date(response?.hivVerification?.verificationStatusDate),"MM/dd/yyyy");
+            }else{
+              this.isSendRequest = false;
+              this.isResendRequest=false;
+              this.emailSentDate=null;
+              this.isEmailFieldVisible = false;
             }
           }else{
             this.isSendRequest = false;
             this.isResendRequest=false;
             this.emailSentDate=null;
             this.isEmailFieldVisible = false;
+          }
+          if(!this.isCaseManagerExists){
+            this.providerOption = null;
+            this.isSendRequest = true;
+            this.isResendRequest=false;
+            this.emailSentDate = null;
           }
           this.cdr.detectChanges();
           this.verificationFacade.hideLoader();

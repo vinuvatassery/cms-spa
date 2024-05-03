@@ -34,6 +34,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   alreadyUploaded = false;
   showAttachmentOptions = true;
   healthCareProviderExists: boolean = false;
+  isCaseManagerExists: boolean = false;
   providerEmail!: string;
   emailSentDate?:any = null;
   loginUserName!:any;
@@ -174,7 +175,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.verificationFacade.getClientHivDocuments(this.clientId);
-          this.checkCaseManagerAndHealthCareProviderExists(false);          
+          this.checkCaseManagerAndHealthCareProviderExists(false);
           this.cdr.detectChanges();
         }
       });
@@ -194,8 +195,10 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       if (response) {
         //case manager check.
         if (response.caseManager != null) {
+          this.isCaseManagerExists=true;
           this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = false;
         } else {
+          this.isCaseManagerExists=false;
           this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
         }
 
@@ -256,7 +259,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         return of(false);
       })
     );
-      
+
   }
 
   private load(){
@@ -280,7 +283,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             if(data?.verificationStatusCode === VerificationStatusCode.Approved){
               this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled=true;
               this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=true;
-             
+
             }
             this.cdr.detectChanges();
           }
