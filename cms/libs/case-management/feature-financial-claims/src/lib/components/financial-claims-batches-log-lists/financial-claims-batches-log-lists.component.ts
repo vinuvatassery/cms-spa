@@ -42,6 +42,7 @@ import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, first
 })
 export class FinancialClaimsBatchesLogListsComponent
   implements OnInit, OnChanges {
+  
   @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
   previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
   @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
@@ -192,6 +193,13 @@ export class FinancialClaimsBatchesLogListsComponent
   paymentStatus$ = this.lovFacade.paymentStatus$;
   batchStatus = PaymentStatusCode.PendingApproval;
   claimsBathcPaymentProfileSubject = new Subject();
+
+  // --------------------- grid columns visiblity
+  visibleColumnFields: string[] = [];
+  visibleColumns: any[] = [];
+  @ViewChild('clientsGrid') clientsGrid: any;
+  // ---------------------
+
   getBatchLogGridActions(dataItem: any) {
     return [{
       buttonType: 'btn-h-primary',
@@ -761,9 +769,16 @@ export class FinancialClaimsBatchesLogListsComponent
     this.onProviderNameClickEvent.emit(event);
   }
 
+  getHiddenDataGridColumns() {
+    const hiddenColumns: ColumnComponent[] = this.clientsGrid.columns.toArray().filter((column: ColumnComponent) => column.hidden);
+    // const combinedString: string = hiddenColumns.map(column => column.field).join(', ');
+    return hiddenColumns.map(column => column.field);
+  }
+
   onClickedExport() {
+
     this.showExportLoader = true;
-    this.exportGridDataEvent.emit();
+    this.exportGridDataEvent.emit(this.getHiddenDataGridColumns());
 
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {

@@ -17,7 +17,7 @@
   </ng-template>
   <section class="app-l-client-wrapper ">
     <section class="app-l-wrapper">
-      <p> Click "Bulk" to execute actions for one or more claims. Click on a row to view that claim.</p>
+      <p> 1 Click "Bulk" to execute actions for one or more claims. Click on a row to view that claim.</p>
       <section class="table-filter-section mat-form-no-b-space">
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
@@ -70,7 +70,7 @@
       </div>
     </div>
       <div class="app-c-table">
-        <kendo-grid (columnReorder)="onColumnReorder($event)" (columnVisibilityChange)="columnChange($event)" [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
+        <kendo-grid #clientsGrid (columnReorder)="onColumnReorder($event)" (columnVisibilityChange)="columnChange($event)" [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [columnMenu]="{ filter: true }"
           [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
           [data]="batchLogGridLists$ | async" (filterChange)="filterChange($event)" filterable="menu"

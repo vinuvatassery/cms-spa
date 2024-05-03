@@ -2,7 +2,7 @@
  [loader$]="paymentByBatchGridLoader$" [pageSizes]="pageSizes" [sortValue]="sortValue"
  [sortType]="sortType" [sort]="sort" [paymentBatchName$]="paymentBatchName$"
  [exportButtonShow$]="exportButtonShow$"
- (exportGridDataEvent)="exportClaimsBatchGridData()"
+ (exportGridDataEvent)="exportClaimsBatchGridData($event)"
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
  (onProviderNameClickEvent)="onProviderNameClick($event)"
  (loadTemplateEvent) = "loadEachLetterTemplate($event)"

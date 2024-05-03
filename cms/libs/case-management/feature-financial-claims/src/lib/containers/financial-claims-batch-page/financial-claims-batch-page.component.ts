@@ -123,7 +123,8 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
     this.lovFacade.getPaymentMethodLov()
   }
 
-  exportClaimsBatchGridData() {
+  exportClaimsBatchGridData(input:any) {
+    alert(JSON.stringify(input))
     const batchId = this.route.snapshot.queryParams['bid'];
     const data = this.dataExportParameters;
     if (data) {
