@@ -271,6 +271,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         if (data?.clientHivVerificationId) {
           this.hivVerificationForm.controls["providerOption"].setValue(data?.verificationMethodCode);
           this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
+          if (data?.verificationMethodCode === "HEALTHCARE_PROVIDER" && !this.healthCareProviderExists) {
+            this.hivVerificationForm.controls["providerOption"].setValue("");
+          }
           if (data?.verificationMethodCode == "UPLOAD_ATTACHMENT") {
             this.verificationFacade.showAttachmentOptions.next(false);
             if (data?.hivVerification?.documentName) {

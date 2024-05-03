@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** Internal Libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientHivVerification } from '../entities/client-hiv-verification';
+import { ProviderOption } from '../enums/provider-option.enum';
 
 @Injectable({ providedIn: 'root' })
 export class VerificationDataService {
@@ -77,5 +78,9 @@ export class VerificationDataService {
 
       getClientHivVerification(clientId:any){
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification?clientId=${clientId}`);
+      }
+
+      getClientHivVerificationByMethod(clientId: number, methodCode: ProviderOption) {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/${clientId}/${methodCode}`);
       }
     }
