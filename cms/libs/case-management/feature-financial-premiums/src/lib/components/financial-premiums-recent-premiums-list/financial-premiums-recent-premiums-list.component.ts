@@ -59,12 +59,12 @@ export class FinancialPremiumsRecentPremiumsListComponent {
     coverageStartDate: 'Coverage Dates',
     premiumAmount: 'Premium Amount',
     insurancePlanName: 'Plan Name',
-    healthInsuranceTypeDesc: 'Insurance Type',
-    paymentMethodDesc: 'Pmt. Method',
+    healthInsuranceTypeCode: 'Insurance Type',
+    paymentMethodCode: 'Pmt. Method',
     insuranceIdNbr: 'Policy ID',
     insuranceGroupNumber: 'Ins. Group ID',
     paymentIdNbr: 'Payment ID',
-    paymentStatusDesc: 'Payment Status',
+    paymentStatusCode: 'Payment Status',
     checkNbr: 'Warrant #',
     creationTime: 'Entry Date'
   };
@@ -156,7 +156,7 @@ export class FinancialPremiumsRecentPremiumsListComponent {
       premiumsType : premiumsType,
       skipCount: skipCountValue,
       pageSize: maxResultCountValue,
-      sort: sortValue,
+      sorting: sortValue,
       sortType: sortTypeValue,
       filter : this.state?.["filter"]?.["filters"] ?? []
     };
@@ -193,13 +193,13 @@ export class FinancialPremiumsRecentPremiumsListComponent {
           logic: "or"
       });
 
-      if(field == "healthInsuranceTypeDesc"){
+      if(field == "healthInsuranceTypeCode"){
         this.healthInsuranceValue = value;
       }
-      if(field == "paymentMethodDesc"){
+      if(field == "paymentMethodCode"){
         this.paymentMethodTypeValue = value;
       }
-      if(field == "paymentStatusDesc"){
+      if(field == "paymentStatusCode"){
         this.paymentStatusValue = value;
       }
     }
@@ -274,8 +274,20 @@ export class FinancialPremiumsRecentPremiumsListComponent {
       this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
       this.sortColumnDesc = this.column[this.sortValue];
       this.filter = stateData?.filter?.filters;
+      if(this.sortValue === "paymentMethodCode"){
+        this.sortValue = "paymentMethodDesc ";
+      }
+      if(this.sortValue === "healthInsuranceTypeCode"){
+        this.sortValue = "healthInsuranceTypeDesc ";
+      }
+      if(this.sortValue === "paymentStatusCode"){
+        this.sortValue = "paymentStatusDesc ";
+      }
       this.setFilterBy(true, '', this.filter);
       if (!this.filteredByColumnDesc.includes('Status')) this.selectedStatus = '';
+      if (!this.filteredByColumnDesc.includes('Insurance Type')) this.healthInsuranceValue = null;
+      if (!this.filteredByColumnDesc.includes('Pmt. Method')) this.paymentMethodTypeValue = null;
+      if (!this.filteredByColumnDesc.includes('Payment Status')) this.paymentStatusValue = null;
       this.loadFinancialRecentPremiumListGrid();
     }
 
