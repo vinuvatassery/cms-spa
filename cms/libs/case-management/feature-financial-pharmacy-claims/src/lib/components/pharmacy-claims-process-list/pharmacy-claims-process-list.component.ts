@@ -238,7 +238,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadPharmacyClaimsProcessListGrid();
     this.addSearchSubjectSubscription();
-    this.lovFacade.getPaymentStatusLov();
+    this.lovFacade.getClaimStatusLov();
     this.lovFacade.getPaymentMethodLov();   
   }
 
