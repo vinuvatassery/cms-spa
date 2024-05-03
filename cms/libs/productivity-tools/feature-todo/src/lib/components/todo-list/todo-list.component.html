@@ -37,7 +37,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="entityTypeCode" title="Type" [width]="100">
       <ng-template kendoGridCellTemplate let-dataItem>
-      <span class="text-upper">  {{ dataItem.displayEntityTypeCode }}</span>
+      <span>  {{ dataItem.displayEntityTypeCode | titlecase }}</span>
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate
       let-column="column"

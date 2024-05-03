@@ -289,10 +289,6 @@ message:  JSON.stringify(clientMessage)
 
    async getListMessages() {
       this.messages = [];
-      let currentDate = new Date();
-
-   //Subtract one hour from the current time
-    let oneHourBefore = new Date(currentDate.getTime() - (4 * 60 * 60 * 1000));
     this.chatThreadClient = this.chatClient.getChatThreadClient(this.threadId);
    const messages = <any>this.chatThreadClient?.listMessages({});
     if (!messages) {
@@ -308,6 +304,7 @@ message:  JSON.stringify(clientMessage)
           if (messageObj) {
             messageObj  = {
               id: message.id,
+              sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
               message: mesg.message,
               isOwner: message.sender?.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
@@ -321,6 +318,7 @@ message:  JSON.stringify(clientMessage)
            
             let msg = {
               id: message.id,
+              sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
               message: mesg.message ?? mesg.message,
               isOwner: message.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
@@ -339,6 +337,7 @@ message:  JSON.stringify(clientMessage)
           if (messageObj) {
             messageObj = {
               id: message.id,
+              sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
               message: message.content?.message,
               isOwner: message.sender?.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
@@ -350,6 +349,7 @@ message:  JSON.stringify(clientMessage)
           else {
             let msg = {
               id: message.id,
+              sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
               message: message.content.message,
               isOwner: message.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
@@ -365,7 +365,7 @@ message:  JSON.stringify(clientMessage)
 
 
     }
-    this.messages = this.messages.sort((a:any, b:any) => a.createdOn!.getTime() - b.createdOn!.getTime());
+    this.messages = this.messages.sort((a:any, b:any) => a.sequenceId - b.sequenceId);
     this.changeDetection.detectChanges();
      this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
     this.keys =  Object.keys(this.groupedMessages).sort()
@@ -375,7 +375,7 @@ message:  JSON.stringify(clientMessage)
   }
 
    mySortingFunction = (a :any, b:any) => {
-    return new Date(a.key).getTime()-new Date(b.key).getTime();
+    return a.value?.sequenceId- b.value?.sequenceId;
   }
 
   getVlauesWithKey(value :any[] | unknown){
@@ -452,7 +452,7 @@ message:  JSON.stringify(clientMessage)
       }
     );
     });
-  this.directMessageFacade.uploadAttachments(uploadedRequest);
+  this.directMessageFacade.uploadAttachments(uploadedRequest,this.threadId);
 }
 
 

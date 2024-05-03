@@ -19,12 +19,12 @@ import { StatusFlag } from '@cms/shared/ui-common';
 })
 export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  hivVerificationForm!:FormGroup;
+  hivVerificationForm!: FormGroup;
   sessionId!: string;
   clientCaseId!: string;
   clientId!: number;
-  userId!:any;
-  clientCaseEligibilityId : any
+  userId!: any;
+  clientCaseEligibilityId: any
   private loadSessionSubscription!: Subscription;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -36,20 +36,22 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   healthCareProviderExists: boolean = false;
   isCaseManagerExists: boolean = false;
   providerEmail!: string;
-  emailSentDate?:any = null;
-  loginUserName!:any;
+  emailSentDate?: any = null;
+  loginUserName!: any;
   loginUserId!: any;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   errorMessage!: string;
   isSendEmailFailed: boolean = false;
   isSendEmailClicked: boolean = false;
-  workflowTypeCode:any;
+  workflowTypeCode: any;
   isProviderAvailable: boolean = false;
+  isHealthCareValid = true;
+  currentHivUploadedDocument:any;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
-    private verificationFacade: VerificationFacade,private formBuilder: FormBuilder,
-    private readonly cdr: ChangeDetectorRef,private workFlowFacade: WorkflowFacade,
+    private verificationFacade: VerificationFacade, private formBuilder: FormBuilder,
+    private readonly cdr: ChangeDetectorRef, private workFlowFacade: WorkflowFacade,
     private route: ActivatedRoute, private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
@@ -59,7 +61,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     private readonly userDataService: UserDataService,
     private readonly configurationProvider: ConfigurationProvider,
     private elementRef: ElementRef
-) { }
+  ) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -67,15 +69,15 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.buildForm();
     this.addSaveForLaterSubscription();
     this.addSaveSubscription();
-    this.verificationFacade.isSaveandContinue$.subscribe(response=>{
+    this.verificationFacade.isSaveandContinue$.subscribe(response => {
       this.isNotUploaded = response;
       this.cdr.detectChanges();
     });
-    this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
+    this.verificationFacade.showAttachmentOptions$.subscribe(response => {
       this.showAttachmentOptions = response;
       this.cdr.detectChanges();
     });
-    this.verificationFacade.hivVerificationSave$.subscribe(data=>{
+    this.verificationFacade.hivVerificationSave$.subscribe(data => {
       this.load();
     });
   }
@@ -85,7 +87,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.loadSessionSubscription.unsubscribe();
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.workflowFacade.enableSaveButton();
   }
 
@@ -93,13 +95,13 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   private buildForm() {
     this.hivVerificationForm = this.formBuilder.group({
       providerEmailAddress: [''],
-      providerOption:[''],
-      attachmentType:[''],
-      verificationStatusDate:[''],
-      requestedUserName:[''],
-      userId:[''],
-      clientsAttachment:[],
-      computerAttachment:[]
+      providerOption: [''],
+      attachmentType: [''],
+      verificationStatusDate: [''],
+      requestedUserName: [''],
+      userId: [''],
+      clientsAttachment: [],
+      computerAttachment: []
     });
 
   }
@@ -112,7 +114,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       next: ([navigationType, isSaved]) => {
         this.loaderService.hide();
         if (isSaved) {
-          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,'HIV Verification status updated');
+          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'HIV Verification status updated');
           this.workflowFacade.navigate(navigationType);
         } else {
           this.workflowFacade.enableSaveButton();
@@ -179,7 +181,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           this.cdr.detectChanges();
         }
       });
-      this.verificationFacade.hideLoader();
+    this.verificationFacade.hideLoader();
   }
 
 
@@ -191,7 +193,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       healthCareProvider: this.HealthCareProviderExists()
     });
 
-    caseManagerAndProvider.subscribe((response: any) => {caseManagerAndProvider
+    caseManagerAndProvider.subscribe((response: any) => {
       if (response) {
         //case manager check.
         if (response.caseManager != null) {
@@ -222,17 +224,15 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           }
         }
         this.loaderService.hide();
+        this.load();
 
-        if (!event) {
-          this.load();
-        }
       }
     })
 
   }
 
-  caseManagerExists(){
-    return this.verificationFacade.getHivCaseWorker(this.clientId) .pipe(
+  caseManagerExists() {
+    return this.verificationFacade.getHivCaseWorker(this.clientId).pipe(
       catchError((error: any) => {
         if (error) {
           this.verificationFacade.showHideSnackBar(
@@ -246,8 +246,8 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     );
   }
 
-  HealthCareProviderExists(){
-    return this.verificationFacade.loadHealthCareProviders(this.clientId , 0 , 10, '' , 'asc', false) .pipe(
+  HealthCareProviderExists() {
+    return this.verificationFacade.loadHealthCareProviders(this.clientId, 0, 10, '', 'asc', false).pipe(
       catchError((error: any) => {
         if (error) {
           this.verificationFacade.showHideSnackBar(
@@ -262,15 +262,14 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
 
   }
 
-  private load(){
+  private load() {
     this.loaderService.show();
-    this.verificationFacade.getHivVerificationWithAttachment( this.clientId, this.clientCaseEligibilityId).subscribe({
-      next:(data)=>{
-        if(data?.clientHivVerificationId){
+    this.verificationFacade.getHivVerificationWithAttachment(this.clientId, this.clientCaseEligibilityId).subscribe({
+      next: (data) => {
+        if (data?.clientHivVerificationId) {
           this.hivVerificationForm.controls["providerOption"].setValue(data?.verificationMethodCode);
           this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
-          if(data?.verificationMethodCode == "UPLOAD_ATTACHMENT")
-          {
+          if (data?.verificationMethodCode == "UPLOAD_ATTACHMENT") {
             this.verificationFacade.showAttachmentOptions.next(false);
             if (data?.hivVerification?.documentName) {
               this.verificationFacade.hivVerificationUploadedDocument.next(data);
@@ -280,26 +279,36 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
               this.verificationFacade.hivVerificationUploadedDocument.next(undefined);
               this.alreadyUploaded = false;
             }
-            if(data?.verificationStatusCode === VerificationStatusCode.Approved){
-              this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled=true;
-              this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled=true;
-
+            if (data?.verificationStatusCode === VerificationStatusCode.Accept) {
+              this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
+              this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = true;
             }
             this.cdr.detectChanges();
           }
-          else
-          {
+          else if (data?.verificationMethodCode === 'HEALTHCARE_PROVIDER') {
+            this.currentHivUploadedDocument = data;
+            if (data?.hivVerification?.documentName) {
+              this.verificationFacade.hivVerificationUploadedDocument.next(data);
+              this.alreadyUploaded = true;
+            }
+            else {
+              this.verificationFacade.hivVerificationUploadedDocument.next(undefined);
+              this.alreadyUploaded = false;
+            }
+          }
+          else {
             this.verificationFacade.showAttachmentOptions.next(true);
           }
         }
-        else
-        {
+        else {
           this.verificationFacade.showAttachmentOptions.next(true);
+          this.verificationFacade.hivVerificationUploadedDocument.next(undefined);
+          this.verificationFacade.healthcareInvalidSubject.next(false);
         }
 
         this.loaderService.hide();
       },
-      error:(error)=>{
+      error: (error) => {
         if (error) {
           this.verificationFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
@@ -310,78 +319,72 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       }
     });
   }
+
   private save() {
     this.validateForm();
     this.cdr.detectChanges();
     if (this.hivVerificationForm.valid) {
-      if(this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && !this.isNotUploaded)
-      {
+      if (this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && !this.isNotUploaded) {
         this.loaderService.show()
         this.verificationFacade.isSaveandContinueSubject.next(true);
-        return this.saveHivVerification();
       }
-      else if(this.hivVerificationForm.controls["providerOption"].value !== 'UPLOAD_ATTACHMENT' || this.alreadyUploaded)
-      {
-        return of(true)
+      else if (this.hivVerificationForm.controls["providerOption"].value !== 'UPLOAD_ATTACHMENT') {
+        let hivVerification = {'verificationMethodCode': this.hivVerificationForm.controls["providerOption"].value,
+          'clientId':this.clientId, 'clientCaseEligibilityId': this.clientCaseEligibilityId};
+        this.clientHivVerification = hivVerification;
       }
+      return this.saveHivVerification()
     }
     return of(false)
   }
-  private validateForm(){
+
+  private validateForm() {
     this.hivVerificationForm.markAllAsTouched();
     this.hivVerificationForm.controls["providerOption"].setValidators([Validators.required])
     this.hivVerificationForm.controls["providerOption"].updateValueAndValidity();
-    if(this.hivVerificationForm.controls['providerOption'].value == 'UPLOAD_ATTACHMENT')
-    {
+    if (this.hivVerificationForm.controls['providerOption'].value == 'UPLOAD_ATTACHMENT') {
       this.validateUploadAttachemnt();
       this.verificationFacade.formChangeEventSubject.next(true);
     }
-    else
-    {
+    else {
       this.resetValidations();
     }
+
     this.hivVerificationForm.updateValueAndValidity();
   }
 
-  onAttachmentConfirmationEvent(event:any)
-  {
+  onAttachmentConfirmationEvent(event: any) {
     this.clientHivVerification = event;
   }
   private saveHivVerification() {
-     return this.verificationFacade.saveHivVerification(this.clientHivVerification)
-     .pipe(
-          catchError((error: any) => {
-            if (error) {
-              this.verificationFacade.showHideSnackBar(
-                SnackBarNotificationType.ERROR,
-                error
-              );
-              return of(false);
-            }
+    return this.verificationFacade.saveHivVerification(this.clientHivVerification)
+      .pipe(
+        catchError((error: any) => {
+          if (error) {
+            this.verificationFacade.healthcareInvalidSubject.next(true);
             return of(false);
-          })
-        );
+          }
+          this.verificationFacade.healthcareInvalidSubject.next(true);
+          return of(false);
+        }),
+
+      )
   }
-  validateUploadAttachemnt()
-  {
-    if(this.showAttachmentOptions)
-    {
+  validateUploadAttachemnt() {
+    if (this.showAttachmentOptions) {
       this.hivVerificationForm.controls["attachmentType"].setValidators([Validators.required])
       this.hivVerificationForm.controls["attachmentType"].updateValueAndValidity();
     }
-    if(this.hivVerificationForm.controls['attachmentType'].value == 'Attach From Client Attachments')
-    {
+    if (this.hivVerificationForm.controls['attachmentType'].value == 'Attach From Client Attachments') {
       this.hivVerificationForm.controls["clientsAttachment"].setValidators([Validators.required])
       this.hivVerificationForm.controls["clientsAttachment"].updateValueAndValidity();
     }
-    if(this.hivVerificationForm.controls['attachmentType'].value == 'Attach From Computer')
-    {
+    if (this.hivVerificationForm.controls['attachmentType'].value == 'Attach From Computer') {
       this.hivVerificationForm.controls["computerAttachment"].setValidators([Validators.required])
       this.hivVerificationForm.controls["computerAttachment"].updateValueAndValidity();
     }
   }
-  resetValidations()
-  {
+  resetValidations() {
     this.hivVerificationForm.controls["clientsAttachment"].removeValidators(Validators.required);
     this.hivVerificationForm.controls['clientsAttachment'].updateValueAndValidity();
     this.hivVerificationForm.controls["computerAttachment"].removeValidators(Validators.required);
@@ -390,14 +393,14 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.hivVerificationForm.controls['attachmentType'].updateValueAndValidity();
   }
 
-getLoggedInUserProfile(){
-  this.verificationFacade.showLoader();
- this.userDataService.getProfile$.subscribe((profile:any)=>{
-    if(profile?.length>0){
-     this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
-     this.loginUserId = profile[0].loginUserId;
-    }
-  })
-  this.verificationFacade.hideLoader();
-}
+  getLoggedInUserProfile() {
+    this.verificationFacade.showLoader();
+    this.userDataService.getProfile$.subscribe((profile: any) => {
+      if (profile?.length > 0) {
+        this.loginUserName = profile[0]?.firstName + ' ' + profile[0]?.lastName;
+        this.loginUserId = profile[0].loginUserId;
+      }
+    })
+    this.verificationFacade.hideLoader();
+  }
 }

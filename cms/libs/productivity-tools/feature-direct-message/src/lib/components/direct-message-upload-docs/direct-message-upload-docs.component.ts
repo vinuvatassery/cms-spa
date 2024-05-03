@@ -25,6 +25,7 @@ export class DirectMessageUploadDocsComponent {
   @ViewChild('anchor',{ read: ElementRef }) public anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef }) public popup!: ElementRef;
   @Input() uploadDocumentTypeDetails : any
+  @Input() threadId : any
   @Output() uploadDocumentsClosedDialog = new EventEmitter<any>();
   @Output() uploadedDocuments = new EventEmitter<any>();
   @Output() cerEmailAttachments = new EventEmitter();
