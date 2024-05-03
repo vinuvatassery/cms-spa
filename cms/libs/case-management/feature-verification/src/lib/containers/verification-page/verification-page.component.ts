@@ -34,6 +34,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   alreadyUploaded = false;
   showAttachmentOptions = true;
   healthCareProviderExists: boolean = false;
+  isCaseManagerExists: boolean = false;
   providerEmail!: string;
   emailSentDate?: any = null;
   loginUserName!: any;
@@ -198,8 +199,10 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       if (response) {
         //case manager check.
         if (response.caseManager != null) {
+          this.isCaseManagerExists=true;
           this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = false;
         } else {
+          this.isCaseManagerExists=false;
           this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
         }
 
@@ -222,9 +225,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             }
           }
         }
-        this.loaderService.hide();      
+        this.loaderService.hide();
         this.load();
-        
+
       }
     })
 
@@ -281,7 +284,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             if (data?.verificationStatusCode === VerificationStatusCode.Accept) {
               this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
               this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = true;
-
             }
             this.cdr.detectChanges();
           }
@@ -326,7 +328,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     if (this.hivVerificationForm.valid) {
       if (this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && !this.isNotUploaded) {
         this.loaderService.show()
-        this.verificationFacade.isSaveandContinueSubject.next(true);        
+        this.verificationFacade.isSaveandContinueSubject.next(true);
       }
       else if (this.hivVerificationForm.controls["providerOption"].value !== 'UPLOAD_ATTACHMENT') {
         let hivVerification = {'verificationMethodCode': this.hivVerificationForm.controls["providerOption"].value,
@@ -348,7 +350,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     }
     else {
       this.resetValidations();
-    }   
+    }
 
     this.hivVerificationForm.updateValueAndValidity();
   }
@@ -360,7 +362,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     return this.verificationFacade.saveHivVerification(this.clientHivVerification)
       .pipe(
         catchError((error: any) => {
-          if (error) {           
+          if (error) {
             this.verificationFacade.healthcareInvalidSubject.next(true);
             return of(false);
           }

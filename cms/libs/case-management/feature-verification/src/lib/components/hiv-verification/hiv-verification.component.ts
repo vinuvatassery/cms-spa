@@ -20,6 +20,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
   @Input() clientCaseId!: any;
   @Input() clientCaseEligibilityId!: any;
   @Input() healthCareProviderExists!: any;
+  @Input() isCaseManagerExists!: any;
   @Input() providerEmail!: any;
   @Input() emailSentDate!: any;
   @Input() loginUserName!: any;
@@ -63,9 +64,11 @@ export class HivVerificationComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    
+    if (!this.isCaseManagerExists) {
+      this.hivVerificationForm.controls["providerOption"].setValue("");
+    }
   }
-  
+
   providerChange(event:any){
     if(this.hivVerificationForm.controls["providerOption"].value=="UPLOAD_ATTACHMENT")
     {
@@ -77,7 +80,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
     this.updateVerificationCount(true);
     this.cd.detectChanges();
   }
-  
+
   onHivRemoveConfirmationClosed() {
     this.isHivVerificationRemovalConfirmationOpened = false;
   }
