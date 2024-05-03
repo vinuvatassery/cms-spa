@@ -79,6 +79,8 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.verificationFacade.hivVerificationSave$.subscribe(data => {
       this.load();
     });
+
+    this.getLoggedInUserProfile();
   }
 
   ngOnDestroy(): void {

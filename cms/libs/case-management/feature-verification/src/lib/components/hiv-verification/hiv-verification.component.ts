@@ -87,6 +87,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
     this.checkCaseManagerAndHealthCareProviderExists.emit(true);
     this.verificationFacade.showHideAttachment.next(false);
     this.cd.detectChanges();
+    this.providerChange(null);
     this.updateVerificationCount(false);
   }
   onHivRemoveConfirmationOpen(clientHivVerificationId:string) {
