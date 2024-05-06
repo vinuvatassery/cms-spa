@@ -8,8 +8,6 @@ import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { CaseManagementFeatureApprovalRoutingModule } from './case-management-feature-approval-routing.module';
 import { CaseManagementFeatureFinancialClaimsModule } from '@cms/case-management/feature-financial-claims';
 /** Components **/
-import { ApprovalListComponent } from './components/approval-list/approval-list.component';
-import { ApprovalDetailComponent } from './components/approval-detail/approval-detail.component';
 import { ApprovalPageComponent } from './containers/approval-page/approval-page.component';
 import { ApprovalsGeneralListComponent } from './components/approvals-general-list/approvals-general-list.component';
 import { ApprovalsPaymentsListComponent } from './components/approvals-payments-list/approvals-payments-list.component';
@@ -20,7 +18,6 @@ import { ImportedClaimsListsComponent } from './components/imported-claims-lists
 import { ApprovalsSearchClientsComponent } from './components/approvals-search-clients/approvals-search-clients.component';
 import { ApprovalsReviewPossibleMatchesComponent } from './components/approvals-review-possible-matches/approvals-review-possible-matches.component';
 import { ApprovalsEditItemsComponent } from './components/approvals-edit-items/approvals-edit-items.component';
-import { ApprovalsSubmitItemsComponent } from './components/approvals-submit-items/approvals-submit-items.component';
 import { ApprovalsExpectationReasonComponent } from './components/approvals-expectation-reason/approvals-expectation-reason.component';
 import { ApprovalsGeneralListDetailCaseReassignmentComponent } from './components/approvals-general-list-detail-casereassignment/approvals-general-list-detail-casereassignment.component';
 import { ApprovalsGeneralListDetailExceptionsComponent } from './components/approvals-general-list-detail-exceptions/approvals-general-list-detail-exceptions.component';
@@ -37,8 +34,6 @@ import { HivVerificationListComponent } from './components/hiv-verification-list
     CaseManagementFeatureFinancialClaimsModule,
   ],
   declarations: [
-    ApprovalListComponent,
-    ApprovalDetailComponent,
     ApprovalPageComponent,
     ApprovalsGeneralListComponent,
     ApprovalsPaymentsListComponent,
@@ -49,7 +44,6 @@ import { HivVerificationListComponent } from './components/hiv-verification-list
     ApprovalsSearchClientsComponent,
     ApprovalsReviewPossibleMatchesComponent,
     ApprovalsEditItemsComponent,
-    ApprovalsSubmitItemsComponent,
     ApprovalsExpectationReasonComponent,
     ApprovalsGeneralListDetailCaseReassignmentComponent,
     ApprovalsGeneralListDetailExceptionsComponent,
@@ -57,9 +51,7 @@ import { HivVerificationListComponent } from './components/hiv-verification-list
     HivVerificationListComponent,
   ],
   exports: [
-    ApprovalListComponent,
-    ApprovalDetailComponent,
-    ApprovalPageComponent,
+    ApprovalPageComponent
   ],
 })
 export class CaseManagementFeatureApprovalModule {}
