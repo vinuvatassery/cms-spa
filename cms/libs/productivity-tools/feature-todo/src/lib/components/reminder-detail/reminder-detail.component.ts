@@ -170,7 +170,7 @@ export class ReminderDetailComponent implements OnInit {
       this.entityTypeCode= res.entityTypeCode
       this.entityId = res.entityId
       this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
-      if(!res.entityTypeCode){
+      if(res.entityTypeCode){
         this.clientReminderForm.controls['linkTo'].disable()
       }
      if(res.entityTypeCode !=='CLIENT'){
