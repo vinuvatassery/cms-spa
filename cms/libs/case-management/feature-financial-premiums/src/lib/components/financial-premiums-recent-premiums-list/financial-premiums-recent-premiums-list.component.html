@@ -84,7 +84,7 @@
               </ng-template>
             </kendo-grid-column>
 
-            <kendo-grid-column field="healthInsuranceTypeDesc" title="Insurance Type" [width]="120">
+            <kendo-grid-column field="healthInsuranceTypeCode" title="Insurance Type" [width]="120">
               <ng-template kendoGridCellTemplate let-dataItem>
                 {{ dataItem.healthInsuranceTypeDesc }}
               </ng-template>
@@ -98,13 +98,13 @@
                 textField="lovDesc"
                 valueField="lovCode"
                 [value]="healthInsuranceValue"
-                (valueChange)="dropdownFilterChange('healthInsuranceTypeDesc',$event, filterService)"
+                (valueChange)="dropdownFilterChange('healthInsuranceTypeCode',$event, filterService)"
                 >
                 </kendo-dropdownlist>
               </ng-template>
             </kendo-grid-column>
 
-            <kendo-grid-column field="paymentMethodDesc" title="Pmt. Method" [width]="160">
+            <kendo-grid-column field="paymentMethodCode" title="Pmt. Method" [width]="160">
               <ng-template kendoGridCellTemplate let-dataItem>
                 {{ dataItem.paymentMethodDesc }}
               </ng-template>
@@ -115,10 +115,10 @@
               >
                 <kendo-dropdownlist
                 [data]="paymentMethodTypeLovs"
-                textField="lovCode"
+                textField="lovDesc"
                 valueField="lovCode"
                 [value]="paymentMethodTypeValue"
-                (valueChange)="dropdownFilterChange('paymentMethodDesc',$event, filterService)"
+                (valueChange)="dropdownFilterChange('paymentMethodCode',$event, filterService)"
                 >
                 </kendo-dropdownlist>
               </ng-template>
@@ -157,7 +157,7 @@
               </ng-template>
             </kendo-grid-column>
 
-            <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="120">
+            <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="120">
               <ng-template kendoGridCellTemplate let-dataItem>
                 {{ dataItem.paymentStatusDesc }}
               </ng-template>
@@ -171,7 +171,7 @@
                 textField="lovCode"
                 valueField="lovDesc"
                 [value]="paymentStatusValue"
-                (valueChange)="dropdownFilterChange('paymentStatusDesc',$event, filterService)"
+                (valueChange)="dropdownFilterChange('paymentStatusCode',$event, filterService)"
                 >
                 </kendo-dropdownlist>
               </ng-template>

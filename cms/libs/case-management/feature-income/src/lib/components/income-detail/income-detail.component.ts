@@ -116,6 +116,7 @@ export class IncomeDetailComponent implements OnInit {
     }
 
     this.employers$.subscribe((response:any)=>{
+      this.loadProofOfIncomeTypes();
       if(this.setNotApplicable){
         this.notApplicableId =response[0].employerId;   
         this.IncomeDetailsForm.controls['employerId'].setValue(this.notApplicableId);

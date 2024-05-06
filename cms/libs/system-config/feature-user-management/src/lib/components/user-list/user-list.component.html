@@ -83,26 +83,28 @@
     </kendo-grid-column>
     <kendo-grid-column field="email" title="Email Address" [width]="200">
     </kendo-grid-column>
-    <kendo-grid-column field="roleAssigned" title="Role Assigned" [width]="150">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        <span class="d-flex align-items-center">
-          <span class="role-identifier role-super-admins"></span
-          >{{ dataItem.roleAssigned }}
-        </span>
-      </ng-template>
-    </kendo-grid-column>
+
     <kendo-grid-column field="lastModified" title="Last Modified" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="modifiedBy" title="Modified by" [width]="120">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <common-user-photo-icon  
+        [userId]="dataItem.creatorId" 
+        [userFirstName]="dataItem.userFirstName"
+        [userLastName]="dataItem.userLastName"
+        [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+        [linkType]="'profileIcon'"
+        ></common-user-photo-icon>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="status" title="Status" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column
       field=""
-      title=""
-      [width]="40"
-      class="text-center"
-      [sticky]="true"
+      title="Options"
+      [width]="70"
+      class="text-center" 
+      [columnMenu]="false"
     >
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton
@@ -125,6 +127,63 @@
       </kendo-dropdownbutton>
       </ng-template>
     </kendo-grid-column>
+    <ng-template kendoGridDetailTemplate let-dataItem>
+      <kendo-grid [data]="usersDataLists$ | async"  >
+        <kendo-grid-column field="roleAssigned" title="Role Assigned" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="d-flex align-items-center">
+              <span class="role-identifier role-super-admins"></span
+              >{{ dataItem.roleAssigned }}
+            </span>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="lastModified" title="Last Modified" [width]="120">
+        </kendo-grid-column>
+        <kendo-grid-column field="modifiedBy" title="Modified by" [width]="120">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <common-user-photo-icon  
+            [userId]="dataItem.creatorId" 
+            [userFirstName]="dataItem.userFirstName"
+            [userLastName]="dataItem.userLastName"
+            [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+            [linkType]="'profileIcon'"
+            ></common-user-photo-icon>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="status" title="Status" [width]="120">
+        </kendo-grid-column>
+        <kendo-grid-column
+        field=""
+        title="Options"
+      [width]="70"
+      class="text-center" 
+      [columnMenu]="false"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <kendo-dropdownbutton
+          [data]="moreactions"
+          
+          title="More option"
+          aria-label="more actions"
+          class="TableActionPopup app-dropdown-action more_action_wid"
+          buttonClass="k-icon-button"
+          [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+        >
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
+          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+            <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+              <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+              <label>   {{ dataItem.text }} </label>
+          </button>
+   
+          </ng-template>
+        </kendo-dropdownbutton>
+        </ng-template>
+      </kendo-grid-column>
+        
+      </kendo-grid>
+      </ng-template>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
                   let-currentPage="currentPage">
                   <div class="grid-custom-paginationtemplates d-flex">
