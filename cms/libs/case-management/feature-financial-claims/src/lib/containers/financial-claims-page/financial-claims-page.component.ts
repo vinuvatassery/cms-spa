@@ -190,7 +190,8 @@ export class FinancialClaimsPageComponent implements OnInit {
     }
   }
 
-  exportClaimsBatchGridData() {
+  exportClaimsBatchGridData(input:any) {
+    alert(JSON.stringify(input))
     const data = this.dataExportParameters;
     if (data) {
       const filter = JSON.stringify(data?.filter);
@@ -201,6 +202,7 @@ export class FinancialClaimsPageComponent implements OnInit {
         SkipCount: data?.skipcount,
         MaxResultCount: data?.maxResultCount,
         Filter: filter,
+        excludeColumns : input,
       };
       let fileName =
         this.claimsType[0].toUpperCase() +

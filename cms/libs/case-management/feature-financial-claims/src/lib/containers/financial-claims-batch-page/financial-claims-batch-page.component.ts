@@ -136,6 +136,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
         SkipCount: data?.skipcount,
         MaxResultCount: data?.maxResultCount,
         Filter: filter,
+        excludeColumns : input,
       };
       const fileName =
         this.claimsType[0].toUpperCase() +

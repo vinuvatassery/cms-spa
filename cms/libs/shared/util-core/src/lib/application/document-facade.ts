@@ -58,7 +58,7 @@ export class DocumentFacade {
         })
     }
 
-    getExportFile(pageAndSortedRequest : any, path : string , fileName : string, apiType : string = ApiType.CaseApi): void {
+    getExportFile(pageAndSortedRequest : any, path : string , fileName : string, apiType : string = ApiType.CaseApi, excludeColumns?: any): void {
         this.documentDataService.getExportFile(pageAndSortedRequest,path,apiType).subscribe({
           next: (response: any) => {
             if (response) {

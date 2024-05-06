@@ -34,7 +34,7 @@
                                 [sortType]="'desc'" [sort]="sortBatchList"
                                 [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"
-                                (exportGridDataEvent)="exportClaimsBatchGridData()"
+                                (exportGridDataEvent)="exportClaimsBatchGridData($event)"
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-batches-list>
                             </div>
                         </ng-template>

@@ -769,16 +769,17 @@ export class FinancialClaimsBatchesLogListsComponent
     this.onProviderNameClickEvent.emit(event);
   }
 
-  getHiddenDataGridColumns() {
-    const hiddenColumns: ColumnComponent[] = this.clientsGrid.columns.toArray().filter((column: ColumnComponent) => column.hidden);
-    // const combinedString: string = hiddenColumns.map(column => column.field).join(', ');
-    return hiddenColumns.map(column => column.field);
+  GetHiddenDataGridColumns() {
+    return this.clientsGrid.columns.toArray()
+      .filter((column: ColumnComponent) => column.hidden)
+      .map((column: any) => column.field ? column.field.charAt(0).toUpperCase() + column.field.slice(1) : null);
   }
+
 
   onClickedExport() {
 
     this.showExportLoader = true;
-    this.exportGridDataEvent.emit(this.getHiddenDataGridColumns());
+    this.exportGridDataEvent.emit(this.GetHiddenDataGridColumns());
 
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
