@@ -81,7 +81,7 @@ export class NotificationPanelComponent implements OnInit {
   isReminderOpenClicked = false
   getTodo$ = this.todoFacade.getTodo$
   crudText ="Create New"
-  notificationAndReminderPageTab : any;
+  notificationAndReminderPageTab="NOTIFICATION";
   public data = [
     {
       buttonType: 'btn-h-primary',
