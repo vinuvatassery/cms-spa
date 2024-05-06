@@ -456,7 +456,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadIncomeListGrid(gridDataRefinerValue:any):void{
-    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pagesize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
     this.loadIncomes(
       this.clientId,
       this.clientCaseEligibilityId,
@@ -466,7 +466,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadIncomeListHandle(gridDataRefinerValue: any): void {
-    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pagesize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
     this.loadIncomes(
       this.clientId,
       this.clientCaseEligibilityId,

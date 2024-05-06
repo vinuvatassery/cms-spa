@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit,Output, EventEmitter, OnChanges, ElementRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Internal Libraries **/
-import { CompletionChecklist, VerificationFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ProviderOption, VerificationFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
@@ -64,7 +64,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (!this.isCaseManagerExists) {
+    if (!this.isCaseManagerExists && this.hivVerificationForm.controls["providerOption"].value === ProviderOption.CaseManager) {
       this.hivVerificationForm.controls["providerOption"].setValue("");
     }
   }
