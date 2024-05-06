@@ -14,8 +14,7 @@ import {  GridDataResult } from '@progress/kendo-angular-grid';
 import { BehaviorSubject, Subject } from 'rxjs';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State
 } from '@progress/kendo-data-query';
 import { Router } from '@angular/router';
 /** Facades **/ 

@@ -1,7 +1,6 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Observable } from 'rxjs';
 

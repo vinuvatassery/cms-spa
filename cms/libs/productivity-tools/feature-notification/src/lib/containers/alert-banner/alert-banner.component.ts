@@ -7,8 +7,7 @@ import {
   Input,
   OnInit,
   Output,
-  TemplateRef,
-  ViewChild,
+  TemplateRef
 } from '@angular/core';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -208,9 +207,9 @@ export class AlertBannerComponent implements OnInit {
     let isCrossedDueDate = false;
     let dueDate = alertDueDate == null ? this.topAlert.alertDueDate: alertDueDate;
     if(dueDate){
-      var currentDate = new Date();
-      var numberOfDaysToAdd = 7;
-      var resultDate =new Date(currentDate.setDate(currentDate.getDate() + numberOfDaysToAdd));
+      let currentDate = new Date();
+      let numberOfDaysToAdd = 7;
+      let resultDate =new Date(currentDate.setDate(currentDate.getDate() + numberOfDaysToAdd));
       if(new Date(dueDate) < resultDate){
         isCrossedDueDate = true;
       }

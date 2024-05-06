@@ -1,7 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { GridFilterParam } from '@cms/case-management/domain';
 
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
