@@ -191,7 +191,6 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   exportClaimsBatchGridData(input:any) {
-    alert(JSON.stringify(input))
     const data = this.dataExportParameters;
     if (data) {
       const filter = JSON.stringify(data?.filter);

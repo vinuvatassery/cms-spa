@@ -124,7 +124,6 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   }
 
   exportClaimsBatchGridData(input:any) {
-    alert(JSON.stringify(input))
     const batchId = this.route.snapshot.queryParams['bid'];
     const data = this.dataExportParameters;
     if (data) {

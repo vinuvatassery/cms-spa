@@ -775,7 +775,6 @@ export class FinancialClaimsBatchesLogListsComponent
       .map((column: any) => column.field ? column.field.charAt(0).toUpperCase() + column.field.slice(1) : null);
   }
 
-
   onClickedExport() {
 
     this.showExportLoader = true;
