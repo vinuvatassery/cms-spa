@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { CaseScreenTab, HealthInsurancePlan, InsuranceTypeCode } from '@cms/case-management/domain';
+import { CaseScreenTab, HealthInsurancePlan } from '@cms/case-management/domain';
 import { WidgetFacade } from '@cms/dashboard/domain';
 
 @Component({

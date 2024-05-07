@@ -2,10 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
-import { Event } from '../entities/event';
 import { ConfigurationProvider } from "@cms/shared/util-core";
 
 @Injectable({ providedIn: 'root' })

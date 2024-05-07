@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WidgetFacade } from '@cms/dashboard/domain';
-import {CaseScreenTab, CaseStatusCode, ModuleCode} from '@cms/case-management/domain';
+import {CaseScreenTab, CaseStatusCode } from '@cms/case-management/domain';
 @Component({
   selector: 'dashboard-widget-applications-cers',
   templateUrl: './widget-applications-cers.component.html',

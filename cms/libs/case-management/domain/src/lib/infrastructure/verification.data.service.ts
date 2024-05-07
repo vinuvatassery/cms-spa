@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** Internal Libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { ClientHivVerification } from '../entities/client-hiv-verification';
 import { ProviderOption } from '../enums/provider-option.enum';
 
 @Injectable({ providedIn: 'root' })

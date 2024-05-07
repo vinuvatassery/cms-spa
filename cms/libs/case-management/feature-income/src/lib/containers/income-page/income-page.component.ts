@@ -3,7 +3,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, AfterViewInit,ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 /** External libraries **/
-import {catchError, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
+import {catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode, WorkflowTypeCode, ContactFacade, CommunicationFacade } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
