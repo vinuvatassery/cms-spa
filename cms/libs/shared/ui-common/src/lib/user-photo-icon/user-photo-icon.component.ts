@@ -27,10 +27,6 @@ export class UserPhotoIconComponent implements OnChanges, OnDestroy {
   profilePhotoSubscription = new Subscription();
   userProfilePhoto!: string;
 
-  /** Constructor**/
-  constructor(
-  ) {}
-
   /** Lifecycle hooks **/
   ngOnChanges(): void {
     this.userFullName = this.userFirstName +' '+ this.userLastName;

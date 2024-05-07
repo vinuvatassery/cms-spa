@@ -2,8 +2,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
-    Input,
-    OnInit,
     Output,
   } from '@angular/core';
   import { LoaderService } from '@cms/shared/util-core';
@@ -13,7 +11,7 @@ import {
     templateUrl: './deactivate-notification-category.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
-  export class DeactivateNotificationCategoryComponent implements OnInit {
+  export class DeactivateNotificationCategoryComponent  {
     @Output() close = new EventEmitter<any>();
     @Output() deactivateConfimEvent = new EventEmitter<any>();
  
@@ -21,7 +19,6 @@ import {
     /** Constructor **/
     constructor(private readonly loaderService: LoaderService,) {}
   
-    ngOnInit(): void { }
   
     onCancelClick() {
       this.close.emit();

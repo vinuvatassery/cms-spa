@@ -7,7 +7,6 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { SystemInterfaceActivityStatusCode } from '../enums/system-interface-status-type-code';
 import { SystemInterfaceActivityStatusCodeDescription } from '../enums/system-interface-status-type-code.description';
 import { SystemInterfaceEecProcessTypeCode } from '../enums/system-interface-eec-process-type-code';
-import { SystemInterfaceSupportFacade } from './system-interface-support.facade';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { SystemInterfaceUsps } from '../enums/system-interface-Usps';
 import { SystemInterfaceUspsStatusCodeDescription } from '../enums/usps-status-type-code';

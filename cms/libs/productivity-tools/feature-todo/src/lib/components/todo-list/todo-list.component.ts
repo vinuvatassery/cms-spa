@@ -211,7 +211,6 @@ export class TodoListComponent implements OnInit {
     onToDoClicked(gridItem: any) {
       if (gridItem && gridItem.entityTypeCode == this.entityTypes.Client) {
         this.getEligibilityInfoByEligibilityId(gridItem?.entityId)
-        //this.router.navigate([`/case-management/cases/case360/${gridItem?.entityId}`]);
       }
       else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Vendor) {
         this.getVendorProfile(gridItem.vendorTypeCode)

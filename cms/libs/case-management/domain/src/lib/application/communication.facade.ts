@@ -11,7 +11,6 @@ import { LoggingService } from '@cms/shared/util-core';
 import { SmsNotification } from '../entities/sms-notification';
 import { DocumentDataService } from '../infrastructure/document.data.service';
 import { Subject } from 'rxjs';
-import { ScreenType } from '../enums/screen-type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CommunicationFacade {

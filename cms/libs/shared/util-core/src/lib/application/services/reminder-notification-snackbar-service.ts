@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { debounceTime, Subject } from 'rxjs';
 import { ConfigurationProvider } from '../../api/providers/configuration.provider';
-import { ReminderNotificationSource, ReminderSnackBarNotificationText, ReminderSnackBarNotificationType } from '../../enums/snack-bar-notification-type.enum';
+import {  ReminderSnackBarNotificationType } from '../../enums/snack-bar-notification-type.enum';
 
 
 

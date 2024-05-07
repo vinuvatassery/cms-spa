@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { LovFacade } from '@cms/system-config/domain';
+import {  ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { DashboardWrapperFacade, WidgetFacade } from '@cms/dashboard/domain';
 import { LocalStorageService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { DashboardTemplate, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
+import { DashboardTemplate } from '@cms/system-interface/domain';
 import { State } from '@progress/kendo-data-query';
 import { DisplayGrid, GridType, GridsterConfig, GridsterItem, GridsterItemComponentInterface } from 'angular-gridster2';
 import { Subject, Subscription, first } from 'rxjs';
@@ -401,7 +400,6 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     }
   }
 
-  changedOptions() {}
 
   removeItem(item: any) {
     this.dashboard.splice(this.dashboard.indexOf(item), 1);

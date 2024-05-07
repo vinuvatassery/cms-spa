@@ -19,7 +19,7 @@ import { VerificationFacade,
   CommunicationEventTypeCode,
   CommunicationFacade,
   EsignFacade,
-  EsignStatusCode} from '@cms/case-management/domain';
+} from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 import { StatusFlag } from '@cms/shared/ui-common';

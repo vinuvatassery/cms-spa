@@ -333,7 +333,6 @@ export class ReminderListComponent implements  OnInit{
   onNavigationClicked(result: any) {
     if (result.entityTypeCode == this.entityTypes.Client) {
       this.getEligibilityInfoByEligibilityId(result?.entityId)
-      //this.router.navigate([`/case-management/cases/case360/${result.entityId}`]);
     }
     else if(result.entityTypeCode == this.entityTypes.Vendor)
     { 

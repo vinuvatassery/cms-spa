@@ -334,13 +334,7 @@ export class NotificationPanelComponent implements OnInit {
       this.notificationaAndReminderDataSubject.next(this.gridDataResult);
     });
     this.notificationListBell$.subscribe((data: any) => {
-      //this.gridDataResult = data?.items;
-      
-     // if (data?.totalCount >= 0 || data?.totalCount === -1) {
-        
       this.unViewedCount =  !isNaN(data) ? data : 0
-     //   this.isToDoGridLoaderShow.next(false);
-     //}
       this.notificationaAndReminderDataSubject.next(this.gridDataResult);
     });
   }
