@@ -9,11 +9,10 @@ import {
   Input,
   OnChanges,
   Output,
-  ViewChild,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  ColumnComponent, GridDataResult } from '@progress/kendo-angular-grid';
+import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State
@@ -57,12 +56,6 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
-    // --------------------- grid columns visiblity
-    visibleColumnFields: string[] = [];
-    visibleColumns: any[] = [];
-    @ViewChild('clientsGrid') clientsGrid: any;
-    // ---------------------
 
   columns: any = {
     creationTime: 'Batch #',
@@ -241,16 +234,9 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
     );
   }
 
-  GetHiddenDataGridColumns() {
-    return this.clientsGrid.columns.toArray()
-      .filter((column: ColumnComponent) => column.hidden)
-      .map((column: any) => column.field ? column.field.charAt(0).toUpperCase() + column.field.slice(1) : null);
-  }
-
-
   onClickedExport() {
     this.showExportLoader = true;
-    this.exportGridDataEvent.emit(this.GetHiddenDataGridColumns());
+    this.exportGridDataEvent.emit();
 
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
