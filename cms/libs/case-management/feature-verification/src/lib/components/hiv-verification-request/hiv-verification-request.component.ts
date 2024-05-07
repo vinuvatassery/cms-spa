@@ -39,6 +39,7 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
   @Input() clientCaseId!: any;
   @Input() clientCaseEligibilityId!: any;
   @Input() healthCareProviderExists!: any;
+  @Input() isCaseManagerExists!: any;
   @Input() providerEmail!: any;
   @Input() emailSentDate!: any;
   @Input() loginUserName!: any;
@@ -81,6 +82,8 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public uploadFileRestrictions: UploadFileRistrictionOptions =
   new UploadFileRistrictionOptions();
+  modifiedUserName:any;
+  updatedUserId:any;
   showDocInputLoader = false;
   hivDocument = new HivVerificationDocument();
   popupClass1 = 'more-action-dropdown app-dropdown-action-list ';
@@ -176,10 +179,19 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
             uid: data?.hivVerification?.documentId,
             documentId: data?.hivVerification?.documentId,
             clientHivVerificationId: data?.clientHivVerificationId,
+            verificationStatusCode: data?.verificationStatusCode,
+            verificationStatusDate : data?.verificationStatusDate
           },
         ];
         this.uploadedAttachment = documentData;
         this.userId = data?.creatorId;
+        if(data?.verificationStatusCode === VerificationStatusCode.Accept || data?.verificationStatusCode === VerificationStatusCode.Reject){
+          this.loginUserId = data?.lastModifiedId;
+          this.modifiedUserName = data?.modifiedUser
+        }
+        else{
+          this.loginUserId = data?.creatorId;
+        }
         this.uploadedDate = data?.verificationUploadedDate;
         this.uploadedBy = data?.uploadedBy
         this.cdr.detectChanges();
@@ -321,7 +333,6 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.loadPendingEsignRequestInfo();
             this.saveHivVerificationData();
             this.isSendEmailVisiable = false;
             this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'HIV Verification sent successfully!');
@@ -400,10 +411,10 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
     next:(data)=>{
       if(data){
         this.isResendRequest = false;
-        this.verificationFacade.hivVerificationSaveSubject.next(true);
-        this.verificationFacade.hideLoader();
-        this.cdr.detectChanges();
+        this.loadPendingEsignRequestInfo();
       }
+      this.cdr.detectChanges();
+      this.verificationFacade.hideLoader();
     },
     error:(error)=>{
       if (error) {
@@ -419,38 +430,34 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
 
 loadPendingEsignRequestInfo(){
   this.verificationFacade.showLoader();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', 'HIV_VERIFICATION_EMAIL')
+    this.verificationFacade.getHivVerificationByMethodCode(this.clientId, ProviderOption.HealthCareProvider)
     .subscribe({
       next: (data: any) =>{
-        if (data?.esignRequestId != null) {
-          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.InProgress){
-            this.isSendEmailClicked=true;
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
-            this.intl.formatDate(new Date(), "MM/dd/yyyy")
-            this.providerEmail = data?.to.map((x: any)=>x);
-            this.getLoggedInUserProfile();
-          }
-          else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
-            this.isSendEmailClicked=true;
-            this.providerEmail = data?.to.map((x: any)=>x);
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
-            this.getLoggedInUserProfile();
-          }else if(data?.esignRequestStatusCode == EsignStatusCode.Failed){
-            this.providerEmail = data?.to.map((x: any)=>x);
-            this.isSendEmailFailed = true;
-            this.errorMessage = data?.errorMessage;
-          }
+          if (data?.hivVerification != null && data?.requestedUserName != null) {
+            this.emailSentDate = this.intl.formatDate(new Date(data?.creationTime), "MM/dd/yyyy");
+            this.loginUserName = data?.requestedUserName;
             this.isEmailFieldVisible = false;
+            this.isSendEmailVisiable = false;
             this.isSendRequest = true;
-            this.cdr.detectChanges();
-          }else{
+            this.isResendRequest = true;
+            this.providerEmail = data?.hivVerification?.verificationToEmail;
+           }
+           else
+           {
             this.isEmailFieldVisible = true;
             this.isSendEmailVisiable = true;
             this.isSendRequest = false;
             this.isResendRequest = false;
             this.emailSentDate = null;
-            this.cdr.detectChanges();
+           }
+
+           if(!this.healthCareProviderExists){
+            this.providerOption = null;
+            this.isSendRequest = true;
+            this.isResendRequest=false;
+            this.emailSentDate = null;
           }
+          this.cdr.detectChanges();
           this.verificationFacade.hideLoader();
     },
     error: (err: any) => {
@@ -494,20 +501,25 @@ sendHivRequestCaseManager(){
   getClientHivVerification(){
     if(this.clientId != 0 && this.clientId != null && this.clientId != undefined){
       this.verificationFacade.showLoader();
-      this.verificationFacade.getClientHivVerification(this.clientId).subscribe({
+      this.verificationFacade.getHivVerificationByMethodCode(this.clientId, ProviderOption.CaseManager).subscribe({
         next: (response: any) => {
-          if(response){
-            if(response?.hivVerification?.verificationMethodCode === ProviderOption.CaseManager)
-            {
+          if(response?.hivVerification && response?.requestedUserName != null){
             this.isSendRequest = true;
             this.loginUserName = response?.requestedUserName;
-            this.emailSentDate = this.intl.formatDate(new Date(response?.hivVerification?.verificationStatusDate),"MM/dd/yyyy");
-            }
+            this.emailSentDate = this.intl.formatDate(new Date(response?.creationTime),"MM/dd/yyyy");
+            this.loginUserId = response?.loginUserId;
           }else{
             this.isSendRequest = false;
             this.isResendRequest=false;
             this.emailSentDate=null;
             this.isEmailFieldVisible = false;
+          }
+          
+          if(!this.isCaseManagerExists){
+            this.providerOption = null;
+            this.isSendRequest = true;
+            this.isResendRequest=false;
+            this.emailSentDate = null;
           }
           this.cdr.detectChanges();
           this.verificationFacade.hideLoader();

@@ -7,6 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountSettingsComponent {
+  isScheduleOutOfOfficeSection = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public listItems = [
  {
@@ -39,4 +40,8 @@ export class AccountSettingsComponent {
  },
   ]; 
   public time: Date = new Date(2000, 2, 10, 13, 30, 0);
+
+  showScheduleOutOfOfficeSection(){
+this.isScheduleOutOfOfficeSection = !this.isScheduleOutOfOfficeSection
+  }
 }

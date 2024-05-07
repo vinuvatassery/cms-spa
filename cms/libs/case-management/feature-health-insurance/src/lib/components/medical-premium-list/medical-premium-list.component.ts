@@ -335,7 +335,7 @@ export class MedicalPremiumListComponent implements OnInit {
   ) {
     const gridDataRefinerValue = {
       skipCount: skipcountValue,
-      pagesize: maxResultCountValue,
+      maxResultCount: maxResultCountValue,
       sortColumn: sortColumn,
       sortType: sortType,
       filter:filter

@@ -166,11 +166,13 @@ export class ReminderDetailComponent implements OnInit {
       }
 
      if(this.isEdit && res){
-      this.clientReminderForm.controls['linkTo'].disable()
       this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
       this.entityTypeCode= res.entityTypeCode
       this.entityId = res.entityId
       this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
+      if(res.entityTypeCode){
+        this.clientReminderForm.controls['linkTo'].disable()
+      
      if(res.entityTypeCode !=='CLIENT'){
       this.clientReminderForm.controls['vendorId'].disable()    
 
@@ -215,6 +217,7 @@ export class ReminderDetailComponent implements OnInit {
         clientId : res.entityId
       })
      }
+    }
    }
   })
 }
