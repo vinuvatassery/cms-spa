@@ -4,13 +4,14 @@ import { HttpClient } from '@angular/common/http';
 /** Internal Libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientHivVerification } from '../entities/client-hiv-verification';
+import { ProviderOption } from '../enums/provider-option.enum';
 
 @Injectable({ providedIn: 'root' })
 export class VerificationDataService {
     constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider){}
     save(clientHivVerification: FormData) {
         return this.http.post(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification`,
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/save`,
           clientHivVerification
         );
       }
@@ -73,5 +74,13 @@ export class VerificationDataService {
 
       sendHivRequestCaseManager(clientId:any){
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/hiv-casemanager-notification/${clientId}`);
+      }
+
+      getClientHivVerification(clientId:any){
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification?clientId=${clientId}`);
+      }
+
+      getClientHivVerificationByMethod(clientId: number, methodCode: ProviderOption) {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/${clientId}/${methodCode}`);
       }
     }

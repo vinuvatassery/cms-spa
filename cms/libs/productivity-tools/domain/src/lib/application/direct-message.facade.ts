@@ -11,7 +11,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { DirectMessage } from '../entities/direct-message';
 /** Data services **/
 import { DirectMessageDataService } from '../infrastructure/direct-message.data.service';
-import { ChatClient, ChatThreadClient, ChatThreadItem, ChatThreadProperties } from '@azure/communication-chat';
+import { ChatClient, ChatThreadClient } from '@azure/communication-chat';
 import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
 
 @Injectable({ providedIn: 'root' })
@@ -34,7 +34,9 @@ export class DirectMessageFacade {
   private communicationDetailSubject = new Subject<any>();
   private communicationDetailLoaderSubject = new Subject<boolean>();
   private sendMessageSubject = new Subject<any>();
+  private uploadDocumentSubject = new Subject<any>();
   private comminicationTokenSubject = new Subject<any>();
+  private downloadAttachmentLoaderSubject = new Subject<boolean>();
   /** Public properties **/
   directMessages$ = this.directMessagesSubject.asObservable();
   directMessagesLists$ = this.directMessagesListSubject.asObservable();
@@ -42,6 +44,8 @@ export class DirectMessageFacade {
   communicationDetailLoader$ = this.communicationDetailLoaderSubject.asObservable();
   sendMessage$ = this.sendMessageSubject.asObservable();
   comminicationToken$ = this.comminicationTokenSubject.asObservable();
+  uploadDocument$ = this.uploadDocumentSubject.asObservable();
+  downloadAttachmentLoader$ = this.downloadAttachmentLoaderSubject.asObservable();
    // handling the snackbar & loader
    snackbarMessage!: SnackBar;
    snackbarSubject = new Subject<SnackBar>(); 
@@ -73,7 +77,7 @@ export class DirectMessageFacade {
   ) {}
 
   getChatClient(userAccessToken :any): ChatClient{
-   var endpoint = parseConnectionString(this.configurationProvider.appSettings.azureCommunication.connectionString).endpoint;
+    let endpoint = parseConnectionString(this.configurationProvider.appSettings.azureCommunication.connectionString).endpoint;
     return new ChatClient(endpoint, new AzureCommunicationTokenCredential(userAccessToken))
   }
 
@@ -92,18 +96,17 @@ export class DirectMessageFacade {
     });
   }
   loadDirectMessagesLists(param:any): void {
-    this.loaderService.show()
     this.directMessageDataService.loadDirectMessagesLists(param).subscribe({
       next: (Response) => {
         this.loaderService.hide()
         const gridView: any = {
-          data: Response.items,
-          total:Response.totalCount,
+          data: Response.items == undefined ? [] : Response.items,
+          total:Response.totalCount == undefined ? 0:  Response.totalCount,
         }; 
         this.directMessagesListSubject.next(gridView);
       },
       error: (err) => {
-        this.loaderService.hide()
+        this.loaderService.hide();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
@@ -117,6 +120,7 @@ export class DirectMessageFacade {
       this.communicationDetailLoaderSubject.next(false)
     },
     error: (err) => {
+      this.communicationDetailSubject.next(undefined);
       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
     }
   })
@@ -124,8 +128,13 @@ export class DirectMessageFacade {
   
   sendMessage(payload:any){
     this.directMessageDataService.sendMessage(payload).subscribe({
-      next: (Response) => {
-        this.sendMessageSubject.next(Response);
+      next: (response:any) => {
+        this.sendMessageSubject.next(response);
+        if(!payload.isClient){
+          if(response){
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+        }
+      }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -143,4 +152,41 @@ export class DirectMessageFacade {
       }
     })
   }
+  uploadAttachments(uploadRequest:any , threadId :string){
+    this.showLoader()
+    this.directMessageDataService.uploadAttachments(uploadRequest, threadId).subscribe({
+      next: (Response) => {
+        this.uploadDocumentSubject.next(Response);
+        if (Response) {
+          this.loaderService.hide();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+        this.loaderService.hide();
+      },
+    })
+  }
+
+
+downloadChatAttachment(documentName: string, filePath:string) {
+   this.downloadAttachmentLoaderSubject.next(true)
+  this.directMessageDataService.downloadDocument(documentName, filePath).subscribe({
+        next: (data: any) => {
+          this.downloadAttachmentLoaderSubject.next(false)
+
+            const fileUrl = window.URL.createObjectURL(data);
+          
+                const downloadLink = document.createElement('a');
+                downloadLink.href = fileUrl;
+                downloadLink.download = documentName;
+                downloadLink.click();
+            },
+        error: (error: any) => {
+          
+        }
+    })
+
 }
+}
+

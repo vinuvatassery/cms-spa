@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import {  Subject } from 'rxjs';
 /** Data services **/
 import { NotificationStatsDataService } from '../infrastructure/notification-stats.data.service';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 
 
 @Injectable({ providedIn: 'root' })
@@ -13,12 +13,12 @@ export class NotificationStatsFacade {
   private getStatsSubject = new Subject<any>();
   private updateStatsSubject = new Subject<any>();
   private resetStatsSubject = new Subject<any>();
-
+  private directMessageStatsSubject = new Subject<any>();
   /** Public properties **/
   getStats$ = this.getStatsSubject.asObservable();
   updateStats$ = this.updateStatsSubject.asObservable();
   resetStats$ = this.resetStatsSubject.asObservable();
-
+  directMessageStats$ = this.directMessageStatsSubject.asObservable();
   /** Constructor **/
   constructor(private readonly notificationStatsDataService: NotificationStatsDataService,
     private loggingService : LoggingService,
@@ -61,6 +61,20 @@ export class NotificationStatsFacade {
             statsTypeCode: statsTypeCode
           };
         this.resetStatsSubject.next(response);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+  directMessageStats(entityId:string, statsTypeCode:string): void {
+    this.notificationStatsDataService.directMessageStats(entityId).subscribe({
+      next: (statsResponse) => {
+        const response = {
+            data: statsResponse,
+            statsTypeCode: statsTypeCode
+          };
+        this.directMessageStatsSubject.next(response);
       },
       error: (err) => {
         console.error('err', err);

@@ -1,3 +1,3 @@
 export enum ConstantValue {
-    Repeat = "Repeat"
+    Repeat = "Repeats"
 }

@@ -114,7 +114,7 @@
           </div>
           <div class="flex-col flex-col-6">
             <common-document-upload
-              [typeCode]="'COPY_OF_PAPER_APPLICATION'"
+              [typeCode]="'COPY_OF_SIGNED_APPLICATION'"
               [fieldName]="'COPY OF SIGNED APPLICATION'"
               [file]="copyOfSignedApplication"
               [isFileViewable]="true"
@@ -150,7 +150,7 @@
             >
               Re-Send Email
             </button>
-            <button *ngIf="!isCERApplicationSigned"
+            <button
               kendoButton
               [primary]="true"
               look="flat"
@@ -160,16 +160,6 @@
             >
               Send Letter
             </button>
-            <button *ngIf="isCERApplicationSigned"
-            kendoButton
-            [primary]="true"
-            look="flat"
-            class="ml-1"
-            (click)="onGetSignedApplicationClicked()"
-            aria-label="View Signed Application"
-          >
-            View Signed Application
-          </button>
           </div>
         </div>
         <div class="flex-col mt-2" *ngIf="isSendEmailFailed">
@@ -207,6 +197,7 @@
   [confirmationModelText]="confirmationModelText" 
   [saveForLaterHeadterText]="saveForLaterHeadterText" 
   [saveForLaterModelText]="saveForLaterModelText"
+  [entityType]="entityType"
   kendoTooltip
 >
 </case-management-send-letter>
@@ -232,6 +223,7 @@
   [confirmationModelText]="confirmationModelText" 
   [saveForLaterHeadterText]="saveForLaterHeadterText" 
   [saveForLaterModelText]="saveForLaterModelText"
+  [entityType]="entityType"
   kendoTooltip
 ></case-management-send-email>
 </ng-template>

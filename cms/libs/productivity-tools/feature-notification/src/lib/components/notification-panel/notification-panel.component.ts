@@ -21,6 +21,7 @@ import {
 import {
   LoggingService,
   SnackBarNotificationType,
+  NotificationDataFacade
 } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -41,6 +42,8 @@ export class NotificationPanelComponent implements OnInit {
   deleteReminderTemplate!: TemplateRef<any>;
   @ViewChild('NewReminderTemplate', { read: TemplateRef })
   NewReminderTemplate!: TemplateRef<any>;
+  @ViewChild('notificationsAndRemindersDialog', { read: TemplateRef })
+  notificationsAndRemindersDialog!: TemplateRef<any>;
   // data: Array<any> = [{}];
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
@@ -63,6 +66,7 @@ export class NotificationPanelComponent implements OnInit {
   alertsData:any = {};
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
+  notificationAndReminderDataList$ = this.notificationDataFacade.notificationAndReminderDataList$;
   isNotificationPopupOpened = false;
   unViewedCount : number = 0;
   selectedAlertId =""
@@ -77,6 +81,7 @@ export class NotificationPanelComponent implements OnInit {
   isReminderOpenClicked = false
   getTodo$ = this.todoFacade.getTodo$
   crudText ="Create New"
+  notificationAndReminderPageTab="NOTIFICATION";
   public data = [
     {
       buttonType: 'btn-h-primary',
@@ -138,6 +143,7 @@ export class NotificationPanelComponent implements OnInit {
   /** Constructor **/
   constructor(
     private readonly notificationFacade: NotificationFacade,
+    private readonly notificationDataFacade: NotificationDataFacade,
     private readonly todoFacade: TodoFacade,
     private loggingService: LoggingService,
     private dialogService: DialogService,
@@ -157,6 +163,14 @@ export class NotificationPanelComponent implements OnInit {
         this.alertsData = data;
         this.cdr.detectChanges();
       });
+      this.notificationAndReminderDataList$.subscribe((data: any) => {
+       if(data){
+        this.notificationAndReminderPageTab = data;
+        this.onNotificationsAndRemindersOpenClicked(this.notificationsAndRemindersDialog);
+       }
+        this.cdr.detectChanges();
+      });
+      
     this.loadSignalrGeneralNotifications();
     this.loadSignalrReminders();
   }

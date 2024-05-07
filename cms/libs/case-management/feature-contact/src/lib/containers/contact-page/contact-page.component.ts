@@ -14,10 +14,9 @@ import {
   ClientDocumentFacade, HomeAddressProof, StatesInUSA, WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
+import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
-import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-contact-page',

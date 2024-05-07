@@ -22,7 +22,8 @@
     [sort]="state.sort"
     [skip]="state.skip"
     [pageSize]="state.take"
-    [pageable]="true">
+    [pageable]="true"
+    [loading]="(isDirectMessageGridLoaderShow | async) === true">
       <kendo-grid-column field="clientFullName" title="From" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" aria-label="Message From" 
@@ -46,9 +47,10 @@
       </ng-template>
       <!-- grid No data Template -->
       <ng-template kendoGridNoRecordsTemplate>
-        <common-grid-no-records></common-grid-no-records>
+        <div role="cell" > <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There are no messages</p>
       </ng-template>
-
     <!--Footer Paging-->
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
     let-currentPage="currentPage">

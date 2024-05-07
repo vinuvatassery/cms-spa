@@ -9,11 +9,8 @@
             format="MM/dd/yyyy"
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="dueDate"
-            formatPlaceholder="formatPattern"
-            [min]="currentDate" 
-            placeholder=""
-            (keyup)="dueDateValidation()"
-            (valueChange)="dueDateValidation()"
+            formatPlaceholder="formatPattern"           
+            placeholder=""            
           >
           </kendo-datepicker>
           <kendo-formerror *ngIf="clientReminderForm.controls['dueDate'].hasError('incorrect')">
@@ -28,6 +25,7 @@
           <kendo-timepicker
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="time"
+            format="hh:mm a"
             formatPlaceholder="formatPattern"
             (keyup)="timeValidation()"
             (valueChange)="timeValidation()"
@@ -193,6 +191,12 @@
   </section>
 </section>
 <kendo-dialog-actions kendoTooltip>
+  <div class="justify-content-between">
+    <div>
+    <button *ngIf="isEdit"  kendoButton aria-label="Delete" 
+    class="k-danger-link" (click)="delete()">  Delete     </button>
+    
+    </div>
   <div class="justify-content-end">
     <button
       kendoButton
@@ -200,17 +204,20 @@
       look="outline"
       aria-label="Cancel"
       (click)="onCloseReminderClicked()"
+      class="mr-2"
     >
       Cancel
     </button>
     <button *ngIf="!isDelete" kendoButton [primary]="true" (click)="save()"  
-    aria-label="Create" >
+    aria-label="Create" class="mr-2" >
       {{isEdit ? 'Update': 'Create'}} 
     </button>
     <div>
-      <button *ngIf="isDelete"  kendoButton aria-label="Delete"
-       class="k-danger-link" (click)="delete()">  Delete     </button>
-    </div>
+      <button *ngIf="isDelete"  kendoButton aria-label="Delete" 
+      class="k-error-button" (click)="delete()">  Delete     </button>
+      
+      </div>
 
+  </div>
   </div>
 </kendo-dialog-actions>

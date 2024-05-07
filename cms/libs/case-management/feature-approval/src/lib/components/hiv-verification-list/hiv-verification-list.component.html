@@ -1,0 +1,166 @@
+<div class="flex-row app-c-expansion-panel-two">
+    <div class="flex-col">
+      <kendo-panelbar (expand)="onPanelExpand(item)"
+       
+        *ngFor="let item of hivVerificationApproval; let i = index" >
+
+        <kendo-panelbar-item >
+          <ng-template kendoPanelBarItemTitle>
+            <div class="flex-row rw-100" (click)="$event.stopPropagation()">
+              <div class="flex-col flex-col-6">
+                <h5>Review HIV Verification</h5>               
+                <p>
+                  {{ item.verificationStatusDate | date : 'MM/dd/yyyy' }} from
+                  <a > {{item.verificationToEmail}}</a>                
+                </p>
+                <p>
+                  <button                
+                  [attr.aria-label]="item.clientName"
+                  kendoButton
+                  look="flat"
+                  class="card-link-button"    
+                  (click)="navigateIncompleteApplication(item)"               
+                >
+                  {{ item.clientName }}
+                </button>
+                </p>
+               
+              </div>
+              <div class="flex-col flex-col-6">
+                <div class="cms-button-group">
+                  <button
+                    kendoButton
+                    (selectedChange)="
+                    onRowLevelStatusChange($event, item, acceptStatus)"
+                    [selected]="item.status == acceptStatus"
+                    aria-label="Accept"
+                    id="Accept{{ i }}"
+                    [toggleable]="true"
+                  >
+                    ACCEPT 
+                  </button>
+                  <button
+                    kendoButton
+                    (selectedChange)="
+                    onRowLevelStatusChange($event, item, rejectStatus)"
+                    [selected]="item.status == rejectStatus"
+                    aria-label="Reject"
+                    id="Reject{{ i }}"
+                    [toggleable]="true"
+                  >
+                    REJECT
+                  </button>
+                </div>
+            
+                <div *ngIf="item.status == rejectStatus">
+                  <kendo-floatinglabel text="Reason for Rejection">
+                    <kendo-textarea
+                      #tareaCessation
+                      [fillMode]="formUiStyle.inputFillMode"
+                      [maxlength]="tAreaCessationMaxLength"
+                      [rows]="2"
+                      resizable="none"
+                      [(ngModel)]="item.reasonForRejection"
+                      aria-label="rejection text area"
+                      title="{{ item.reasonForRejection }}"                     
+                      id="reasonForRejection{{ i }}"
+                      (valueChange)="calculateCharacterCount(item);"
+                      [ngClass]="ngDirtyInValid(item, 'reasonForRejection', i)">     
+                      <kendo-textarea-suffix class="justify-content-end">
+                        <span class="counter">{{
+                          item.tAreaCessationCounter
+                        }}</span>
+                      </kendo-textarea-suffix>              
+                  </kendo-textarea>                
+               
+                  <kendo-formerror *ngIf="item.reasonForRejectionInValid">
+                    Reason for rejection is required.
+                  </kendo-formerror>             
+                  </kendo-floatinglabel>
+                  <p>This will be sent to the Healthcare Provider if re-request is sent.</p>
+                  <input type="checkbox" kendoCheckBox aria-labelledby="resentEmail" id="resentEmail"
+                    [(ngModel)]="item.resentEmail" />
+                  <label class="k-checkbox-label" for="resentEmail">Re-send email to request HIV Verification from Healthcare Provider {{item.verificationToEmail}}</label>  
+                 
+                </div>              
+              </div>
+            </div>
+          </ng-template>
+  
+           <ng-template kendoPanelBarContent >
+            <div *ngIf = "item.isExpanded">
+              <p>The Healthcare Provider submitted HIV Verification for the client. Review the information then select accept or reject.</p>
+              <p><b>HIV Verification: </b></p>
+              <div *ngIf ="item.clientDocumentId != null">
+                <div class="file-name-uploaded">
+                  <span class="material-icons">
+                    insert_drive_file
+                    </span>
+                  <p>{{item.fileName}}</p>
+                  <button kendoButton look="flat" aria-label="Download" class="k-icon-button" title="Download"
+                  (click)="openInNewTabOrDownload(false, item)">
+            <span class="material-icons" aria-label="download file" aria-hidden="true">file_download</span>
+          </button>
+          <button kendoButton look="flat" aria-label="Open in new tab" class="k-icon-button" title="Open in new tab"
+          (click)="openInNewTabOrDownload(true, item)">
+            <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
+          </button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </kendo-panelbar-item>
+      </kendo-panelbar>
+
+      <div class="text-center" *ngIf ="hivVerificationApproval?.length === 0">
+    <common-grid-no-records></common-grid-no-records>
+
+      </div>
+    </div>
+  </div>
+  <div class="bottom-fixed-wrapper text-right flex-gap">
+    <button
+      kendoButton
+      [primary]="true"
+      aria-label="Submit"
+      class=""
+      (click)="onSubmitHivVerificationOtherTab()"
+      [disabled]="hasDisabledSubmit"
+    >
+      {{submitButtonText}}
+    </button>
+  </div>
+ 
+  <ng-template #submitRequestModalDialog>
+   
+    <kendo-dialog-titlebar  (close)="onCloseSubmitConfirmClicked()">
+      {{submitButtonText}}</kendo-dialog-titlebar>  
+      <section class="k-dialog-body newcase">
+        <p  class="mb-1">
+          {{confirmationBodyText}}
+        </p>       
+      </section> 
+      <kendo-dialog-actions>
+        <div class="justify-content-between">
+          <div class="justify-content-end">
+            <button
+              aria-label="Cancel"
+              kendoButton
+              look="outline"
+              (click)="onCloseSubmitConfirmClicked()"
+            >
+              CANCEL
+            </button>
+            <button
+              aria-label="Submit"
+              kendoButton
+              [primary]="true"
+              (click)="saveHivVerification()"
+            >
+              {{confirmButtonText}}
+            </button>
+          </div>
+        </div>
+      </kendo-dialog-actions>
+  </ng-template>
+  

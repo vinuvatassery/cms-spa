@@ -16,7 +16,7 @@ import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationP
 import { Subject, Subscription, of } from 'rxjs';
 
 import { IntlService } from '@progress/kendo-angular-intl';
-import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
+import { ScrollFocusValidationfacade, FabBadgeFacade, FabEntityTypeCode } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-client-read-only-view',
   templateUrl: './client-read-only-view.component.html',
@@ -62,7 +62,8 @@ export class ClientReadOnlyViewComponent implements OnInit{
       private caseFacade: CaseFacade,
       private intl: IntlService,
       private configurationProvider: ConfigurationProvider,
-      private scrollFocusValidationfacade: ScrollFocusValidationfacade){}
+      private scrollFocusValidationfacade: ScrollFocusValidationfacade,
+      private fabBadgeFacade: FabBadgeFacade){}
    /** Lifecycle hooks **/
  ngOnInit(): void {
   this.loadReadOnlyClientInfoEvent.emit();
@@ -226,7 +227,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
             this.onCloseEditClientInformationClicked();
             this.onUpdateApplicantInfo.emit();
             this.clientFacade.reloadClientHeader();
-            this.clientFacade.reloadClientHeader();
+            this.fabBadgeFacade.reloadFabMenu(this.clientId, FabEntityTypeCode.Client);
           },
           error: (error: any) => {
             this.loaderService.hide();
@@ -308,6 +309,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
     this.appInfoForm.controls["firstName"].updateValueAndValidity();
     this.appInfoForm.controls["dateOfBirth"].setValidators([Validators.required]);
     this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
+    this.dateValidate();
     if (this.appInfoForm.controls["chkmiddleName"].value) {
       this.appInfoForm.controls["middleName"].removeValidators(Validators.required);;
       this.appInfoForm.controls["middleName"].updateValueAndValidity();
@@ -353,6 +355,15 @@ export class ClientReadOnlyViewComponent implements OnInit{
       if (hasError) {
         this.appInfoForm.controls['ssn'].setErrors(hasError);
       }
+    }
+  }
+
+  dateValidate() {
+    const signedDate = this.appInfoForm.controls['dateOfBirth'].value;
+    const todayDate = new Date();
+    if (signedDate && signedDate > todayDate) {
+      this.appInfoForm.controls['dateOfBirth'].setErrors(null);
+      this.appInfoForm.controls['dateOfBirth'].setErrors({ incorrect: true });
     }
   }
 

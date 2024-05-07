@@ -2,37 +2,41 @@
   <div class="flex-row">
     <div class="flex-col flex-space-bw align-items-center">
 
-      <div class="fmly-epdorpdown" style="min-width: 150px;">
-        <kendo-floatinglabel text="Interface">
-          <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="interfaceFilterDataList" [ngModel]="interfaceFilterDropDown" textField="lovDesc"
-            valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)"
-           >
-          </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-      <div>
-        <span class="app-checkboxwidtext-wrapper">
-          <input type="checkbox" kendoCheckBox
-            aria-labelledby="StatusshowHistorical" id="StatusshowHistorical" [(ngModel)]="displayAll"
-            (change)="handleShowHistoricalClick()" />
-          <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 2 Weeks   </label>
-        </span>
-      </div>
+
+      <kendo-floatinglabel text="Interface">
+        <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode" [data]="interfaceFilterDataList"
+          [ngModel]="interfaceFilterDropDown" textField="lovDesc" valueField="lovCode"
+          (selectionChange)="onInterfaceSelectionChanged($event)">
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+
+
     </div>
   </div>
+  <div class="flex-row mb-05">
+    <div class="flex-col flex-col-7 mt-1">
 
-  <div class="table-sorted-info">
-    Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
-    <span class="sort-items" *ngIf="!filteredBy">No Filters</span>
-    <span class="sort-items" *ngIf="filteredBy">Filtered by {{filteredBy}}</span>
-    <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
-    <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
-    <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetGrid()">
-      <a>Set to Default</a>
-    </button>
+
+      <div class="table-sorted-info pb-0">
+        Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
+        <span class="sort-items" *ngIf="!filteredBy">No Filters</span>
+        <span class="sort-items" *ngIf="filteredBy">Filtered by {{filteredBy}}</span>
+        <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+        <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+        <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetGrid()">
+          <a>Set to Default</a>
+        </button>
+      </div>
+    </div>
+      <div class="flex-col flex-col-5 justify-content-end mt-1">
+        <span>
+          <input type="checkbox" kendoCheckBox aria-labelledby="StatusshowHistorical" id="StatusshowHistorical"
+            [(ngModel)]="displayAll" (change)="handleShowHistoricalClick()" />
+          <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 2 Weeks </label>
+        </span>
+      </div>
+   
   </div>
-
   <div class="app-c-table">
 
     <kendo-grid [loading]="(webLogListsLoader$  | async) === true" [pageSize]="state.take" [pageable]="true"
@@ -67,16 +71,17 @@
           </common-grid-cell-date-range-filter>
         </ng-template>
       </kendo-grid-column>
- <ng-container  *ngIf="interfaceType !='USPS'">
-  <kendo-grid-column field="clientId" title="Client ID" [width]="180" [field]="'clientId'" >
-    <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
-      <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
-                <kendo-filter-eq-operator></kendo-filter-eq-operator>
-      </kendo-grid-numeric-filter-menu>
-       </ng-template>
-  </kendo-grid-column>
- </ng-container>
-     
+      <ng-container *ngIf="interfaceType !='USPS'">
+        <kendo-grid-column field="clientId" title="Client ID" [width]="180" [field]="'clientId'">
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+              [extra]="false" operator="eq">
+              <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            </kendo-grid-numeric-filter-menu>
+          </ng-template>
+        </kendo-grid-column>
+      </ng-container>
+
 
       <kendo-grid-column field="status" title="Status" [width]="160">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -85,48 +90,44 @@
           </kendo-dropdownlist>
         </ng-template>
 
-        <ng-template kendoGridCellTemplate let-dataItem >        
-          <button *ngIf="dataItem.status === 'FAILED' || dataItem.status === 'WEBSERVICE_DOWN'||dataItem.status === 'SUCCESS' " [attr.aria-label]="dataItem.status" kendoButton look="flat"
-            class="card-link-button" (click)="onViewInformation(dataItem.exceptionDetails,dataItem.status)" >
-             <span *ngIf="dataItem.status === 'FAILED'">Failed</span>
-             <span *ngIf="dataItem.status === 'WEBSERVICE_DOWN'">Web Service Down</span>
-             <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
-          </button>     
-          
-          <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span> 
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button
+            *ngIf="dataItem.status === 'FAILED' || dataItem.status === 'WEBSERVICE_DOWN'||dataItem.status === 'SUCCESS' "
+            [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button"
+            (click)="onViewInformation(dataItem.exceptionDetails,dataItem.status)">
+            <span *ngIf="dataItem.status === 'FAILED'">Failed</span>
+            <span *ngIf="dataItem.status === 'WEBSERVICE_DOWN'">Web Service Down</span>
+            <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
+          </button>
+
+          <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column *ngIf="interfaceType !='USPS'" field="uploadStatus" title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
+      <kendo-grid-column *ngIf="interfaceType !='USPS'" field="uploadStatus" title="File Download" [width]="180"
+        [sortable]="false" [columnMenu]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button kendoButton  [disabled]="dataItem.uploadStatus==='N'" title="Download" [attr.aria-label]="dataItem.status" [primary]="true" look="flat"  (click)="downloadFile(dataItem.fileId)"> <span class="material-icons">
-            file_download
+          <button kendoButton [disabled]="dataItem.uploadStatus==='N'" title="Download"
+            [attr.aria-label]="dataItem.status" [primary]="true" look="flat" (click)="downloadFile(dataItem.fileId)">
+            <span class="material-icons" aria-hidden="true">
+              file_download
             </span>
           </button>
 
-        
+
         </ng-template>
       </kendo-grid-column>
 
       <kendo-grid-column field="triggeredBy" title="Triggered By" [width]="120" [sortable]="false" [columnMenu]="false"
         class="text-center">
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.triggeredBy">
-            <common-user-photo-icon
-
-        [userId]="dataItem.triggeredBy"
-        [userFirstName]="dataItem.userFirstName"
-        [userLastName]="dataItem.userLastName"
-        [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
-        [linkType]="'profileIcon'"
-        [userPhotos$]="profilePhoto$"
-             ></common-user-photo-icon>
-          </button>
-          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-            <ng-template kendoPopoverBodyTemplate>
-              <common-user-profile-card [userId]="dataItem.triggeredBy"></common-user-profile-card>
-            </ng-template>
-          </kendo-popover>
+        <ng-template kendoGridCellTemplate let-dataItem> 
+            <common-user-photo-icon 
+            [userId]="dataItem.triggeredBy" 
+            [userFirstName]="dataItem.userFirstName"
+            [userLastName]="dataItem.userLastName" 
+            [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+            [linkType]="'profileIcon'" 
+            [userPhotos$]="profilePhoto$"></common-user-photo-icon> 
+        
         </ng-template>
       </kendo-grid-column>
 
@@ -166,46 +167,47 @@
   <kendo-dialog-titlebar (close)="Close()">
     <span *ngIf="status=='SUCCESS'"> Success Detail</span>
     <span *ngIf="status=='FAILED'"> Failure Detail</span>
-       
-    </kendo-dialog-titlebar>
-  <section class="k-dialog-body mb-2">
-     
-          <p class="text-muted mb-1">{{failureDetail}}</p>
-       
-    </section>
-    <kendo-dialog-actions>
-      <div class="justify-content-between">
-        <div class="justify-content-end">
-          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="Close()"> Close  </button>
 
-        </div>
+  </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+
+    <p class="text-muted mb-1">{{failureDetail}}</p>
+
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="Close()"> Close </button>
+
       </div>
-    </kendo-dialog-actions>
+    </div>
+  </kendo-dialog-actions>
 </ng-template>
 <ng-template #errorAddressDialogTemplate>
   <kendo-dialog-titlebar (close)="Close()">
-    <span *ngIf="errorCode=='500'" > Web Service Down  ({{errorCode}})</span>
-    <span *ngIf="status=='FAILED'" > Address Validation Failed <span *ngIf="errorCode!='200'">({{errorCode}}) </span></span>
-    <span *ngIf="status=='SUCCESS'" > Address Validation Succeeded</span>
- 
-    </kendo-dialog-titlebar>
-    <section class="k-dialog-body mb-2">
-      <div >
-        <p  >{{message}} <span *ngIf="status!='SUCCESS'"> We can't validate the address below.</span></p>
-          <div class="mt-2 ml-3">
-          <p>  {{address?.Address1 | uppercase }}   </p>   
-         <p> {{address?.Address2 | uppercase }}   </p>  
-         <p>    {{address?.City | uppercase }}, {{address.State}} {{address?.Zip5}}</p>
-         
-          </div> 
-      </div>
-    </section>
-    <kendo-dialog-actions>
-      <div class="justify-content-between">
-        <div class="justify-content-end">
-          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="Close()"> Close  </button>
+    <span *ngIf="errorCode=='500'"> Web Service Down ({{errorCode}})</span>
+    <span *ngIf="status=='FAILED'"> Address Validation Failed <span *ngIf="errorCode!='200'">({{errorCode}})
+      </span></span>
+    <span *ngIf="status=='SUCCESS'"> Address Validation Succeeded</span>
 
-        </div>
+  </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <div>
+      <p>{{message}} <span *ngIf="status!='SUCCESS'"> We can't validate the address below.</span></p>
+      <div class="mt-2 ml-3">
+        <p> {{address?.Address1 | uppercase }} </p>
+        <p> {{address?.Address2 | uppercase }} </p>
+        <p> {{address?.City | uppercase }}, {{address.State}} {{address?.Zip5}}</p>
+
       </div>
-    </kendo-dialog-actions>
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="Close()"> Close </button>
+
+      </div>
+    </div>
+  </kendo-dialog-actions>
 </ng-template>

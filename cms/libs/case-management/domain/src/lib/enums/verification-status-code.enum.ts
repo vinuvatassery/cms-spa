@@ -1,6 +1,6 @@
 export enum VerificationStatusCode {
-    Pending = "PENDING",
-    Approved = "APPROVED",
-    Rejected ='REJECTED',
-    HivProofReceived = 'HIV_PROOF_RECEIVED'
+    Pending = "PENDING",    
+    Reject ='REJECT',
+    HivProofReceived = 'HIV_PROOF_RECEIVED',
+    Accept ="ACCEPT"
 }

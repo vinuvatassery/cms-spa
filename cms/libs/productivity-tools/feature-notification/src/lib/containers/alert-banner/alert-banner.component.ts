@@ -7,8 +7,7 @@ import {
   Input,
   OnInit,
   Output,
-  TemplateRef,
-  ViewChild,
+  TemplateRef
 } from '@angular/core';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -175,18 +174,19 @@ export class AlertBannerComponent implements OnInit {
 
 
   public DueOn(alertItem:any):any{
-    console.log(alertItem.alertDueDate);
+   
     let dateNow = new Date();
+    dateNow = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate())
     let dueDate = new Date(alertItem.alertDueDate); 
-         if (dueDate.getDate() == dateNow.getDate()) {
+         if (dueDate == dateNow) {
              return alertItem.alertTypeCode != 'TODO' ?  '(Due '+AlertDueOn.Today+')' : AlertDueOn.Today;
-          } else if(!(dueDate.getDate() < dateNow.getDate()) && 
-            (dueDate.getDate() <= this.addDays(dateNow,1).getDate())) {
+          } else if(!(dueDate < dateNow) && 
+            (dueDate <= this.addDays(dateNow,1))) {
              return alertItem.alertTypeCode != 'TODO' ?  '(Due in 1 day)' : AlertDueOn.Tomorrow;
-           }else if(dueDate.getDate() > dateNow.getDate()){
-            return alertItem.alertTypeCode != 'TODO' ?  '(Due in '+this.differenceInDays(dueDate,dateNow)+ ' days)' :
+           }else if(dueDate > dateNow){
+            return alertItem.alertTypeCode != 'TODO' ?  '(Due in '+(this.differenceInDays(dueDate,dateNow))+ ' days)' :
             (this.intl.formatDate(new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
-           }else if (dueDate.getDate() < dateNow.getDate()){
+           }else if (dueDate < dateNow){
             return alertItem.alertTypeCode != 'TODO' ?  '(Overdue)' : 
             (this.intl.formatDate(new Date(alertItem.alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
            }
@@ -207,9 +207,9 @@ export class AlertBannerComponent implements OnInit {
     let isCrossedDueDate = false;
     let dueDate = alertDueDate == null ? this.topAlert.alertDueDate: alertDueDate;
     if(dueDate){
-      var currentDate = new Date();
-      var numberOfDaysToAdd = 7;
-      var resultDate =new Date(currentDate.setDate(currentDate.getDate() + numberOfDaysToAdd));
+      let currentDate = new Date();
+      let numberOfDaysToAdd = 7;
+      let resultDate =new Date(currentDate.setDate(currentDate.getDate() + numberOfDaysToAdd));
       if(new Date(dueDate) < resultDate){
         isCrossedDueDate = true;
       }

@@ -2,7 +2,10 @@
   <!-- Side Panel Header -->
   <div class="sidePanel_header">
     <div class="sidePanel_header-left">
+      <kendo-skeleton *ngIf="showLoader" shape="text" animation="pulse" width="30%"></kendo-skeleton>
+       <ng-container *ngIf="!showLoader">
       <h3>Direct Message {{clientName}}</h3>
+    </ng-container>
     </div>
     <div class="sidePanel_header-right">
       <button kendoButton class="k-icon-button small-i-btn" title="Close" (click)="onCloseDirectMessageClicked()"
@@ -11,76 +14,100 @@
       </button>
     </div>
   </div>
-  <div class="direct-chat-wrapper">
-    <div class="chat-view-container" #scrollMe>
+ 
+  <div   class="direct-chat-wrapper">
+    <div  class="chat-view-container" #scrollMe *ngIf="!disableChatInput">
+      <ng-container *ngIf="groupedMessages">
       <ng-container *ngFor="let item of groupedMessages | keyvalue:mySortingFunction">
         <label class="center-date">{{ item.key}}</label>
         
         <ng-container *ngFor="let value of getVlauesWithKey(item.value)">
+  
+
         <div class="chat-grey chat-left-side" *ngIf="!value.isOwner">
-          <p>{{value.message}}</p>
-          <div class="msg-attachment-wrapper" *ngIf="false">
-            <div class="attachment-container-list">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
-                 <span>AttachmentName.pdf</span>
-            </div>
-            <div class="attachment-container-list">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
-                 <span>AttachmentName.pdf</span>
-            </div>
-            <div class="attachment-container-list">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
-                 <span>AttachmentName.pdf</span>
-            </div>
-            <div class="attachment-container-list">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
-                 <span>AttachmentName.pdf</span>
-            </div>
-            <div class="attachment-container-list">
-              <span class="material-icons" aria-hidden="true">
-                attach_file
-                </span>
-                 <span>AttachmentName.pdf</span>
+          <div class="time-status"><span class="chat-time">{{value.sender}}</span> </div>
+          <p *ngIf="value.message">{{value.message}}</p>
+          <div class="msg-attachment-wrapper" *ngIf="value.attachments">
+            <div  *ngFor="let attachment of value.attachments"> 
+            <div class="attachment-container-list" (click)="download(value,attachment)">
+              <span class="material-icons attach" aria-hidden="true" *ngIf="!value.showDownloadLoader">  attach_file  </span>
+              <span class="material-icons download" aria-hidden="true" *ngIf="!value.showDownloadLoader">    file_download   </span>
+              <span class=" k-icon k-i-loading k-input-loading-icon mr-1" *ngIf="value.showDownloadLoader"></span>
+                 <span>{{attachment.id}}</span>
             </div>
           </div>
-          <div class="time-status" *ngIf="false"><span class="chat-time">{{value.createdOn | date:'h:mm a'}}</span> <span class="chat-time">Mark as Unread</span>
+          </div>
+          <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}}</span> 
           </div>
          
         </div>
         <div class="chat-green chat-right-side" *ngIf="value.isOwner">
-          <p>{{value.message}}</p>
-          <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}} (Read)</span> </div>
+          <div class="app-c-avatar avatar-sm">
+            <common-user-photo-icon  
+            [userId]="value.loginUserId" 
+            [userFirstName]="value.senderDisplayName.split(' ')[0]"
+            [userLastName]="value.senderDisplayName.split(' ')[1]"
+            [linkType]="'profileIcon'"
+           ></common-user-photo-icon>
+          </div>
+          <div class="msg_right"> 
+            <p *ngIf="value.message">{{value.message}}</p>
+          <div class="msg-attachment-wrapper" *ngIf="value.attachments">
+            <div  *ngFor="let attachment of value.attachments">
+
+           
+            <div class="attachment-container-list" (click)="download(value,attachment)" > 
+              <span class="material-icons attach" aria-hidden="true" *ngIf="!value.showDownloadLoader">  attach_file  </span>
+              <span class="material-icons download" aria-hidden="true" *ngIf="!value.showDownloadLoader">    file_download   </span>
+              <span class=" k-icon k-i-loading k-input-loading-icon mr-1" *ngIf="value.showDownloadLoader"></span>
+                 <span>{{attachment.id}}</span>
+            </div>
+          </div>
+          </div>
+          <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}} </span> </div>
+        </div>
         </div>
      
       </ng-container>
       </ng-container>
+    </ng-container>
+    <div *ngIf="showChatLoader">
 
-    </div>
-    <div *ngIf="false">
-      <div *ngFor="let skeletonCount of skeletonCounts" class="reminder_skeletion_loader">
-        <kendo-skeleton shape="rectangle" animation="pulse" width="100%" height="60"
-          class="bg_rect_loader"></kendo-skeleton>
-        <kendo-skeleton shape="rectangle" animation="pulse" [width]="40" [height]="40"></kendo-skeleton>
-        <div [ngStyle]="{ flex: '1 1 50%', marginLeft: '16px' }">
-          <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
-          <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
-        </div>
+      <div *ngFor="let skeletonCount of skeletonCounts" class="msg_loader">
+        <div class="left-msgloader">
+
+      
+        <kendo-skeleton  shape="rectangle"   animation="pulse"   class="msg_bgloader" ></kendo-skeleton>
+      <div class="msg_loader_second">
+        <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+        <kendo-skeleton shape="text" animation="pulse"  width="50%" ></kendo-skeleton>
       </div>
-
+     
     </div>
+    <div class="right-msgloader">
 
+      
+      <kendo-skeleton  shape="rectangle"   animation="pulse"   class="msg_bgloader" ></kendo-skeleton>
+    <div class="msg_loader_second">
+      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+      <kendo-skeleton shape="text" animation="pulse"  width="50%" ></kendo-skeleton>
+    </div>
+  </div>
+      </div>
+    </div>
+    </div>
+  
+    <div  class="chat-view-container" *ngIf="disableChatInput">
+     <span>Client does not have an active ORCares account.</span>
+    </div>
     <div class="chat-bottom-container">
       <div class="chat-input">
-        <input type="text" placeholder="Direct Message Donna…" class="message-normal-text-box" *ngIf="!messageToolBarShow" [(ngModel)]="sendMsg.message"  (keydown.control.enter)="sendMessage()" />
-        <kendo-editor [value]="value" class="message-editor" [iframe]="false" placeholder="Direct Message Donna…" *ngIf="messageToolBarShow">
+        <input type="text" [placeholder]="placeHolderText"
+         class="message-normal-text-box" *ngIf="!messageToolBarShow" 
+         [(ngModel)]="sendMsg.message"  (keydown.control.enter)="sendMessage()"
+         [disabled]="disableChatInput || showChatLoader" />
+        <kendo-editor [value]="value" class="message-editor" [iframe]="false"
+         [placeholder]="placeHolderText" *ngIf="messageToolBarShow">
           <kendo-toolbar [overflow]="true" >
             <kendo-toolbar-button kendoEditorBoldButton></kendo-toolbar-button>
             <kendo-toolbar-button kendoEditorItalicButton></kendo-toolbar-button>
@@ -94,19 +121,22 @@
         </kendo-editor>
       </div>
       <div class="chat-actions">
-        <div>        
-          <kendo-dropdownbutton   [data]="ListItemModel" themeColor="primary"  aria-label="Attach a File" title="Attach a File"  fillMode="flat" (itemClick)="onUploadDocumentsOpenClicked(UploadDocumentInDirectMessage, $event)">
-           
-              <span class="material-icons" aria-hidden="true">    attach_file   </span> 
+        <div>
+          <kendo-dropdownbutton [disabled]="disableChatInput || showChatLoader" [data]="ListModel" themeColor="primary" aria-label="Attach a File" title="Attach a File"
+            fillMode="flat" (itemClick)="onUploadDocumentsOpenClicked(UploadDocumentInDirectMessage, $event)">
+
+            <span class="material-icons" aria-hidden="true"> attach_file </span>
           </kendo-dropdownbutton>
         </div>
-     
+        <div>
+          <p class="mr-1"><small>CTRL + Enter to send  </small></p>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
 
 <ng-template #UploadDocumentInDirectMessage>
  
- <productivity-tools-direct-message-upload-docs (uploadDocumentsClosedDialog)="onUploadDocumentsClosed($event)"  [uploadDocumentTypeDetails]="uploadDocumentTypeDetails"></productivity-tools-direct-message-upload-docs>
+ <productivity-tools-direct-message-upload-docs (uploadDocumentsClosedDialog)="onUploadDocumentsClosed($event)" (uploadedDocuments)="getUploadedDocuments($event)"  [uploadDocumentTypeDetails]="uploadDocumentTypeDetails" [threadId]="threadId"></productivity-tools-direct-message-upload-docs>
 </ng-template>

@@ -13,7 +13,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, DocumentFacade, ScreenType} from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, ScreenType} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
@@ -136,12 +136,7 @@ export class EmailEditorComponent implements OnInit {
   }
 
   ngOnChanges(){
-    if(this.selectedTemplate){
-      this.selectedAttachedFile = [];
-      if(this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
-        this.loadUserDraftTemplateAttachment();
-        this.loadLetterAttachment(this.selectedTemplate.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
-      }else if(this.selectedTemplate?.notificationDraftId && this.selectedTemplate?.notificationRequestAttachments?.length > 0){
+      if(this.selectedTemplate?.notificationDraftId && this.selectedTemplate?.notificationRequestAttachments?.length > 0){
             for (let file of this.selectedTemplate?.notificationRequestAttachments){
               this.selectedAttachedFile.push({
                 document: file,
@@ -158,16 +153,8 @@ export class EmailEditorComponent implements OnInit {
         else
         {
           if(!this.isContentMissing){
-          let templateId = null;
-          if(this.selectedTemplate.documentTemplateId === null){
-            templateId = this.selectedTemplate.notificationTemplateId
-          }
-          else {
-            templateId = this.selectedTemplate.documentTemplateId
-          }
-          this.loadClientVendorDefaultAttachment(templateId);
+          this.loadClientVendorDefaultAttachment(this.selectedTemplate.documentTemplateId ?? this.selectedTemplate.notificationTemplateId);
         }
-      }
     }
 
     if (this.notificationGroup === ScreenType.VendorProfile) {
@@ -324,7 +311,14 @@ export class EmailEditorComponent implements OnInit {
     for (let file of event.files){
     const isFileExists = this.selectedAttachedFile?.some((item: any) => item.name === file.name);
     if(!isFileExists){
-      this.selectedAttachedFile.push(file);
+      let uploadedFile = {
+        'rawFile': file.rawFile,
+        'size': file.size,
+        'name': file.name,
+        'uid': file.uid,
+        'documentPath': ''
+      };
+      this.selectedAttachedFile.push(uploadedFile);
      }
     }
    }
@@ -348,7 +342,7 @@ export class EmailEditorComponent implements OnInit {
 
   clientAttachmentChange(event:any)
   {
-    if( event != undefined){
+    if(event != undefined){
     const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.documentName);
     if(!isFileExists){
     this.uploadedAttachedFile = [{
@@ -367,7 +361,7 @@ export class EmailEditorComponent implements OnInit {
        }
       }
     this.uploadedAttachedFile = [];
-    this.cerEmailAttachments.emit(event);
+    this.cerEmailAttachments.emit(this.selectedAttachedFile[0]);
     }
     this.showClientAttachmentUpload = false;
   }
@@ -394,7 +388,7 @@ export class EmailEditorComponent implements OnInit {
        }
       }
     this.uploadedAttachedFile = [];
-    this.cerEmailAttachments.emit(event);
+    this.cerEmailAttachments.emit(this.selectedAttachedFile[0]);
     }
     this.showFormsAndDocumentsUpload = false;
    }
@@ -497,7 +491,7 @@ clientAttachmentClick(item:any)
 
   private loadUserDraftTemplateAttachment() {
     this.loaderService.show();
-    this.communicationFacade.loadCERAuthorizationDraftAttachment(this.selectedTemplate.documentTemplateId)
+    this.communicationFacade.loadCERAuthorizationDraftAttachment(this.selectedTemplate.documentTemplateId ?? this.selectedTemplate?.notificationTemplateId)
       .subscribe({
         next: (attachments: any) => {
           if (attachments) {

@@ -40,9 +40,9 @@
         >
       </button>
       <button #eventFilterCardBtn kendoButton (click)="onShowFilterEventPopover()">
-        <span class="material-icons" aria-label="More option" *ngIf="!isEventFilterPopoverOpen"> more_vert </span>
+        <span class="material-icons" aria-label="More option"  *ngIf="!isEventFilterPopoverOpen" title="More options"> more_vert </span>
 
-        <span class="material-icons" aria-label="Cancel" *ngIf="isEventFilterPopoverOpen"> cancel </span>
+        <span class="material-icons" aria-label="Cancel" *ngIf="isEventFilterPopoverOpen" title="Close more options"> cancel </span>
       </button>
       <div class="event-filter_popover_wrapper" *ngIf="isEventFilterPopoverOpen" #eventtFilterPopover>
         <div class="event-filter-body">

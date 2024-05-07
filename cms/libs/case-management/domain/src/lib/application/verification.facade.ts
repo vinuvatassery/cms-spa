@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService } from '@cms/shared/util-core';
 import { ClientHivVerification } from '../entities/client-hiv-verification';
 import { VerificationDataService } from '../infrastructure/verification.data.service';
+import { ProviderOption } from '../enums/provider-option.enum';
 
 @Injectable({ providedIn: 'root' })
 export class VerificationFacade {
@@ -21,6 +22,7 @@ export class VerificationFacade {
   showHideAttachment = new BehaviorSubject<boolean>(false);
   isSaveandContinueSubject = new BehaviorSubject<boolean>(true);
   formChangeEventSubject = new BehaviorSubject<boolean>(false);
+  healthcareInvalidSubject = new BehaviorSubject<boolean>(false);
 
 
   /** Public properties **/
@@ -31,6 +33,7 @@ export class VerificationFacade {
   clientHivDocumentsList$ = this.clientHivDocumentsListSubject.asObservable();
   isSaveandContinue$ = this.isSaveandContinueSubject.asObservable();
   formChangeEvent$ = this.formChangeEventSubject.asObservable();
+  healthcareInvalid$ = this.healthcareInvalidSubject.asObservable();
 
 
 
@@ -115,5 +118,12 @@ export class VerificationFacade {
 
   sendHivRequestCaseManager(clientId : number,) {
     return this.verificationDataService.sendHivRequestCaseManager(clientId);
+  }
+  getClientHivVerification(clientId : number,) {
+    return this.verificationDataService.getClientHivVerification(clientId);
+  }
+
+  getHivVerificationByMethodCode(clientId: number, healthCareProvider: ProviderOption) {
+    return this.verificationDataService.getClientHivVerificationByMethod(clientId, healthCareProvider);
   }
 }

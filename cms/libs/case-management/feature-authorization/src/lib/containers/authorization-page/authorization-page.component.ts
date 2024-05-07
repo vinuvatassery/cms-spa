@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthorizationFacade, NavigationType, WorkFlowProgress, WorkflowFacade } from '@cms/case-management/domain';
+import { AuthorizationFacade, CommunicationEventTypeCode, NavigationType, WorkFlowProgress, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { BehaviorSubject, Subscription, first } from 'rxjs';
 
@@ -50,7 +50,6 @@ export class AuthorizationPageComponent implements OnInit{
     ngOnInit(): void {
       this.loadCurrentSession();
       this.loadEligibilityReviewUrlData();
-    
     }
   
   private loadCurrentSession() {
@@ -89,7 +88,7 @@ loadDateSignature(event : Date){
 }
 
   loadAuthorization() {
-    this.authorizationFacade.loadAuthorization(this.clientCaseEligibilityId);
+    this.authorizationFacade.loadAuthorization(this.clientCaseEligibilityId, CommunicationEventTypeCode.CopyOfSignedApplication ?? '');
   }
 
   saveAuthorization(data: any) {
