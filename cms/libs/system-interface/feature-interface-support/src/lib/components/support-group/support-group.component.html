@@ -187,7 +187,7 @@
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isSupportGroupDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()"> Delete Confirmation</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()">Error Confirmation</kendo-dialog-titlebar>
   <remove-support-group (deleteConfimEvent)="handleSupportGroupDelete($event)"
     (close)="onCloseSupportGroupDeleteClicked()"></remove-support-group>
 </kendo-dialog>
