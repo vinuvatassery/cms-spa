@@ -1,9 +1,5 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import {
-  TabCloseEvent,
-  TabStripComponent,
-} from "@progress/kendo-angular-layout";
 @Component({
   selector: 'system-config-email-template-header-footer',
   templateUrl: './email-template-header-footer.component.html',

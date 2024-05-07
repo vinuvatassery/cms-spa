@@ -7,12 +7,9 @@ import {
   SnackBarNotificationType,
   ConfigurationProvider
 } from '@cms/shared/util-core';
-import { Subject, first, Observable } from 'rxjs';
+import {  Observable } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { LoginUser } from '../entities/login-user';
-/** Entities **/
-import { User } from '../entities/user';
 /** Data services **/
 import { Counties } from '../entities/counties';
 import { State } from '../entities/state';

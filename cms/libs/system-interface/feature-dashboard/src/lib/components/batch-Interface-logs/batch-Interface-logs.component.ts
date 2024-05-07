@@ -239,8 +239,6 @@ closeallexpensions:any;
 
     this.filterData = filter;
   }
-  public columnChange(e: any) {
-  }
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }

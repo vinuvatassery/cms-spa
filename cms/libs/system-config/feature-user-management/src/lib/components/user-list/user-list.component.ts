@@ -1,6 +1,5 @@
 /** Angular **/
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
-import { UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
@@ -74,8 +73,6 @@ export class UserListComponent implements OnInit, OnChanges {
     
  
   ];
-
-  constructor() { }
 
   
   ngOnInit(): void {

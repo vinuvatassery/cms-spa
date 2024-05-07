@@ -1,14 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
     Input,
     OnInit,
-    Output,
 } from '@angular/core';
-import { LoaderService } from '@cms/shared/util-core';
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
-import { Subject, first } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'sub-event-detail',

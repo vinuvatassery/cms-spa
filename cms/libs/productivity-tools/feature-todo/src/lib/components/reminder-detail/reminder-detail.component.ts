@@ -1,12 +1,12 @@
 /** Angular **/
 import { Component, OnInit, Output, ChangeDetectionStrategy, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
-import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CaseFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { ConfigurationProvider, SnackBarNotificationType, } from '@cms/shared/util-core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Observable, Subject } from 'rxjs';
 @Component({
@@ -436,8 +436,6 @@ export class ReminderDetailComponent implements OnInit {
   }
 }
   else{
-    //this.clientReminderForm.controls['time'].setErrors({ 'incorrect': null })
-    //this.clientReminderForm.controls['time'].updateValueAndValidity();
     return;
   }
   }

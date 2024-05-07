@@ -2,15 +2,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
-import { User } from '../entities/user';
-import { LoginUser } from '../entities/login-user';
 
 /** Providers **/
 import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
-import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
