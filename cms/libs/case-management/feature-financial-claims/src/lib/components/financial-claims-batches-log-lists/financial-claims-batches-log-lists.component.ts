@@ -20,6 +20,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
   ConfigurationProvider,
+  DocumentFacade,
   NotificationSnackbarService,
   NotificationSource,
   SnackBarNotificationType,
@@ -276,6 +277,7 @@ export class FinancialClaimsBatchesLogListsComponent
     private readonly intl: IntlService,
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
+    private readonly documentFacade: DocumentFacade,
   ) { }
 
   ngOnInit(): void {
@@ -769,16 +771,13 @@ export class FinancialClaimsBatchesLogListsComponent
     this.onProviderNameClickEvent.emit(event);
   }
 
-  GetHiddenDataGridColumns() {
-    return this.clientsGrid.columns.toArray()
-      .filter((column: ColumnComponent) => column.hidden)
-      .map((column: any) => column.field ? column.field.charAt(0).toUpperCase() + column.field.slice(1) : null);
-  }
+
 
   onClickedExport() {
 
     this.showExportLoader = true;
-    this.exportGridDataEvent.emit(this.GetHiddenDataGridColumns());
+    const cols = this.documentFacade.getHiddenDataGridColumns(this.clientsGrid.columns.toArray());
+    this.exportGridDataEvent.emit(cols);
 
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {

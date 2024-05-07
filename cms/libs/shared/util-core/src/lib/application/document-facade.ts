@@ -7,6 +7,7 @@ import { SnackBarNotificationType } from '../enums/snack-bar-notification-type.e
 import { ApiType } from '../enums/api-type.enum';
 import { DocumentDataService } from '../infrastructure/document.data.service';
 import { Subject } from 'rxjs';
+import { ColumnComponent } from '@progress/kendo-angular-grid';
 /** External libraries **/
 
 @Injectable({ providedIn: 'root' })
@@ -155,4 +156,10 @@ export class DocumentFacade {
           }
       })
   }
+
+  getHiddenDataGridColumns(columns: ColumnComponent[]): string[] {
+    return columns
+        .filter((column: ColumnComponent) => column.hidden)
+        .map((column: any) => column.field ? column.field.charAt(0).toUpperCase() + column.field.slice(1) : null);
+}
 }
