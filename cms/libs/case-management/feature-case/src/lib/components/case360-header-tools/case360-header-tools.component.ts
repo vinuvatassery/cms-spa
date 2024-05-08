@@ -237,8 +237,38 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.saveForLaterHeadterText = "Letter Draft Saved";
             this.saveForLaterModelText="You must send the  Disenrollment Letter within 2 Days";
             this.confirmationModelText="If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete.";
+            this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
+          }
+          this.ref.detectChanges();
+        }
+        if (this.workflowFacade.caseStatus.toLowerCase() === CaseStatusCode.restricted.toLowerCase()) {    
+          if (this.paperlessFlag === StatusFlag.Yes) {
+            this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+            this.notificationGroup = CommunicationEventTypeCode.EMAIL;
+            this.emailCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeEmail;
+            this.currentCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeEmail;
+            this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click "+'Send Email'+" once the email is complete."
+            this.templateHeader = 'Send Restricted Email';
+            this.emailSubject = "CAREAssist Restricted Notice";
+            this.confirmPopupHeader = 'Send Restricted email to print?';
+            this.saveForLaterHeadterText = "Email Draft Saved";
+            this.saveForLaterModelText="To pick up where you left off, click New Emai from the client's profile";
+            this.confirmationModelText="If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click "+'Send Email'+" once the email is complete.";
 
-
+            this.notificationDraftCheck(this.clientId, this.templateLoadType,this.emailCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
+          }
+          else {
+            this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+            this.notificationGroup = CommunicationEventTypeCode.LETTER;
+            this.letterCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeLetter;
+            this.currentCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeLetter;
+            this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click "+'Send to Print'+" once the letter is complete."
+            this.templateHeader = 'Send Restricted Letter';
+            this.emailSubject = '';
+            this.confirmPopupHeader = 'Send Restricted letter to print?';
+            this.saveForLaterHeadterText = "Letter Draft Saved";
+            this.saveForLaterModelText="To pick up where you left off, click New Letter from the client's profile";
+            this.confirmationModelText="If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click "+'Send to Print'+" once the letter is complete.";
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
           }
           this.ref.detectChanges();
@@ -423,11 +453,11 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   loadNotificationTemplates(subTypeCode: string, templateName: TemplateRef<unknown>) {
-    if(subTypeCode == CommunicationEventTypeCode.EmailTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail){
+    if(subTypeCode == CommunicationEventTypeCode.EmailTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail || subTypeCode == CommunicationEventTypeCode.RestrictedNoticeEmail){
       templateName = this.sendNewEmailDialog;
       this.onSendNewEmailClicked(templateName);
     }
-    if(subTypeCode == CommunicationEventTypeCode.LetterTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeLetter){
+    if(subTypeCode == CommunicationEventTypeCode.LetterTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeLetter || subTypeCode == CommunicationEventTypeCode.RestrictedNoticeLetter){
       templateName = this.sendLetterDialog;
       this.onSendNewLetterClicked(templateName);
     }

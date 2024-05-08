@@ -457,6 +457,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             templateTypeCode = CommunicationEventTypeCode.CerLetterSent;
             eventGroupCode = EventGroupCode.CER;
             break;
+          case CommunicationEventTypeCode.RestrictedNoticeLetter:
+            templateTypeCode = CommunicationEventTypeCode.RestrictedLetterSent;
+            eventGroupCode = EventGroupCode.Application;
+            break;
     }
     return {templateTypeCode, eventGroupCode};
   }
