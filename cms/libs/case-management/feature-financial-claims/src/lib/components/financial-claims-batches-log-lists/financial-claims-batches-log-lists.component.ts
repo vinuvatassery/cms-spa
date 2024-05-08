@@ -9,7 +9,7 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -20,10 +20,9 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
   ConfigurationProvider,
-  DocumentFacade,
   NotificationSnackbarService,
   NotificationSource,
-  SnackBarNotificationType,
+  SnackBarNotificationType
 } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -36,6 +35,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, first } from 'rxjs';
+import { ExportHelpersFacade } from '../../../../../../shared/util-core/src/lib/application/ExportHelpers-facade';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html',
@@ -277,7 +277,7 @@ export class FinancialClaimsBatchesLogListsComponent
     private readonly intl: IntlService,
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly documentFacade: DocumentFacade,
+    private readonly exportHelpersFacade: ExportHelpersFacade,
   ) { }
 
   ngOnInit(): void {
@@ -776,7 +776,7 @@ export class FinancialClaimsBatchesLogListsComponent
   onClickedExport() {
 
     this.showExportLoader = true;
-    const cols = this.documentFacade.getHiddenDataGridColumns(this.clientsGrid.columns.toArray());
+    const cols = this.exportHelpersFacade.getHiddenDataGridColumns(this.clientsGrid.columns.toArray());
     this.exportGridDataEvent.emit(cols);
 
     this.exportButtonShow$.subscribe((response: any) => {
