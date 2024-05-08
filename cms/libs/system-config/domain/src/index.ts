@@ -24,6 +24,7 @@ export * from './lib/infrastructure/tin-validation.data.service';
 export * from './lib/infrastructure/other_lists.data.service';
 export * from './lib/infrastructure/housing-coordination.service';
 export * from './lib/infrastructure/system_config_cases.data.service';
+export * from './lib/infrastructure/forms-and-document.data.service';
 
 /** Facades **/
 export * from './lib/application/lov.facade';
@@ -40,6 +41,7 @@ export * from './lib/application/housing-coordination.facade';
 export * from './lib/application/scroll-focus-validation.facade';
 export * from './lib/application/system_config_cases.facade';
 export * from './lib/application/fab-badge.facade';
+export * from './lib/application/forms-and-document.facade';
 
 /** Enums **/
 export * from './lib/enums/lov-types.enum';
