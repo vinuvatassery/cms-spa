@@ -133,6 +133,7 @@ export class ApprovalPageComponent implements OnInit {
   selectedAttachedFile:any[]=[];
   clientHivVerification!:any;
   acceptStatus: string = 'ACCEPT';
+  RejectionReason:any;
 
   /** Constructor **/
   constructor(
@@ -241,6 +242,7 @@ export class ApprovalPageComponent implements OnInit {
 
   updateHiveVerificationApproval(event: any){
     this.statusUpdatedEligibilityId = event.toSave.eligibilityId;
+    this.RejectionReason = event.toSave.reasonForRejection;
     this.clientHivVerification = event.hivVerification[0];
     this.hivVerificationApprovalFacade.updateHivVerificationApproval(event.toSave);
   }
@@ -713,6 +715,7 @@ export class ApprovalPageComponent implements OnInit {
   private initiateAdobeEsignProcess(clientHivVerification: ClientHivVerification) {
     this.hivVerificationApprovalFacade.showLoader();
     let esignRequestFormdata = this.esignFacade.prepareHivVerificationdobeEsignFormData(clientHivVerification, this.statusUpdatedEligibilityId, this.emailSubject, this.selectedAttachedFile, this.notificationTemplateId);
+    esignRequestFormdata.append('rejectionReason', this.RejectionReason);
     const emailData = {};
     this.esignFacade.initiateAdobeesignRequest(esignRequestFormdata, emailData)
       .subscribe({
