@@ -1,1 +1,216 @@
-<p>account-setup works!</p>
+
+    <style type="text/css">
+        body {
+            margin: 0px;
+            padding: 0px;
+            background-color: #ffffff;
+            color: #777777;
+            font-family: 'Neue Helvetica'  !important; 
+            font-size: 12pt;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            width: 100% !important;
+        }
+
+        a,
+        a:link,
+        a:visited {
+            text-decoration: underline;
+        }
+
+        a:hover,
+        a:active {
+            text-decoration: underline !important;
+        }
+
+
+
+        h2 {
+            padding: 0px 0px 10px 0px;
+            margin: 0px 0px 10px 0px;
+        }
+
+        h3 {
+            padding: 0px 0px 5px 0px;
+            margin: 0px 0px 5px 0px;
+        }
+
+        h4,
+        h5 {
+            margin: 0;
+        }
+
+        h4 {
+            margin-bottom: 16px;
+        }
+
+        h5 {
+            margin-bottom: 8px;
+        }
+
+        .mb-2 {
+            margin-bottom: 30px !important;
+        }
+
+        p {
+            margin: 0px;
+            padding: 0;
+        }
+
+        img {
+            border: 0;
+            -ms-interpolation-mode: bicubic;
+            width: 100%;
+        }
+
+        a img {
+            border: none;
+        }
+
+        table td {
+            border-collapse: collapse;
+        }
+
+        .login-page-wrapper {
+            display: grid;
+            grid-template-columns: .3fr 1fr;
+            min-height: 100vh;
+
+        }
+
+        .top-select_box {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .login-left-side {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            background-color: #005994;
+            padding: 1rem;
+            background-image: url(./left_bg.jpg);
+            background-position: center;
+            background-size: cover;
+        }
+
+        .login-left-side img {
+            max-width: 150px;
+            margin-bottom: 3rem;
+        }
+
+        .login-right-side {
+            padding: 1rem;
+            max-width: 92%;
+            margin: auto;
+            width: 100%;
+        }
+
+        .login-form-wrapper {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .top-select_box {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .login-inner-wrapper {
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .blue-btn {
+            background-color: #005994;
+            color: #fff;
+            font-family: Neue Helvetica Medium !important;
+            padding-block: 8px;
+            padding-inline: 16px;
+            font-size: 14px;
+            line-height: 1.4285714286;
+            display: block;
+            width: 100%;
+            border-radius: 4px;
+            border: 0px;
+            cursor: pointer;
+
+        }
+        .blue-btn:hover{
+            background-color: #004a7c;  
+        }
+        .border-btn {
+            background-color: #ffffff;
+            color: #005994;
+            padding-block: 8px;
+            padding-inline: 16px;
+            font-size: 14px;
+            line-height: 1.4285714286;
+            display: block;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #005994;
+            font-weight: 600;
+            margin-top: 4px;
+            cursor: pointer;
+        }
+        .border-btn:hover{
+            background-color: #f3faff;  
+        }
+        .mt-22 {
+            margin-top: 20px;
+        }
+    </style>
+
+
+
+    <div class="login-page-wrapper">
+        <div class="login-left-side">
+            <img src="../assets/OHA_logo.png"  alt="logo" />
+        </div>
+        <div class="login-right-side">
+            <div class="top-select_box">
+                <div>
+                    <select placeholder="Select Language">
+                        <option>English</option>
+                      
+                    </select>
+                </div>
+            </div>
+            <h1 style="color: #005994;">Sign in to [Portal Name]</h1>
+            <div class="login-form-wrapper">
+                <div class="login-inner-wrapper">
+                    <div style="margin-top: 2rem;">
+                        <p>Enter your email address and password below.</p>
+
+                        <div style="margin-top: 10px;">
+                            <!-- your content goes here -->
+                            <h3>your content goes here</h3>
+                        </div>
+                    </div>
+                    <button class="blue-btn mt-22"> LOGIN </button>
+                    <div style="text-align: center;margin-top: 20px;">
+                        <p>I don't have a account</p>
+                        <button class="border-btn"> GET STARTED </button>
+                    </div>
+
+                </div>
+                <div>
+                    <div class="" style="text-align: right;">
+                        <h2 style="font-weight: 200;">Need Assistance?</h2>
+                        <h5 class=""><strong>Call CAREAssist</strong></h5>
+                        <p class="mb-2">(404)-470-1763</p>
+                        <h5><strong>Call CAREAssist</strong></h5>
+                        <p class="mb-2">(404)-470-1763</p>
+                        <img style="max-width: 300px;" src="./htlp.jpg" alt="" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
