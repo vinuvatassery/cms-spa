@@ -1,13 +1,25 @@
-<section class="k-dialog-body">
-
+<section class="k-dialog-body" [formGroup]="Form" >
       <div class="flex-row">
             <div class="flex-col">
-                  <kendo-floatinglabel text="Folder Name">
-                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-                        </kendo-textbox>
-                  </kendo-floatinglabel>
+                  <p class="text-muted mb-2">Enter the name for the folder and add</p>
+                <kendo-floatinglabel text="Folder Name">
+                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode"
+                    formControlName="folderName"
+                    (valueChange)="onCustomValueChange($event)"
+                    [maxlength]="CustomMaxLength"
+                    [value]="CustomDescription">
+                    </kendo-textbox>
+                    <kendo-textarea-suffix class="justify-content-end">
+                        <span class="customcounter">{{
+                          CustomCounter
+                        }}</span>
+                      </kendo-textarea-suffix>
+                    <kendo-formerror *ngIf="!Form.controls['folderName']?.valid && isValidateForm">
+                        Folder Name  is required
+                      </kendo-formerror>
+                </kendo-floatinglabel>
             </div>
-      </div>
+        </div>
 </section>
 
 <kendo-dialog-actions>
@@ -15,7 +27,7 @@
             <div class="justify-content-end">
                   <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Add"> ADD </button>
+                  <button kendoButton [primary]="true" aria-label="Add" (click)="addFormDocument()"> ADD </button>
             </div>
       </div>
 
