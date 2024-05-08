@@ -16,7 +16,9 @@
         "tsConfig": "apps/cp/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": ["apps/cp/src/favicon.ico", "apps/cp/src/assets"],
-        "styles": ["apps/cp/src/styles.scss"],
+        "styles": [    "node_modules/@progress/kendo-theme-material/dist/all.scss",
+        "libs/shared/util-theme/src/lib/styles.scss",
+        "apps/cp/src/styles.scss"],
         "scripts": []
       },
       "configurations": {
