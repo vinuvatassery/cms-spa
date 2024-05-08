@@ -22,7 +22,7 @@ import { DocumentFacade } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-event-log',

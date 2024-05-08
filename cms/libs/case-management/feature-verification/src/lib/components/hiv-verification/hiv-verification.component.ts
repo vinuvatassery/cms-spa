@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit,Output, EventEmitter, OnChanges, ElementRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Internal Libraries **/
-import { CompletionChecklist, VerificationFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ProviderOption, VerificationFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
@@ -20,6 +20,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
   @Input() clientCaseId!: any;
   @Input() clientCaseEligibilityId!: any;
   @Input() healthCareProviderExists!: any;
+  @Input() isCaseManagerExists!: any;
   @Input() providerEmail!: any;
   @Input() emailSentDate!: any;
   @Input() loginUserName!: any;
@@ -63,9 +64,11 @@ export class HivVerificationComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    
+    if (!this.isCaseManagerExists && this.hivVerificationForm.controls["providerOption"].value === ProviderOption.CaseManager) {
+      this.hivVerificationForm.controls["providerOption"].setValue("");
+    }
   }
-  
+
   providerChange(event:any){
     if(this.hivVerificationForm.controls["providerOption"].value=="UPLOAD_ATTACHMENT")
     {
@@ -77,7 +80,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
     this.updateVerificationCount(true);
     this.cd.detectChanges();
   }
-  
+
   onHivRemoveConfirmationClosed() {
     this.isHivVerificationRemovalConfirmationOpened = false;
   }
@@ -87,6 +90,7 @@ export class HivVerificationComponent implements OnInit, OnChanges {
     this.checkCaseManagerAndHealthCareProviderExists.emit(true);
     this.verificationFacade.showHideAttachment.next(false);
     this.cd.detectChanges();
+    this.providerChange(null);
     this.updateVerificationCount(false);
   }
   onHivRemoveConfirmationOpen(clientHivVerificationId:string) {

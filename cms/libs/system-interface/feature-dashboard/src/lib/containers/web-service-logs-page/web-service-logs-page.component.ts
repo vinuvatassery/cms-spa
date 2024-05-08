@@ -1,8 +1,6 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   OnInit,
-  ViewEncapsulation
 } from '@angular/core';
 import { LovFacade } from '@cms/system-config/domain';
 import { SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';

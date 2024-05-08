@@ -90,10 +90,6 @@ import { Subscription } from 'rxjs';
       {
         this.fabMenuFacade.isShownTodoReminders = !this.fabMenuFacade.isShownTodoReminders;
       }
-
-      editTodoItem(event:any){
-      
-      }
       onloadTodoGrid(){
         this.todoFacade.loadAlertsData();
       }

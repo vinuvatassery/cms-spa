@@ -48,11 +48,11 @@ export class HealthcareProviderDataService {
 
 
   ///3
-  updateHealthCareProvidersFlag(clientId : number, nohealthCareProviderFlag : string)
+  updateHealthCareProvidersFlag(clientId : number, nohealthCareProviderFlag : string, saveContinueFlag : string)
   {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${clientId}/${nohealthCareProviderFlag}`     
+      `/case-management/healthcare-providers/${clientId}/${nohealthCareProviderFlag}/${saveContinueFlag}`     
     ,null);
   }
 

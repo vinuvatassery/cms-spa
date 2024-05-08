@@ -9,13 +9,11 @@ import {
   TemplateRef,
   ViewChild,
   ElementRef,
-  Renderer2,
-  DoCheck
+  Renderer2
 } from '@angular/core';
 import { take,Subscription, first } from 'rxjs';
 import { DirectMessageFacade } from '@cms/productivity-tools/domain';
-import { ChatClient, ChatThreadClient,ChatMessageContent, ChatThreadItem, ChatThreadProperties, SendMessageOptions, SendMessageRequest } from '@azure/communication-chat';
-import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
+import { ChatClient,ChatMessageContent } from '@azure/communication-chat';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
@@ -213,7 +211,7 @@ export class DirectMessageComponent implements OnInit {
       let msg = undefined;
       if(this.checkJson(data.message)) {
         let parsed = JSON.parse(data.message);
-        var mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
+        let mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
         msg = {
           id: data.id,
           sender: data.senderDisplayName,
@@ -250,14 +248,14 @@ export class DirectMessageComponent implements OnInit {
     if (!this.sendMsg.message) {
       return;
     }else{
-      var message ={ message : this.sendMsg.message,
+      let message ={ message : this.sendMsg.message,
                loginUserId :  this.communicationDetails.loginUserId
       }
     const messageContent: ChatMessageContent = {
       message:  JSON.stringify(message)
     };
 
-    var clientMessage ={ message : "Hi I received your message.",
+    let clientMessage ={ message : "Hi I received your message.",
       loginUserId :  this.communicationDetails.clientUsercommunicationUserId
 }
 const clientMessageContent: ChatMessageContent = {
@@ -300,7 +298,7 @@ message:  JSON.stringify(clientMessage)
         let messageObj = this.messages.find((x:any) => x.id == message.id);
         if(this.checkJson(message.content.message)) {
           let parsed = JSON.parse(message.content.message);
-          var mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
+          let mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
           if (messageObj) {
             messageObj  = {
               id: message.id,
@@ -418,11 +416,11 @@ getUploadedDocuments(uploadedRequest:any){
   this.uploadDocumentSubscription = this.directMessageFacade.uploadDocument$
   .pipe(first((res: any) => res != null))
   .subscribe((res:any) =>{
-    var message ={ message : "",
+    let message ={ message : "",
       loginUserId :  this.communicationDetails.loginUserId
 }
-      var filepaths = res.filePath.split('$')
-      var fileName = filepaths[filepaths.length -1]
+      let filepaths = res.filePath.split('$')
+      let fileName = filepaths[filepaths.length -1]
       const attachmentMessageContent: ChatMessageContent = {
         message: JSON.stringify(message),
         attachments: [
@@ -433,7 +431,7 @@ getUploadedDocuments(uploadedRequest:any){
           },
         ],
       };
-      var clientMessage ={ message : "Hi I received your message.",
+      let clientMessage ={ message : "Hi I received your message.",
       loginUserId :  this.communicationDetails.clientUsercommunicationUserId
 }
 const clientMessageContent: ChatMessageContent = {

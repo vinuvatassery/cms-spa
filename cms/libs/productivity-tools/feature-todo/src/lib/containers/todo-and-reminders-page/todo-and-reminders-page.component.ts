@@ -1,5 +1,4 @@
 /** Angular **/
-import { publishFacade } from '@angular/compiler';
 import {
   Component,
   ChangeDetectionStrategy,

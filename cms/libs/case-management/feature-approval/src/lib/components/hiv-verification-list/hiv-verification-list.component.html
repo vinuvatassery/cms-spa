@@ -91,12 +91,12 @@
             <div *ngIf = "item.isExpanded">
               <p>The Healthcare Provider submitted HIV Verification for the client. Review the information then select accept or reject.</p>
               <p><b>HIV Verification: </b></p>
-              <div>
+              <div *ngIf ="item.clientDocumentId != null">
                 <div class="file-name-uploaded">
                   <span class="material-icons">
                     insert_drive_file
                     </span>
-                  <p>filename.pdf</p>
+                  <p>{{item.fileName}}</p>
                   <button kendoButton look="flat" aria-label="Download" class="k-icon-button" title="Download"
                   (click)="openInNewTabOrDownload(false, item)">
             <span class="material-icons" aria-label="download file" aria-hidden="true">file_download</span>
