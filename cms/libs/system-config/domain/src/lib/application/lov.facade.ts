@@ -103,6 +103,9 @@ export class LovFacade {
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceSupportGroupSubject = new BehaviorSubject<Lov[]>([]);
+  private userDeviceTypeLovSubject = new Subject<any>();
+  private userPronounsLovSubject = new Subject<any>();
+
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
@@ -175,7 +178,7 @@ export class LovFacade {
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
   deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
   VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
-  frequencyTypeCodeSubject$ = this.lovFrequencyTypeCodeSubject.asObservable()  
+  frequencyTypeCodeSubject$ = this.lovFrequencyTypeCodeSubject.asObservable()
   entityTypeCodeSubject$ = this.lovEntityTypeCodeSubject.asObservable()
   lovProofOfIncomeByType$ = this.lovProofOfIncomeByTypeSubject.asObservable();
 
@@ -184,6 +187,9 @@ export class LovFacade {
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
   interfaceSupportGroupLov$ = this.interfaceSupportGroupSubject.asObservable();
   eventAttachmentTypeLov$ = this.eventAttachmentTypeLovSubject.asObservable();
+  userDeviceTypeLov$ = this.userDeviceTypeLovSubject.asObservable();
+  userPronounsLov$ = this.userPronounsLovSubject.asObservable();
+
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -247,7 +253,7 @@ export class LovFacade {
     });
 
   }
-  
+
   getPronounLovs(): void {
     this.lovDataService.getLovsbyType(LovType.Pronoun).subscribe({
       next: (lovPronounResponse) => {
@@ -1013,6 +1019,28 @@ export class LovFacade {
     return this.lovDataService.getLovsbyType(LovType.ProofOfIncomeType).subscribe({
       next: (lovResponse) => {
         this.lovProofOfIncomeByTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getUserPhoneTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.UserDeviceType).subscribe({
+      next: (lovResponse) => {
+        this.userDeviceTypeLovSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getUserPronounsLov(): void {
+    this.lovDataService.getLovsbyType(LovType.UserPronouns).subscribe({
+      next: (lovResponse) => {
+        this.userPronounsLovSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)

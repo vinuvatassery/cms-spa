@@ -78,7 +78,8 @@
             <div class="flex-row">
               <div class="flex-col-5 flex-col">
                 <kendo-floatinglabel class="k-form" text="Pronouns">
-                  <kendo-textbox placeholder="Pronouns" [fillMode]="formUiStyle.inputFillMode" formControlName="pronoun"> </kendo-textbox>
+                  <kendo-dropdownlist formControlName="pronoun"  [fillMode]="formUiStyle.dropDownFillMode" [data]="userPronounsLov$ | async"
+                  textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"> </kendo-dropdownlist>
                 </kendo-floatinglabel>
               </div>
 
@@ -120,7 +121,8 @@
               <div class="flex-row">
                 <div class="flex-col  d-flex flex-col-5">
                   <kendo-floatinglabel class="k-form" text="Phone Type">
-                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode"> </kendo-dropdownlist>
+                    <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" [data]="userDeviceTypeLov$ | async"
+                    textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"> </kendo-dropdownlist>
                   </kendo-floatinglabel>
                   <button kendoButton [primary]="true" look="flat" class="mt-1"  icon="add" class="mt-3 ml-1"  area-label="Phone">
                     Phone
@@ -183,7 +185,8 @@
                   <div class="flex-row">
                     <div class="flex-col flex-col-6">
                       <kendo-floatinglabel class="k-form" text="State">
-                        <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode" formControlName="state"> </kendo-dropdownlist>
+                        <kendo-dropdownlist [data]="ddlStates$ | async" textField="stateName"
+                        valueField="stateCode" [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true"formControlName="state"> </kendo-dropdownlist>
                       </kendo-floatinglabel>
                     </div>
                     <div class="flex-col flex-col-6">
