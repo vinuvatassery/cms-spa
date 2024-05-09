@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { Subject } from 'rxjs/internal/Subject';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-medical-insurance-status-list',
@@ -115,7 +116,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade,
      private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
      private readonly clientFacade: ClientFacade, private lovFacade: LovFacade,
-     private readonly userManagementFacade: UserManagementFacade) {
+     private readonly userManagementFacade: UserManagementFacade,
+     private route: Router) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
@@ -424,5 +426,16 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
         }
       }
     })
-  } 
+  }
+  
+  onVendorClicked(vendorId: any)
+  {
+    const query = {
+      queryParams: {
+        v_id: vendorId ,
+      },
+    };
+    this.route.navigate(['/financial-management/vendors/profile'], query )
+  }
+
 }
