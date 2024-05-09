@@ -18,8 +18,10 @@
                   <div class="flex-row">
                         <div class="flex-col flex-col-4 mb-3">
                               <kendo-floatinglabel text="Sort">
-                                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
-                                          value="Alphabetically Ascending">
+                                    <kendo-dropdownlist aria-label="Folder Sort"
+                                          [fillMode]="formUiStyle.dropDownFillMode" [data]="folderSortList$ | async"
+                                          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"  [(ngModel)]="sortOrder"
+                                          (valueChange)="onSortChange($event)">
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
                         </div>
@@ -116,7 +118,8 @@
 <kendo-dialog *ngIf="isAddNewEditFolderPopup" (close)="onCloseAddNewEditFolderClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Add New Folder </kendo-dialog-titlebar>
-      <system-config-add-folder (addFolder)="addFolderData($event)" (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"></system-config-add-folder>
+      <system-config-add-folder (addFolder)="addFolderData($event)"
+            (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"></system-config-add-folder>
 </kendo-dialog>
 
 
