@@ -10,42 +10,37 @@
       <div class="flex-row">
 
             <!-- Table header show only in list -->
-            <div class="flex-col" >
+            <div class="flex-col">
                   <p class="pt-1">Add, edit, or deactivate the forms and documents that are available for other users.
                   </p>
-                  </div>
+            </div>
             <div class="flex-col" *ngIf="!isDragDropEnabled">
-                  <div class="mt-3 mb-3">
+                  <div class="flex-row">
+                        <div class="flex-col flex-col-4 mb-3">
+                              <kendo-floatinglabel text="Sort">
+                                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+                                          value="Alphabetically Ascending">
+                                    </kendo-dropdownlist>
+                              </kendo-floatinglabel>
+                        </div>
                         <button kendoButton fillMode="clear" themeColor="primary" aria-label="NEW FOLDER"
-                              (click)="onAddNewEditFolderClicked()"> <span class="material-icons"> add</span> NEW FOLDER
+                              (click)="onAddNewEditFolderClicked()"> <span class="material-icons"> add</span> NEW
+                              FOLDER
                         </button>
                         <button kendoButton fillMode="clear" themeColor="primary" aria-label="UPLOAD FILE"
-                              (click)="onUploadFileOpenClicked()"> <span class="material-icons"> upload</span> UPLOAD
+                              (click)="onUploadFileOpenClicked()"> <span class="material-icons"> upload</span>
+                              UPLOAD
                               FILE </button>
-                        <button kendoButton fillMode="clear" themeColor="primary" aria-label="UPLOAD FOLDER"
-                              (click)="onUploadFolderOpenClicked()">  <span class="material-icons"> upload</span> UPLOAD FOLDER   </button>
-
                   </div>
             </div>
-            <div class="flex-col flex-col-4 mb-3" *ngIf="isDragDropEnabled"> 
-                  <kendo-floatinglabel text="Sort">
-                  <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  value="Alphabetically Ascending">
-                  </kendo-dropdownlist>
-                  </kendo-floatinglabel>
-
-            </div>
       </div>
-
-
-
 </section>
 <div class="flex-row forms_doc-lists">
- 
+
       <kendo-treeview [nodes]="data" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
-            kendoTreeViewExpandable expandBy="id" [expandedKeys]="[1]" kendoTreeViewDragAndDrop  
-             
-            kendoTreeViewDragAndDropEditing  kendoTreeViewLoadMore  (nodeDragStart)="log('nodeDragStart', $event)" 
-            (nodeDrag)="log('nodeDrag', $event)" (nodeDrop)="handleDrop($event)" (addItem)="log('addItem', $event)"  
+            kendoTreeViewExpandable expandBy="id" [expandedKeys]="[1]" kendoTreeViewDragAndDrop
+            kendoTreeViewDragAndDropEditing kendoTreeViewLoadMore (nodeDragStart)="log('nodeDragStart', $event)"
+            (nodeDrag)="log('nodeDrag', $event)" (nodeDrop)="handleDrop($event)" (addItem)="log('addItem', $event)"
             (removeItem)="log('removeItem', $event)" (nodeDragEnd)="log('nodeDragEnd', $event)" [pageSize]="10">
 
             <ng-template kendoTreeViewNodeTemplate let-dataItem>
@@ -55,8 +50,6 @@
                               <span class="material-icons folder_icon" aria-hidden="true"
                                     *ngIf="dataItem.isFolder===true">folder</span>
                               <div class="file-section-inner">
-
-
                                     <span class="attachments-buttons-wrap" *ngIf="dataItem.isFolder===false">
                                           <button kendoButton look="flat" title="Download" aria-label="Download">
                                                 <span class="material-icons" aria-label="download"
@@ -70,8 +63,9 @@
                                     </span>
                                     <label *ngIf="dataItem.isFolder===false">{{dataItem.text}}
                                           <label>({{dataItem.fileSize| number: '1.0-0'}} MB)</label></label>
-                                    <label *ngIf="dataItem.isFolder===true">{{dataItem.text}}  <span
-                                          *ngIf="dataItem.isFolder===true">{{dataItem.fileCount}} Files</span></label>
+                                    <label *ngIf="dataItem.isFolder===true">{{dataItem.text}} <span
+                                                *ngIf="dataItem.isFolder===true">{{dataItem.fileCount}}
+                                                Files</span></label>
                               </div>
                         </div>
                         <span class="attachments-date">Last Updated
@@ -115,7 +109,7 @@
             </ng-template>
       </kendo-popover>
 </div>
-<div class="bottom-fixed-wrapper text-right flex-gap" *ngIf="isDragDropEnabled"> 
+<div class="bottom-fixed-wrapper text-right flex-gap" *ngIf="isDragDropEnabled">
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Update" class="">Update</button>
 </div>
