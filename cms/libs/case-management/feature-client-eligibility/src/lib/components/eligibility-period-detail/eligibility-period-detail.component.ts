@@ -129,6 +129,12 @@ export class EligibilityPeriodDetailComponent implements OnInit {
                   true
                 );
               }
+              if( this.eligibilityPeriodForm.controls['eligibilityStatus'].value.toLowerCase() ===  CaseStatusCode.restricted.toLowerCase()){
+                this.workflowFacade.caseStatus = CaseStatusCode.restricted;             
+                this.workflowFacade.handleSendNewsLetterpopup(
+                  true
+                );
+              }
             }
             else{
               this.clientEligibilityFacade.showHideSnackBar(
