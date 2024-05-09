@@ -7,7 +7,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-user-detail',
@@ -66,16 +66,8 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
-  onRoleValuechange(role: any) {
-    if (role.roleCode == 'CACM') {
-      this.isCaseManagerSelected = true;
-    } else {
-      this.isCaseManagerSelected = false;
-    }
-  }
-
   onUserAccessValueChange(userAccess: any){
-    if(userAccess.lovCode == 'INTERNAL'){
+    if(userAccess.lovCode == UserAccessType.Internal){
       this.isAccessTypeInternal = true;
     }else{
       this.isAccessTypeInternal = false;
