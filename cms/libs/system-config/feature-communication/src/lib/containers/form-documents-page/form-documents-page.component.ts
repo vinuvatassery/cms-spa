@@ -12,7 +12,6 @@ export class FormDocumentsPageComponent {
      ) {}
 
     addFolder(payload:any){
-    debugger
     this.formsAndDocumentFacade.addFolder(payload);
    }
 

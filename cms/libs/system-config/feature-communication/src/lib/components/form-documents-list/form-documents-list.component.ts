@@ -261,7 +261,6 @@ export class FormDocumentsListComponent implements OnInit {
     this.isFormsDocumentReactivatePopupShow = false;
   }
   addFolderData(payLoad:any){
-    debugger
     this.addFolder.emit(payLoad);
    }
 }
