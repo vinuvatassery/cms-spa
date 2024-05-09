@@ -1,5 +1,5 @@
 export enum AddFolder {
-  DocumentTypeCode = "FORM"  ,
+  DocumentTemplateTypeCode = "FORM",
   SequenceNbr = 1,
   TemplateVersion = 1,
   SystemCode = "HIVE",

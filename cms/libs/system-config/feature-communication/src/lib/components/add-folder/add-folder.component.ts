@@ -31,15 +31,14 @@ addFormDocument(){
     {
       const  payload={
         TemplateDesc:  this.Form.controls['folderName'].value,
-        DocumentTypeCode : AddFolder.DocumentTypeCode,
+        DocumentTemplateTypeCode : AddFolder.DocumentTemplateTypeCode,
         SequenceNbr :  AddFolder.SequenceNbr,
         TemplateVersion : AddFolder.TemplateVersion,
-        SystemCode :AddFolder.SubtypeCode,
+        SystemCode :AddFolder.SystemCode,
         SubtypeCode  :AddFolder.SubtypeCode,
         LanguageCode:AddFolder.LanguageCode,
         ChannelTypeCode :  AddFolder.ChannelTypeCode
       }
-
       this.addFolder.emit(payload);
     }
 }
