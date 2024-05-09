@@ -30,12 +30,12 @@ export class FormsAndDocumentFacade {
     addFolder(payLoad :any){
         this.showLoader();
         this.uploadFormandDocumentService.addFolder(payLoad).subscribe({
-          next: (Response) =>
+          next: (response) =>
         {
-            this.addFolderSubject.next(Response);
-            if (Response) 
+            this.addFolderSubject.next(response);
+            if (response) 
             {
-                this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'New Folder added!');
+                this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
                 this.hideLoader();
             } 
         },
