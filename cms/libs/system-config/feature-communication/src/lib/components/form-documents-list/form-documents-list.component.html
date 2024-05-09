@@ -122,7 +122,7 @@
 <kendo-dialog *ngIf="isAddNewEditFolderPopup" (close)="onCloseAddNewEditFolderClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Add New Folder </kendo-dialog-titlebar>
-      <system-config-add-folder></system-config-add-folder>
+      <system-config-add-folder (addFolder)="addFolderData($event)" ></system-config-add-folder>
 </kendo-dialog>
 
 

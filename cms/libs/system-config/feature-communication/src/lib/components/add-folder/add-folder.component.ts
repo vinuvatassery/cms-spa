@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { AddFolder } from '@cms/system-config/domain';
 
 @Component({
   selector: 'system-config-add-folder',
@@ -9,6 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class AddFolderComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @Output() addFolder = new EventEmitter<any>();
   Form:any
   isValidateForm= false;
   CustomDescription = '';
@@ -25,6 +27,21 @@ export class AddFolderComponent implements OnInit {
   }
 addFormDocument(){
   this.isValidateForm=true;
+  if(!this.Form.Invalid)
+    {
+      const  payload={
+        TemplateDesc:  this.Form.controls['folderName'].value,
+        DocumentTypeCode : AddFolder.DocumentTypeCode,
+        SequenceNbr :  AddFolder.SequenceNbr,
+        TemplateVersion : AddFolder.TemplateVersion,
+        SystemCode :AddFolder.SubtypeCode,
+        SubtypeCode  :AddFolder.SubtypeCode,
+        LanguageCode:AddFolder.LanguageCode,
+        ChannelTypeCode :  AddFolder.ChannelTypeCode
+      }
+
+      this.addFolder.emit(payload);
+    }
 }
 onCustomValueChange(event: any): void {
   this.CustomCharactersCount = event.length;
