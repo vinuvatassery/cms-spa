@@ -94,12 +94,18 @@ export class UserDataService {
 
 
 
-  getUserProfilePhotos(userIds : string) { 
+  getUserProfilePhotos(userIds : string) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-      `/system-config/users/${userIds}/profile-photos`);  
+      `/system-config/users/${userIds}/profile-photos`);
   }
-  
+
+  loadUserInfoData(userId: string) {
+    return this.http.get<LoginUser[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/${userId}/userInfo`);
+  }
+
   loadUsers(): Observable<User[]> {
     return of([
       { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },

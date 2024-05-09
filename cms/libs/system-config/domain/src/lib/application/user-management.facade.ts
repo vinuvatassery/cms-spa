@@ -21,48 +21,49 @@ export class UserManagementFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueUserListGrid = 'creationTime'; 
+  public sortValueUserListGrid = 'creationTime';
   public sortUserListGrid: SortDescriptor[] = [{
     field: this.sortValueUserListGrid,
   }];
 
-  public sortValueRolesPermissionListGrid = 'creationTime'; 
+  public sortValueRolesPermissionListGrid = 'creationTime';
   public sortRolesPermissionListGrid: SortDescriptor[] = [{
     field: this.sortValueRolesPermissionListGrid,
   }];
 
 
-  public sortValueDirectMessageListGrid = 'creationTime'; 
+  public sortValueDirectMessageListGrid = 'creationTime';
   public sortDirectMessageListGrid: SortDescriptor[] = [{
     field: this.sortValueDirectMessageListGrid,
   }];
 
-  public sortValueGenderListGrid = 'creationTime'; 
+  public sortValueGenderListGrid = 'creationTime';
   public sortGenderListGrid: SortDescriptor[] = [{
     field: this.sortValueGenderListGrid,
   }];
-  public sortValueLanguageListGrid = 'creationTime'; 
+  public sortValueLanguageListGrid = 'creationTime';
   public sortLanguageListGrid: SortDescriptor[] = [{
     field: this.sortValueLanguageListGrid,
   }];
 
-  public sortValuePronounsListGrid = 'creationTime'; 
+  public sortValuePronounsListGrid = 'creationTime';
   public sortPronounsListGrid: SortDescriptor[] = [{
     field: this.sortValuePronounsListGrid,
   }];
-  
-  public sortValueRacialEthnicListGrid = 'creationTime'; 
+
+  public sortValueRacialEthnicListGrid = 'creationTime';
   public sortRacialEthnicListGrid: SortDescriptor[] = [{
     field: this.sortValueRacialEthnicListGrid,
   }];
 
-  public sortValueSexualOrientationListGrid = 'creationTime'; 
+  public sortValueSexualOrientationListGrid = 'creationTime';
   public sortSexualOrientationListGrid: SortDescriptor[] = [{
     field: this.sortValueSexualOrientationListGrid,
   }];
 
   private userListSubject = new BehaviorSubject<User[]>([]);
   private usersDataSubject = new BehaviorSubject<any>([]);
+  private userInfoDataSubject = new BehaviorSubject<any>([]);
   private usersFilterColumnSubject = new BehaviorSubject<any>([]);
   private ddlUserRoleSubject = new BehaviorSubject<any>([]);
   private usersRoleAndPermissionsSubject = new BehaviorSubject<any>([]);
@@ -85,9 +86,9 @@ export class UserManagementFacade {
   private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
   private usersByRoleSubject = new BehaviorSubject<LoginUser[]>([]);
   private userImageSubject = new Subject<any>();
-  private userByIdSubject = new Subject<any>(); 
+  private userByIdSubject = new Subject<any>();
   private profilePhotosSubject = new BehaviorSubject<any>([]);
- 
+
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -116,8 +117,9 @@ export class UserManagementFacade {
   usersByRole$ = this.usersByRoleSubject.asObservable();
   userImage$ = this.userImageSubject.asObservable();
   usersById$ = this.userByIdSubject.asObservable();
-  profilePhotos$ = this.profilePhotosSubject.asObservable(); 
-  
+  profilePhotos$ = this.profilePhotosSubject.asObservable();
+  userInfoData$ = this.userInfoDataSubject.asObservable();
+
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
@@ -369,8 +371,8 @@ export class UserManagementFacade {
     });
   }
 
- 
- 
+
+
 
   loadSexualOrientationList(){
     this.userDataService.loadSexualOrientationList().subscribe({
@@ -414,12 +416,12 @@ export class UserManagementFacade {
     });
   }
 
-    
+
   reassignCase(caseReassignData : any){
     return this.userDataService.reassignCase(caseReassignData);
   }
 
-  getUserProfilePhotosByIds(userIds : string, gridItems: any) {    
+  getUserProfilePhotosByIds(userIds : string, gridItems: any) {
     return this.userDataService.getUserProfilePhotos(userIds)
     .subscribe({
       next: (data: any[]) => {
@@ -434,13 +436,13 @@ export class UserManagementFacade {
         }
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
   }
 
 
-  getProfilePhotosByUserIds(userIds : string) {    
+  getProfilePhotosByUserIds(userIds : string) {
     return this.userDataService.getUserProfilePhotos(userIds);
   }
   loadDirectMessageLogEvent() {
@@ -449,6 +451,20 @@ export class UserManagementFacade {
         this.directMessageLogEventSubject.next(response);
       },
       error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  loadUserInfoData(userId : any) {
+    this.showLoader();
+    this.userDataService.loadUserInfoData(userId).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        this.userInfoDataSubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
