@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, EventEmitter, Output } from '@angular/core';
 import {
   TreeItemDropEvent,
   DropPosition,
@@ -6,6 +6,7 @@ import {
   DropAction,
 } from '@progress/kendo-angular-treeview';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -16,6 +17,7 @@ const isFile = (name: string) => name.split('.').length > 1;
 })
 export class FormDocumentsListComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  @Output() addFolder = new EventEmitter<any>();
   ngOnInit(): void {
     throw new Error('Method not implemented.');
   }
@@ -29,6 +31,9 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
   /** Public properties **/ 
+
+  constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
+  ) {}
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -255,4 +260,7 @@ export class FormDocumentsListComponent implements OnInit {
   onCloseFormsDocumentReactivateClicked() {
     this.isFormsDocumentReactivatePopupShow = false;
   }
+  addFolderData(payLoad:any){
+    this.addFolder.emit(payLoad);
+   }
 }
