@@ -1,9 +1,9 @@
 <kendo-grid [resizable]="true" [navigable]="true"  [data]="gridFinancialClaimsInvoice$ | async" [loading]="isInvoiceServiceGridLoaderShow">
     <kendo-grid-column field="serviceStartDate" title="Service Start" [width]="150">
-      <ng-template kendoGridCellTemplate let-dataItem>{{ dataItem.serviceStartDate | date:'MM-dd-yyyy' }} </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>{{ dataItem.serviceStartDate | date:'MM/dd/yyyy' }} </ng-template>
     </kendo-grid-column> 
     <kendo-grid-column field="serviceEndDate" title="Service End" [width]="100"> 
-      <ng-template kendoGridCellTemplate let-dataItem>{{ dataItem.serviceEndDate | date:'MM-dd-yyyy' }} </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>{{ dataItem.serviceEndDate | date:'MM/dd/yyyy' }} </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="cptCode" title="CPT Code" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="pcaCode" title="PCA" [width]="100"> </kendo-grid-column>
