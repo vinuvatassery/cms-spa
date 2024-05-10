@@ -744,7 +744,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.clientAndVendorAttachedFiles = event;
     }else{
       if(event.documentTemplateId){
-        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.description);
+        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){
           this.clientAndVendorAttachedFiles?.push(event);
         }

@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
+import { EventLogFacade, EventTypeCode } from '@cms/productivity-tools/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'productivity-tools-event-log-description',
@@ -13,6 +15,7 @@ export class EventLogDescriptionComponent {
   @Input() completeWords: boolean = false;
   @Input() eventId:any;
   @Input() userEventFlag:any;
+  @Input() eventLogId:any
 
   @Output() downloadOldAttachmentEvent = new EventEmitter();
 
@@ -31,9 +34,34 @@ export class EventLogDescriptionComponent {
   ViewEmail:string = "{View Email}";
   ViewSmsText:string = "{View Text(s)}";
   sanitizedHtml:any;
-  constructor(private sanitizer : DomSanitizer) {}
+  bodyText:any;
+  notificationEmail$  = this.eventLogFacade.notificationEmail$;
+  notificationLetter$  = this.eventLogFacade.notificationLetter$;
+  notificationEmail:any;
+  previewContent:any;
+  toEmailAddress:any;
+  ccEmailAddress:any;
+  bccEmailAddress:any;
+  attachments:any;
+  headerText:any;
+  buttonText:any;
+  createdUser:any
+  createdDate:any;
+  attachmentType:any;
+  mailingAddress:any = null;
+  mailCode:any=null;
+  entityTypeCode:any;
+  eventTypeCode:any;
+  entityId:any;
+  creatorId:any;
+
+  constructor(private sanitizer : DomSanitizer, private readonly eventLogFacade: EventLogFacade,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
+    this.notificationEmailSubscriptionInit();
+    this.notificationLetterSubscriptionInit();
     this.formatContent();
     this.content = this.data;
     this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content);
@@ -159,16 +187,151 @@ export class EventLogDescriptionComponent {
     return (this.isViewEmail || this.isViewLetter || this.ViewSmsText);
   }
 
-  OpenModalPopUp()
-  {
+  OpenModalPopUp() {
+
+    if (this.viewText.toLowerCase().includes('email')) { 
+      this.bodyText = 'Click Re-send to send the message again. Attachments will be included in the email.';
+      this.headerText = 'View and Re-Send Email modal';
+      this.buttonText = 'RE-SEND'
+      this.attachmentType = "email";
+      this.eventLogFacade.loadNotificationEmail(this.eventLogId);
+    }
+    else if (this.viewText.toLowerCase().includes('letter')) { 
+      this.bodyText = 'Click Re-print to print the letter again. Attachments will be printed in addition to the letter.';
+      this.headerText='View and Recreate Letter modal';
+      this.buttonText = 'RE-PRINT';
+      this.attachmentType = "letter";
+      this.eventLogFacade.loadNotificationLetter(this.eventLogId);
+    }
     this.isViewLetterEmailTextDialog = true;
+
   }
   onCloseLetterEmailSmsTextClicked()
   {
     this.isViewLetterEmailTextDialog = false;
+    this.cdr.detectChanges();
   }
   downloadOldAttachment(path : any)
   {
     this.downloadOldAttachmentEvent.emit(path);
   }
+
+  notificationEmailSubscriptionInit(){
+    this.notificationEmail$.subscribe((notificationLog:any)=>{
+      this.setValuesForNotification(notificationLog);
+    });
+  }
+
+  notificationLetterSubscriptionInit() {
+    this.notificationLetter$.subscribe((notificationLog: any) => {
+      this.setValuesForNotification(notificationLog);
+    });
+  }
+
+  setValuesForNotification(notificationLog: any) {
+    this.eventLogFacade.showLoader()
+    this.previewContent = notificationLog?.previewContent;   
+    this.attachments = notificationLog?.attachments;
+    this.createdUser = notificationLog?.createdUser;
+    this.createdDate = notificationLog?.createdDate;
+    this.entityTypeCode = notificationLog?.entityTypeCode;
+    this.eventTypeCode = notificationLog?.eventTypeCode;
+    this.entityId = notificationLog?.entityId;
+    this.creatorId =  notificationLog?.creatorId;
+    this.mailingAddress = notificationLog?.mailingAddress;
+    if (this.buttonText === "RE-SEND") {
+      this.toEmailAddress = notificationLog?.emailAddress?.TO;
+      this.ccEmailAddress = notificationLog?.emailAddress?.CC;
+      this.bccEmailAddress = notificationLog?.emailAddress?.BCC;
+    }
+    if (this.buttonText === "RE-PRINT") {
+      this.toEmailAddress = null;
+      this.ccEmailAddress = null;
+      this.bccEmailAddress = null;      
+      this.mailCode = notificationLog?.mailCode;
+    }
+    this.cdr.detectChanges();
+    this.eventLogFacade.hideLoader();
+  }
+
+  viewAttachment(item: any) {
+    this.eventLogFacade.showLoader()
+    this.eventLogFacade.loadAttachmentPreview(item.logAttachmentId,this.attachmentType).subscribe({
+      next: (data: any) => {
+        if (data) {
+          const fileUrl = window.URL.createObjectURL(data);
+          window.open(fileUrl, "_blank");
+        }
+        this.eventLogFacade.hideLoader();
+      },
+      error: (err: any) => {
+        this.eventLogFacade.hideLoader()
+        this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "File is not found at location.");
+      },
+    });
+  }
+
+  reSendNotification() {
+    if (this.buttonText === "RE-SEND") {
+      this.eventLogFacade.showLoader()
+      this.eventLogFacade.reSentEmailNotification(this.eventLogId).subscribe({
+        next: (data: any) => {
+          this.onCloseLetterEmailSmsTextClicked();
+          this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, data.message);
+          this.eventLogFacade.hideLoader();
+        },
+        error: (err: any) => {
+          this.eventLogFacade.hideLoader();
+          this.onCloseLetterEmailSmsTextClicked();
+          this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "Error in re-sent-email.");
+        },
+      });
+    }
+    else if (this.buttonText === "RE-PRINT") {
+      this.eventLogFacade.showLoader()
+      this.eventLogFacade.reSentLetterNotification(this.eventLogId).subscribe({
+        next: (data: any) => {
+          this.onCloseLetterEmailSmsTextClicked();
+          const fileUrl = window.URL.createObjectURL(data);   
+          const documentName = this.getFileNameFromTypeCode(this.eventTypeCode);          
+          const downloadLink = document.createElement('a');
+          downloadLink.href = fileUrl;
+          downloadLink.download = documentName;
+          downloadLink.click();
+          this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated successfully.');
+          this.cdr.detectChanges()
+          this.eventLogFacade.hideLoader();
+        },
+        error: (err: any) => {
+          this.eventLogFacade.hideLoader();
+          this.onCloseLetterEmailSmsTextClicked();
+          this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "Error in re-print-email.");
+        },
+      });
+    }
+  }
+
+  getFileNameFromTypeCode(typeCode: string): string {
+    switch (typeCode) {
+      case EventTypeCode.LetterTypeCode:
+        return "Client Letter_" + this.entityId + ".zip";
+      case EventTypeCode.VendorLetter:
+        return "Vendor Letter+" + this.entityId + ".zip";
+      case EventTypeCode.ApplicationAuthorizationLetter:
+        return "Application Authorization Letter.zip";
+      case EventTypeCode.CerAuthorizationLetter:
+        return "CER Authorization Letter.zip";
+      case EventTypeCode.PendingLetterGenerated:
+        return "Pending Notice Letter.zip";
+      case EventTypeCode.RejectionLetterGenerated:
+        return "Rejection Notice Letter.zip";
+      case EventTypeCode.ApprovalLetterGenerated:
+        return "Approval Notice Letter.zip";
+      case EventTypeCode.DisenrollmentLetterGenerated:
+        return "Disenrollment Notice Letter.zip";
+      default:
+        return "Letter_" + this.entityId + ".zip";
+    }
+  }
+
 }

@@ -71,7 +71,7 @@
         <kendo-formerror *ngIf="currentStatusCode==''&& isSubmitted"> Case status is required
         </kendo-formerror>
       </div>
-      <div class="flex-col mb-2">
+      <div class="flex-col mb-2" *ngIf="ifClientHasAddress">
         <h5 *ngIf="paperlessFlag == 'Y'; else letterTemplate">Do you want to send the client an email?</h5>
         <ng-template #letterTemplate>
           <h5>Do you want to send a letter?</h5>

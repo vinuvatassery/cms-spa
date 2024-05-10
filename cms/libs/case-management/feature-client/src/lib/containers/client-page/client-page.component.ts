@@ -1623,6 +1623,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.checkValidations()) {
             this.saveAndUpdate().subscribe((response: any) => {
               if (response) {
+                this.workFlowFacade.saveForLaterCompleted(true)
                 this.loaderService.hide();
                 if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
                   if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
@@ -1635,6 +1636,8 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
                       queryParamsHandling: "preserve"
                     });
                   }
+                }else{
+                  this.router.navigate(['/case-management/cases']);
                 }
               }
             });

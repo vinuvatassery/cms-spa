@@ -123,7 +123,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.addSaveSubscription();
     this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
-    this.loadAuthorization();
+    this.loadPendingEsignRequestInfo();
   }
 
   getNotificationTypeCode(sendEmailClick: boolean) {
@@ -155,7 +155,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.communicationEmailTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
-        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
         this.saveForLaterHeadterText = "Send Authorization Email Later?";
         this.saveForLaterModelText="You must send the  Authorization Email within 45 Days";
@@ -596,6 +595,9 @@ loadPendingEsignRequestInfo(){
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
             this.isSendEmailClicked=true;
             this.getLoggedInUserProfile();
+            if(this.signedApplication === null || this.signedApplication === undefined){
+              this.loadAuthorization();
+              }
           }
           else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
@@ -610,9 +612,7 @@ loadPendingEsignRequestInfo(){
             this.ref.detectChanges();
           }
           else{
-            if(this.signedApplication === null || this.signedApplication === undefined){
             this.loadAuthorization();
-            }
           }
           this.loaderService.hide();
     },
