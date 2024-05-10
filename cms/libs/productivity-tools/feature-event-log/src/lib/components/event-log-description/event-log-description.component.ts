@@ -292,8 +292,7 @@ export class EventLogDescriptionComponent {
       this.eventLogFacade.reSentLetterNotification(this.eventLogId).subscribe({
         next: (data: any) => {
           this.onCloseLetterEmailSmsTextClicked();
-          const fileUrl = window.URL.createObjectURL(data);
-   
+          const fileUrl = window.URL.createObjectURL(data);   
           const documentName = this.getFileNameFromTypeCode(this.eventTypeCode);          
           const downloadLink = document.createElement('a');
           downloadLink.href = fileUrl;
@@ -322,13 +321,13 @@ export class EventLogDescriptionComponent {
         return "Application Authorization Letter.zip";
       case EventTypeCode.CerAuthorizationLetter:
         return "CER Authorization Letter.zip";
-      case EventTypeCode.PendingNoticeLetter:
+      case EventTypeCode.PendingLetterGenerated:
         return "Pending Notice Letter.zip";
-      case EventTypeCode.RejectionNoticeLetter:
+      case EventTypeCode.RejectionLetterGenerated:
         return "Rejection Notice Letter.zip";
-      case EventTypeCode.ApprovalNoticeLetter:
+      case EventTypeCode.ApprovalLetterGenerated:
         return "Approval Notice Letter.zip";
-      case EventTypeCode.DisenrollmentNoticeLetter:
+      case EventTypeCode.DisenrollmentLetterGenerated:
         return "Disenrollment Notice Letter.zip";
       default:
         return "Letter_" + this.entityId + ".zip";

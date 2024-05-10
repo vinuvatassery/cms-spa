@@ -10,7 +10,7 @@ export enum EventTypeCode {
     VendorLetter="VENDOR_LETTER",
     LETTER="Letter",
     LetterTypeCode="CLIENT_LETTER",
-    PendingNoticeLetter = 'PENDING_NOTICE_LETTER',
+    PendingLetterGenerated = 'PENDING_LETTER_GENERATED',
     CerPendingLetterGenerated = 'CER_PENDING_LETTER_GENERATED',
     RejectionNoticeLetter = 'REJECTION_NOTICE_LETTER',
     RejectionLetterGenerated = 'REJECTION_LETTER_GENERATED',
