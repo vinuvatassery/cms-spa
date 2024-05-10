@@ -30,6 +30,36 @@ export class EventDataService {
 
   }
 
+  loadNotificationEmail(eventLogId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/email?eventLogId=${eventLogId}`)
+  }
+
+  loadNotificationLetter(eventLogId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/letter?eventLogId=${eventLogId}`)
+  }
+
+
+  loadAttachmentPreview(attachmentId: any, attachmentType:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/${attachmentType}/log-attachment/${attachmentId}`, null
+      , {
+        responseType: 'blob'
+      });
+  }
+
+  reSentEmailNotification(eventLogId:any)
+  {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/re-send/${eventLogId}`, null);
+  }
+
+  reSentLetterNotification(eventLogId:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/re-print/${eventLogId}`,null,
+      {responseType: 'blob'}
+    )
+  }
+
   private bindFormData(event: any): FormData {
     const eventFormData = new FormData();
     eventFormData.append("clientId", `${event?.clientId}` ?? '');
