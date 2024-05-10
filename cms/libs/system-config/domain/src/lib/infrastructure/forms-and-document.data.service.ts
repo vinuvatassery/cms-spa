@@ -14,6 +14,6 @@ export class FormsAndDocumentDataService
 
    addFolder(payLoad:any) 
     {
-        return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folder`,payLoad);
+        return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folders`,payLoad);
     }
 }
