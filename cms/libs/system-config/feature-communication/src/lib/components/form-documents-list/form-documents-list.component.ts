@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import {
   TreeItemDropEvent,
   DropPosition,
@@ -16,6 +16,7 @@ const isFile = (name: string) => name.split('.').length > 1;
 })
 export class FormDocumentsListComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  @Input() folderSortList$: any;
   ngOnInit(): void {
     throw new Error('Method not implemented.');
   }
@@ -29,6 +30,7 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
   /** Public properties **/ 
+  sortOrder : any;
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -254,5 +256,10 @@ export class FormDocumentsListComponent implements OnInit {
   }
   onCloseFormsDocumentReactivateClicked() {
     this.isFormsDocumentReactivatePopupShow = false;
+  }
+
+  onSortChange(event:any){
+    debugger;
+    this.sortOrder = event;
   }
 }
