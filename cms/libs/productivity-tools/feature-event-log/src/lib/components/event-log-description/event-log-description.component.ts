@@ -189,7 +189,6 @@ export class EventLogDescriptionComponent {
   OpenModalPopUp() {
 
     if (this.viewText.toLowerCase().includes('email')) { 
-      this.eventLogId = 'ACC2A6DF-3B10-484E-A701-0E037CB37BC3';
       this.bodyText = 'Click Re-send to send the message again. Attachments will be included in the email.';
       this.headerText = 'View and Re-Send Email modal';
       this.buttonText = 'RE-SEND'
@@ -197,7 +196,6 @@ export class EventLogDescriptionComponent {
       this.eventLogFacade.loadNotificationEmail(this.eventLogId);
     }
     else if (this.viewText.toLowerCase().includes('letter')) { 
-      this.eventLogId = '0073CB72-5B47-494F-B962-906DEFD10248';
       this.bodyText = 'Click Re-print to print the letter again. Attachments will be printed in addition to the letter.';
       this.headerText='View and Recreate Letter modal';
       this.buttonText = 'RE-PRINT';
