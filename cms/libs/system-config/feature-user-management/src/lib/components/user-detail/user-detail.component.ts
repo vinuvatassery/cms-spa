@@ -26,6 +26,10 @@ export class UserDetailComponent implements OnInit {
   userRoleTypeCodeLovData: any = null;
   isCaseManagerSelected = false;
   isAccessTypeInternal = false;
+  activeFlag = 'Y';
+  userAccessType: any;
+  userRoleType: string = "";
+  userRolesList = [];
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
@@ -34,15 +38,15 @@ export class UserDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadDdlUserRole();
     this.subscribeLovData();
     this.lovFacade.getUserAccessTypeLov();
     this.lovFacade.getRoleTypeLov();
     this.lovFacade.getCaseManagerDomainLov();
   }
 
-  private loadDdlUserRole() {
-    this.userManagementFacade.loadDdlUserRole();
+  private loadDdlUserRole() {    
+    if(this.userRoleType == "") return;
+    this.userManagementFacade.loadDdlUserRole(this.userRoleType, this.activeFlag);
   }
 
   onDeactivateClicked() {
@@ -64,13 +68,34 @@ export class UserDetailComponent implements OnInit {
       },
       error: (err) => {},
     });
+
+    this.ddlUserRole$.subscribe({
+      next: (data) => {
+        this.userRolesList = data;
+      },
+      error: (err) => {}
+    })
   }
 
-  onUserAccessValueChange(userAccess: any){
-    if(userAccess.lovCode == UserAccessType.Internal){
+  onUserAccessValueChange(event: Event){
+    let value = (event.target as HTMLInputElement).value.toUpperCase();
+    if(value == UserAccessType.Internal){
       this.isAccessTypeInternal = true;
     }else{
       this.isAccessTypeInternal = false;
     }
+    this.userRoleType = this.getUserRoleType(value);
+    this.loadDdlUserRole();
   }
+
+  getUserRoleType(userType: any){
+    switch(userType){
+      case UserAccessType.Internal:
+        return UserAccessType.Internal;
+      case UserAccessType.External:
+        return UserAccessType.External;
+    }
+    return "";
+  }
+
 }

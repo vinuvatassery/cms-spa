@@ -6,13 +6,19 @@
   </p>
   <div class="flex-row">
     <div class="flex-col">
-      <kendo-floatinglabel text="User Access Type">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" 
-        [data]="userAccessTypeLov$ | async"
-        valueField="lovCode"
-        textField="lovDesc"
-        (valueChange)="onUserAccessValueChange($event)"> </kendo-dropdownlist>
-      </kendo-floatinglabel>
+      <h5>User Access Type</h5>
+      <div class="component-list-h">
+        <span class="app-radiobtnwidtext-wrapper">
+          <input type="radio" [(ngModel)]="userAccessType" id="internalUserAccessType" value="INTERNAL" aria-labelledby="Internal" kendoRadioButton name="userAccessType" 
+          (change)="onUserAccessValueChange($event)"/>
+          <kendo-label class="k-radio-label" for="internalUserAccessType" text="Internal" ></kendo-label>
+        </span>
+        <span class="app-radiobtnwidtext-wrapper">
+          <input type="radio" [(ngModel)]="userAccessType"  id="externalUserAccessType" value="EXTERNAL" aria-labelledby="External" kendoRadioButton name="userAccessType" 
+          (change)="onUserAccessValueChange($event)"/>
+          <kendo-label class="k-radio-label" for="externalUserAccessType" text="External" ></kendo-label>
+        </span>
+      </div>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="PNumber or QRNumber">
@@ -38,7 +44,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="User Role">
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" 
-        [data]="ddlUserRole$ | async"
+        [data]="userRolesList"
         valueField="roleCode"
         textField="roleDesc"
         > </kendo-dropdownlist>
