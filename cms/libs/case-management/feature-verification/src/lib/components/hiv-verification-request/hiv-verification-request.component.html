@@ -3,7 +3,7 @@
     <div
      > 
       <div class="verificaton_email"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
-        <div  *ngIf="isSendEmailVisiable && isEmailFieldVisible">
+        <div  *ngIf="isSendEmailVisiable && isEmailFieldVisible" class="mb-1">
         <kendo-floatinglabel text="Healthcare Provider’s Email Address">
           <kendo-textbox aria-label="healthcare providers email address"
             placeholder="Healthcare Provider’s Email Address" [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="providerEmail"
@@ -16,7 +16,7 @@
           *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value === ''">Healthcare Provider email is required.</kendo-formerror>
       </div>
       <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'"
-      class="overlay-send-button mt-1">
+      class="overlay-send-button">
       <button kendoButton [primary]="true" (click)="onSendRequestClicked()"
         aria-label="send request">
         Send request
@@ -127,7 +127,8 @@
 
 
   <section *ngIf="(providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER') && (isSendRequest || isResendRequest || emailSentDate != null)">
-   <div *ngIf="providerOption === 'HEALTHCARE_PROVIDER' && uploadedAttachment.length >0" class="attachment-from-client-lists-wrapper mt-2">
+   <div *ngIf="providerOption === 'HEALTHCARE_PROVIDER' && uploadedAttachment.length >0 
+    && (uploadedAttachment[0].verificationStatusCode === 'ACCEPT' || uploadedAttachment[0].verificationStatusCode === 'REJECT')" class="attachment-from-client-lists-wrapper mt-2">
     <div class="attachment-from-client-lists-container">
       <div class="attachment-from-client-lists">
         <span class="material-icons" aria-hidden="true">
@@ -157,14 +158,15 @@
 
 
     <div class="flex-row mt-3 align-items-center">
-      <div class="flex-col">
+      <div class="flex-col" *ngIf="(uploadedAttachment[0]?.verificationStatusCode !== 'REJECT' && uploadedAttachment[0]?.verificationStatusCode !== 'ACCEPT')">
         <span class="app-c-badge badge-primary">
           <span class="material-icons" aria-label="information" aria-hidden="true" #refresh>info_outline</span>
           <span *ngIf="providerOption === 'CASE_MANAGER'">You will receive a notification once the Case Manager submits the HIV Verification</span>
           <span *ngIf="providerOption === 'HEALTHCARE_PROVIDER'">You will receive a notification once the provider submits the HIV Verification</span>
         </span>
       </div>
-      <div class="flex-col mt-1">
+      <div class="flex-col mt-1" *ngIf ="(uploadedAttachment[0]?.verificationStatusCode !== 'ACCEPT' 
+      && uploadedAttachment[0]?.verificationStatusCode !== 'REJECT')">
         <span>Sent {{emailSentDate}} by
           <a
             kendoPopoverAnchor
@@ -177,6 +179,18 @@
           Re-send Request
         </button>
       </div>
+      <div class="flex-col mt-1" *ngIf ="(uploadedAttachment[0]?.verificationStatusCode === 'ACCEPT'
+      || uploadedAttachment[0]?.verificationStatusCode === 'REJECT')">
+        <span>​Submitted by Healthcare Provider.</span> <span *ngIf ="uploadedAttachment[0]?.verificationStatusCode === 'ACCEPT'"> Accepted by </span> 
+        <span *ngIf ="uploadedAttachment[0]?.verificationStatusCode === 'REJECT'"> Rejected by </span> 
+        <span><a
+            kendoPopoverAnchor
+            [popover]="onUserProfileDetailsHovered"
+            showOn="hover"
+            >{{modifiedUserName}}</a>
+            on {{ uploadedAttachment[0]?.verificationStatusDate | date : 'MM/dd/YYYY' }}</span>       
+      </div>
+      
     </div>
   <div class="flex-col mt-2" *ngIf="isSendEmailFailed">
     <p  style="color:red">ERROR: {{errorMessage}}</p>
@@ -184,9 +198,9 @@
 </section>
 
 <!-- User Profile Details Card -->
-
 <kendo-popover #onUserProfileDetailsHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
     <common-user-profile-card [userId]="loginUserId"></common-user-profile-card>
   </ng-template>
 </kendo-popover>
+

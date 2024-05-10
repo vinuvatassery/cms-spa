@@ -92,6 +92,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   saveForLaterModelText:any;
   confirmationModelText:any;
   entityType: string = EntityTypeCode.Client;
+  authorization!: any;
 
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
@@ -118,9 +119,11 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   {
     this.loadUserContactInfo(this.clientId, this.clientCaseEligibilityId);
     this.buildForm();
-    //this.addApplicationSignatureDetailsSubscription();
+    this.addApplicationSignatureDetailsSubscription();
     this.addSaveSubscription();
+    this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
+    this.loadAuthorization();
   }
 
   getNotificationTypeCode(sendEmailClick: boolean) {
@@ -190,7 +193,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
                 if(data?.email?.email !== null){
                   this.toEmail.push(data?.email?.email.trim());
                 }
-              this.loadPendingEsignRequestInfo();
               }
               this.getNotificationTypeCode(this.paperlessFlag ? true : false);
             }
@@ -238,8 +240,11 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       if (resp?.applicantSignedDate) {
         this.signedApplication = resp;
         this.authorizationForm?.get('applicantSignedDate')?.patchValue(new Date(resp?.applicantSignedDate));
-        const signatureNotedDate = resp?.signatureNotedDate ? formatDate(new Date(resp?.signatureNotedDate), 'MM-dd-yyyy') : '';
-        this.authorizationForm?.get('signatureNotedDate')?.patchValue(signatureNotedDate);
+        const signatureNotedDate = resp?.signatureNotedDate == null ? null : formatDate(new Date(resp?.signatureNotedDate), 'MM-dd-yyyy');
+        if(signatureNotedDate != null){
+          this.authorizationForm?.get('signatureNotedDate')?.patchValue(signatureNotedDate);
+          this.dateSignatureNoted = signatureNotedDate;
+        }
         if (resp.signedApplication) {
           this.copyOfSignedApplication = [
             {
@@ -521,11 +526,13 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       this.cerDateValidator = true;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+      this.validate();
     }else if (signedDate < new Date(this.minApplicantSignedDate)) {
       this.currentDate = signedDate;
       this.cerDateValidator = true;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+      this.validate();
     }else{
       this.currentDate = event;
       this.dateSignatureNoted = formatDate(new Date(todayDate), 'MM-dd-yyyy');
@@ -537,7 +544,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
 
   saveDateAndSignedDoc() {
     this.loaderService.show();
-    const authorization = {
+    this.authorization = {
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       applicantSignedDate: this.intl.formatDate(this.authorizationForm?.get('applicantSignedDate')?.value, this.dateFormat),
       signatureNotedDate: this.intl.formatDate(new Date(this.authorizationForm?.get('signatureNotedDate')?.value), this.dateFormat),
@@ -546,19 +553,22 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     }
     if (this.uploadedCopyOfSignedApplication) {
       const documentId = this.copyOfSignedApplication?.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
-      authorization.signedApplication = {
+      this.authorization.signedApplication = {
         documentId: documentId,
         documentName: this.uploadedCopyOfSignedApplication.name,
         documentSize: this.uploadedCopyOfSignedApplication.size,
         documentTypeCode: this.documentTypeCode,
       }
     }
-    this.authorizationFacade.saveDateSignedAndSignedFile(authorization).subscribe({
+    this.authorizationFacade.saveDateSignedAndSignedFile(this.authorization).subscribe({
       next: (response) => {
         if(response){
-          this.updateDataPoints('applicantSignedDate', false);
-          this.updateDataPoints('signatureNotedDate', false);
-          this.updateDataPoints('copyOfSignedApplication', false);
+          if(this.authorization?.applicantSignedDate){
+            this.updateDataPoints('applicantSignedDate', true);
+          }
+          if(this.authorization?.signedApplication){
+          this.updateDataPoints('copyOfSignedApplication', true);
+          }
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Authorization Saved Successfully!");
         }
@@ -600,7 +610,9 @@ loadPendingEsignRequestInfo(){
             this.ref.detectChanges();
           }
           else{
+            if(this.signedApplication === null || this.signedApplication === undefined){
             this.loadAuthorization();
+            }
           }
           this.loaderService.hide();
     },
@@ -652,7 +664,7 @@ onGetSignedApplicationClicked(){
 }
 
 loadAuthorization() {
-  this.loaderService.show()
+  this.loaderService.show();
   this.authorizationFacade.bindAuthorizationDetails(this.clientCaseEligibilityId ?? '', CommunicationEventTypeCode.CopyOfSignedApplication ?? '')
   .subscribe({
     next: (data: any) => {
@@ -676,6 +688,7 @@ loadAuthorization() {
           ];
         }
         this.updateInitialDataPoints(data?.applicantSignedDate, data.signedApplication);
+        this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
       }
       this.loaderService.hide();
     },

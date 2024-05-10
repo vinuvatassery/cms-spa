@@ -131,10 +131,11 @@
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-dropdownlist
           textField="lovDesc"
-          valueField="lovCode"
+          valueField="lovDesc"
           [data]="paymentMethodType$ | async"
           [value]="paymentMethodFilter"
           [valuePrimitive]="true"
+          [(ngModel)]="selectedPaymentMethod"
           (valueChange)="dropdownFilterChange('paymentMethodDesc',$event, filterService)">
           </kendo-dropdownlist>
         </ng-template>
@@ -219,10 +220,11 @@
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-dropdownlist
             textField="lovDesc"
-            valueField="lovCode"
+            valueField="lovDesc"
             [data]="paymentStatus$ | async"
             [value]="paymentStatusFilter"
             [valuePrimitive]="true"
+            [(ngModel)]="selectedPaymentStatus"
             (valueChange)="dropdownFilterChange('paymentStatus',$event, filterService)">
           </kendo-dropdownlist>
         </ng-template>
@@ -350,7 +352,7 @@
 
 
     <ng-template #PrintAuthorizationDialogTemplate>
-      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Preview & Print Authorization Letter(s)</kendo-dialog-titlebar>
     <cms-pharmacy-claims-print-authorization
     [printOption]="true"
     [items]="selectedAllPaymentsList"

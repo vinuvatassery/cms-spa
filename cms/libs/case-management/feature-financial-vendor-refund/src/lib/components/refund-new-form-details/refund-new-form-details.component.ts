@@ -448,7 +448,13 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       }
     }
   }
-
+  
+  ngOnChanges(): void {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+    };
+  }
   subscribeLoadRefundClaimDataForRx() {
     this.pharmacySearchResultSubscription =
       this.pharmacySearchResult$.subscribe((res: any) => {
@@ -1339,4 +1345,11 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       logic: 'or',
     });
   }
+    // updating the pagination infor based on dropdown selection
+    pageSelectionChange(data: any) {
+      this.state.take = data.value;
+      this.state.skip = 0;
+      this.subscribeLoadRefundClaimDataForRx()
+    }
+    
 }

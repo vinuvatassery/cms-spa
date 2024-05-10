@@ -2,12 +2,8 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
-import { Subject, first } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { LoginUser } from '../entities/login-user';
-/** Entities **/
-import { User } from '../entities/user';
 /** Data services **/
 import { SystemConfigHousingCoordinationService } from '../infrastructure/housing-coordination.service';
 import { SortDescriptor } from '@progress/kendo-data-query';

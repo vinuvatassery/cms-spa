@@ -53,23 +53,6 @@
       </kendo-grid-column>
       <kendo-grid-column field="failedRecords" title="Failed Records" [width]="130">
       </kendo-grid-column>
-      <!-- below only in Ramsell -->
-      <!-- <kendo-grid-column field="status" title="Status" [width]="100">
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <button *ngIf="dataItem.status ==='Failed'" [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
-            View Log
-          </button>
-          <span *ngIf="dataItem.status ==='Success'">   {{ dataItem.status }} </span>
-          <kendo-popover  #userCard width="330" position="left">
-            <ng-template kendoPopoverBodyTemplate>
-           <div class="p-2">
-            <h5> Failure Details</h5>
-            <p>Missing Tax ID Number</p>
-           </div>
-            </ng-template>
-          </kendo-popover>
-        </ng-template>
-      </kendo-grid-column> -->
       <ng-template kendoGridDetailTemplate let-dataItem>
         <kendo-grid [data]="activityEventLogSubList" *ngIf="dataItem.status ==='Failed'">
         

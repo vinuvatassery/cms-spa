@@ -7,12 +7,11 @@ import {
   ViewChild,
   TemplateRef,
   Input,
-  EventEmitter,
-  ChangeDetectorRef,
+  EventEmitter
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { CaseFacade, FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode, WorkflowTypeCode } from '@cms/case-management/domain';
-import { AlertEntityTypeCode, AlertFrequencyTypeCode, AlertTypeCode, ConstantValue } from '@cms/productivity-tools/domain';
+import { CaseFacade, FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { AlertFrequencyTypeCode, AlertTypeCode, ConstantValue } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -212,7 +211,6 @@ export class TodoListComponent implements OnInit {
     onToDoClicked(gridItem: any) {
       if (gridItem && gridItem.entityTypeCode == this.entityTypes.Client) {
         this.getEligibilityInfoByEligibilityId(gridItem?.entityId)
-        //this.router.navigate([`/case-management/cases/case360/${gridItem?.entityId}`]);
       }
       else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Vendor) {
         this.getVendorProfile(gridItem.vendorTypeCode)

@@ -277,18 +277,18 @@ export class PaymentAddressDetailsComponent implements OnInit {
 
   onInputChangeNameOnCheck(event: Event) {
     const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/[^a-zA-Z\s]/g, ''); // Filter out non-alpha and non-space characters
+    let value = input.value.replace(/[^a-zA-Z\s\/#:"\(\)\-&']/g, '');
     input.value = value;
     this.paymentAddressForm.controls['nameOnCheck'].patchValue(value);
   }
 
   onInputChangeNameOnEnvelope(event: Event) {
     const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/[^a-zA-Z\s]/g, ''); // Filter out non-alpha and non-space characters
+    let value = input.value.replace(/[^a-zA-Z\s\/#:"\(\)\-&']/g, '');
     input.value = value;
     this.paymentAddressForm.controls['nameOnEnvelope'].patchValue(value);
   }
-
+  
   onInputChangeCity(event: Event) {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/[^a-zA-Z\s]/g, ''); // Filter out non-alpha and non-space characters

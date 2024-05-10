@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import {  Subject } from 'rxjs';
 /** Data services **/
 import { NotificationStatsDataService } from '../infrastructure/notification-stats.data.service';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 
 
 @Injectable({ providedIn: 'root' })

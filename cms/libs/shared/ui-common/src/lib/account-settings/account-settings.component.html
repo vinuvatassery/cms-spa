@@ -30,7 +30,7 @@
         <div class="flex-col app-popover-body">
 
           <p class="app-card-details">
-            <span class="material-icons" >email</span>
+            <span class="material-icons">email</span>
             <a href="mailto:aj.com">exampleemail@gmail.com</a>
           </p>
           <p class="app-card-details">
@@ -118,18 +118,29 @@
                 </div>
               </div>
               <div class="flex-row">
-                <div class="flex-col flex-col-5">
-                  <kendo-floatinglabel class="k-form" text="Phone Number">
-                    <kendo-textbox placeholder="Phone Number" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                <div class="flex-col  d-flex flex-col-5">
+                  <kendo-floatinglabel class="k-form" text="Phone Type">
+                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode"> </kendo-dropdownlist>
                   </kendo-floatinglabel>
+                  <button kendoButton [primary]="true" look="flat" class="mt-1"  icon="add" class="mt-3 ml-1"  area-label="Phone">
+                    Phone
+                  </button>
                 </div>
-
-                <div class="flex-col flex-col-5">
+              
+                <div class="flex-col flex-col-3">
                   <span class="app-checkboxwidtext-wrapper mt-4">
                     <input type="checkbox" kendoCheckBox aria-labelledby="smstextok" id="smstextok" />
                     <label class="k-checkbox-label" for="smstextok">SMS Text OK</label>
                   </span>
                 </div>
+              </div>
+
+              <div class="flex-row">
+                <div class="flex-col flex-col-5">
+                  <kendo-floatinglabel class="k-form" text="Phone Number">
+                    <kendo-textbox placeholder="Phone Number" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  </kendo-floatinglabel>
+                </div> 
               </div>
               <div class="flex-row">
                 <div class="flex-col flex-col-5">
@@ -267,8 +278,62 @@
                 </div>
               </div>
 
-              <button kendoButton [primary]="true" look="flat" class="mt-1" aria-label="Schedule Out Of Office">
+              <button kendoButton [primary]="true" look="flat" class="mt-1" aria-label="Schedule Out Of Office"
+                *ngIf="!isScheduleOutOfOfficeSection" (click)="showScheduleOutOfOfficeSection()">
                 SCHEDULE OUT OF OFFICE </button>
+             
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="form-innercontainer" *ngIf="isScheduleOutOfOfficeSection">
+          <h3>SCHEDULE OUT OF OFFICE</h3>
+          <div class="ac-block">
+            <div class="ac-block-fields ">
+              <div class="flex-row mb-2">
+                <div class="flex-col flex-col-4">
+                  <kendo-floatinglabel text="Start Date">
+
+                    <kendo-datepicker [incompleteDateValidation]="true" [fillMode]="formUiStyle.dateInputFillMode"
+                      format="MM-dd-yyyy" formControlName="applicantSignedDate" formatPlaceholder="formatPattern">
+                    </kendo-datepicker>
+                  </kendo-floatinglabel>
+
+                </div>
+                <div class="flex-col flex-col-2">
+                  <kendo-floatinglabel class="k-form" text="Start Time">
+                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
+                      [value]="time"></kendo-timepicker>
+                  </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-2">
+                  <kendo-floatinglabel class="k-form" text="End Time">
+                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
+                      [value]="time"></kendo-timepicker>
+                  </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-4">
+                  <kendo-floatinglabel class="k-form" text="End Date">
+                    <kendo-datepicker [incompleteDateValidation]="true" [fillMode]="formUiStyle.dateInputFillMode"
+                      format="MM-dd-yyyy" formControlName="applicantSignedDate" formatPlaceholder="formatPattern">
+                    </kendo-datepicker>
+                  </kendo-floatinglabel>
+                </div>
+                <div class="flex-col">
+                  <kendo-floatinglabel text="Out of Office Message">
+                    <kendo-textarea [fillMode]="formUiStyle.inputFillMode" class="text-area-height"
+                      class="table-text-area textarea" resizable="vertical"  >
+
+                    </kendo-textarea>
+                  </kendo-floatinglabel>
+                </div>
+              </div>
+              <button kendoButton class="k-error-button" aria-label="Remove" *ngIf="isScheduleOutOfOfficeSection"
+                (click)="showScheduleOutOfOfficeSection()">
+                Remove
+              </button>
             </div>
 
           </div>

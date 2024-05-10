@@ -34,6 +34,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   alreadyUploaded = false;
   showAttachmentOptions = true;
   healthCareProviderExists: boolean = false;
+  isCaseManagerExists: boolean = false;
   providerEmail!: string;
   emailSentDate?: any = null;
   loginUserName!: any;
@@ -79,6 +80,8 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.verificationFacade.hivVerificationSave$.subscribe(data => {
       this.load();
     });
+
+    this.getLoggedInUserProfile();
   }
 
   ngOnDestroy(): void {
@@ -196,8 +199,10 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       if (response) {
         //case manager check.
         if (response.caseManager != null) {
+          this.isCaseManagerExists=true;
           this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = false;
         } else {
+          this.isCaseManagerExists=false;
           this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
         }
 
@@ -220,9 +225,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             }
           }
         }
-        this.loaderService.hide();      
+        this.loaderService.hide();
         this.load();
-        
+
       }
     })
 
@@ -266,6 +271,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         if (data?.clientHivVerificationId) {
           this.hivVerificationForm.controls["providerOption"].setValue(data?.verificationMethodCode);
           this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
+          if (data?.verificationMethodCode === "HEALTHCARE_PROVIDER" && !this.healthCareProviderExists) {
+            this.hivVerificationForm.controls["providerOption"].setValue("");
+          }
           if (data?.verificationMethodCode == "UPLOAD_ATTACHMENT") {
             this.verificationFacade.showAttachmentOptions.next(false);
             if (data?.hivVerification?.documentName) {
@@ -279,7 +287,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             if (data?.verificationStatusCode === VerificationStatusCode.Accept) {
               this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
               this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = true;
-
             }
             this.cdr.detectChanges();
           }
@@ -322,16 +329,21 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.validateForm();
     this.cdr.detectChanges();
     if (this.hivVerificationForm.valid) {
-      if (this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && !this.isNotUploaded) {
+      if (this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && this.isNotUploaded) {
         this.loaderService.show()
-        this.verificationFacade.isSaveandContinueSubject.next(true);        
+        this.verificationFacade.isSaveandContinueSubject.next(true);
+        return of(true)
       }
       else if (this.hivVerificationForm.controls["providerOption"].value !== 'UPLOAD_ATTACHMENT') {
         let hivVerification = {'verificationMethodCode': this.hivVerificationForm.controls["providerOption"].value,
           'clientId':this.clientId, 'clientCaseEligibilityId': this.clientCaseEligibilityId};
         this.clientHivVerification = hivVerification;
+        return this.saveHivVerification()
       }
-      return this.saveHivVerification()
+      else{
+        return this.saveHivVerification()
+      }
+      
     }
     return of(false)
   }
@@ -346,7 +358,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     }
     else {
       this.resetValidations();
-    }   
+    }
 
     this.hivVerificationForm.updateValueAndValidity();
   }
@@ -358,7 +370,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     return this.verificationFacade.saveHivVerification(this.clientHivVerification)
       .pipe(
         catchError((error: any) => {
-          if (error) {           
+          if (error) {
             this.verificationFacade.healthcareInvalidSubject.next(true);
             return of(false);
           }

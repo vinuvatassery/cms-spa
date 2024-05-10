@@ -5,7 +5,6 @@ import {
   ViewChild,
   TemplateRef,
   Output,
-  OnChanges,
   EventEmitter,
   Input,
   ChangeDetectorRef,
@@ -13,12 +12,12 @@ import {
 } from '@angular/core';
 /** External libraries **/
 import { SnackBar, ToDoEntityTypeCode } from '@cms/shared/ui-common';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** Facades **/ 
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { AlertTypeCode, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
+import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { CaseFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
@@ -334,7 +333,6 @@ export class ReminderListComponent implements  OnInit{
   onNavigationClicked(result: any) {
     if (result.entityTypeCode == this.entityTypes.Client) {
       this.getEligibilityInfoByEligibilityId(result?.entityId)
-      //this.router.navigate([`/case-management/cases/case360/${result.entityId}`]);
     }
     else if(result.entityTypeCode == this.entityTypes.Vendor)
     { 

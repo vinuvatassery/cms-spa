@@ -8,7 +8,7 @@
           <span class="material-icons" aria-label="notification" aria-hidden="true" *ngIf="topAlert.alertTypeCode == 'REMINDER'">alarm</span>
   
           <span class="text-bold">{{topAlert.alertTypeCode =='REMINDER'? topAlert.alertDesc : topAlert.alertName}} </span>
-          <span class="text-normal">{{DueOn(topAlert)}}</span>
+          <span class="text-normal">{{topAlert.dueDateText}}</span>
         </div>
 
         <div class="" *ngIf="topAlert.alertTypeCode != 'NOTIFICATION' || topAlert.customAlertFlag !='Y'">
@@ -46,7 +46,7 @@
    <span class="material-icons" aria-label="to do" aria-hidden="true" *ngIf="alertItem.alertTypeCode == 'TODO'">playlist_add_check</span>
    <span class="material-icons" aria-label="notification" aria-hidden="true" *ngIf="alertItem.alertTypeCode == 'REMINDER'">alarm</span>
    <span class="text-bold">{{alertItem.alertTypeCode == 'REMINDER'? alertItem.alertDesc : alertItem.alertName}} </span>
-   <span class="text-normal">{{DueOn(alertItem)}}</span>
+   <span class="text-normal">{{alertItem.dueDateText}}</span>
  </div>
 
  <div class="" *ngIf="alertItem.alertTypeCode != 'NOTIFICATION' || alertItem.customAlertFlag !='Y'">

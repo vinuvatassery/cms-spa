@@ -1,8 +1,6 @@
 import {
   Component,
-  OnInit,
   Input,
-  EventEmitter,
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';

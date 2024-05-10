@@ -34,3 +34,5 @@ export * from './lib/containers/letter-template-page/letter-template-page.compon
 export * from './lib/containers/template-page/template-page.component';
 export * from './lib/containers/template-layout-new-form-page/template-layout-new-form-page.component';
 export * from './lib/containers/template-layout-page/template-layout-page.component';
+
+export * from './lib/components/add-folder/add-folder.component';
