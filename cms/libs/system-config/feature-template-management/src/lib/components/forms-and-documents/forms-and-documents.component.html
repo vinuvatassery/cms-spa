@@ -10,8 +10,7 @@
   </kendo-dialog-titlebar>
 
   <section class="k-dialog-body mb-2 pd-2">
-    <system-config-common-form-document-tree [foldersTree] ="foldersTree" [treeViewSize]='"large"' [hasChildren]="hasFiles"></system-config-common-form-document-tree>
-    <!-- <kendo-treeview [nodes]="foldersTree" textField="name" TreeViewSize="large" kendoTreeViewExpandable
+    <kendo-treeview [nodes]="foldersTree" textField="name" TreeViewSize="large" kendoTreeViewExpandable
       [hasChildren]="hasFiles" [children]="fetchSubfolders" childrenField="items" >
       <ng-template kendoTreeViewNodeTemplate let-dataItem>
         <div class="attachments-lists-wrap" [ngClass]="dataItem.isFolder===false ? 'file_list' : 'directory_list'">
@@ -37,6 +36,6 @@
             | date: 'MM/dd/YYYY'}}</span>
         </div>
       </ng-template>
-    </kendo-treeview> -->
+    </kendo-treeview>
   </section>
 </ng-template>
