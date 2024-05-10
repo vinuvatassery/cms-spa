@@ -380,6 +380,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             downloadLink.href = fileUrl;
             downloadLink.download = documentName;
             downloadLink.click();
+            this.communicationLetterTypeCode = '';
             this.onCloseNewLetterClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated! Event Logged.');
           }
@@ -459,7 +460,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             break;
           case CommunicationEventTypeCode.RestrictedNoticeLetter:
             templateTypeCode = CommunicationEventTypeCode.RestrictedLetterSent;
-            eventGroupCode = EventGroupCode.Application;
+            eventGroupCode = EventGroupCode.CER;
             break;
     }
     return {templateTypeCode, eventGroupCode};
@@ -545,7 +546,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
               if (this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter) {
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RestrictedNoticeLetter) {
                 this.templateDrpDisable = true;
                 this.cancelDisplay = false;                
               }

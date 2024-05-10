@@ -324,7 +324,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             if (this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
               || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
               || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail
-              || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail) {
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.RestrictedNoticeEmail) {
               this.templateDrpDisable = true;
               this.cancelDisplay = false;
             }
@@ -549,6 +550,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           if (data) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message);
+            this.communicationEmailTypeCode = '';
             this.onCloseSendEmailClicked();
           }
           this.ref.detectChanges();
@@ -629,7 +631,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           break;
         case CommunicationEventTypeCode.RestrictedNoticeEmail:
           templateTypeCode = CommunicationEventTypeCode.RestrictedEmailSent;
-          eventGroupCode = EventGroupCode.Application;
+          eventGroupCode = EventGroupCode.CER;
           break;
     }
     return { templateTypeCode, eventGroupCode };

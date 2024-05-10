@@ -95,6 +95,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
+        this.letterCommunicationTypeCode = '';
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.LetterTypeCode;
         this.notificationGroup = CommunicationEventTypeCode.LETTER;
@@ -118,6 +119,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
+        this.emailCommunicationTypeCode = '';
         this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.EmailTypeCode;
         this.notificationGroup = CommunicationEventTypeCode.EMAIL;
