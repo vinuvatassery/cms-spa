@@ -17,7 +17,7 @@
             <div class="flex-col" *ngIf="!isDragDropEnabled">
                   <div class="mt-3 mb-3">
                         <button kendoButton fillMode="clear" themeColor="primary" aria-label="NEW FOLDER"
-                              (click)="onAddNewEditFolderClicked()"> <span class="material-icons"> add</span> NEW FOLDER
+                              (click)="onAddNewEditFolderClicked()" (click)="onAddFolderClicked(addFolderTemplate )"  > <span class="material-icons"> add</span> NEW FOLDER
                         </button>
                         <button kendoButton fillMode="clear" themeColor="primary" aria-label="UPLOAD FILE"
                               (click)="onUploadFileOpenClicked()"> <span class="material-icons"> upload</span> UPLOAD
@@ -119,13 +119,6 @@
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Update" class="">Update</button>
 </div>
-<kendo-dialog *ngIf="isAddNewEditFolderPopup" (close)="onCloseAddNewEditFolderClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar> Add New Folder </kendo-dialog-titlebar>
-      <system-config-add-folder (addFolder)="addFolderData($event)" (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"></system-config-add-folder>
-</kendo-dialog>
-
-
 <kendo-dialog *ngIf="isUploadFileDetailPopup" (close)="onCloseUploadFileDetailClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Upload New File </kendo-dialog-titlebar>
@@ -337,3 +330,9 @@
             </div>
       </kendo-dialog-actions>
 </kendo-dialog>
+<ng-template #addFolderTemplate >
+      <kendo-dialog-titlebar (close)="onCloseAddNewEditFolderClicked()"> Add New Folder </kendo-dialog-titlebar>
+      <system-config-add-folder (addFolder)="addFolderData($event)"
+      (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"> 
+  </system-config-add-folder> 
+</ng-template>

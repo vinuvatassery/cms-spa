@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import {
   TreeItemDropEvent,
   DropPosition,
@@ -7,6 +7,7 @@ import {
 } from '@progress/kendo-angular-treeview';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormsAndDocumentFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -22,6 +23,9 @@ export class FormDocumentsListComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @ViewChild('addFolderTemplate', { read: TemplateRef })
+  addFolderTemplate!: TemplateRef<any>;
+  addFolderDialog:any
   isAddNewEditFolderPopup = false;
   isFormsDocumentDeletePopupShow = false;
   isFormsDocumentDeactivatePopupShow = false;
@@ -33,6 +37,7 @@ export class FormDocumentsListComponent implements OnInit {
   /** Public properties **/ 
 
   constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
+    private dialogService: DialogService, 
   ) {}
   public moreActions = [
     {
@@ -237,7 +242,7 @@ export class FormDocumentsListComponent implements OnInit {
     this.isAddNewEditFolderPopup = true;
   }
   onCloseAddNewEditFolderClicked() {
-    this.isAddNewEditFolderPopup = false;
+    this.addFolderDialog.close();
   }
 
   onFormsDocumentDeleteClicked() {
@@ -263,4 +268,10 @@ export class FormDocumentsListComponent implements OnInit {
   addFolderData(payLoad:any){
     this.addFolder.emit(payLoad);
    }
+   onAddFolderClicked(template: TemplateRef<unknown>): void {
+    this.addFolderDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
 }
