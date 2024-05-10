@@ -8,14 +8,18 @@ import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 })
 export class FormDocumentsPageComponent implements OnInit {
   folderSortList$ = this.formsAndDocumentFacade.folderSort$;
-  
+  formsDocumentsList$ = this.formsAndDocumentFacade.formsDocumentsList$;
   constructor(private readonly formsAndDocumentFacade: FormsAndDocumentFacade) { }
   
   ngOnInit(): void {
     this.loadFolderSort();
+    this.loadFolderFiles();
   }
 
   loadFolderSort() {
     this.formsAndDocumentFacade.loadfolderSort();
+  }
+  loadFolderFiles() {
+    this.formsAndDocumentFacade.loadFolderFile();
   }
 }

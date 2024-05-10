@@ -40,4 +40,18 @@ export class FormsAndDocumentFacade {
         })
     }
 
+    loadFolderFile() {
+        this.showLoader();
+        this.uploadFormandDocumentService.loadFolderFile().subscribe({
+            next: (response) => {
+                this.formsDocumentsSubject.next(response);
+                this.hideLoader();
+            },
+            error: (err) => {
+                this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+                this.hideLoader();
+            },
+        })
+    }
+
 }

@@ -14,4 +14,8 @@ export class FormsAndDocumentDataService {
     loadfolderSort() {
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folder-sort`);
     }
+
+    loadFolderFile() {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config`);
+    }
 }

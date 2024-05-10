@@ -40,7 +40,8 @@
 
 
 </section>
-<div class="flex-row forms_doc-lists">
+<system-config-common-form-document-tree [foldersTree] ="folderFileList$ | async" [treeViewSize]='"large"'></system-config-common-form-document-tree>
+<!-- <div class="flex-row forms_doc-lists">
  
       <kendo-treeview [nodes]="data" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
             kendoTreeViewExpandable expandBy="id" [expandedKeys]="[1]" kendoTreeViewDragAndDrop  
@@ -115,7 +116,7 @@
                   <common-user-profile-card> </common-user-profile-card>
             </ng-template>
       </kendo-popover>
-</div>
+</div> -->
 <div class="bottom-fixed-wrapper text-right flex-gap" *ngIf="isDragDropEnabled"> 
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Update" class="">Update</button>

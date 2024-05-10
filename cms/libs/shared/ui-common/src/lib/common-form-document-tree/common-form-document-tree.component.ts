@@ -1,26 +1,24 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
-import {
-  TreeItemDropEvent,
-  DropPosition,
-  TreeItemLookup,
-  DropAction,
-} from '@progress/kendo-angular-treeview';
+import { Component, Input } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
 const isOfType = (fileName: string, ext: string) =>
-  new RegExp(`.${ext}\$`).test(fileName);
+new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
 @Component({
-  selector: 'system-config-form-documents-list',
-  templateUrl: './form-documents-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'system-config-common-form-document-tree',
+  templateUrl: './common-form-document-tree.component.html',
 })
-export class FormDocumentsListComponent implements OnInit {
+export class CommonFormDocumentTreeComponent {
+
+  /** Public properties **/
+  isOpenAttachment = false;
+  @Input() foldersTree: any = [];
+  @Input() treeViewSize: any;
+  @Input() hasChildren:any;
+  selectedfolder: string = "";
+  isShowLoader: boolean = true;
+
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  @Input() folderSortList$: any;
-  @Input() folderFileList$:any;
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isAddNewEditFolderPopup = false;
   isFormsDocumentDeletePopupShow = false;
@@ -30,8 +28,6 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
-  /** Public properties **/ 
-  sortOrder : any;
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -211,55 +207,51 @@ export class FormDocumentsListComponent implements OnInit {
     }
   }
 
-  /** Internal event methods **/
-  onUploadFileVersionOpenClicked() {
-    this.isUploadFileVersionDetailPopup = true;
-  }
-  onCloseUploadFileVersionDetailClicked() {
-    this.isUploadFileVersionDetailPopup = false;
-  }
-  onUploadFolderOpenClicked() {
-    this.isUploadFolderDetailPopup = true;
-  }
-  onCloseUploadFolderDetailClicked() {
-    this.isUploadFolderDetailPopup = false;
-  }
-  onUploadFileOpenClicked() {
-    this.isUploadFileDetailPopup = true;
-  }
-  onCloseUploadFileDetailClicked() {
-    this.isUploadFileDetailPopup = false;
-  }
-
-  onAddNewEditFolderClicked() {
-    this.isAddNewEditFolderPopup = true;
-  }
-  onCloseAddNewEditFolderClicked() {
-    this.isAddNewEditFolderPopup = false;
-  }
-
-  onFormsDocumentDeleteClicked() {
-    this.isFormsDocumentDeletePopupShow = true;
-  }
-  onCloseFormsDocumentDeleteClicked() {
-    this.isFormsDocumentDeletePopupShow = false;
-  }
-
-  onFormsDocumentDeactivateClicked() {
-    this.isFormsDocumentDeactivatePopupShow = true;
-  }
-  onCloseFormsDocumentDeactivateClicked() {
-    this.isFormsDocumentDeactivatePopupShow = false;
-  }
-
-  onFormsDocumentReactivateClicked() {
-    this.isFormsDocumentReactivatePopupShow = true;
-  }
-  onCloseFormsDocumentReactivateClicked() {
-    this.isFormsDocumentReactivatePopupShow = false;
-  }
-
-  onSortChange(event:any){
-    this.sortOrder = event;
-  }
+    /** Internal event methods **/
+    onUploadFileVersionOpenClicked() {
+      this.isUploadFileVersionDetailPopup = true;
+    }
+    onCloseUploadFileVersionDetailClicked() {
+      this.isUploadFileVersionDetailPopup = false;
+    }
+    onUploadFolderOpenClicked() {
+      this.isUploadFolderDetailPopup = true;
+    }
+    onCloseUploadFolderDetailClicked() {
+      this.isUploadFolderDetailPopup = false;
+    }
+    onUploadFileOpenClicked() {
+      this.isUploadFileDetailPopup = true;
+    }
+    onCloseUploadFileDetailClicked() {
+      this.isUploadFileDetailPopup = false;
+    }
+  
+    onAddNewEditFolderClicked() {
+      this.isAddNewEditFolderPopup = true;
+    }
+    onCloseAddNewEditFolderClicked() {
+      this.isAddNewEditFolderPopup = false;
+    }
+  
+    onFormsDocumentDeleteClicked() {
+      this.isFormsDocumentDeletePopupShow = true;
+    }
+    onCloseFormsDocumentDeleteClicked() {
+      this.isFormsDocumentDeletePopupShow = false;
+    }
+  
+    onFormsDocumentDeactivateClicked() {
+      this.isFormsDocumentDeactivatePopupShow = true;
+    }
+    onCloseFormsDocumentDeactivateClicked() {
+      this.isFormsDocumentDeactivatePopupShow = false;
+    }
+  
+    onFormsDocumentReactivateClicked() {
+      this.isFormsDocumentReactivatePopupShow = true;
+    }
+    onCloseFormsDocumentReactivateClicked() {
+      this.isFormsDocumentReactivatePopupShow = false;
+    }
 }
