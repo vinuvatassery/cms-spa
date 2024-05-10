@@ -134,7 +134,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.templateHeader = 'CER Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
-        this.saveForLaterHeadterText = "Email Draft Saved";
+        this.saveForLaterHeadterText = "Send CER Authorization Email Later?";
         this.saveForLaterModelText="You must send the  Cer Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
@@ -144,10 +144,10 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.templateHeader = 'CER Authorization Letter';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
-        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterHeadterText = "Send CER Authorization Letter Later?";
         this.saveForLaterModelText="You must send the  CerAuthorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText="This action cannot be undone.";
+        this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
       }
     }else{
       if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
@@ -157,7 +157,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
-        this.saveForLaterHeadterText = "Email Draft Saved";
+        this.saveForLaterHeadterText = "Send Authorization Email Later?";
         this.saveForLaterModelText="You must send the  Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
@@ -167,7 +167,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.templateHeader = 'Application Authorization Letter';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
-        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterHeadterText = "Send Authorization Letter Later?";
         this.saveForLaterModelText="You must send the  Authorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send Letter to Print?';
         this.confirmationModelText="This action cannot be undone.";

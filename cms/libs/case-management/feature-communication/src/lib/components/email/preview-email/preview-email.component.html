@@ -4,7 +4,7 @@
     <div class="border-box">
       <div class="flex-row">
          <div class="flex-col letter-preview-box mb-3">
-          <div [innerHTML]="emailContent"></div>          
+          <div [innerHTML]="emailContent"></div>
         </div>
       </div>
     </div>
@@ -13,7 +13,7 @@
 <kendo-dialog-actions>
   <div class="justify-content-between bigbtn-wrapper">
     <div class="justify-content-end">
-      <span class="mr-2 mt-1">{{attachmentCount}} attachment(s) to be printed</span>
+      <span class="mr-2 mt-1">{{attachmentCount}} attachment(s) to be emailed</span>
       <button kendoButton [primary]="true" look="outline" aria-label="Close" (click)="closeClicked()">
         Close
       </button>
