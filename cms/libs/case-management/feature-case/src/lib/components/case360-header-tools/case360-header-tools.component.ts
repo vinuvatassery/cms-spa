@@ -81,6 +81,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   paperlessFlag:any;
   emailSubject:any;
   loginUserEmail: any;
+  caseManagerEmail: any;
   entityType= EntityTypeCode.Client;
   triggerFrom= ScreenType.ClientProfile;
   public sendActions = [
@@ -182,6 +183,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Internal Methods */
   ngOnInit(): void {
     this.getLoggedInUserProfile();
+    this.getAssignedCaseManagerDetails();
     this.initialize();
     this.loadedClientHeader.subscribe(res => {
       this.clientHeader = res;
@@ -247,13 +249,13 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.notificationGroup = CommunicationEventTypeCode.EMAIL;
             this.emailCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeEmail;
             this.currentCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeEmail;
-            this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click "+'Send Email'+" once the email is complete."
+            this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click "+'"Send Email"'+" once the email is complete."
             this.templateHeader = 'Send Restricted Email';
             this.emailSubject = "CAREAssist Restricted Notice";
             this.confirmPopupHeader = 'Send Restricted email to print?';
             this.saveForLaterHeadterText = "Email Draft Saved";
             this.saveForLaterModelText="To pick up where you left off, click New Emai from the client's profile";
-            this.confirmationModelText="If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click "+'Send Email'+" once the email is complete.";
+            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
 
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.emailCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
           }
@@ -262,13 +264,13 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.notificationGroup = CommunicationEventTypeCode.LETTER;
             this.letterCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeLetter;
             this.currentCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeLetter;
-            this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click "+'Send to Print'+" once the letter is complete."
+            this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click "+'"Send to Print"'+" once the letter is complete."
             this.templateHeader = 'Send Restricted Letter';
             this.emailSubject = '';
             this.confirmPopupHeader = 'Send Restricted letter to print?';
             this.saveForLaterHeadterText = "Letter Draft Saved";
             this.saveForLaterModelText="To pick up where you left off, click New Letter from the client's profile";
-            this.confirmationModelText="If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click "+'Send to Print'+" once the letter is complete.";
+            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
           }
           this.ref.detectChanges();
@@ -506,6 +508,27 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
        }
       }
     });
+    this.loaderService.hide();
+  }
+
+  getAssignedCaseManagerDetails() {
+    this.loaderService.show();
+    this.contactFacade.lodAssignedCaseManager(this.clientId, this.clientCaseId)
+      .subscribe({
+        next: (caseManager: any) => {
+          if(caseManager !== null && caseManager?.email !== null){
+            const ccEmail ={
+              email: caseManager.email,
+              isDefault: true
+            };
+            this.caseManagerEmail = ccEmail;
+          }
+        },
+        error: (err) => {
+          this.loggingService.logException(err);
+          this.loaderService.hide();
+        },
+      });
     this.loaderService.hide();
   }
 
