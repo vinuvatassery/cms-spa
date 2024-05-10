@@ -81,6 +81,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   paperlessFlag:any;
   emailSubject:any;
   loginUserEmail: any;
+  caseManagerEmail: any;
   entityType= EntityTypeCode.Client;
   triggerFrom= ScreenType.ClientProfile;
   public sendActions = [
@@ -182,6 +183,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Internal Methods */
   ngOnInit(): void {
     this.getLoggedInUserProfile();
+    this.getAssignedCaseManagerDetails();
     this.initialize();
     this.loadedClientHeader.subscribe(res => {
       this.clientHeader = res;
@@ -506,6 +508,27 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
        }
       }
     });
+    this.loaderService.hide();
+  }
+
+  getAssignedCaseManagerDetails() {
+    this.loaderService.show();
+    this.contactFacade.lodAssignedCaseManager(this.clientId, this.clientCaseId)
+      .subscribe({
+        next: (caseManager: any) => {
+          if(caseManager !== null && caseManager?.email !== null){
+            const ccEmail ={
+              email: caseManager.email,
+              isDefault: true
+            };
+            this.caseManagerEmail = ccEmail;
+          }
+        },
+        error: (err) => {
+          this.loggingService.logException(err);
+          this.loaderService.hide();
+        },
+      });
     this.loaderService.hide();
   }
 
