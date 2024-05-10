@@ -239,7 +239,7 @@ export class FormDocumentsListComponent implements OnInit {
   }
 
   onAddNewEditFolderClicked() {
-    this.isAddNewEditFolderPopup = true;
+    this.addFolderDialog.open();
   }
   onCloseAddNewEditFolderClicked() {
     this.addFolderDialog.close();
