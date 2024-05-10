@@ -22,6 +22,7 @@ import { RolesAndPermissionsPageComponent } from './containers/roles-and-permiss
 import { CaseManagerPageComponent } from './containers/case-manager-page/case-manager-page.component';
 import { CaseManagerListsComponent } from './components/case-manager-lists/case-manager-lists.component';
 import { RolesAndPermissionsDetailsPageComponent } from './containers/roles-and-permissions-details-page/roles-and-permissions-details-page.component';
+import { UserAssignedRoleComponentComponent } from './components/user-assigned-role.component/user-assigned-role.component.component';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { RolesAndPermissionsDetailsPageComponent } from './containers/roles-and-
     CaseManagerPageComponent,
     CaseManagerListsComponent,
     RolesAndPermissionsDetailsPageComponent,
+    UserAssignedRoleComponentComponent,
   ],
   exports: [
     UserListComponent,

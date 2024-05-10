@@ -1,0 +1,56 @@
+<kendo-grid [data]="gridUserAssignedRoles$ | async" 
+    [pageSize]="state.take" 
+    [pageable]="false" 
+    [skip]="state.skip"
+    [sort]="state.sort" 
+    [resizable]="true" 
+    [sortable]="false"
+    (dataStateChange)="dataStateChange($event)"
+    [loading]="(loader$ | async) === true">
+    <kendo-grid-column field="roleDesc" title="Role Assigned" [width]="150">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="d-flex align-items-center">
+                <span class="role-identifier role-super-admins"></span>{{ dataItem.roleDesc }}
+            </span>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="lastModificationTime" title="Last Modified" [width]="120">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.lastModificationTime |date:'MM/dd/YYYY'}}
+          </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="120" [sortable]="false" [filterable]="false">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <common-user-photo-icon 
+              [userId]="dataItem.lastModifierId" 
+              [userFirstName]="dataItem.userFirstName"
+              [userLastName]="dataItem.userLastName" 
+              [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+              [linkType]="'profileIcon'"></common-user-photo-icon>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="activeFlag" title="Status" [width]="120">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="d-flex align-items-center">
+                <span class="role-identifier role-super-admins"></span>{{ dataItem.activeFlag }}
+            </span>
+        </ng-template>
+      </kendo-grid-column>
+    <kendo-grid-column field="" title="Options" [width]="70" class="text-center" [columnMenu]="false">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <kendo-dropdownbutton [data]="moreactions" title="More option" aria-label="more actions"
+                class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
+                [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+                <span class="material-icons" aria-label="More option"> more_vert </span>
+                <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+                    <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+                        aria-hidden="false" (click)="dataItem.click">
+                        <span class="material-icons" aria-hidden="true"
+                            [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                        <label> {{ dataItem.text }} </label>
+                    </button>
+                </ng-template>
+            </kendo-dropdownbutton>
+        </ng-template>
+    </kendo-grid-column>
+</kendo-grid>

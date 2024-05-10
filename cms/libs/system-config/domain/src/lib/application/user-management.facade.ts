@@ -21,7 +21,7 @@ export class UserManagementFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueUserListGrid = 'creationTime'; 
+  public sortValueUserListGrid = 'userName'; 
   public sortUserListGrid: SortDescriptor[] = [{
     field: this.sortValueUserListGrid,
   }];
@@ -87,7 +87,9 @@ export class UserManagementFacade {
   private userImageSubject = new Subject<any>();
   private userByIdSubject = new Subject<any>(); 
   private profilePhotosSubject = new BehaviorSubject<any>([]);
- 
+  private userListDataLoaderSubject = new Subject<any>();
+  userListDataLoader$ = this.userListDataLoaderSubject.asObservable();
+  userListProfilePhotoSubject = new Subject();
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -117,7 +119,7 @@ export class UserManagementFacade {
   userImage$ = this.userImageSubject.asObservable();
   usersById$ = this.userByIdSubject.asObservable();
   profilePhotos$ = this.profilePhotosSubject.asObservable(); 
-  
+  userListProfilePhoto$ = this.userListProfilePhotoSubject.asObservable();
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
@@ -288,16 +290,27 @@ export class UserManagementFacade {
 
 
 
-  loadUsersData(): void {
-    this.userDataService.loadUsersData().subscribe({
-      next: (response) => {
-        this.usersDataSubject.next(response);
+  loadUsersData(params: any): void {
+    this.showLoader();
+    this.userDataService.loadUsersData(params).subscribe({
+      next: (response:any) => {
+        const gridView = {
+          data: response['items'],
+          total: response['totalCount'],
+        };
+        this.usersDataSubject.next(gridView);
+        this.loadUserListDistinctUserIdsAndProfilePhoto(response['items']);
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
   }
+
+  loadUserAssignedRolesByUserId(data: any){
+    return this.userDataService.loadUserAssignedRolesByUserId(data);
+   }
 
   loadUserFilterColumn(): void {
     this.userDataService.loadUserFilterColumn().subscribe({
@@ -453,4 +466,18 @@ export class UserManagementFacade {
       },
     });
   }
+
+  loadUserListDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');
+    if(distinctUserIds){
+      this.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }  
 }
