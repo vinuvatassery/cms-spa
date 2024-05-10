@@ -44,25 +44,40 @@
                     <h5>
                         TO
                     </h5>
-                    <p *ngFor="let toEmail of toEmailAddress; let i = index">
-                        {{toEmail}}
-                    </p>
+                   
+                    <kendo-chip-list selection="multiple" >
+                        <kendo-chip
+                            *ngFor="let toEmail of toEmailAddress"
+                            [label]="toEmail"
+                        >
+                        </kendo-chip>
+                    </kendo-chip-list>
+
                 </div>
                 <div *ngIf="ccEmailAddress?.length>0">
                     <h5>
                         CC
-                    </h5>
-                    <p *ngFor="let ccEmail of ccEmailAddress; let i = index">
-                        {{ccEmail}}
-                    </p>
+                    </h5>                  
+                    <kendo-chip-list selection="multiple" >
+                        <kendo-chip
+                            *ngFor="let ccEmail of ccEmailAddress"
+                            [label]="ccEmail"
+                        >
+                        </kendo-chip>
+                    </kendo-chip-list>
+
                 </div>
                 <div *ngIf="bccEmailAddress?.length>0">
                     <h5>
                         BCC
                     </h5>
-                    <p *ngFor="let bccEmail of bccEmailAddress; let i = index">
-                        {{bccEmail}}
-                    </p>
+                     <kendo-chip-list selection="multiple" >
+                        <kendo-chip
+                            *ngFor="let bccEmail of bccEmailAddress"
+                            [label]="bccEmail"
+                        >
+                        </kendo-chip>
+                    </kendo-chip-list>
                 </div>
             </div>
             <div class="innerHtmlWrapper k-editor">
