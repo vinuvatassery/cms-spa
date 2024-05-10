@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import {
   TreeItemDropEvent,
   DropPosition,
@@ -6,6 +6,8 @@ import {
   DropAction,
 } from '@progress/kendo-angular-treeview';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { FormsAndDocumentFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -16,10 +18,14 @@ const isFile = (name: string) => name.split('.').length > 1;
 })
 export class FormDocumentsListComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  @Output() addFolder = new EventEmitter<any>();
   ngOnInit(): void {
     throw new Error('Method not implemented.');
   }
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @ViewChild('addFolderTemplate', { read: TemplateRef })
+  addFolderTemplate!: TemplateRef<any>;
+  addFolderDialog:any
   isAddNewEditFolderPopup = false;
   isFormsDocumentDeletePopupShow = false;
   isFormsDocumentDeactivatePopupShow = false;
@@ -29,6 +35,10 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
   /** Public properties **/ 
+
+  constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
+    private dialogService: DialogService, 
+  ) {}
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -229,10 +239,10 @@ export class FormDocumentsListComponent implements OnInit {
   }
 
   onAddNewEditFolderClicked() {
-    this.isAddNewEditFolderPopup = true;
+    this.addFolderDialog.open();
   }
   onCloseAddNewEditFolderClicked() {
-    this.isAddNewEditFolderPopup = false;
+    this.addFolderDialog.close();
   }
 
   onFormsDocumentDeleteClicked() {
@@ -254,5 +264,14 @@ export class FormDocumentsListComponent implements OnInit {
   }
   onCloseFormsDocumentReactivateClicked() {
     this.isFormsDocumentReactivatePopupShow = false;
+  }
+  addFolderData(payLoad:any){
+    this.addFolder.emit(payLoad);
+   }
+   onAddFolderClicked(template: TemplateRef<unknown>): void {
+    this.addFolderDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
+    });
   }
 }
