@@ -2,8 +2,12 @@ import { Component, ViewEncapsulation, ChangeDetectionStrategy, Input, Output, E
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LovFacade } from '@cms/system-config/domain';
-import { ContactFacade } from '@cms/case-management/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { PronounTypeCode } from '../enums/pronoun-type-code.enum';
+import { NullLogger } from '@microsoft/signalr';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+
 
 
 @Component({
@@ -21,86 +25,55 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   isScheduleOutOfOfficeSection = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   userForm!: FormGroup;
-  userDeviceTypeLovSubscription = new Subscription();
-  userPronounsLovSubjectSubscription = new Subscription();
   userDeviceTypeLov$ = this.lovFacade.userDeviceTypeLov$;
-  userPronounsLov$ = this.lovFacade.userPronounsLov$;
-  ddlStates$ = this.contactFacade.ddlStates$;
-
-  public listItems = [
- {
-  lovDesc: 'Monday',
-  lovCode:"MO"
- },
- {
-  lovDesc: 'Tuesday',
-  lovCode:"TU"
- },
- {
-  lovDesc: 'Wednesday',
-  lovCode:"WE"
- },
- {
-  lovDesc: 'Thursday',
-  lovCode:"TH"
- },
- {
-  lovDesc: 'Friday',
-  lovCode:"FR"
- },
- {
-  lovDesc: 'Saturday',
-  lovCode:"SA"
- },
- {
-  lovDesc: 'Sunday',
-  lovCode:"SU"
- },
-  ];
+  pronounslov$ = this.lovFacade.pronounslov$;
+  ddlStates$ = this.userManagementFacade.ddlStates$;
+  pronounLovSubscription = new Subscription();
+  pronounList : any;
+  dateFormat = this.configProvider.appSettings.dateFormat;
   public time: Date = new Date(2000, 2, 10, 13, 30, 0);
 
    /** Constructor**/
    constructor(private readonly cdr :ChangeDetectorRef,
     private readonly formBuilder: FormBuilder,
     private readonly lovFacade: LovFacade,
-    private readonly contactFacade: ContactFacade,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider,
     ) {}
 
   ngOnInit(): void {
-    this.contactFacade.loadDdlStates();
+    this.userManagementFacade.loadDdlStates();
     this.lovFacade.getUserPhoneTypeLov();
-    this.lovFacade.getUserPronounsLov();
+    this.lovFacade.getPronounLovs();
     this.initUserForm();
     this.loadUserInfoData();
     this.userInfoDataHandle();
-    // this.userDeviceTypeLovSubscription = this.userDeviceTypeLov$.subscribe((response: any) => {
-    //   if (response !== undefined && response !== null) {
-    //    this.eventAttachmentTypeList = response;
-    //   }
-    // });
-    // this.userPronounsLovSubjectSubscription = this.userPronounsLov$.subscribe((response: any) => {
-    //   if (response !== undefined && response !== null) {
-    //    this.eventAttachmentTypeList = response;
-    //   }
-    // });
+    this.pronounLovSubscription = this.pronounslov$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        debugger;
+        const pronounCodes = Object.values(PronounTypeCode)
+        this.pronounList = response.filter((item: any) => pronounCodes.includes(item.lovCode));
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.userInfoSubsriction.unsubscribe();
-    this.userDeviceTypeLovSubscription.unsubscribe();
-    this.userPronounsLovSubjectSubscription.unsubscribe();
+    this.pronounLovSubscription.unsubscribe();
   }
 
   initUserForm() {
     this.userForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: [''],
+      firstName: [{value: '', disabled:true}],
+      lastName: [{value: '', disabled:true}],
       initials: [''],
       pronoun: [''],
       jobTitle:  [''],
-      pOrNbr:  [''],
-      email:  [''],
+      pOrNbr:  [{value: '', disabled:true}],
+      email:  [{value: '', disabled:true}],
       phones: new FormArray([]),
+      faxNbr : [''],
       address1:  [''],
       address2:  [''],
       city:  [''],
@@ -117,7 +90,17 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   showScheduleOutOfOfficeSection(){
-this.isScheduleOutOfOfficeSection = !this.isScheduleOutOfOfficeSection
+  this.isScheduleOutOfOfficeSection = !this.isScheduleOutOfOfficeSection
+  if(!this.isScheduleOutOfOfficeSection)
+    {
+      this.userForm.controls['startDate'].reset();
+      this.userForm.controls['endDate'].reset()
+      this.userForm.controls['startTime'].reset();
+      this.userForm.controls['endTime'].reset();
+      this.userForm.controls['outOfOfficeMsg'].reset();
+
+    }
+
   }
 
   loadUserInfoData()
@@ -131,6 +114,10 @@ this.isScheduleOutOfOfficeSection = !this.isScheduleOutOfOfficeSection
      if(response)
       {
         this.userInfo = response;
+        if(this.userInfo.userTypeCode === 'INTERNAL')
+        {
+          this.disableAddressFields();
+        }
         this.setFormValues(this.userInfo);
         this.cdr.detectChanges();
       }
@@ -147,11 +134,11 @@ this.isScheduleOutOfOfficeSection = !this.isScheduleOutOfOfficeSection
         null ),
 
       PhoneNbr: new FormControl(
-        ''
+        '', [Validators.required]
       ),
 
-      faxNbr: new FormControl(
-        ''
+      phoneType: new FormControl(
+        '', [Validators.required]
       )
 
     });
@@ -160,6 +147,7 @@ this.isScheduleOutOfOfficeSection = !this.isScheduleOutOfOfficeSection
 
   setFormValues(userInfo : any)
   {
+    debugger;
     this.userForm.controls['firstName'].setValue(userInfo.firstName);
     this.userForm.controls['lastName'].setValue(userInfo.lastName);
     this.userForm.controls['pronoun'].setValue(userInfo.pronouns);
@@ -175,13 +163,84 @@ this.isScheduleOutOfOfficeSection = !this.isScheduleOutOfOfficeSection
     this.userForm.controls['county'].setValue(userInfo.county);
     this.userForm.controls['startDate'].setValue(userInfo?.userSchedules[0]?.startDate ? new Date(userInfo?.userSchedules[0]?.startDate) : '');
     this.userForm.controls['endDate'].setValue(userInfo?.userSchedules[0]?.endDate ? new Date(userInfo?.userSchedules[0]?.endDate) : '');
-    this.userForm.controls['startTime'].setValue(userInfo?.userSchedules[0]?.startTime);
-    this.userForm.controls['endTime'].setValue(userInfo?.userSchedules[0]?.endTime);
     this.userForm.controls['outOfOfficeMsg'].setValue(userInfo?.userSchedules[0]?.message);
     this.userForm.controls['notificationSummaryFlag'].setValue(userInfo.notificationSummaryEmailCheck);
     this.userForm.updateValueAndValidity();
+    const startTimeValue = userInfo?.userSchedules[0]?.startTime?.split(':')
+    const endTimeValue = userInfo?.userSchedules[0]?.endTime?.split(':')
+    this.userForm.controls['startTime'].setValue(startTimeValue? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), startTimeValue[0], startTimeValue[1]) : null);
+    this.userForm.controls['endTime'].setValue(endTimeValue? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), endTimeValue[0], endTimeValue[1]) : null);
+    if(!userInfo.state && userInfo.userTypeCode === 'EXTERNAL')
+    {
+      this.userForm.controls["state"].setValue('OR');
+    }
+    if(userInfo?.userSchedules.length > 0)
+      {
+        this.isScheduleOutOfOfficeSection = true;
+      }
+  }
 
+  disableAddressFields()
+  {
+    this.userForm.controls['address1'].disable();
+    this.userForm.controls['address2'].disable();
+    this.userForm.controls['city'].disable();
+    this.userForm.controls['state'].disable();
+    this.userForm.controls['zip'].disable();
 
+  }
+
+  onSave()
+  {
+    this.setFormValidation();
+    if(!this.userForm.invalid)
+    {
+      let payload = {
+        userTypeCode : this.userInfo.userTypeCode,
+        initials:  this.userForm.controls['initials'].value ?? null,
+        pronouns: this.userForm.controls['pronoun'].value ?? null,
+        jobTitle:  this.userForm.controls['jobTitle'].value ?? null,
+        address1:  this.userForm.controls['address1'].value ?? null,
+        address2:  this.userForm.controls['address2'].value ?? null,
+        city:  this.userForm.controls['city'].value ?? null,
+        state:  this.userForm.controls['state'].value ?? null,
+        zip:  this.userForm.controls['zip'].value ?? null,
+        county: this.userForm.controls['county'].value ?? null,
+        userSchedules: [{}],
+      }
+      if(this.isScheduleOutOfOfficeSection)
+      {
+        let schedule = {
+          startDate: this.intl.formatDate(this.userForm.controls['startDate'].value,  this.dateFormat ),
+          endDate: this.intl.formatDate(this.userForm.controls['endDate'].value,  this.dateFormat ),
+          startTime: new Date(this.userForm.controls['startTime'].value).getHours()+":"+new Date(this.userForm.controls['startTime'].value).getMinutes(),
+          endTime: new Date(this.userForm.controls['endTime'].value).getHours()+":"+new Date(this.userForm.controls['endTime'].value).getMinutes(),
+          message: this.userForm.controls['outOfOfficeMsg'].value ?? null
+        }
+        payload.userSchedules.push(schedule);
+        payload.userSchedules.splice(0, 1);
+      }
+    }
+  }
+
+  setFormValidation()
+  {
+    this.userForm.controls['jobTitle'].setValidators(Validators.required);
+    this.userForm.controls["jobTitle"].updateValueAndValidity();
+    if(this.isScheduleOutOfOfficeSection)
+    {
+      this.userForm.controls['startDate'].setValidators(Validators.required);
+      this.userForm.controls["startDate"].updateValueAndValidity();
+      this.userForm.controls['endDate'].setValidators(Validators.required);
+      this.userForm.controls['endDate'].updateValueAndValidity();
+      this.userForm.controls['startTime'].setValidators(Validators.required);
+      this.userForm.controls['startTime'].updateValueAndValidity();
+      this.userForm.controls['endTime'].setValidators(Validators.required);
+      this.userForm.controls['endTime'].updateValueAndValidity();
+      this.userForm.controls['outOfOfficeMsg'].setValidators(Validators.required);
+      this.userForm.controls['outOfOfficeMsg'].updateValueAndValidity();
+
+    }
   }
 
 }

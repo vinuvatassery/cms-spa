@@ -59,6 +59,7 @@ export * from './lib/enums/pending-approval-payment-type-code.enum';
 export * from './lib/enums/case-status-code.enum';
 export * from './lib/enums/payment-method-code.enum';
 export * from './lib/enums/to-do-entity-type-code.enum';
+export * from './lib/enums/pronoun-type-code.enum'
 
 export * from './lib/document-upload/document-upload.component';
 export * from './lib/clients-attachment/clients-attachment.component';

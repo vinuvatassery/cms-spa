@@ -47,7 +47,7 @@
 
           <p *ngIf="userInfo?.address1" class="app-card-details">
             <span class="material-icons">location_pin</span>
-            {{userInfo.address1}} {{userInfo.address2}} {{userInfo.city}} {{userInfo.state}}-{{userInfo.zip}}
+            {{userInfo.address1}} {{userInfo.city}} {{userInfo.state}}-{{userInfo.zip}}
           </p>
         </div>
       </div>
@@ -78,7 +78,7 @@
             <div class="flex-row">
               <div class="flex-col-5 flex-col">
                 <kendo-floatinglabel class="k-form" text="Pronouns">
-                  <kendo-dropdownlist formControlName="pronoun"  [fillMode]="formUiStyle.dropDownFillMode" [data]="userPronounsLov$ | async"
+                  <kendo-dropdownlist formControlName="pronoun"  [fillMode]="formUiStyle.dropDownFillMode" [data]="pronounList"
                   textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"> </kendo-dropdownlist>
                 </kendo-floatinglabel>
               </div>
@@ -89,6 +89,7 @@
                 <kendo-floatinglabel class="k-form" text="Job Title">
                   <kendo-textbox placeholder="Job Title" [fillMode]="formUiStyle.inputFillMode" formControlName="jobTitle"> </kendo-textbox>
                 </kendo-floatinglabel>
+                <kendo-formerror *ngIf="!userForm.controls['jobTitle'].valid">Job Title is required</kendo-formerror>
               </div>
             </div>
             <div class="flex-row">
@@ -235,19 +236,21 @@
                       format="MM-dd-yyyy" formControlName="startDate" formatPlaceholder="formatPattern">
                     </kendo-datepicker>
                   </kendo-floatinglabel>
-
+                  <kendo-formerror *ngIf="!userForm.controls['startDate'].valid">Start Date is required</kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-2">
                   <kendo-floatinglabel class="k-form" text="Start Time">
                     <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
                       [value]="time" formControlName="startTime"></kendo-timepicker>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!userForm.controls['startTime'].valid">Start Time is required</kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-2">
                   <kendo-floatinglabel class="k-form" text="End Time">
                     <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
                       [value]="time" formControlName="endTime"></kendo-timepicker>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!userForm.controls['endTime'].valid">End Time is required</kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-4">
                   <kendo-floatinglabel class="k-form" text="End Date">
@@ -255,14 +258,15 @@
                       format="MM-dd-yyyy" formControlName="endDate" formatPlaceholder="formatPattern">
                     </kendo-datepicker>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!userForm.controls['endDate'].valid">End Date is required</kendo-formerror>
                 </div>
                 <div class="flex-col">
                   <kendo-floatinglabel text="Out of Office Message">
                     <kendo-textarea [fillMode]="formUiStyle.inputFillMode" class="text-area-height"
                       class="table-text-area textarea" resizable="vertical" formControlName="outOfOfficeMsg" >
-
                     </kendo-textarea>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!userForm.controls['outOfOfficeMsg'].valid">Out of Office Message is required</kendo-formerror>
                 </div>
               </div>
               <button kendoButton class="k-error-button" aria-label="Remove" *ngIf="isScheduleOutOfOfficeSection"
@@ -289,7 +293,7 @@
     <button kendoButton [primary]="true" look="outline" area-label="Cancel">
       Cancel
     </button>
-    <button kendoButton [primary]="true" area-label="Save">
+    <button kendoButton [primary]="true" area-label="Save"   (click)="onSave()" >
       Save
     </button>
   </section>

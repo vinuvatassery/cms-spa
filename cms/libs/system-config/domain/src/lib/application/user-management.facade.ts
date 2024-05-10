@@ -11,6 +11,7 @@ import { User } from '../entities/user';
 /** Data services **/
 import { UserDataService } from '../infrastructure/user.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { ZipCodeFacade } from './zip-code.facade';
 
 @Injectable({ providedIn: 'root' })
 export class UserManagementFacade {
@@ -88,6 +89,7 @@ export class UserManagementFacade {
   private userImageSubject = new Subject<any>();
   private userByIdSubject = new Subject<any>();
   private profilePhotosSubject = new BehaviorSubject<any>([]);
+  private ddlStatesSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   users$ = this.userSubject.asObservable();
@@ -119,6 +121,7 @@ export class UserManagementFacade {
   usersById$ = this.userByIdSubject.asObservable();
   profilePhotos$ = this.profilePhotosSubject.asObservable();
   userInfoData$ = this.userInfoDataSubject.asObservable();
+  ddlStates$ = this.ddlStatesSubject.asObservable();
 
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
@@ -126,6 +129,7 @@ export class UserManagementFacade {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
+    private readonly zipCodeFacade: ZipCodeFacade
     ) {}
 
 
@@ -466,6 +470,17 @@ export class UserManagementFacade {
       error: (err) => {
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  loadDdlStates(): void {
+    this.zipCodeFacade.getStates().subscribe({
+      next: (ddlStatesResponse) => {
+        this.ddlStatesSubject.next(ddlStatesResponse);
+      },
+      error: (err) => {
+        this.loggingService.logException(err);
       },
     });
   }

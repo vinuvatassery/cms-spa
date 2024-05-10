@@ -104,7 +104,6 @@ export class LovFacade {
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceSupportGroupSubject = new BehaviorSubject<Lov[]>([]);
   private userDeviceTypeLovSubject = new Subject<any>();
-  private userPronounsLovSubject = new Subject<any>();
 
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
@@ -188,7 +187,6 @@ export class LovFacade {
   interfaceSupportGroupLov$ = this.interfaceSupportGroupSubject.asObservable();
   eventAttachmentTypeLov$ = this.eventAttachmentTypeLovSubject.asObservable();
   userDeviceTypeLov$ = this.userDeviceTypeLovSubject.asObservable();
-  userPronounsLov$ = this.userPronounsLovSubject.asObservable();
 
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -1037,16 +1035,6 @@ export class LovFacade {
     });
   }
 
-  getUserPronounsLov(): void {
-    this.lovDataService.getLovsbyType(LovType.UserPronouns).subscribe({
-      next: (lovResponse) => {
-        this.userPronounsLovSubject.next(lovResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      }
-    });
-  }
 }
 
 
