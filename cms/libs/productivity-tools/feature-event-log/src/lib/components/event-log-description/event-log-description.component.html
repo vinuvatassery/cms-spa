@@ -26,7 +26,10 @@
                 {{bodyText}}
             </p>
             <!-- Letter mailing address -->
-
+            <div *ngIf="mailCode">
+                <p class="text-capital text-bold">Mail Code</p>
+               <p>{{mailCode}}</p>
+            </div>
             <div class="flex-col mb-2" *ngIf="buttonText == 'RE-PRINT'">
                 <p class="text-capital text-bold">Mailing Address</p>
                 <span *ngIf="mailingAddress">

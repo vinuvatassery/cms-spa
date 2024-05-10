@@ -218,24 +218,19 @@ export class EventLogDescriptionComponent {
 
   notificationEmailSubscriptionInit(){
     this.notificationEmail$.subscribe((notificationLog:any)=>{
-      this.setForNotification(notificationLog);
+      this.setValuesForNotification(notificationLog);
     });
   }
 
   notificationLetterSubscriptionInit() {
     this.notificationLetter$.subscribe((notificationLog: any) => {
-      this.setForNotification(notificationLog);
+      this.setValuesForNotification(notificationLog);
     });
   }
 
-  setForNotification(notificationLog: any) {
+  setValuesForNotification(notificationLog: any) {
     this.eventLogFacade.showLoader()
-    this.previewContent = notificationLog?.previewContent;
-    if (this.buttonText === "RE-SEND") {
-      this.toEmailAddress = notificationLog?.emailAddress?.TO;
-      this.ccEmailAddress = notificationLog?.emailAddress?.CC;
-      this.bccEmailAddress = notificationLog?.emailAddress?.BCC;
-    }
+    this.previewContent = notificationLog?.previewContent;   
     this.attachments = notificationLog?.attachments;
     this.createdUser = notificationLog?.createdUser;
     this.createdDate = notificationLog?.createdDate;
@@ -243,13 +238,16 @@ export class EventLogDescriptionComponent {
     this.eventTypeCode = notificationLog?.eventTypeCode;
     this.entityId = notificationLog?.entityId;
     this.creatorId =  notificationLog?.creatorId;
-
-
+    this.mailingAddress = notificationLog?.mailingAddress;
+    if (this.buttonText === "RE-SEND") {
+      this.toEmailAddress = notificationLog?.emailAddress?.TO;
+      this.ccEmailAddress = notificationLog?.emailAddress?.CC;
+      this.bccEmailAddress = notificationLog?.emailAddress?.BCC;
+    }
     if (this.buttonText === "RE-PRINT") {
       this.toEmailAddress = null;
       this.ccEmailAddress = null;
-      this.bccEmailAddress = null;
-      this.mailingAddress = notificationLog?.mailingAddress;
+      this.bccEmailAddress = null;      
       this.mailCode = notificationLog?.mailCode;
     }
     this.cdr.detectChanges();
