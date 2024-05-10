@@ -20,14 +20,14 @@
 <kendo-dialog *ngIf="isViewLetterEmailTextDialog" class="app-c-modal app-c-modal-xlg app-c-modal-xlg">
     <kendo-dialog-titlebar (close)="onCloseLetterEmailSmsTextClicked()"> {{headerText}} </kendo-dialog-titlebar>
 
-    <section class="k-dialog-body newcase">
+    <section class="k-dialog-body newcase pl-0">
         <div class="app-c-editor letter-editor-height">
             <p class="mb-2">
                 {{bodyText}}
             </p>
             <!-- Letter mailing address -->
 
-            <div class="flex-col mb-2">
+            <div class="flex-col mb-2" *ngIf="buttonText == 'RE-PRINT'">
                 <p class="text-capital text-bold">Mailing Address</p>
                 <span *ngIf="mailingAddress">
                     <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>
@@ -58,15 +58,17 @@
                 </div>
                 <div *ngIf="bccEmailAddress?.length>0">
                     <h5>
-                        CC
+                        BCC
                     </h5>
                     <p *ngFor="let bccEmail of bccEmailAddress; let i = index">
                         {{bccEmail}}
                     </p>
                 </div>
             </div>
-            
-            <div [innerHtml]="previewContent"></div>
+            <div class="innerHtmlWrapper k-editor">
+                <div [innerHtml]="previewContent"></div>
+            </div>  
+           
 
             <!-- Attachment Panel -->
             <div class="panelbar-wrapper">
