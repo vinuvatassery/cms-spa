@@ -183,6 +183,7 @@ private updateFormCompleteCount(prev: any, curr: any) {
       if (this.checkValidations()) {
         this.updateCase().subscribe((response: any) => {
           if (response) {
+            this.workFlowFacade.saveForLaterCompleted(true)
             this.loaderService.hide();
             this.workFlowFacade.handleSendNewsLetterpopup(statusResponse)
           }
