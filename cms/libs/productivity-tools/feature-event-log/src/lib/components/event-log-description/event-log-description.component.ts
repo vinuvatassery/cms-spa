@@ -53,6 +53,7 @@ export class EventLogDescriptionComponent {
   entityTypeCode:any;
   eventTypeCode:any;
   entityId:any;
+  creatorId:any;
 
   constructor(private sanitizer : DomSanitizer, private readonly eventLogFacade: EventLogFacade,
     private readonly cdr: ChangeDetectorRef
@@ -241,6 +242,7 @@ export class EventLogDescriptionComponent {
     this.entityTypeCode = notificationLog?.entityTypeCode;
     this.eventTypeCode = notificationLog?.eventTypeCode;
     this.entityId = notificationLog?.entityId;
+    this.creatorId =  notificationLog?.creatorId;
 
 
     if (this.buttonText === "RE-PRINT") {

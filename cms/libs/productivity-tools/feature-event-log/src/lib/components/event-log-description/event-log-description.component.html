@@ -102,7 +102,12 @@
             </div>
         </div>
     </section>
-    <span *ngIf="createdDate">Printed {{ createdDate | date : 'MM/dd/YYYY' }} by {{createdUser}}</span>
+    <span *ngIf="createdDate">Printed {{ createdDate | date : 'MM/dd/YYYY' }} by 
+        <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
+        [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="createdUser">
+        {{createdUser}}
+      </button>
+    </span>
     <kendo-dialog-actions>
         <div class="justify-content-between">
             <div class="justify-content-end">
@@ -117,3 +122,10 @@
         </div>
     </kendo-dialog-actions>
 </kendo-dialog>
+
+<!-- User Profile Details Card -->
+<kendo-popover #onUserProfileDetailsHovered width="330">
+    <ng-template kendoPopoverBodyTemplate>
+      <common-user-profile-card [userId]="creatorId"></common-user-profile-card>
+    </ng-template>
+  </kendo-popover>
