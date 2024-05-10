@@ -1,10 +1,12 @@
 <div *ngIf="hasUrl">
     <span *ngFor="let item of anchorArray">
         <span class="mb-1" *ngIf="(!item.isBaseUrlFlag && !item.isFilePathUrl)" [innerHtml]="item.sanitizedHtml"></span>
-        <a *ngIf="item.isBaseUrlFlag && !item.isFilePathUrl" href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
+        <a *ngIf="item.isBaseUrlFlag && !item.isFilePathUrl" href="{{item.url}}"
+            title="{{item.title}}">{{item.text}}</a>
 
         <span class="mb-1" *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" [innerHtml]="sanitizedHtml"></span>
-        <a *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" (click)="downloadOldAttachment(item.url)" title="{{item.title}}">{{item.text}}</a>
+        <a *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" (click)="downloadOldAttachment(item.url)"
+            title="{{item.title}}">{{item.text}}</a>
     </span>
     <span class="mb-1" *ngIf="getViewFlag() && (anchorArray.length<=0)">
         {{data}}
@@ -16,19 +18,114 @@
     </common-read-more>
 </div>
 <kendo-dialog *ngIf="isViewLetterEmailTextDialog" class="app-c-modal app-c-modal-xlg app-c-modal-xlg">
-    <kendo-dialog-titlebar (close)="onCloseLetterEmailSmsTextClicked()"> View </kendo-dialog-titlebar>
-    <section class="k-dialog-body newcase">
-        <p class="mb-2">
-            This is View Email, View Letter & View Text(s) dialog.
-        </p>
+    <kendo-dialog-titlebar (close)="onCloseLetterEmailSmsTextClicked()"> {{headerText}} </kendo-dialog-titlebar>
+
+    <section class="k-dialog-body newcase pl-0">
+        <div class="app-c-editor letter-editor-height">
+            <p class="mb-2">
+                {{bodyText}}
+            </p>
+            <!-- Letter mailing address -->
+
+            <div class="flex-col mb-2" *ngIf="buttonText == 'RE-PRINT'">
+                <p class="text-capital text-bold">Mailing Address</p>
+                <span *ngIf="mailingAddress">
+                    <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>
+                    <p *ngIf="mailingAddress?.address2">{{ mailingAddress?.address2 }} </p>
+                    <p *ngIf="mailingAddress?.city || mailingAddress?.state || mailingAddress?.zip">{{
+                        mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
+                </span>
+            </div>
+
+            <!-- Email -->
+
+            <div>
+                <div *ngIf="toEmailAddress?.length>0">
+                    <h5>
+                        TO
+                    </h5>
+                   
+                    <kendo-chip-list selection="multiple" >
+                        <kendo-chip
+                            *ngFor="let toEmail of toEmailAddress"
+                            [label]="toEmail"
+                        >
+                        </kendo-chip>
+                    </kendo-chip-list>
+
+                </div>
+                <div *ngIf="ccEmailAddress?.length>0">
+                    <h5>
+                        CC
+                    </h5>                  
+                    <kendo-chip-list selection="multiple" >
+                        <kendo-chip
+                            *ngFor="let ccEmail of ccEmailAddress"
+                            [label]="ccEmail"
+                        >
+                        </kendo-chip>
+                    </kendo-chip-list>
+
+                </div>
+                <div *ngIf="bccEmailAddress?.length>0">
+                    <h5>
+                        BCC
+                    </h5>
+                     <kendo-chip-list selection="multiple" >
+                        <kendo-chip
+                            *ngFor="let bccEmail of bccEmailAddress"
+                            [label]="bccEmail"
+                        >
+                        </kendo-chip>
+                    </kendo-chip-list>
+                </div>
+            </div>
+            <div class="innerHtmlWrapper k-editor">
+                <div [innerHtml]="previewContent"></div>
+            </div>  
+           
+
+            <!-- Attachment Panel -->
+            <div class="panelbar-wrapper">
+                <kendo-panelbar>
+                    <kendo-panelbar-item *ngIf="attachments?.length > 0" title="{{attachments?.length}} attachment(s)">
+                        <ng-template kendoPanelBarContent>
+                            <div class="attachment-item-list" kendoTooltip
+                                *ngFor="let item of attachments;let index = index">
+                                <a class="attachment-item_name"
+                                    (click)="viewAttachment(item)">{{item.attachmentName}}</a>
+                                <span class="attachment-item_size">{{item.attachmentSize | fileSize}}</span>
+                            </div>
+                        </ng-template>
+                    </kendo-panelbar-item>
+                </kendo-panelbar>
+            </div>
+        </div>
     </section>
+    <span *ngIf="createdDate">Printed {{ createdDate | date : 'MM/dd/YYYY' }} by 
+        <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
+        [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="createdUser">
+        {{createdUser}}
+      </button>
+    </span>
     <kendo-dialog-actions>
         <div class="justify-content-between">
             <div class="justify-content-end">
                 <button aria-label="Close" kendoButton look="outline" (click)="onCloseLetterEmailSmsTextClicked()">
-                    CLOSE
+                    CANCEL
+                </button>
+                <button aria-label="Close" kendoButton look="outline" (click)="reSendNotification()">
+                    {{buttonText}}
                 </button>
             </div>
+
         </div>
     </kendo-dialog-actions>
 </kendo-dialog>
+
+<!-- User Profile Details Card -->
+<kendo-popover #onUserProfileDetailsHovered width="330">
+    <ng-template kendoPopoverBodyTemplate>
+      <common-user-profile-card [userId]="creatorId"></common-user-profile-card>
+    </ng-template>
+  </kendo-popover>
