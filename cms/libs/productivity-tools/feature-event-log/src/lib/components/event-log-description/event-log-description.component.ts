@@ -59,7 +59,6 @@ export class EventLogDescriptionComponent {
   ) {}
 
   ngOnInit() {
-    debugger;
     this.notificationEmailSubscriptionInit();
     this.notificationLetterSubscriptionInit();
     this.formatContent();
@@ -226,7 +225,6 @@ export class EventLogDescriptionComponent {
 
   notificationLetterSubscriptionInit() {
     this.notificationLetter$.subscribe((notificationLog: any) => {
-      debugger;
       this.setForNotification(notificationLog);
     });
   }
@@ -276,12 +274,10 @@ export class EventLogDescriptionComponent {
   }
 
   reSendNotification() {
-    debugger;
     if (this.buttonText === "RE-SEND") {
       this.eventLogFacade.showLoader()
       this.eventLogFacade.reSentEmailNotification(this.eventLogId).subscribe({
         next: (data: any) => {
-          debugger
           this.onCloseLetterEmailSmsTextClicked();
           this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, data.message);
           this.eventLogFacade.hideLoader();
@@ -297,7 +293,6 @@ export class EventLogDescriptionComponent {
       this.eventLogFacade.showLoader()
       this.eventLogFacade.reSentLetterNotification(this.eventLogId).subscribe({
         next: (data: any) => {
-          debugger
           this.onCloseLetterEmailSmsTextClicked();
           const fileUrl = window.URL.createObjectURL(data);
    

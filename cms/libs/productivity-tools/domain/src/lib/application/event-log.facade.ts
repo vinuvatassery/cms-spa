@@ -96,8 +96,7 @@ export class EventLogFacade {
     });
   }
 
-  loadNotificationEmail(eventLogId:any){
-    debugger
+  loadNotificationEmail(eventLogId:any){   
     this.showLoader();
     this.eventDataService.loadNotificationEmail(eventLogId).subscribe({
       next: (response : any) => {
@@ -112,7 +111,6 @@ export class EventLogFacade {
   }
 
   loadNotificationLetter(eventLogId:any){
-    debugger
     this.showLoader();
     this.eventDataService.loadNotificationLetter(eventLogId).subscribe({
       next: (response : any) => {
