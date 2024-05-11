@@ -110,7 +110,7 @@
             </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="120" [sortable]="false" [filterable]="false">
+    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="120" [sortable]="false" [filterable]="false" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <common-user-photo-icon 
             [userId]="dataItem.lastModifierId" 
@@ -139,18 +139,49 @@
     </kendo-grid-column>
     <kendo-grid-column field="" title="Options" [width]="70" class="text-center" [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="moreactions" title="More option" aria-label="more actions"
-          class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
-          [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-          <span class="material-icons" aria-label="More option"> more_vert </span>
-          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-            <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-              aria-hidden="false" (click)="dataItem.click">
-              <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
-              <label> {{ dataItem.text }} </label>
-            </button>
-
-          </ng-template>
+        <kendo-dropdownbutton 
+            [data]="moreactions" 
+            title="More option" 
+            aria-label="more actions"
+            class="TableActionPopup app-dropdown-action more_action_wid" 
+            buttonClass="k-icon-button"
+            [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+            <span class="material-icons" aria-label="More option"> more_vert </span>
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+              <ng-container
+                *ngIf="buttondataItem.text === 'Deactivate' && dataItem.activeFlag ==='Active'; else reactivate">
+                <button kendoButton look="flat" 
+                  [attr.aria-label]="buttondataItem.text"
+                  [class]="buttondataItem.buttonType" 
+                  aria-hidden="false" 
+                  (click)="buttondataItem.click(dataItem)">
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                  <label> {{ buttondataItem.text }} </label>
+                </button>
+              </ng-container>
+              <ng-template #reactivate>
+                <ng-container
+                  *ngIf="buttondataItem.text === 'Reactivate' && dataItem.activeFlag ==='Inactive'; else edit">
+                  <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)"
+                    >
+                    <span class="material-icons" aria-hidden="true"
+                      [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                    <label> {{ buttondataItem.text }} </label>
+                  </button>
+                </ng-container>
+              </ng-template>
+              <ng-template #edit>
+                <ng-container *ngIf="buttondataItem.text === 'Edit'">
+                  <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                    <span class="material-icons" aria-hidden="true"
+                      [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                    <label> {{ buttondataItem.text }} </label>
+                  </button>
+                </ng-container>
+              </ng-template>
+            </ng-template>
         </kendo-dropdownbutton>
       </ng-template>
     </kendo-grid-column>

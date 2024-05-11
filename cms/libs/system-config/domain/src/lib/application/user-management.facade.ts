@@ -1,7 +1,7 @@
 
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource, DocumentFacade, ApiType } from '@cms/shared/util-core';
 import { Subject, first } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -119,13 +119,13 @@ export class UserManagementFacade {
   userImage$ = this.userImageSubject.asObservable();
   usersById$ = this.userByIdSubject.asObservable();
   profilePhotos$ = this.profilePhotosSubject.asObservable(); 
-  userListProfilePhoto$ = this.userListProfilePhotoSubject.asObservable();
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
+    private readonly documentFacade: DocumentFacade,
     ) {}
 
 
@@ -472,12 +472,17 @@ export class UserManagementFacade {
     if(distinctUserIds){
       this.getProfilePhotosByUserIds(distinctUserIds)
       .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.userListProfilePhotoSubject.next(data);
+        next: (photoData: any[]) => {
+          if (photoData.length > 0) {
+            this.userListProfilePhotoSubject.next(photoData);
           }
         },
       });
     }
   }  
+
+  onExportAllUser(params: any){
+    const fileName = 'Care Assist System Users'
+    this.documentFacade.getExportFile(params,`users`, fileName,ApiType.SystemConfig);
+  }
 }

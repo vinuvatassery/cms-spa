@@ -10,6 +10,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserAssignedRoleComponentComponent  implements OnChanges{
+  isUserDeactivatePopup = false;
+  isUserReactivatePopup = false;
   @Input() userId!: string;
   @Input() pageSizes: any;
   sort: any = "priority";
@@ -24,31 +26,23 @@ export class UserAssignedRoleComponentComponent  implements OnChanges{
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public moreactions = [
     {
-      buttonType: "btn-h-primary",
-      text: "Edit",
-      icon: "edit",
-      click: (): void => {
-       // this.onUserDetailsClicked(true);
+      buttonType: 'btn-h-danger',
+      text: 'Deactivate',
+      icon: 'block',
+      type: 'Deactivate',
+      click: (data:any): void => {
+        this.onUserDeactivateClicked(data);
       },
-    },
+    },  
     {
-      buttonType: "btn-h-primary",
-      text: "Block",
-      icon: "block",
-      click: (): void => {
-       // this.onUserDeactivateClicked()
-      },
+      buttonType: 'btn-h-primary',
+      text: 'Reactivate',
+      icon: 'done',
+      type: 'Reactivate',
+      click: (data: any): void => {
+        this.onUserReactivateClicked(data);
+        }
     },
-    {
-      buttonType: "btn-h-danger",
-      text: "Delete",
-      icon: "delete",
-      click: (): void => {
-        // this.onOpenDeleteTodoClicked()
-      },
-    },
-
-
   ];
   /* Constructor */
   constructor(private readonly userManagementFacade: UserManagementFacade,
@@ -136,5 +130,22 @@ defaultGridState() {
     filter: { logic: 'and', filters: [] },
   };
 }  
+
+onUserDeactivateClosed() {
+  this.isUserDeactivatePopup = false;
+}
+onUserDeactivateClicked(data:any) {
+  this.isUserDeactivatePopup = true;
+}
+
+onUserReactivateClicked(data:any) {
+  this.isUserReactivatePopup = true;
+  this.isUserDeactivatePopup = true;
+}
+
+onUserReactivateClosed() {
+  this.isUserReactivatePopup = false;
+  this.isUserDeactivatePopup = false;
+}
 
 }

@@ -19,6 +19,7 @@ export class UserListComponent implements OnInit, OnChanges {
 
   isUserDetailsPopup = false;
   isUserDeactivatePopup = false;
+  isUserReactivatePopup = false;
   isEditUsersData!: boolean;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Input() pageSizes: any;
@@ -30,6 +31,7 @@ export class UserListComponent implements OnInit, OnChanges {
   @Output() loadUserListEvent = new EventEmitter<any>();
   @Output() usersFilterColumnEvent = new EventEmitter<any>();
   @Input() userListProfilePhoto$!: any;
+  @Output() exportGridEvent$ = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'User Name';
   sortDir = 'Ascending';
@@ -83,28 +85,29 @@ export class UserListComponent implements OnInit, OnChanges {
       buttonType: "btn-h-primary",
       text: "Edit",
       icon: "edit",
-      click: (): void => {
+      type: "Edit",
+      click: (data:any): void => {
         this.onUserDetailsClicked(true);
       },
     },
     {
-      buttonType: "btn-h-primary",
-      text: "Block",
-      icon: "block",
-      click: (): void => {
-        this.onUserDeactivateClicked()
+      buttonType: 'btn-h-danger',
+      text: 'Deactivate',
+      icon: 'block',
+      type: 'Deactivate',
+      click: (data:any): void => {
+        this.onUserDeactivateClicked(data);
       },
-    },
+    },  
     {
-      buttonType: "btn-h-danger",
-      text: "Delete",
-      icon: "delete",
-      click: (): void => {
-        // this.onOpenDeleteTodoClicked()
-      },
+      buttonType: 'btn-h-primary',
+      text: 'Reactivate',
+      icon: 'done',
+      type: 'Reactivate',
+      click: (data: any): void => {
+        this.onUserReactivateClicked(data);
+        }
     },
-
-
   ];
 
 
@@ -159,13 +162,12 @@ export class UserListComponent implements OnInit, OnChanges {
     this.sortColumn = 'User Name';
     this.sortType = 'asc';
     this.sortDir = this.sortType === 'asc' ?  'Ascending' : "";
-    this.filter = [];
+    this.filter = '';
     this.selectedSearchColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
-    this.sort=[];
-    //this.sortValue = 'userName';
-    this.sortColumn = this.columns[this.sortValue];
+    this.sortValue = 'userName';
+    this.sort = this.sortValue;
     this.searchValue = '';
     this.loadUserListGrid();
   }
@@ -212,7 +214,6 @@ export class UserListComponent implements OnInit, OnChanges {
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = this.columns[this.sortValue];
-    this.clearIndividualSelectionOnClear(stateData);
     this.filter = stateData?.filter?.filters;
     this.clearIndividualSelectionOnClear(stateData);
     this.loadUserListGrid();
@@ -254,8 +255,18 @@ export class UserListComponent implements OnInit, OnChanges {
   onUserDeactivateClosed() {
     this.isUserDeactivatePopup = false;
   }
-  onUserDeactivateClicked() {
+  onUserDeactivateClicked(data:any) {
     this.isUserDeactivatePopup = true;
+  }
+
+  onUserReactivateClicked(data:any) {
+    this.isUserReactivatePopup = true;
+    this.isUserDeactivatePopup = true;
+  }
+
+  onUserReactivateClosed() {
+    this.isUserReactivatePopup = false;
+    this.isUserDeactivatePopup = false;
   }
 
   searchColumnChangeHandler(data: any) {
@@ -267,13 +278,19 @@ export class UserListComponent implements OnInit, OnChanges {
 
   onClickedExport() {
     this.showExportLoader = true;
-    // this.exportGridDataEvent.emit();
-    // this.exportButtonShow$.subscribe((response: any) => {
-    //   if (response) {
-    //     this.showExportLoader = false;
-    //     this.cdr.detectChanges();
-    //   }
-    // });
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
+    };
+    this.exportGridEvent$.emit(params);
+    this.exportGridEvent$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
+    this.showExportLoader = false;
   }
   
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
@@ -383,4 +400,9 @@ export class UserListComponent implements OnInit, OnChanges {
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
+
+  onExportClaims() {
+   
+  }
+
 }
