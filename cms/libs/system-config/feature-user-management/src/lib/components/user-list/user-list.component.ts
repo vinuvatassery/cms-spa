@@ -50,7 +50,9 @@ export class UserListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   showExportLoader = false;
-  statusList:any = [{ code: "Active", name: 'Active'}, { code: "Inactive", name: 'Inactive' }];
+  active="Active";
+  inActive="Inactive";
+  statusList:any = [{ code: this.active, name: this.active}, { code: this.inActive, name: this.inActive }];
   columns: any = {
     ALL: 'All Columns',
     userName: "User Name",
@@ -401,8 +403,8 @@ export class UserListComponent implements OnInit, OnChanges {
     this.dataStateChange(stateData);
   }
 
-  onExportClaims() {
-   
-  }
+  public rowClass = (args:any) => ({
+    "table-row-disabled": (args.dataItem.activeFlag != this.active),
+  });
 
 }

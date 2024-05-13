@@ -482,7 +482,7 @@ export class UserManagementFacade {
   }  
 
   onExportAllUser(params: any){
-    const fileName = 'Care Assist System Users'
+    const fileName = 'Users List'
     this.documentFacade.getExportFile(params,`users`, fileName,ApiType.SystemConfig);
   }
 }

@@ -64,7 +64,8 @@
     [sort]="state.sort"
     [pageSize]="state.take"
     (dataStateChange)="dataStateChange($event)" 
-    (filterChange)="filterChange($event)">
+    (filterChange)="filterChange($event)"
+    [rowClass]="rowClass">
     <kendo-grid-column field="userName" title="User Name" [width]="150">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton class="card-link-button" aria-label="user name" [popover]="onUserProfileDetailsHovered"
@@ -186,7 +187,7 @@
       </ng-template>
     </kendo-grid-column>
     <ng-template kendoGridDetailTemplate let-dataItem>
-      <system-config-user-assigned-role [userId]="dataItem?.loginUserId" [pageSizes]="pageSizes">
+      <system-config-user-assigned-role [userId]="dataItem?.loginUserId" [pageSizes]="pageSizes" [userStatus]="dataItem?.activeFlag" [assignedRoleCount]="dataItem.assignedRoleCount">
       </system-config-user-assigned-role>
     </ng-template>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"

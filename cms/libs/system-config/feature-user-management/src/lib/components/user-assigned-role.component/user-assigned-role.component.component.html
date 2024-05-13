@@ -6,7 +6,8 @@
     [resizable]="true" 
     [sortable]="false"
     (dataStateChange)="dataStateChange($event)"
-    [loading]="(loader$ | async) === true">
+    [loading]="(loader$ | async) === true"
+    [rowClass]="rowClass">
     <kendo-grid-column field="roleDesc" title="Role Assigned" [width]="150">
         <ng-template kendoGridCellTemplate let-dataItem>
             <span class="d-flex align-items-center">
@@ -37,14 +38,14 @@
         </ng-template>
       </kendo-grid-column>
     <kendo-grid-column field="" title="Options" [width]="70" class="text-center" [columnMenu]="false">
-        <ng-template kendoGridCellTemplate let-dataItem>
+        <ng-template *ngIf="assignedRoleCount > 1 && userStatus === active" kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="moreactions" title="More option" aria-label="more actions"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                 [popupSettings]="{ popupClass: popupClassAction, animate: true }">
                 <span class="material-icons" aria-label="More option"> more_vert </span>
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                     <ng-container
-                      *ngIf="buttondataItem.text === 'Deactivate' && dataItem.activeFlag ==='Active'; else reactivate">
+                      *ngIf="buttondataItem.text === 'Deactivate' && dataItem.activeFlag ==='Active' && assignedRoleCount > 1; else reactivate">
                       <button kendoButton look="flat" 
                         [attr.aria-label]="buttondataItem.text"
                         [class]="buttondataItem.buttonType" 
@@ -56,7 +57,7 @@
                     </ng-container>
                     <ng-template #reactivate>
                       <ng-container
-                        *ngIf="buttondataItem.text === 'Reactivate' && dataItem.activeFlag ==='Inactive'">
+                        *ngIf="buttondataItem.text === 'Reactivate' && dataItem.activeFlag ==='Inactive' && assignedRoleCount > 1">
                         <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                           [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)"
                           >
