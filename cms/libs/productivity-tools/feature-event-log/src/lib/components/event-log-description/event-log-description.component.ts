@@ -60,7 +60,6 @@ export class EventLogDescriptionComponent implements OnDestroy{
   smsTo:any;
   notificationEmailSubscription!:Subscription;
   notificationLetterSubscription!:Subscription;
-  eventLogSubscription!:Subscription;
   smsId:any;
 
   constructor(private sanitizer : DomSanitizer, private readonly eventLogFacade: EventLogFacade,
@@ -78,7 +77,6 @@ export class EventLogDescriptionComponent implements OnDestroy{
   }
 
   ngOnDestroy(): void {
-    this.eventLogSubscription.unsubscribe();
     this.notificationLetterSubscription.unsubscribe();
     this.notificationEmailSubscription.unsubscribe();
   }

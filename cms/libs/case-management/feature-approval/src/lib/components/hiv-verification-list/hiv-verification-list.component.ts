@@ -175,6 +175,7 @@ export class HivVerificationListComponent implements OnInit {
   }
 
   saveHivVerification() {
+    this.resetValue();
     let hivVerification = this.hivVerificationApproval.filter((x: any) => x.toSave);
     this.toSave.clientHivVerificationId = hivVerification[0].clientHivVerificationId;
     this.toSave.reasonForRejection = hivVerification[0].reasonForRejection;
@@ -187,6 +188,18 @@ export class HivVerificationListComponent implements OnInit {
     this.toSave.clientDocumentId = hivVerification[0].clientDocumentId;
     this.saveHivVerificationApproval.emit({toSave:this.toSave, hivVerification:hivVerification});
     this.onCloseSubmitConfirmClicked();
+  }
+
+  resetValue(){
+    this.toSave.clientHivVerificationId  = undefined;
+    this.toSave.status = undefined;
+    this.toSave.reasonForRejection = undefined;
+    this.toSave.assignedCwName = undefined;
+    this.toSave.templateTypeCode = undefined;
+    this.toSave.resentEmail = undefined;
+    this.toSave.clientId = undefined;
+    this.toSave.eligibilityId = undefined;
+    this.toSave.clientDocumentId = undefined;
   }
 
   getTemplateTypeCode(status: any): string {
