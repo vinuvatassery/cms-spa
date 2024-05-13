@@ -137,6 +137,9 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   acceptStatus: string = 'ACCEPT';
   RejectionReason:any;
   loadWorkFlowSubscription!:Subscription;
+  saveSubscription!:Subscription;
+  loadEmailSubscription!:Subscription;
+  esignSubscription!:Subscription;
 
   /** Constructor **/
   constructor(
@@ -189,6 +192,9 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.loadWorkFlowSubscription?.unsubscribe();
+    this.saveSubscription?.unsubscribe();
+    this.loadEmailSubscription?.unsubscribe();
+    this.esignSubscription?.unsubscribe();
   }
 
   loadWorkFlowSubscriptionInit() {
@@ -671,7 +677,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   //Get email subject details and notification template.
   private loadHivVerificationEmail() {
       this.hivVerificationApprovalFacade.showLoader();
-      this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
+      this.loadEmailSubscription =this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
         .subscribe({
           next: (data: any) => {
             if (data) {
@@ -724,7 +730,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
     let esignRequestFormdata = this.esignFacade.prepareHivVerificationdobeEsignFormData(clientHivVerification, this.statusUpdatedEligibilityId, this.emailSubject, this.selectedAttachedFile, this.notificationTemplateId);
     esignRequestFormdata.append('rejectionReason', this.RejectionReason);
     const emailData = {};
-    this.esignFacade.initiateAdobeesignRequest(esignRequestFormdata, emailData)
+    this.esignSubscription = this.esignFacade.initiateAdobeesignRequest(esignRequestFormdata, emailData)
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -748,7 +754,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
     formData.append('verificationMethodCode', this.clientHivVerification.verificationMethodCode ?? '');
     formData.append('verificationTypeCode', this.clientHivVerification.verificationTypeCode ?? '');
     formData.append('verificationStatusCode', VerificationStatusCode.Pending ?? '');
-    this.verificationFacade.save(formData).subscribe({
+    this.saveSubscription = this.verificationFacade.save(formData).subscribe({
       next: (data) => {
         if (data) {
           this.hivVerificationApprovalFacade.hideLoader();
