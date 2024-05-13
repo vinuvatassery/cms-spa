@@ -132,7 +132,7 @@ export class VendorHeaderToolsComponent {
           this.templateHeader = 'Send New SMS Text';
           this.saveForLaterHeadterText = "Sms Draft Saved";
           this.saveForLaterModelText="To pick up where you left off, click \"New Sms\" from the vendor's profile";
-          this.confirmPopupHeader = 'Send Sms?';
+          this.confirmPopupHeader = 'Send SMS text Message(s)?';
           this.confirmationModelText="This action cannot be undone.";
           this.notificationDraftCheck(this.vendorId, this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
@@ -271,7 +271,7 @@ export class VendorHeaderToolsComponent {
     }
   }
 
- 
+
     onSendNewLetterClicked(template: TemplateRef<unknown>): void {
       this.isSendNewLetterDialog = this.dialogService.open({
         content: template,
@@ -367,5 +367,5 @@ export class VendorHeaderToolsComponent {
       });
       this.loaderService.hide();
     }
-    
+
 }

@@ -544,7 +544,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     const emailData = this.getEmailPayload(selectedTemplate, templateTypeCode, eventGroupCode);
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     emailFormData.append('description', this.emailSubject ?? selectedTemplate.description);
-    emailFormData.append('mailCode', this.selectedMailCode?.mailCode ?? '');  
+    emailFormData.append('mailCode', this.selectedMailCode?.mailCode ?? '');
     this.communicationFacade.initiateSendEmailRequest(emailFormData)
       .subscribe({
         next: (data: any) => {
@@ -877,7 +877,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.isSendEmailSuccess.emit(true);
             this.closeSendEmailEvent.emit(CommunicationEvents.Print);
             this.onCloseSendEmailClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Email Sent! Event Logged.')
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Email Sent! An event has been logged.')
           }
           this.loaderService.hide();
         },
