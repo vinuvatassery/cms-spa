@@ -193,7 +193,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
 
   loadWorkFlowSubscriptionInit() {
     this.loadWorkFlowSubscription = this.loadWorkflow$.subscribe((response: any) => { 
-      if (response && this.clientHivVerification.resentEmail) {
+      if (response === 'REJECT' && this.clientHivVerification.resentEmail) {
                 this.loadHivVerificationEmail();
       }
       else
