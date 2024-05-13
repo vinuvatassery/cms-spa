@@ -1,12 +1,14 @@
+import { deviceTypeCode } from './../../../../../case-management/domain/src/lib/enums/device-type-code.enum';
 import { Component, ViewEncapsulation, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, filter, first } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { PronounTypeCode } from '../enums/pronoun-type-code.enum';
 import { NullLogger } from '@microsoft/signalr';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { StatusFlag } from '../enums/status-flag.enum';
 
 
 
@@ -20,7 +22,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   @Input() userInfoData$: any;
   @Output() loadUserInfoDataEvent = new EventEmitter<any>();
   @Output() submitUserInfoDataEvent = new EventEmitter<any>();
-
+  inputMask ='(999) 000-0000';
   userInfo : any;
   private userInfoSubsriction !: Subscription;
   isScheduleOutOfOfficeSection = false;
@@ -30,9 +32,12 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   pronounslov$ = this.lovFacade.pronounslov$;
   ddlStates$ = this.userManagementFacade.ddlStates$;
   pronounLovSubscription = new Subscription();
+  userDeviceTypeSubscription = new Subscription();
   pronounList : any;
+  userDeviceList : any;
   dateFormat = this.configProvider.appSettings.dateFormat;
   public time: Date = new Date(2000, 2, 10, 13, 30, 0);
+  endDateValidator = false;
 
    /** Constructor**/
    constructor(private readonly cdr :ChangeDetectorRef,
@@ -54,6 +59,11 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       if (response !== undefined && response !== null) {
         const pronounCodes = Object.values(PronounTypeCode)
         this.pronounList = response.filter((item: any) => pronounCodes.includes(item.lovCode));
+      }
+    });
+    this.userDeviceTypeSubscription = this.userDeviceTypeLov$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.userDeviceList = response;
       }
     });
   }
@@ -87,7 +97,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       startTime:  [''],
       endTime:  [''],
       outOfOfficeMsg:  [''],
-      notificationSummaryFlag: [null],
+      notificationSummaryFlag : [null]
     });
   }
 
@@ -131,18 +141,24 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   addPhoneGroup() {
+    if(this.addPhoneForm.length > 1 )
+    { 
+      return;
+    }
     let phoneForm = this.formBuilder.group({
-      SmsTextConsentFlag: new FormControl(
+      smsTextConsentFlag: new FormControl(
         null ),
 
-      PhoneNbr: new FormControl(
-        '', [Validators.required]
+      phoneNbr: new FormControl(
+        ''
       ),
 
       phoneType: new FormControl(
-        '', [Validators.required]
-      )
+        ''
+      ),
 
+      loginUserPhoneId: new FormControl(
+        ''),
     });
     this.addPhoneForm.push(phoneForm);
   }
@@ -163,24 +179,54 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userForm.controls['state'].setValue(userInfo.state);
     this.userForm.controls['zip'].setValue(userInfo.zip);
     this.userForm.controls['county'].setValue(userInfo.county);
-    this.userForm.controls['loginUserScheduleId'].setValue(userInfo?.userSchedules[0]?.loginUserScheduleId);
-    this.userForm.controls['startDate'].setValue(userInfo?.userSchedules[0]?.startDate ? new Date(userInfo?.userSchedules[0]?.startDate) : '');
-    this.userForm.controls['endDate'].setValue(userInfo?.userSchedules[0]?.endDate ? new Date(userInfo?.userSchedules[0]?.endDate) : '');
-    this.userForm.controls['outOfOfficeMsg'].setValue(userInfo?.userSchedules[0]?.message);
-    this.userForm.controls['notificationSummaryFlag'].setValue(userInfo.notificationSummaryEmailCheck);
+    this.userForm.controls['notificationSummaryFlag'].setValue(userInfo?.notificationSummaryEmailCheck);
     this.userForm.updateValueAndValidity();
-    const startTimeValue = userInfo?.userSchedules[0]?.startTime?.split(':')
-    const endTimeValue = userInfo?.userSchedules[0]?.endTime?.split(':')
-    this.userForm.controls['startTime'].setValue(startTimeValue? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), startTimeValue[0], startTimeValue[1]) : null);
-    this.userForm.controls['endTime'].setValue(endTimeValue? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), endTimeValue[0], endTimeValue[1]) : null);
+    
     if(!userInfo.state && userInfo.userTypeCode === 'EXTERNAL')
     {
       this.userForm.controls["state"].setValue('OR');
     }
-    if(userInfo?.userSchedules.length > 0)
+    if(userInfo?.userSchedules?.length > 0)
+    {
+      this.userForm.controls['loginUserScheduleId'].setValue(userInfo?.userSchedules[0]?.loginUserScheduleId);
+      this.userForm.controls['startDate'].setValue(userInfo?.userSchedules[0]?.startDate ? new Date(userInfo?.userSchedules[0]?.startDate) : '');
+      this.userForm.controls['endDate'].setValue(userInfo?.userSchedules[0]?.endDate ? new Date(userInfo?.userSchedules[0]?.endDate) : '');
+      this.userForm.controls['outOfOfficeMsg'].setValue(userInfo?.userSchedules[0]?.message);
+      const startTimeValue = userInfo?.userSchedules[0]?.startTime?.split(':')
+      const endTimeValue = userInfo?.userSchedules[0]?.endTime?.split(':')
+      this.userForm.controls['startTime'].setValue(startTimeValue? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), startTimeValue[0], startTimeValue[1]) : null);
+      this.userForm.controls['endTime'].setValue(endTimeValue? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), endTimeValue[0], endTimeValue[1]) : null);
+      this.isScheduleOutOfOfficeSection = true;
+    }
+    let filteredPhones = userInfo?.userPhones.filter((item : any) => item.deviceTypeCode !== 'FAX' );
+    let faxNumber = userInfo?.userPhones.filter((item : any) => item.deviceTypeCode === 'FAX' );
+    if(faxNumber?.length > 0)
       {
-        this.isScheduleOutOfOfficeSection = true;
+        this.userForm.controls['faxNbr'].setValue(faxNumber[0].phoneNbr);
       }
+    if(filteredPhones?.length > 0)
+    {
+      this.setPhoneFormValues(filteredPhones);
+    }
+    else
+    {
+      this.addPhoneGroup();
+    }
+  }
+
+  setPhoneFormValues(userPhones : any)
+  {
+    for (let i = 0; i < userPhones.length; i++) {
+      let phone = userPhones[i];
+      this.addPhoneGroup();
+      let phoneForm = this.addPhoneForm.at(i) as FormGroup;
+      phoneForm.controls['smsTextConsentFlag'].setValue(phone.smsTextConsentFlag === StatusFlag.Yes?true:false);
+      phoneForm.controls['phoneNbr'].setValue(phone.phoneNbr);
+      phoneForm.controls['phoneType'].setValue(phone.deviceTypeCode);
+      phoneForm.controls['loginUserPhoneId'].setValue(phone.loginUserPhoneId);
+
+    }
+    this.cdr.detectChanges();
   }
 
   disableFields()
@@ -197,7 +243,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   onSave()
   {
     this.setFormValidation();
-    if(!this.userForm.invalid)
+    if(!this.userForm.invalid && !this.endDateValidator)
     {
       let payload = {
         loginUserId : this.userForm.controls['loginUserId'].value ? this.userForm.controls['loginUserId'].value : null,
@@ -253,6 +299,25 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       this.userForm.controls['outOfOfficeMsg'].updateValueAndValidity();
 
     }
+  }
+
+  validateDate() {
+    this.endDateValidator = false;
+    const startDate = this.userForm.controls['startDate'].value;
+    const endDate = this.userForm.controls['endDate'].value;
+    if (startDate > endDate) {
+      this.endDateValidator = true;
+    }
+  }
+
+  removeForm(i : any)
+  {
+    if(this.addPhoneForm.length > 1 ){
+      let form = this.addPhoneForm.value[i];
+      this.addPhoneForm.removeAt(i);
+      this.addPhoneForm.removeAt(i);
+      }
+
   }
 
 }

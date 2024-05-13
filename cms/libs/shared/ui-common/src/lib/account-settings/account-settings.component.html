@@ -119,20 +119,22 @@
                   </kendo-floatinglabel>
                 </div>
               </div>
+              <div>
+              <ng-container formArrayName="phones" >
+                <ng-container *ngFor="let phone of addPhoneForm.controls; let i=index">
+                  <ng-container [formGroupName]="i">
               <div class="flex-row">
-                <div class="flex-col  d-flex flex-col-5">
+                <div class="flex-col  d-flex flex-col-3">
                   <kendo-floatinglabel class="k-form" text="Phone Type">
-                    <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" [data]="userDeviceTypeLov$ | async"
+                    <kendo-dropdownlist formControlName="phoneType"  [fillMode]="formUiStyle.dropDownFillMode" [data]="userDeviceList"
                     textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"> </kendo-dropdownlist>
                   </kendo-floatinglabel>
-                  <button kendoButton [primary]="true" look="flat" class="mt-1"  icon="add" class="mt-3 ml-1"  area-label="Phone">
-                    Phone
-                  </button>
+
                 </div>
 
-                <div class="flex-col flex-col-3">
+                <div class="flex-col flex-col-2">
                   <span class="app-checkboxwidtext-wrapper mt-4">
-                    <input type="checkbox" kendoCheckBox aria-labelledby="smstextok" id="smstextok" />
+                    <input formControlName="smsTextConsentFlag" type="checkbox" kendoCheckBox aria-labelledby="smstextok" id="smstextok" />
                     <label class="k-checkbox-label" for="smstextok">SMS Text OK</label>
                   </span>
                 </div>
@@ -141,15 +143,26 @@
               <div class="flex-row">
                 <div class="flex-col flex-col-5">
                   <kendo-floatinglabel class="k-form" text="Phone Number">
-                    <kendo-textbox placeholder="Phone Number" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                    <kendo-maskedtextbox [maxlength]="10"  placeholder="Phone Number"  [mask]="inputMask"   aria-label="Phone Number" [fillMode]="formUiStyle.inputFillMode"
+                            formControlName="phoneNbr"  [maskOnFocus]="true">
+                    </kendo-maskedtextbox>
                   </kendo-floatinglabel>
                 </div>
+                <div class="flex-col flex-col-2 d-flex">
+                  <button  (click)="addPhoneGroup()" kendoButton [primary]="true"   icon="add" class="mt-3"  area-label="Phone"></button>
+                  <button (click)="removeForm(i)" kendoButton class="k-error-button mt-3 ml-1"  icon="delete" aria-label="Remove"></button>
+                </div>
               </div>
+              </ng-container>
+              </ng-container>
+            </ng-container>
+            </div>
               <div class="flex-row">
                 <div class="flex-col flex-col-5">
                   <kendo-floatinglabel class="k-form" text="Fax Number(Optional)">
-                    <kendo-textbox placeholder="Fax Number(Optional)" [fillMode]="formUiStyle.inputFillMode">
-                    </kendo-textbox>
+                    <kendo-maskedtextbox [maxlength]="10"  placeholder="Fax Number(Optional)"  [mask]="inputMask"   aria-label="Fax Number(Optional)" [fillMode]="formUiStyle.inputFillMode"
+                            formControlName="faxNbr"  [maskOnFocus]="true">
+                    </kendo-maskedtextbox>
                   </kendo-floatinglabel>
                 </div>
               </div>
@@ -163,21 +176,21 @@
               <div class="flex-row">
                 <div class="flex-col flex-col-5">
                   <kendo-floatinglabel class="k-form" text="Address Line 1 (Optional)">
-                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="address1"> </kendo-textbox>
+                    <kendo-textbox [maxlength]="100" [fillMode]="formUiStyle.inputFillMode" formControlName="address1"> </kendo-textbox>
                   </kendo-floatinglabel>
                 </div>
               </div>
               <div class="flex-row">
                 <div class="flex-col flex-col-5">
                   <kendo-floatinglabel class="k-form" text="Address Line 2 (Optional)">
-                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="address2"> </kendo-textbox>
+                    <kendo-textbox [maxlength]="100" [fillMode]="formUiStyle.inputFillMode" formControlName="address2"> </kendo-textbox>
                   </kendo-floatinglabel>
                 </div>
               </div>
               <div class="flex-row">
                 <div class="flex-col flex-col-5">
                   <kendo-floatinglabel class="k-form" text="City">
-                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="city"> </kendo-textbox>
+                    <kendo-textbox [maxlength]="20" [fillMode]="formUiStyle.inputFillMode" formControlName="city"> </kendo-textbox>
                   </kendo-floatinglabel>
                 </div>
               </div>
@@ -192,7 +205,7 @@
                     </div>
                     <div class="flex-col flex-col-6">
                       <kendo-floatinglabel class="k-form" text="Zip">
-                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="zip"> </kendo-textbox>
+                        <kendo-textbox [maxlength]="10" [fillMode]="formUiStyle.inputFillMode" formControlName="zip"> </kendo-textbox>
                       </kendo-floatinglabel>
                     </div>
                   </div>
@@ -233,7 +246,8 @@
                   <kendo-floatinglabel text="Start Date">
 
                     <kendo-datepicker [incompleteDateValidation]="true" [fillMode]="formUiStyle.dateInputFillMode"
-                      format="MM-dd-yyyy" formControlName="startDate" formatPlaceholder="formatPattern">
+                      format="MM-dd-yyyy" formControlName="startDate" formatPlaceholder="formatPattern" (keyup)="validateDate()"
+                      (valueChange)="validateDate()">
                     </kendo-datepicker>
                   </kendo-floatinglabel>
                   <kendo-formerror *ngIf="!userForm.controls['startDate'].valid">Start Date is required</kendo-formerror>
@@ -241,24 +255,26 @@
                 <div class="flex-col flex-col-2">
                   <kendo-floatinglabel class="k-form" text="Start Time">
                     <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
-                      [value]="time" formControlName="startTime"></kendo-timepicker>
+                      formControlName="startTime"></kendo-timepicker>
                   </kendo-floatinglabel>
                   <kendo-formerror *ngIf="!userForm.controls['startTime'].valid">Start Time is required</kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-2">
                   <kendo-floatinglabel class="k-form" text="End Time">
                     <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
-                      [value]="time" formControlName="endTime"></kendo-timepicker>
+                       formControlName="endTime"></kendo-timepicker>
                   </kendo-floatinglabel>
                   <kendo-formerror *ngIf="!userForm.controls['endTime'].valid">End Time is required</kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-4">
                   <kendo-floatinglabel class="k-form" text="End Date">
                     <kendo-datepicker [incompleteDateValidation]="true" [fillMode]="formUiStyle.dateInputFillMode"
-                      format="MM-dd-yyyy" formControlName="endDate" formatPlaceholder="formatPattern">
+                      format="MM-dd-yyyy" formControlName="endDate" formatPlaceholder="formatPattern" [min]="userForm.controls['startDate'].value"
+                      (keyup)="validateDate()" (valueChange)="validateDate()">
                     </kendo-datepicker>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf="!userForm.controls['endDate'].valid">End Date is required</kendo-formerror>
+                  <kendo-formerror *ngIf="!userForm.controls['endDate'].valid && !endDateValidator">End Date is required</kendo-formerror>
+                  <kendo-formerror *ngIf="endDateValidator">end Date should be greater than start Date.</kendo-formerror>
                 </div>
                 <div class="flex-col">
                   <kendo-floatinglabel text="Out of Office Message">

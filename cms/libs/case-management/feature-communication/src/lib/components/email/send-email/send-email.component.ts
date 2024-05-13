@@ -130,6 +130,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   subjectMax = 200;
   vendorMailCodesubscription!: Subscription;
   userDataSubscription!: Subscription;
+  // caseManagerEmail: any = null;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -325,7 +326,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
               || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApprovalNoticeEmail
               || this.communicationEmailTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeEmail
-              || this.communicationEmailTypeCode === CommunicationEventTypeCode.RestrictedNoticeEmail) {
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.RestrictedNoticeEmail
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail
+              || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
               this.templateDrpDisable = true;
               this.cancelDisplay = false;
             }
@@ -622,10 +625,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         eventGroupCode = EventGroupCode.ClientProfile;
         break;
         case CommunicationEventTypeCode.ApplicationAuthorizationEmail:
-          templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
+          templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmailSent;
           eventGroupCode = EventGroupCode.Application;
           break;
-        case CommunicationEventTypeCode.CerAuthorizationEmail:
+        case CommunicationEventTypeCode.CerAuthorizationEmailSent:
           templateTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
           eventGroupCode = EventGroupCode.CER;
           break;
@@ -868,7 +871,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private initiateAdobeEsignProcess(emailData: any) {
     this.loaderService.show();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater);
+    let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater, templateTypeCode, eventGroupCode);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
       .subscribe({
@@ -877,7 +881,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.isSendEmailSuccess.emit(true);
             this.closeSendEmailEvent.emit(CommunicationEvents.Print);
             this.onCloseSendEmailClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Email Sent! Event Logged.')
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Email Sent! An event has been logged.')
           }
           this.loaderService.hide();
         },
@@ -925,7 +929,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
     this.isSaveForLater = true;
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater);
+    let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater, templateTypeCode, eventGroupCode);
     let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(esignRequestFormdata, draftTemplate, this.cerEmailAttachedFiles);
     if (draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null) {
       this.esignFacade.saveDraftEsignRequest(draftEsignRequest)

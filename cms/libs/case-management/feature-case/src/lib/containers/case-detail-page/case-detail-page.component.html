@@ -150,7 +150,7 @@
 
     <!-- Send New Email Modal -->
     <ng-template #sendNewEmailModalDialog>
-<case-management-send-email [notificationGroup]="ScreenName" [paperlessFlag]="paperlessFlag"
+<case-management-send-email [notificationGroup]="ScreenName" [paperlessFlag]="paperlessFlag" [caseManagerEmail]="caseManagerEmail"
 (closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
 </ng-template>
 <ng-template #sendNewLetterModalDialog>
