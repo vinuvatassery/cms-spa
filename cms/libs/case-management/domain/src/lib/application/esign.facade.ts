@@ -94,8 +94,10 @@ prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAtt
       return formData;
 }
 
-prepareDraftAdobeEsignFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, selectedBccEmail: any, isSaveForLater: boolean) {
+prepareDraftAdobeEsignFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, selectedBccEmail: any, isSaveForLater: boolean, templateTypeCode: string, eventGroupCode: string) {
   const formData = new FormData();
+    formData.append('templateTypeCode', templateTypeCode ?? '');
+    formData.append('eventGroupCode', eventGroupCode ?? '');  
     formData.append('to', selectedToEmail ?? '');
     formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
     formData.append('clientId', clientId ?? '');
