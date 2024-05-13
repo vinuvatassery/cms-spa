@@ -143,9 +143,11 @@
 
 
 <kendo-dialog *ngIf="isCptCodeDetailPopup" (close)="onCloseCptCodeDetailClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar> Add New Medical Provider </kendo-dialog-titlebar>
-      <system-config-cpt-code-form-details></system-config-cpt-code-form-details>
+      class="app-c-modal app-c-modal-md app-c-modal-np">
+      <kendo-dialog-titlebar> Add New CPT Code </kendo-dialog-titlebar>
+      <system-config-cpt-code-form-details [isEditCptCode]="isEditCptCode"
+      (addCptCodeEvent)="addCptCode($event)"
+      (closeCptCode)="onCloseCptCodeDetailClicked()"></system-config-cpt-code-form-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isCptCodeDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">

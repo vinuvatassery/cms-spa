@@ -10,7 +10,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { Subject } from 'rxjs';
+import { Subject, first } from 'rxjs';
 
  
 
@@ -33,8 +33,10 @@ export class CptCodeListComponent implements OnInit, OnChanges{
   @Input() sort: any;
   @Input() cptCodeDataLists$: any;
   @Input() cptCodeFilterColumn$: any;
+  @Input() addCptCode$: any;
   @Output() loadCptCodeListsEvent = new EventEmitter<any>();
   @Output() cptCodeFilterColumnEvent = new EventEmitter<any>();
+  @Output() addCptCodeEvent = new EventEmitter<string>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -42,6 +44,7 @@ export class CptCodeListComponent implements OnInit, OnChanges{
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
+  isEditCptCode = false;
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
@@ -217,4 +220,18 @@ export class CptCodeListComponent implements OnInit, OnChanges{
   onCptCodeDeactivateClicked() {
     this.isCptCodeDeactivatePopupShow = true;
   }
+
+  addCptCode(data: any): void {
+    this.addCptCodeEvent.emit(data);
+    // this.addCptCode$.pipe(first((response: any) => response != null))
+    //   .subscribe((response: any) => {
+    //     if (response ?? false) {
+    //       this.loadCptCodeList()
+    //     }
+
+    //   })
+    this.onCloseCptCodeDetailClicked();
+  }
+
+
 }

@@ -1,7 +1,5 @@
- 
- <system-config-cpt-code-list 
- [cptCodeDataLists$]="cptCodeService$" 
-[pageSizes]="pageSizes" [sortValue]="sortValueCptCode"
-[sortType]="sortType" [sort]="sortCptCodeGrid" 
-(loadCptCodeListsEvent)="loadCptCodeLists($event)"  ></system-config-cpt-code-list>
- 
+<system-config-cpt-code-list [cptCodeDataLists$]="cptCodeService$" [pageSizes]="pageSizes"
+    [sortValue]="sortValueCptCode" [sortType]="sortType" [sort]="sortCptCodeGrid"
+    (loadCptCodeListsEvent)="loadCptCodeLists($event)" (addCptCodeEvent)="handleAddCptCode($event)"
+    [addCptCode$]="addCptCode$">
+</system-config-cpt-code-list>
