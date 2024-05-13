@@ -102,12 +102,6 @@
                 </kendo-panelbar>
             </div>
         </div>
-        <span *ngIf="createdDate">Printed {{ createdDate | date : 'MM/dd/YYYY' }} by 
-            <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="createdUser">
-            {{createdUser}}
-          </button>
-        </span>
     </section>
 
 
@@ -132,7 +126,7 @@
 
         </div>
         <div >
-            <h5>
+            <h5 class="mb-1">
                 MESSAGE
             </h5>                  
            {{previewContent}}
