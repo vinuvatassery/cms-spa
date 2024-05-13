@@ -123,9 +123,8 @@
             <kendo-chip-list selection="multiple" >
                 <kendo-chip
                     *ngFor="let to of smsTo"
-                    [label]="to"
-                >
-                </kendo-chip>
+                    [label]="to | phone"
+                >                </kendo-chip>
             </kendo-chip-list>
 
         </div>
@@ -138,7 +137,9 @@
         </div>
 
     </section>
+   
 
+    
     <!-- common -->
     <span *ngIf="createdDate">Originally Printed {{ createdDate | date : 'MM/dd/YYYY' }} by 
         <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
