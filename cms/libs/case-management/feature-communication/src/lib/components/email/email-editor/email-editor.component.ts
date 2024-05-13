@@ -13,7 +13,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, DocumentFacade, ScreenType} from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, ScreenType} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 

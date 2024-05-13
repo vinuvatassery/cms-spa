@@ -4,10 +4,9 @@ import {
   ChangeDetectionStrategy, 
   Output,
   TemplateRef,
-  OnInit,
   ViewChild,
 } from '@angular/core';
-import { CaseFacade, FinancialVendorFacade, FinancialVendorRefundFacade, SearchFacade, VendorFacade } from '@cms/case-management/domain';
+import { CaseFacade, FinancialVendorFacade, FinancialVendorRefundFacade} from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -21,7 +20,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./todo-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoPageComponent implements OnInit {
+export class TodoPageComponent {
   /** Public properties **/
   private todoDetailsDialog: any;
   @Output() isToDODetailsActionOpen!: boolean;
@@ -55,11 +54,6 @@ export class TodoPageComponent implements OnInit {
     private caseFacade: CaseFacade,
     private router: Router,
     private loaderService: LoaderService) {}
- 
-    ngOnInit(): void {
-     
-  }
-
   searchClientName(event:any){
     this.FinancialRefundFacade.loadClientBySearchText(event);
   }

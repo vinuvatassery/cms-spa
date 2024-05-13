@@ -12,6 +12,12 @@
 
 
         <kendo-grid-column field="vendorName" title="Service Provider Name" [width]="180" [sticky]="true" [filterable]="false">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button"
+              (click)="onVendorClicked(dataItem.vendorId)" *ngIf="dataItem.vendorName">
+              {{ dataItem.vendorName }}
+            </button>
+          </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="invoiceId" title="Invoice ID" [width]="150" [filterable]="false">
         </kendo-grid-column>

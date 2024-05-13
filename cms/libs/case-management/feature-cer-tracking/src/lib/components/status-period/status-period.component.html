@@ -72,7 +72,7 @@
                 </kendo-grid-column>
                 <kendo-grid-column field="daysInGroup" title="Days in Group" [width]="140" >
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                    <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    <kendo-grid-numeric-filter-menu  format="0" [column]="column" [filter]="filter" [filterService]="filterService"
                       [extra]="false" operator="eq">
                       <kendo-filter-eq-operator></kendo-filter-eq-operator>
                     </kendo-grid-numeric-filter-menu>
@@ -80,7 +80,7 @@
                 </kendo-grid-column>
                 <kendo-grid-column field="familySize" title="Family Size" [width]="100">
                     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                        <kendo-grid-numeric-filter-menu format="0" [column]="column" [filter]="filter" [filterService]="filterService"
                           [extra]="false" operator="eq">
                           <kendo-filter-eq-operator></kendo-filter-eq-operator>
                         </kendo-grid-numeric-filter-menu>

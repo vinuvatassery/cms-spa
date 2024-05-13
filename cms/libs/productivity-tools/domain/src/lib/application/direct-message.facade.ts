@@ -11,7 +11,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { DirectMessage } from '../entities/direct-message';
 /** Data services **/
 import { DirectMessageDataService } from '../infrastructure/direct-message.data.service';
-import { ChatClient, ChatThreadClient, ChatThreadItem, ChatThreadProperties } from '@azure/communication-chat';
+import { ChatClient, ChatThreadClient } from '@azure/communication-chat';
 import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
 
 @Injectable({ providedIn: 'root' })
@@ -77,7 +77,7 @@ export class DirectMessageFacade {
   ) {}
 
   getChatClient(userAccessToken :any): ChatClient{
-   var endpoint = parseConnectionString(this.configurationProvider.appSettings.azureCommunication.connectionString).endpoint;
+    let endpoint = parseConnectionString(this.configurationProvider.appSettings.azureCommunication.connectionString).endpoint;
     return new ChatClient(endpoint, new AzureCommunicationTokenCredential(userAccessToken))
   }
 

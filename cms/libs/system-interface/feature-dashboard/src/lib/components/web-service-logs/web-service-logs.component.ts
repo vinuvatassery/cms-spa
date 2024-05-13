@@ -1,16 +1,13 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnInit,
   OnChanges,
   Output,
-  ViewEncapsulation,
   OnDestroy,
   ViewChild,
   TemplateRef,
-  ChangeDetectorRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';

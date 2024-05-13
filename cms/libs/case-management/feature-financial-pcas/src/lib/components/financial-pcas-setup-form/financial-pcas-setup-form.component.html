@@ -15,7 +15,8 @@
                               [maxlength]="8"
                               [readonly]="pcaId != null"
                               format="0"
-                              formControlName="pcaCode"                             
+                              formControlName="pcaCode"  
+                              (keypress)="restrictSpecialChar($event)"                           
                               > 
                               </kendo-numerictextbox >
                         </kendo-floatinglabel> 
@@ -35,6 +36,7 @@
                               [readonly]="pcaId != null"
                               format="##"
                               formControlName="appropriationYear"
+                              (keypress)="restrictSpecialChar($event)"   
                         > 
                         </kendo-numerictextbox>
                         </kendo-floatinglabel>

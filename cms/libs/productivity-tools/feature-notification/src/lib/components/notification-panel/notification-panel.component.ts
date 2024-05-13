@@ -27,7 +27,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'productivity-tools-notification-panel',
@@ -81,7 +81,9 @@ export class NotificationPanelComponent implements OnInit {
   isReminderOpenClicked = false
   getTodo$ = this.todoFacade.getTodo$
   crudText ="Create New"
-  notificationAndReminderPageTab : any;
+  notificationAndReminderPageTab="NOTIFICATION";
+  notificationListSubscription = new Subscription();
+
   public data = [
     {
       buttonType: 'btn-h-primary',
@@ -266,14 +268,18 @@ export class NotificationPanelComponent implements OnInit {
       this.itemsLoader = true;
       this.isViewAll = false;
       this.loadNotificationsAndReminders(this.isViewAll);
-      this.notificationList$.subscribe((data: any) => {
+      this.notificationListSubscription = this.notificationList$.subscribe((data: any) => {
         if(data){
           this.itemsLoader = false;
         }
         this.alertsData = data;
         this.cdr.detectChanges();
-      });
         this.viewNotifications();
+      });
+      }
+      else
+      {
+        this.notificationListSubscription.unsubscribe();
       }
       this.isViewAll = true;
   }
@@ -328,13 +334,7 @@ export class NotificationPanelComponent implements OnInit {
       this.notificationaAndReminderDataSubject.next(this.gridDataResult);
     });
     this.notificationListBell$.subscribe((data: any) => {
-      //this.gridDataResult = data?.items;
-      
-     // if (data?.totalCount >= 0 || data?.totalCount === -1) {
-        
       this.unViewedCount =  !isNaN(data) ? data : 0
-     //   this.isToDoGridLoaderShow.next(false);
-     //}
       this.notificationaAndReminderDataSubject.next(this.gridDataResult);
     });
   }

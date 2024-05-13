@@ -8,12 +8,12 @@ import {
   Input,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 /** facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { Observable, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-todo-detail',

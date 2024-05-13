@@ -3,7 +3,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, AfterViewInit,ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 /** External libraries **/
-import {catchError, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
+import {catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode, WorkflowTypeCode, ContactFacade, CommunicationFacade } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
@@ -456,7 +456,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadIncomeListGrid(gridDataRefinerValue:any):void{
-    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pagesize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
     this.loadIncomes(
       this.clientId,
       this.clientCaseEligibilityId,
@@ -466,7 +466,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadIncomeListHandle(gridDataRefinerValue: any): void {
-    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pagesize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));
     this.loadIncomes(
       this.clientId,
       this.clientCaseEligibilityId,
@@ -484,6 +484,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.checkValidations() && this.noIncomeDetailsForm.valid && cerFormValid) {
         this.save().subscribe((response: any) => {
           if (response) {
+            this.workflowFacade.saveForLaterCompleted(true)  
             this.loaderService.hide();
             if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
               if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
@@ -496,7 +497,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
                   queryParamsHandling: "preserve"
                 });
               }
-            }
+            }else{
+              this.router.navigate(['/case-management/cases']);
+          }
           }
         })
       }

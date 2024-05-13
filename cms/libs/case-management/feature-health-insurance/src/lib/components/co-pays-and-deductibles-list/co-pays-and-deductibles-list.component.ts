@@ -5,9 +5,10 @@ import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade} from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subject, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',
@@ -46,7 +47,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit, OnDestroy {
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
-    private lovFacade: LovFacade,) {
+    private lovFacade: LovFacade,private route: Router,) {
     this.copayPaymentForm = this.formBuilder.group({});
   }
   /** Lifecycle hooks **/
@@ -154,6 +155,16 @@ export class CoPaysAndDeductiblesListComponent implements OnInit, OnDestroy {
         }
       },
     });
+  }
+
+  onVendorClicked(vendorId: any)
+  {
+    const query = {
+      queryParams: {
+        v_id: vendorId ,
+      },
+    };
+    this.route.navigate(['/financial-management/vendors/profile'], query )
   }
 
   

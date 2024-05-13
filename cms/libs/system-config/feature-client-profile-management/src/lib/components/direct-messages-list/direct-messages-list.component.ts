@@ -1,5 +1,5 @@
  
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { GridDataResult } from '@progress/kendo-angular-grid';

@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService } from '@cms/shared/util-core';
 import { ClientHivVerification } from '../entities/client-hiv-verification';
 import { VerificationDataService } from '../infrastructure/verification.data.service';
+import { ProviderOption } from '../enums/provider-option.enum';
 
 @Injectable({ providedIn: 'root' })
 export class VerificationFacade {
@@ -120,5 +121,9 @@ export class VerificationFacade {
   }
   getClientHivVerification(clientId : number,) {
     return this.verificationDataService.getClientHivVerification(clientId);
+  }
+
+  getHivVerificationByMethodCode(clientId: number, healthCareProvider: ProviderOption) {
+    return this.verificationDataService.getClientHivVerificationByMethod(clientId, healthCareProvider);
   }
 }

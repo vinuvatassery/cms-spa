@@ -14,10 +14,9 @@ import {
   ClientDocumentFacade, HomeAddressProof, StatesInUSA, WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
+import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
-import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -1150,7 +1149,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     return flag ? StatusFlag.Yes : StatusFlag.No;
   }
 
-  private loadContactInfo(isFormFillRequired = true) {
+  private  loadContactInfo(isFormFillRequired = true) {
     this.loaderService.show()
     this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '').subscribe({
       next: (data: ContactInfo) => {
@@ -1971,6 +1970,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.checkValidations()) {
         this.save().subscribe((response: any) => {
           if (response) {
+            this.workflowFacade.saveForLaterCompleted(true)
             this.loaderService.hide();
             if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
               if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
@@ -1983,6 +1983,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
                   queryParamsHandling: "preserve"
                 });
               }
+            }else{
+              this.router.navigate(['/case-management/cases']);
             }
           }
         })

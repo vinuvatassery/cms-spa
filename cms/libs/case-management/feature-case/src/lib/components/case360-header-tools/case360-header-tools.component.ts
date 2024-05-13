@@ -20,7 +20,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   @Input() loadedClientHeader!: Observable<any>;
   @Input() clientCaseId: any;
   @Output() onNewReminderClickedEvent = new EventEmitter()
-  /* Public properties */ 
+  /* Public properties */
   @ViewChild('notificationDraftEmailDialog', { read: TemplateRef })
   notificationDraftEmailDialog!: TemplateRef<any>;
   @ViewChild('sendLetterDialog', { read: TemplateRef })
@@ -32,9 +32,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   @ViewChild('viewTemplateDialog', { read: TemplateRef })
   viewTemplateDialog!: TemplateRef<any>;
   screenName = ScreenType.ClientProfile;
-  emailScreenName = ScreenType.Case360PageEmail; 
-  letterScreenName = ScreenType.Case360PageLetter; 
-  smsScreenName = ScreenType.Case360PageSMS; 
+  emailScreenName = ScreenType.Case360PageEmail;
+  letterScreenName = ScreenType.Case360PageLetter;
+  smsScreenName = ScreenType.Case360PageSMS;
   smsNotificationGroup = ScreenType.Case360PageSMS;
   isIdCardOpened = false;
   isSendNewLetterOpened = false;
@@ -74,13 +74,14 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   private isPreviewTemplateDialog : any;
   private isSendNewEmailOpenedDialog : any;
   private isNewSMSTextOpenedDialog : any;
-  private isIdCardOpenedDialog : any;  
+  private isIdCardOpenedDialog : any;
   private isDraftNotificationOpenedDialog: any;
   paperless$ = this.contactFacade.paperless$;
   clientHeader:any
   paperlessFlag:any;
   emailSubject:any;
   loginUserEmail: any;
+  caseManagerEmail: any;
   entityType= EntityTypeCode.Client;
   triggerFrom= ScreenType.ClientProfile;
   public sendActions = [
@@ -94,6 +95,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
+        this.letterCommunicationTypeCode = '';
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.LetterTypeCode;
         this.notificationGroup = CommunicationEventTypeCode.LETTER;
@@ -117,6 +119,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
+        this.emailCommunicationTypeCode = '';
         this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.EmailTypeCode;
         this.notificationGroup = CommunicationEventTypeCode.EMAIL;
@@ -167,7 +170,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   ];
 
   /* constructor */
-  constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute, 
+  constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute,
     private dialogService: DialogService, private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService, private readonly loggingService: LoggingService,
     private readonly ref: ChangeDetectorRef,private readonly workflowFacade: WorkflowFacade,
@@ -182,14 +185,15 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Internal Methods */
   ngOnInit(): void {
     this.getLoggedInUserProfile();
+    this.getAssignedCaseManagerDetails();
     this.initialize();
     this.loadedClientHeader.subscribe(res => {
       this.clientHeader = res;
     })
-   
+
   }
 
-  private loadPaperLessStatus() {    
+  private loadPaperLessStatus() {
     this.paperless$
       ?.pipe(first((emailData: any) => emailData?.paperlessFlag != null))
       .subscribe((emailData: any) => {
@@ -213,7 +217,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   private emailLetterSubscriptionInitializer(){
     this.emailLetterSubscription = this.workflowFacade.sendEmailLetterClicked$.subscribe(response => {
       if (response) {
-        if (this.workflowFacade.caseStatus.toLowerCase() === CaseStatusCode.disenrolled.toLowerCase()) {    
+        if (this.workflowFacade.caseStatus.toLowerCase() === CaseStatusCode.disenrolled.toLowerCase()) {
           if (this.paperlessFlag === StatusFlag.Yes) {
             this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
             this.emailCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
@@ -221,9 +225,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.templateHeader = 'Send Disenrollment Email';
             this.emailSubject = "CAREAssist Disenrollment Notice";
             this.confirmPopupHeader = 'Send Disenrollment email to print?';
-            this.saveForLaterHeadterText = "Email Draft Saved";
-            this.saveForLaterModelText="You must send the  Disenrollment Email within 2 Days";
-            this.confirmationModelText="If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete.";
+            this.saveForLaterHeadterText = "Send Disenrollment Email Later?";
+            this.saveForLaterModelText="You must send the Disenrollment Email within 2 Days";
+            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
 
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.emailCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
           }
@@ -234,11 +238,41 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.templateHeader = 'Send Disenrollment Letter';
             this.emailSubject = '';
             this.confirmPopupHeader = 'Send Disenrollment letter to print?';
-            this.saveForLaterHeadterText = "Letter Draft Saved";
+            this.saveForLaterHeadterText = "Send Disenrollment Letter Later?";
             this.saveForLaterModelText="You must send the  Disenrollment Letter within 2 Days";
-            this.confirmationModelText="If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete.";
+            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
+            this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
+          }
+          this.ref.detectChanges();
+        }
+        if (this.workflowFacade.caseStatus.toLowerCase() === CaseStatusCode.restricted.toLowerCase()) {
+          if (this.paperlessFlag === StatusFlag.Yes) {
+            this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+            this.notificationGroup = CommunicationEventTypeCode.EMAIL;
+            this.emailCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeEmail;
+            this.currentCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeEmail;
+            this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click "+'"Send Email"'+" once the email is complete."
+            this.templateHeader = 'Send Restricted Email';
+            this.emailSubject = "CAREAssist Restricted Notice";
+            this.confirmPopupHeader = 'Send Restricted email to print?';
+            this.saveForLaterHeadterText = "Send Restricted Email Later?";
+            this.saveForLaterModelText="To pick up where you left off, click New Emai from the client's profile";
+            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
 
-
+            this.notificationDraftCheck(this.clientId, this.templateLoadType,this.emailCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
+          }
+          else {
+            this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+            this.notificationGroup = CommunicationEventTypeCode.LETTER;
+            this.letterCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeLetter;
+            this.currentCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeLetter;
+            this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click "+'"Send to Print"'+" once the letter is complete."
+            this.templateHeader = 'Send Restricted Letter';
+            this.emailSubject = '';
+            this.confirmPopupHeader = 'Send Restricted letter to print?';
+            this.saveForLaterHeadterText = "Send Restricted Letter Later?";
+            this.saveForLaterModelText="To pick up where you left off, click New Letter from the client's profile";
+            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
           }
           this.ref.detectChanges();
@@ -282,10 +316,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Internal Methods */
 
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
-    this.isSendNewLetterDialog = this.dialogService.open({ 
-      content: template, 
+    this.isSendNewLetterDialog = this.dialogService.open({
+      content: template,
       cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
-    }); 
+    });
   }
   handleSendNewLetterClosed(value: CommunicationEvents) {
     if (value === CommunicationEvents.Close) {
@@ -296,9 +330,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
   onSendNewEmailClicked(template: TemplateRef<unknown>): void {
     this.isSendNewEmailOpenedDialog = this.dialogService.open({
-      content: template, 
+      content: template,
       cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
-    }); 
+    });
   }
 
   handleSendNewEmailClosed(value: CommunicationEvents) {
@@ -311,9 +345,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   onDraftNotificationExistsConfirmation(notificationDraftEmailDialog: TemplateRef<unknown>): void {
     this.isDraftNotificationOpenedDialog = this.dialogService.open({
-      content: notificationDraftEmailDialog, 
+      content: notificationDraftEmailDialog,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
-    }); 
+    });
   }
 
   onDraftNotificationCloseClicked(result: any) {
@@ -325,9 +359,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   onNewSMSTextClicked(template: TemplateRef<unknown>): void {
     this.isNewSMSTextOpenedDialog = this.dialogService.open({
-      content: template, 
+      content: template,
       cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
-    }); 
+    });
   }
 
   handleNewSMSTextClosed(value: CommunicationEvents) {
@@ -341,9 +375,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onIdCardClicked(template: TemplateRef<unknown>): void {
     this.isIdCardOpenedDialog = this.dialogService.open({
       title: 'Send New ID Card',
-      content: template, 
+      content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    }); 
+    });
   }
 
   handleIdCardClosed(result: any) {
@@ -352,7 +386,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       this.isIdCardOpenedDialog.close();
     }
   }
- 
+
   onNewReminderClosed() {
       this.newReminderDetailsDialog.close()
     }
@@ -362,7 +396,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   onTodoDetailsClosed(result: any) {
-    if(result){ 
+    if(result){
       this.todoDetailsDialog.close();
     }
   }
@@ -371,21 +405,21 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     this.todoDetailsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    }); 
+    });
   }
 
 
   handlePreviewTemplateClosed(result: any) {
     if (result) {
       this.isPreviewTemplateDialog.close(result);
-     
+
     }
   }
   onPreviewTemplateClicked(template: TemplateRef<unknown>): void {
     this.isPreviewTemplateDialog = this.dialogService.open({
-      content: template, 
+      content: template,
       cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
-    }); 
+    });
   }
 
 
@@ -423,11 +457,11 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   loadNotificationTemplates(subTypeCode: string, templateName: TemplateRef<unknown>) {
-    if(subTypeCode == CommunicationEventTypeCode.EmailTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail){
+    if(subTypeCode == CommunicationEventTypeCode.EmailTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail || subTypeCode == CommunicationEventTypeCode.RestrictedNoticeEmail){
       templateName = this.sendNewEmailDialog;
       this.onSendNewEmailClicked(templateName);
     }
-    if(subTypeCode == CommunicationEventTypeCode.LetterTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeLetter){
+    if(subTypeCode == CommunicationEventTypeCode.LetterTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeLetter || subTypeCode == CommunicationEventTypeCode.RestrictedNoticeLetter){
       templateName = this.sendLetterDialog;
       this.onSendNewLetterClicked(templateName);
     }
@@ -476,6 +510,27 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
        }
       }
     });
+    this.loaderService.hide();
+  }
+
+  getAssignedCaseManagerDetails() {
+    this.loaderService.show();
+    this.contactFacade.lodAssignedCaseManager(this.clientId, this.clientCaseId)
+      .subscribe({
+        next: (caseManager: any) => {
+          if(caseManager !== null && caseManager?.email !== null){
+            const ccEmail ={
+              email: caseManager.email,
+              isDefault: true
+            };
+            this.caseManagerEmail = ccEmail;
+          }
+        },
+        error: (err) => {
+          this.loggingService.logException(err);
+          this.loaderService.hide();
+        },
+      });
     this.loaderService.hide();
   }
 

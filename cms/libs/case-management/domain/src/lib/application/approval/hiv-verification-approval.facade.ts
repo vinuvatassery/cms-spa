@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from "@cms/shared/util-core";
 import { Subject } from "rxjs";
 import { HivVerificationApprovalService } from "../../infrastructure/approval/hiv-verification-approval.facade";
-import { PendingApprovalGeneralService } from "../../infrastructure/approval/pending-approval-general.data.service";
 import { NavigationMenuFacade } from "@cms/system-config/domain";
 
 @Injectable({ providedIn: 'root' })

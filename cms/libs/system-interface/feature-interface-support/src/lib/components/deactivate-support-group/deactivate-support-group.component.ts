@@ -2,8 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
-  OnInit,
   Output,
 } from '@angular/core';
 import { LoaderService } from '@cms/shared/util-core';
@@ -13,15 +11,13 @@ import { LoaderService } from '@cms/shared/util-core';
   templateUrl: './deactivate-support-group.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeactivateSupportGroupComponent implements OnInit {
+export class DeactivateSupportGroupComponent {
   @Output() close = new EventEmitter<any>();
   @Output() deactivateConfimEvent = new EventEmitter<any>();
 
 
   /** Constructor **/
   constructor(private readonly loaderService: LoaderService,) {}
-
-  ngOnInit(): void { }
 
   onCancelClick() {
     this.close.emit();

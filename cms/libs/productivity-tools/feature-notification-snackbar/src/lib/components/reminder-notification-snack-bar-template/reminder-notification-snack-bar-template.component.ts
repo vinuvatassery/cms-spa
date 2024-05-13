@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
-import { ConfigurationProvider, LoaderService, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';

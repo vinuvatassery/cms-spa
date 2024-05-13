@@ -209,7 +209,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         {
           this.showProvidervalidationboxSubject.next(false)
           this.healthProvider.showLoader();    
-          return  this.healthProvider.updateHealthCareProvidersFlag(this.clientId,this.providersStatus)
+          return  this.healthProvider.updateHealthCareProvidersFlag(this.clientId,this.providersStatus,StatusFlag.Yes )
           .pipe(
             catchError((err: any) => { 
               this.healthProvider.hideLoader();                     
@@ -240,7 +240,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
     this.showProvidervalidationboxSubject.next(false)
     
     this.healthProvider.updateHealthCareProvidersFlagonCheck
-      (this.clientId,this.providersStatus).subscribe((isSaved) => {  
+      (this.clientId,this.providersStatus, StatusFlag.No).subscribe((isSaved) => {  
         this.healthProvider.hideLoader();       
         if (isSaved) {    
           this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
@@ -292,6 +292,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
     this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
       this.save().subscribe((response: any) => {
         if (response) {
+          this.workFlowFacade.saveForLaterCompleted(true)  
           this.loaderService.hide();
           if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
             if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
@@ -304,7 +305,9 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
                 queryParamsHandling: "preserve"
               });
             }
-          }
+          }else{
+            this.router.navigate(['/case-management/cases']);
+        }
         }
       })
     });
