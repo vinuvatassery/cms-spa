@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import { EventLogFacade, EventTypeCode } from '@cms/productivity-tools/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,6 +12,8 @@ import { Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventLogDescriptionComponent implements OnDestroy{
+  @ViewChild('viewLetterEmailTextDialog', { read: TemplateRef })
+  viewLetterEmailTextDialog!: TemplateRef<any>;
   @Input() content: string = '';
   @Input() limit: number = 0;
   @Input() completeWords: boolean = false;
@@ -30,7 +33,7 @@ export class EventLogDescriptionComponent implements OnDestroy{
   isViewEmail:boolean = false;
   isViewSmsText:boolean = false;
   viewText:string = '';
-  isViewLetterEmailTextDialog:boolean = false;
+  isViewLetterEmailTextDialog: any;
   ViewLetter:string = "{View Letter}";
   ViewEmail:string = "{View Email}";
   ViewSmsText:string = "{View Text(s)}";
@@ -62,7 +65,7 @@ export class EventLogDescriptionComponent implements OnDestroy{
   notificationLetterSubscription!:Subscription;
   smsId:any;
 
-  constructor(private sanitizer : DomSanitizer, private readonly eventLogFacade: EventLogFacade,
+  constructor(private sanitizer : DomSanitizer,  private dialogService: DialogService, private readonly eventLogFacade: EventLogFacade,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
@@ -225,13 +228,21 @@ export class EventLogDescriptionComponent implements OnDestroy{
         this.attachmentType = null;
         this.eventLogFacade.loadNotificationSms(this.eventLogId);
       }
-      this.isViewLetterEmailTextDialog = true;
+         // this.isViewLetterEmailTextDialog = true;
+this.onViewLetterEmailTextDialogClicked(this.viewLetterEmailTextDialog);
     });   
+  }
 
+  onViewLetterEmailTextDialogClicked(template: TemplateRef<unknown>): void {
+    this.isViewLetterEmailTextDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-np just_start app-c-modal-xlg'
+    });
   }
   onCloseLetterEmailSmsTextClicked()
   {
-    this.isViewLetterEmailTextDialog = false;
+    // this.isViewLetterEmailTextDialog = false;
+    this.isViewLetterEmailTextDialog.close();
     this.cdr.detectChanges();
   }
   downloadOldAttachment(path : any)
