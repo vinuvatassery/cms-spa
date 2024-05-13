@@ -16,11 +16,15 @@ export class EventLogFacade {
   private eventsSubject = new Subject<any>();
   private eventsDataSubject = new Subject<any>();
   private addEventDataSubject = new Subject<any>();
+  private notificationEmailSubject = new Subject<any>();
+  private notificationLetterSubject = new Subject<any>();
 
   /** Public properties **/
   events$ = this.eventsSubject.asObservable();
   eventsdata$ = this.eventsDataSubject.asObservable();
   addEventdata$ = this.addEventDataSubject.asObservable();
+  notificationEmail$ = this.notificationEmailSubject.asObservable();
+  notificationLetter$ = this.notificationLetterSubject.asObservable();
 
   /** Constructor **/
   constructor(private readonly eventDataService: EventDataService,
@@ -90,4 +94,48 @@ export class EventLogFacade {
       },
     });
   }
+
+  loadNotificationEmail(eventLogId:any){   
+    this.showLoader();
+    this.eventDataService.loadNotificationEmail(eventLogId).subscribe({
+      next: (response : any) => {
+        this.hideLoader()
+        this.notificationEmailSubject.next(response);        
+      },
+      error: (err) => {
+        this.hideLoader()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+
+  loadNotificationLetter(eventLogId:any){
+    this.showLoader();
+    this.eventDataService.loadNotificationLetter(eventLogId).subscribe({
+      next: (response : any) => {
+        this.hideLoader()
+        this.notificationLetterSubject.next(response);        
+      },
+      error: (err) => {
+        this.hideLoader()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+
+  }
+
+  reSentEmailNotification(eventLogId:any)
+  {
+    return this.eventDataService.reSentEmailNotification(eventLogId);
+  }
+
+  reSentLetterNotification(eventLogId: any)
+  {
+    return this.eventDataService.reSentLetterNotification(eventLogId);
+  }
+
+  loadAttachmentPreview(attachmentId: any, attachmentType:any) {
+    return this.eventDataService.loadAttachmentPreview(attachmentId,attachmentType);
+  }
+
 }

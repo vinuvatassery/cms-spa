@@ -168,7 +168,10 @@ export class UserDataService {
   }
 
   loadDdlUserRole() {
-    return of(['Column 1', 'Column 2', 'Column 3', 'Column 4']);
+    return this.http.get<LoginUser[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/roles`
+    );
   }
 
   loadUsersRoleAndPermissions() {

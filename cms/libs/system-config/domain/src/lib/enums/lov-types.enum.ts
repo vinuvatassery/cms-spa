@@ -68,4 +68,7 @@ export enum LovType {
     AlertFrequencyCode ='ALERT_FREQUENCY_CODE',
     EntityTypeCode ='ALERT_ENTITY_TYPE_CODE',
     UserDeviceType = 'USER_DEVICE_TYPE_CODE',
+    UserTypeCode ='USER_TYPE_CODE',
+    RoleTypeCode= 'ROLE_TYPE_CODE',
+    CaseManagerDomain = 'CASE_MANAGER_DOMAIN'
     }

@@ -74,7 +74,7 @@
           <kendo-floatinglabel text="Exception Note">
             <kendo-textarea [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="child.notes"
               [ngModelOptions]="{standalone: true}" aria-label="exception note description" name="Exception Note"
-              [rows]="5" [cols]="40" (blur)="notesChanged()">
+              [rows]="5" [maxlength]="250" [cols]="40" (blur)="notesChanged()">
               <kendo-textarea-suffix class="justify-content-end"> <span  class="counter"> {{child.notes?.length}}/250</span> </kendo-textarea-suffix>
             </kendo-textarea> 
           </kendo-floatinglabel>

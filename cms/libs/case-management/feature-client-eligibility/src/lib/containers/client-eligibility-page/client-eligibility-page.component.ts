@@ -124,7 +124,8 @@ export class ClientEligibilityPageComponent
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription =
-      this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {  
+      this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+        this.workflowFacade.saveForLaterCompleted(true)  
               this.loaderService.hide();
               this.workflowFacade.handleSendNewsLetterpopup(statusResponse)        
       });

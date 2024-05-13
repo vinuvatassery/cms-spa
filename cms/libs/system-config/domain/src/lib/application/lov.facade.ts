@@ -103,6 +103,9 @@ export class LovFacade {
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceSupportGroupSubject = new BehaviorSubject<Lov[]>([]);
+  private userAccessTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private userRoleTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private caseManagerDomainSubject = new BehaviorSubject<Lov[]>([]);
   private userDeviceTypeLovSubject = new Subject<any>();
 
   /** Public properties **/
@@ -186,6 +189,9 @@ export class LovFacade {
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
   interfaceSupportGroupLov$ = this.interfaceSupportGroupSubject.asObservable();
   eventAttachmentTypeLov$ = this.eventAttachmentTypeLovSubject.asObservable();
+  userAccessTypeLov$ = this.userAccessTypeSubject.asObservable();
+  userRoleTypeLov$ = this.userRoleTypeSubject.asObservable();
+  caseManagerDomainLov$ = this.caseManagerDomainSubject.asObservable();
   userDeviceTypeLov$ = this.userDeviceTypeLovSubject.asObservable();
 
   /** Public methods **/
@@ -1017,6 +1023,39 @@ export class LovFacade {
     return this.lovDataService.getLovsbyType(LovType.ProofOfIncomeType).subscribe({
       next: (lovResponse) => {
         this.lovProofOfIncomeByTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getUserAccessTypeLov() {
+    return this.lovDataService.getLovsbyType(LovType.UserTypeCode).subscribe({
+      next: (lovResponse) => {
+        this.userAccessTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getRoleTypeLov() {
+    return this.lovDataService.getLovsbyType(LovType.RoleTypeCode).subscribe({
+      next: (lovResponse) => {
+        this.userRoleTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getCaseManagerDomainLov() {
+    return this.lovDataService.getLovsbyType(LovType.CaseManagerDomain).subscribe({
+      next: (lovResponse) => {
+        this.caseManagerDomainSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
