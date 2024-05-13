@@ -69,4 +69,4 @@ export * from './lib/read-more/read-more.component';
 export * from './lib/delete-todo-confirmation/delete-todo-confirmation.component';
 export * from './lib/directives/placeholder.directive';
 export * from './lib/client-attachment-model/client-attachment-model.component';
-export * from './lib/common-form-document-tree/common-form-document-tree.component'
+export * from './lib/common-form-document-list/common-form-document-list.component'

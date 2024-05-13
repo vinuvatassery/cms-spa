@@ -39,7 +39,7 @@
 
 
 </section>
-<system-config-common-form-document-tree [foldersTree] ="folderFileList$ | async" [treeViewSize]='"large"'></system-config-common-form-document-tree>
+<system-config-common-form-document-list [foldersTree] ="folderFileList$ | async" [treeViewSize]='"large"'></system-config-common-form-document-list>
 <div class="bottom-fixed-wrapper text-right flex-gap" *ngIf="isDragDropEnabled"> 
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Update" class="">Update</button>

@@ -5,10 +5,10 @@ const isOfType = (fileName: string, ext: string) =>
 new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
 @Component({
-  selector: 'system-config-common-form-document-tree',
-  templateUrl: './common-form-document-tree.component.html',
+  selector: 'system-config-common-form-document-list',
+  templateUrl: './common-form-document-list.component.html',
 })
-export class CommonFormDocumentTreeComponent {
+export class CommonFormDocumentListComponent {
 
   /** Public properties **/
   isOpenAttachment = false;

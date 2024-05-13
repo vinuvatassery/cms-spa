@@ -58,7 +58,7 @@ import { CmsPharmacyClaimsDetailComponent } from './cms-pharmacy-claims-detail/c
 import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
 import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
 import { ClientAttachmentModelComponent } from './client-attachment-model/client-attachment-model.component';
-import { CommonFormDocumentTreeComponent } from './common-form-document-tree/common-form-document-tree.component';
+import { CommonFormDocumentListComponent } from './common-form-document-list/common-form-document-list.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -108,7 +108,7 @@ import { CommonFormDocumentTreeComponent } from './common-form-document-tree/com
     DeleteTodoConfirmationComponent,
     AddEmployerComponent,
     LastMessageDateTimePipe,
-    CommonFormDocumentTreeComponent,
+    CommonFormDocumentListComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -157,7 +157,7 @@ import { CommonFormDocumentTreeComponent } from './common-form-document-tree/com
     DeleteTodoConfirmationComponent,
     AddEmployerComponent,
     LastMessageDateTimePipe,
-    CommonFormDocumentTreeComponent,
+    CommonFormDocumentListComponent,
   ],
 })
 export class SharedUiCommonModule {}
