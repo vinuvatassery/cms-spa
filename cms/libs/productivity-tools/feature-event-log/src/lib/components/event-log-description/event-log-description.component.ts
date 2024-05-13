@@ -36,7 +36,7 @@ export class EventLogDescriptionComponent implements OnDestroy{
   isViewLetterEmailTextDialog: any;
   ViewLetter:string = "{View Letter}";
   ViewEmail:string = "{View Email}";
-  ViewSmsText:string = "{View Text(s)}";
+  ViewSmsText:string = "{View Text}";
   sanitizedHtml:any;
   bodyText:any;
   notificationEmail$  = this.eventLogFacade.notificationEmail$;
