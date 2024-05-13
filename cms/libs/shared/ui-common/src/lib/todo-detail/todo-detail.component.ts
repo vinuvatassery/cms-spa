@@ -8,12 +8,12 @@ import {
   Input,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 /** facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { Observable, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-todo-detail',
@@ -204,6 +204,7 @@ export class TodoDetailComponent implements OnInit {
     this.todoDetailsForm.controls['repeat'].enable();
     this.todoDetailsForm.controls['endDate'].enable();
     this.todoDetailsForm.controls['repeat'].setValidators(Validators.required)
+    this.endDateValidation();
   }
   /** Private methods **/
   private tareaVaribalesIntialization() {
@@ -288,12 +289,13 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
    }
 
   endDateValidation(){
-    const endDate = this.todoDetailsForm.controls['endDate'].value;
-    const dueDate = this.todoDetailsForm.controls['dueDate'].value;
-    if (endDate < dueDate && this.todoDetailsForm.controls['endDate'].value) {
+    const endDate = this.intl.formatDate(this.todoDetailsForm.controls['endDate'].value,this.dateFormat);
+    const dueDate = this.intl.formatDate(this.todoDetailsForm.controls['dueDate'].value,this.dateFormat);
+    if ((endDate < dueDate || endDate == dueDate)  && this.todoDetailsForm.controls['endDate'].value) {
       this.todoDetailsForm.controls['endDate'].setErrors({ 'incorrect': true });
-    
       return;
+    }else{
+      this.todoDetailsForm.controls['endDate'].clearValidators();
     }
   }
 

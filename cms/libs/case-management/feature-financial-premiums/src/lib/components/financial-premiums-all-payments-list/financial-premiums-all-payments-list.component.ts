@@ -528,8 +528,8 @@ deletePremiumPayment(paymentId: string) {
       }
       this.filteredBy = filterList.toString();
     }else {
-      this.filter = '';
-      this.isFiltered = false;
+      this.filter = stateData.filter?.filters.length > 0 ? this.filter : '';
+      this.isFiltered = stateData.filter?.filters.length > 0 ? true : false;
     }
   }
   pageSelectionChange(data: any) {
@@ -603,13 +603,13 @@ deletePremiumPayment(paymentId: string) {
   }
 
   private loadFinancialPremiumsPaymentsListGrid(): void {
+    const filter = this.filter == "" ? "[]" : JSON.stringify(this.filter);
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
-
-      JSON.stringify(this.filter)
+      filter
     );
     this.loadFinancialPremiumsAllPaymentsListEvent.emit(param);
   }

@@ -433,7 +433,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
     emailData.templateTypeCode = templateTypeCode;
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
-    emailFormData.append('description', this.emailSubject ?? '');
+    emailFormData.append('description', draftTemplate.description ?? '');
     emailFormData.append('vendorAddressId', this.selectedMailCode?.vendorAddressId ?? '');
     emailFormData.append('selectedMailCode', this.selectedMailCode?.mailCode ?? '');
     this.communicationFacade.saveClientAndVendorNotificationForLater(emailFormData)
@@ -522,7 +522,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       subject: this.emailSubject,
       toEmail: this.selectedToEmails,
       ccEmail: this.getSelectedEmails(this.selectedCCEmail, "CC"),
-      bccEmail: this.isBCCDropdownVisible ? null : this.getSelectedEmails(this.selectedCCEmail, "BCC"),
+      bccEmail: this.isBCCDropdownVisible ? null : this.getSelectedEmails(this.selectedBccEmail, "BCC"),
       eligibilityId: this.clientCaseEligibilityId,
       entity: this.entityType,
       entityId: this.entityId,
@@ -625,6 +625,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         case CommunicationEventTypeCode.CerAuthorizationEmail:
           templateTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
           eventGroupCode = EventGroupCode.CER;
+          break;
+        case CommunicationEventTypeCode.RestrictedNoticeEmail:
+          templateTypeCode = CommunicationEventTypeCode.RestrictedEmailSent;
+          eventGroupCode = EventGroupCode.Application;
           break;
     }
     return { templateTypeCode, eventGroupCode };
@@ -763,11 +767,16 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.selectedToEmails = [];
       this.selectedToEmails = event.to;
       this.emails = this.selectedToEmails;
-      this.emailSubject = event.description ?? event?.requestSubject;
+      this.emailSubject = event?.requestSubject ?? event.description;
       this.defaultBCCEmail = event.bcc;
-      if (event?.bccEmail?.length > 0) {
-        this.bccEmail = this.selectedBccEmail = event.bcc;
+      if (event?.bcc?.length > 0) {
         this.isBCCDropdownVisible = false;
+        event?.bcc?.forEach((email: any) => {
+           if (!this.selectedBccEmail?.includes(email?.email?.trim())) {
+             this.selectedBccEmail?.push(email?.email);
+             this.bccEmail?.push(email?.email);
+           }
+         });
       }
       this.showToEmailLoader = false;
       this.documentTemplate = {

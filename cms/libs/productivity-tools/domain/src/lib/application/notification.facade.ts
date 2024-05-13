@@ -13,7 +13,7 @@ import {
 /** Services **/
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 import { NotificationDataService } from '../infrastructure/notification.data.service';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationFacade {

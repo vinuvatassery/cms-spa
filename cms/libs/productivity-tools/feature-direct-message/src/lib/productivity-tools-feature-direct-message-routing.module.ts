@@ -8,10 +8,16 @@ const routes: Routes = [
   {
     path: '',
     component: DirectMessageFabComponent,
+    data: {
+      title: '',
+    },
   },
   {
     path: 'list',
     component: DirectMessagePageComponent,
+    data: {
+      title: '',
+    },
   },
  
 ];

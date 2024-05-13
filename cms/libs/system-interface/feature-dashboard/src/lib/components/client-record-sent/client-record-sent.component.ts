@@ -1,7 +1,5 @@
 import {
-  ChangeDetectionStrategy,
   Component,
-  ViewEncapsulation,
 } from '@angular/core';
 import { SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 

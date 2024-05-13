@@ -209,7 +209,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         {
           this.showProvidervalidationboxSubject.next(false)
           this.healthProvider.showLoader();    
-          return  this.healthProvider.updateHealthCareProvidersFlag(this.clientId,this.providersStatus)
+          return  this.healthProvider.updateHealthCareProvidersFlag(this.clientId,this.providersStatus,StatusFlag.Yes )
           .pipe(
             catchError((err: any) => { 
               this.healthProvider.hideLoader();                     
@@ -240,7 +240,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
     this.showProvidervalidationboxSubject.next(false)
     
     this.healthProvider.updateHealthCareProvidersFlagonCheck
-      (this.clientId,this.providersStatus).subscribe((isSaved) => {  
+      (this.clientId,this.providersStatus, StatusFlag.No).subscribe((isSaved) => {  
         this.healthProvider.hideLoader();       
         if (isSaved) {    
           this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   

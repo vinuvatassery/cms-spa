@@ -72,7 +72,7 @@
           </div>
           <kendo-dropdownbutton
             [data]="dataTwo"
-            
+            *ngIf="message.alertTypeCode == 'REMINDER'"
             title="More option"
             look="bare"
             aria-label="more actions"
@@ -80,7 +80,7 @@
             [popupSettings]="{ popupClass: popupClass1, animate: true }"
             (itemClick)="onActionClicked($event,message)"
           >
-          <span *ngIf="message.alertTypeCode == 'REMINDER'"
+          <span 
            class="material-icons" aria-label="More option"> more_vert    </span>
           <ng-template class="app-dropdown-action-list"
            kendoDropDownButtonItemTemplate let-dataItem>
@@ -152,7 +152,7 @@
 <!-- Create New Reminder Popup -->
 <ng-template #NewReminderTemplate>
   <kendo-dialog-titlebar (close)="onNewReminderClosed(false)">
-    {{crudText}} Reminder  </kendo-dialog-titlebar>
+    {{crudText}} Reminder{{isDelete === true ? '?' : ''}}</kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
   [isEdit]="isEdit" 
   [isDelete]="isDelete"
@@ -194,5 +194,5 @@
     <span class="text-bold">Notifications and Reminders</span>
   </kendo-dialog-titlebar>
 
- <productivity-tools-notification-and-reminder-page (closeDialog)="onCloseNotificationsAndReminders($event)"></productivity-tools-notification-and-reminder-page>
+ <productivity-tools-notification-and-reminder-page [focusedTab]="notificationAndReminderPageTab"(closeDialog)="onCloseNotificationsAndReminders($event)"></productivity-tools-notification-and-reminder-page>
 </ng-template>

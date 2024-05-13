@@ -11,7 +11,7 @@
     </span>
     <a *ngIf="getViewFlag() && (anchorArray.length<=0)" (click)="OpenModalPopUp()" title="">{{viewText}}</a>
 </div>
-<div *ngIf="!hasUrl" class="text-justify">
+<div *ngIf="!hasUrl">
     <common-read-more [content]="content" [limit]="limit" [completeWords]="completeWords">
     </common-read-more>
 </div>

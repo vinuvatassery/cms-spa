@@ -6,7 +6,6 @@ import {
   Input,
   Output,
   EventEmitter,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
@@ -21,7 +20,7 @@ import {
   ClientProfileTabs,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({

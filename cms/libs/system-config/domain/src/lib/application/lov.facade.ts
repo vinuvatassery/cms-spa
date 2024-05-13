@@ -215,17 +215,6 @@ export class LovFacade {
       },
     });
   }
-
-  // getEventAttachmentTypeLov(): void {
-  //   this.lovDataService.getLovsbyType(LovType.EventAttachemntType).subscribe({
-  //     next: (lovResponse) => {
-  //       this.eventAttachmentTypeLovSubject.next(lovResponse);
-  //     },
-  //     error: (err) => {
-  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-  //     }
-  //   });
-  // }
   getRelationShipsLovs(): void {
     this.lovDataService.getLovsbyType(LovType.RelationshipCode).subscribe({
       next: (relationsResponse) => {
@@ -503,11 +492,7 @@ export class LovFacade {
     this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).subscribe({
       next: (lovResponse) => {
         this.lovHealthInsuranceTypeSubject.next(lovResponse);
-        //const acceptedCaseStatusCodes = Object.values(AcceptedCaseStatusCode)
         const filteredLov = lovResponse.filter((item: any) => item.lovCode)
-        // filteredLov.forEach((item: any) => {
-        //   item.lovDesc = item.lovDesc.toUpperCase();
-        // });
         this.lovHealthInsuranceTypeSubject.next(filteredLov);
       },
       error: (err) => {

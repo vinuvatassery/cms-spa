@@ -40,6 +40,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   paymentCount = 0;
   generalCount = 0;
   importedClaimCount = 0;
+  hivVerificationCount = 0;
 
   pendingApprovalCount = 0;
   directMessageCount = 0;
@@ -230,7 +231,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   }
 
   private getDirectMessageCount(){
-    //this.navigationMenuFacade.getDirectMessageCount();
+    this.navigationMenuFacade.getDirectMessageCount();
     this.subscribeToDirectMessageCount();
   }
   subscribeToDirectMessageCount(){
@@ -261,6 +262,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
     this.navigationMenuFacade.getPendingApprovalGeneralCount();
     this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
     this.subscribeToPendingApprovalCount();
+    this.navigationMenuFacade.getHivVerificationCount();
   }
 
   private subscribeToPendingApprovalCount() {
@@ -288,11 +290,19 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
         }
       },
     });
+    this.navigationMenuFacade.hivVerificationCount$.subscribe({
+      next:(hivVerificationCount) =>{
+        if(hivVerificationCount){
+          this.hivVerificationCount = hivVerificationCount;
+          this.setProductivityToolsCount();
+        }
+      }
+    })
   }
 
   private setProductivityToolsCount() {
     this.pendingApprovalCount =
-      this.paymentCount + this.generalCount + this.importedClaimCount;
+      this.paymentCount + this.generalCount + this.importedClaimCount + this.hivVerificationCount;
     this.productivityToolsCount =
       this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount;
     this.setBadgeValue(MenuBadge.pendingApprovals, this.pendingApprovalCount);

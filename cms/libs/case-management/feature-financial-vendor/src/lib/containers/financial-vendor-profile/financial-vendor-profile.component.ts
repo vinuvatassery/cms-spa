@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorRefundDataService, FinancialVendorRefundFacade, InvoiceFacade } from '@cms/case-management/domain';
+import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode,FinancialVendorRefundFacade, InvoiceFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { FabBadgeFacade, FabEntityTypeCode, LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
 
@@ -90,6 +90,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     private readonly invoiceFacade: InvoiceFacade,
     private readonly userManagementFacade: UserManagementFacade,
     private readonly contactFacade: ContactFacade,
+    private readonly fabBadgeFacade: FabBadgeFacade,
     private dialogService: DialogService,
     private lovFacade: LovFacade,
     public todoFacade: TodoFacade,
@@ -180,6 +181,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     if (status) {
       this.loadVendorInfo();
       this.loadFinancialVendorProfile(this.vendorId);
+      this.fabBadgeFacade.reloadFabMenu(this.vendorId, FabEntityTypeCode.Vendor);
     }
   }
 

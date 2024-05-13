@@ -11,11 +11,10 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';  
 import {  GridDataResult } from '@progress/kendo-angular-grid';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State
 } from '@progress/kendo-data-query';
 import { Router } from '@angular/router';
 /** Facades **/ 
@@ -29,7 +28,7 @@ export class DirectMessageListComponent implements OnInit, OnChanges{
   
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isDirectMessageGridLoaderShow = false;
+  isDirectMessageGridLoaderShow = new BehaviorSubject<boolean>(true);
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -52,7 +51,6 @@ export class DirectMessageListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
  
  /** Constructor **/
  constructor(
@@ -62,6 +60,7 @@ export class DirectMessageListComponent implements OnInit, OnChanges{
 
 ngOnInit(): void {
   this.loadDirectMessageListGrid();
+  this.gridDataHandle();
 }
 ngOnChanges(): void {
   this.state = {
@@ -85,7 +84,7 @@ loadDirectMessageList(
   sortValue: string,
   sortTypeValue: string
 ) {
-  this.isDirectMessageGridLoaderShow = true;
+  this.isDirectMessageGridLoaderShow.next(true);
   const gridDataRefinerValue = {
     skipCount: skipCountValue,
     maxResultCount: maxResultCountValue,
@@ -146,18 +145,10 @@ public filterChange(filter: CompositeFilterDescriptor): void {
 
 gridDataHandle() {
   this.directMessageGridLists$.subscribe((data: GridDataResult) => {
-    this.gridDataResult = data;
-    this.gridDataResult.data = filterBy(
-      this.gridDataResult.data,
-      this.filterData
-    );
-    this.gridVDirectMessageListDataSubject.next(this.gridDataResult);
     if (data?.total >= 0 || data?.total === -1) { 
-      this.isDirectMessageGridLoaderShow = false;
+      this.isDirectMessageGridLoaderShow.next(false);
     }
   });
-  this.isDirectMessageGridLoaderShow = false;
-
 }
   onClientFromClicked(clientId:any){
     this.router.navigate([`/case-management/cases/case360/${clientId}`]);

@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, SearchHeaderType } from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'cms-financial-vendor-page',

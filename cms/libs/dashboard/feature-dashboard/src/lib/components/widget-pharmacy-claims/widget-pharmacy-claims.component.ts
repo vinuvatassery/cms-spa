@@ -11,7 +11,6 @@ import { WidgetFacade } from '@cms/dashboard/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs';
 import {
-  Legend,
   LegendLabels,
   LegendLabelsContentArgs,
   LegendMarkers,

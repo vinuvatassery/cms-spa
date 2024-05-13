@@ -18,7 +18,7 @@
   </span>
 </section>
 
-<h3 class="mb-1 mt-1">Support Group</h3>
+<h2 class="mb-1 mt-1 mat-h3">Support Group</h2>
 <p class="mb-1">Select a Support Group in the table below to view assigned Users and Notification Categories</p>
 
 <div class="app-c-table">
@@ -187,7 +187,7 @@
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isSupportGroupDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()"> Delete Confirmation</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()">Error Confirmation</kendo-dialog-titlebar>
   <remove-support-group (deleteConfimEvent)="handleSupportGroupDelete($event)"
     (close)="onCloseSupportGroupDeleteClicked()"></remove-support-group>
 </kendo-dialog>

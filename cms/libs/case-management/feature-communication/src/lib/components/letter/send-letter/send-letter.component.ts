@@ -120,8 +120,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
-    this.addSubscriptions();
-    if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter) {
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      this.addSubscriptions();
+    }
+    if (this.templateLoadType === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.templateLoadType === CommunicationEventTypeCode.CerAuthorizationLetter) {
+      this.loadClientAndVendorDraftLetterTemplates();
+    }else{
       if(this.isContinueDraftClicked){
         this.loadClientAndVendorDraftLetterTemplates();
       }else if(this.isNewNotificationClicked){
@@ -131,13 +135,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       }
     }
     this.isNewLetterClicked =  this.notificationGroup ? true : false;
-  }
-
-  addSubscriptions() {
-    this.vendorMailCodesubscription =  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
-      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
-      this.ref.detectChanges();
-    });
     if(this.entityType == EntityTypeCode.Vendor){
       this.variableName = 'Vendor';
       this.typeName = 'VENDOR_VARIABLE'
@@ -146,6 +143,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.variableName = 'Client';
       this.typeName = 'CLIENT_VARIABLE'
     }
+  }
+
+  addSubscriptions() {
+    this.vendorMailCodesubscription =  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+      this.ref.detectChanges();
+    });
   }
 
   getProfileName() {
@@ -352,8 +356,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     if(this.isFormValid){
     this.loaderService.show();
     if(this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
-      this.entityId = this.workflowFacade.clientId ?? 0;
-      this.clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
       this.sendClientAndVendorLetterToPrint(this.entityId, this.clientCaseEligibilityId, draftTemplate, requestType, this.cerEmailAttachedFiles);
     }else{
       this.sendClientAndVendorLetterToPrint(this.entityId, this.clientCaseEligibilityId, draftTemplate, requestType, this.clientAndVendorAttachedFiles);
@@ -452,8 +454,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           eventGroupCode = EventGroupCode.ClientProfile;
           break;
           case CommunicationEventTypeCode.CerAuthorizationLetter:
-            templateTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
+            templateTypeCode = CommunicationEventTypeCode.CerLetterSent;
             eventGroupCode = EventGroupCode.CER;
+            break;
+          case CommunicationEventTypeCode.RestrictedNoticeLetter:
+            templateTypeCode = CommunicationEventTypeCode.RestrictedLetterSent;
+            eventGroupCode = EventGroupCode.Application;
             break;
     }
     return {templateTypeCode, eventGroupCode};
@@ -674,7 +680,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   private saveDraftEsignLetterRequest(draftTemplate: any) {
     this.loaderService.show();
     draftTemplate.entity = this.communicationLetterTypeCode;
-    let formData = this.communicationFacade.prepareEsignLetterData(draftTemplate, this.entityId,this.loginUserId, this.cerEmailAttachedFiles);
+    let formData = this.communicationFacade.prepareEsignLetterData(draftTemplate, this.entityId, this.loginUserId, this.cerEmailAttachedFiles, this.entityType);
     this.communicationFacade.saveEsignLetterForLater(formData)
         .subscribe({
           next: (data: any) =>{
