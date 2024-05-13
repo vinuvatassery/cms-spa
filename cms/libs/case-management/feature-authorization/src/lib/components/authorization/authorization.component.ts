@@ -93,6 +93,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   confirmationModelText:any;
   entityType: string = EntityTypeCode.Client;
   authorization!: any;
+  caseManagerEmail: any = null;
 
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
@@ -445,6 +446,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.updateDataPoints('copyOfSignedApplication', true);
     this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
     this.saveDateAndSignedDoc();
+    this.ref.detectChanges();
   }
 
   handleFileRemoved(e: SelectEvent) {
@@ -462,6 +464,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
             this.loaderService.hide();
             this.updateDataPoints('copyOfSignedApplication', false);
             this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
+            this.ref.detectChanges();          
           }
         },
         error: (err) => {
@@ -476,6 +479,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       this.updateDataPoints('copyOfSignedApplication', false);
       this.loaderService.hide();
       this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
+      this.ref.detectChanges();
     }
 
   }
@@ -518,7 +522,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     if (signedDate == null) {
       this.currentDate = signedDate;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
+      this.updateDataPoints('applicantSignedDate', false);
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+      this.ref.detectChanges();
     }
     else if (signedDate > todayDate) {
       this.currentDate = signedDate;
@@ -538,6 +544,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       this.authorizationForm?.get('signatureNotedDate')?.patchValue(this.dateSignatureNoted)
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
       this.saveDateAndSignedDoc();
+      this.ref.detectChanges();
     }
   }
 
@@ -570,6 +577,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
           }
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Authorization Saved Successfully!");
+        this.ref.detectChanges();
         }
       },
       error: (err) => {
@@ -601,8 +609,8 @@ loadPendingEsignRequestInfo(){
           }
           else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
-            this.isSendEmailClicked=true;
             this.isCERApplicationSigned = true;
+            this.isSendEmailClicked = true;
             this.loadCompletedEsignRequestInfo();
             this.getLoggedInUserProfile();
           }else if(data?.esignRequestStatusCode == EsignStatusCode.Failed){
@@ -686,6 +694,7 @@ loadAuthorization() {
               documentId: data?.signedApplication?.documentId,
             },
           ];
+          this.isSendEmailClicked = false;
         }
         this.updateInitialDataPoints(data?.applicantSignedDate, data.signedApplication);
         this.setStartButtonVisibility.emit(this.isStartButtonEnabled());

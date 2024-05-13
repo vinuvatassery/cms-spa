@@ -382,7 +382,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             downloadLink.click();
             this.communicationLetterTypeCode = '';
             this.onCloseNewLetterClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated! Event Logged.');
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated! An event has been logged.');
           }
           this.loaderService.hide();
           this.navigateConditionally();
@@ -443,7 +443,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         eventGroupCode = EventGroupCode.CER;
         break;
         case CommunicationEventTypeCode.ApplicationAuthorizationLetter:
-        templateTypeCode = CommunicationEventTypeCode.ApplicationAndCERLetterSent;
+        templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetterSent;
         eventGroupCode = EventGroupCode.Application;
         break;
         case CommunicationEventTypeCode.VendorLetter:
@@ -455,7 +455,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           eventGroupCode = EventGroupCode.ClientProfile;
           break;
           case CommunicationEventTypeCode.CerAuthorizationLetter:
-            templateTypeCode = CommunicationEventTypeCode.CerLetterSent;
+            templateTypeCode = CommunicationEventTypeCode.CerAuthorizationLetterSent;
             eventGroupCode = EventGroupCode.CER;
             break;
           case CommunicationEventTypeCode.RestrictedNoticeLetter:
@@ -547,7 +547,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RestrictedNoticeLetter) {
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RestrictedNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter
+              || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
                 this.templateDrpDisable = true;
                 this.cancelDisplay = false;                
               }
