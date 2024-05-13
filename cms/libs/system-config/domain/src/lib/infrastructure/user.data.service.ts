@@ -101,9 +101,16 @@ export class UserDataService {
   }
 
   loadUserInfoData(userId: string) {
-    return this.http.get<LoginUser[]>(
+    return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
         `/system-config/users/${userId}/userInfo`);
+  }
+
+  submitUserInfoData(userInfoData: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${userInfoData.loginUserId}/userInfo`,
+      userInfoData
+    );
   }
 
   loadUsers(): Observable<User[]> {

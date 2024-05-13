@@ -68,5 +68,5 @@
     <span class="material-icons mr-1" aria-label="account settings" aria-hidden="true">person</span>
     <span class="text-bold">Account Settings</span>
   </kendo-dialog-titlebar>
-  <common-account-settings  (loadUserInfoDataEvent)="loadUserInfoData()" [userInfoData$] = "userInfoData$"></common-account-settings>
+  <common-account-settings  (loadUserInfoDataEvent)="loadUserInfoData()" (submitUserInfoDataEvent)="submitUserInfoData($event)" [userInfoData$] = "userInfoData$"></common-account-settings>
 </kendo-dialog>

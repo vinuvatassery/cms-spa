@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, OnInit, Chan
 /** Services **/
 import { AuthService } from '@cms/shared/util-oidc';
 import { UserDataService } from '@cms/system-config/domain';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -20,6 +20,8 @@ export class LoginStatusComponent  implements OnInit{
   @ViewChild('profileAnchor')
   profileAnchor!: ElementRef;
   userInfoData$ = this.userManagementFacade.userInfoData$;
+  submitUserInfoData$ = this.userManagementFacade.submitUserInfoData$;
+  private submitUserInfoSubscription !: Subscription;
 
   isAccountSettingsPopup = false;
   isProfilePopoverOpen = false;
@@ -41,6 +43,12 @@ export class LoginStatusComponent  implements OnInit{
 
   ngOnInit(): void {
     this.loadProfilePhoto();
+    this.submitUserInfoSubscription = this.submitUserInfoData$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.isAccountSettingsPopup = false;
+        this.cd.detectChanges();
+      }
+    });
   }
   user() {
     return this.authService.getUser();
@@ -116,5 +124,10 @@ export class LoginStatusComponent  implements OnInit{
     {
       this.userManagementFacade.loadUserInfoData(this.userInfo?.loginUserId);
     }
+  }
+
+  submitUserInfoData(userInfoData : any)
+  {
+    this.userManagementFacade.submitUserInfoData(userInfoData);
   }
 }

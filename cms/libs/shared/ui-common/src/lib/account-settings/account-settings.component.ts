@@ -19,6 +19,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 export class AccountSettingsComponent implements OnInit, OnDestroy {
   @Input() userInfoData$: any;
   @Output() loadUserInfoDataEvent = new EventEmitter<any>();
+  @Output() submitUserInfoDataEvent = new EventEmitter<any>();
 
   userInfo : any;
   private userInfoSubsriction !: Subscription;
@@ -51,7 +52,6 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userInfoDataHandle();
     this.pronounLovSubscription = this.pronounslov$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
-        debugger;
         const pronounCodes = Object.values(PronounTypeCode)
         this.pronounList = response.filter((item: any) => pronounCodes.includes(item.lovCode));
       }
@@ -65,6 +65,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
   initUserForm() {
     this.userForm = this.formBuilder.group({
+      loginUserId: [''],
       firstName: [{value: '', disabled:true}],
       lastName: [{value: '', disabled:true}],
       initials: [''],
@@ -80,6 +81,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       state:  [''],
       zip:  [''],
       county:  [''],
+      loginUserScheduleId: [''],
       startDate:  [''],
       endDate:  [''],
       startTime:  [''],
@@ -116,7 +118,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         this.userInfo = response;
         if(this.userInfo.userTypeCode === 'INTERNAL')
         {
-          this.disableAddressFields();
+          this.disableFields();
         }
         this.setFormValues(this.userInfo);
         this.cdr.detectChanges();
@@ -147,7 +149,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
   setFormValues(userInfo : any)
   {
-    debugger;
+    this.userForm.controls['loginUserId'].setValue(userInfo.loginUserId);
     this.userForm.controls['firstName'].setValue(userInfo.firstName);
     this.userForm.controls['lastName'].setValue(userInfo.lastName);
     this.userForm.controls['pronoun'].setValue(userInfo.pronouns);
@@ -161,6 +163,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userForm.controls['state'].setValue(userInfo.state);
     this.userForm.controls['zip'].setValue(userInfo.zip);
     this.userForm.controls['county'].setValue(userInfo.county);
+    this.userForm.controls['loginUserScheduleId'].setValue(userInfo?.userSchedules[0]?.loginUserScheduleId);
     this.userForm.controls['startDate'].setValue(userInfo?.userSchedules[0]?.startDate ? new Date(userInfo?.userSchedules[0]?.startDate) : '');
     this.userForm.controls['endDate'].setValue(userInfo?.userSchedules[0]?.endDate ? new Date(userInfo?.userSchedules[0]?.endDate) : '');
     this.userForm.controls['outOfOfficeMsg'].setValue(userInfo?.userSchedules[0]?.message);
@@ -180,13 +183,14 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       }
   }
 
-  disableAddressFields()
+  disableFields()
   {
     this.userForm.controls['address1'].disable();
     this.userForm.controls['address2'].disable();
     this.userForm.controls['city'].disable();
     this.userForm.controls['state'].disable();
     this.userForm.controls['zip'].disable();
+    this.userForm.controls['county'].disable();
 
   }
 
@@ -196,6 +200,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     if(!this.userForm.invalid)
     {
       let payload = {
+        loginUserId : this.userForm.controls['loginUserId'].value ? this.userForm.controls['loginUserId'].value : null,
         userTypeCode : this.userInfo.userTypeCode,
         initials:  this.userForm.controls['initials'].value ?? null,
         pronouns: this.userForm.controls['pronoun'].value ?? null,
@@ -206,11 +211,14 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         state:  this.userForm.controls['state'].value ?? null,
         zip:  this.userForm.controls['zip'].value ?? null,
         county: this.userForm.controls['county'].value ?? null,
+        notificationSummaryEmailCheck : this.userForm.controls['notificationSummaryFlag'].value,
         userSchedules: [{}],
       }
       if(this.isScheduleOutOfOfficeSection)
       {
         let schedule = {
+          loginUserId : this.userForm.controls['loginUserId'].value ? this.userForm.controls['loginUserId'].value : null,
+          loginUserScheduleId : this.userForm.controls['loginUserScheduleId'].value ? this.userForm.controls['loginUserScheduleId'].value : null,
           startDate: this.intl.formatDate(this.userForm.controls['startDate'].value,  this.dateFormat ),
           endDate: this.intl.formatDate(this.userForm.controls['endDate'].value,  this.dateFormat ),
           startTime: new Date(this.userForm.controls['startTime'].value).getHours()+":"+new Date(this.userForm.controls['startTime'].value).getMinutes(),
@@ -220,6 +228,10 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         payload.userSchedules.push(schedule);
         payload.userSchedules.splice(0, 1);
       }
+      else{
+        payload.userSchedules = [];
+      }
+      this.submitUserInfoDataEvent.emit(payload);
     }
   }
 

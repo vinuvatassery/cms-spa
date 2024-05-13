@@ -64,7 +64,8 @@ export class UserManagementFacade {
 
   private userListSubject = new BehaviorSubject<User[]>([]);
   private usersDataSubject = new BehaviorSubject<any>([]);
-  private userInfoDataSubject = new BehaviorSubject<any>([]);
+  private userInfoDataSubject = new Subject<any>();
+  private submitUserInfoDataSubject = new Subject<any>();
   private usersFilterColumnSubject = new BehaviorSubject<any>([]);
   private ddlUserRoleSubject = new BehaviorSubject<any>([]);
   private usersRoleAndPermissionsSubject = new BehaviorSubject<any>([]);
@@ -121,6 +122,7 @@ export class UserManagementFacade {
   usersById$ = this.userByIdSubject.asObservable();
   profilePhotos$ = this.profilePhotosSubject.asObservable();
   userInfoData$ = this.userInfoDataSubject.asObservable();
+  submitUserInfoData$ = this.submitUserInfoDataSubject.asObservable();
   ddlStates$ = this.ddlStatesSubject.asObservable();
 
   /** Constructor **/
@@ -466,6 +468,20 @@ export class UserManagementFacade {
       next: (response : any) => {
         this.hideLoader();
         this.userInfoDataSubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  submitUserInfoData(userInfoData : any) {
+    this.showLoader();
+    this.userDataService.submitUserInfoData(userInfoData).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        this.submitUserInfoDataSubject.next(response);
       },
       error: (err) => {
         this.hideLoader();
