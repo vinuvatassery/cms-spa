@@ -11,7 +11,7 @@
     <kendo-grid-column field="roleDesc" title="Role Assigned" [width]="150">
         <ng-template kendoGridCellTemplate let-dataItem>
             <span class="d-flex align-items-center">
-                <span class="role-identifier role-super-admins"></span>{{ dataItem.roleDesc }}
+                <span [ngClass]="getRolesClassByRoleCode(dataItem)"></span>{{ dataItem.roleDesc }}
             </span>
         </ng-template>
     </kendo-grid-column>
@@ -33,7 +33,7 @@
       <kendo-grid-column field="activeFlag" title="Status" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
             <span class="d-flex align-items-center">
-                <span class="role-identifier role-super-admins"></span>{{ dataItem.activeFlag }}
+                <span class="getRolesClassByRoleCode(dataItem)"></span>{{ dataItem.activeFlag }}
             </span>
         </ng-template>
       </kendo-grid-column>

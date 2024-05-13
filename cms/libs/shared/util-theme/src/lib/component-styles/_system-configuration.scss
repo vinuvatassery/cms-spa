@@ -22,6 +22,27 @@
   }
   &.role-qa-analysts {
     background: $role-color-6;
+  }  
+  &.role-admin {
+    background: $role-color-2;
+  }
+  &.role-client {
+    background: $role-color-3;
+  }
+  &.role-fiscal-specialist {
+    background: $role-color-4;
+  }
+  &.role-case-manager {
+    background: $role-color-5;
+  }
+  &.role-qa-analysts {
+    background: $role-color-6;
+  }
+  &.role-office-specialist {
+    background: $role-color-7;
+  }
+  &.role-case-worker {
+    background: $role-color-8;
   }
 }
 

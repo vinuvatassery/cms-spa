@@ -48,6 +48,17 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
       }
     },
   ];
+
+  public rolesClassList:any = [
+    {roleCode : "CACW",roleClass : 'role-identifier role-case-worker'},
+    {roleCode : "ADMIN",roleClass : 'role-identifier role-admin'},
+    {roleCode : "CLIENT",roleClass : 'role-identifier role-client'},
+    {roleCode : "SUPER_ADMIN",roleClass : 'role-identifier role-super-admins'},
+    {roleCode : "FISCAL_SPECIALIST",roleClass : 'role-identifier role-fiscal-specialist'},
+    {roleCode : "CACM",roleClass : 'role-identifier role-case-manager'},
+    {roleCode : "QA_ANALYST",roleClass : 'role-identifier role-qa-analyst'},
+    {roleCode : "OFFICE_SPECIALIST",roleClass : 'role-identifier role-office-specialist'},
+  ];
   /* Constructor */
   constructor(private readonly userManagementFacade: UserManagementFacade,
     private cd: ChangeDetectorRef,
@@ -156,4 +167,10 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   public rowClass = (args:any) => ({
     "table-row-disabled": (args.dataItem.activeFlag != this.active),
   });
+
+  getRolesClassByRoleCode(dataItem:any)
+  {
+    let roleClass = this.rolesClassList.find((x: any)=>x.roleCode==dataItem.roleCode);
+    return roleClass == null || roleClass ==undefined ? '' : roleClass.roleClass;
+  }
 }
