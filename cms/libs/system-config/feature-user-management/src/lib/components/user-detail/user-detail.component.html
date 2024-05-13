@@ -6,29 +6,51 @@
   </p>
   <div class="flex-row">
     <div class="flex-col">
+      <kendo-floatinglabel text="User Access Type">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" 
+        [data]="userAccessTypeLov$ | async"
+        valueField="lovCode"
+        textField="lovDesc"
+        (valueChange)="onUserAccessValueChange($event)"> </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
       <kendo-floatinglabel text="PNumber or QRNumber">
         <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="First Name">
-        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode" [disabled] = "isAccessTypeInternal"> </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Last Name">
-        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode" [disabled] = "isAccessTypeInternal"> </kendo-textbox>
       </kendo-floatinglabel>
     </div>
   
     <div class="flex-col">
       <kendo-floatinglabel text="Email Address">
-        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode" [disabled] = "isAccessTypeInternal"> </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="User Role">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlUserRole$ | async"> </kendo-dropdownlist>
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" 
+        [data]="ddlUserRole$ | async"
+        valueField="roleCode"
+        textField="roleDesc"
+        > </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col" *ngIf="isCaseManagerSelected">
+      <kendo-floatinglabel text="Domain">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" 
+        [data]="caseManagerDomainLov$ | async"
+        valueField="lovCode"
+        textField="lovDesc"
+        > </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
   </div>

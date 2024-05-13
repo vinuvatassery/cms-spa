@@ -16,6 +16,10 @@ export class FormDocumentsPageComponent implements OnInit {
     this.loadFolderFiles();
   }
 
+  addFolder(payload:any){
+    this.formsAndDocumentFacade.addFolder(payload);
+  }
+  
   loadFolderSort() {
     this.formsAndDocumentFacade.loadfolderSort();
   }
