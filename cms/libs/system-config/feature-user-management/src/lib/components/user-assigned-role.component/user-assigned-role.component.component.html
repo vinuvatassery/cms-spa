@@ -8,7 +8,7 @@
     (dataStateChange)="dataStateChange($event)"
     [loading]="(loader$ | async) === true"
     [rowClass]="rowClass">
-    <kendo-grid-column field="roleDesc" title="Role Assigned" [width]="150">
+    <kendo-grid-column field="roleDesc" title="Role Assigned" [width]="190">
         <ng-template kendoGridCellTemplate let-dataItem>
             <span class="d-flex align-items-center">
                 <span [ngClass]="getRolesClassByRoleCode(dataItem)"></span>{{ dataItem.roleDesc }}
@@ -20,7 +20,7 @@
             {{dataItem.lastModificationTime |date:'MM/dd/YYYY'}}
           </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="120" [sortable]="false" [filterable]="false">
+    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="80" [sortable]="false" [filterable]="false" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
           <common-user-photo-icon 
               [userId]="dataItem.lastModifierId" 

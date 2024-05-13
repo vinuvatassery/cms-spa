@@ -5,7 +5,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
-import { UserManagementFacade } from 'libs/system-config/domain/src/lib/application/user-management.facade';
+import { UserManagementFacade } from '@cms/system-config/domain';
 import { Subject, debounceTime } from 'rxjs';
 
 @Component({

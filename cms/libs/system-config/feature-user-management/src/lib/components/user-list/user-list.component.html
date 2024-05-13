@@ -111,7 +111,7 @@
             </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="120" [sortable]="false" [filterable]="false" class="text-center">
+    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="80" [sortable]="false" [filterable]="false" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <common-user-photo-icon 
             [userId]="dataItem.lastModifierId" 
