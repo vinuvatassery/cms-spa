@@ -193,8 +193,8 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
 
   loadWorkFlowSubscriptionInit() {
     this.loadWorkFlowSubscription = this.loadWorkflow$.subscribe((response: any) => { 
-      if (this.clientHivVerification.resentEmail) {
-        this.loadHivVerificationEmail();
+      if (response && this.clientHivVerification.resentEmail) {
+                this.loadHivVerificationEmail();
       }
       else
       {
@@ -250,7 +250,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   updateHiveVerificationApproval(event: any){
     this.statusUpdatedEligibilityId = event.toSave.eligibilityId;
     this.RejectionReason = event.toSave.reasonForRejection;
-    this.clientHivVerification = event.hivVerification[0];
+    this.clientHivVerification = event.hivVerification;
     this.hivVerificationApprovalFacade.updateHivVerificationApproval(event.toSave);
   }
   selectedItemEligibilityIdSet(eligibilityId:any){

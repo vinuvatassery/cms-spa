@@ -152,7 +152,7 @@
                 >add</span
               >
             </button>
-            <!-- <span class="items-body_details">{{eventLog.eventLogDesc}}</span> -->{{eventLog.eventTypeCode}}
+            <!-- <span class="items-body_details">{{eventLog.eventLogDesc}}</span> -->
              <div class="items-body">
               <productivity-tools-event-log-description
                 (downloadOldAttachmentEvent)="downloadOldAttachment($event)"
@@ -194,7 +194,7 @@
                   </span>
                 </p>
               </div>
-              <div class="items-body">{{eventLog.eventTypeCode}}
+              <div class="items-body">
                 <productivity-tools-event-log-description
                   [content]="subEventLog.eventLogDesc"
                   [limit]="250"
