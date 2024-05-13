@@ -14,12 +14,26 @@
 </div>
 <!-- Select file form client attachment -->
 <div *ngIf="showClientAttachmentUpload" class="mb-2 mt-2">
-  <common-clients-attachment
-  [clientAttachmentForm]="cerAuthorizationForm"
-  [clientDocumentList$]="clientAllDocumentList$"
-  (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
-  ></common-clients-attachment>
-</div>
+  <kendo-floatinglabel  text="Client Documents">
+      
+    <kendo-multicolumncombobox
+      (valueChange)="clientAttachmentChange($event)"
+      [data]="clientAllDocumentList$"
+      textField="documentName"
+      valueField="clientDocumentId"
+      autofocusfield
+      [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
+      [fillMode]="formUiStyle.dropDownFillMode"
+      [filterable]="true"
+   >
+      <kendo-combobox-column >
+        <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+          <span  >{{ dataItem.documentName }}</span>
+        </ng-template>
+      </kendo-combobox-column>
+    </kendo-multicolumncombobox>
+  </kendo-floatinglabel>
+  </div>
 <!-- Select file form forms and documents -->
 <div *ngIf="showFormsAndDocumentsUpload" class="mb-2 mt-2">
 <kendo-floatinglabel  text="Forms & Documents">

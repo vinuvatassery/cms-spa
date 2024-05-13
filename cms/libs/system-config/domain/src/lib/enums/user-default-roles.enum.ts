@@ -6,3 +6,8 @@ export enum UserDefaultRoles {
     FinancialManagerL1 = 'FM1',
     FinancialManagerL2 = 'FM2'
 }
+
+export enum UserAccessType {
+    Internal = 'INTERNAL',
+    External = 'EXTERNAL'
+}

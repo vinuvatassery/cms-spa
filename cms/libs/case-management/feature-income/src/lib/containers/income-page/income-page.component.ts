@@ -484,6 +484,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.checkValidations() && this.noIncomeDetailsForm.valid && cerFormValid) {
         this.save().subscribe((response: any) => {
           if (response) {
+            this.workflowFacade.saveForLaterCompleted(true)  
             this.loaderService.hide();
             if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
               if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
@@ -496,7 +497,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
                   queryParamsHandling: "preserve"
                 });
               }
-            }
+            }else{
+              this.router.navigate(['/case-management/cases']);
+          }
           }
         })
       }

@@ -334,6 +334,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
       this.save().subscribe((response: any) => {
         if (response) {
+          this.workflowFacade.saveForLaterCompleted(true)  
           this.loaderService.hide();
           if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
             if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
@@ -346,7 +347,9 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
                 queryParamsHandling: "preserve"
               });
             }
-          }
+          }else{
+            this.router.navigate(['/case-management/cases']);
+        }
         }
       })
     });
