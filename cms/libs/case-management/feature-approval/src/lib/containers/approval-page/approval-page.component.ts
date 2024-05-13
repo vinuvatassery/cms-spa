@@ -5,7 +5,8 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -48,13 +49,14 @@ import {
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
   styleUrls: ['./approval-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalPageComponent implements OnInit {
+export class ApprovalPageComponent implements OnInit, OnDestroy {
   /** Public properties **/
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -134,6 +136,7 @@ export class ApprovalPageComponent implements OnInit {
   clientHivVerification!:any;
   acceptStatus: string = 'ACCEPT';
   RejectionReason:any;
+  loadWorkFlowSubscription!:Subscription;
 
   /** Constructor **/
   constructor(
@@ -184,8 +187,12 @@ export class ApprovalPageComponent implements OnInit {
     this.loadWorkFlowSubscriptionInit();
   }
 
+  ngOnDestroy(): void {
+    this.loadWorkFlowSubscription?.unsubscribe();
+  }
+
   loadWorkFlowSubscriptionInit() {
-    this.loadWorkflow$.subscribe((response: any) => { 
+    this.loadWorkFlowSubscription = this.loadWorkflow$.subscribe((response: any) => { 
       if (this.clientHivVerification.resentEmail) {
         this.loadHivVerificationEmail();
       }

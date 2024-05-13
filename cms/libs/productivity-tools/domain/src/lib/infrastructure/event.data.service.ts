@@ -27,6 +27,10 @@ export class EventDataService {
 
   }
 
+  loadEventLog(eventLogId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${eventLogId}`)
+  }
+
   loadNotificationEmail(eventLogId:any){
     return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/email?eventLogId=${eventLogId}`)
   }
@@ -35,6 +39,9 @@ export class EventDataService {
     return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/letter?eventLogId=${eventLogId}`)
   }
 
+  loadNotificationSms(eventLogId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/events/${eventLogId}/sms`)
+  }
 
   loadAttachmentPreview(attachmentId: any, attachmentType:any) {
     return this.http.post(
@@ -55,6 +62,11 @@ export class EventDataService {
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/re-print/${eventLogId}`,null,
       {responseType: 'blob'}
     )
+  }
+
+  reSendSmsNotification(smsId:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/sms/${smsId}/re-send`,null);
   }
 
   private bindFormData(event: any): FormData {
