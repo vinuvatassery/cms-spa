@@ -106,6 +106,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   isSaveButtonEnabled$ = this.workflowFacade.isSaveButtonEnabled$;
   showSplitButton$ = this.workflowFacade.showSplitButton$;
   showButton:boolean = true;
+  caseManagerEmail: any = null;
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,

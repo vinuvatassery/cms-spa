@@ -68,6 +68,7 @@ export class VendorHeaderToolsComponent {
   triggerFrom= ScreenType.VendorProfile;
   @Output() openAddReminderEvent = new EventEmitter()
   loginUserEmail: any;
+  caseManagerEmail: any = null;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
