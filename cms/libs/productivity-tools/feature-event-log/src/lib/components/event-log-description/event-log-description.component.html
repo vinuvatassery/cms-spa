@@ -20,7 +20,9 @@
 <kendo-dialog *ngIf="isViewLetterEmailTextDialog" class="app-c-modal app-c-modal-xlg app-c-modal-xlg">
     <kendo-dialog-titlebar (close)="onCloseLetterEmailSmsTextClicked()"> {{headerText}} </kendo-dialog-titlebar>
 
-    <section class="k-dialog-body newcase pl-0">
+    <!-- LETTER/EMAIL -->
+
+    <section class="k-dialog-body newcase pl-0" *ngIf="(entityTypeCode === 'EMAIL_LOG' || entityTypeCode === 'LETTER_LOG')">
         <div class="app-c-editor letter-editor-height">
             <p class="mb-2">
                 {{bodyText}}
@@ -105,7 +107,40 @@
             </div>
         </div>
     </section>
-    <span *ngIf="createdDate">Printed {{ createdDate | date : 'MM/dd/YYYY' }} by 
+
+    <!-- SMS -->
+
+    <section class="k-dialog-body newcase pl-0" *ngIf="(entityTypeCode === 'SMS_LOG')">
+        <div class="app-c-editor letter-editor-height">
+            <p class="mb-2">
+                {{bodyText}}
+            </p>
+        </div>
+        <div *ngIf="smsTo?.length>0">
+            <h5>
+                TO
+            </h5>                  
+            <kendo-chip-list selection="multiple" >
+                <kendo-chip
+                    *ngFor="let to of smsTo"
+                    [label]="to"
+                >
+                </kendo-chip>
+            </kendo-chip-list>
+
+        </div>
+        <div >
+            <h5>
+                MESSAGE
+            </h5>                  
+           {{previewContent}}
+
+        </div>
+
+    </section>
+
+    <!-- common -->
+    <span *ngIf="createdDate">Originally Printed {{ createdDate | date : 'MM/dd/YYYY' }} by 
         <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
         [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="createdUser">
         {{createdUser}}
