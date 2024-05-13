@@ -4,76 +4,99 @@
     prompted to enter the rest of their information such as phone number and fax
     number after they register.
   </p>
-  <div class="flex-row">
-    <div class="flex-col">
-      <h5>User Access Type</h5>
-      <div class="component-list-h">
-        <span class="app-radiobtnwidtext-wrapper">
-          <input type="radio" [(ngModel)]="userAccessType" id="internalUserAccessType" value="INTERNAL" aria-labelledby="Internal" kendoRadioButton name="userAccessType" 
-          (change)="onUserAccessValueChange($event)"/>
-          <kendo-label class="k-radio-label" for="internalUserAccessType" text="Internal" ></kendo-label>
-        </span>
-        <span class="app-radiobtnwidtext-wrapper">
-          <input type="radio" [(ngModel)]="userAccessType"  id="externalUserAccessType" value="EXTERNAL" aria-labelledby="External" kendoRadioButton name="userAccessType" 
-          (change)="onUserAccessValueChange($event)"/>
-          <kendo-label class="k-radio-label" for="externalUserAccessType" text="External" ></kendo-label>
-        </span>
+  <form [formGroup]="userFormGroup">
+    <div class="flex-row">
+      <div class="flex-col">
+        <h5>User Access Type</h5>
+        <div class="component-list-h">
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" [(ngModel)]="userAccessType" id="internalUserAccessType" value="INTERNAL" aria-labelledby="Internal" kendoRadioButton name="userAccessType" 
+            (change)="onUserAccessValueChange($event)"
+            formControlName="userAccessType"/>
+            <kendo-label class="k-radio-label" for="internalUserAccessType" text="Internal" ></kendo-label>
+          </span>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" [(ngModel)]="userAccessType"  id="externalUserAccessType" value="EXTERNAL" aria-labelledby="External" kendoRadioButton name="userAccessType" 
+            (change)="onUserAccessValueChange($event)"
+            formControlName="userAccessType"/>
+            <kendo-label class="k-radio-label" for="externalUserAccessType" text="External" ></kendo-label>
+          </span>          
+        </div>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="PNumber or QRNumber">
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode"
+          formControlName="pNumber"> </kendo-textbox>
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="userFormControls?.pNumber.errors?.required
+                              && userFormControls?.pNumber.touched">
+                              PNumber or QRNumber is required.
+        </kendo-formerror>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="First Name">
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
+          name="firstName"
+          formControlName="firstName"> </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Last Name">
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
+          formControlName="lastName"
+          name="lastName"> </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+
+      <div class="flex-col">
+        <kendo-floatinglabel text="Email Address">
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
+          formControlName="email"
+          name="email"> </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="User Role">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlUserRole$ | async"
+            valueField="roleCode" textField="roleDesc"
+            formControlName="role"
+            name="role"> </kendo-dropdownlist>
+            <kendo-formerror *ngIf="userFormControls?.role.errors?.required
+                              && userFormControls?.role.touched">
+                              Role is required.
+        </kendo-formerror>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col" *ngIf="isCaseManagerSelected">
+        <kendo-floatinglabel text="Domain">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="caseManagerDomainLov$ | async"
+            valueField="lovCode" textField="lovDesc"
+            formControlName="domain"
+            name="domain"> </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col" *ngIf="isCaseManagerSelected">
+        <kendo-floatinglabel text="Group">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="caseManagerAssistorGrp$ | async"
+            valueField="lovCode" textField="lovDesc"
+            formControlName="group"
+            name="group"> </kendo-dropdownlist>
+        </kendo-floatinglabel>
       </div>
     </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="PNumber or QRNumber">
-        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="First Name">
-        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode" [disabled] = "isAccessTypeInternal"> </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="Last Name">
-        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode" [disabled] = "isAccessTypeInternal"> </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-  
-    <div class="flex-col">
-      <kendo-floatinglabel text="Email Address">
-        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode" [disabled] = "isAccessTypeInternal"> </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="User Role">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" 
-        [data]="userRolesList"
-        valueField="roleCode"
-        textField="roleDesc"
-        > </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col" *ngIf="isCaseManagerSelected">
-      <kendo-floatinglabel text="Domain">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" 
-        [data]="caseManagerDomainLov$ | async"
-        valueField="lovCode"
-        textField="lovDesc"
-        > </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-  </div>
+  </form>
 </section>
 
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div *ngIf="isEditValue">
-      <button kendoButton [primary]="true" aria-label="Deactivate" look="flat" (click)="onDeactivateClicked()">Deactivate</button>
+      <button kendoButton [primary]="true" aria-label="Deactivate" look="flat"
+        (click)="onDeactivateClicked()">Deactivate</button>
     </div>
     <div class="justify-content-end">
       <button kendoButton [primary]="true" aria-label="Cancel" look="outline">Cancel</button>
-      <button
-        kendoButton
-        [primary]="true"
-        attr.aria-label=" {{ isEditValue ? 'Update' : 'Add' }}"
-      >
+      <button kendoButton [primary]="true" attr.aria-label=" {{ isEditValue ? 'Update' : 'Add' }}"
+      (click)="onUserSaveButtonClick()">
         {{ isEditValue ? 'Update' : 'Add' }}
       </button>
     </div>
