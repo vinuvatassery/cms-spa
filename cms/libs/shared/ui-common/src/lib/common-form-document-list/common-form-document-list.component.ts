@@ -1,33 +1,25 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
-import {
-  TreeItemDropEvent,
-  DropPosition,
-  TreeItemLookup,
-  DropAction,
-} from '@progress/kendo-angular-treeview';
+import { Component, Input } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormsAndDocumentFacade } from '@cms/system-config/domain';
-import { DialogService } from '@progress/kendo-angular-dialog';
+import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
 const isOfType = (fileName: string, ext: string) =>
-  new RegExp(`.${ext}\$`).test(fileName);
+new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
 @Component({
-  selector: 'system-config-form-documents-list',
-  templateUrl: './form-documents-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'system-config-common-form-document-list',
+  templateUrl: './common-form-document-list.component.html',
 })
-export class FormDocumentsListComponent implements OnInit {
+export class CommonFormDocumentListComponent {
+
+  /** Public properties **/
+  isOpenAttachment = false;
+  @Input() foldersTree: any = [];
+  @Input() treeViewSize: any;
+  @Input() hasChildren:any;
+  selectedfolder: string = "";
+  isShowLoader: boolean = true;
+
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  @Input() folderSortList$: any;
-  @Input() folderFileList$:any;
-  @Output() addFolder = new EventEmitter<any>();
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  @ViewChild('addFolderTemplate', { read: TemplateRef })
-  addFolderTemplate!: TemplateRef<any>;
-  addFolderDialog:any
   isAddNewEditFolderPopup = false;
   isFormsDocumentDeletePopupShow = false;
   isFormsDocumentDeactivatePopupShow = false;
@@ -36,12 +28,6 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
-  /** Public properties **/ 
-  sortOrder : any;
-
-  constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
-    private dialogService: DialogService, 
-  ) {}
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -221,64 +207,51 @@ export class FormDocumentsListComponent implements OnInit {
     }
   }
 
-  /** Internal event methods **/
-  onUploadFileVersionOpenClicked() {
-    this.isUploadFileVersionDetailPopup = true;
-  }
-  onCloseUploadFileVersionDetailClicked() {
-    this.isUploadFileVersionDetailPopup = false;
-  }
-  onUploadFolderOpenClicked() {
-    this.isUploadFolderDetailPopup = true;
-  }
-  onCloseUploadFolderDetailClicked() {
-    this.isUploadFolderDetailPopup = false;
-  }
-  onUploadFileOpenClicked() {
-    this.isUploadFileDetailPopup = true;
-  }
-  onCloseUploadFileDetailClicked() {
-    this.isUploadFileDetailPopup = false;
-  }
-
-  onAddNewEditFolderClicked() {
-    this.addFolderDialog.open();
-  }
-  onCloseAddNewEditFolderClicked() {
-    this.addFolderDialog.close();
-  }
-
-  onFormsDocumentDeleteClicked() {
-    this.isFormsDocumentDeletePopupShow = true;
-  }
-  onCloseFormsDocumentDeleteClicked() {
-    this.isFormsDocumentDeletePopupShow = false;
-  }
-
-  onFormsDocumentDeactivateClicked() {
-    this.isFormsDocumentDeactivatePopupShow = true;
-  }
-  onCloseFormsDocumentDeactivateClicked() {
-    this.isFormsDocumentDeactivatePopupShow = false;
-  }
-
-  onFormsDocumentReactivateClicked() {
-    this.isFormsDocumentReactivatePopupShow = true;
-  }
-  onCloseFormsDocumentReactivateClicked() {
-    this.isFormsDocumentReactivatePopupShow = false;
-  }
-
-  onSortChange(event:any){
-    this.sortOrder = event;
-  }
-  addFolderData(payLoad:any){
-    this.addFolder.emit(payLoad);
-   }
-   onAddFolderClicked(template: TemplateRef<unknown>): void {
-    this.addFolderDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
-    });
-  }
+    /** Internal event methods **/
+    onUploadFileVersionOpenClicked() {
+      this.isUploadFileVersionDetailPopup = true;
+    }
+    onCloseUploadFileVersionDetailClicked() {
+      this.isUploadFileVersionDetailPopup = false;
+    }
+    onUploadFolderOpenClicked() {
+      this.isUploadFolderDetailPopup = true;
+    }
+    onCloseUploadFolderDetailClicked() {
+      this.isUploadFolderDetailPopup = false;
+    }
+    onUploadFileOpenClicked() {
+      this.isUploadFileDetailPopup = true;
+    }
+    onCloseUploadFileDetailClicked() {
+      this.isUploadFileDetailPopup = false;
+    }
+  
+    onAddNewEditFolderClicked() {
+      this.isAddNewEditFolderPopup = true;
+    }
+    onCloseAddNewEditFolderClicked() {
+      this.isAddNewEditFolderPopup = false;
+    }
+  
+    onFormsDocumentDeleteClicked() {
+      this.isFormsDocumentDeletePopupShow = true;
+    }
+    onCloseFormsDocumentDeleteClicked() {
+      this.isFormsDocumentDeletePopupShow = false;
+    }
+  
+    onFormsDocumentDeactivateClicked() {
+      this.isFormsDocumentDeactivatePopupShow = true;
+    }
+    onCloseFormsDocumentDeactivateClicked() {
+      this.isFormsDocumentDeactivatePopupShow = false;
+    }
+  
+    onFormsDocumentReactivateClicked() {
+      this.isFormsDocumentReactivatePopupShow = true;
+    }
+    onCloseFormsDocumentReactivateClicked() {
+      this.isFormsDocumentReactivatePopupShow = false;
+    }
 }
