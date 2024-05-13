@@ -1,14 +1,20 @@
 <kendo-grid [resizable]="true" [navigable]="true"  [data]="gridFinancialClaimsInvoice$ | async" [loading]="isInvoiceServiceGridLoaderShow">
     <kendo-grid-column field="serviceStartDate" title="Service Start" [width]="150">
-      <ng-template kendoGridCellTemplate let-dataItem>{{ dataItem.serviceStartDate | date:'MM-dd-yyyy' }} </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>{{ dataItem.serviceStartDate | date:'MM/dd/yyyy' }} </ng-template>
     </kendo-grid-column> 
     <kendo-grid-column field="serviceEndDate" title="Service End" [width]="100"> 
-      <ng-template kendoGridCellTemplate let-dataItem>{{ dataItem.serviceEndDate | date:'MM-dd-yyyy' }} </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>{{ dataItem.serviceEndDate | date:'MM/dd/yyyy' }} </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="cptCode" title="CPT Code" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="pcaCode" title="PCA" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="medicalService" title="Medical Service" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="serviceCost" title="Service Cost" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="amountDue" title="Amount Due" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="serviceCost" title="Service Cost" [width]="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
+      </ng-template> </kendo-grid-column>
+    <kendo-grid-column field="amountDue" title="Amount Due" [width]="100"> 
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
+      </ng-template></kendo-grid-column>
     <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="100"> </kendo-grid-column>                 
  </kendo-grid>

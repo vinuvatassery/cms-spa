@@ -292,6 +292,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
     this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
       this.save().subscribe((response: any) => {
         if (response) {
+          this.workFlowFacade.saveForLaterCompleted(true)  
           this.loaderService.hide();
           if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
             if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
@@ -304,7 +305,9 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
                 queryParamsHandling: "preserve"
               });
             }
-          }
+          }else{
+            this.router.navigate(['/case-management/cases']);
+        }
         }
       })
     });

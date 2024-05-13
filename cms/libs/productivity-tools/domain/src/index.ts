@@ -30,3 +30,4 @@ export * from './lib/enums/alert-frequency-type-code.enum'
 export * from './lib/enums/constant-value.enum'
 export * from './lib/enums/alert-due-on.enum'
 export * from './lib/enums/stats-type-code.enum'
+export * from './lib/enums/event-type-code';

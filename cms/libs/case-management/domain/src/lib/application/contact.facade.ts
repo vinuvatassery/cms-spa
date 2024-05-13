@@ -777,5 +777,8 @@ export class ContactFacade {
     });
   }
 
+  lodAssignedCaseManager(clientId: any, clientCaseId: any) {
+    return this.contactDataService.getAssignedCaseManager(clientId, clientCaseId);
+  }
   //#endregion client phone//NOSONAR
 }

@@ -136,6 +136,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       if (this.hivVerificationForm.valid) {
         this.save().subscribe((response: any) => {
           if (response) {
+            this.workflowFacade.saveForLaterCompleted(true) 
             this.loaderService.hide();
             if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
               if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
@@ -148,7 +149,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
                   queryParamsHandling: "preserve"
                 });
               }
-            }
+            }else{
+              this.router.navigate(['/case-management/cases']);
+          }
           }
         })
       }

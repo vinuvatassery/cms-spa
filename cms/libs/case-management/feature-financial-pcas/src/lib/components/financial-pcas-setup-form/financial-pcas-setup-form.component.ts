@@ -166,5 +166,14 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
     test.setDate(test.getDate() + 1);
     return test.getMonth() !== month;
    }
+
+   restrictSpecialChar(event: KeyboardEvent): boolean {
+    const key = event.key;
+    return (
+        (key >= '0' && key <= '9') ||  
+        key === 'Backspace'  
+    );
+}
+
 }
 

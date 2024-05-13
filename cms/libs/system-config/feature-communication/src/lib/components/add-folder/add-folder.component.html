@@ -1,4 +1,4 @@
-<section class="k-dialog-body" [formGroup]="Form" >
+<section class="k-dialog-body" [formGroup]="Form">
       <div class="flex-row">
             <div class="flex-col">
                   <p class="text-muted mb-2">Enter the name for the folder and add</p>
@@ -22,12 +22,12 @@
         </div>
 </section>
 
-<kendo-dialog-actions>
-      <div class="justify-content-between">
+<kendo-dialog-actions> 
+      <div class="justify-content-between" *ngIf="isAddNewEditFolderPopup">
             <div class="justify-content-end">
-                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
+                  <button kendoButton [primary]="true" (click)="onCloseAddNewFolderClicked()" look="outline" aria-label="Cancel" > Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Add" (click)="addFormDocument()"> ADD </button>
+                  <button kendoButton [primary]="true" aria-label="Add" (click)="addNewFolder()"> ADD </button>
             </div>
       </div>
 

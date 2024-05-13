@@ -206,7 +206,7 @@
 
               <kendo-grid-column field="checkReconcileDate" title="Date Reconciled" [width]="160">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                    {{ dataItem.checkReconcileDate | date:'MM-dd-yyyy' }}
+                    {{ dataItem.checkReconcileDate | date:'MM/dd/yyyy' }}
                 </ng-template>
                 <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                   <common-grid-cell-date-range-filter
