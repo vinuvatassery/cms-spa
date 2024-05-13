@@ -33,7 +33,7 @@ export class BreadCrumbComponent {
         this.items = [
           {
             text: 'Home',
-            title: 'Home',
+            title: 'dashboard',
           },
           ...this.items,
         ];
@@ -93,7 +93,7 @@ export class BreadCrumbComponent {
       const breadcrumbText = isValidTitleExist ? label : this.formatText(routePath);
       breadcrumbs.push({
         text: breadcrumbText,
-        title: breadcrumbText,
+        title: url.replace('#', ''),
       });
     }
   }
