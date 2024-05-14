@@ -37,11 +37,11 @@
           <span *ngFor="let phone of userInfo?.userPhones; let i = index">
             <p  *ngIf="phone?.deviceTypeCode !== 'FAX'" class="app-card-details">
               <span class="material-icons">phone</span>
-              {{phone.phoneNbr | phone}} - {{phone.deviceTypeDesc}}
+              {{phone.deviceNbr | phone}} - {{phone.deviceTypeDesc}}
             </p>
             <p *ngIf="phone?.deviceTypeCode === 'FAX'" class="app-card-details">
               <span class="material-icons">print</span>
-              {{phone.phoneNbr | phone}}
+              {{phone.deviceNbr | phone}}
             </p>
           </span>
 

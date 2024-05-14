@@ -38,6 +38,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   dateFormat = this.configProvider.appSettings.dateFormat;
   public time: Date = new Date(2000, 2, 10, 13, 30, 0);
   endDateValidator = false;
+  addressControlsList = ["address1", "address2", "city", "state", "zip", "county"]
 
    /** Constructor**/
    constructor(private readonly cdr :ChangeDetectorRef,
@@ -85,6 +86,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       email:  [{value: '', disabled:true}],
       phones: new FormArray([]),
       faxNbr : [''],
+      loginUserAddressId: [''],
       address1:  [''],
       address2:  [''],
       city:  [''],
@@ -173,19 +175,22 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userForm.controls['jobTitle'].setValue(userInfo.jobTitle);
     this.userForm.controls['pOrNbr'].setValue(userInfo.pOrNbr);
     this.userForm.controls['email'].setValue(userInfo.email);
-    this.userForm.controls['address1'].setValue(userInfo.address1);
-    this.userForm.controls['address2'].setValue(userInfo.address2);
-    this.userForm.controls['city'].setValue(userInfo.city);
-    this.userForm.controls['state'].setValue(userInfo.state);
-    this.userForm.controls['zip'].setValue(userInfo.zip);
-    this.userForm.controls['county'].setValue(userInfo.county);
     this.userForm.controls['notificationSummaryFlag'].setValue(userInfo?.notificationSummaryEmailCheck);
-    this.userForm.updateValueAndValidity();
     
     if(!userInfo.state && userInfo.userTypeCode === 'EXTERNAL')
     {
       this.userForm.controls["state"].setValue('OR');
     }
+    if(userInfo?.userAddresses?.length > 0)
+      {
+        this.userForm.controls['loginUserAddressId'].setValue(userInfo?.userAddresses[0]?.loginUserAddressId);
+        this.userForm.controls['address1'].setValue(userInfo?.userAddresses[0]?.address1);
+        this.userForm.controls['address2'].setValue(userInfo?.userAddresses[0]?.address2);
+        this.userForm.controls['city'].setValue(userInfo?.userAddresses[0]?.city);
+        this.userForm.controls['state'].setValue(userInfo?.userAddresses[0]?.state);
+        this.userForm.controls['zip'].setValue(userInfo?.userAddresses[0]?.zip);
+        this.userForm.controls['county'].setValue(userInfo?.userAddresses[0]?.county);
+      }
     if(userInfo?.userSchedules?.length > 0)
     {
       this.userForm.controls['loginUserScheduleId'].setValue(userInfo?.userSchedules[0]?.loginUserScheduleId);
@@ -202,7 +207,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     let faxNumber = userInfo?.userPhones.filter((item : any) => item.deviceTypeCode === 'FAX' );
     if(faxNumber?.length > 0)
       {
-        this.userForm.controls['faxNbr'].setValue(faxNumber[0].phoneNbr);
+        this.userForm.controls['faxNbr'].setValue(faxNumber[0].deviceNbr);
       }
     if(filteredPhones?.length > 0)
     {
@@ -212,6 +217,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     {
       this.addPhoneGroup();
     }
+    this.userForm.updateValueAndValidity();
   }
 
   setPhoneFormValues(userPhones : any)
@@ -221,7 +227,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       this.addPhoneGroup();
       let phoneForm = this.addPhoneForm.at(i) as FormGroup;
       phoneForm.controls['smsTextConsentFlag'].setValue(phone.smsTextConsentFlag === StatusFlag.Yes?true:false);
-      phoneForm.controls['phoneNbr'].setValue(phone.phoneNbr);
+      phoneForm.controls['phoneNbr'].setValue(phone.deviceNbr);
       phoneForm.controls['phoneType'].setValue(phone.deviceTypeCode);
       phoneForm.controls['loginUserPhoneId'].setValue(phone.loginUserPhoneId);
 
@@ -251,14 +257,10 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         initials:  this.userForm.controls['initials'].value ?? null,
         pronouns: this.userForm.controls['pronoun'].value ?? null,
         jobTitle:  this.userForm.controls['jobTitle'].value ?? null,
-        address1:  this.userForm.controls['address1'].value ?? null,
-        address2:  this.userForm.controls['address2'].value ?? null,
-        city:  this.userForm.controls['city'].value ?? null,
-        state:  this.userForm.controls['state'].value ?? null,
-        zip:  this.userForm.controls['zip'].value ?? null,
-        county: this.userForm.controls['county'].value ?? null,
         notificationSummaryEmailCheck : this.userForm.controls['notificationSummaryFlag'].value,
         userSchedules: [{}],
+        userAddresses: [{}],
+        userPhones: [{}],
       }
       if(this.isScheduleOutOfOfficeSection)
       {
@@ -277,6 +279,38 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       else{
         payload.userSchedules = [];
       }
+      if(this.checkAddressControls() && this.userInfo.userTypeCode === 'EXTERNAL')
+        {
+          let address = {
+            loginUserId : this.userForm.controls['loginUserId'].value ? this.userForm.controls['loginUserId'].value : null,
+            loginUserAddressId : this.userForm.controls['loginUserAddressId'].value ? this.userForm.controls['loginUserAddressId'].value : null,
+            address1:  this.userForm.controls['address1'].value ? this.userForm.controls['address1'].value: null,
+            address2:  this.userForm.controls['address2'].value ? this.userForm.controls['address2'].value: null,
+            city:  this.userForm.controls['city'].value ? this.userForm.controls['city'].value: null,
+            state:  this.userForm.controls['state'].value ? this.userForm.controls['state'].value: null,
+            zip:  this.userForm.controls['zip'].value ? this.userForm.controls['zip'].value: null,
+            county: this.userForm.controls['county'].value ? this.userForm.controls['county'].value: null,
+          }
+          payload.userAddresses.push(address);
+          payload.userAddresses.splice(0, 1);
+        }
+        else{
+          payload.userAddresses = [];
+        }
+        let phoneformValues = this.userForm.value;
+        for (let element of phoneformValues.phones) {
+          let phone = {
+            loginUserPhoneId: element.loginUserPhoneId ? element.loginUserPhoneId: null,
+            loginUserId: this.userInfo.loginUserId,
+            deviceTypeCode: element.phoneType ? element.phoneType: null,
+            deviceNbr: element.phoneNbr ? element.phoneNbr: null,
+            smsTextConsentFlag: element.smsTextConsentFlag ? StatusFlag.Yes : StatusFlag.No,
+          };
+          payload.userPhones.push(phone);
+        }
+        payload.userPhones.splice(0, 1);
+
+      
       this.submitUserInfoDataEvent.emit(payload);
     }
   }
@@ -305,7 +339,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.endDateValidator = false;
     const startDate = this.userForm.controls['startDate'].value;
     const endDate = this.userForm.controls['endDate'].value;
-    if (startDate > endDate) {
+    if (startDate > endDate && endDate) {
       this.endDateValidator = true;
     }
   }
@@ -318,6 +352,16 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       this.addPhoneForm.removeAt(i);
       }
 
+  }
+  checkAddressControls()
+  {
+   for(let i = 0; i< this.addressControlsList.length; i++)
+    {
+      const control = this.addressControlsList[i]
+      if(this.userForm.controls[control].value)
+        return true;
+    }
+    return false;
   }
 
 }
