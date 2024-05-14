@@ -603,7 +603,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.columnName = "";
       this.isFiltered = false;
     }
-    this.sortValue();
+    this.setSortValue();
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? "";
     this.sortType = stateData.sort[0]?.dir ?? "";

@@ -35,6 +35,10 @@ export class DocumentDataService {
         apiUrl = this.configurationProvider.appSettings.productivityToolsApiUrl;
         break;
       }
+      case ApiType.SystemConfig: {
+        apiUrl = this.configurationProvider.appSettings.sysConfigApiUrl;
+        break;
+      }
       default: {
         apiUrl = this.configurationProvider.appSettings.caseApiUrl;
         break;
@@ -55,6 +59,10 @@ export class DocumentDataService {
       }
       case ApiType.ProductivityToolsApi: {
         apiUrl = this.configurationProvider.appSettings.productivityToolsApiUrl;
+        break;
+      }
+      case ApiType.SystemConfig: {
+        apiUrl = this.configurationProvider.appSettings.sysConfigApiUrl;
         break;
       }
       default: {

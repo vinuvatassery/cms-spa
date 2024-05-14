@@ -129,45 +129,32 @@ export class UserDataService {
     ]);
   }
 
-  loadUsersData() {
-    return of([
+  loadUsersData(params: any) {
+    const paginationAndSortingDto =
+    {
+      SortType : params.sortType,
+      Sorting : params.sortColumn,
+      SkipCount : params.skipCount,
+      MaxResultCount : params.pagesize,
+      Filter : params.filter
+    }
+    return this.http.post(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/all-users`,
+      paginationAndSortingDto
+    );
+    }
+
+  loadUserAssignedRolesByUserId(data:any) {
+      const pageAndSortedRequestDto =
       {
-        id: 1,
-        name: 'John Samuel',
-        email: 'example@email.com',
-        roleAssigned: 'Housing Supervisor',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'John',
-        status: 'Active',
-      },
-      {
-        id: 2,
-        name: 'Lisa Mock',
-        email: 'example@email.com',
-        roleAssigned: 'Housing Supervisor',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'John',
-        status: 'Active',
-      },
-      {
-        id: 3,
-        name: 'Miller Phil',
-        email: 'example@email.com',
-        roleAssigned: 'Housing Supervisor',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'John',
-        status: 'Active',
-      },
-      {
-        id: 4,
-        name: 'John Mike',
-        email: 'example@email.com',
-        roleAssigned: 'Housing Supervisor',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'John',
-        status: 'Active',
-      },
-    ]);
+        SkipCount : data.skipCount,
+        MaxResultCount : data.maxResultCount,
+        SortType : "asc"
+      }
+      return this.http.post(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${data.userId}/roles`,
+        pageAndSortedRequestDto
+      );
   }
 
   loadUserFilterColumn() {
