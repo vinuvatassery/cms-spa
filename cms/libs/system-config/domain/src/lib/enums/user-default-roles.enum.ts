@@ -3,8 +3,11 @@ export enum UserDefaultRoles {
     CACaseManager = 'CACM' ,
     Admin ='ADMIN',
     SuperAdmin = 'SUPER_ADMIN',
-    FinancialManagerL1 = 'FM1',
-    FinancialManagerL2 = 'FM2'
+    Client = 'CLIENT',
+    FiscalSpecialist = 'FISCAL_SPECIALIST',
+    QaAnalyst ='QA_ANALYST',
+    OfficeSpecialist = 'OFFICE_SPECIALIST',
+    IntakeOrdinator = 'INTAKE_COORDINATOR',
 }
 
 export enum UserAccessType {

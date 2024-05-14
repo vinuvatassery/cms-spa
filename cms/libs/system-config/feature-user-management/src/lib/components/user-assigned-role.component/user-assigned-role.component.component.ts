@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { UserDefaultRoles, UserManagementFacade } from '@cms/system-config/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { BehaviorSubject, Subject } from 'rxjs';
 
@@ -50,14 +50,15 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   ];
 
   public rolesClassList:any = [
-    {roleCode : "CACW",roleClass : 'role-identifier role-case-worker'},
-    {roleCode : "ADMIN",roleClass : 'role-identifier role-admin'},
-    {roleCode : "CLIENT",roleClass : 'role-identifier role-client'},
-    {roleCode : "SUPER_ADMIN",roleClass : 'role-identifier role-super-admins'},
-    {roleCode : "FISCAL_SPECIALIST",roleClass : 'role-identifier role-fiscal-specialist'},
-    {roleCode : "CACM",roleClass : 'role-identifier role-case-manager'},
-    {roleCode : "QA_ANALYST",roleClass : 'role-identifier role-qa-analyst'},
-    {roleCode : "OFFICE_SPECIALIST",roleClass : 'role-identifier role-office-specialist'},
+    {roleCode : UserDefaultRoles.CACaseWorker, roleClass : 'role-identifier role-case-worker'},
+    {roleCode : UserDefaultRoles.Admin, roleClass : 'role-identifier role-admin'},
+    {roleCode : UserDefaultRoles.Client, roleClass : 'role-identifier role-client'},
+    {roleCode : UserDefaultRoles.SuperAdmin, roleClass : 'role-identifier role-super-admins'},
+    {roleCode : UserDefaultRoles.FiscalSpecialist, roleClass : 'role-identifier role-fiscal-specialist'},
+    {roleCode : UserDefaultRoles.CACaseManager, roleClass : 'role-identifier role-case-manager'},
+    {roleCode : UserDefaultRoles.QaAnalyst, roleClass : 'role-identifier role-qa-analyst'},
+    {roleCode : UserDefaultRoles.OfficeSpecialist ,roleClass : 'role-identifier role-office-specialist'},
+    {roleCode : UserDefaultRoles.IntakeCoordinator,roleClass : 'role-identifier role-intake-coordinator'},
   ];
   /* Constructor */
   constructor(private readonly userManagementFacade: UserManagementFacade,

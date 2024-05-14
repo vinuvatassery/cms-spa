@@ -5,35 +5,23 @@
   display: inline-flex;
   border-radius: $border-radius-xlg;
   margin-right: $size-l;
-  &.role-super-admins {
-    background: $role-color-1;
+  &.role-case-worker {
+    background: $role-color-8;
   }
-  &.role-housing-supervisors {
-    background: $role-color-2;
-  }
-  &.role-manager {
-    background: $role-color-3;
-  }
-  &.role-fiscal-specialists {
-    background: $role-color-4;
-  }
-  &.role-housing-coordinators {
-    background: $role-color-5;
-  }
-  &.role-qa-analysts {
-    background: $role-color-6;
-  }  
   &.role-admin {
     background: $role-color-2;
   }
   &.role-client {
-    background: $role-color-3;
+    background: $role-color-5;
+  }
+  &.role-super-admins {
+    background: $role-color-1;
   }
   &.role-fiscal-specialist {
     background: $role-color-4;
   }
   &.role-case-manager {
-    background: $role-color-5;
+    background: $role-color-3;
   }
   &.role-qa-analysts {
     background: $role-color-6;
@@ -41,8 +29,8 @@
   &.role-office-specialist {
     background: $role-color-7;
   }
-  &.role-case-worker {
-    background: $role-color-8;
+  &.role-intake-coordinator {
+    background: $role-color-9;
   }
 }
 
