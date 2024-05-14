@@ -20,6 +20,7 @@
       border-top-width: 0;
       cursor: pointer;
       transition: ease-in all 0.4s;
+      position: relative;
       &:hover {
         background: var(--hive-neutral-palette-100);
       }
