@@ -19,8 +19,8 @@
                         <div class="flex-col flex-col-4 mb-3">
                               <kendo-floatinglabel text="Sort">
                                     <kendo-dropdownlist aria-label="Folder Sort"
-                                          [fillMode]="formUiStyle.dropDownFillMode" [data]="folderSortList$ | async"
-                                          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"  [(ngModel)]="sortOrder"
+                                          [fillMode]="formUiStyle.dropDownFillMode" [data]="folderSortLovList"
+                                          textField="lovDesc" valueField="lovCode"  [(ngModel)]="sortOrder"
                                           (valueChange)="onSortChange($event)">
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>

@@ -108,6 +108,8 @@ export class LovFacade {
   private caseManagerDomainSubject = new BehaviorSubject<Lov[]>([]);
   private userDeviceTypeLovSubject = new Subject<any>();
   private caseManagerAssistorGrpSubject = new BehaviorSubject<Lov[]>([]);
+
+  private folderSortSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
@@ -194,6 +196,8 @@ export class LovFacade {
   caseManagerDomainLov$ = this.caseManagerDomainSubject.asObservable();
   userDeviceTypeLov$ = this.userDeviceTypeLovSubject.asObservable();
   caseManagerAssistorGrp$ = this.caseManagerAssistorGrpSubject.asObservable();
+  folderSortLov$ = this.folderSortSubject.asObservable()
+
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -1074,6 +1078,17 @@ export class LovFacade {
     });
   }
 
+
+  getFolderSortLov() {
+    return this.lovDataService.getLovsbyType(LovType.FolderSort).subscribe({
+      next: (lovResponse) => {
+        this.folderSortSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
 
   getCaseManagerAssistorGrpLov() {
     return this.lovDataService.getLovsbyType(LovType.CaseManagerAssistorGrp).subscribe({

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormsAndDocumentFacade } from '@cms/system-config/domain';
+import { FormsAndDocumentFacade, LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'system-config-form-documents-page',
@@ -7,13 +7,12 @@ import { FormsAndDocumentFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormDocumentsPageComponent implements OnInit {
-  folderSortList$ = this.formsAndDocumentFacade.folderSort$;
+  folderSortList$ = this.lovFacade.folderSortLov$;;
   formsDocumentsList$ = this.formsAndDocumentFacade.formsDocumentsList$;
-  constructor(private readonly formsAndDocumentFacade: FormsAndDocumentFacade) { }
+  constructor(private readonly formsAndDocumentFacade: FormsAndDocumentFacade, private readonly lovFacade: LovFacade) { }
   
   ngOnInit(): void {
     this.loadFolderSort();
-    this.loadFolderFiles();
   }
 
   addFolder(payload:any){
@@ -21,9 +20,9 @@ export class FormDocumentsPageComponent implements OnInit {
   }
   
   loadFolderSort() {
-    this.formsAndDocumentFacade.loadfolderSort();
+    this.lovFacade.getFolderSortLov()
   }
-  loadFolderFiles() {
-    this.formsAndDocumentFacade.loadFolderFile();
+  loadFolderFiles(payload:any) {
+    this.formsAndDocumentFacade.loadFolderFile(payload);
   }
 }
