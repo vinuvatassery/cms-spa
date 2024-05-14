@@ -52,3 +52,5 @@ export * from './lib/enums/user-default-roles.enum';
 export * from './lib/enums/user-level.enum';
 export * from './lib/enums/fab-entity-type-code.enum';
 export * from './lib/enums/add-folder.enum';
+export * from './lib/enums/user-device-type.enum';
+export * from './lib/enums/user-type.enum';

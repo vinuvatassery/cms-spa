@@ -1,11 +1,10 @@
 import { deviceTypeCode } from './../../../../../case-management/domain/src/lib/enums/device-type-code.enum';
 import { Component, ViewEncapsulation, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { Observable, Subscription, filter, first } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade, UserDeviceType, UserManagementFacade, UserType } from '@cms/system-config/domain';
 import { PronounTypeCode } from '../enums/pronoun-type-code.enum';
-import { NullLogger } from '@microsoft/signalr';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { StatusFlag } from '../enums/status-flag.enum';
@@ -39,6 +38,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   public time: Date = new Date(2000, 2, 10, 13, 30, 0);
   endDateValidator = false;
   addressControlsList = ["address1", "address2", "city", "state", "zip", "county"]
+  userDeviceType: typeof UserDeviceType = UserDeviceType;
 
    /** Constructor**/
    constructor(private readonly cdr :ChangeDetectorRef,
@@ -128,7 +128,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
      if(response)
       {
         this.userInfo = response;
-        if(this.userInfo.userTypeCode === 'INTERNAL')
+        if(this.userInfo.userTypeCode === UserType.Internal)
         {
           this.disableFields();
         }
@@ -177,7 +177,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userForm.controls['email'].setValue(userInfo.email);
     this.userForm.controls['notificationSummaryFlag'].setValue(userInfo?.notificationSummaryEmailCheck);
     
-    if(!userInfo.state && userInfo.userTypeCode === 'EXTERNAL')
+    if(!userInfo.state && userInfo.userTypeCode === UserType.External)
     {
       this.userForm.controls["state"].setValue('OR');
     }
@@ -203,8 +203,8 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       this.userForm.controls['endTime'].setValue(endTimeValue? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), endTimeValue[0], endTimeValue[1]) : null);
       this.isScheduleOutOfOfficeSection = true;
     }
-    let filteredPhones = userInfo?.userPhones.filter((item : any) => item.deviceTypeCode !== 'FAX' );
-    let faxNumber = userInfo?.userPhones.filter((item : any) => item.deviceTypeCode === 'FAX' );
+    let filteredPhones = userInfo?.userPhones.filter((item : any) => item.deviceTypeCode !== this.userDeviceType.Fax );
+    let faxNumber = userInfo?.userPhones.filter((item : any) => item.deviceTypeCode === this.userDeviceType.Fax );
     if(faxNumber?.length > 0)
       {
         this.userForm.controls['faxNbr'].setValue(faxNumber[0].deviceNbr);
@@ -225,6 +225,10 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     for (let i = 0; i < userPhones.length; i++) {
       let phone = userPhones[i];
       this.addPhoneGroup();
+      if (phone.deviceTypeCode === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
+        {
+          this.disablePhoneFields(i);
+        }
       let phoneForm = this.addPhoneForm.at(i) as FormGroup;
       phoneForm.controls['smsTextConsentFlag'].setValue(phone.smsTextConsentFlag === StatusFlag.Yes?true:false);
       phoneForm.controls['phoneNbr'].setValue(phone.deviceNbr);
@@ -244,6 +248,14 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userForm.controls['zip'].disable();
     this.userForm.controls['county'].disable();
 
+  }
+
+  disablePhoneFields(index: any)
+  {
+    const phoneForm = this.addPhoneForm.at(index) as FormGroup;
+    phoneForm.controls['smsTextConsentFlag'].disable();
+    phoneForm.controls['phoneNbr'].disable();
+    phoneForm.controls['phoneType'].disable();
   }
 
   onSave()
@@ -279,7 +291,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       else{
         payload.userSchedules = [];
       }
-      if(this.checkAddressControls() && this.userInfo.userTypeCode === 'EXTERNAL')
+      if(this.checkAddressControls() && this.userInfo.userTypeCode === UserType.External)
         {
           let address = {
             loginUserId : this.userForm.controls['loginUserId'].value ? this.userForm.controls['loginUserId'].value : null,

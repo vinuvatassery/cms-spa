@@ -35,11 +35,11 @@
             <a href="mailto:aj.com">{{userInfo?.email}}</a>
           </p>
           <span *ngFor="let phone of userInfo?.userPhones; let i = index">
-            <p  *ngIf="phone?.deviceTypeCode !== 'FAX'" class="app-card-details">
+            <p  *ngIf="phone?.deviceTypeCode !== userDeviceType.Fax" class="app-card-details">
               <span class="material-icons">phone</span>
               {{phone.deviceNbr | phone}} - {{phone.deviceTypeDesc}}
             </p>
-            <p *ngIf="phone?.deviceTypeCode === 'FAX'" class="app-card-details">
+            <p *ngIf="phone?.deviceTypeCode === userDeviceType.Fax" class="app-card-details">
               <span class="material-icons">print</span>
               {{phone.deviceNbr | phone}}
             </p>
