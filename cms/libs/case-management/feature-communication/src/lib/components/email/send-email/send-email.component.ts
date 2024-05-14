@@ -547,7 +547,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     const emailData = this.getEmailPayload(selectedTemplate, templateTypeCode, eventGroupCode);
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     emailFormData.append('description', this.emailSubject ?? selectedTemplate.description);
-    emailFormData.append('mailCode', this.selectedMailCode?.mailCode ?? '');  
+    emailFormData.append('mailCode', this.selectedMailCode?.mailCode ?? '');
     this.communicationFacade.initiateSendEmailRequest(emailFormData)
       .subscribe({
         next: (data: any) => {
