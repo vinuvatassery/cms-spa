@@ -209,21 +209,21 @@ export class EventLogDescriptionComponent implements OnDestroy{
     this.eventLogFacade.loadEventLog(this.eventLogId).subscribe((eventLog:any)=>{     
       if (eventLog?.entityTypeCode === 'EMAIL_LOG') { 
         this.bodyText = 'Click Re-send to send the message again. Attachments will be included in the email.';
-        this.headerText = 'View and Re-Send Email modal';
+        this.headerText = 'View and Re-Send Email';
         this.buttonText = 'RE-SEND'
         this.attachmentType = "email";
         this.eventLogFacade.loadNotificationEmail(this.eventLogId);
       }
       else if (eventLog?.entityTypeCode === 'LETTER_LOG') { 
         this.bodyText = 'Click Re-print to print the letter again. Attachments will be printed in addition to the letter.';
-        this.headerText='View and Recreate Letter modal';
+        this.headerText='View and Recreate Letter';
         this.buttonText = 'RE-PRINT';
         this.attachmentType = "letter";
         this.eventLogFacade.loadNotificationLetter(this.eventLogId);
       }
       else if(eventLog?.entityTypeCode === 'SMS_LOG') {
         this.bodyText = 'Click Re-send to send the messages again.';
-        this.headerText='View and Resend SMS modal';
+        this.headerText='View and Resend SMS';
         this.buttonText = 'RE-SEND';
         this.attachmentType = null;
         this.eventLogFacade.loadNotificationSms(this.eventLogId);
