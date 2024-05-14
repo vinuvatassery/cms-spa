@@ -41,9 +41,9 @@ export class FormsAndDocumentFacade {
         })
     }
 
-    loadFolderFile() {
+    loadFolderFile(payLoad:any) {
         this.showLoader();
-        this.uploadFormandDocumentService.loadFolderFile().subscribe({
+        this.uploadFormandDocumentService.loadFolderFile(payLoad).subscribe({
             next: (response) => {
                 this.formsDocumentsSubject.next(response);
                 this.hideLoader();

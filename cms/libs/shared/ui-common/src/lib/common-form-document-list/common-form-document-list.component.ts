@@ -1,20 +1,22 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { TemplateManagementFacade } from '@cms/system-config/domain';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
+import { map } from 'rxjs';
 const isOfType = (fileName: string, ext: string) =>
-new RegExp(`.${ext}\$`).test(fileName);
+  new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
 @Component({
   selector: 'system-config-common-form-document-list',
   templateUrl: './common-form-document-list.component.html',
 })
-export class CommonFormDocumentListComponent {
+export class CommonFormDocumentListComponent implements OnInit {
 
   /** Public properties **/
   isOpenAttachment = false;
   @Input() foldersTree: any = [];
   @Input() treeViewSize: any;
-  @Input() hasChildren:any;
+  @Input() hasChildren: any;
   selectedfolder: string = "";
   isShowLoader: boolean = true;
 
@@ -28,6 +30,12 @@ export class CommonFormDocumentListComponent {
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
+  public constructor(
+    private readonly templateManagementFacade: TemplateManagementFacade) {
+
+  }
+  ngOnInit(): void {
+  }
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -207,51 +215,52 @@ export class CommonFormDocumentListComponent {
     }
   }
 
-    /** Internal event methods **/
-    onUploadFileVersionOpenClicked() {
-      this.isUploadFileVersionDetailPopup = true;
-    }
-    onCloseUploadFileVersionDetailClicked() {
-      this.isUploadFileVersionDetailPopup = false;
-    }
-    onUploadFolderOpenClicked() {
-      this.isUploadFolderDetailPopup = true;
-    }
-    onCloseUploadFolderDetailClicked() {
-      this.isUploadFolderDetailPopup = false;
-    }
-    onUploadFileOpenClicked() {
-      this.isUploadFileDetailPopup = true;
-    }
-    onCloseUploadFileDetailClicked() {
-      this.isUploadFileDetailPopup = false;
-    }
-  
-    onAddNewEditFolderClicked() {
-      this.isAddNewEditFolderPopup = true;
-    }
-    onCloseAddNewEditFolderClicked() {
-      this.isAddNewEditFolderPopup = false;
-    }
-  
-    onFormsDocumentDeleteClicked() {
-      this.isFormsDocumentDeletePopupShow = true;
-    }
-    onCloseFormsDocumentDeleteClicked() {
-      this.isFormsDocumentDeletePopupShow = false;
-    }
-  
-    onFormsDocumentDeactivateClicked() {
-      this.isFormsDocumentDeactivatePopupShow = true;
-    }
-    onCloseFormsDocumentDeactivateClicked() {
-      this.isFormsDocumentDeactivatePopupShow = false;
-    }
-  
-    onFormsDocumentReactivateClicked() {
-      this.isFormsDocumentReactivatePopupShow = true;
-    }
-    onCloseFormsDocumentReactivateClicked() {
-      this.isFormsDocumentReactivatePopupShow = false;
-    }
+  /** Internal event methods **/
+  onUploadFileVersionOpenClicked() {
+    this.isUploadFileVersionDetailPopup = true;
+  }
+  onCloseUploadFileVersionDetailClicked() {
+    this.isUploadFileVersionDetailPopup = false;
+  }
+  onUploadFolderOpenClicked() {
+    this.isUploadFolderDetailPopup = true;
+  }
+  onCloseUploadFolderDetailClicked() {
+    this.isUploadFolderDetailPopup = false;
+  }
+  onUploadFileOpenClicked() {
+    this.isUploadFileDetailPopup = true;
+  }
+  onCloseUploadFileDetailClicked() {
+    this.isUploadFileDetailPopup = false;
+  }
+
+  onAddNewEditFolderClicked() {
+    this.isAddNewEditFolderPopup = true;
+  }
+  onCloseAddNewEditFolderClicked() {
+    this.isAddNewEditFolderPopup = false;
+  }
+
+  onFormsDocumentDeleteClicked() {
+    this.isFormsDocumentDeletePopupShow = true;
+  }
+  onCloseFormsDocumentDeleteClicked() {
+    this.isFormsDocumentDeletePopupShow = false;
+  }
+
+  onFormsDocumentDeactivateClicked() {
+    this.isFormsDocumentDeactivatePopupShow = true;
+  }
+  onCloseFormsDocumentDeactivateClicked() {
+    this.isFormsDocumentDeactivatePopupShow = false;
+  }
+
+  onFormsDocumentReactivateClicked() {
+    this.isFormsDocumentReactivatePopupShow = true;
+  }
+  onCloseFormsDocumentReactivateClicked() {
+    this.isFormsDocumentReactivatePopupShow = false;
+  }
+
 }

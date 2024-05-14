@@ -18,10 +18,10 @@ export class FormsAndDocumentDataService
     }
 
     loadfolderSort() {
-        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folder-sort`);
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/`);
     }
 
-    loadFolderFile() {
-        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config`);
+    loadFolderFile(payload:any) {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/${payload}`);
     }
 }
