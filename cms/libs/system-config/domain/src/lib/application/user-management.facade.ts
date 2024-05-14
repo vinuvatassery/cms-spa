@@ -310,8 +310,8 @@ export class UserManagementFacade {
     });
   }
 
-  loadDdlUserRole(): void {
-    this.userDataService.loadDdlUserRole().subscribe({
+  loadDdlUserRole(roleType: any, activeFlag: any): void {
+    this.userDataService.loadDdlUserRole(roleType, activeFlag).subscribe({
       next: (response) => {
         this.ddlUserRoleSubject.next(response);
       },

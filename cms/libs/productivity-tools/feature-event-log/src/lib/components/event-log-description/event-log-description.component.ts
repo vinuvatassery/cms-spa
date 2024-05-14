@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import { EventLogFacade, EventTypeCode } from '@cms/productivity-tools/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-event-log-description',
@@ -9,7 +11,9 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
   styleUrls: ['./event-log-description.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventLogDescriptionComponent {
+export class EventLogDescriptionComponent implements OnDestroy{
+  @ViewChild('viewLetterEmailTextDialog', { read: TemplateRef })
+  viewLetterEmailTextDialog!: TemplateRef<any>;
   @Input() content: string = '';
   @Input() limit: number = 0;
   @Input() completeWords: boolean = false;
@@ -29,14 +33,15 @@ export class EventLogDescriptionComponent {
   isViewEmail:boolean = false;
   isViewSmsText:boolean = false;
   viewText:string = '';
-  isViewLetterEmailTextDialog:boolean = false;
+  isViewLetterEmailTextDialog: any;
   ViewLetter:string = "{View Letter}";
   ViewEmail:string = "{View Email}";
-  ViewSmsText:string = "{View Text(s)}";
+  ViewSmsText:string = "{View Text}";
   sanitizedHtml:any;
   bodyText:any;
   notificationEmail$  = this.eventLogFacade.notificationEmail$;
   notificationLetter$  = this.eventLogFacade.notificationLetter$;
+  smsLog$  = this.eventLogFacade.smsLog$;
   notificationEmail:any;
   previewContent:any;
   toEmailAddress:any;
@@ -51,20 +56,32 @@ export class EventLogDescriptionComponent {
   mailingAddress:any = null;
   mailCode:any=null;
   entityTypeCode:any;
+  sourceEntityTypeCode:any;
   eventTypeCode:any;
   entityId:any;
   creatorId:any;
+  smsTo:any;
+  notificationEmailSubscription!:Subscription;
+  notificationLetterSubscription!:Subscription;
+  smsId:any;
 
-  constructor(private sanitizer : DomSanitizer, private readonly eventLogFacade: EventLogFacade,
+  constructor(private sanitizer : DomSanitizer,  private dialogService: DialogService, private readonly eventLogFacade: EventLogFacade,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.notificationEmailSubscriptionInit();
     this.notificationLetterSubscriptionInit();
+    this.notificationSmsSubscriptionInit();
     this.formatContent();
     this.content = this.data;
     this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content);
+
+  }
+
+  ngOnDestroy(): void {
+    this.notificationLetterSubscription.unsubscribe();
+    this.notificationEmailSubscription.unsubscribe();
   }
 
   setHasUrl(anchorArray:any)
@@ -188,27 +205,44 @@ export class EventLogDescriptionComponent {
   }
 
   OpenModalPopUp() {
+    this.resetValues();
+    this.eventLogFacade.loadEventLog(this.eventLogId).subscribe((eventLog:any)=>{     
+      if (eventLog?.entityTypeCode === 'EMAIL_LOG') { 
+        this.bodyText = 'Click Re-send to send the message again. Attachments will be included in the email.';
+        this.headerText = 'View and Re-Send Email modal';
+        this.buttonText = 'RE-SEND'
+        this.attachmentType = "email";
+        this.eventLogFacade.loadNotificationEmail(this.eventLogId);
+      }
+      else if (eventLog?.entityTypeCode === 'LETTER_LOG') { 
+        this.bodyText = 'Click Re-print to print the letter again. Attachments will be printed in addition to the letter.';
+        this.headerText='View and Recreate Letter modal';
+        this.buttonText = 'RE-PRINT';
+        this.attachmentType = "letter";
+        this.eventLogFacade.loadNotificationLetter(this.eventLogId);
+      }
+      else if(eventLog?.entityTypeCode === 'SMS_LOG') {
+        this.bodyText = 'Click Re-send to send the messages again.';
+        this.headerText='View and Resend SMS modal';
+        this.buttonText = 'RE-SEND';
+        this.attachmentType = null;
+        this.eventLogFacade.loadNotificationSms(this.eventLogId);
+      }
+         // this.isViewLetterEmailTextDialog = true;
+this.onViewLetterEmailTextDialogClicked(this.viewLetterEmailTextDialog);
+    });   
+  }
 
-    if (this.viewText.toLowerCase().includes('email')) { 
-      this.bodyText = 'Click Re-send to send the message again. Attachments will be included in the email.';
-      this.headerText = 'View and Re-Send Email modal';
-      this.buttonText = 'RE-SEND'
-      this.attachmentType = "email";
-      this.eventLogFacade.loadNotificationEmail(this.eventLogId);
-    }
-    else if (this.viewText.toLowerCase().includes('letter')) { 
-      this.bodyText = 'Click Re-print to print the letter again. Attachments will be printed in addition to the letter.';
-      this.headerText='View and Recreate Letter modal';
-      this.buttonText = 'RE-PRINT';
-      this.attachmentType = "letter";
-      this.eventLogFacade.loadNotificationLetter(this.eventLogId);
-    }
-    this.isViewLetterEmailTextDialog = true;
-
+  onViewLetterEmailTextDialogClicked(template: TemplateRef<unknown>): void {
+    this.isViewLetterEmailTextDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-np just_start app-c-modal-xlg'
+    });
   }
   onCloseLetterEmailSmsTextClicked()
   {
-    this.isViewLetterEmailTextDialog = false;
+    // this.isViewLetterEmailTextDialog = false;
+    this.isViewLetterEmailTextDialog.close();
     this.cdr.detectChanges();
   }
   downloadOldAttachment(path : any)
@@ -217,41 +251,75 @@ export class EventLogDescriptionComponent {
   }
 
   notificationEmailSubscriptionInit(){
-    this.notificationEmail$.subscribe((notificationLog:any)=>{
+    this.notificationEmailSubscription = this.notificationEmail$.subscribe((notificationLog:any)=>{
       this.setValuesForNotification(notificationLog);
     });
   }
 
   notificationLetterSubscriptionInit() {
-    this.notificationLetter$.subscribe((notificationLog: any) => {
+    this.notificationLetterSubscription =this.notificationLetter$.subscribe((notificationLog: any) => {
+      this.setValuesForNotification(notificationLog);
+    });
+  }
+
+  notificationSmsSubscriptionInit(){
+    this.notificationLetterSubscription =this.smsLog$.subscribe((notificationLog: any) => {
       this.setValuesForNotification(notificationLog);
     });
   }
 
   setValuesForNotification(notificationLog: any) {
     this.eventLogFacade.showLoader()
+      if (notificationLog?.entityTypeCode === 'EMAIL_LOG') { 
+      this.toEmailAddress = notificationLog?.emailAddress?.TO;
+      this.ccEmailAddress = notificationLog?.emailAddress?.CC;
+      this.bccEmailAddress = notificationLog?.emailAddress?.BCC;
+    }
+    else if (notificationLog?.entityTypeCode === 'LETTER_LOG') { 
+      this.toEmailAddress = null;
+      this.ccEmailAddress = null;
+      this.bccEmailAddress = null;      
+      this.mailCode = notificationLog?.mailCode;
+    }
+
+    else if(notificationLog?.entityTypeCode === 'SMS_LOG') {
+      this.smsTo = notificationLog?.to;
+      this.smsId = notificationLog?.smsLogId
+    }
     this.previewContent = notificationLog?.previewContent;   
     this.attachments = notificationLog?.attachments;
     this.createdUser = notificationLog?.createdUser;
     this.createdDate = notificationLog?.createdDate;
     this.entityTypeCode = notificationLog?.entityTypeCode;
     this.eventTypeCode = notificationLog?.eventTypeCode;
+    this.sourceEntityTypeCode = notificationLog?.sourceEntityTypeCode;
     this.entityId = notificationLog?.entityId;
     this.creatorId =  notificationLog?.creatorId;
     this.mailingAddress = notificationLog?.mailingAddress;
-    if (this.buttonText === "RE-SEND") {
-      this.toEmailAddress = notificationLog?.emailAddress?.TO;
-      this.ccEmailAddress = notificationLog?.emailAddress?.CC;
-      this.bccEmailAddress = notificationLog?.emailAddress?.BCC;
-    }
-    if (this.buttonText === "RE-PRINT") {
-      this.toEmailAddress = null;
-      this.ccEmailAddress = null;
-      this.bccEmailAddress = null;      
-      this.mailCode = notificationLog?.mailCode;
-    }
     this.cdr.detectChanges();
     this.eventLogFacade.hideLoader();
+  }
+
+  resetValues() {
+    this.toEmailAddress = null;
+    this.ccEmailAddress = null;
+    this.bccEmailAddress = null;
+    this.toEmailAddress = null;
+    this.ccEmailAddress = null;
+    this.bccEmailAddress = null;
+    this.mailCode = null;
+    this.smsTo = null;
+    this.smsId = null;
+    this.previewContent = null;
+    this.attachments = null;
+    this.createdUser = null;
+    this.createdDate = null;
+    this.entityTypeCode = null;
+    this.eventTypeCode = null;
+    this.sourceEntityTypeCode = null;
+    this.entityId = null;
+    this.creatorId = null;
+    this.mailingAddress = null;
   }
 
   viewAttachment(item: any) {
@@ -271,8 +339,8 @@ export class EventLogDescriptionComponent {
     });
   }
 
-  reSendNotification() {
-    if (this.buttonText === "RE-SEND") {
+  reSendNotification() { 
+    if (this.entityTypeCode === "EMAIL_LOG") {
       this.eventLogFacade.showLoader()
       this.eventLogFacade.reSentEmailNotification(this.eventLogId).subscribe({
         next: (data: any) => {
@@ -287,7 +355,7 @@ export class EventLogDescriptionComponent {
         },
       });
     }
-    else if (this.buttonText === "RE-PRINT") {
+    else if (this.entityTypeCode === "LETTER_LOG") {
       this.eventLogFacade.showLoader()
       this.eventLogFacade.reSentLetterNotification(this.eventLogId).subscribe({
         next: (data: any) => {
@@ -305,7 +373,23 @@ export class EventLogDescriptionComponent {
         error: (err: any) => {
           this.eventLogFacade.hideLoader();
           this.onCloseLetterEmailSmsTextClicked();
-          this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "Error in re-print-email.");
+          this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "Error in re-print-letter.");
+        },
+      });
+    }
+    else if (this.entityTypeCode === "SMS_LOG") {
+      this.eventLogFacade.showLoader()
+      this.eventLogFacade.reSendSmsNotification(this.smsId).subscribe({
+        next: (data: any) => {
+          this.onCloseLetterEmailSmsTextClicked();         
+          this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, data.message);
+          this.cdr.detectChanges()
+          this.eventLogFacade.hideLoader();
+        },
+        error: (err: any) => {
+          this.eventLogFacade.hideLoader();
+          this.onCloseLetterEmailSmsTextClicked();
+          this.eventLogFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "Error in sms sent.");
         },
       });
     }

@@ -17,10 +17,14 @@
     <common-read-more [content]="content" [limit]="limit" [completeWords]="completeWords">
     </common-read-more>
 </div>
-<kendo-dialog *ngIf="isViewLetterEmailTextDialog" class="app-c-modal app-c-modal-xlg app-c-modal-xlg">
+<ng-template #viewLetterEmailTextDialog>
+<!-- <kendo-dialog *ngIf="isViewLetterEmailTextDialog" class="app-c-modal app-c-modal-xlg app-c-modal-xlg"> -->
     <kendo-dialog-titlebar (close)="onCloseLetterEmailSmsTextClicked()"> {{headerText}} </kendo-dialog-titlebar>
 
-    <section class="k-dialog-body newcase pl-0">
+ 
+
+    <section class="k-dialog-body" *ngIf="(entityTypeCode === 'EMAIL_LOG' || entityTypeCode === 'LETTER_LOG')">
+
         <div class="app-c-editor letter-editor-height">
             <p class="mb-2">
                 {{bodyText}}
@@ -43,10 +47,8 @@
             <!-- Email -->
 
             <div>
-                <div *ngIf="toEmailAddress?.length>0">
-                    <h5>
-                        TO
-                    </h5>
+                <div *ngIf="toEmailAddress?.length>0" class="mb-1">
+                    <h5> TO </h5>
                    
                     <kendo-chip-list selection="multiple" >
                         <kendo-chip
@@ -57,10 +59,8 @@
                     </kendo-chip-list>
 
                 </div>
-                <div *ngIf="ccEmailAddress?.length>0">
-                    <h5>
-                        CC
-                    </h5>                  
+                <div *ngIf="ccEmailAddress?.length>0" class="mb-1">
+                    <h5> CC </h5>                  
                     <kendo-chip-list selection="multiple" >
                         <kendo-chip
                             *ngFor="let ccEmail of ccEmailAddress"
@@ -70,10 +70,8 @@
                     </kendo-chip-list>
 
                 </div>
-                <div *ngIf="bccEmailAddress?.length>0">
-                    <h5>
-                        BCC
-                    </h5>
+                <div *ngIf="bccEmailAddress?.length>0" class="mb-1">
+                    <h5> BCC </h5>
                      <kendo-chip-list selection="multiple" >
                         <kendo-chip
                             *ngFor="let bccEmail of bccEmailAddress"
@@ -105,12 +103,54 @@
             </div>
         </div>
     </section>
-    <span *ngIf="createdDate">Printed {{ createdDate | date : 'MM/dd/YYYY' }} by 
-        <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
-        [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="createdUser">
-        {{createdUser}}
-      </button>
-    </span>
+
+
+    <!-- SMS -->
+    <section class="k-dialog-body" *ngIf="(entityTypeCode === 'SMS_LOG')">
+        <div class="app-c-editor letter-editor-height">
+            <p class="mb-2">
+                {{bodyText}}
+            </p>
+        </div>
+        <div *ngIf="smsTo?.length>0">
+            <h5>
+                TO
+            </h5>                  
+            <kendo-chip-list selection="multiple" >
+                <kendo-chip
+                    *ngFor="let to of smsTo"
+                    [label]="to | phone"
+                >                </kendo-chip>
+            </kendo-chip-list>
+
+        </div>
+        <div >
+            <h5 class="mb-1">
+                MESSAGE
+            </h5>                  
+            <div style="    border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 4px">                
+           {{previewContent}}
+            </div>
+
+        </div>
+
+    </section>
+   
+
+    
+    <!-- common -->
+    <section class="k-dialog-body">
+        <span *ngIf="createdDate">Originally Printed {{ createdDate | date : 'MM/dd/YYYY' }} by 
+            <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
+            [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="createdUser">
+            {{createdUser}}
+          </button>
+        </span>
+    </section>
+
+ 
     <kendo-dialog-actions>
         <div class="justify-content-between">
             <div class="justify-content-end">
@@ -124,8 +164,8 @@
 
         </div>
     </kendo-dialog-actions>
-</kendo-dialog>
 
+</ng-template>
 <!-- User Profile Details Card -->
 <kendo-popover #onUserProfileDetailsHovered width="330">
     <ng-template kendoPopoverBodyTemplate>

@@ -110,6 +110,7 @@ export class EmailEditorComponent implements OnInit {
   typeCount!: number;
   myCount!: number;
   otherCount!: number;
+  caseManagerEmail: any = null;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,

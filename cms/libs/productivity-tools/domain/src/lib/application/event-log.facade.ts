@@ -18,6 +18,7 @@ export class EventLogFacade {
   private addEventDataSubject = new Subject<any>();
   private notificationEmailSubject = new Subject<any>();
   private notificationLetterSubject = new Subject<any>();
+  private smsLogSubject = new Subject<any>();
 
   /** Public properties **/
   events$ = this.eventsSubject.asObservable();
@@ -25,6 +26,7 @@ export class EventLogFacade {
   addEventdata$ = this.addEventDataSubject.asObservable();
   notificationEmail$ = this.notificationEmailSubject.asObservable();
   notificationLetter$ = this.notificationLetterSubject.asObservable();
+  smsLog$ = this.smsLogSubject.asObservable();
 
   /** Constructor **/
   constructor(private readonly eventDataService: EventDataService,
@@ -95,6 +97,10 @@ export class EventLogFacade {
     });
   }
 
+  loadEventLog(eventLogId:any){ 
+    return this.eventDataService.loadEventLog(eventLogId);     
+  }
+
   loadNotificationEmail(eventLogId:any){   
     this.showLoader();
     this.eventDataService.loadNotificationEmail(eventLogId).subscribe({
@@ -124,6 +130,21 @@ export class EventLogFacade {
 
   }
 
+  loadNotificationSms(eventLogId:any){
+    this.showLoader();
+    this.eventDataService.loadNotificationSms(eventLogId).subscribe({
+      next: (response : any) => {
+        this.hideLoader()
+        this.smsLogSubject.next(response);        
+      },
+      error: (err) => {
+        this.hideLoader()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+
+  }
+
   reSentEmailNotification(eventLogId:any)
   {
     return this.eventDataService.reSentEmailNotification(eventLogId);
@@ -132,6 +153,11 @@ export class EventLogFacade {
   reSentLetterNotification(eventLogId: any)
   {
     return this.eventDataService.reSentLetterNotification(eventLogId);
+  }
+
+  reSendSmsNotification(eventLogId: any)
+  {
+    return this.eventDataService.reSendSmsNotification(eventLogId);
   }
 
   loadAttachmentPreview(attachmentId: any, attachmentType:any) {

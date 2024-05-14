@@ -106,6 +106,7 @@ export class LovFacade {
   private userAccessTypeSubject = new BehaviorSubject<Lov[]>([]);
   private userRoleTypeSubject = new BehaviorSubject<Lov[]>([]);
   private caseManagerDomainSubject = new BehaviorSubject<Lov[]>([]);
+  private caseManagerAssistorGrpSubject = new BehaviorSubject<Lov[]>([]);
 
   private folderSortSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
@@ -192,6 +193,7 @@ export class LovFacade {
   userAccessTypeLov$ = this.userAccessTypeSubject.asObservable();
   userRoleTypeLov$ = this.userRoleTypeSubject.asObservable();
   caseManagerDomainLov$ = this.caseManagerDomainSubject.asObservable();
+  caseManagerAssistorGrp$ = this.caseManagerAssistorGrpSubject.asObservable();
   folderSortLov$ = this.folderSortSubject.asObservable()
 
   /** Public methods **/
@@ -1073,6 +1075,19 @@ export class LovFacade {
       }
     });
   }
+
+  getCaseManagerAssistorGrpLov() {
+    return this.lovDataService.getLovsbyType(LovType.CaseManagerAssistorGrp).subscribe({
+      next: (lovResponse) => {
+        this.caseManagerAssistorGrpSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
 }
+
 
 
