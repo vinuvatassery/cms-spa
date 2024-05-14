@@ -276,6 +276,7 @@ export class FormDocumentsListComponent implements OnInit {
 
   onSortChange(event:any){
     this.sortOrder = event;
+    this.loadFolders.emit(this.sortOrder.lovCode.toLowerCase());
   }
   addFolderData(payLoad:any){
     this.addFolder.emit(payLoad);
