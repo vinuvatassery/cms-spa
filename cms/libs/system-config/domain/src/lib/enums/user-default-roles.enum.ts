@@ -7,7 +7,9 @@ export enum UserDefaultRoles {
     FiscalSpecialist = 'FISCAL_SPECIALIST',
     QaAnalyst ='QA_ANALYST',
     OfficeSpecialist = 'OFFICE_SPECIALIST',
-    IntakeOrdinator = 'INTAKE_COORDINATOR',
+    IntakeCoordinator = 'INTAKE_COORDINATOR',
+    FinancialManagerL1 = 'FM1',
+    FinancialManagerL2 = 'FM2'
 }
 
 export enum UserAccessType {
