@@ -23,10 +23,10 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() folderFileList$:any;
   @Output() addFolder = new EventEmitter<any>();
   @Input()uploadFolders$: any;
-  
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addFolderTemplate', { read: TemplateRef })
   addFolderTemplate!: TemplateRef<any>;
+  @Output() uploadFiles = new EventEmitter<any>();
   addFolderDialog:any
   isAddNewEditFolderPopup = false;
   isFormsDocumentDeletePopupShow = false;
@@ -304,9 +304,12 @@ export class FormDocumentsListComponent implements OnInit {
   uploadFile(){
     this.isValidateForm= true;
     this.showAttachmentRequiredError= true;
-    if (this.selectedAttachedFile){
-      this.showAttachmentRequiredError= false;
-    }
+    const formData = new FormData();
+  if (this.selectedAttachedFile){
+    this.showAttachmentRequiredError= false;
+      formData.append("uploadFiles",this.selectedAttachedFile );
+      this.uploadFiles.emit(formData);
+  }
   }
   handleFileSelected(event: any) {  
     if(event != undefined)
