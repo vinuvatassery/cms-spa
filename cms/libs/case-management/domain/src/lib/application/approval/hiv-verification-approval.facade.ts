@@ -63,7 +63,7 @@ export class HivVerificationApprovalFacade {
         {
           next: (response: any) => {
             this.hideLoader();                 
-            this.loadWorkflowSubject.next(true);   
+            this.loadWorkflowSubject.next(hivVerification.status);   
             this.navigationMenuFacade.getHivVerificationCount();
             this.notificationSnackbarService.manageSnackBar(
               SnackBarNotificationType.SUCCESS,

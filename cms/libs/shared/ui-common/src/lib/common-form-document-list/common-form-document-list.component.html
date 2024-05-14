@@ -1,0 +1,72 @@
+<div class="flex-row forms_doc-lists">
+ 
+    <kendo-treeview [nodes]="foldersTree" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
+          kendoTreeViewExpandable expandBy="id"  [expandedKeys]="[1]" kendoTreeViewLoadMore [pageSize]="10">
+
+          <ng-template kendoTreeViewNodeTemplate let-dataItem>
+                <div class="attachments-lists-wrap"
+                      [ngClass]="dataItem.isFolder===false ? 'file_list' : 'directory_list'">
+                      <div class="align-items-center">
+                            <span class="material-icons folder_icon" aria-hidden="true"
+                                  *ngIf="dataItem.isFolder===true">folder</span>
+                            <div class="file-section-inner">
+
+
+                                  <span class="attachments-buttons-wrap" *ngIf="dataItem.isFolder===false">
+                                        <button kendoButton look="flat" title="Download" aria-label="Download">
+                                              <span class="material-icons" aria-label="download"
+                                                    aria-hidden="true">file_download</span>
+                                        </button>
+                                        <button kendoButton look="flat" title="Open in new tab"
+                                              aria-label="open in new tab">
+                                              <span class="material-icons" aria-label="open in new tab"
+                                                    aria-hidden="true">open_in_new</span>
+                                        </button>
+                                  </span>
+                                  <label *ngIf="dataItem.isFolder===false">{{dataItem.text}}
+                                        <label>({{dataItem.fileSize| number: '1.0-0'}} MB)</label></label>
+                                  <label *ngIf="dataItem.isFolder===true">{{dataItem.text}}  <span
+                                        *ngIf="dataItem.isFolder===true">{{dataItem.fileCount}} Files</span></label>
+                            </div>
+                      </div>
+                      <span class="attachments-date">Last Updated
+                            {{dataItem.lastModificationTime | date: 'MM/dd/YYYY'}} by
+                            <button kendoButton [primary]="true" class="avatar-sm-btn c-default ml-1"
+                                  kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
+                                  [attr.aria-label]="dataItem.modifiedBy">
+                                  <div class="app-c-avatar avatar-sm">
+                                        <span class="profile-text-avatar">AK</span>
+                                  </div>
+                            </button>
+                            <kendo-dropdownbutton [data]="moreActions" title="More option" aria-label="more actions"
+                                  class="TableActionPopup app-dropdown-action ml-1" buttonClass="k-icon-button"
+                                  [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+                                  <span class="material-icons"> more_vert </span>
+                                  <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
+                                        let-dataItem>
+                                        <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
+                                              [class]="dataItem.buttonType" aria-hidden="false"
+                                              (click)="dataItem.click">
+                                              <span class="material-icons"
+                                                    [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                                              <label> {{ dataItem.text }} </label>
+                                        </button>
+
+                                  </ng-template>
+                            </kendo-dropdownbutton>
+                            <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+                              <ng-template kendoPopoverBodyTemplate>
+                                    <common-user-profile-card [userId]="dataItem.lastModifierId"> </common-user-profile-card>
+                              </ng-template>
+                        </kendo-popover>
+                      </span>
+                </div>
+          </ng-template>
+          <ng-template kendoTreeViewDragClueTemplate let-action="action" let-destinationItem="destinationItem"
+                let-text="text">
+                <span class="k-drag-status k-font-icon k-icon"
+                      [ngClass]="getDragStatus(action, destinationItem)"></span>
+                <span>{{ text }}</span>
+          </ng-template>
+    </kendo-treeview>
+</div>

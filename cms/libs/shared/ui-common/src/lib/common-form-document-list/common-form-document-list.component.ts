@@ -1,39 +1,27 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
-import {
-  TreeItemDropEvent,
-  DropPosition,
-  TreeItemLookup,
-  DropAction,
-} from '@progress/kendo-angular-treeview';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormsAndDocumentFacade } from '@cms/system-config/domain';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subscription } from 'rxjs';
+import { TemplateManagementFacade } from '@cms/system-config/domain';
+import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
+import { map } from 'rxjs';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
 @Component({
-  selector: 'system-config-form-documents-list',
-  templateUrl: './form-documents-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'system-config-common-form-document-list',
+  templateUrl: './common-form-document-list.component.html',
 })
-export class FormDocumentsListComponent implements OnInit {
-  popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  @Input() folderSortList$: any;
-  @Input() folderFileList$:any;
-  @Output() addFolder = new EventEmitter<any>();
-  @Output() loadFolders = new EventEmitter<any>();
+export class CommonFormDocumentListComponent implements OnInit {
 
-  folderSortLovSubscription!: Subscription;
-  folderSortLovList : any;
-  ngOnInit(): void {
-    this.loadSortDropDown(); 
-    this.loadFoldersTree();
-  }
+  /** Public properties **/
+  isOpenAttachment = false;
+  @Input() foldersTree: any = [];
+  @Input() treeViewSize: any;
+  @Input() hasChildren: any;
+  selectedfolder: string = "";
+  isShowLoader: boolean = true;
+
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  @ViewChild('addFolderTemplate', { read: TemplateRef })
-  addFolderTemplate!: TemplateRef<any>;
-  addFolderDialog:any
   isAddNewEditFolderPopup = false;
   isFormsDocumentDeletePopupShow = false;
   isFormsDocumentDeactivatePopupShow = false;
@@ -42,12 +30,12 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
-  /** Public properties **/ 
-  sortOrder : any;
+  public constructor(
+    private readonly templateManagementFacade: TemplateManagementFacade) {
 
-  constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
-    private dialogService: DialogService,private readonly cdr: ChangeDetectorRef, 
-  ) {}
+  }
+  ngOnInit(): void {
+  }
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -248,10 +236,10 @@ export class FormDocumentsListComponent implements OnInit {
   }
 
   onAddNewEditFolderClicked() {
-    this.addFolderDialog.open();
+    this.isAddNewEditFolderPopup = true;
   }
   onCloseAddNewEditFolderClicked() {
-    this.addFolderDialog.close();
+    this.isAddNewEditFolderPopup = false;
   }
 
   onFormsDocumentDeleteClicked() {
@@ -275,31 +263,4 @@ export class FormDocumentsListComponent implements OnInit {
     this.isFormsDocumentReactivatePopupShow = false;
   }
 
-  onSortChange(event:any){
-    this.sortOrder = event;
-    this.loadFolders.emit(this.sortOrder.lovCode.toLowerCase());
-  }
-  addFolderData(payLoad:any){
-    this.addFolder.emit(payLoad);
-   }
-   onAddFolderClicked(template: TemplateRef<unknown>): void {
-    this.addFolderDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
-    });
-  }
-  loadSortDropDown(){
-    this.folderSortLovSubscription = this.folderSortList$.subscribe({
-      next:(response: any[]) => {
-        if(response.length > 0){
-          this.sortOrder = response[0];
-          this.folderSortLovList = response;
-          this.cdr.detectChanges();
-        }
-      }
-    });
-  }
-  loadFoldersTree(){
-    this.loadFolders.emit(true);
-  }
 }

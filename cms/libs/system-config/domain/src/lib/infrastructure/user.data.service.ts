@@ -148,10 +148,10 @@ export class UserDataService {
     return of(['Column 1', 'Column 2', 'Column 3', 'Column 4']);
   }
 
-  loadDdlUserRole() {
+  loadDdlUserRole(roleType: string, activeFlag: string) {
     return this.http.get<LoginUser[]>(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
-        `/system-config/users/roles`
+        `/system-config/users/roles/${roleType}?activeFlag=${activeFlag}`
     );
   }
 

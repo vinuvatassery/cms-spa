@@ -71,6 +71,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
   saveForLaterModelText:string='';
   confirmationModelText:string='';
   entityType = EntityTypeCode.Client;
+  caseManagerEmail: any = null;
   /** Constructor**/
   constructor(
     private route: ActivatedRoute,
