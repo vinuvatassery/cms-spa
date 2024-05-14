@@ -1,7 +1,7 @@
 <div class="flex-row forms_doc-lists">
  
     <kendo-treeview [nodes]="foldersTree" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
-          kendoTreeViewExpandable expandBy="id" [expandedKeys]="[1]" kendoTreeViewLoadMore [pageSize]="10">
+          kendoTreeViewExpandable expandBy="id" [hasChildren]="hasFiles" [children]="fetchSubfolders" [expandedKeys]="[1]" kendoTreeViewLoadMore [pageSize]="10">
 
           <ng-template kendoTreeViewNodeTemplate let-dataItem>
                 <div class="attachments-lists-wrap"

@@ -106,6 +106,8 @@ export class LovFacade {
   private userAccessTypeSubject = new BehaviorSubject<Lov[]>([]);
   private userRoleTypeSubject = new BehaviorSubject<Lov[]>([]);
   private caseManagerDomainSubject = new BehaviorSubject<Lov[]>([]);
+
+  private folderSortSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
@@ -190,6 +192,8 @@ export class LovFacade {
   userAccessTypeLov$ = this.userAccessTypeSubject.asObservable();
   userRoleTypeLov$ = this.userRoleTypeSubject.asObservable();
   caseManagerDomainLov$ = this.caseManagerDomainSubject.asObservable();
+  folderSortLov$ = this.folderSortSubject.asObservable()
+
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -1052,6 +1056,17 @@ export class LovFacade {
     return this.lovDataService.getLovsbyType(LovType.CaseManagerDomain).subscribe({
       next: (lovResponse) => {
         this.caseManagerDomainSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getFolderSortLov() {
+    return this.lovDataService.getLovsbyType(LovType.FolderSort).subscribe({
+      next: (lovResponse) => {
+        this.folderSortSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)

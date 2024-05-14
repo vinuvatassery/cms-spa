@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {
   TreeItemDropEvent,
   DropPosition,
@@ -8,6 +8,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { Subscription } from 'rxjs';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -21,8 +22,12 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() folderSortList$: any;
   @Input() folderFileList$:any;
   @Output() addFolder = new EventEmitter<any>();
+  @Output() loadFolders = new EventEmitter<any>();
+
+  folderSortLovSubscription!: Subscription;
+  folderSortLovList : any;
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.loadSortDropDown(); 
   }
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addFolderTemplate', { read: TemplateRef })
@@ -40,7 +45,7 @@ export class FormDocumentsListComponent implements OnInit {
   sortOrder : any;
 
   constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
-    private dialogService: DialogService, 
+    private dialogService: DialogService,private readonly cdr: ChangeDetectorRef, 
   ) {}
   public moreActions = [
     {
@@ -279,6 +284,17 @@ export class FormDocumentsListComponent implements OnInit {
     this.addFolderDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
+    });
+  }
+  loadSortDropDown(){
+    this.folderSortLovSubscription = this.folderSortList$.subscribe({
+      next:(response: any[]) => {
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
+        this.folderSortLovList = response;
+        this.sortOrder = response[0];
+        this.cdr.detectChanges();
+        this.loadFolders.emit(this.sortOrder.lovCode.toLowerCase());
+      }
     });
   }
 }
