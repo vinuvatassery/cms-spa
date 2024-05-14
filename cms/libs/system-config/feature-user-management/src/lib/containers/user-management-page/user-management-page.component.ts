@@ -22,15 +22,20 @@ export class UserManagementPageComponent {
   sortUserListGrid = this.userManagementFacade.sortUserListGrid;
   usersDataLists$ = this.userManagementFacade.usersData$;
   usersFilterColumn$ = this.userManagementFacade.usersFilterColumn$;
+  userListProfilePhoto$ = this.userManagementFacade.userListProfilePhotoSubject;
   /** Constructor **/
   constructor(private readonly userManagementFacade: UserManagementFacade) { }
 
 
  
   loadUserLists(data: any){
-    this.userManagementFacade.loadUsersData();
+    this.userManagementFacade.loadUsersData(data);
   }
   loadUserGridFilterLists(data: any){
     this.userManagementFacade.loadUserFilterColumn();
+  }
+
+  onExportAllUser(event: any){
+    this.userManagementFacade.onExportAllUser(event);
   }
 }
