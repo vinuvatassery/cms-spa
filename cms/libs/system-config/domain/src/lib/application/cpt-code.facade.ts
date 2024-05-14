@@ -92,19 +92,26 @@ export class CptCodeFacade {
     this.cptCodeService.addCptCode(cptCode).subscribe(
       {
         next: (response: any) => {
-          debugger;
           this.loaderService.hide();
           this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
           this.addCptCodeSubject.next(true);
         },
         error: (err) => {
-          this.loaderService.hide();
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-          this.loggingService.logException(err);
+
+          if (err?.error?.error?.code?.includes('DUPLICATE_CPT_CODE_ALREADY_EXISTS')) {
+            this.showHideSnackBar(SnackBarNotificationType.WARNING, err?.error?.error?.message);
+            this.loggingService.logException(err?.error?.error?.message);
+            this.loaderService.hide();
+          } else{
+            this.loaderService.hide();
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+            this.loggingService.logException(err);
+          }
         },
       }
     );
   }
+
   loadSupportGroupDistinctUserIdsAndProfilePhoto(data: any[]) {
     const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');
     if (distinctUserIds) {
