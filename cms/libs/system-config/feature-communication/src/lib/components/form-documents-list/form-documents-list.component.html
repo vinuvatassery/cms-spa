@@ -39,7 +39,10 @@
 
 
 </section>
-<system-config-common-form-document-list [foldersTree] ="folderFileList$ | async" [treeViewSize]='"large"'></system-config-common-form-document-list>
+<system-config-common-form-document-list
+ [foldersTree] ="folderFileList$ | async" 
+ [treeViewSize]='"large"'
+ (newFileVersionUpload)="openNewFileVersion($event,newVersionFile)"></system-config-common-form-document-list>
 <div class="bottom-fixed-wrapper text-right flex-gap" *ngIf="isDragDropEnabled"> 
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Update" class="">Update</button>
@@ -92,7 +95,8 @@
       </kendo-dialog-actions>
 </kendo-dialog>
 
-<kendo-dialog *ngIf="isUploadFileVersionDetailPopup" (close)="onCloseUploadFileVersionDetailClicked()"
+<ng-template #newVersionFile>
+<kendo-dialog (close)="onCloseUploadFileVersionDetailClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Upload New File Version </kendo-dialog-titlebar>
       <section class="k-dialog-body">
@@ -103,13 +107,22 @@
             <div class="flex-row">
                   <div class="flex-col">
                         <kendo-floatinglabel text="File Name">
-                              <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                              <kendo-textbox 
+                              [(ngModel)]="fileName"
+                              [fillMode]="formUiStyle.inputFillMode">
                               </kendo-textbox>
                         </kendo-floatinglabel>
                   </div>
                   <div class="flex-col mt-2">
 
-                        <kendo-fileselect>
+                        <kendo-fileselect
+                        [multiple]="false"
+                        (select)="handleFileSelected($event)"
+                        (remove)="handleFileRemoved($event)"
+                        [(ngModel)]="file"
+                        [ngModelOptions]="{standalone: true}"
+                        [id]="'email'"
+                        >
                               <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
                                     <span>
                                           <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
@@ -123,7 +136,10 @@
                               </ng-template>
                         </kendo-fileselect>
                         <kendo-formhint>Max file size 25MB</kendo-formhint>
-
+                        <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+                        <kendo-formerror *ngIf="showAttachmentRequiredError">
+                          Attachment is required. Please select a file to upload.
+                      </kendo-formerror>
                   </div>
             </div>
       </section>
@@ -134,12 +150,13 @@
                         <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
                               (click)="onCloseUploadFileVersionDetailClicked()"> Cancel
                         </button>
-                        <button kendoButton [primary]="true" aria-label="Upload"> Upload </button>
+                        <button kendoButton [primary]="true" aria-label="Upload" (click)="uploadAttachments()" > Upload </button>
                   </div>
             </div>
 
       </kendo-dialog-actions>
 </kendo-dialog>
+</ng-template>
 <kendo-dialog *ngIf="isUploadFolderDetailPopup" (close)="onCloseUploadFolderDetailClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Upload New Folder </kendo-dialog-titlebar>

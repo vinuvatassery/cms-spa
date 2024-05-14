@@ -19,7 +19,7 @@ const isFile = (name: string) => name.split('.').length > 1;
 export class FormDocumentsListComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Input() folderSortList$: any;
-  @Input() folderFileList$:any;
+  @Input() folderFileList$: any;
   @Output() addFolder = new EventEmitter<any>();
   ngOnInit(): void {
     throw new Error('Method not implemented.');
@@ -27,7 +27,13 @@ export class FormDocumentsListComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addFolderTemplate', { read: TemplateRef })
   addFolderTemplate!: TemplateRef<any>;
-  addFolderDialog:any
+
+  @ViewChild('newVersionFile', { read: TemplateRef })
+  newVersionFile!: TemplateRef<any>;
+  fileName = ""
+  addFolderDialog: any
+  file: any
+  documentTemplateId:any
   isAddNewEditFolderPopup = false;
   isFormsDocumentDeletePopupShow = false;
   isFormsDocumentDeactivatePopupShow = false;
@@ -36,12 +42,16 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
-  /** Public properties **/ 
-  sortOrder : any;
+  selectedAttachedFile: any
+  attachedFileValidatorSize = false;
+  showAttachmentRequiredError = false;
+  attachedFiles: any
+  /** Public properties **/
+  sortOrder: any;
 
-  constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
-    private dialogService: DialogService, 
-  ) {}
+  constructor(private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
+    private dialogService: DialogService,
+  ) { }
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -64,7 +74,9 @@ export class FormDocumentsListComponent implements OnInit {
       text: 'New Version',
       icon: 'upload',
       click: (data: any): void => {
-        this.onUploadFileVersionOpenClicked();
+        console.log(data)
+        this.onAddFolderClicked(this.newVersionFile)
+        // this.onUploadFileVersionOpenClicked();
       },
     },
     {
@@ -84,150 +96,13 @@ export class FormDocumentsListComponent implements OnInit {
       },
     },
   ];
-  public data: any[] = [
-    {
-      id: 2,
-      text: 'Kendo UI Project',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 3,
-          text: 'about.html',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 4,
-          text: 'index.html',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 5,
-          text: 'logo.png',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-    {
-      id: 6,
-      text: 'New Web Site',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 7,
-          text: 'mockup.jpg',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 8,
-          text: 'Research.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-    {
-      id: 9,
-      text: 'Reports',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 10,
-          text: 'February.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 11,
-          text: 'March.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 12,
-          text: 'April.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-  ];
 
-  public iconClass({ text }: any): any {
-    return {
-      'k-i-folder': !isFile(text),
-      'k-icon': true,
-      'k-font-icon': true,
-    };
-  }
-
-  public getDragStatus(
-    action: DropAction,
-    destinationItem: TreeItemLookup
-  ): string {
-    if (
-      destinationItem &&
-      action === DropAction.Add &&
-      isFile(destinationItem.item.dataItem.text)
-    ) {
-      return 'k-i-cancel';
-    }
-
-    switch (action) {
-      case DropAction.Add:
-        return 'k-i-plus';
-      case DropAction.InsertTop:
-        return 'k-i-insert-top';
-      case DropAction.InsertBottom:
-        return 'k-i-insert-bottom';
-      case DropAction.InsertMiddle:
-        return 'k-i-insert-middle';
-      case DropAction.Invalid:
-      default:
-        return 'k-i-cancel';
-    }
-  }
-
-  public log(event: string, args?: any): void {
-    console.log(event, args);
-  }
-
-  public handleDrop(event: TreeItemDropEvent): void {
-    this.log('nodeDrop', event);
-
-    // prevent drop if attempting to add to file
-    if (
-      isFile(event.destinationItem.item.dataItem.text) &&
-      event.dropPosition === DropPosition.Over
-    ) {
-      event.setValid(false);
-    }
-  }
 
   /** Internal event methods **/
   onUploadFileVersionOpenClicked() {
     this.isUploadFileVersionDetailPopup = true;
   }
-  onCloseUploadFileVersionDetailClicked() {
-    this.isUploadFileVersionDetailPopup = false;
-  }
+
   onUploadFolderOpenClicked() {
     this.isUploadFolderDetailPopup = true;
   }
@@ -269,16 +144,83 @@ export class FormDocumentsListComponent implements OnInit {
     this.isFormsDocumentReactivatePopupShow = false;
   }
 
-  onSortChange(event:any){
+  onSortChange(event: any) {
     this.sortOrder = event;
   }
-  addFolderData(payLoad:any){
+  addFolderData(payLoad: any) {
     this.addFolder.emit(payLoad);
-   }
-   onAddFolderClicked(template: TemplateRef<unknown>): void {
+  }
+  onAddFolderClicked(template: TemplateRef<unknown>): void {
     this.addFolderDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
   }
+
+  openNewFileVersion(event: any, newVersionFile: any) {
+    if(event){
+    this.fileName = event.text
+    this.documentTemplateId = event.documentTemplateId
+    this.onAddFolderClicked(this.newVersionFile);
+    }
+  }
+
+  onCloseUploadFileVersionDetailClicked() {
+    this.addFolderDialog.close()
+    this.file = undefined
+    this.fileName = ""
+    this.isUploadFileVersionDetailPopup = false;
+    this.attachedFileValidatorSize = false;
+    this.showAttachmentRequiredError = false;
+  }
+  handleFileSelected(event: any) {
+    if (event != undefined) {
+      this.selectedAttachedFile = event.files[0].rawFile;
+      this.showAttachmentRequiredError = false;
+      this.attachedFileValidatorSize = false;
+      if (this.selectedAttachedFile.size > 25 * 1024 * 1024) {
+        this.attachedFileValidatorSize = true;
+      }
+      else {
+        this.attachedFileValidatorSize = false;
+      }
+    }
+  }
+  handleFileRemoved(event: any) {
+    this.selectedAttachedFile = undefined;
+    this.showAttachmentRequiredError = true;
+    this.attachedFileValidatorSize = false;
+    this.attachedFiles = null;
+  }
+
+
+  uploadAttachments() {
+    if(this.attachedFileValidatorSize || this.showAttachmentRequiredError){
+      return;
+    }
+    let SystemAttachmentsRequests: any = {};
+    const formData = new FormData();
+    if (!this.selectedAttachedFile) {
+      this.showAttachmentRequiredError = true;
+      return;
+    }
+    this.showAttachmentRequiredError = false;
+    if (this.selectedAttachedFile) {
+      if (!this.attachedFileValidatorSize) {
+        formData.append("UploadedAttachments", this.selectedAttachedFile);
+
+      }
+      formData.append("fileNameDesc", this.fileName)
+      const request ={
+        uploadedAttachments :formData, 
+        fileDetail:{
+            fileName : this.fileName,
+            fileSize : this.selectedAttachedFile.size
+        } 
+    }
+      this.formsAndDocumentFacade.uploadAttachments(formData, this.documentTemplateId);
+    }
+
+  }
+
 }

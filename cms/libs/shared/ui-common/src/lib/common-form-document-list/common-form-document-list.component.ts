@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
 const isOfType = (fileName: string, ext: string) =>
@@ -15,6 +15,7 @@ export class CommonFormDocumentListComponent {
   @Input() foldersTree: any = [];
   @Input() treeViewSize: any;
   @Input() hasChildren:any;
+  @Output() newFileVersionUpload= new EventEmitter<any>();
   selectedfolder: string = "";
   isShowLoader: boolean = true;
 
@@ -49,8 +50,9 @@ export class CommonFormDocumentListComponent {
       buttonType: 'btn-h-primary',
       text: 'New Version',
       icon: 'upload',
-      click: (data: any): void => {
-        this.onUploadFileVersionOpenClicked();
+      click: ($event :any,data: any): void => {
+        console.log(data)
+        this.onUploadFileVersionOpenClicked(data);
       },
     },
     {
@@ -70,146 +72,14 @@ export class CommonFormDocumentListComponent {
       },
     },
   ];
-  public data: any[] = [
-    {
-      id: 2,
-      text: 'Kendo UI Project',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 3,
-          text: 'about.html',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 4,
-          text: 'index.html',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 5,
-          text: 'logo.png',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-    {
-      id: 6,
-      text: 'New Web Site',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 7,
-          text: 'mockup.jpg',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 8,
-          text: 'Research.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-    {
-      id: 9,
-      text: 'Reports',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 10,
-          text: 'February.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 11,
-          text: 'March.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 12,
-          text: 'April.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-  ];
 
-  public iconClass({ text }: any): any {
-    return {
-      'k-i-folder': !isFile(text),
-      'k-icon': true,
-      'k-font-icon': true,
-    };
-  }
 
-  public getDragStatus(
-    action: DropAction,
-    destinationItem: TreeItemLookup
-  ): string {
-    if (
-      destinationItem &&
-      action === DropAction.Add &&
-      isFile(destinationItem.item.dataItem.text)
-    ) {
-      return 'k-i-cancel';
-    }
-
-    switch (action) {
-      case DropAction.Add:
-        return 'k-i-plus';
-      case DropAction.InsertTop:
-        return 'k-i-insert-top';
-      case DropAction.InsertBottom:
-        return 'k-i-insert-bottom';
-      case DropAction.InsertMiddle:
-        return 'k-i-insert-middle';
-      case DropAction.Invalid:
-      default:
-        return 'k-i-cancel';
-    }
-  }
-
-  public log(event: string, args?: any): void {
-    console.log(event, args);
-  }
-
-  public handleDrop(event: TreeItemDropEvent): void {
-    this.log('nodeDrop', event);
-
-    // prevent drop if attempting to add to file
-    if (
-      isFile(event.destinationItem.item.dataItem.text) &&
-      event.dropPosition === DropPosition.Over
-    ) {
-      event.setValid(false);
-    }
-  }
+  
 
     /** Internal event methods **/
-    onUploadFileVersionOpenClicked() {
+    onUploadFileVersionOpenClicked(data:any) {
       this.isUploadFileVersionDetailPopup = true;
+      this.newFileVersionUpload.emit(data)
     }
     onCloseUploadFileVersionDetailClicked() {
       this.isUploadFileVersionDetailPopup = false;
@@ -254,4 +124,61 @@ export class CommonFormDocumentListComponent {
     onCloseFormsDocumentReactivateClicked() {
       this.isFormsDocumentReactivatePopupShow = false;
     }
+
+    public log(event: string, args?: any): void {
+      console.log("addin")
+      console.log(event, args);
+    }
+  
+    public handleDrop(event: TreeItemDropEvent): void {
+      this.log("nodeDrop", event);
+  
+      // prevent drop if attempting to add to file
+      if (
+        isFile(event.destinationItem.item.dataItem.text) &&
+        event.dropPosition === DropPosition.Over
+      ) {
+        event.setValid(false);
+      }
+    }
+
+    
+  public iconClass({ text }: any): any {
+    return {
+      'k-i-folder': !isFile(text),
+      'k-icon': true,
+      'k-font-icon': true,
+    };
+  }
+
+  public getDragStatus(
+    action: DropAction,
+    destinationItem: TreeItemLookup
+  ): string {
+   
+    if (
+      destinationItem &&
+      action === DropAction.Add &&
+      isFile(destinationItem.item.dataItem.templatePath.substring(destinationItem.item.dataItem.templatePath.lastIndexOf('$')))
+    ) {
+      return 'k-i-cancel';
+    }
+
+    switch (action) {
+      case DropAction.Add:
+        return 'k-i-plus';
+      case DropAction.InsertTop:
+        return 'k-i-insert-top';
+      case DropAction.InsertBottom:
+        return 'k-i-insert-bottom';
+      case DropAction.InsertMiddle:
+        return 'k-i-insert-middle';
+      case DropAction.Invalid:
+      default:
+        return 'k-i-cancel';
+    }
+
+    console.log(action)
+  }
+
 }

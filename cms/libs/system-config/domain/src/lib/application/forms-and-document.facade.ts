@@ -12,6 +12,9 @@ export class FormsAndDocumentFacade {
     private formsDocumentsSubject = new BehaviorSubject<any>([]);
     formsDocumentsList$ = this.formsDocumentsSubject.asObservable();
     private folderSortSubject = new BehaviorSubject<any>([]);
+    private uploadDocumentSubject = new BehaviorSubject<any>([]);
+    uploadDocument$ =  this.uploadDocumentSubject.asObservable();
+  
     folderSort$ = this.folderSortSubject.asObservable();
     showLoader() { this.loaderService.show(); }
     hideLoader() { this.loaderService.hide(); }
@@ -74,4 +77,21 @@ export class FormsAndDocumentFacade {
         },
         })
       }
+
+      uploadAttachments(uploadRequest:any , documentTemplateId :string){
+        this.showLoader()
+        this.uploadFormandDocumentService.uploadAttachments(uploadRequest, documentTemplateId).subscribe({
+          next: (Response) => {
+            this.uploadDocumentSubject.next(Response);
+            if (Response) {
+              this.loaderService.hide();
+            }
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.loaderService.hide();
+          },
+        })
+      }
+	  
 }
