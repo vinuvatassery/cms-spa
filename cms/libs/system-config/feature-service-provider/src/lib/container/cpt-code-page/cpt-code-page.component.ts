@@ -14,15 +14,20 @@ export class CptCodePageComponent {
   gridSkipCount = this.cptCodeFacade.skipCount;
   sortValueCptCode = this.cptCodeFacade.sortValueCptCode;
   sortCptCodeGrid = this.cptCodeFacade.sortCptCodeGrid;
-  cptCodeService$ = this.cptCodeFacade.loadCptCodeListsService$; 
+
+
+  cptCodeDataLists$ = this.cptCodeFacade.loadCptCodeListsService$; 
   addCptCode$ = this.cptCodeFacade.addCptCode$;
+  cptCodeProfilePhoto$ = this.cptCodeFacade.cptCodeProfilePhoto$;
+  cptCodeListDataLoader$ = this.cptCodeFacade.cptCodeListDataLoader$;
+
   /** Constructor **/
   constructor(private readonly cptCodeFacade: CptCodeFacade) { }
 
 
  
   loadCptCodeLists(data: any){
-    this.cptCodeFacade.loadCptCodeLists();
+    this.cptCodeFacade.loadCptCodeLists(data);
   }
 
   handleAddCptCode(event: any) {

@@ -25,37 +25,8 @@ export class CptCodeService {
     this.loaderService.hide();
   }
 
-  loadCptCodeListsService() {
-    return of([
-      {
-        id: 1,
-        cptCode: 'XXXXXXXXXX',
-        serviceDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit icus',
-        medicaidRate: 'XXX.00',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-        status: 'Active',
-      },
-      {
-        id: 2,
-        cptCode: 'XXXXXXXXXX',
-        serviceDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit icus',
-        medicaidRate: 'XXX.00',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-        status: 'Active',
-
-      },
-      {
-        id: 3,
-        cptCode: 'XXXXXXXXXX',
-        serviceDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit icus',
-        medicaidRate: 'XXX.00',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-        status: 'Active',
-      },
-    ]);
+  loadCptCodeListsService(paginationParameters: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.sysConfigApiUrl}` + `/system-config/cpt-code/list`, paginationParameters);
   }
 
   addCptCode(cptCode: any) {

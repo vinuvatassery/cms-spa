@@ -14,6 +14,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { CptCodeService } from '../infrastructure/cpt-code.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class CptCodeFacade {
@@ -22,13 +23,19 @@ export class CptCodeFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueCptCode = 'creationTime'; 
+  public sortValueCptCode = 'cptCode1'; 
   public sortCptCodeGrid: SortDescriptor[] = [{
     field: this.sortValueCptCode,
   }];
 
   private loadCptCodeListsServiceSubject = new BehaviorSubject<any>([]);
   loadCptCodeListsService$ = this.loadCptCodeListsServiceSubject.asObservable();
+
+  private cptCodeListDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  cptCodeListDataLoader$ = this.cptCodeListDataLoaderSubject.asObservable();
+
+  private cptCodeProfilePhotoSubject = new Subject();
+  cptCodeProfilePhoto$ = this.cptCodeProfilePhotoSubject.asObservable();
 
   private addCptCodeSubject = new Subject<any>();
   addCptCode$ = this.addCptCodeSubject.asObservable();
@@ -40,7 +47,8 @@ export class CptCodeFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private readonly configurationProvider: ConfigurationProvider
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {}
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -60,13 +68,21 @@ export class CptCodeFacade {
     this.loaderService.hide();
   }
 
-  loadCptCodeLists() {
-    this.cptCodeService.loadCptCodeListsService().subscribe({
-      next: (loadCptCodeListsService) => {
-        this.loadCptCodeListsServiceSubject.next(loadCptCodeListsService);
+  loadCptCodeLists(paginationParameters: any) {
+    this.cptCodeListDataLoaderSubject.next(true);
+    this.cptCodeService.loadCptCodeListsService(paginationParameters).subscribe({
+      next: (dataResponse: any) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.loadCptCodeListsServiceSubject.next(gridView);
+        this.loadSupportGroupDistinctUserIdsAndProfilePhoto(gridView?.data);
+        this.cptCodeListDataLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.cptCodeListDataLoaderSubject.next(false);
       },
     });
   }
@@ -79,7 +95,7 @@ export class CptCodeFacade {
           debugger;
           this.loaderService.hide();
           this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
-          //this.addCptCodeSubject.next(true);
+          this.addCptCodeSubject.next(true);
         },
         error: (err) => {
           this.loaderService.hide();
@@ -88,6 +104,19 @@ export class CptCodeFacade {
         },
       }
     );
+  }
+  loadSupportGroupDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');
+    if (distinctUserIds) {
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+        .subscribe({
+          next: (data: any[]) => {
+            if (data.length > 0) {
+              this.cptCodeProfilePhotoSubject.next(data);
+            }
+          },
+        });
+    }
   }
 
 }
