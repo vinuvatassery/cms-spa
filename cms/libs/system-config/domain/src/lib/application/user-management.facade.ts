@@ -496,6 +496,7 @@ export class UserManagementFacade {
       next: (response : any) => {
         this.hideLoader();
         this.submitUserInfoDataSubject.next(response);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.Message)
       },
       error: (err) => {
         this.hideLoader();
