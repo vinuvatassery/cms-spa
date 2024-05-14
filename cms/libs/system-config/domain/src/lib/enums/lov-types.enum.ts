@@ -70,5 +70,6 @@ export enum LovType {
     UserDeviceType = 'USER_DEVICE_TYPE_CODE',
     UserTypeCode ='USER_TYPE_CODE',
     RoleTypeCode= 'ROLE_TYPE_CODE',
-    CaseManagerDomain = 'CASE_MANAGER_DOMAIN'
+    CaseManagerDomain = 'CASE_MANAGER_DOMAIN',
+    CaseManagerAssistorGrp = 'CASE_MANAGER_ASSISTOR_GRP'
     }
