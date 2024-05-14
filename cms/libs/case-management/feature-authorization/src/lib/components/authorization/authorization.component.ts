@@ -124,7 +124,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.addSaveSubscription();
     this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
-    this.loadPendingEsignRequestInfo();
   }
 
   getNotificationTypeCode(sendEmailClick: boolean) {
@@ -195,6 +194,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
                 }
               }
               this.getNotificationTypeCode(this.paperlessFlag ? true : false);
+              this.loadPendingEsignRequestInfo();
             }
             this.loaderService.hide();
       },
@@ -572,7 +572,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
           if(this.authorization?.applicantSignedDate){
             this.updateDataPoints('applicantSignedDate', true);
           }
-          if(this.authorization?.signedApplication){
+          if(this.uploadedCopyOfSignedApplication){
           this.updateDataPoints('copyOfSignedApplication', true);
           }
         this.loaderService.hide();
@@ -595,11 +595,12 @@ updateSendEmailSuccessStatus(event:any){
 
 loadPendingEsignRequestInfo(){
   this.loaderService.show();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail : CommunicationEventTypeCode.ApplicationAuthorizationEmail)
+  let flowName = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail : CommunicationEventTypeCode.ApplicationAuthorizationEmail;
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', flowName ?? '')
     .subscribe({
       next: (data: any) =>{
         if (data != null && data?.esignRequestId != null) {
-          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.InProgress){
+          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.Started|| data?.esignRequestStatusCode == EsignStatusCode.InProgress){
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
             this.isSendEmailClicked=true;
             this.getLoggedInUserProfile();

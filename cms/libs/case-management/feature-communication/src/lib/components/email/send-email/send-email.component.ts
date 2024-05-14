@@ -628,8 +628,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmailSent;
           eventGroupCode = EventGroupCode.Application;
           break;
-        case CommunicationEventTypeCode.CerAuthorizationEmailSent:
-          templateTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+        case CommunicationEventTypeCode.CerAuthorizationEmail:
+          templateTypeCode = CommunicationEventTypeCode.CerAuthorizationEmailSent;
           eventGroupCode = EventGroupCode.CER;
           break;
         case CommunicationEventTypeCode.RestrictedNoticeEmail:
