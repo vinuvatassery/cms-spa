@@ -39,7 +39,7 @@
         <p class="due-item-heading">{{todoItem?.entityName}} - {{todoItem?.alertName}}</p>
         <div class="due-item-details">
           <span class="notifydate">{{todoItem.isToday ? 'Today' : todoItem.isTomorrow ? 'Tomorrow' : (todoItem?.alertDueDate | date : 'MM/dd/YYYY')}}</span>
-          <kendo-dropdownbutton  title="More option" [data]="reminderActions"
+          <kendo-dropdownbutton  *ngIf="todoItem.customAlertFlag == 'Y'" title="More option" [data]="reminderActions"
            (itemClick)="onToDoActionClicked($event,todoItem)"  (click)="$event.stopPropagation()" look="bare" aria-label="More option"
            class="small-i-btn app-dropdown-action more_action_wid notifydate_dropdown" [popupSettings]="{
               popupClass: reminderActionPopupClass,
