@@ -45,9 +45,9 @@
             </p>
           </span>
 
-          <p *ngIf="userInfo?.address1" class="app-card-details">
+          <p *ngIf="userInfo?.userAddresses?.length > 0" class="app-card-details">
             <span class="material-icons">location_pin</span>
-            {{userInfo.address1}} {{userInfo.city}} {{userInfo.state}}-{{userInfo.zip}}
+            {{userInfo?.userAddresses[0].address1}} {{userInfo?.userAddresses[0].city}} {{userInfo?.userAddresses[0].state}}-{{userInfo?.userAddresses[0].zip}}
           </p>
         </div>
       </div>
