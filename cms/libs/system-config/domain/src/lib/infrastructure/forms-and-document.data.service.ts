@@ -24,4 +24,9 @@ export class FormsAndDocumentDataService
     loadFolderFile() {
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config`);
     }
+
+    getFolderName() 
+    {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folders`,);
+    }
 }

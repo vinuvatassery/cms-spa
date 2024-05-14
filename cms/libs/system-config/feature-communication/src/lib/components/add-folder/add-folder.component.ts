@@ -19,7 +19,7 @@ export class AddFolderComponent implements OnInit {
   CustomCounter!: string;
   CustomMaxLength = 50;
   isAddNewEditFolderPopup = true;
-  constructor(public formBuilder: FormBuilder,){
+  constructor(public formBuilder: FormBuilder){
       this.Form = this.formBuilder.group({})
   }
   ngOnInit(): void {

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {
   TreeItemDropEvent,
   DropPosition,
@@ -8,6 +8,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -21,9 +22,8 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() folderSortList$: any;
   @Input() folderFileList$:any;
   @Output() addFolder = new EventEmitter<any>();
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
+  @Input()uploadFolders$: any;
+  
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addFolderTemplate', { read: TemplateRef })
   addFolderTemplate!: TemplateRef<any>;
@@ -36,12 +36,32 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
+  showAttachmentRequiredError: boolean = false;
+	public selectedAttachedFile: any;
+  public uploadedAttachedFile: any;
+	attachedFileValidatorSize: boolean = false;
+  value: any
+  forms!: FormGroup;
+  attachedFiles: any;
+  isValidateForm= false;
+			
   /** Public properties **/ 
   sortOrder : any;
 
   constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
+    public formBuilder: FormBuilder,
     private dialogService: DialogService, 
-  ) {}
+    private readonly cdr: ChangeDetectorRef,
+  )  { }
+  ngOnInit(): void {
+  this.initForm()
+  }
+  initForm()
+  {
+    this.forms = this.formBuilder.group({
+      folderName: ['', Validators.required]
+    });
+  }
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -281,4 +301,33 @@ export class FormDocumentsListComponent implements OnInit {
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
   }
+  uploadFile(){
+    this.isValidateForm= true;
+    this.showAttachmentRequiredError= true;
+    if (this.selectedAttachedFile){
+      this.showAttachmentRequiredError= false;
+    }
+  }
+  handleFileSelected(event: any) {  
+    if(event != undefined)
+     {
+           this.selectedAttachedFile=event.files[0].rawFile;
+           this.showAttachmentRequiredError = false;
+           this.attachedFileValidatorSize=false;
+           if (this.selectedAttachedFile.size > 25 * 1024 * 1024) 
+           {
+            this.attachedFileValidatorSize = true; 
+           } 
+           else 
+           {
+           this.attachedFileValidatorSize = false; 
+            }
+   }
+ }
+ handleFileRemoved(event: any) {
+  this.selectedAttachedFile= undefined;
+  this.showAttachmentRequiredError = true;
+   this.attachedFileValidatorSize=false;
+  this.attachedFiles = null;
+}
 }

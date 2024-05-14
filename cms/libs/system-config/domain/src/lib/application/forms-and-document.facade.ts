@@ -13,13 +13,14 @@ export class FormsAndDocumentFacade {
     formsDocumentsList$ = this.formsDocumentsSubject.asObservable();
     private folderSortSubject = new BehaviorSubject<any>([]);
     folderSort$ = this.folderSortSubject.asObservable();
+    private uploadFolderSubject = new BehaviorSubject<any>([]);
+    uploadFolder$ =  this.uploadFolderSubject.asObservable();
     showLoader() { this.loaderService.show(); }
     hideLoader() { this.loaderService.hide(); }
     constructor(private readonly uploadFormandDocumentService: FormsAndDocumentDataService,
         private readonly loggingService: LoggingService,
         private readonly loaderService: LoaderService,
         private readonly notificationSnackbarService: NotificationSnackbarService) {}
-
     showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
         if (type == SnackBarNotificationType.ERROR) {
             const err = subtitle;
@@ -74,4 +75,14 @@ export class FormsAndDocumentFacade {
         },
         })
       }
-}
+      getFolderName() {
+        this.uploadFormandDocumentService.getFolderName().subscribe({
+          next:(response) => {
+            this.uploadFolderSubject.next(response);
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          },
+           }); 
+        }
+    }
