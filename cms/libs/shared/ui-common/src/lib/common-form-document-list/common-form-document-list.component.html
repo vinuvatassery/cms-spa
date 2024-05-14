@@ -1,7 +1,7 @@
 <div class="flex-row forms_doc-lists">
  
     <kendo-treeview [nodes]="foldersTree" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
-          kendoTreeViewExpandable expandBy="id" [hasChildren]="hasFiles" [children]="fetchSubfolders" [expandedKeys]="[1]" kendoTreeViewLoadMore [pageSize]="10">
+          kendoTreeViewExpandable expandBy="id"  [expandedKeys]="[1]" kendoTreeViewLoadMore [pageSize]="10">
 
           <ng-template kendoTreeViewNodeTemplate let-dataItem>
                 <div class="attachments-lists-wrap"
@@ -54,6 +54,11 @@
 
                                   </ng-template>
                             </kendo-dropdownbutton>
+                            <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+                              <ng-template kendoPopoverBodyTemplate>
+                                    <common-user-profile-card [userId]="dataItem.lastModifierId"> </common-user-profile-card>
+                              </ng-template>
+                        </kendo-popover>
                       </span>
                 </div>
           </ng-template>
@@ -64,9 +69,4 @@
                 <span>{{ text }}</span>
           </ng-template>
     </kendo-treeview>
-    <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-          <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card> </common-user-profile-card>
-          </ng-template>
-    </kendo-popover>
 </div>

@@ -28,6 +28,7 @@ export class FormDocumentsListComponent implements OnInit {
   folderSortLovList : any;
   ngOnInit(): void {
     this.loadSortDropDown(); 
+    this.loadFoldersTree();
   }
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addFolderTemplate', { read: TemplateRef })
@@ -290,12 +291,15 @@ export class FormDocumentsListComponent implements OnInit {
   loadSortDropDown(){
     this.folderSortLovSubscription = this.folderSortList$.subscribe({
       next:(response: any[]) => {
-        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
-        this.folderSortLovList = response;
-        this.sortOrder = response[0];
-        this.cdr.detectChanges();
-        this.loadFolders.emit(this.sortOrder.lovCode.toLowerCase());
+        if(response.length > 0){
+          this.sortOrder = response[0];
+          this.folderSortLovList = response;
+          this.cdr.detectChanges();
+        }
       }
     });
+  }
+  loadFoldersTree(){
+    this.loadFolders.emit(true);
   }
 }

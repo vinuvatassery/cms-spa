@@ -263,19 +263,4 @@ export class CommonFormDocumentListComponent implements OnInit {
     this.isFormsDocumentReactivatePopupShow = false;
   }
 
-  fetchSubfolders = (node: any) =>
-    this.templateManagementFacade.getDirectoryContent('Form', node.documentTemplateId).pipe(map((response: any[]) => {
-      return this.folderstreeformatting(response);
-    }));
-  hasFiles = function (data: any) {
-    debugger;
-    return (data.typeCode.toUpperCase() === 'Form'.toUpperCase() && data.templateSize === 0) ? true : false;
-  }
-
-  folderstreeformatting(folderdata: any) {
-    folderdata.forEach((element: any) => {
-      element.isFolder = (element.typeCode.toUpperCase() === 'Form'.toUpperCase() && element.templateSize === 0);
-      element.templateSize = (element.templateSize / (1024 * 1024));
-    });
-  }
 }
