@@ -1,4 +1,3 @@
-import { deviceTypeCode } from './../../../../../case-management/domain/src/lib/enums/device-type-code.enum';
 import { Component, ViewEncapsulation, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subscription } from 'rxjs';
