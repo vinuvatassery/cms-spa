@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { CptCodeService } from '../infrastructure/cpt-code.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { UserManagementFacade } from '../application/user-management.facade';
 
 @Injectable({ providedIn: 'root' })
 export class CptCodeFacade {
