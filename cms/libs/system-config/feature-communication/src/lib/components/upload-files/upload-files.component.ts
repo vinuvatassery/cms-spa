@@ -18,6 +18,7 @@ export class UploadFilesComponent implements OnInit {
   @Input()getFolders$: any;
   attachedFiles: any;
   isValidateForm= false;
+  multipleFilesUpload = true;
   @Output() uploadFilesEvent = new EventEmitter<any>();
   @Output () onCloseUploadFileDetailClicked = new EventEmitter<any>();
   constructor(public formBuilder: FormBuilder){

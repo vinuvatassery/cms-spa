@@ -23,6 +23,7 @@
     <common-document-upload
      [typeCode]="'File_upload'"
      [file]="uploadedAttachedFile"
+     [multipleFilesUpload]=" multipleFilesUpload"
      [isFileViewable]="true"
     (handleFileSelectEvent)="handleFileSelected($event)"
     (handleFileRemoveEvent)="handleFileRemoved($event)"
