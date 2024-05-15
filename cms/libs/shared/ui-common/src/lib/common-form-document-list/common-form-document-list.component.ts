@@ -17,6 +17,7 @@ export class CommonFormDocumentListComponent implements OnInit {
   @Input() foldersTree: any = [];
   @Input() treeViewSize: any;
   @Input() hasChildren: any;
+  @Input() children:any;
   selectedfolder: string = "";
   isShowLoader: boolean = true;
 
@@ -263,4 +264,29 @@ export class CommonFormDocumentListComponent implements OnInit {
     this.isFormsDocumentReactivatePopupShow = false;
   }
 
+  onDownloadViewFileClick(viewType: string, templateId: string,templateName:string) {
+
+    if (templateId === undefined || templateId === '') {
+      return;
+    }
+    //this.loaderService.show()
+    this.templateManagementFacade.getFormsandDocumentsViewDownload(templateId).subscribe({
+      next: (data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        if (viewType === 'view') {
+          window.open(fileUrl, "_blank");
+        } else {
+          const downloadLink = document.createElement('a');
+          downloadLink.href = fileUrl;
+          downloadLink.download = templateName;
+          downloadLink.click();
+        }
+        //this.loaderService.hide();
+      },
+      error: (error: any) => {
+        // this.loaderService.hide();
+        // this.showSnackBar(SnackBarNotificationType.ERROR, error)
+      }
+    })
+  }
 }
