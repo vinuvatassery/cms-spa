@@ -553,7 +553,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           if (data) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message);
-            this.communicationEmailTypeCode = '';
             this.onCloseSendEmailClicked();
           }
           this.ref.detectChanges();

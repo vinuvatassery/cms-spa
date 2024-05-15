@@ -134,8 +134,8 @@ export class EmailEditorComponent implements OnInit {
     this.cerAuthorizationForm = this.formBuilder.group({
       clientsAttachment:[]
     });
-    if(this.communicationTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter ||
-      this.communicationTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
+    if(this.communicationTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail ||
+      this.communicationTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail){
         this.isAttachmentIconVisible = false;
       }
   }
