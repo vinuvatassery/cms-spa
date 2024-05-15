@@ -139,7 +139,6 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showSplitButtonSubscriptionInitializer();
     this.paperLessFlagContactInfoChangeSubscription();
     this.workflowFacade.savedForLaterCompleted$
-    .pipe(first((res: any) => res != null))
     .subscribe(res =>{
      if(res){
        this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId)
