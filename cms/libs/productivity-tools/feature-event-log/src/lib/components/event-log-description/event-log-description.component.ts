@@ -214,7 +214,7 @@ export class EventLogDescriptionComponent implements OnDestroy{
         this.headerText = 'View and Re-Send Email';
         this.buttonText = 'RE-SEND'
         this.attachmentType = "email";
-        this.infoText = "Send"
+        this.infoText = "Sent"
         this.eventLogFacade.loadNotificationEmail(this.eventLogId);
       }
       else if (eventLog?.entityTypeCode === 'LETTER_LOG') { 
@@ -230,7 +230,7 @@ export class EventLogDescriptionComponent implements OnDestroy{
         this.headerText='View and Resend SMS';
         this.buttonText = 'RE-SEND';
         this.attachmentType = null;
-        this.infoText = "Send"
+        this.infoText = "Sent"
         this.eventLogFacade.loadNotificationSms(this.eventLogId);
       }
          // this.isViewLetterEmailTextDialog = true;
