@@ -39,6 +39,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   addressControlsList = ["address1", "address2", "city", "state", "zip", "county"]
   userDeviceType: typeof UserDeviceType = UserDeviceType;
   phoneData:any;
+  isButtonDisabled=true;
    /** Constructor**/
    constructor(private readonly cdr :ChangeDetectorRef,
     private readonly formBuilder: FormBuilder,
@@ -160,6 +161,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
       loginUserPhoneId: new FormControl(
         ''),
+      
     });
     this.addPhoneForm.push(phoneForm);
   }
@@ -263,12 +265,16 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
   disablePhoneFields(index: any)
   {
-    const phoneForm = this.addPhoneForm.at(index) as FormGroup;
-    phoneForm.disable();
+    if(index == 0)
+      {
+        const phoneForm = this.addPhoneForm.at(index) as FormGroup;
+        phoneForm.disable();
+      }
   }
 
   onSave()
   {
+    this.userForm.markAllAsTouched();
     this.setFormValidation();
     if(!this.userForm.invalid && !this.endDateValidator)
     {
@@ -366,6 +372,8 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       this.userForm.controls['outOfOfficeMsg'].updateValueAndValidity();
 
     }
+
+    this.setPhoneValidations()
   }
 
   validateDate() {
@@ -380,9 +388,11 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   removeForm(i : any)
   {
     if(this.addPhoneForm.length > 1 ){
-      let form = this.addPhoneForm.value[i];
       this.addPhoneForm.removeAt(i);
-      this.addPhoneForm.removeAt(i);
+      }
+    else if(this.addPhoneForm.length == 1)
+      {
+        this.addPhoneForm.reset();
       }
 
   }
@@ -396,5 +406,55 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+  setPhoneValidations()
+  {
+    this.addPhoneForm.controls.forEach((element, index) => {
+      this.addPhoneForm.at(index).get('phoneNbr')?.setValidators(Validators.required);
+      this.addPhoneForm.at(index).get('phoneNbr')?.updateValueAndValidity();
+      this.addPhoneForm.at(index).get('phoneType')?.setValidators(Validators.required);
+      this.addPhoneForm.at(index).get('phoneType')?.updateValueAndValidity();
+
+    });
+
+  }
+
+  isControlValid(controlName: string, index: any) {
+    let form = this.addPhoneForm.at(index) as FormGroup;
+    let control = form.controls[controlName];
+    if(control){
+      return control?.errors?.['required'];
+    }
+    return false;
+  }
+
+  showSmsOkTextField(index : any)
+  {
+    let form = this.addPhoneForm.at(index) as FormGroup;
+    if(form.controls['phoneType'].value === this.userDeviceType.CellPhone)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+  }
+
+  isDisableRemoveButton(index : any)
+  {
+    if(index === 0)
+    {
+      const phoneForm = this.addPhoneForm.at(index) as FormGroup;
+      if(phoneForm.controls['phoneType'].value === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
+        {
+          return true;
+        }
+        else{
+          return false;
+        }
+    }
+    return false;
+  }
+
 
 }

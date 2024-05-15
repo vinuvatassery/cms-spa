@@ -547,6 +547,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
   }
   removeService(i: number) {
+    debugger;
     let servicCount = 0;;
     for(let service of this.claimForm.value.claimService) {
       if (service.tpaInvoiceId) {

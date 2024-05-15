@@ -115,41 +115,51 @@
                
               <div>              
               <div class="flex-row">
-                <div class="flex-col  d-flex flex-col-6">
+                <div class="flex-col flex-col-5">
+                  <ng-container formArrayName="phones" >
+                    <ng-container *ngFor="let phone of addPhoneForm.controls; let i=index">
+                      <ng-container [formGroupName]="i">
                   <div class="flex-row phone_cont">
-                    <ng-container formArrayName="phones" >
-                      <ng-container *ngFor="let phone of addPhoneForm.controls; let i=index">
-                        <ng-container [formGroupName]="i">
-                  <div class="flex-col d-flex flex-col-6">
+                  <div class="flex-col d-flex flex-col-8">
                     <kendo-floatinglabel class="k-form" text="Phone Type">
                       <kendo-dropdownlist formControlName="phoneType"  [fillMode]="formUiStyle.dropDownFillMode" [data]="userDeviceList"
                       textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"> </kendo-dropdownlist>
+                      <kendo-formerror
+                      *ngIf="(isControlValid('phoneType', i))"
+                        >Phone Type is required
+                    </kendo-formerror>
                     </kendo-floatinglabel>
                  
                   </div>
                 
-                  <div class="flex-col flex-col-6">
+                  <div *ngIf="showSmsOkTextField(i)"  class="flex-col flex-col-4">
                     <span class="app-checkboxwidtext-wrapper mt-4">
                       <input formControlName="smsTextConsentFlag" type="checkbox" kendoCheckBox aria-labelledby="smstextok" id="smstextok" />
                       <label class="k-checkbox-label" for="smstextok">SMS Text OK</label>
                     </span>
                   </div>
-                  <div class="flex-col flex-col-9">
+                  <div class="flex-col flex-col-10">
                     <kendo-floatinglabel class="k-form" text="Phone Number">
                       <kendo-maskedtextbox [maxlength]="10"  placeholder="Phone Number"  [mask]="inputMask"   aria-label="Phone Number" [fillMode]="formUiStyle.inputFillMode"
                               formControlName="phoneNbr"  [maskOnFocus]="true">
                       </kendo-maskedtextbox>
+                      <kendo-formerror
+                    *ngIf="(isControlValid('phoneNbr', i))"
+                      >Phone Number is required
+                  </kendo-formerror>
                     </kendo-floatinglabel>
                   </div> 
-                  <button (click)="removeForm(i)" kendoButton class="k-error-button mt-3 ml-1"  icon="delete" aria-label="Remove"></button>
-                </ng-container>
+                  <button [disabled]="isDisableRemoveButton(i)" (click)="removeForm(i)" kendoButton class="k-error-button mt-3 ml-1"  icon="delete" aria-label="Remove"></button>
+            
+                </div>
               </ng-container>
             </ng-container>
-                  <div class="flex-col flex-col-3 d-flex">
-                    <button  (click)="addPhoneGroup()" kendoButton [primary]="true"   icon="add" class="mt-3"  area-label="Phone"></button>
-                  </div>
-                </div>
+          </ng-container>
+               
                </div>
+               <div class="flex-col">
+                  <button  (click)="addPhoneGroup()" kendoButton [primary]="true"   icon="add" class="mt-3"  area-label="Phone">Phone</button>
+              </div>
               </div>
 
               
@@ -227,8 +237,8 @@
 
               <div class="flex-row">
                 <div class="flex-col flex-col-5">
-                  <kendo-floatinglabel class="k-form" text="Country">
-                    <kendo-textbox placeholder="Country" [fillMode]="formUiStyle.inputFillMode" formControlName="county"> </kendo-textbox>
+                  <kendo-floatinglabel class="k-form" text="County">
+                    <kendo-textbox placeholder="County" [fillMode]="formUiStyle.inputFillMode" formControlName="county"> </kendo-textbox>
                   </kendo-floatinglabel>
                 </div>
               </div>
