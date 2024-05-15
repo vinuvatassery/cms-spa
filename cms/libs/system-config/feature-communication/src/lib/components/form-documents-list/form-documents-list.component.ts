@@ -323,7 +323,7 @@ uploadFilesClicked(template: TemplateRef<unknown>): void
  {
   this.uploadFileDialog = this.dialogService.open({
     content: template,
-    cssClass:'app-c-modal app-c-modal-sm app-c-modal-np'
+    cssClass:'app-c-modal app-c-modal-lg app-c-modal-np'
   });
 }
 onCloseUploadFileDetailClicked() {
