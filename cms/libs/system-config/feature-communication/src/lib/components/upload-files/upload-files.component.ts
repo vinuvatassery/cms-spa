@@ -9,7 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class UploadFilesComponent implements OnInit {
   showAttachmentRequiredError: boolean = false;
-  public selectedAttachedFile: any;
+  public selectedAttachedFile: any = [];
   public uploadedAttachedFile: any;
   attachedFileValidatorSize: boolean = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -33,7 +33,7 @@ export class UploadFilesComponent implements OnInit {
     this.isValidateForm= true;
     this.showAttachmentRequiredError= true;
     const formData = new FormData();
-  if (this.selectedAttachedFile){
+  if (this.selectedAttachedFile?.length>0){
     this.showAttachmentRequiredError= false;
     for (let index = 0; index < this.selectedAttachedFile.length; index++) {
       const element = this.selectedAttachedFile[index];
@@ -49,14 +49,19 @@ export class UploadFilesComponent implements OnInit {
   {  
     if(event != undefined)
      {
-           this.selectedAttachedFile=event.files.map(function (option :any) {
-                return option.rawFile;
-        });   ;
+           event.files.forEach((option :any)=> {
+              
+                this.selectedAttachedFile.push(option.rawFile)
+        });
            this.showAttachmentRequiredError = false;
-           this.attachedFileValidatorSize=false;
+           this.validateFileSize();
+           
+   }
+ }
+ validateFileSize(){
+  this.attachedFileValidatorSize=false;
            let fileSize = 0;
-           this.selectedAttachedFile.forEach((file:any) => 
-            { fileSize =+ file.size});
+          fileSize = this.selectedAttachedFile.map((item:any) => item.size).reduce((prev: any, next: any) => prev + next);
            if (fileSize > 25 * 1024 * 1024)
            {
             this.attachedFileValidatorSize = true;
@@ -65,14 +70,18 @@ export class UploadFilesComponent implements OnInit {
            {
            this.attachedFileValidatorSize = false;
             }
-   }
+            if(fileSize >0){
+              this.showAttachmentRequiredError = false;
+            }
  }
  handleFileRemoved(event: any) 
  {
-  this.selectedAttachedFile= undefined;
-  this.showAttachmentRequiredError = true;
+  this.showAttachmentRequiredError = false;
    this.attachedFileValidatorSize=false;
   this.attachedFiles = null;
+  let index = this.selectedAttachedFile.findIndex((x:any) =>x.name == event.files[0].rawFile?.name);
+  this.selectedAttachedFile.splice(index,1);
+  this.validateFileSize();
 }
 onCloseUploadFileClicked() {
   this.onCloseUploadFileDetailClicked.emit(false);

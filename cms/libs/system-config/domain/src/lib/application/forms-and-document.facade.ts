@@ -13,7 +13,7 @@ export class FormsAndDocumentFacade {
     formsDocumentsList$ = this.formsDocumentsSubject.asObservable();
     private folderSortSubject = new Subject<any>();
     folderSort$ = this.folderSortSubject.asObservable();
-    private getFolderSubject = new Subject<any>();
+    private getFolderSubject = new BehaviorSubject<any>([]);
     getFolder$ =  this.getFolderSubject.asObservable();
     private uploadFilesSubject = new Subject<any>();
     uploadFiles$ =  this.uploadFilesSubject.asObservable();
