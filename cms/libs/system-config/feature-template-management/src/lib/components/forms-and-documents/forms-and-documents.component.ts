@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy , OnInit, TemplateRef,} from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { TemplateManagementFacade } from '@cms/system-config/domain';
+import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
 import { DialogService } from '@progress/kendo-angular-dialog';
 
@@ -18,8 +18,10 @@ export class FormsAndDocumentsComponent implements OnInit {
   selectedfolder: string = "";
   isShowLoader: boolean = true;
   public formsDocumentDialog : any;
+  formsDocumentsList$ = this.formsAndDocumentFacade.formsDocumentsList$;
   public constructor(
     private readonly templateManagementFacade: TemplateManagementFacade,
+    private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService,
@@ -106,5 +108,9 @@ export class FormsAndDocumentsComponent implements OnInit {
   });
 
   return folderdata;
+  }
+
+  loadFolderFiles(payload:any) {
+    this.formsAndDocumentFacade.loadFolderFile(payload);
   }
 }
