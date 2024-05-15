@@ -69,6 +69,7 @@ export class FormsAndDocumentFacade {
             {
                 this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
                 this.hideLoader();
+                this.loadFolderFile(true);
             } 
         },
           error: (err) => 
@@ -94,10 +95,12 @@ export class FormsAndDocumentFacade {
             this.uploadFormandDocumentService.uploadFiles(files,documentTemplateId).subscribe({
               next:(response) => {
                 this.uploadFilesSubject.next(response);
+                this.hideLoader();
+                this.loadFolderFile(true);
               },
               error: (err) => {
                 this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-                this.hideLoader()
+                this.hideLoader();
               },
                });
           }
