@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import { EventLogFacade, EventTypeCode } from '@cms/productivity-tools/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './event-log-description.component.html',
   styleUrls: ['./event-log-description.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class EventLogDescriptionComponent implements OnDestroy{
   @ViewChild('viewLetterEmailTextDialog', { read: TemplateRef })
@@ -64,9 +65,10 @@ export class EventLogDescriptionComponent implements OnDestroy{
   notificationEmailSubscription!:Subscription;
   notificationLetterSubscription!:Subscription;
   smsId:any;
+  infoText:any;
 
   constructor(private sanitizer : DomSanitizer,  private dialogService: DialogService, private readonly eventLogFacade: EventLogFacade,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef, 
   ) {}
 
   ngOnInit() {
@@ -212,6 +214,7 @@ export class EventLogDescriptionComponent implements OnDestroy{
         this.headerText = 'View and Re-Send Email';
         this.buttonText = 'RE-SEND'
         this.attachmentType = "email";
+        this.infoText = "Send"
         this.eventLogFacade.loadNotificationEmail(this.eventLogId);
       }
       else if (eventLog?.entityTypeCode === 'LETTER_LOG') { 
@@ -219,6 +222,7 @@ export class EventLogDescriptionComponent implements OnDestroy{
         this.headerText='View and Recreate Letter';
         this.buttonText = 'RE-PRINT';
         this.attachmentType = "letter";
+        this.infoText ="Printed"
         this.eventLogFacade.loadNotificationLetter(this.eventLogId);
       }
       else if(eventLog?.entityTypeCode === 'SMS_LOG') {
@@ -226,6 +230,7 @@ export class EventLogDescriptionComponent implements OnDestroy{
         this.headerText='View and Resend SMS';
         this.buttonText = 'RE-SEND';
         this.attachmentType = null;
+        this.infoText = "Send"
         this.eventLogFacade.loadNotificationSms(this.eventLogId);
       }
          // this.isViewLetterEmailTextDialog = true;
@@ -286,7 +291,7 @@ this.onViewLetterEmailTextDialogClicked(this.viewLetterEmailTextDialog);
       this.smsTo = notificationLog?.to;
       this.smsId = notificationLog?.smsLogId
     }
-    this.previewContent = notificationLog?.previewContent;   
+    this.previewContent =  this.getSanitizedHtml( notificationLog?.previewContent);  
     this.attachments = notificationLog?.attachments;
     this.createdUser = notificationLog?.createdUser;
     this.createdDate = notificationLog?.createdDate;
@@ -418,4 +423,8 @@ this.onViewLetterEmailTextDialogClicked(this.viewLetterEmailTextDialog);
     }
   }
 
+  private getSanitizedHtml(currentEmailData: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+  }
+  
 }
