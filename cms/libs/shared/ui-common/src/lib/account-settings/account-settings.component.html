@@ -328,7 +328,7 @@
     </div>
   </section>
   <section class="as_footer justify-content-end">
-    <button kendoButton [primary]="true" look="outline" area-label="Cancel">
+    <button (click)="onCancel()" kendoButton [primary]="true" look="outline" area-label="Cancel">
       Cancel
     </button>
     <button kendoButton [primary]="true" area-label="Save"   (click)="onSave()" >

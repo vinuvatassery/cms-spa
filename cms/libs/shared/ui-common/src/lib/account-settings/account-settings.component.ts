@@ -20,6 +20,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   @Input() userInfoData$: any;
   @Output() loadUserInfoDataEvent = new EventEmitter<any>();
   @Output() submitUserInfoDataEvent = new EventEmitter<any>();
+  @Output() closeFormEvent = new EventEmitter<any>();
   inputMask ='(999) 000-0000';
   userInfo : any;
   private userInfoSubsriction !: Subscription;
@@ -454,6 +455,11 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         }
     }
     return false;
+  }
+
+  onCancel()
+  {
+    this.closeFormEvent.emit();
   }
 
 
