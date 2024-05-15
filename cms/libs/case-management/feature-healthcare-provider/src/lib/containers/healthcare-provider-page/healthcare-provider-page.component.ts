@@ -294,20 +294,6 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         if (response) {
           this.workFlowFacade.saveForLaterCompleted(true)  
           this.loaderService.hide();
-          if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-          }else{
-            this.router.navigate(['/case-management/cases']);
-        }
         }
       })
     });

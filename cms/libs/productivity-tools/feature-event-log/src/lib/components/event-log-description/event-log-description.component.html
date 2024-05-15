@@ -36,11 +36,16 @@
             </div>
             <div class="flex-col mb-2" *ngIf="buttonText == 'RE-PRINT'">
                 <p class="text-capital text-bold">Mailing Address</p>
-                <span *ngIf="mailingAddress">
-                    <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>
-                    <p *ngIf="mailingAddress?.address2">{{ mailingAddress?.address2 }} </p>
-                    <p *ngIf="mailingAddress?.city || mailingAddress?.state || mailingAddress?.zip">{{
-                        mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
+                <span *ngIf="mailingAddress" class="address_bg">
+                    <span class="material-icons mr-1"  aria-hidden="true">location_on</span>
+                   <div>
+                    <span *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</span>
+                    <span *ngIf="mailingAddress?.address2">, {{ mailingAddress?.address2 }} </span>
+                <br/>
+                    <span *ngIf="mailingAddress?.city || mailingAddress?.state || mailingAddress?.zip">{{
+                        mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</span>
+               
+                   </div>
                 </span>
             </div>
 
@@ -80,8 +85,8 @@
                         </kendo-chip>
                     </kendo-chip-list>
                 </div>
-            </div>
-            <div class="innerHtmlWrapper k-editor">
+            </div> 
+            <div class="innerHtmlWrapper k-editor mt-1">
                 <div [innerHtml]="previewContent"></div>
             </div>  
            
@@ -114,25 +119,16 @@
         </div>
         <div *ngIf="smsTo?.length>0">
             <h5>
-                TO
+                <strong class="mr-1">Send to:</strong> <kendo-chip-list  >
+                    <kendo-chip *ngFor="let to of smsTo" [label]="to | phone" > </kendo-chip>
+                </kendo-chip-list>
             </h5>                  
-            <kendo-chip-list selection="multiple" >
-                <kendo-chip
-                    *ngFor="let to of smsTo"
-                    [label]="to | phone"
-                >                </kendo-chip>
-            </kendo-chip-list>
+            
 
         </div>
-        <div >
-            <h5 class="mb-1">
-                MESSAGE
-            </h5>                  
-            <div style="    border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 4px">                
-           {{previewContent}}
-            </div>
+        <div class="view_sms_cont">
+            <h5> MESSAGE  </h5>     {{previewContent}}
+            
 
         </div>
 
@@ -142,7 +138,7 @@
     
     <!-- common -->
     <section class="k-dialog-body">
-        <span *ngIf="createdDate">Originally Printed {{ createdDate | date : 'MM/dd/YYYY' }} by 
+        <span *ngIf="createdDate">Originally Printed <strong>{{ createdDate | date : 'MM/dd/YYYY' }}</strong> by 
             <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="createdUser">
             {{createdUser}}
@@ -157,7 +153,7 @@
                 <button aria-label="Close" kendoButton look="outline" (click)="onCloseLetterEmailSmsTextClicked()">
                     CANCEL
                 </button>
-                <button aria-label="Close" kendoButton look="outline" (click)="reSendNotification()">
+                <button attr.aria-label="{{buttonText}}" kendoButton [primary]="true" (click)="reSendNotification()">
                     {{buttonText}}
                 </button>
             </div>

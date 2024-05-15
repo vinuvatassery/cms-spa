@@ -27,7 +27,8 @@
               [userFirstName]="dataItem.userFirstName"
               [userLastName]="dataItem.userLastName" 
               [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
-              [linkType]="'profileIcon'"></common-user-photo-icon>
+              [linkType]="'profileIcon'"
+              [userPhotos$]="rolesUserListProfilePhoto$"></common-user-photo-icon>
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="activeFlag" title="Status" [width]="120">
