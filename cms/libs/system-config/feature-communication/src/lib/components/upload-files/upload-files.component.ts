@@ -35,7 +35,10 @@ export class UploadFilesComponent implements OnInit {
     const formData = new FormData();
   if (this.selectedAttachedFile){
     this.showAttachmentRequiredError= false;
-      this.selectedAttachedFile.forEach((file:any) => { formData.append('uploadFiles', file); });
+    for (let index = 0; index < this.selectedAttachedFile.length; index++) {
+      const element = this.selectedAttachedFile[index];
+      formData.append('uploadFiles', element);
+    }
       formData.append("documentTemplateId",this.forms.controls["folderName"].value );
       this.uploadFilesEvent.emit(formData);
       this.isValidateForm= false;
