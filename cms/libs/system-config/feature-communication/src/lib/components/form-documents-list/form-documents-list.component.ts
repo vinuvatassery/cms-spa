@@ -9,6 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -23,6 +24,9 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() folderFileList$:any;
   @Output() addFolder = new EventEmitter<any>();
   @Output() loadFolders = new EventEmitter<any>();
+  @Output() uploadFiles = new EventEmitter<any>();
+  @Input() getFolders$: any; 
+  uploadFileDialog :any
 
   folderSortLovSubscription!: Subscription;
   folderSortLovList : any;
@@ -33,6 +37,8 @@ export class FormDocumentsListComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addFolderTemplate', { read: TemplateRef })
   addFolderTemplate!: TemplateRef<any>;
+  @ViewChild('uploadFileTemplate', { read: TemplateRef })
+  uploadFileTemplate!: TemplateRef<any>;
   addFolderDialog:any
   isAddNewEditFolderPopup = false;
   isFormsDocumentDeletePopupShow = false;
@@ -42,10 +48,19 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
+  showAttachmentRequiredError: boolean = false;
+	public selectedAttachedFile: any;
+  public uploadedAttachedFile: any;
+	attachedFileValidatorSize: boolean = false;
+  value: any
+  forms!: FormGroup;
+  attachedFiles: any;
+  isValidateForm= false;
   /** Public properties **/ 
   sortOrder : any;
 
   constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
+    public formBuilder: FormBuilder,
     private dialogService: DialogService,private readonly cdr: ChangeDetectorRef, 
   ) {}
   public moreActions = [
@@ -243,9 +258,6 @@ export class FormDocumentsListComponent implements OnInit {
   onUploadFileOpenClicked() {
     this.isUploadFileDetailPopup = true;
   }
-  onCloseUploadFileDetailClicked() {
-    this.isUploadFileDetailPopup = false;
-  }
 
   onAddNewEditFolderClicked() {
     this.addFolderDialog.open();
@@ -302,4 +314,20 @@ export class FormDocumentsListComponent implements OnInit {
   loadFoldersTree(){
     this.loadFolders.emit(true);
   }
+
+  uploadFilesEvent(event:any)
+  {
+   this.uploadFiles.emit(event);
+  }
+uploadFilesClicked(template: TemplateRef<unknown>): void
+ {
+  this.uploadFileDialog = this.dialogService.open({
+    content: template,
+    cssClass:'app-c-modal app-c-modal-sm app-c-modal-np'
+  });
+}
+onCloseUploadFileDetailClicked() {
+  this.uploadFileDialog.close();
+}
+
 }

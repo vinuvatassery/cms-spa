@@ -13,6 +13,10 @@ export class FormsAndDocumentFacade {
     formsDocumentsList$ = this.formsDocumentsSubject.asObservable();
     private folderSortSubject = new BehaviorSubject<any>([]);
     folderSort$ = this.folderSortSubject.asObservable();
+    private getFolderSubject = new BehaviorSubject<any>([]);
+    getFolder$ =  this.getFolderSubject.asObservable();
+    private uploadFilesSubject = new BehaviorSubject<any>([]);
+    uploadFiles$ =  this.uploadFilesSubject.asObservable();
     showLoader() { this.loaderService.show(); }
     hideLoader() { this.loaderService.hide(); }
     constructor(private readonly uploadFormandDocumentService: FormsAndDocumentDataService,
@@ -74,4 +78,27 @@ export class FormsAndDocumentFacade {
         },
         })
       }
+
+      getFolderName() {
+        this.uploadFormandDocumentService.getFolderName().subscribe({
+          next:(response) => {
+            this.getFolderSubject.next(response);
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          },
+           }); 
+        }
+        uploadFiles( files: File[], documentTemplateId: string){
+            this.showLoader()
+            this.uploadFormandDocumentService.uploadFiles(files,documentTemplateId).subscribe({
+              next:(response) => {
+                this.uploadFilesSubject.next(response);
+              },
+              error: (err) => {
+                this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+                this.hideLoader()
+              },
+               });
+          }
 }

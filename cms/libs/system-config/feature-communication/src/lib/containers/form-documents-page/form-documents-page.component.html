@@ -1,3 +1,9 @@
  
-<system-config-form-documents-list (loadFolders)="loadFolderFiles($event)" (addFolder)="addFolder($event)"  [folderSortList$]="folderSortList$" [folderFileList$]="formsDocumentsList$"></system-config-form-documents-list>
- 
+<system-config-form-documents-list
+(loadFolders)="loadFolderFiles($event)"
+ (addFolder)="addFolder($event)" 
+[getFolders$] = "getFolders$" 
+[folderSortList$]="folderSortList$"
+(uploadFiles)="uploadFiles($event,$event)"
+[folderFileList$]="formsDocumentsList$">
+</system-config-form-documents-list>

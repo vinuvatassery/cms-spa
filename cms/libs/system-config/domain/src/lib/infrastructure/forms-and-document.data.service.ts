@@ -24,4 +24,21 @@ export class FormsAndDocumentDataService
     loadFolderFile(payload:any) {
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/${payload}`);
     }
-}
+
+    getFolderName()
+    {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folders`,);
+    }
+
+    uploadFiles(files: File[], documentTemplateId: string) {
+        const formData: FormData = new FormData();
+        files.forEach(file => {
+          formData.append('uploadFiles', file);
+        });
+        formData.append('documentTemplateId', documentTemplateId);
+        return this.http.post<any>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/files`,
+          formData
+        );
+      }
+    }
