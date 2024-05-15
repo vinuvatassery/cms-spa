@@ -22,7 +22,6 @@ export class UploadFilesComponent implements OnInit {
   @Output() uploadFilesEvent = new EventEmitter<any>();
   @Output () onCloseUploadFileDetailClicked = new EventEmitter<any>();
   constructor(public formBuilder: FormBuilder){
-    this.forms = this.formBuilder.group({})
 }
  
   ngOnInit(): void {
@@ -36,20 +35,25 @@ export class UploadFilesComponent implements OnInit {
     const formData = new FormData();
   if (this.selectedAttachedFile){
     this.showAttachmentRequiredError= false;
-    this.isValidateForm= false;
-      formData.append("uploadFiles",this.selectedAttachedFile );
-      formData.append("documentTemplateId", "63E485AE-4CE9-42D1-ACBC-60812F32220B");
+      this.selectedAttachedFile.forEach((file:any) => { formData.append('uploadFiles', file); });
+      formData.append("documentTemplateId",this.forms.controls["folderName"].value );
       this.uploadFilesEvent.emit(formData);
+      this.isValidateForm= false;
   }
   }
   handleFileSelected(event: any) 
   {  
     if(event != undefined)
      {
-           this.selectedAttachedFile=event.files[0].rawFile;
+           this.selectedAttachedFile=event.files.map(function (option :any) {
+                return option.rawFile;
+        });   ;
            this.showAttachmentRequiredError = false;
            this.attachedFileValidatorSize=false;
-           if (this.selectedAttachedFile.size > 25 * 1024 * 1024)
+           let fileSize = 0;
+           this.selectedAttachedFile.forEach((file:any) => 
+            { fileSize =+ file.size});
+           if (fileSize > 25 * 1024 * 1024)
            {
             this.attachedFileValidatorSize = true;
            }
@@ -69,5 +73,9 @@ export class UploadFilesComponent implements OnInit {
 onCloseUploadFileClicked() {
   this.onCloseUploadFileDetailClicked.emit(false);
 }
+changeOnfolderName(){
+  if(this.getFolders$){
+    this.isValidateForm= false;
+  }
 }
- 
+}

@@ -315,9 +315,9 @@ export class FormDocumentsListComponent implements OnInit {
     this.loadFolders.emit(true);
   }
 
-  uploadFilesEvent(event:any)
+  uploadFilesEvent(formdata: any)
   {
-   this.uploadFiles.emit(event);
+   this.uploadFiles.emit(formdata);
   }
 uploadFilesClicked(template: TemplateRef<unknown>): void
  {

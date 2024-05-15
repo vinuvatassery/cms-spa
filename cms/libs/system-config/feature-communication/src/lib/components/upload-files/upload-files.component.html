@@ -1,4 +1,4 @@
-<section class="k-dialog-body">
+<section [formGroup]="forms" class="k-dialog-body">
     <p>
           Select the file(s) and which folder to upload to.
     </p>
@@ -7,7 +7,6 @@
                 <kendo-floatinglabel text="Folder Name">
                       <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
                       formControlName="folderName"
-                      name="folderName"
                       [data]="getFolders$ | async"
                       textField="templateDesc"
                       valueField="documentTemplateId"

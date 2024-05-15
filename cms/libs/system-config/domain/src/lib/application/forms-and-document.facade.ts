@@ -90,9 +90,9 @@ export class FormsAndDocumentFacade {
           },
            }); 
         }
-        uploadFiles( files: File[], documentTemplateId: string){
+        uploadFiles( formData:any){
             this.showLoader()
-            this.uploadFormandDocumentService.uploadFiles(files,documentTemplateId).subscribe({
+            this.uploadFormandDocumentService.uploadFiles(formData).subscribe({
               next:(response) => {
                 this.uploadFilesSubject.next(response);
                 this.hideLoader();

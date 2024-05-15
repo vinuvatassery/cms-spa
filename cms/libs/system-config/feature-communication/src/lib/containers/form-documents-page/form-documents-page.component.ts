@@ -31,7 +31,7 @@ export class FormDocumentsPageComponent implements OnInit {
   getFolderName(){
     this.formsAndDocumentFacade.getFolderName();
   }
-  uploadFiles(files: File[], documentTemplateId: string){
-    this.formsAndDocumentFacade.uploadFiles(files,documentTemplateId);
+  uploadFiles(formData: any){
+    this.formsAndDocumentFacade.uploadFiles(formData);
   }
 }
