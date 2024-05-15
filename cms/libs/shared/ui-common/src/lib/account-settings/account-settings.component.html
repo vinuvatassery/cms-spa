@@ -73,7 +73,7 @@
               </div>
               <div class="flex-col flex-col-2">
                 <kendo-floatinglabel class="k-form" text="Initials">
-                  <kendo-textbox placeholder="Initials" [fillMode]="formUiStyle.inputFillMode" formControlName="initials"> </kendo-textbox>
+                  <kendo-textbox [maxlength]="10"  placeholder="Initials" [fillMode]="formUiStyle.inputFillMode" formControlName="initials"> </kendo-textbox>
                 </kendo-floatinglabel>
               </div>
             </div>
@@ -89,7 +89,7 @@
             <div class="flex-row">
               <div class="flex-col-5 flex-col">
                 <kendo-floatinglabel class="k-form" text="Job Title">
-                  <kendo-textbox placeholder="Job Title" [fillMode]="formUiStyle.inputFillMode" formControlName="jobTitle"> </kendo-textbox>
+                  <kendo-textbox [maxlength]="100"  placeholder="Job Title" [fillMode]="formUiStyle.inputFillMode" formControlName="jobTitle"> </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!userForm.controls['jobTitle'].valid">Job Title is required</kendo-formerror>
               </div>
@@ -238,7 +238,7 @@
               <div class="flex-row">
                 <div class="flex-col flex-col-5">
                   <kendo-floatinglabel class="k-form" text="County">
-                    <kendo-textbox placeholder="County" [fillMode]="formUiStyle.inputFillMode" formControlName="county"> </kendo-textbox>
+                    <kendo-textbox [maxlength]="50"  placeholder="County" [fillMode]="formUiStyle.inputFillMode" formControlName="county"> </kendo-textbox>
                   </kendo-floatinglabel>
                 </div>
               </div>
