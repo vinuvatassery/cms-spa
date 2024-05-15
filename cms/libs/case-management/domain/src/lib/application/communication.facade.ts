@@ -179,6 +179,7 @@ export class CommunicationFacade {
     let i = 0;
     clientAndVendorAttachedFiles.forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
+        formData.append('systemAttachments[' + i + '][fileSize]', file.size);
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
         formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode == undefined ? file?.document?.documentTypeCode : (file.typeCode == undefined && file?.document?.documentTypeCode == undefined ? '' : file.typeCode));
