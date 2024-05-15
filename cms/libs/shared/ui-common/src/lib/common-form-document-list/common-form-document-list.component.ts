@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { TemplateManagementFacade } from '@cms/system-config/domain';
+import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
 import { map } from 'rxjs';
 const isOfType = (fileName: string, ext: string) =>
@@ -32,7 +32,7 @@ export class CommonFormDocumentListComponent implements OnInit {
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
   public constructor(
-    private readonly templateManagementFacade: TemplateManagementFacade) {
+    private readonly formsAndDocumentFacade: FormsAndDocumentFacade) {
 
   }
   ngOnInit(): void {
@@ -265,12 +265,12 @@ export class CommonFormDocumentListComponent implements OnInit {
   }
 
   onDownloadViewFileClick(viewType: string, templateId: string,templateName:string) {
-
+    debugger;
     if (templateId === undefined || templateId === '') {
       return;
     }
     //this.loaderService.show()
-    this.templateManagementFacade.getFormsandDocumentsViewDownload(templateId).subscribe({
+    this.formsAndDocumentFacade.getFormsandDocumentsViewDownload(templateId).subscribe({
       next: (data: any) => {
         const fileUrl = window.URL.createObjectURL(data);
         if (viewType === 'view') {

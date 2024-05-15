@@ -54,7 +54,9 @@ export class FormsAndDocumentFacade {
             },
         })
     }
-
+    getFormsandDocumentsViewDownload(id: string) {
+        return this.uploadFormandDocumentService.getFormsandDocumentsViewDownload(id);
+      }
     addFolder(payLoad :any){
         this.showLoader();
         this.uploadFormandDocumentService.addFolder(payLoad).subscribe({

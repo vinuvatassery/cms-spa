@@ -24,4 +24,14 @@ export class FormsAndDocumentDataService
     loadFolderFile(payload:any) {
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/${payload}`);
     }
+
+    getFormsandDocumentsViewDownload(templateId: string) {
+        let url = `/case-management/forms-documents-config/${templateId}/content`;
+        return this.http.get(
+          `${this.configurationProvider.appSettings.caseApiUrl}` +url,
+          {
+            responseType: 'blob',
+          }
+        );
+      }
 }
