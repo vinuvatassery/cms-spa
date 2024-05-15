@@ -85,6 +85,12 @@
                         </kendo-chip>
                     </kendo-chip-list>
                 </div>
+                <div *ngIf="subject" class="mb-1">
+                    <h5> SUBJECT </h5>
+                   
+                  <span>{{subject}}</span>
+
+                </div>
             </div> 
             <div class="innerHtmlWrapper k-editor mt-1">
                 <div [innerHtml]="previewContent"></div>
