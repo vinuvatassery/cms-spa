@@ -680,6 +680,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    this.isToEmailMissing = false;
+    this.isEmailSubjectMissing = false;
+    this.isContentMissing = false;
+    if (this.notificationGroup === ScreenType.VendorProfile) 
+    {
+    this.isMailCodeMissing = false;
+    }
     if (this.triggerFrom === ScreenType.ClientProfile || this.triggerFrom === ScreenType.VendorProfile) {
       this.communicationEmailTypeCode = event.templateTypeCode;
     }

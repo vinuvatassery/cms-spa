@@ -380,7 +380,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             downloadLink.href = fileUrl;
             downloadLink.download = documentName;
             downloadLink.click();
-            this.communicationLetterTypeCode = '';
             this.onCloseNewLetterClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated! An event has been logged.');
           }

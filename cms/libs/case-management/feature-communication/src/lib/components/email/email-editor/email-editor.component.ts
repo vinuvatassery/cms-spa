@@ -111,6 +111,7 @@ export class EmailEditorComponent implements OnInit {
   myCount!: number;
   otherCount!: number;
   caseManagerEmail: any = null;
+  isAttachmentIconVisible = true;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -133,7 +134,10 @@ export class EmailEditorComponent implements OnInit {
     this.cerAuthorizationForm = this.formBuilder.group({
       clientsAttachment:[]
     });
-
+    if(this.communicationTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter ||
+      this.communicationTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
+        this.isAttachmentIconVisible = false;
+      }
   }
 
   ngOnChanges(){
