@@ -911,7 +911,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           if (data) {
             this.currentEmailData =  data;
-            this.emailContentValue =  this.getSanitizedHtml(this.currentEmailData);;
+            this.emailContentValue =  this.getSanitizedHtml(this.currentEmailData);
             this.ref.detectChanges();
           }
           this.loaderService.hide();
