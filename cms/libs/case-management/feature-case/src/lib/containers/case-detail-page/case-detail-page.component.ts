@@ -145,11 +145,10 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
        this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId)
        .subscribe({
          next: (casesResponse: any) => {
-           this.loaderService.hide();       
            this.isShowSaveLaterPopup = false;
-           this.cdr.detectChanges()
            this.workflowFacade.caseStatus = this.currentStatusCode;
            this.caseFacade.loadActiveSession();
+           this.loaderService.hide();       
            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
             if (this.workflowType === WorkflowTypeCode.NewCase) {
               this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
