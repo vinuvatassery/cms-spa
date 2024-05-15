@@ -18,6 +18,7 @@ export class CommonFormDocumentListComponent implements OnInit {
   @Input() treeViewSize: any;
   @Input() hasChildren: any;
   @Input() children:any;
+  @Input() isPopUp:any;
   selectedfolder: string = "";
   isShowLoader: boolean = true;
 

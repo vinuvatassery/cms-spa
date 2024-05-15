@@ -30,7 +30,7 @@
                                                 Files</span></label>
                               </div>
                         </div>
-                        <span class="attachments-date">Last Updated
+                        <span *ngIf="!isPopUp" class="attachments-date">Last Updated
                               {{dataItem.lastModificationTime | date: 'MM/dd/YYYY'}} by
                               <button kendoButton [primary]="true" class="avatar-sm-btn c-default ml-1"
                                     kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
