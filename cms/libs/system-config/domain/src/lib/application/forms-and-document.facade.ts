@@ -96,6 +96,7 @@ export class FormsAndDocumentFacade {
               next:(response) => {
                 this.uploadFilesSubject.next(response);
                 this.hideLoader();
+                this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
                 this.loadFolderFile(true);
               },
               error: (err) => {

@@ -39,6 +39,7 @@ export class UploadFilesComponent implements OnInit {
       formData.append("documentTemplateId",this.forms.controls["folderName"].value );
       this.uploadFilesEvent.emit(formData);
       this.isValidateForm= false;
+      this.onCloseUploadFileClicked();
   }
   }
   handleFileSelected(event: any) 
