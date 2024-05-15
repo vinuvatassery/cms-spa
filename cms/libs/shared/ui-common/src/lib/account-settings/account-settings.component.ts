@@ -38,7 +38,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   endDateValidator = false;
   addressControlsList = ["address1", "address2", "city", "state", "zip", "county"]
   userDeviceType: typeof UserDeviceType = UserDeviceType;
-  phoneData = {};
+  phoneData:any;
    /** Constructor**/
    constructor(private readonly cdr :ChangeDetectorRef,
     private readonly formBuilder: FormBuilder,
