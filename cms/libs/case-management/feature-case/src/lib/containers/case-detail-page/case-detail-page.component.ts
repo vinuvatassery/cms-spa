@@ -137,7 +137,40 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showCancelApplicationPopup();
     this.resetReadOnlyView();
     this.showSplitButtonSubscriptionInitializer();
-    this.paperLessFlagContactInfoChangeSubscription()
+    this.paperLessFlagContactInfoChangeSubscription();
+    this.workflowFacade.savedForLaterCompleted$
+    .subscribe(res =>{
+     if(res){
+       this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId)
+       .subscribe({
+         next: (casesResponse: any) => {
+           this.isShowSaveLaterPopup = false;
+           this.workflowFacade.caseStatus = this.currentStatusCode;
+           this.caseFacade.loadActiveSession();
+           this.loaderService.hide();       
+           if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+            if (this.workflowType === WorkflowTypeCode.NewCase) {
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+            else {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+          }else{
+            this.router.navigate(['/case-management/cases']);
+          }
+         },
+         error: (err: any) => {
+           this.loaderService.hide();
+           this.loggingService.logException(err);
+           this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+         }
+       })
+     }
+    })
   }
 
   ngOnDestroy(): void {
@@ -482,38 +515,18 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
  
     if (this.currentStatusCode != "") {
       this.loaderService.show();
-      if (this.sendLetterFlag == StatusFlag.Yes) {
-        this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
-        this.workflowFacade.saveForLater(true);
-      }
-      else {
-        this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
-        this.workflowFacade.saveForLater(false);
-      }
+    
       this.clientCaseEligibilityId = this.clientCaseEligibilityId == null ? this.workflowFacade.clientCaseEligibilityId : this.clientCaseEligibilityId;
-   this.workflowFacade.savedForLaterCompleted$
-   .pipe(first((res: any) => res != null))
-   .subscribe(res =>{
-    if(res){
-      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId)
-      .subscribe({
-        next: (casesResponse: any) => {
-          this.loaderService.hide();
-          this.workflowFacade.caseStatus = this.currentStatusCode;
-        
-          this.isShowSaveLaterPopup = false;
-          this.cdr.detectChanges()
-          this.caseFacade.loadActiveSession();
-        },
-        error: (err: any) => {
-          this.loaderService.hide();
-          this.loggingService.logException(err);
-          this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-        }
-      })
-    }
-   })
+
      
+   if (this.sendLetterFlag == StatusFlag.Yes) {
+    this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
+    this.workflowFacade.saveForLater(true);
+  }
+  else {
+    this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
+    this.workflowFacade.saveForLater(false);
+  }
     }
   }
 
