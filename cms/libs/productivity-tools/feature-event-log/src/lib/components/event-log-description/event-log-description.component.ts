@@ -66,6 +66,7 @@ export class EventLogDescriptionComponent implements OnDestroy{
   notificationLetterSubscription!:Subscription;
   smsId:any;
   infoText:any;
+  subject:any;
 
   constructor(private sanitizer : DomSanitizer,  private dialogService: DialogService, private readonly eventLogFacade: EventLogFacade,
     private readonly cdr: ChangeDetectorRef, 
@@ -274,24 +275,8 @@ this.onViewLetterEmailTextDialogClicked(this.viewLetterEmailTextDialog);
   }
 
   setValuesForNotification(notificationLog: any) {
-    this.eventLogFacade.showLoader()
-      if (notificationLog?.entityTypeCode === 'EMAIL_LOG') { 
-      this.toEmailAddress = notificationLog?.emailAddress?.TO;
-      this.ccEmailAddress = notificationLog?.emailAddress?.CC;
-      this.bccEmailAddress = notificationLog?.emailAddress?.BCC;
-    }
-    else if (notificationLog?.entityTypeCode === 'LETTER_LOG') { 
-      this.toEmailAddress = null;
-      this.ccEmailAddress = null;
-      this.bccEmailAddress = null;      
-      this.mailCode = notificationLog?.mailCode;
-    }
-
-    else if(notificationLog?.entityTypeCode === 'SMS_LOG') {
-      this.smsTo = notificationLog?.to;
-      this.smsId = notificationLog?.smsLogId
-    }
-    this.previewContent =  this.getSanitizedHtml( notificationLog?.previewContent);  
+    this.eventLogFacade.showLoader()      
+    this.previewContent = notificationLog?.entityTypeCode != 'SMS_LOG'? this.getSanitizedHtml( notificationLog?.previewContent):notificationLog?.previewContent;  
     this.attachments = notificationLog?.attachments;
     this.createdUser = notificationLog?.createdUser;
     this.createdDate = notificationLog?.createdDate;
@@ -301,6 +286,27 @@ this.onViewLetterEmailTextDialogClicked(this.viewLetterEmailTextDialog);
     this.entityId = notificationLog?.entityId;
     this.creatorId =  notificationLog?.creatorId;
     this.mailingAddress = notificationLog?.mailingAddress;
+    this.subject = notificationLog?.subject
+    if (notificationLog?.entityTypeCode === 'EMAIL_LOG') { 
+      this.toEmailAddress = notificationLog?.emailAddress?.TO;
+      this.ccEmailAddress = notificationLog?.emailAddress?.CC;
+      this.bccEmailAddress = notificationLog?.emailAddress?.BCC;
+    }
+    else if (notificationLog?.entityTypeCode === 'LETTER_LOG') { 
+      this.toEmailAddress = null;
+      this.ccEmailAddress = null;
+      this.bccEmailAddress = null; 
+      this.subject = null     
+      this.mailCode = notificationLog?.mailCode;
+    }
+    else if(notificationLog?.entityTypeCode === 'SMS_LOG') {
+      this.smsTo = notificationLog?.to;
+      this.smsId = notificationLog?.smsLogId
+      this.subject = null
+      this.toEmailAddress = null;
+      this.ccEmailAddress = null;
+      this.bccEmailAddress = null;   
+    }
     this.cdr.detectChanges();
     this.eventLogFacade.hideLoader();
   }
