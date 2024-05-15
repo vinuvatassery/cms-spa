@@ -70,16 +70,18 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   isDeleteClaimsOption = false;
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isProcessGridExpand = true;
+   isProcessGridExpand = true;
   isPharmacyClaimsProcessGridLoaderShow = false;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
   vendorId: any;
   clientId: any;
- clientName: any;
- claimsType:any;
- paymentRequestId!: string;
-  @Input() addPharmacyClaim$: any;
+  clientName: any;
+  claimsType:any;
+  paymentRequestId!: string;
+  excludedPaymentStatus: string[] = ['Failed', 'On Hold', 'Pending', 'Submitted'];
+  
+ @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
   @Input() getPharmacyClaim$: any;
   @Input() searchPharmacies$: any;
@@ -130,6 +132,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
   pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
   fromDrugPurchased:any = false;
+  pharmacyStatusList! : any[];
   selectedPaymentStatus: string | null = null;
   selectedPaymentMethod: string | null = null;
   public claimsProcessMore = [
@@ -239,8 +242,12 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadPharmacyClaimsProcessListGrid();
     this.addSearchSubjectSubscription();
-    this.lovFacade.getClaimStatusLov();
-    this.lovFacade.getPaymentMethodLov();   
+    this.lovFacade.getPaymentStatusLov();
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentStatus$.subscribe(values => 
+      {
+        this.pharmacyStatusList = values.filter(value => !this.excludedPaymentStatus.includes(value.lovDesc))
+      })
   }
 
   ngOnChanges(): void {
