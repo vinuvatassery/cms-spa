@@ -40,6 +40,9 @@ export class CptCodeFacade {
   private addCptCodeSubject = new Subject<any>();
   addCptCode$ = this.addCptCodeSubject.asObservable();
 
+  private editCptCodeSubject = new Subject<boolean>();
+  editCptCode$ = this.editCptCodeSubject.asObservable();
+
 
   /** Constructor **/
   constructor(
@@ -97,7 +100,6 @@ export class CptCodeFacade {
           this.addCptCodeSubject.next(true);
         },
         error: (err) => {
-
           if (err?.error?.error?.code?.includes('DUPLICATE_CPT_CODE_ALREADY_EXISTS')) {
             this.showHideSnackBar(SnackBarNotificationType.WARNING, err?.error?.error?.message);
             this.loggingService.logException(err?.error?.error?.message);
@@ -111,6 +113,33 @@ export class CptCodeFacade {
       }
     );
   }
+
+
+  editCptCode(cptCode: any) {
+    this.loaderService.show();
+    let cptCodeId = cptCode.cptCodeId;
+    return this.cptCodeService.editCptCode(cptCodeId, cptCode).subscribe({
+      next: (response: any) => {
+        if (response.status) {
+          this.editCptCodeSubject.next(true);
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+        }
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        if (err?.error?.error?.code?.includes('DUPLICATE_CPT_CODE_ALREADY_EXISTS')) {
+          this.showHideSnackBar(SnackBarNotificationType.WARNING, err?.error?.error?.message);
+          this.loggingService.logException(err?.error?.error?.message);
+          this.loaderService.hide();
+        } else{
+          this.loaderService.hide();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loggingService.logException(err);
+        }
+      },
+    });
+  }
+
 
   loadSupportGroupDistinctUserIdsAndProfilePhoto(data: any[]) {
     const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');

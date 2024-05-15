@@ -20,6 +20,7 @@ export class CptCodePageComponent {
   addCptCode$ = this.cptCodeFacade.addCptCode$;
   cptCodeProfilePhoto$ = this.cptCodeFacade.cptCodeProfilePhoto$;
   cptCodeListDataLoader$ = this.cptCodeFacade.cptCodeListDataLoader$;
+  editCptCode$ = this.cptCodeFacade.editCptCode$;
 
   /** Constructor **/
   constructor(private readonly cptCodeFacade: CptCodeFacade) { }
@@ -32,6 +33,9 @@ export class CptCodePageComponent {
 
   handleAddCptCode(event: any) {
     this.cptCodeFacade.addCptCode(event);
+  }
+  handleEditCptCode(event: any) {
+    this.cptCodeFacade.editCptCode(event);
   }
 
 }

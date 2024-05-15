@@ -11,8 +11,10 @@ import { LoaderService } from '@cms/shared/util-core';
 export class CptCodeFormDetailsComponent {
 
   @Input() isEditCptCode: any;
+  @Input() selectedCptCode: any;
   @Output() closeCptCode = new EventEmitter<any>();
   @Output() addCptCodeEvent = new EventEmitter<any>();
+  @Output() editCptCodeEvent = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   cptCode: any;
@@ -37,7 +39,7 @@ export class CptCodeFormDetailsComponent {
   ngOnInit(): void {
     this.createCptCodeForm();
     if (this.isEditCptCode) {
-      //this.bindDataToForm(this.selectedSupportGroup)
+      this.bindDataToForm(this.selectedCptCode)
     }
     this.tareaVariablesIntialization();
   }
@@ -50,26 +52,44 @@ export class CptCodeFormDetailsComponent {
       brigeUppFlag: [this.isChecked]
     });
   }
+
+  bindDataToForm(cptCode: any) {
+    this.cptCode = cptCode;
+    this.cptCodeForm.controls["cptCode1"].setValue(this.cptCode.cptCode1);
+    this.cptCodeForm.controls["serviceDesc"].setValue(this.cptCode.serviceDesc);
+    this.cptCodeForm.controls["medicaidRate"].setValue(this.cptCode.medicaidRate);
+    this.cptCodeForm.controls["brigeUppFlag"].setValue(this.setBridgeUppEligibleFlagValue());
+    this.cptCodeForm.markAllAsTouched();
+    this.cd.detectChanges();
+  }
+
+
   mapFormValues() {
     const formValues = this.cptCodeForm.value;
     const dto = {
       cptCode1: formValues.cptCode1,
       serviceDesc: formValues.serviceDesc,
       medicaidRate: formValues.medicaidRate,
-      BrigeUppFlag: this.getBridgeUppEligibleFlagValue()
+      brigeUppFlag: this.getBridgeUppEligibleFlagValue()
     };
     return dto;
   }
+
   get cptCodeFormControls() {
     return this.cptCodeForm.controls as any;
   }
+
   onCancelClick() {
     this.closeCptCode.emit();
   }
+
   getBridgeUppEligibleFlagValue() {
     return this.cptCodeForm.controls['brigeUppFlag'].value ? "Y" : "N";
   }
 
+  setBridgeUppEligibleFlagValue() {
+    return this.cptCode?.brigeUppFlag === "Active" ? true : false;
+  }
   validateForm() {
     this.cptCodeForm.markAllAsTouched();
   }
@@ -84,6 +104,7 @@ export class CptCodeFormDetailsComponent {
       : 0;
     this.tareaCounter = `${this.tareaCharachtersCount}/${this.tareamaxLength}`;
   }
+
   onTareaValueChange(event: any): void {
     this.tareaCharachtersCount = event.length;
     this.tareaCounter = `${this.tareaCharachtersCount}/${this.tareamaxLength}`;
@@ -101,7 +122,7 @@ export class CptCodeFormDetailsComponent {
     if (this.cptCodeForm.valid) {
       let finalData = this.mapFormValues();
       if (this.isEditCptCode) {
-        // this.editCptCodeEventEvent.emit(finalData)
+        this.editCptCodeEvent.emit(finalData)
       } else {
         this.addCptCodeEvent.emit(finalData)
       }

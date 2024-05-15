@@ -30,9 +30,17 @@ export class CptCodeService {
   }
 
   addCptCode(cptCode: any) {
-    debugger;
     return this.http.post(`${this.configurationProvider.appSettings.sysConfigApiUrl}` + `/system-config/cpt-code/`, cptCode);
   }
   
+  editCptCode(cptCodeId: string, cptCode: any) {
+    const body = {
+      cptCode1: cptCode.cptCode1,
+      serviceDesc: cptCode.serviceDesc,
+      medicaidRate: cptCode.medicaidRate,
+      brigeUppFlag: cptCode.brigeUppFlag
+    }
+    return this.http.put(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/cpt-code/${cptCodeId}`, body);
+  }
 
 }

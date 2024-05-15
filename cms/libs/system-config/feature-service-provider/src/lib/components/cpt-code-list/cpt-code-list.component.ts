@@ -34,11 +34,13 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   @Input() cptCodeDataLists$: any;
   @Input() cptCodeFilterColumn$: any;
   @Input() addCptCode$: any;
+  @Input() editCptCode$: any;
   @Input() cptCodeProfilePhoto$: any;
   @Input() cptCodeListDataLoader$: any;
   @Output() loadCptCodeListsEvent = new EventEmitter<any>();
   @Output() cptCodeFilterColumnEvent = new EventEmitter<any>();
   @Output() addCptCodeEvent = new EventEmitter<string>();
+  @Output() editCptCodeEvent = new EventEmitter<string>();
 
   public state!: State;
   sortColumn = 'cptCode1';
@@ -54,17 +56,26 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   isCptCodeListGridLoaderShow = false;
   gridCptCodeDataSubject = new Subject<any>();
   gridCptCodeData$ =
-    this.gridCptCodeDataSubject.asObservable();
+  this.gridCptCodeDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   statusFilter: any;
+  cptCodeId!: any;
+  editButtonEmitted = false;
+  selectedCptCode!: any;
+
   public moreActions = [
     {
       buttonType: "btn-h-primary",
       text: "Edit",
       icon: "edit",
-
+      click: (data: any): void => {
+        if (!this.editButtonEmitted) {
+          this.editButtonEmitted = true;
+          this.onEditCptCodeDetailsClicked(data);
+        }
+      },
     },
 
     {
@@ -221,11 +232,20 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.isCptCodeListGridLoaderShow = false;
   }
 
+  onEditCptCodeDetailsClicked(cptCode: any) {
+    this.selectedCptCode = cptCode;
+    this.isEditCptCode = true;
+    this.cptCodeId = cptCode.cptCodeId;
+    this.isCptCodeDetailPopup = true;
+  }
   /** Internal event methods **/
   onCloseCptCodeDetailClicked() {
     this.isCptCodeDetailPopup = false;
+    this.editButtonEmitted = false;
+    this.isEditCptCode = false;
   }
   onCptCodeDetailClicked() {
+    this.isEditCptCode = false;
     this.isCptCodeDetailPopup = true;
   }
 
@@ -249,9 +269,21 @@ export class CptCodeListComponent implements OnInit, OnChanges {
         if (response ?? false) {
           this.loadCptCodeList()
         }
+        this.onCloseCptCodeDetailClicked();
       })
-    this.onCloseCptCodeDetailClicked();
   }
 
+  editCptCode(data: any): void {
+    data["cptCodeId"] = this.cptCodeId;
+    this.editCptCodeEvent.emit(data);
+    this.editCptCode$.pipe(first((response: any) => response != null))
+      .subscribe((response: any) => {
+        if (response ?? false) {
+          this.loadCptCodeList()
+        }
+        this.onCloseCptCodeDetailClicked();
+      })
+    
+  }
 
 }

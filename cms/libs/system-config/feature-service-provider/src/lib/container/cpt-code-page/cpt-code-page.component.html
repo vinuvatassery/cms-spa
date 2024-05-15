@@ -3,5 +3,7 @@
     (loadCptCodeListsEvent)="loadCptCodeLists($event)" (addCptCodeEvent)="handleAddCptCode($event)"
     [cptCodeProfilePhoto$]="cptCodeProfilePhoto$"
     [cptCodeListDataLoader$] ="cptCodeListDataLoader$"
-    [addCptCode$]="addCptCode$">
+    [addCptCode$]="addCptCode$"
+    [editCptCode$]="editCptCode$"
+    (editCptCodeEvent) ="handleEditCptCode($event)" >
 </system-config-cpt-code-list>

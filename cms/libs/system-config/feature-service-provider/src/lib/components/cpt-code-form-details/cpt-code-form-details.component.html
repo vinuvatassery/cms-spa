@@ -1,8 +1,4 @@
 <section class="k-dialog-body" [formGroup]="cptCodeForm">
-
-      <!-- <p class="text-muted mb-2">
-            All fields are required unless otherwise stated.
-      </p> -->
       <div class="flex-row">
             <div class="flex-col">
                   <kendo-formfield>
@@ -63,7 +59,7 @@
                   <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancelClick()">
                         Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Add" (click)="addAndEditCptCode()"> ADD </button>
+                  <button kendoButton [primary]="true" aria-label="Add" (click)="addAndEditCptCode()">  {{ isEditCptCode ? 'Update' : 'Add' }} </button>
             </div>
       </div>
 

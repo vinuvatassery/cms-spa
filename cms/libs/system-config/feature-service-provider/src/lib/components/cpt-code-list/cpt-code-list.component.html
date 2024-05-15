@@ -125,21 +125,21 @@
                               </kendo-grid-string-filter-menu>
                         </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="" title="" [width]="50" class="text-center" [sticky]="true"
+                  <kendo-grid-column field="cptCodeId" title="Options" [width]="50" class="text-center" [sticky]="true"
                         [columnMenu]="false">
-                        <ng-template kendoGridCellTemplate let-dataItem>
+                        <ng-template kendoGridCellTemplate let-dataItem let-cptCodeId="field">
                               <kendo-dropdownbutton [data]="moreActions" title="More option" aria-label="more actions"
                                     class="TableActionPopup app-dropdown-action  " buttonClass="k-icon-button"
                                     [popupSettings]="{ popupClass: popupClassAction, animate: true }">
                                     <span class="material-icons" aria-label="More option"> more_vert </span>
                                     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
-                                          let-dataItem>
-                                          <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
-                                                [class]="dataItem.buttonType" aria-hidden="false"
-                                                (click)="dataItem.click">
+                                          let-buttondataItem>
+                                          <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                                                [class]="buttondataItem.buttonType" aria-hidden="false"
+                                                (click)="buttondataItem.click(dataItem)">
                                                 <span class="material-icons"
-                                                      [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
-                                                <label> {{ dataItem.text }} </label>
+                                                      [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                                                <label> {{ buttondataItem.text }} </label>
                                           </button>
 
                                     </ng-template>
@@ -187,9 +187,10 @@
 
 <kendo-dialog *ngIf="isCptCodeDetailPopup" (close)="onCloseCptCodeDetailClicked()"
       class="app-c-modal app-c-modal-md app-c-modal-np">
-      <kendo-dialog-titlebar> Add New CPT Code </kendo-dialog-titlebar>
-      <system-config-cpt-code-form-details [isEditCptCode]="isEditCptCode" (addCptCodeEvent)="addCptCode($event)"
-            (closeCptCode)="onCloseCptCodeDetailClicked()"></system-config-cpt-code-form-details>
+      <kendo-dialog-titlebar> {{ isEditCptCode ? 'Edit CPT Code' : 'Add New CPT Code' }} </kendo-dialog-titlebar>
+      <system-config-cpt-code-form-details [isEditCptCode]="isEditCptCode" (addCptCodeEvent)="addCptCode($event)" 
+      [selectedCptCode]="selectedCptCode" (editCptCodeEvent)="editCptCode($event)"
+      (closeCptCode)="onCloseCptCodeDetailClicked()"></system-config-cpt-code-form-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isCptCodeDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
