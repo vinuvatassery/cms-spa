@@ -21,6 +21,8 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   gridUserAssignedRolesSubject = new Subject<any>();
   gridUserAssignedRoles$ = this.gridUserAssignedRolesSubject.asObservable();
   userAssignedRolesGridLists$ = new Subject<any>();
+  rolesUserListProfilePhoto$ = this.userManagementFacade.rolesUserListProfilePhotoSubject;
+
   public state!: any;
   sortType = "asc"
   gridDataResult!: GridDataResult;
@@ -89,6 +91,7 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
           total: dataResponse['totalCount'],
         };
         this.userAssignedRolesGridLists$.next(gridView);
+        this.userManagementFacade.loadRolesUserListDistinctUserIdsAndProfilePhoto(gridView.data);
         this.loader$.next(false);
       },
       error: (err: any) => {

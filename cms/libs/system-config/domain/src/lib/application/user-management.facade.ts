@@ -90,6 +90,7 @@ export class UserManagementFacade {
   private userListDataLoaderSubject = new Subject<any>();
   userListDataLoader$ = this.userListDataLoaderSubject.asObservable();
   userListProfilePhotoSubject = new Subject();
+  rolesUserListProfilePhotoSubject = new Subject();
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -485,4 +486,18 @@ export class UserManagementFacade {
     const fileName = 'Users List'
     this.documentFacade.getExportFile(params,`users`, fileName,ApiType.SystemConfig);
   }
+
+  loadRolesUserListDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');
+    if(distinctUserIds){
+      this.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (photoData: any[]) => {
+          if (photoData.length > 0) {
+            this.rolesUserListProfilePhotoSubject.next(photoData);
+          }
+        },
+      });
+    }
+  }  
 }
