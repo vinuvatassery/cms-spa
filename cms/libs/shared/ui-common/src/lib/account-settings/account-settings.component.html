@@ -39,12 +39,14 @@
               <span class="material-icons">phone</span>
               {{phone.deviceNbr | phone}} - {{phone.deviceTypeDesc}}
             </p>
+          </span>
+          <span *ngFor="let phone of userInfo?.userPhones; let i = index">
+
             <p *ngIf="phone?.deviceTypeCode === userDeviceType.Fax" class="app-card-details">
               <span class="material-icons">print</span>
               {{phone.deviceNbr | phone}}
             </p>
           </span>
-
           <p *ngIf="userInfo?.userAddresses?.length > 0" class="app-card-details">
             <span class="material-icons">location_pin</span>
             {{userInfo?.userAddresses[0].address1}} {{userInfo?.userAddresses[0].city}} {{userInfo?.userAddresses[0].state}}-{{userInfo?.userAddresses[0].zip}}

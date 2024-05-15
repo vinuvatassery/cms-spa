@@ -38,7 +38,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   endDateValidator = false;
   addressControlsList = ["address1", "address2", "city", "state", "zip", "county"]
   userDeviceType: typeof UserDeviceType = UserDeviceType;
-
+  phoneData = {};
    /** Constructor**/
    constructor(private readonly cdr :ChangeDetectorRef,
     private readonly formBuilder: FormBuilder,
@@ -224,18 +224,30 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     for (let i = 0; i < userPhones.length; i++) {
       let phone = userPhones[i];
       this.addPhoneGroup();
-      if (phone.deviceTypeCode === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
-        {
-          this.disablePhoneFields(i);
-        }
       let phoneForm = this.addPhoneForm.at(i) as FormGroup;
       phoneForm.controls['smsTextConsentFlag'].setValue(phone.smsTextConsentFlag === StatusFlag.Yes?true:false);
       phoneForm.controls['phoneNbr'].setValue(phone.deviceNbr);
       phoneForm.controls['phoneType'].setValue(phone.deviceTypeCode);
       phoneForm.controls['loginUserPhoneId'].setValue(phone.loginUserPhoneId);
+      if (phone.deviceTypeCode === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
+        {
+          this.saveDefaultDeskPhoneData(phoneForm)
+          this.disablePhoneFields(i);
+        }
 
     }
     this.cdr.detectChanges();
+  }
+
+  saveDefaultDeskPhoneData(phoneForm : FormGroup)
+  {
+    this.phoneData = {
+      loginUserPhoneId: phoneForm.controls['loginUserPhoneId'].value ? phoneForm.controls['loginUserPhoneId'].value: null,
+      loginUserId: this.userInfo.loginUserId,
+      deviceTypeCode: phoneForm.controls['phoneType'].value ? phoneForm.controls['phoneType'].value : null,
+      deviceNbr: phoneForm.controls['phoneNbr'].value ? phoneForm.controls['phoneNbr'].value: null,
+      smsTextConsentFlag:  phoneForm.controls['smsTextConsentFlag'].value ? StatusFlag.Yes : StatusFlag.No,
+    };
   }
 
   disableFields()
@@ -246,15 +258,13 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userForm.controls['state'].disable();
     this.userForm.controls['zip'].disable();
     this.userForm.controls['county'].disable();
-
+    this.userForm.controls['faxNbr'].disable();
   }
 
   disablePhoneFields(index: any)
   {
     const phoneForm = this.addPhoneForm.at(index) as FormGroup;
-    phoneForm.controls['smsTextConsentFlag'].disable();
-    phoneForm.controls['phoneNbr'].disable();
-    phoneForm.controls['phoneType'].disable();
+    phoneForm.disable();
   }
 
   onSave()
@@ -268,6 +278,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         initials:  this.userForm.controls['initials'].value ?? null,
         pronouns: this.userForm.controls['pronoun'].value ?? null,
         jobTitle:  this.userForm.controls['jobTitle'].value ?? null,
+        faxNbr:  this.userForm.controls['faxNbr'].value? this.userForm.controls['faxNbr'].value: null,
         notificationSummaryEmailCheck : this.userForm.controls['notificationSummaryFlag'].value,
         userSchedules: [{}],
         userAddresses: [{}],
@@ -308,8 +319,11 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         else{
           payload.userAddresses = [];
         }
-        let phoneformValues = this.userForm.value;
-        for (let element of phoneformValues.phones) {
+        let userform = this.userForm.value;
+        let phoneArrayForm = userform.phones
+        if(phoneArrayForm)
+          {
+        for (let element of phoneArrayForm) {
           let phone = {
             loginUserPhoneId: element.loginUserPhoneId ? element.loginUserPhoneId: null,
             loginUserId: this.userInfo.loginUserId,
@@ -319,7 +333,15 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
           };
           payload.userPhones.push(phone);
         }
+        if(this.phoneData)
+          {
+            payload.userPhones.push(this.phoneData);
+          }
         payload.userPhones.splice(0, 1);
+      }
+      else{
+        payload.userPhones = [];
+      }
 
       
       this.submitUserInfoDataEvent.emit(payload);
