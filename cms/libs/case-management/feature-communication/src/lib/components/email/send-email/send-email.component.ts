@@ -682,7 +682,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isToEmailMissing = false;
     this.isEmailSubjectMissing = false;
     this.isContentMissing = false;
-    if (this.notificationGroup === ScreenType.VendorProfile) 
+    this.handleconfirmPopupHeader(event.templateTypeCode);
+    if (this.notificationGroup === ScreenType.VendorProfile)
     {
     this.isMailCodeMissing = false;
     }
@@ -710,6 +711,26 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
     else {
       this.loadNewTemplate(event);
+    }
+  }
+
+  handleconfirmPopupHeader(event: any){
+    switch(event){
+      case CommunicationEventTypeCode.PendingNoticeEmail:
+        this.confirmPopupHeader = 'Send Pending Email';
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeEmail:
+        this.confirmPopupHeader = 'Send Rejection Email';
+        break;
+      case CommunicationEventTypeCode.ApprovalNoticeEmail:
+        this.confirmPopupHeader = 'Send Approval Email';
+        break;
+      case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
+        this.confirmPopupHeader = 'Send Disenrollment Email';
+        break;
+      default:
+        this.confirmPopupHeader = 'Send Email';
+        break;
     }
   }
 

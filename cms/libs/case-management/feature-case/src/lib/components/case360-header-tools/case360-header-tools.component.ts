@@ -104,7 +104,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.saveForLaterHeadterText = "Letter Draft Saved";
         this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText="This action cannot be undone.";
+        this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
         this.notificationDraftCheck(this.clientId,this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -127,8 +127,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.templateHeader = 'Send New Email';
         this.saveForLaterHeadterText = "Email Draft Saved";
         this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
-        this.confirmPopupHeader = 'Send Email?';
-        this.confirmationModelText="This action cannot be undone.";
+        this.confirmPopupHeader = 'Send Email';
+        this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
         this.notificationDraftCheck(this.clientId,this.templateLoadType , this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },

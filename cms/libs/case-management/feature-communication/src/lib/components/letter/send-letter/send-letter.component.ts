@@ -590,6 +590,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
+    this.handleconfirmPopupHeader(event.templateTypeCode);
     if(this.communicationLetterTypeCode === undefined || this.communicationLetterTypeCode === ''){
       this.communicationLetterTypeCode = event.templateTypeCode;
     }
@@ -613,6 +614,26 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
     else{
       this.loadNewTemplate(event);
+    }
+  }
+
+  handleconfirmPopupHeader(event: any){
+    switch(event){
+      case CommunicationEventTypeCode.PendingNoticeLetter:
+        this.confirmPopupHeader = 'Send Pending Letter to print?';
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeLetter:
+        this.confirmPopupHeader = 'Send Rejection Letter to print?';
+        break;
+      case CommunicationEventTypeCode.ApprovalNoticeLetter:
+        this.confirmPopupHeader = 'Send Approval Letter to print?';
+        break;
+      case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
+        this.confirmPopupHeader = 'Send Disenrollment Letter to print?';
+        break;
+      default:
+        this.confirmPopupHeader = 'Send Email';
+        break;
     }
   }
 
