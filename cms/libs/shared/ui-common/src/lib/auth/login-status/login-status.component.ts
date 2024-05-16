@@ -1,9 +1,12 @@
+import { LoginUser } from '@cms/system-config/domain';
 /** Angular **/
 import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, OnInit, ChangeDetectorRef,   HostListener, ViewEncapsulation } from '@angular/core';
 /** Services **/
 import { AuthService } from '@cms/shared/util-oidc';
 import { UserDataService } from '@cms/system-config/domain';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { UserManagementFacade } from '@cms/system-config/domain';
+
 @Component({
   selector: 'common-login-status',
   templateUrl: './login-status.component.html',
@@ -16,6 +19,9 @@ export class LoginStatusComponent  implements OnInit{
   public accountSettingsPopover!: ElementRef;
   @ViewChild('profileAnchor')
   profileAnchor!: ElementRef;
+  userInfoData$ = this.userManagementFacade.userInfoData$;
+  submitUserInfoData$ = this.userManagementFacade.submitUserInfoData$;
+  private submitUserInfoSubscription !: Subscription;
 
   isAccountSettingsPopup = false;
   isProfilePopoverOpen = false;
@@ -26,15 +32,23 @@ export class LoginStatusComponent  implements OnInit{
   popupClass = 'user-setting-dropdown';
   userInfo!:any;
 
-  
-  constructor(private authService: AuthService, 
-    private readonly userDataService: UserDataService,private readonly cd: ChangeDetectorRef) { }
 
- 
+  constructor(private authService: AuthService,
+    private readonly userDataService: UserDataService,private readonly cd: ChangeDetectorRef,
+    private readonly userManagementFacade: UserManagementFacade,
+  ) { }
+
+
 
 
   ngOnInit(): void {
     this.loadProfilePhoto();
+    this.submitUserInfoSubscription = this.submitUserInfoData$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.isAccountSettingsPopup = false;
+        this.cd.detectChanges();
+      }
+    });
   }
   user() {
     return this.authService.getUser();
@@ -83,7 +97,7 @@ export class LoginStatusComponent  implements OnInit{
         : false)
     );
   }
- 
+
   loadProfilePhoto() {
     this.userDataService.getProfile$.subscribe((users: any[]) => {
       if (users.length > 0) {
@@ -103,4 +117,17 @@ export class LoginStatusComponent  implements OnInit{
   }
   onCloseAccountSettingsClicked() { this.isAccountSettingsPopup = false; }
   onAccountSettingsClicked() { this.isAccountSettingsPopup = true; }
+
+  loadUserInfoData()
+  {
+    if(this.userInfo?.loginUserId)
+    {
+      this.userManagementFacade.loadUserInfoData(this.userInfo?.loginUserId);
+    }
+  }
+
+  submitUserInfoData(userInfoData : any)
+  {
+    this.userManagementFacade.submitUserInfoData(userInfoData);
+  }
 }

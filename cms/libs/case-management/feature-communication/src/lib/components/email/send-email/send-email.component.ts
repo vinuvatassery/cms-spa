@@ -553,7 +553,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           if (data) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message);
-            this.communicationEmailTypeCode = '';
             this.onCloseSendEmailClicked();
           }
           this.ref.detectChanges();
@@ -680,6 +679,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    this.isToEmailMissing = false;
+    this.isEmailSubjectMissing = false;
+    this.isContentMissing = false;
+    if (this.notificationGroup === ScreenType.VendorProfile) 
+    {
+    this.isMailCodeMissing = false;
+    }
     if (this.triggerFrom === ScreenType.ClientProfile || this.triggerFrom === ScreenType.VendorProfile) {
       this.communicationEmailTypeCode = event.templateTypeCode;
     }

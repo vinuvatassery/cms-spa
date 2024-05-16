@@ -1,5 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { DocumentFacade } from '@cms/shared/util-core';
 /** Facades **/
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { State } from '@progress/kendo-data-query';
@@ -23,8 +24,9 @@ export class UserManagementPageComponent {
   usersDataLists$ = this.userManagementFacade.usersData$;
   usersFilterColumn$ = this.userManagementFacade.usersFilterColumn$;
   userListProfilePhoto$ = this.userManagementFacade.userListProfilePhotoSubject;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$;
   /** Constructor **/
-  constructor(private readonly userManagementFacade: UserManagementFacade) { }
+  constructor(private readonly userManagementFacade: UserManagementFacade, private readonly documentFacade: DocumentFacade ) { }
 
 
  
