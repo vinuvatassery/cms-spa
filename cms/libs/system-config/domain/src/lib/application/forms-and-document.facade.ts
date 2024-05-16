@@ -72,6 +72,7 @@ export class FormsAndDocumentFacade {
                 this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
                 this.hideLoader();
                 this.loadFolderFile(true);
+                this.getFolderName();
             } 
         },
           error: (err) => 
