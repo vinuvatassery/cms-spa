@@ -4,17 +4,26 @@
       <div class="flex-row pb-3">
         <div class="flex-col justify-content-center avatar-section">
           <div class="app-c-avatar avatar-xlg">
-            <img src="../assets/images/avatar-1.png" alt="Profile Avatar" class="profile-avatar" hidden />
-            <span class="profile-text-avatar">AK</span>
+            <div [hidden]="imageLoaderVisible">
+              <img [hidden]="imageLoaderVisible" [src]="userImage$ | async" alt="Profile Avatar" class="profile-avatar"
+              (load)="onLoad()" />
+            </div>
+            <div *ngIf="imageLoaderVisible">
+              <span class="profile-text-avatar">{{userInfo?.firstName?.charAt(0)}}{{userInfo?.lastName?.charAt(0)}}</span>
+            </div>
           </div>
         </div>
         <div class="flex-col">
           <div class="profile-button-wrapper">
             <button kendoButton look="flat" aria-label="Upload photo" class="k-primary-button btn-small">
-              Upload photo
+              <label for="fileInput">
+                Upload photo
+              </label>
+              <input style="position: absolute; opacity: 0; width: 100%" id="fileInput" type="file"  (change)="handleFileSelected($event)">
+              
             </button>
             <span class="btn-separator"></span>
-            <button kendoButton look="flat" aria-label="Remove photo" class="k-danger-link btn-small">
+            <button [disabled]="imageLoaderVisible" (click) = "onDeleteProfilePhotoClicked()" kendoButton look="flat" aria-label="Remove photo" class="k-danger-link btn-small">
               Remove photo
             </button>
           </div>
@@ -340,3 +349,9 @@
     </button>
   </section>
 </div>
+
+<ng-template #deleteTemplate>   
+  <common-delete-profile-photo-confirmation
+    (isModalDeleteCloseClicked)="onCloseDeleteClicked($event)" 
+    (isModalDeleteClicked)="onConfirmDeleteClicked($event)"> </common-delete-profile-photo-confirmation> 
+</ng-template>

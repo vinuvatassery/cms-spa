@@ -95,6 +95,9 @@ export class UserManagementFacade {
   userListDataLoader$ = this.userListDataLoaderSubject.asObservable();
   userListProfilePhotoSubject = new Subject();
   rolesUserListProfilePhotoSubject = new Subject();
+  private removePhotoResponseSubject = new Subject<any>();
+  private uploadPhotoResponseSubject = new Subject<any>();
+
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -127,6 +130,8 @@ export class UserManagementFacade {
   userInfoData$ = this.userInfoDataSubject.asObservable();
   submitUserInfoData$ = this.submitUserInfoDataSubject.asObservable();
   ddlStates$ = this.ddlStatesSubject.asObservable();
+  removePhotoResponse$ = this.removePhotoResponseSubject.asObservable();
+  uploadPhotoResponse$ = this.uploadPhotoResponseSubject.asObservable();
 
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
@@ -549,4 +554,33 @@ export class UserManagementFacade {
       });
     }
   }  
+
+  removeUserProfilePhoto(userId : any) {
+    this.showLoader();
+    this.userDataService.removeUserProfilePhoto(userId).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        this.removePhotoResponseSubject.next(response);
+        // this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message)
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  uploadUserProfilePhoto(uploadRequest : any) {
+    this.showLoader();
+    this.userDataService.uploadUserProfilePhoto(uploadRequest).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        this.uploadPhotoResponseSubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 }
