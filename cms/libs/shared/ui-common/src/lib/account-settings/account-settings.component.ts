@@ -5,7 +5,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { LovFacade, UserDeviceType, UserManagementFacade, UserType } from '@cms/system-config/domain';
 import { PronounTypeCode } from '../enums/pronoun-type-code.enum';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '../enums/status-flag.enum';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
@@ -543,8 +543,23 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
   handleFileSelected(e: any) {
     this.file = e.currentTarget.files[0];
+    if (this.file.type !== 'image/png' || this.file.type !== 'image/png' || this.file.type !== 'image/png') {
+      this.userManagementFacade.showHideSnackBar(
+        SnackBarNotificationType.WARNING,
+        "Invalid file type"
+      );
+      return;
+      }
     if(this.file)
       {
+        const maxSizeInBytes: number = 2 * 1024 * 1024;
+        if (this.file.size > maxSizeInBytes){
+          this.userManagementFacade.showHideSnackBar(
+            SnackBarNotificationType.WARNING,
+            "Image size exceeds maximum limit"
+          );
+          return;
+        }
         let payload = {
           loginUserId : this.userInfo.loginUserId,
           profilePhoto : this.file 
