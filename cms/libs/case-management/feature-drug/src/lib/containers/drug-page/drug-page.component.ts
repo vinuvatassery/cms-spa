@@ -416,36 +416,13 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
             if (response) {
               this.workflowFacade.saveForLaterCompleted(true)
               this.loaderService.hide();
-              if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-                if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-                  this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                    queryParamsHandling: "preserve"
-                  });
-                }
-                else {
-                  this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                    queryParamsHandling: "preserve"
-                  });
-                }
-              }else{
-                this.router.navigate(['/case-management/cases']);
-            }
+        
             }
           })
         }
         else {
-          if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-          }
+          this.workflowFacade.saveForLaterCompleted(true)
+        
         }
       });
   }

@@ -142,7 +142,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.savedForLaterCompleted$
     .subscribe(res =>{
      if(res){
-     this.updateCaseStatusSubscription$ = this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId)
+     this.updateCaseStatusSubscription$ = this.caseFacade.updateCaseStatus(this.workflowFacade.clientCaseId, this.currentStatusCode,this.workflowFacade.clientCaseEligibilityId)
        .subscribe({
          next: (casesResponse: any) => {
            this.isShowSaveLaterPopup = false;
@@ -442,7 +442,8 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
       if (val) {
         if(!this.workflowFacade.clientCaseEligibilityId && ! this.workflowFacade.clientId){
           this.ifClientHasAddress = false;
-          this.isShowSaveLaterPopup = true;
+          this.isShowSaveLaterPopup = false;
+          this.router.navigate(['/case-management/cases']);
           return;
         }
         this.loaderService.show()
