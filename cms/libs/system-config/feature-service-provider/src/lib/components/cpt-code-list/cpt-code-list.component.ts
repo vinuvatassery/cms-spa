@@ -37,10 +37,13 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   @Input() editCptCode$: any;
   @Input() cptCodeProfilePhoto$: any;
   @Input() cptCodeListDataLoader$: any;
+  @Input() cptCodeChangeStatus$: any;
   @Output() loadCptCodeListsEvent = new EventEmitter<any>();
   @Output() cptCodeFilterColumnEvent = new EventEmitter<any>();
   @Output() addCptCodeEvent = new EventEmitter<string>();
   @Output() editCptCodeEvent = new EventEmitter<string>();
+  @Output() deactivateConfimEvent = new EventEmitter<string>();
+  @Output() reactivateConfimEvent = new EventEmitter<string>();
 
   public state!: State;
   sortColumn = 'cptCode1';
@@ -64,8 +67,9 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   cptCodeId!: any;
   editButtonEmitted = false;
   selectedCptCode!: any;
+  changeStatusButtonEmitted = false;
 
-  public moreActions = [
+  public moreActions = (dataItem: any) => [
     {
       buttonType: "btn-h-primary",
       text: "Edit",
@@ -79,10 +83,17 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     },
     {
       buttonType: "btn-h-primary",
-      text: "Deactivate",
-      icon: "block",
+      text: dataItem.activeFlag === 'Active' ? 'Deactivate' : 'Reactivate',
+      icon: dataItem.activeFlag === 'Active' ? "block" : 'done',
       click: (data: any): void => {
-        this.onCptCodeDeactivateClicked();
+        if (!this.changeStatusButtonEmitted && data.cptCodeId) {
+          this.changeStatusButtonEmitted = true;
+          if (dataItem.activeFlag === 'Active') {
+            this.onCptCodeDeactivateClicked(data.cptCodeId);
+          } else {
+            this.onCptCodeReactiveClicked(data.cptCodeId);
+          }
+        }
       },
     }
   ];
@@ -246,12 +257,13 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.isCptCodeDeletePopupShow = true;
   }
   onCloseCptCodeDeactivateClicked() {
+    this.changeStatusButtonEmitted = false;
     this.isCptCodeDeactivatePopupShow = false;
   }
-  onCptCodeDeactivateClicked() {
+  onCptCodeDeactivateClicked(cptCodeId: any) {
+    this.cptCodeId = cptCodeId;
     this.isCptCodeDeactivatePopupShow = true;
   }
-
   addCptCode(data: any): void {
     this.addCptCodeEvent.emit(data);
     this.addCptCode$.pipe(first((response: any) => response != null))
@@ -262,7 +274,10 @@ export class CptCodeListComponent implements OnInit, OnChanges {
         this.onCloseCptCodeDetailClicked();
       })
   }
-
+  onCptCodeReactiveClicked(cptCodeId: string) {
+    this.cptCodeId = cptCodeId;
+    this.handleCptCodeReactive(true);
+  }
   editCptCode(data: any): void {
     data["cptCodeId"] = this.cptCodeId;
     this.editCptCodeEvent.emit(data);
@@ -273,7 +288,35 @@ export class CptCodeListComponent implements OnInit, OnChanges {
         }
         this.onCloseCptCodeDetailClicked();
       })
-    
+  }
+
+  handleCptCodeDeactive(isDeactivate: any) {
+    if (isDeactivate) {
+      this.changeStatusButtonEmitted = false;
+      this.deactivateConfimEvent.emit(this.cptCodeId);
+
+      this.cptCodeChangeStatus$.pipe(first((response: any) => response != null))
+        .subscribe((response: any) => {
+          if (response ?? false) {
+            this.loadCptCodeList()
+          }
+          this.onCloseCptCodeDeactivateClicked();
+        })
+    }
+  }
+
+  handleCptCodeReactive(isReactivate: any) {
+    if (isReactivate) {
+      this.changeStatusButtonEmitted = false;
+      this.reactivateConfimEvent.emit(this.cptCodeId);
+
+      this.cptCodeChangeStatus$.pipe(first((response: any) => response != null))
+        .subscribe((response: any) => {
+          if (response ?? false) {
+            this.loadCptCodeList()
+          }
+        })
+    }
   }
 
 }

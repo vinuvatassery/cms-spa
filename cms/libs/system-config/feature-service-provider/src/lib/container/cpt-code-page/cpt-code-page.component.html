@@ -1,9 +1,13 @@
 <system-config-cpt-code-list [cptCodeDataLists$]="cptCodeDataLists$" [pageSizes]="pageSizes"
     [sortValue]="sortValueCptCode" [sortType]="sortType" [sort]="sortCptCodeGrid"
-    (loadCptCodeListsEvent)="loadCptCodeLists($event)" (addCptCodeEvent)="handleAddCptCode($event)"
     [cptCodeProfilePhoto$]="cptCodeProfilePhoto$"
     [cptCodeListDataLoader$] ="cptCodeListDataLoader$"
     [addCptCode$]="addCptCode$"
     [editCptCode$]="editCptCode$"
-    (editCptCodeEvent) ="handleEditCptCode($event)" >
+    [cptCodeChangeStatus$]="cptCodeChangeStatus$"
+    (loadCptCodeListsEvent)="loadCptCodeLists($event)"
+    (editCptCodeEvent) ="handleEditCptCode($event)"
+    (addCptCodeEvent)="handleAddCptCode($event)"
+    (deactivateConfimEvent)="handleDeactivateCptCode($event)" 
+    (reactivateConfimEvent)="handleReactivateCptCode($event)" >
 </system-config-cpt-code-list>

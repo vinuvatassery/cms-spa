@@ -43,6 +43,9 @@ export class CptCodeFacade {
   private editCptCodeSubject = new Subject<boolean>();
   editCptCode$ = this.editCptCodeSubject.asObservable();
 
+  private cptCodeChangeStatusSubject = new Subject<any>();
+  cptCodeChangeStatus$ = this.cptCodeChangeStatusSubject.asObservable();
+
 
   /** Constructor **/
   constructor(
@@ -140,6 +143,23 @@ export class CptCodeFacade {
     });
   }
 
+  changeCptCodeStatus(cptCodeId: any, status: boolean) {
+    this.showLoader();
+    this.cptCodeService.changeCptCodeStatus(cptCodeId, status)
+      .subscribe({
+        next: (response: any) => {
+          if (response.status) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message)
+          }
+          this.cptCodeChangeStatusSubject.next(true);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loggingService.logException(err);
+        },
+      });
+  }
 
   loadSupportGroupDistinctUserIdsAndProfilePhoto(data: any[]) {
     const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');

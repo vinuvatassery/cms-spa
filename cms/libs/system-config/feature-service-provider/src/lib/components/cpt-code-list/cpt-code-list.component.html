@@ -128,7 +128,7 @@
                   <kendo-grid-column field="cptCodeId" title="Options" [width]="50" class="text-center" [sticky]="true"
                         [columnMenu]="false">
                         <ng-template kendoGridCellTemplate let-dataItem let-cptCodeId="field">
-                              <kendo-dropdownbutton [data]="moreActions" title="More option" aria-label="more actions"
+                              <kendo-dropdownbutton [data]="moreActions(dataItem)" title="More option" aria-label="more actions"
                                     class="TableActionPopup app-dropdown-action  " buttonClass="k-icon-button"
                                     [popupSettings]="{ popupClass: popupClassAction, animate: true }">
                                     <span class="material-icons" aria-label="More option"> more_vert </span>
@@ -193,11 +193,8 @@
       (closeCptCode)="onCloseCptCodeDetailClicked()"></system-config-cpt-code-form-details>
 </kendo-dialog>
 
-<kendo-dialog *ngIf="isCptCodeDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar (close)="onCloseCptCodeDeleteClicked()"> Delete CPT Code?</kendo-dialog-titlebar>
-      <system-config-cpt-code-delete></system-config-cpt-code-delete>
-</kendo-dialog>
+
 <kendo-dialog *ngIf="isCptCodeDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar (close)="onCloseCptCodeDeactivateClicked()"> Deactivate CPT Code? </kendo-dialog-titlebar>
-      <system-config-cpt-code-deactivate></system-config-cpt-code-deactivate>
+      <system-config-cpt-code-deactivate (close)="onCloseCptCodeDeactivateClicked()" (deactivateConfimEvent)="handleCptCodeDeactive($event)"></system-config-cpt-code-deactivate>
 </kendo-dialog>

@@ -21,6 +21,7 @@ export class CptCodePageComponent {
   cptCodeProfilePhoto$ = this.cptCodeFacade.cptCodeProfilePhoto$;
   cptCodeListDataLoader$ = this.cptCodeFacade.cptCodeListDataLoader$;
   editCptCode$ = this.cptCodeFacade.editCptCode$;
+  cptCodeChangeStatus$ = this.cptCodeFacade.cptCodeChangeStatus$;
 
   /** Constructor **/
   constructor(private readonly cptCodeFacade: CptCodeFacade) { }
@@ -34,8 +35,16 @@ export class CptCodePageComponent {
   handleAddCptCode(event: any) {
     this.cptCodeFacade.addCptCode(event);
   }
+
   handleEditCptCode(event: any) {
     this.cptCodeFacade.editCptCode(event);
+  }
+
+  handleDeactivateCptCode(event: any) {
+    this.cptCodeFacade.changeCptCodeStatus(event, false);
+  }
+  handleReactivateCptCode(event: any) {
+    this.cptCodeFacade.changeCptCodeStatus(event, true);
   }
 
 }
