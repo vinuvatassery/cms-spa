@@ -77,7 +77,6 @@ export class CptCodeListComponent implements OnInit, OnChanges {
         }
       },
     },
-
     {
       buttonType: "btn-h-primary",
       text: "Deactivate",
@@ -85,16 +84,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         this.onCptCodeDeactivateClicked();
       },
-    },
-    {
-      buttonType: "btn-h-danger",
-      text: "Delete",
-      icon: "delete",
-      click: (data: any): void => {
-        this.onCptCodeDeleteClicked();
-      },
-    },
-
+    }
   ];
 
 
