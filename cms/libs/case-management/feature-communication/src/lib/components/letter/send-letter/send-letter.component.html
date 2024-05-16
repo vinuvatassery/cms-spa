@@ -44,6 +44,9 @@
             <p *ngIf="mailingAddress?.address2">{{ mailingAddress?.address2 }} </p>
             <p *ngIf="mailingAddress?.city || mailingAddress?.state || mailingAddress?.zip">{{ mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
           </span>
+          <kendo-formerror *ngIf="isMailingAddressMissing">
+            Mailing Address is required.
+          </kendo-formerror>
         </div>
         <div class="flex-col">
           <p>
