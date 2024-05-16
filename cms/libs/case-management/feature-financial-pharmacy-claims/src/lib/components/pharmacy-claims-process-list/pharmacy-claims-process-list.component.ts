@@ -132,7 +132,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
   pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
   fromDrugPurchased:any = false;
-  pharmacyStatusList! : any[];
+  pharmacyPaymentStatusList! : any[];
   selectedPaymentStatus: string | null = null;
   selectedPaymentMethod: string | null = null;
   public claimsProcessMore = [
@@ -246,7 +246,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     this.lovFacade.getPaymentMethodLov();
     this.paymentStatus$.subscribe(values => 
       {
-        this.pharmacyStatusList = values.filter(value => !this.excludedPaymentStatus.includes(value.lovDesc))
+        this.pharmacyPaymentStatusList = values.filter(value => !this.excludedPaymentStatus.includes(value.lovDesc))
       })
   }
 
