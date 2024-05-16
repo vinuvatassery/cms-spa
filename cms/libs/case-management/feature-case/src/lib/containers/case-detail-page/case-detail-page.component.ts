@@ -188,7 +188,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showSendNewsLetterSubscription.unsubscribe();
     this.showCancelApplicationSubscription.unsubscribe();
     this.showSplitButtonSubscription.unsubscribe();
-    this.updateCaseStatusSubscription$.unsubscribe();
+    this.updateCaseStatusSubscription$?.unsubscribe();
   }
 
   paperLessFlagContactInfoChangeSubscription(){
