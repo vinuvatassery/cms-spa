@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { TemplateManagementFacade } from '@cms/system-config/domain';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
 import { map } from 'rxjs';
 const isOfType = (fileName: string, ext: string) =>
@@ -33,7 +34,10 @@ export class CommonFormDocumentListComponent implements OnInit {
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
   public constructor(
-    private readonly templateManagementFacade: TemplateManagementFacade) {
+    private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
+    private readonly loaderService: LoaderService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly loggingService: LoggingService,) {
 
   }
   ngOnInit(): void {
@@ -249,13 +253,13 @@ export class CommonFormDocumentListComponent implements OnInit {
     this.isFormsDocumentReactivatePopupShow = false;
   }
 
-  onDownloadViewFileClick(viewType: string, templateId: string,templateName:string) {
-
+  onDownloadViewFileClick(viewType: string, templateId: string, templateName: string) {
+    debugger;
     if (templateId === undefined || templateId === '') {
       return;
     }
-    //this.loaderService.show()
-    this.templateManagementFacade.getFormsandDocumentsViewDownload(templateId).subscribe({
+    this.loaderService.show()
+    this.formsAndDocumentFacade.getFormsandDocumentsViewDownload(templateId).subscribe({
       next: (data: any) => {
         const fileUrl = window.URL.createObjectURL(data);
         if (viewType === 'view') {
@@ -266,12 +270,20 @@ export class CommonFormDocumentListComponent implements OnInit {
           downloadLink.download = templateName;
           downloadLink.click();
         }
-        //this.loaderService.hide();
+        this.loaderService.hide();
       },
       error: (error: any) => {
-        // this.loaderService.hide();
-        // this.showSnackBar(SnackBarNotificationType.ERROR, error)
+        this.loaderService.hide();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, error)
       }
     })
+  }
+
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
   }
 }

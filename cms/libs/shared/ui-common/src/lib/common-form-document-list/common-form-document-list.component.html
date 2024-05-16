@@ -13,12 +13,13 @@
                                     *ngIf="dataItem.isFolder===true">folder</span>
                               <div class="file-section-inner">
                                     <span class="attachments-buttons-wrap" *ngIf="dataItem.isFolder===false">
-                                          <button kendoButton look="flat" title="Download" aria-label="Download">
+                                          <button kendoButton look="flat" title="Download" aria-label="Download"
+                                          (click)="onDownloadViewFileClick('download',dataItem.documentTemplateId,dataItem.text)">
                                                 <span class="material-icons" aria-label="download"
                                                       aria-hidden="true">file_download</span>
                                           </button>
-                                          <button kendoButton look="flat" title="Open in new tab"
-                                                aria-label="open in new tab">
+                                          <button kendoButton look="flat" title="Open in new tab" aria-label="open in new tab" 
+                                                (click)="onDownloadViewFileClick('view',dataItem.documentTemplateId,dataItem.description)">
                                                 <span class="material-icons" aria-label="open in new tab"
                                                       aria-hidden="true">open_in_new</span>
                                           </button>

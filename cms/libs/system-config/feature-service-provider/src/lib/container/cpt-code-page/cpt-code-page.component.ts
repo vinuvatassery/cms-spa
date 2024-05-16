@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SystemConfigServiceProviderFacade } from '@cms/system-config/domain';
+import { CptCodeFacade } from '@cms/system-config/domain';
 import { State } from '@progress/kendo-data-query';
 
 @Component({
@@ -9,19 +9,33 @@ import { State } from '@progress/kendo-data-query';
 })
 export class CptCodePageComponent {
   state!: State;
-  sortType = this.systemConfigServiceProviderFacade.sortType;
-  pageSizes = this.systemConfigServiceProviderFacade.gridPageSizes;
-  gridSkipCount = this.systemConfigServiceProviderFacade.skipCount;
-  sortValueCptCode = this.systemConfigServiceProviderFacade.sortValueCptCode;
-  sortCptCodeGrid = this.systemConfigServiceProviderFacade.sortCptCodeGrid;
-  cptCodeService$ = this.systemConfigServiceProviderFacade.loadCptCodeListsService$; 
+  sortType = this.cptCodeFacade.sortType;
+  pageSizes = this.cptCodeFacade.gridPageSizes;
+  gridSkipCount = this.cptCodeFacade.skipCount;
+  sortValueCptCode = this.cptCodeFacade.sortValueCptCode;
+  sortCptCodeGrid = this.cptCodeFacade.sortCptCodeGrid;
+
+
+  cptCodeDataLists$ = this.cptCodeFacade.loadCptCodeListsService$; 
+  addCptCode$ = this.cptCodeFacade.addCptCode$;
+  cptCodeProfilePhoto$ = this.cptCodeFacade.cptCodeProfilePhoto$;
+  cptCodeListDataLoader$ = this.cptCodeFacade.cptCodeListDataLoader$;
+  editCptCode$ = this.cptCodeFacade.editCptCode$;
+
   /** Constructor **/
-  constructor(private readonly systemConfigServiceProviderFacade: SystemConfigServiceProviderFacade) { }
+  constructor(private readonly cptCodeFacade: CptCodeFacade) { }
 
 
  
   loadCptCodeLists(data: any){
-    this.systemConfigServiceProviderFacade.loadCptCodeLists();
+    this.cptCodeFacade.loadCptCodeLists(data);
+  }
+
+  handleAddCptCode(event: any) {
+    this.cptCodeFacade.addCptCode(event);
+  }
+  handleEditCptCode(event: any) {
+    this.cptCodeFacade.editCptCode(event);
   }
 
 }

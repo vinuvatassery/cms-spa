@@ -71,3 +71,4 @@ export * from './lib/delete-todo-confirmation/delete-todo-confirmation.component
 export * from './lib/directives/placeholder.directive';
 export * from './lib/client-attachment-model/client-attachment-model.component';
 export * from './lib/common-form-document-list/common-form-document-list.component'
+export * from  './lib/enums/income-type.enum';
