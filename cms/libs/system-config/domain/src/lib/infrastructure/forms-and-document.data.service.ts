@@ -36,4 +36,14 @@ export class FormsAndDocumentDataService
           formData
         );
       }
-    }
+    
+    getFormsandDocumentsViewDownload(templateId: string) {
+        let url = `/case-management/forms-documents-config/${templateId}/content`;
+        return this.http.get(
+          `${this.configurationProvider.appSettings.caseApiUrl}` +url,
+          {
+            responseType: 'blob',
+          }
+        );
+      }
+}
