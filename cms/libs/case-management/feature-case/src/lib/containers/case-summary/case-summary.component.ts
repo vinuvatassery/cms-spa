@@ -190,6 +190,7 @@ private updateFormCompleteCount(prev: any, curr: any) {
         })
       }
       else {
+        this.workFlowFacade.saveForLaterCompleted(true)
         this.workFlowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
