@@ -11,7 +11,7 @@ import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { StatusFlag } from '@cms/shared/ui-common';
+import { StatusFlag,IncomeType } from '@cms/shared/ui-common';
 import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
 @Component({
   selector: 'case-management-income-page',
@@ -79,6 +79,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   });
   isCerForm = false;
   hasValidIncome = false;
+  hasClientDependentsMinorAdditionalIncomeFlag = false;
+  hasClientDependentsMinorEmployedFlag = false
   prevClientCaseEligibilityId! : string;
   public uploadFileRestrictions: UploadFileRistrictionOptions =
   new UploadFileRistrictionOptions();
@@ -236,6 +238,23 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private save() {
+    this.hasClientDependentsMinorAdditionalIncomeFlag = false
+   this.hasClientDependentsMinorEmployedFlag = false
+
+    var hasAdditionalIncometypes= [IncomeType.work,IncomeType.otherIncome,IncomeType.selfEmployed].includes(this.incomeData.clientIncomes);
+    var hasMinorIncometypes= [IncomeType.Unemployment,IncomeType.SSI, IncomeType.SSDI,IncomeType.SLD,IncomeType.RI,IncomeType.PRVB].includes(this.incomeData.clientIncomes);
+    if(this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes && 
+      !hasAdditionalIncometypes
+    ){
+    this.hasClientDependentsMinorAdditionalIncomeFlag = true
+  }
+
+  if(this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes && 
+  !hasMinorIncometypes
+){
+    this.hasClientDependentsMinorEmployedFlag= true
+  }
+
     this.removeValidations();
     this.checkValidations();
     this.UploadDocumentValidation();
@@ -350,6 +369,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
     /** Internal Event Methods **/
   additionalIncomeFlagSelected(event: any) {
+    this.hasClientDependentsMinorAdditionalIncomeFlag = false;
     let item: CompletionChecklist = {
       dataPointName: 'clientDependentsMinorAdditionalIncomeFlag',
       status:  StatusFlag.Yes
@@ -360,6 +380,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   dependentsMinorEmployedFlagSelected(event:any){
+    this.hasClientDependentsMinorEmployedFlag = false;
     let item: CompletionChecklist = {
       dataPointName: 'clientDependentsMinorEmployedFlag',
       status:  StatusFlag.Yes
@@ -535,6 +556,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       return false;
     }
     return true;
+
   }
 
   validateEmployerIncome() {

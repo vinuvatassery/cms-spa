@@ -109,6 +109,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   draftedTemplate:any='';
   isContentMissing:boolean = false;
   isMailCodeMissing:boolean = false;
+  isMailingAddressMissing: boolean = false;
   isFormValid: boolean = true;
   selectedMailingCode!: string;
   variableName!: string;
@@ -213,6 +214,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.clientAddressSubscription = this.contactFacade.address$.subscribe((address: any) => {
       let selectedAddress = address.filter((x: any) => x.activeFlag == StatusFlag.Yes && x.addressTypeCode === AddressTypeCode.Mail)[0];
       this.mailingAddress = selectedAddress;
+      if(this.mailingAddress){
+        this.isMailingAddressMissing = false;
+      }
       this.ref.detectChanges();
     });
   }
@@ -275,6 +279,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
+    if(!this.mailingAddress){
+      this.isMailingAddressMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+      }
     if(this.notificationGroup === ScreenType.VendorProfile){
       if(this.mailingAddress === undefined || this.mailingAddress === ''){
       this.isMailCodeMissing = true;
@@ -353,6 +362,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.onCloseSaveForLaterClicked();
       }
     }
+    if(!this.mailingAddress){
+      this.isMailingAddressMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+      }
     if(this.isFormValid){
     this.loaderService.show();
     if(this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
@@ -495,6 +509,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.isFormValid = false;
       }
     }
+    if(!this.mailingAddress){
+      this.isMailingAddressMissing = true;
+      this.isFormValid = false;
+      }
     if(this.isFormValid){
     this.isNewLetterClicked=true;
     this.isShowSendLetterToPrintPopupClicked=true;
@@ -590,6 +608,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
+    this.isMailingAddressMissing = false;
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      this.isMailCodeMissing = false;
+    }
     if(this.communicationLetterTypeCode === undefined || this.communicationLetterTypeCode === ''){
       this.communicationLetterTypeCode = event.templateTypeCode;
     }

@@ -27,12 +27,12 @@
                                     </kendo-textbox>
                               </kendo-floatinglabel>
                         </span>
-                     
-                              <button kendoButton [primary]="true" look="flat" aria-label="Export"  >
-                                    <span class="material-icons" aria-label="Export"
-                                          aria-invalid="true">exit_to_app</span>Export
-                              </button>
-                        
+
+                        <button kendoButton [primary]="true" look="flat" aria-label="Export">
+                              <span class="material-icons" aria-label="Export"
+                                    aria-invalid="true">exit_to_app</span>Export
+                        </button>
+
                   </div>
             </div>
       </div>
@@ -45,58 +45,101 @@
       </div>
 
       <div class="app-c-table">
-            <kendo-grid  [data]="cptCodeDataLists$ | async" [resizable]="true" [pageSize]="state.take"
-            [pageable]="true" [loading]="isCptCodeListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
-            [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
-            (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
-                  <kendo-grid-column field="cptCode" title="CPT Code" [width]="160">
+            <kendo-grid [data]="cptCodeDataLists$ | async" [loading]="(cptCodeListDataLoader$  | async) === true"
+                  [resizable]="true" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
+                  [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
+                  [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
+                  <kendo-grid-column field="cptCode1" title="CPT Code" [width]="160">
+                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                              let-filterService="filterService">
+                              <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
+                                    [filterService]="filterService" [extra]="false" operator="contains">
+                                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                              </kendo-grid-string-filter-menu>
+                        </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="serviceDescription" title="Service Description" [width]="220">
+                  <kendo-grid-column field="serviceDesc" title="Service Description" [width]="220">
+                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                              let-filterService="filterService">
+                              <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
+                                    [filterService]="filterService" [extra]="false" operator="contains">
+                                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                              </kendo-grid-string-filter-menu>
+                        </ng-template>
                   </kendo-grid-column>
                   <kendo-grid-column field="medicaidRate" title="Medicaid Rate" [width]="130">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <span class="tableamountview"> <strong>$</strong> {{dataItem.medicaidRate | kendoNumber: 'n2'}}</span>
+                              <span class="tableamountview"> <strong>$</strong> {{dataItem.medicaidRate | kendoNumber:
+                                    'n2'}}</span>
+                        </ng-template>
+                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                              let-filterService="filterService">
+                              <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
+                                    [filterService]="filterService" [extra]="false" operator="eq">
+                                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                              </kendo-grid-string-filter-menu>
                         </ng-template>
                   </kendo-grid-column>
-               
-
-                  <kendo-grid-column field="lastModified" title="Last Modified" [width]="130">
-                  </kendo-grid-column>
-                  <kendo-grid-column field="modifiedBy" title="Modified By" [width]="100" class="text-center">
+                  <kendo-grid-column field="lastModificationTime" title="Last Modified" [width]="130">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                                    [popover]="onUserProfileDetailsHovered" showOn="hover"
-                                    [attr.aria-label]="dataItem.modifiedBy">
-                                    <div class="app-c-avatar avatar-sm">
-                                          <span class="profile-text-avatar">AK</span>
-                                    </div>
-                              </button>
-                              <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                                    <ng-template kendoPopoverBodyTemplate>
-                                          <common-user-profile-card> </common-user-profile-card>
-                                    </ng-template>
-                              </kendo-popover>
+                              {{dataItem.lastModificationTime | date: 'MM/dd/YYYY hh:mm:ss a'}}
+                        </ng-template>
+                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                              let-filterService="filterService">
+                              <common-grid-cell-date-range-filter [field]="'lastModificationTime'" [filter]="filter"
+                                    [filterService]="filterService">
+                              </common-grid-cell-date-range-filter>
                         </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="status" title="Status" [width]="130">
+                  <kendo-grid-column field="lastModifierId" title="Modified By" [width]="120" class="text-center" [columnMenu]="false" [sortable]="false" [filterable]="false">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                          <common-user-photo-icon  
+                          [userId]="dataItem.lastModifierId" 
+                          [userFirstName]="dataItem.userFirstName"
+                          [userLastName]="dataItem.userLastName"
+                          [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+                          [linkType]="'profileIcon'"
+                          [userPhotos$]="cptCodeProfilePhoto$"></common-user-photo-icon>
+                        </ng-template>
+                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                    
+                        </ng-template>
+                      </kendo-grid-column>
+                  <kendo-grid-column field="activeFlag" title="Status" [width]="130">
+                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                              let-filterService="filterService">
+                              <kendo-dropdownlist [data]="['Active', 'Inactive']" [(ngModel)]="statusFilter"
+                                    (valueChange)="dropdownFilterChange('activeFlag',$event, filterService)">
+                              </kendo-dropdownlist>
+                        </ng-template>
+                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                              let-filterService="filterService">
+                              <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
+                                    [filterService]="filterService" [extra]="false" operator="contains">
+                                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                              </kendo-grid-string-filter-menu>
+                        </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="" title="" [width]="50" class="text-center" [sticky]="true"
+                  <kendo-grid-column field="cptCodeId" title="Options" [width]="50" class="text-center" [sticky]="true"
                         [columnMenu]="false">
-                        <ng-template kendoGridCellTemplate let-dataItem>
-                              <kendo-dropdownbutton [data]="moreActions" title="More option"
-                                    aria-label="more actions"
-                                    class="TableActionPopup app-dropdown-action  "
-                                    buttonClass="k-icon-button"
+                        <ng-template kendoGridCellTemplate let-dataItem let-cptCodeId="field">
+                              <kendo-dropdownbutton [data]="moreActions" title="More option" aria-label="more actions"
+                                    class="TableActionPopup app-dropdown-action  " buttonClass="k-icon-button"
                                     [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-                                    <span class="material-icons" aria-label="More option"> more_vert    </span>
+                                    <span class="material-icons" aria-label="More option"> more_vert </span>
                                     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
-                                          let-dataItem>
-                                          <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
-                                                [class]="dataItem.buttonType" aria-hidden="false"
-                                                (click)="dataItem.click">
+                                          let-buttondataItem>
+                                          <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                                                [class]="buttondataItem.buttonType" aria-hidden="false"
+                                                (click)="buttondataItem.click(dataItem)">
                                                 <span class="material-icons"
-                                                      [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
-                                                <label> {{ dataItem.text }} </label>
+                                                      [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                                                <label> {{ buttondataItem.text }} </label>
                                           </button>
 
                                     </ng-template>
@@ -104,26 +147,26 @@
                         </ng-template>
                   </kendo-grid-column>
                   <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
-                  let-currentPage="currentPage">
-                  <div class="grid-custom-paginationtemplates d-flex">
-                        <div class="d-flex align-items-center">
-                              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
-                              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
-                                    [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
-                                    aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
-                                    (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
-                              <kendo-pager-info> </kendo-pager-info>
-                              <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
-                              </kendo-grid-messages>
-            
+                        let-currentPage="currentPage">
+                        <div class="grid-custom-paginationtemplates d-flex">
+                              <div class="d-flex align-items-center">
+                                    <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
+                                          [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
+                                          aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
+                                          (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+                                    <kendo-pager-info> </kendo-pager-info>
+                                    <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+                                    </kendo-grid-messages>
+
+                              </div>
+                              <div class="d-flex">
+                                    <kendo-pager-input></kendo-pager-input>
+                                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+                              </div>
                         </div>
-                        <div class="d-flex">
-                              <kendo-pager-input></kendo-pager-input>
-                              <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-                              <kendo-pager-next-buttons></kendo-pager-next-buttons>
-                        </div>
-                  </div>
-            </ng-template>
+                  </ng-template>
                   <ng-template kendoGridLoadingTemplate>
                         <common-grid-loader-component></common-grid-loader-component>
                   </ng-template>
@@ -133,8 +176,8 @@
                   </ng-template>
             </kendo-grid>
       </div>
- 
-      <div class="mt-2 block-section"> 
+
+      <div class="mt-2 block-section">
             <button icon="add" kendoButton [primary]="true" aria-label="Funds" (click)="onCptCodeDetailClicked()">
                   CPT Code
             </button>
@@ -143,9 +186,11 @@
 
 
 <kendo-dialog *ngIf="isCptCodeDetailPopup" (close)="onCloseCptCodeDetailClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar> Add New Medical Provider </kendo-dialog-titlebar>
-      <system-config-cpt-code-form-details></system-config-cpt-code-form-details>
+      class="app-c-modal app-c-modal-md app-c-modal-np">
+      <kendo-dialog-titlebar> {{ isEditCptCode ? 'Edit CPT Code' : 'Add New CPT Code' }} </kendo-dialog-titlebar>
+      <system-config-cpt-code-form-details [isEditCptCode]="isEditCptCode" (addCptCodeEvent)="addCptCode($event)" 
+      [selectedCptCode]="selectedCptCode" (editCptCodeEvent)="editCptCode($event)"
+      (closeCptCode)="onCloseCptCodeDetailClicked()"></system-config-cpt-code-form-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isCptCodeDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
