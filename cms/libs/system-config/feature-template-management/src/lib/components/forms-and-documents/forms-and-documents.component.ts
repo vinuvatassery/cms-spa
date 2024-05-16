@@ -16,7 +16,6 @@ export class FormsAndDocumentsComponent implements OnInit {
   foldersList: any = [];
   foldersTree: any = [];
   selectedfolder: string = "";
-  isShowLoader: boolean = true;
   public formsDocumentDialog : any;
   formsDocumentsList$ = this.formsAndDocumentFacade.formsDocumentsList$;
   public constructor(
@@ -29,15 +28,7 @@ export class FormsAndDocumentsComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
-    this.templateManagementFacade.getDirectoryContent('Form','').subscribe((documentlist: any) => {
-      this.isShowLoader = false;
-      this.loaderService.hide();
-      if (!!documentlist && this.foldersTree.length == 0) {
-        this.foldersTree = this.folderstreeformatting(documentlist);
-      }
-    })
-  }
+  ngOnInit() {}
   /** Internal event methods **/
   onCloseAttachmentClicked() {
     this.formsDocumentDialog.close()
@@ -51,10 +42,7 @@ export class FormsAndDocumentsComponent implements OnInit {
       cssClass: 'app-c-modal app-c-modal-xls app-c-modal-np app-c-modal-top',
     });
     this.isOpenAttachment = true;
-    if (this.isShowLoader)
-      this.loaderService.show();
-    else
-      this.loaderService.hide();
+      this.loadFolderFiles(true);
   }
 
   fetchSubfolders = (node: any) =>
@@ -111,6 +99,16 @@ export class FormsAndDocumentsComponent implements OnInit {
   }
 
   loadFolderFiles(payload:any) {
-    this.formsAndDocumentFacade.loadFolderFile(payload);
+    this.loaderService.show();
+    this.formsAndDocumentFacade.loadFolderFile(payload); 
+    this.formsDocumentsList$.subscribe({
+      next: (response) => {
+        this.foldersTree =response;
+        this.loaderService.hide()
+      },
+      error: (err) => {
+          this.loaderService.hide()
+      },
+  })
   }
 }
