@@ -123,11 +123,15 @@
                   <div class="flex-col d-flex flex-col-8">
                     <kendo-floatinglabel class="k-form" text="Phone Type">
                       <kendo-dropdownlist formControlName="phoneType"  [fillMode]="formUiStyle.dropDownFillMode" [data]="userDeviceList"
-                      textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"> </kendo-dropdownlist>
+                      textField="lovDesc" valueField="lovCode" [valuePrimitive]="true" (valueChange) = "phoneTypeChange($event, i)"> </kendo-dropdownlist>
                       <kendo-formerror
                       *ngIf="(isControlValid('phoneType', i))"
                         >Phone Type is required
                     </kendo-formerror>
+                    <kendo-formerror
+                    *ngIf="!(isControlValid('phoneType', i)) && (isPhoneTypeControlValid(i))"
+                      >Desk phone has already been entered
+                  </kendo-formerror>
                     </kendo-floatinglabel>
                  
                   </div>
@@ -296,7 +300,7 @@
                     </kendo-datepicker>
                   </kendo-floatinglabel>
                   <kendo-formerror *ngIf="!userForm.controls['endDate'].valid && !endDateValidator">End Date is required</kendo-formerror>
-                  <kendo-formerror *ngIf="endDateValidator">end Date should be greater than start Date.</kendo-formerror>
+                  <kendo-formerror *ngIf="endDateValidator">End Date should be greater than start Date.</kendo-formerror>
                 </div>
                 <div class="flex-col">
                   <kendo-floatinglabel text="Out of Office Message">

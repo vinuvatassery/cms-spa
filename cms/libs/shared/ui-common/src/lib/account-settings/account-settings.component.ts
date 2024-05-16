@@ -41,6 +41,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   userDeviceType: typeof UserDeviceType = UserDeviceType;
   phoneData:any;
   isButtonDisabled=true;
+  defaultDeskPhoneIndex! : number;
    /** Constructor**/
    constructor(private readonly cdr :ChangeDetectorRef,
     private readonly formBuilder: FormBuilder,
@@ -144,10 +145,6 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   addPhoneGroup() {
-    if(this.addPhoneForm.length > 1 )
-    { 
-      return;
-    }
     let phoneForm = this.formBuilder.group({
       smsTextConsentFlag: new FormControl(
         null ),
@@ -157,7 +154,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       ),
 
       phoneType: new FormControl(
-        ''
+        '',Validators.required
       ),
 
       loginUserPhoneId: new FormControl(
@@ -234,6 +231,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       phoneForm.controls['loginUserPhoneId'].setValue(phone.loginUserPhoneId);
       if (phone.deviceTypeCode === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
         {
+          this.defaultDeskPhoneIndex = i;
           this.saveDefaultDeskPhoneData(phoneForm)
           this.disablePhoneFields(i);
         }
@@ -264,13 +262,10 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userForm.controls['faxNbr'].disable();
   }
 
-  disablePhoneFields(index: any)
+  disablePhoneFields(index:any)
   {
-    if(index == 0)
-      {
-        const phoneForm = this.addPhoneForm.at(index) as FormGroup;
-        phoneForm.disable();
-      }
+    const phoneForm = this.addPhoneForm.at(index) as FormGroup;
+    phoneForm.disable();
   }
 
   onSave()
@@ -412,9 +407,6 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.addPhoneForm.controls.forEach((element, index) => {
       this.addPhoneForm.at(index).get('phoneNbr')?.setValidators(Validators.required);
       this.addPhoneForm.at(index).get('phoneNbr')?.updateValueAndValidity();
-      this.addPhoneForm.at(index).get('phoneType')?.setValidators(Validators.required);
-      this.addPhoneForm.at(index).get('phoneType')?.updateValueAndValidity();
-
     });
 
   }
@@ -423,7 +415,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     let form = this.addPhoneForm.at(index) as FormGroup;
     let control = form.controls[controlName];
     if(control){
-      return control?.errors?.['required'];
+      return control?.errors?.['required'] && control.touched;
     }
     return false;
   }
@@ -443,18 +435,18 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
   isDisableRemoveButton(index : any)
   {
-    if(index === 0)
-    {
-      const phoneForm = this.addPhoneForm.at(index) as FormGroup;
-      if(phoneForm.controls['phoneType'].value === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
-        {
-          return true;
-        }
-        else{
-          return false;
-        }
-    }
-    return false;
+    if(index == this.defaultDeskPhoneIndex)
+      {
+        const phoneForm = this.addPhoneForm.at(index) as FormGroup;
+        if(phoneForm.controls['phoneType'].value === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
+          {
+            return true;
+          }
+          else{
+            return false;
+          }
+      }
+      return false;
   }
 
   onCancel()
@@ -462,5 +454,35 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.closeFormEvent.emit();
   }
 
+  phoneTypeChange(value:any, index:any)
+  {
+    let form = this.addPhoneForm.at(index) as FormGroup;
+    form.controls['phoneType'].setErrors({ incorrect: false });
+    form.controls['phoneType'].updateValueAndValidity();
+    let deskPhoneCount = 0;
+    for (let i =0; i < this.addPhoneForm.controls.length; i++)
+      {
+        if(this.addPhoneForm.at(i).get('phoneType')?.value === this.userDeviceType.DeskPhone)
+          {
+            deskPhoneCount++;
+            break;
+          }
+      }
+
+    if(deskPhoneCount > 0 && value === this.userDeviceType.DeskPhone)
+      {
+        form.controls['phoneType'].setErrors({ incorrect: true });
+      }
+  }
+  
+  isPhoneTypeControlValid(index:any)
+  {
+    let form = this.addPhoneForm.at(index) as FormGroup;
+    let control = form.controls['phoneType'];
+    if(control){
+      return control?.errors?.['incorrect'];
+    }
+    return false;
+  }
 
 }
