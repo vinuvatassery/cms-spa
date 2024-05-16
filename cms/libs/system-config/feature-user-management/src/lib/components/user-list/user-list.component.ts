@@ -7,6 +7,7 @@ import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { Subject, debounceTime } from 'rxjs';
+import { DocumentFacade } from '@cms/shared/util-core';
 
 @Component({
   selector: 'system-config-user-list',
@@ -32,6 +33,7 @@ export class UserListComponent implements OnInit, OnChanges {
   @Output() usersFilterColumnEvent = new EventEmitter<any>();
   @Input() userListProfilePhoto$!: any;
   @Output() exportGridEvent$ = new EventEmitter<any>();
+  @Input() exportButtonShow$ = this.documentFacade.exportButtonShow$;
   public state!: State;
   sortColumn = 'User Name';
   sortDir = 'Ascending';
@@ -79,6 +81,7 @@ export class UserListComponent implements OnInit, OnChanges {
     private route: Router,
     private readonly userManagementFacade: UserManagementFacade,
     private readonly cdr: ChangeDetectorRef,
+    private readonly documentFacade: DocumentFacade
   ) {
 
   }
@@ -279,20 +282,21 @@ export class UserListComponent implements OnInit, OnChanges {
   }
 
   onClickedExport() {
-    this.showExportLoader = true;
+   this.showExportLoader = true;
     const params = {
       SortType: this.sortType,
       Sorting: this.sortValue,
       Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
     };
     this.exportGridEvent$.emit(params);
-    this.exportGridEvent$.subscribe((response: any) => {
-      if (response) {
-        this.showExportLoader = false;
-        this.cdr.detectChanges();
+    this.exportButtonShow$.subscribe((response: any) =>
+    {
+      if(response)
+      {
+        this.showExportLoader = false
+        this.cdr.detectChanges()
       }
     });
-    this.showExportLoader = false;
   }
   
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {

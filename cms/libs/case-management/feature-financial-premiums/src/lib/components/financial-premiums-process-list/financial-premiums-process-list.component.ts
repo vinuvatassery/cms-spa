@@ -139,6 +139,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   medicalPremiumListSubject = new Subject<any>();
   medicalPremiumList$ = this.medicalPremiumListSubject.asObservable();
   sendReportCount: number = 0;
+  vendorReportCount : number =0;
   isAllSelected = false;
   processGridDataList: any = [];
   selectAll: boolean = false;
@@ -282,6 +283,10 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
         this.recordCountWhenSelectallClicked = 0;
         this.totalGridRecordsCount = 0;
       }
+      if(this.isSendReportOpened && this.selectAll){
+        this.sendReportCount= this.financialPremiumsProcessGridLists.filter((item:any)=>item.acceptsReportsFlag == 'Y')?.length;
+      }
+
       if(this.recordCountWhenSelectallClicked == 0){
         this.recordCountWhenSelectallClicked = this.gridDataResult?.acceptsReportsQueryCount;
         this.totalGridRecordsCount = this.gridDataResult?.acceptsReportsQueryCount;
@@ -334,7 +339,11 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
         this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
         this.recordCountWhenSelectallClicked = this.sendReportCount;
       } else {
-        this.sendReportCount = this.recordCountWhenSelectallClicked;
+        if(this.isSendReportOpened && this.selectAll){
+          this.sendReportCount= this.financialPremiumsProcessGridLists.filter((item:any)=>item.acceptsReportsFlag == 'Y')?.length;
+        }else{
+          this.sendReportCount = this.recordCountWhenSelectallClicked;
+        }
       }
     } else {
       this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports?.filter((item: any) => item.selected));
@@ -612,6 +621,8 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   }
 
   public onSendReportOpenClicked(template: TemplateRef<unknown>): void {
+    this.vendorReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((obj: any, index: any, self: any) =>
+      index === self.findIndex((t: any) => ( t.vendorId === obj.vendorId && t.acceptsReportsFlag === 'Y' ))).length;
     this.sendReportDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -748,8 +759,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
         this.sendReportCount = this.recordCountWhenSelectallClicked;
       }
     } else {
-      this.sendReportCount = this.selectedSendReportList?.SelectedSendReports.filter((obj: any, index: any, self: any) =>
-      index === self.findIndex((t: any) => ( t.vendorId === obj.vendorId ))).length;
+      this.sendReportCount = this.selectedSendReportList?.SelectedSendReports.length;
     }
   }
 
@@ -782,7 +792,8 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
             'selected': true,
             'vendorId': dataItem.vendorId,
             'clientId': dataItem.clientId,
-            'vendorName': dataItem.insuranceVendor });
+            'vendorName': dataItem.insuranceVendor,
+            'acceptsReportsFlag': dataItem.acceptsReportsFlag });
       } else {
         const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
         if (recordIndex !== -1) {
@@ -840,7 +851,8 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
         this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
         this.recordCountWhenSelectallClicked = this.sendReportCount;
       } else {
-        this.sendReportCount = this.totalGridRecordsCount;
+        //this.sendReportCount = this.totalGridRecordsCount;
+        this.sendReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((x:any) => x.acceptsReportsFlag == 'Y').length;
       }
     } else {
       this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
@@ -1023,7 +1035,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   }
   SendInsuranceVendorReports(result: any){
     if(result){
-      this.financialPremiumsFacade.SendInsuranceVendorReports(this.selectedSendReportList?.SelectedSendReports);
+      this.financialPremiumsFacade.SendInsuranceVendorReports(this.selectedSendReportList?.SelectedSendReports?.filter((x:any) => x.acceptsReportsFlag == 'Y') );
       this.onSendReportCloseClicked(true);
       this.insuranceReportsResponse$.subscribe((response: any) => {
         if (response) {

@@ -36,3 +36,5 @@ export * from './lib/containers/template-layout-new-form-page/template-layout-ne
 export * from './lib/containers/template-layout-page/template-layout-page.component';
 
 export * from './lib/components/add-folder/add-folder.component';
+
+export * from './lib/components/upload-files/upload-files.component';

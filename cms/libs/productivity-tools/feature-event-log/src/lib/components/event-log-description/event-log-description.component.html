@@ -85,6 +85,12 @@
                         </kendo-chip>
                     </kendo-chip-list>
                 </div>
+                <div *ngIf="subject" class="mb-1">
+                    <h5> SUBJECT </h5>
+                   
+                  <span>{{subject}}</span>
+
+                </div>
             </div> 
             <div class="innerHtmlWrapper k-editor mt-1">
                 <div [innerHtml]="previewContent"></div>
@@ -100,7 +106,7 @@
                                 *ngFor="let item of attachments;let index = index">
                                 <a class="attachment-item_name"
                                     (click)="viewAttachment(item)">{{item.attachmentName}}</a>
-                                <span class="attachment-item_size">{{item.attachmentSize | fileSize}}</span>
+                                <span *ngIf = "item.attachmentSize > 0" class="attachment-item_size">{{item.attachmentSize | fileSize}}</span>
                             </div>
                         </ng-template>
                     </kendo-panelbar-item>
@@ -127,8 +133,7 @@
 
         </div>
         <div class="view_sms_cont">
-            <h5> MESSAGE  </h5>     {{previewContent}}
-            
+            <h5> MESSAGE  </h5>     {{previewContent}}           
 
         </div>
 
@@ -138,7 +143,7 @@
     
     <!-- common -->
     <section class="k-dialog-body">
-        <span *ngIf="createdDate">Originally Printed <strong>{{ createdDate | date : 'MM/dd/YYYY' }}</strong> by 
+        <span *ngIf="createdDate">Originally {{infoText}} <strong>{{ createdDate | date : 'MM/dd/YYYY' }}</strong> by 
             <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="createdUser">
             {{createdUser}}
@@ -150,7 +155,7 @@
     <kendo-dialog-actions>
         <div class="justify-content-between">
             <div class="justify-content-end">
-                <button aria-label="Close" kendoButton look="outline" (click)="onCloseLetterEmailSmsTextClicked()">
+                <button aria-label="Close" [primary] ="true" kendoButton look="outline" (click)="onCloseLetterEmailSmsTextClicked()">
                     CANCEL
                 </button>
                 <button attr.aria-label="{{buttonText}}" kendoButton [primary]="true" (click)="reSendNotification()">
