@@ -25,6 +25,18 @@ export class FormsAndDocumentDataService
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/${payload}`);
     }
 
+    getFolderName()
+    {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folders`,);
+    }
+
+    uploadFiles(formData:any) {
+        return this.http.post<any>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/files`,
+          formData
+        );
+      }
+    
     getFormsandDocumentsViewDownload(templateId: string) {
         let url = `/case-management/forms-documents-config/${templateId}/content`;
         return this.http.get(

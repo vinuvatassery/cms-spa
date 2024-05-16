@@ -9,10 +9,12 @@ import { FormsAndDocumentFacade, LovFacade } from '@cms/system-config/domain';
 export class FormDocumentsPageComponent implements OnInit {
   folderSortList$ = this.lovFacade.folderSortLov$;;
   formsDocumentsList$ = this.formsAndDocumentFacade.formsDocumentsList$;
+  getFolders$ = this.formsAndDocumentFacade. getFolder$;
   constructor(private readonly formsAndDocumentFacade: FormsAndDocumentFacade, private readonly lovFacade: LovFacade) { }
   
   ngOnInit(): void {
     this.loadFolderSort();
+    this.getFolderName();
   }
 
   addFolder(payload:any){
@@ -24,5 +26,12 @@ export class FormDocumentsPageComponent implements OnInit {
   }
   loadFolderFiles(payload:any) {
     this.formsAndDocumentFacade.loadFolderFile(payload);
+  }
+
+  getFolderName(){
+    this.formsAndDocumentFacade.getFolderName();
+  }
+  uploadFiles(formData: any){
+    this.formsAndDocumentFacade.uploadFiles(formData);
   }
 }

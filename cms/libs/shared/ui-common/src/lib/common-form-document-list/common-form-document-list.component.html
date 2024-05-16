@@ -1,6 +1,6 @@
 <div class="flex-row forms_doc-lists">
       <kendo-treeview [nodes]="foldersTree" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
-            kendoTreeViewExpandable expandBy="id" [hasChildren]="hasChildren" [children]="children" [expandedKeys]="[1]"
+            kendoTreeViewExpandable expandBy="documentTemplateId" [hasChildren]="hasChildren" [children]="children" [expandedKeys]="[1]"
             kendoTreeViewLoadMore kendoTreeViewDragAndDrop kendoTreeViewDragAndDropEditing kendoTreeViewLoadMore
             (nodeDragStart)="log('nodeDragStart', $event)" (nodeDrag)="log('nodeDrag', $event)"
             (nodeDrop)="handleDrop($event)" (addItem)="log('addItem', $event)" (removeItem)="log('removeItem', $event)"
@@ -31,13 +31,13 @@
                                                 Files</span></label>
                               </div>
                         </div>
-                        <span class="attachments-date">Last Updated
+                        <span *ngIf="!isPopUp" class="attachments-date">Last Updated
                               {{dataItem.lastModificationTime | date: 'MM/dd/YYYY'}} by
                               <button kendoButton [primary]="true" class="avatar-sm-btn c-default ml-1"
                                     kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
                                     [attr.aria-label]="dataItem.modifiedBy">
                                     <div class="app-c-avatar avatar-sm">
-                                          <span class="profile-text-avatar">AK</span>
+                                          <span class="profile-text-avatar">{{dataItem.lastModifierName}}</span>
                                     </div>
                               </button>
                               <kendo-dropdownbutton [data]="moreActions" title="More option" aria-label="more actions"

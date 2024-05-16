@@ -1,0 +1,49 @@
+<section [formGroup]="forms" class="k-dialog-body">
+    <p>
+          Select the file(s) and which folder to upload to.
+    </p>
+    <div class="flex-row" >
+          <div class="flex-col">
+                <kendo-floatinglabel text="Folder Name">
+                      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+                      formControlName="folderName"
+                      [data]="getFolders$ | async"
+                      textField="templateDesc"
+                      valueField="documentTemplateId"
+                      [valuePrimitive]="true"
+                       >
+                      </kendo-dropdownlist>
+                      <kendo-formerror *ngIf="!forms.controls['folderName']?.valid && isValidateForm">
+                            Select a folder
+                          </kendo-formerror>
+                </kendo-floatinglabel>
+          </div>
+          <div class="flex-col mt-2">
+    <common-document-upload
+     [typeCode]="'File_upload'"
+     [file]="uploadedAttachedFile"
+     [multipleFilesUpload]=" multipleFilesUpload"
+     [isFileViewable]="true"
+    (handleFileSelectEvent)="handleFileSelected($event)"
+    (handleFileRemoveEvent)="handleFileRemoved($event)"
+    [isDownloadShow]="true">
+</common-document-upload>
+    <kendo-formerror *ngIf="attachedFileValidatorSize">File is over the 25MB limit </kendo-formerror>
+    <kendo-formerror *ngIf="showAttachmentRequiredError">
+          File size is limited to 25 MB. Please select a smaller file.    
+</kendo-formerror>
+
+          </div>
+    </div>
+</section>
+
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+          <div class="justify-content-end">
+                <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCloseUploadFileClicked()"> Cancel
+                </button>
+                <button kendoButton [primary]="true" aria-label="Upload" (click)="uploadFile()"> Upload </button>
+          </div>
+    </div>
+
+</kendo-dialog-actions>

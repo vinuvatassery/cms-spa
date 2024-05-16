@@ -18,7 +18,8 @@ export class CommonFormDocumentListComponent implements OnInit {
   @Input() foldersTree: any = [];
   @Input() treeViewSize: any;
   @Input() hasChildren: any;
-  @Input() children: any;
+  @Input() children:any;
+  @Input() isPopUp:any;
   selectedfolder: string = "";
   isShowLoader: boolean = true;
 
@@ -52,14 +53,6 @@ export class CommonFormDocumentListComponent implements OnInit {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Reorder',
-      icon: 'format_list_numbered',
-      click: (data: any): void => {
-        this.isDragDropEnabled = true;
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
       text: 'New Version',
       icon: 'upload',
       click: (data: any): void => {
@@ -72,14 +65,6 @@ export class CommonFormDocumentListComponent implements OnInit {
       icon: 'block',
       click: (data: any): void => {
         this.onFormsDocumentDeactivateClicked();
-      },
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Delete',
-      icon: 'delete',
-      click: (data: any): void => {
-        this.onFormsDocumentDeleteClicked();
       },
     },
   ];
