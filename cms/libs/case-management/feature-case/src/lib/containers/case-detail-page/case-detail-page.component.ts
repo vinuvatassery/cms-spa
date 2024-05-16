@@ -439,7 +439,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   private addConfirmationPopupSubscription(): void {
     this.showConfirmationPopupSubscription = this.workflowFacade.saveForLaterConfirmationClicked$.subscribe((val) => {
       if (val) {
-        if(!this.clientCaseEligibilityId && ! this.clientId){
+        if(!this.workflowFacade.clientCaseEligibilityId && ! this.workflowFacade.clientId){
           this.ifClientHasAddress = false;
           this.isShowSaveLaterPopup = true;
           return;
