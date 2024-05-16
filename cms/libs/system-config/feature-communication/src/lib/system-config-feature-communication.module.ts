@@ -37,6 +37,7 @@ import { TemplateLayoutNewFormPageComponent } from './containers/template-layout
 import { TemplateLayoutPageComponent } from './containers/template-layout-page/template-layout-page.component';
 import { AddFolderComponent } from './components/add-folder/add-folder.component';
 import { UploadFilesComponent } from './components/upload-files/upload-files.component';
+import { NewVersionFileUploadComponent } from './components/new-version-file-upload/new-version-file-upload.component';
 
 @NgModule({
   imports: [
@@ -80,6 +81,7 @@ import { UploadFilesComponent } from './components/upload-files/upload-files.com
     TemplateLayoutPageComponent,
     TemplateLayoutListsComponent,
     AddFolderComponent,
+    NewVersionFileUploadComponent,
     UploadFilesComponent,
   ],
   exports: [

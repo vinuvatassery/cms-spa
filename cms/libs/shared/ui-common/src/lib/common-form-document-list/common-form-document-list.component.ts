@@ -20,6 +20,7 @@ export class CommonFormDocumentListComponent implements OnInit {
   @Input() hasChildren: any;
   @Input() children:any;
   @Input() isPopUp:any;
+  @Output() newVersionFileUploadOpenEvent = new EventEmitter()
   selectedfolder: string = "";
   isShowLoader: boolean = true;
 
@@ -55,8 +56,8 @@ export class CommonFormDocumentListComponent implements OnInit {
       buttonType: 'btn-h-primary',
       text: 'New Version',
       icon: 'upload',
-      click: (data: any): void => {
-        this.onUploadFileVersionOpenClicked();
+      click: (event: any, data:any): void => {
+        this.onUploadFileVersionOpenClicked(data);
       },
     },
     {
@@ -206,9 +207,10 @@ export class CommonFormDocumentListComponent implements OnInit {
   }
 
   /** Internal event methods **/
-  onUploadFileVersionOpenClicked() {
-    this.isUploadFileVersionDetailPopup = true;
+  onUploadFileVersionOpenClicked(data:any) {
+    this.newVersionFileUploadOpenEvent.emit(data)
   }
+  
   onCloseUploadFileVersionDetailClicked() {
     this.isUploadFileVersionDetailPopup = false;
   }
