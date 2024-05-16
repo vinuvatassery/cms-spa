@@ -67,8 +67,10 @@ export enum LovType {
     EventAttachemntType = 'EVENT_ATTACHMENT_TYPE_CODE',
     AlertFrequencyCode ='ALERT_FREQUENCY_CODE',
     EntityTypeCode ='ALERT_ENTITY_TYPE_CODE',
+    UserDeviceType = 'USER_DEVICE_TYPE_CODE',
     UserTypeCode ='USER_TYPE_CODE',
     RoleTypeCode= 'ROLE_TYPE_CODE',
     CaseManagerDomain = 'CASE_MANAGER_DOMAIN',
-    CaseManagerAssistorGrp = 'CASE_MANAGER_ASSISTOR_GRP'
-  }
+    CaseManagerAssistorGrp = 'CASE_MANAGER_ASSISTOR_GRP',
+    FolderSort ='FOLDER_SORT'
+    }

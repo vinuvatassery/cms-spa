@@ -19,8 +19,8 @@
                         <div class="flex-col flex-col-4 mb-3">
                               <kendo-floatinglabel text="Sort">
                                     <kendo-dropdownlist aria-label="Folder Sort"
-                                          [fillMode]="formUiStyle.dropDownFillMode" [data]="folderSortList$ | async"
-                                          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"  [(ngModel)]="sortOrder"
+                                          [fillMode]="formUiStyle.dropDownFillMode" [data]="folderSortLovList"
+                                          textField="lovDesc" valueField="lovCode"  [(ngModel)]="sortOrder"
                                           (valueChange)="onSortChange($event)">
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
@@ -29,7 +29,7 @@
                               (click)="onAddNewEditFolderClicked()" (click)="onAddFolderClicked(addFolderTemplate )"  > <span class="material-icons"> add</span> NEW FOLDER
                         </button>
                         <button kendoButton fillMode="clear" themeColor="primary" aria-label="UPLOAD FILE"
-                              (click)="onUploadFileOpenClicked()"> <span class="material-icons"> upload</span>
+                        (click)="uploadFilesClicked(uploadFileTemplate)"> <span class="material-icons"> upload</span>
                               UPLOAD
                               FILE </button>
                   </div>
@@ -44,7 +44,7 @@
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Update" class="">Update</button>
 </div>
-<kendo-dialog *ngIf="isUploadFileDetailPopup" (close)="onCloseUploadFileDetailClicked()"
+<!-- <kendo-dialog *ngIf="isUploadFileDetailPopup" (close)="onCloseUploadFileDetailClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Upload New File </kendo-dialog-titlebar>
       <section class="k-dialog-body">
@@ -90,7 +90,7 @@
             </div>
 
       </kendo-dialog-actions>
-</kendo-dialog>
+</kendo-dialog> -->
 
 <kendo-dialog *ngIf="isUploadFileVersionDetailPopup" (close)="onCloseUploadFileVersionDetailClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
@@ -260,4 +260,13 @@
       <system-config-add-folder (addFolder)="addFolderData($event)"
       (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"> 
   </system-config-add-folder> 
+</ng-template>
+
+<ng-template #uploadFileTemplate >
+      <kendo-dialog-titlebar (close)="onCloseUploadFileDetailClicked()"> Upload New File </kendo-dialog-titlebar>
+      <system-config-upload-files
+        (uploadFilesEvent)="uploadFilesEvent($event)" 
+         (onCloseUploadFileDetailClicked)="onCloseUploadFileDetailClicked()"
+          [getFolders$]="getFolders$" > 
+      </system-config-upload-files>
 </ng-template>

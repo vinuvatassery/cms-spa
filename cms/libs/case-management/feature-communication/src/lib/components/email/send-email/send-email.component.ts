@@ -547,13 +547,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     const emailData = this.getEmailPayload(selectedTemplate, templateTypeCode, eventGroupCode);
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     emailFormData.append('description', this.emailSubject ?? selectedTemplate.description);
-    emailFormData.append('mailCode', this.selectedMailCode?.mailCode ?? '');  
+    emailFormData.append('mailCode', this.selectedMailCode?.mailCode ?? '');
     this.communicationFacade.initiateSendEmailRequest(emailFormData)
       .subscribe({
         next: (data: any) => {
           if (data) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message);
-            this.communicationEmailTypeCode = '';
             this.onCloseSendEmailClicked();
           }
           this.ref.detectChanges();
@@ -628,8 +627,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmailSent;
           eventGroupCode = EventGroupCode.Application;
           break;
-        case CommunicationEventTypeCode.CerAuthorizationEmailSent:
-          templateTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+        case CommunicationEventTypeCode.CerAuthorizationEmail:
+          templateTypeCode = CommunicationEventTypeCode.CerAuthorizationEmailSent;
           eventGroupCode = EventGroupCode.CER;
           break;
         case CommunicationEventTypeCode.RestrictedNoticeEmail:
@@ -680,6 +679,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    this.isToEmailMissing = false;
+    this.isEmailSubjectMissing = false;
+    this.isContentMissing = false;
+    if (this.notificationGroup === ScreenType.VendorProfile) 
+    {
+    this.isMailCodeMissing = false;
+    }
     if (this.triggerFrom === ScreenType.ClientProfile || this.triggerFrom === ScreenType.VendorProfile) {
       this.communicationEmailTypeCode = event.templateTypeCode;
     }
@@ -911,7 +917,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           if (data) {
             this.currentEmailData =  data;
-            this.emailContentValue =  this.getSanitizedHtml(this.currentEmailData);;
+            this.emailContentValue =  this.getSanitizedHtml(this.currentEmailData);
             this.ref.detectChanges();
           }
           this.loaderService.hide();

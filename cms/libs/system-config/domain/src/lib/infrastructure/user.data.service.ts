@@ -94,67 +94,51 @@ export class UserDataService {
 
 
 
-  getUserProfilePhotos(userIds : string) { 
+  getUserProfilePhotos(userIds : string) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-      `/system-config/users/${userIds}/profile-photos`);  
-  }
-  
-  loadUsers(): Observable<User[]> {
-    return of([
-      { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
-      {
-        id: 2,
-        name: 'At vero eos',
-        description: 'At vero eos et accusam et justo duo dolores',
-      },
-      {
-        id: 3,
-        name: 'Duis autem',
-        description: 'Duis autem vel eum iriure dolor in hendrerit',
-      },
-    ]);
+      `/system-config/users/${userIds}/profile-photos`);
   }
 
-  loadUsersData() {
-    return of([
+  loadUserInfoData(userId: string) {
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/${userId}/userInfo`);
+  }
+
+  submitUserInfoData(userInfoData: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${userInfoData.loginUserId}/userInfo`,
+      userInfoData
+    );
+  }
+
+  loadUsersData(params: any) {
+    const paginationAndSortingDto =
+    {
+      SortType : params.sortType,
+      Sorting : params.sortColumn,
+      SkipCount : params.skipCount,
+      MaxResultCount : params.pagesize,
+      Filter : params.filter
+    }
+    return this.http.post(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/all-users`,
+      paginationAndSortingDto
+    );
+    }
+
+  loadUserAssignedRolesByUserId(data:any) {
+      const pageAndSortedRequestDto =
       {
-        id: 1,
-        name: 'John Samuel',
-        email: 'example@email.com',
-        roleAssigned: 'Housing Supervisor',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'John',
-        status: 'Active',
-      },
-      {
-        id: 2,
-        name: 'Lisa Mock',
-        email: 'example@email.com',
-        roleAssigned: 'Housing Supervisor',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'John',
-        status: 'Active',
-      },
-      {
-        id: 3,
-        name: 'Miller Phil',
-        email: 'example@email.com',
-        roleAssigned: 'Housing Supervisor',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'John',
-        status: 'Active',
-      },
-      {
-        id: 4,
-        name: 'John Mike',
-        email: 'example@email.com',
-        roleAssigned: 'Housing Supervisor',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'John',
-        status: 'Active',
-      },
-    ]);
+        SkipCount : data.skipCount,
+        MaxResultCount : data.maxResultCount,
+        SortType : "asc"
+      }
+      return this.http.post(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${data.userId}/roles`,
+        pageAndSortedRequestDto
+      );
   }
 
   loadUserFilterColumn() {

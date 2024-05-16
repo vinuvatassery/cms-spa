@@ -15,6 +15,7 @@ export class DocumentUploadComponent  implements OnInit{
   @Input() typeCode!: any
   @Input() file!: any
   @Input() fieldName!: any
+  @Input() multipleFilesUpload!: any
   @Input() typeCodeLabel!: string;
   @Input() subTypeCodeLabel!: string;
   @Input() currentTypeCode!: string;

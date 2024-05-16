@@ -64,9 +64,9 @@ export class EventDataService {
     )
   }
 
-  reSendSmsNotification(smsId:any) {
+  reSendSmsNotification(eventLogId:any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/sms/${smsId}/re-send`,null);
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/events/${eventLogId}/re-send-sms`,null);
   }
 
   private bindFormData(event: any): FormData {

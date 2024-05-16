@@ -475,37 +475,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
         this.save().subscribe((response: any) => {
           if (response) {
             this.workflowFacade.saveForLaterCompleted(true)  
-            this.loaderService.hide();
-            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-              else {
-                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-            }else{
-              this.router.navigate(['/case-management/cases']);
-          }
+            this.loaderService.hide();  
           }
         })
       }
       else {
-        if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-          else {
-            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-        }
+        this.workflowFacade.saveForLaterCompleted(true)  
       }
     });
   }

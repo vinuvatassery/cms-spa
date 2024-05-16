@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {
   TreeItemDropEvent,
   DropPosition,
@@ -8,6 +8,8 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -21,12 +23,22 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() folderSortList$: any;
   @Input() folderFileList$:any;
   @Output() addFolder = new EventEmitter<any>();
+  @Output() loadFolders = new EventEmitter<any>();
+  @Output() uploadFiles = new EventEmitter<any>();
+  @Input() getFolders$: any; 
+  uploadFileDialog :any
+
+  folderSortLovSubscription!: Subscription;
+  folderSortLovList : any;
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.loadSortDropDown(); 
+    this.loadFoldersTree();
   }
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addFolderTemplate', { read: TemplateRef })
   addFolderTemplate!: TemplateRef<any>;
+  @ViewChild('uploadFileTemplate', { read: TemplateRef })
+  uploadFileTemplate!: TemplateRef<any>;
   addFolderDialog:any
   isAddNewEditFolderPopup = false;
   isFormsDocumentDeletePopupShow = false;
@@ -36,11 +48,20 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
   isDragDropEnabled = false;
+  showAttachmentRequiredError: boolean = false;
+	public selectedAttachedFile: any;
+  public uploadedAttachedFile: any;
+	attachedFileValidatorSize: boolean = false;
+  value: any
+  forms!: FormGroup;
+  attachedFiles: any;
+  isValidateForm= false;
   /** Public properties **/ 
   sortOrder : any;
 
   constructor( private readonly formsAndDocumentFacade:FormsAndDocumentFacade,
-    private dialogService: DialogService, 
+    public formBuilder: FormBuilder,
+    private dialogService: DialogService,private readonly cdr: ChangeDetectorRef, 
   ) {}
   public moreActions = [
     {
@@ -237,9 +258,6 @@ export class FormDocumentsListComponent implements OnInit {
   onUploadFileOpenClicked() {
     this.isUploadFileDetailPopup = true;
   }
-  onCloseUploadFileDetailClicked() {
-    this.isUploadFileDetailPopup = false;
-  }
 
   onAddNewEditFolderClicked() {
     this.addFolderDialog.open();
@@ -271,6 +289,7 @@ export class FormDocumentsListComponent implements OnInit {
 
   onSortChange(event:any){
     this.sortOrder = event;
+    this.loadFolders.emit(this.sortOrder.lovCode.toLowerCase());
   }
   addFolderData(payLoad:any){
     this.addFolder.emit(payLoad);
@@ -281,4 +300,34 @@ export class FormDocumentsListComponent implements OnInit {
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
   }
+  loadSortDropDown(){
+    this.folderSortLovSubscription = this.folderSortList$.subscribe({
+      next:(response: any[]) => {
+        if(response.length > 0){
+          this.sortOrder = response[0];
+          this.folderSortLovList = response;
+          this.cdr.detectChanges();
+        }
+      }
+    });
+  }
+  loadFoldersTree(){
+    this.loadFolders.emit(true);
+  }
+
+  uploadFilesEvent(formdata: any)
+  {
+   this.uploadFiles.emit(formdata);
+  }
+uploadFilesClicked(template: TemplateRef<unknown>): void
+ {
+  this.uploadFileDialog = this.dialogService.open({
+    content: template,
+    cssClass:'app-c-modal app-c-modal-lg app-c-modal-np'
+  });
+}
+onCloseUploadFileDetailClicked() {
+  this.uploadFileDialog.close();
+}
+
 }
