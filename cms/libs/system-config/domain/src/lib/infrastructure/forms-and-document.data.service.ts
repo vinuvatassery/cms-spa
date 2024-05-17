@@ -46,4 +46,11 @@ export class FormsAndDocumentDataService
           }
         );
       }
-}
+
+
+      uploadAttachments(uploadRequest:FormData, documentTemplateId:any){
+       
+        return this.http.post(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/files/${documentTemplateId}/new-version`,uploadRequest);
+        }
+    }

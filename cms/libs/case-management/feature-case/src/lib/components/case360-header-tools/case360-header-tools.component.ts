@@ -185,7 +185,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Internal Methods */
   ngOnInit(): void {
     this.getLoggedInUserProfile();
-    this.getAssignedCaseManagerDetails();
     this.initialize();
     this.loadedClientHeader.subscribe(res => {
       this.clientHeader = res;
@@ -458,6 +457,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   loadNotificationTemplates(subTypeCode: string, templateName: TemplateRef<unknown>) {
     if(subTypeCode == CommunicationEventTypeCode.EmailTypeCode || subTypeCode == CommunicationEventTypeCode.DisenrollmentNoticeEmail || subTypeCode == CommunicationEventTypeCode.RestrictedNoticeEmail){
+      this.getAssignedCaseManagerDetails();
       templateName = this.sendNewEmailDialog;
       this.onSendNewEmailClicked(templateName);
     }
@@ -524,6 +524,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
               isDefault: true
             };
             this.caseManagerEmail = ccEmail;
+          }else{
+            this.caseManagerEmail = null;
           }
         },
         error: (err) => {

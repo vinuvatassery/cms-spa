@@ -15,7 +15,8 @@ import { DialItemAnimation } from '@progress/kendo-angular-buttons';
 import {
   ClientEligibilityFacade,
   CaseFacade,
-  ClientFacade
+  ClientFacade,
+  ContactFacade
 } from '@cms/case-management/domain';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -49,9 +50,9 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   @Output() isLoadAlertBannerContainerEvent = new EventEmitter<any>();
   @Output() onMarkAlertAsDoneEvent = new EventEmitter<any>();
   @Output() onDeleteAlertEvent = new EventEmitter<any>();
-  @Output() openEditReminderEvent = new EventEmitter()
-  @Output() openDeleteReminderEvent = new EventEmitter()
-  @Output() openEditTodoEvent = new EventEmitter()
+  @Output() openEditReminderEvent = new EventEmitter();
+  @Output() openDeleteReminderEvent = new EventEmitter();
+  @Output() openEditTodoEvent = new EventEmitter();
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
   isGroupDetailOpened$ = new BehaviorSubject<boolean>(false);
@@ -71,7 +72,7 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private cdr: ChangeDetectorRef,
     private clientFacade: ClientFacade,
-    private readonly userManagementFacade: UserManagementFacade
+    private readonly userManagementFacade: UserManagementFacade,
   ) {}
 
   /** Lifecycle hooks **/

@@ -83,6 +83,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   prevClientCaseEligibilityId!: string;
   nform!: FormGroup;
   workflowTypeCode:any;
+  clientCerNotes: any[] = [];
   /** Constructor **/
   constructor(
     private workFlowFacade: WorkflowFacade,
@@ -231,7 +232,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
             this.clientFacade.hideLoader()
             /**Populating Client */
             this.applicantInfo.client = response.client;
-
+            this.clientCerNotes = response.clientCerNotes;
             /* Populate Client Case Eligibility */
             if (
               this.applicantInfo.clientCaseEligibilityAndFlag
