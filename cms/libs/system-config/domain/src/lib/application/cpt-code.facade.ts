@@ -25,10 +25,10 @@ export class CptCodeFacade {
 
   public sortValueCptCode = 'cptCode1'; 
   public sortCptCodeGrid: SortDescriptor[] = [{
-    field: this.sortValueCptCode,
+    field: this.sortValueCptCode, dir: 'asc'
   }];
 
-  private loadCptCodeListsServiceSubject = new BehaviorSubject<any>([]);
+  private loadCptCodeListsServiceSubject = new Subject<any>();
   loadCptCodeListsService$ = this.loadCptCodeListsServiceSubject.asObservable();
 
   private cptCodeListDataLoaderSubject = new BehaviorSubject<boolean>(false);

@@ -23,7 +23,8 @@
                         <span class="filter-section_items filter--search">
                               <span class="material-icons">search</span>
                               <kendo-floatinglabel text="Search">
-                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" 
+                                    [clearButton]="true" rounded="medium" >
                                     </kendo-textbox>
                               </kendo-floatinglabel>
                         </span>
@@ -39,7 +40,7 @@
 
       <!-- Sorted Info show only in list -->
       <div class="table-sorted-info">
-            Sorted by <span class="sort-items">Name</span>
+            Sorted by <span class="sort-items">Cpt Code</span>
             <span class="sort-items">No Filters</span>
             <span class="sort-items">All Columns</span>
       </div>
@@ -48,7 +49,8 @@
             <kendo-grid [data]="cptCodeDataLists$ | async" [loading]="(cptCodeListDataLoader$  | async) === true"
                   [resizable]="true" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
                   [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-                  [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
+                  [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" 
+                  (columnReorder)="onColumnReorder($event)" >
                   <kendo-grid-column field="cptCode1" title="CPT Code" [width]="160">
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                               let-filterService="filterService">
@@ -87,7 +89,7 @@
                   </kendo-grid-column>
                   <kendo-grid-column field="lastModificationTime" title="Last Modified" [width]="130">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              {{dataItem.lastModificationTime | date: 'MM/dd/YYYY hh:mm:ss a'}}
+                              {{dataItem.lastModificationTime | date: 'MM/dd/YYYY'}}
                         </ng-template>
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                               let-filterService="filterService">

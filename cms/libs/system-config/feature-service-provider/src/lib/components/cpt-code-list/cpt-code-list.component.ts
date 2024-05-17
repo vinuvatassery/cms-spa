@@ -54,12 +54,11 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   isFiltered = false;
   isEditCptCode = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn: any = 'ALL';
   gridDataResult!: GridDataResult;
   isCptCodeListGridLoaderShow = false;
   gridCptCodeDataSubject = new Subject<any>();
-  gridCptCodeData$ =
-  this.gridCptCodeDataSubject.asObservable();
+  gridCptCodeData$ = this.gridCptCodeDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -122,6 +121,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       this.sortType
     );
   }
+
   loadCptCodeLitData(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -137,7 +137,6 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       filter: JSON.stringify(this.filter)
     };
     this.loadCptCodeListsEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
   }
   loadCptCodeFilterColumn() {
     this.cptCodeFilterColumnEvent.emit();
@@ -145,7 +144,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   }
   onChange(data: any) {
     this.defaultGridState();
-
+    let operator = 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
@@ -153,7 +152,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
           filters: [
             {
               field: this.selectedColumn ?? 'cptCode1',
-              operator: 'startswith',
+              operator: operator,
               value: data,
             },
           ],
@@ -165,6 +164,11 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
+
+  onSearch(searchValue: any) {
+    this.onChange(searchValue);
+  }
+
   dropdownFilterChange(
     field: string,
     value: any,
@@ -202,6 +206,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.filter = stateData?.filter?.filters;
     this.loadCptCodeList();
   }
 
@@ -216,22 +221,6 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.cptCodeDataLists$.subscribe((data: GridDataResult) => {
-
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridCptCodeDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isCptCodeListGridLoaderShow = false;
-      }
-    }
-    );
-    this.isCptCodeListGridLoaderShow = false;
-  }
 
   onEditCptCodeDetailsClicked(cptCode: any) {
     this.selectedCptCode = cptCode;
