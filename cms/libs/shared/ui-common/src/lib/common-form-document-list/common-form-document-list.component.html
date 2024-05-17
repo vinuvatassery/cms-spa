@@ -7,8 +7,7 @@
       </div>
       <kendo-treeview [nodes]="foldersTree" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
             kendoTreeViewExpandable expandBy="documentTemplateId" [hasChildren]="hasChildren" [children]="children" [expandedKeys]="[1]"
-            kendoTreeViewLoadMore
-      [pageSize]="10">
+            kendoTreeViewLoadMore [pageSize]="10">
             <ng-template kendoTreeViewNodeTemplate let-dataItem>
                   <div class="attachments-lists-wrap"
                         [ngClass]="dataItem.isFolder===false ? 'file_list' : 'directory_list'">

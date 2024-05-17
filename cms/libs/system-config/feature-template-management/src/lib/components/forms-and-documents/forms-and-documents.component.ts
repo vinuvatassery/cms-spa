@@ -4,7 +4,7 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { ActiveInactiveFlag } from 'libs/shared/ui-common/src/lib/enums/active-inactive-flag.enum';
+import { ActiveInactiveFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'system-config-forms-and-documents',
