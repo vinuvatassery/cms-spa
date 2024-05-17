@@ -11,6 +11,8 @@ export class FormsAndDocumentFacade {
     addNewFolder$ =  this.addFolderSubject.asObservable();
     private formsDocumentsSubject = new Subject<any>();
     formsDocumentsList$ = this.formsDocumentsSubject.asObservable();
+    private popupFormsDocumentsSubject = new Subject<any>();
+    popupFormsDocumentsList$ = this.popupFormsDocumentsSubject.asObservable();
     private folderSortSubject = new Subject<any>();
     folderSort$ = this.folderSortSubject.asObservable();
     private getFolderSubject = new BehaviorSubject<any>([]);
@@ -61,6 +63,19 @@ export class FormsAndDocumentFacade {
             },
         })
     }
+    loadFolderFilePopup(payLoad:any) {
+      this.showLoader();
+      this.uploadFormandDocumentService.loadFolderFile(payLoad).subscribe({
+          next: (response) => {
+              this.popupFormsDocumentsSubject.next(response);
+              this.hideLoader();
+          },
+          error: (err) => {
+              this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+              this.hideLoader();
+          },
+      })
+  }
     getFormsandDocumentsViewDownload(id: string) {
         return this.uploadFormandDocumentService.getFormsandDocumentsViewDownload(id);
       }
