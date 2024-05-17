@@ -130,6 +130,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   subjectMax = 200;
   vendorMailCodesubscription!: Subscription;
   userDataSubscription!: Subscription;
+  snackBarMessage:any;
   // caseManagerEmail: any = null;
   /** Private properties **/
 
@@ -682,7 +683,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isToEmailMissing = false;
     this.isEmailSubjectMissing = false;
     this.isContentMissing = false;
-    if (this.notificationGroup === ScreenType.VendorProfile) 
+    this.handleconfirmPopupHeader(event.templateTypeCode);
+    if (this.notificationGroup === ScreenType.VendorProfile)
     {
     this.isMailCodeMissing = false;
     }
@@ -710,6 +712,35 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
     else {
       this.loadNewTemplate(event);
+    }
+  }
+
+  handleconfirmPopupHeader(event: any){
+    switch(event){
+      case CommunicationEventTypeCode.PendingNoticeEmail:
+        this.confirmPopupHeader = 'Send Pending Email';
+        this.snackBarMessage = 'Pending Email Sent! An event has been logged.';
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeEmail:
+        this.confirmPopupHeader = 'Send Rejection Email';
+        this.snackBarMessage = 'Rejection Email Sent! An event has been logged.';
+        break;
+      case CommunicationEventTypeCode.ApprovalNoticeEmail:
+        this.confirmPopupHeader = 'Send Approval Email';
+        this.snackBarMessage = 'Approval Email Sent! An event has been logged.';
+        break;
+      case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
+        this.confirmPopupHeader = 'Send Disenrollment Email';
+        this.snackBarMessage = 'Disenrollment Email Sent! An event has been logged.';
+        break;
+      case CommunicationEventTypeCode.RestrictedNoticeEmail:
+        this.confirmPopupHeader = 'Send Restricted Email';
+        this.snackBarMessage = 'Restricted Email Sent! An event has been logged.';
+        break;
+      default:
+        this.confirmPopupHeader = 'Send Email';
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
+        break;
     }
   }
 
