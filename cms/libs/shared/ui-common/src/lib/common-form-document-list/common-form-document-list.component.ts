@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
 import { map } from 'rxjs';
 const isOfType = (fileName: string, ext: string) =>
@@ -23,20 +24,27 @@ export class CommonFormDocumentListComponent implements OnInit {
   @Output() newVersionFileUploadOpenEvent = new EventEmitter()
   selectedfolder: string = "";
   isShowLoader: boolean = true;
-
+  @ViewChild('renameTemplate', { read: TemplateRef })
+  renameTemplate!: TemplateRef<any>;
+  renameDialog:any
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isAddNewEditFolderPopup = false;
+  isFolder = false;
+  temData ='';
   isFormsDocumentDeletePopupShow = false;
   isFormsDocumentDeactivatePopupShow = false;
   isFormsDocumentReactivatePopupShow = false;
   isUploadFileDetailPopup = false;
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
+  documentTemplateId = '';
   isDragDropEnabled = false;
+  templateDesc: any
   public constructor(
     private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
     private readonly loaderService: LoaderService,
+    private dialogService: DialogService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService,) {
 
@@ -48,8 +56,12 @@ export class CommonFormDocumentListComponent implements OnInit {
       buttonType: 'btn-h-primary',
       text: 'Rename',
       icon: 'edit',
-      click: (data: any): void => {
-        this.onAddNewEditFolderClicked();
+      click: (event: any, data:any): void => {
+        this.templateDesc = data.isFolder ? data.description : data.text;
+        this.documentTemplateId =data.documentTemplateId;
+        this.isFolder = data.isFolder ? true: false;
+        this.temData = data;
+        this.onAddFolderClicked(this.renameTemplate);
       },
     },
     {
@@ -231,7 +243,7 @@ export class CommonFormDocumentListComponent implements OnInit {
     this.isAddNewEditFolderPopup = true;
   }
   onCloseAddNewEditFolderClicked() {
-    this.isAddNewEditFolderPopup = false;
+    this.renameDialog.close();
   }
 
   onFormsDocumentDeleteClicked() {
@@ -256,7 +268,6 @@ export class CommonFormDocumentListComponent implements OnInit {
   }
 
   onDownloadViewFileClick(viewType: string, templateId: string, templateName: string) {
-    debugger;
     if (templateId === undefined || templateId === '') {
       return;
     }
@@ -287,5 +298,14 @@ export class CommonFormDocumentListComponent implements OnInit {
       this.loggingService.logException(err)
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
+  }
+  onAddFolderClicked(template: TemplateRef<unknown>): void {
+    this.renameDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
+    });
+  }
+  updateTemplate(payload:any){
+    this.formsAndDocumentFacade.updateTemplate(payload);
   }
 }

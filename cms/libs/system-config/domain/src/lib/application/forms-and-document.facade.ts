@@ -19,6 +19,8 @@ export class FormsAndDocumentFacade {
     uploadFiles$ =  this.uploadFilesSubject.asObservable();
     private uploadNewVersionDocumentSubject = new BehaviorSubject<any>([]);
     uploadNewVersionDocument$ =  this.uploadNewVersionDocumentSubject.asObservable();
+    private renameSubject = new BehaviorSubject<any>([]);
+    renameSubject$ =  this.renameSubject.asObservable();
   
     showLoader() { this.loaderService.show(); }
     hideLoader() { this.loaderService.hide(); }
@@ -125,6 +127,24 @@ export class FormsAndDocumentFacade {
           },
           error: (err) => {
             this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.loaderService.hide();
+          },
+        })
+      } 
+      updateTemplate(payload:any){
+        this.showLoader()
+        this.uploadFormandDocumentService.updateTemplate(payload).subscribe({
+          next: (response:any) => {
+            this.renameSubject.next(response);
+            if (response) {
+              this.loaderService.hide();
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+              this.loadFolderFile(true);
+              this.getFolderName();
+            }
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR," ");
             this.loaderService.hide();
           },
         })
