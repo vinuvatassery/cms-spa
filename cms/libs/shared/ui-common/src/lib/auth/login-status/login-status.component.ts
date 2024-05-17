@@ -22,15 +22,16 @@ export class LoginStatusComponent  implements OnInit{
   userInfoData$ = this.userManagementFacade.userInfoData$;
   submitUserInfoData$ = this.userManagementFacade.submitUserInfoData$;
   private submitUserInfoSubscription !: Subscription;
-
+  removePhotoResponse$ = this.userManagementFacade.removePhotoResponse$;
+  uploadPhotoResponse$ = this.userManagementFacade.uploadPhotoResponse$;
   isAccountSettingsPopup = false;
   isProfilePopoverOpen = false;
-
   userImageSubject = new Subject<any>();
   imageLoaderVisible = true;
   data: Array<any> = [{}];
   popupClass = 'user-setting-dropdown';
   userInfo!:any;
+  userImage$ = this.userManagementFacade.userImage$;
 
 
   constructor(private authService: AuthService,
@@ -49,6 +50,13 @@ export class LoginStatusComponent  implements OnInit{
         this.cd.detectChanges();
       }
     });
+
+    this.uploadPhotoResponse$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.userManagementFacade.getUserImage(this.userInfo?.loginUserId);
+      }
+    });
+    
   }
   user() {
     return this.authService.getUser();
@@ -102,13 +110,7 @@ export class LoginStatusComponent  implements OnInit{
     this.userDataService.getProfile$.subscribe((users: any[]) => {
       if (users.length > 0) {
         this.userInfo = users[0];
-        this.userDataService.getUserImage(this.userInfo?.loginUserId).subscribe({
-          next: (userImageResponse: any) => {
-            this.userImageSubject.next(userImageResponse);
-            this.imageLoaderVisible = true;
-            this.cd.detectChanges();
-          },
-        });
+        this.userManagementFacade.getUserImage(this.userInfo?.loginUserId);
       }
     })
   }
@@ -129,5 +131,15 @@ export class LoginStatusComponent  implements OnInit{
   submitUserInfoData(userInfoData : any)
   {
     this.userManagementFacade.submitUserInfoData(userInfoData);
+  }
+
+  removeProfilePhoto(userId : any)
+  {
+    this.userManagementFacade.removeUserProfilePhoto(userId);
+  }
+
+  uploadProfilePhoto(uploadRequest : any)
+  {
+    this.userManagementFacade.uploadUserProfilePhoto(uploadRequest);
   }
 }

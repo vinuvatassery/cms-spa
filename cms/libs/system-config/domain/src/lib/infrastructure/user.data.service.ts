@@ -152,6 +152,21 @@ export class UserDataService {
     );
   }
 
+  removeUserProfilePhoto(userId : any)
+  {
+    return this.http.delete(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${userId}/profile-photo`);
+  }
+
+  uploadUserProfilePhoto(uploadRequest : any)
+  {
+    const formData: any = new FormData();
+    formData.append('LoginUserId', uploadRequest?.loginUserId ?? '');
+    formData.append('ProfilePhoto', uploadRequest?.profilePhoto ?? '');
+    return this.http.post(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${uploadRequest.loginUserId}/profile-photo`, formData);
+  }
+
   loadUsersRoleAndPermissions() {
     return of([
       {
