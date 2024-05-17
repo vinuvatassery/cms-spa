@@ -143,10 +143,10 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.savedForLaterCompleted$
     .subscribe(res =>{
      if(res){
+      this.isShowSaveLaterPopup = false;
      this.updateCaseStatusSubscription$ = this.caseFacade.updateCaseStatus(this.workflowFacade.clientCaseId, this.currentStatusCode,this.workflowFacade.clientCaseEligibilityId)
        .subscribe({
          next: (casesResponse: any) => {
-           this.isShowSaveLaterPopup = false;
            this.workflowFacade.caseStatus = this.currentStatusCode;
            this.caseFacade.loadActiveSession();
            this.loaderService.hide();     
