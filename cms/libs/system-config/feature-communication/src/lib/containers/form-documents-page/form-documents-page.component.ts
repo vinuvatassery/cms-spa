@@ -10,11 +10,18 @@ export class FormDocumentsPageComponent implements OnInit {
   folderSortList$ = this.lovFacade.folderSortLov$;;
   formsDocumentsList$ = this.formsAndDocumentFacade.formsDocumentsList$;
   getFolders$ = this.formsAndDocumentFacade. getFolder$;
+  uploadNewVersionDocument$ = this.formsAndDocumentFacade.uploadNewVersionDocument$
+fileFolderPayload :any
   constructor(private readonly formsAndDocumentFacade: FormsAndDocumentFacade, private readonly lovFacade: LovFacade) { }
   
   ngOnInit(): void {
     this.loadFolderSort();
     this.getFolderName();
+    this.formsAndDocumentFacade.uploadNewVersionDocument$.subscribe(res =>{
+      if(res){
+        this.formsAndDocumentFacade.loadFolderFile( this.fileFolderPayload)
+      }
+    })
   }
 
   addFolder(payload:any){
@@ -25,6 +32,7 @@ export class FormDocumentsPageComponent implements OnInit {
     this.lovFacade.getFolderSortLov()
   }
   loadFolderFiles(payload:any) {
+    this.fileFolderPayload = payload
     this.formsAndDocumentFacade.loadFolderFile(payload);
   }
 
@@ -33,5 +41,10 @@ export class FormDocumentsPageComponent implements OnInit {
   }
   uploadFiles(formData: any){
     this.formsAndDocumentFacade.uploadFiles(formData);
+  }
+
+  uploadNewVersionFile(event:any){
+  this.formsAndDocumentFacade.uploadAttachments(event.data, event.documentTemplateId);
+
   }
 }

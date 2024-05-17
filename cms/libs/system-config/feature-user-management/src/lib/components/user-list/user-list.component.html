@@ -13,7 +13,7 @@
 <!-- Users List Section -->
 <section>
   <!-- Label info show only in list -->
-  <p class="pt-1">Add, edit, and deactivate users.</p>
+  <p class="pt-1">Add, edit and deactivate users.</p>
   <!-- Table Top Filter, Search and Export -->
   <div class="flex-row">
     <!-- Table header show only in list -->
@@ -61,10 +61,11 @@
 
   <!-- User List table -->
   <div class="app-c-table">
-    <kendo-grid [data]="usersDataLists$ | async" [loading]="isUserListGridLoaderShow" [pageable]="true"
+    <kendo-grid #usersGrid [data]="usersDataLists$ | async" [loading]="isUserListGridLoaderShow" [pageable]="true"
       [sortable]="true" [resizable]="true" [groupable]="false" [reorderable]="true" [columnMenu]="{ filter: true }"
       [filter]="state.filter" [skip]="state.skip" [sort]="state.sort" [pageSize]="state.take"
-      (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [rowClass]="rowClass">
+      (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [rowClass]="rowClass"
+      (columnVisibilityChange)="columnChange($event)">
       <kendo-grid-column field="userName" title="User Name" [width]="150">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button kendoButton class="card-link-button" aria-label="user name" [popover]="onUserProfileDetailsHovered"
@@ -126,7 +127,7 @@
           </kendo-dropdownlist>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="" title="Options" [width]="70" class="text-center" [columnMenu]="false">
+      <kendo-grid-column field="" title="Options" [width]="70" class="text-center" [columnMenu]="true" [sortable]="false" [filterable]="false" [includeInChooser]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
           <kendo-dropdownbutton [data]="moreactions" title="More option" aria-label="more actions"
             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

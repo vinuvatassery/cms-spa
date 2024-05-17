@@ -14,26 +14,28 @@
   </p>
 </section>
 <div class="flex-col flex-col-10" *ngIf="isCerForm"> 
-  <div class="info-banners light-blue-banner d-flex mt-2 align-item-fstart mb-2"   >
-     
-    <div>
-      <p class="mb-05"><b>CER NOTE</b> XX/XX/XXXX by <a   kendoPopoverAnchor
-        [popover]="onUserProfileDetailsHovered"
-        showOn="hover"
-        aria-label="modified by">Lisa McAuliffe</a></p>
-     
-    <kendo-popover
-      #onUserProfileDetailsHovered
-      width="330"
-      position="left"
-    >
-      <ng-template kendoPopoverBodyTemplate>
-        <common-user-profile-card> </common-user-profile-card>
-      </ng-template>
-    </kendo-popover>
-    <p>This note is displaying from the Event Log or from the last CER process. Integer quis quam ac odio ornare aliquet. 
-      Donec volutpat, neque sit amet fringilla pulvinar, arcu odio feugiat augue.</p></div>
-  </div>
+  <div *ngFor="let note of clientCerNotes; index as i;">
+    <div class="info-banners light-blue-banner d-flex mt-2 align-item-fstart mb-2">
+      <div>
+        <p class="mb-05"><b>CER NOTE</b> {{note.creationTime | date : 'MM/dd/yyyy'}} by <a   kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered"
+          showOn="hover"
+          aria-label="modified by">{{note.createdBy}}</a></p>
+      
+      <kendo-popover
+        #onUserProfileDetailsHovered
+        width="330"
+        position="left"
+      >
+        <ng-template kendoPopoverBodyTemplate>
+          <common-user-profile-card> </common-user-profile-card>
+        </ng-template>
+      </kendo-popover>
+      <p>{{note.eventLogDesc}}</p>
+      </div>
+    </div>
+</div>
+
   </div>
 <div class="client-data-block">
   <div class="block-section">

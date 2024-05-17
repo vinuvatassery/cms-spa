@@ -50,7 +50,7 @@
             <!-- Email -->
 
             <div>
-                <div *ngIf="toEmailAddress?.length>0" class="mb-1">
+                <div *ngIf="toEmailAddress?.length>0" class="mb-1 textborder">
                     <h5> TO </h5>
 
                     <kendo-chip-list selection="multiple">
@@ -59,7 +59,7 @@
                     </kendo-chip-list>
 
                 </div>
-                <div *ngIf="ccEmailAddress?.length>0" class="mb-1">
+                <div *ngIf="ccEmailAddress?.length>0" class="mb-1 textborder">
                     <h5> CC </h5>
                     <kendo-chip-list selection="multiple">
                         <kendo-chip *ngFor="let ccEmail of ccEmailAddress" [label]="ccEmail">
@@ -67,14 +67,14 @@
                     </kendo-chip-list>
 
                 </div>
-                <div *ngIf="bccEmailAddress?.length>0" class="mb-1">
+                <div *ngIf="bccEmailAddress?.length>0" class="mb-1 textborder">
                     <h5> BCC </h5>
                     <kendo-chip-list selection="multiple">
                         <kendo-chip *ngFor="let bccEmail of bccEmailAddress" [label]="bccEmail">
                         </kendo-chip>
                     </kendo-chip-list>
                 </div>
-                <div *ngIf="subject" class="mb-1">
+                <div *ngIf="subject" class="mb-1 textborder">
                     <h5> SUBJECT </h5>
 
                     <span>{{subject}}</span>

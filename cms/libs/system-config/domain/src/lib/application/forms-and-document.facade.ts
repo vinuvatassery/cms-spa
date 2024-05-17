@@ -17,6 +17,9 @@ export class FormsAndDocumentFacade {
     getFolder$ =  this.getFolderSubject.asObservable();
     private uploadFilesSubject = new Subject<any>();
     uploadFiles$ =  this.uploadFilesSubject.asObservable();
+    private uploadNewVersionDocumentSubject = new BehaviorSubject<any>([]);
+    uploadNewVersionDocument$ =  this.uploadNewVersionDocumentSubject.asObservable();
+  
     showLoader() { this.loaderService.show(); }
     hideLoader() { this.loaderService.hide(); }
     constructor(private readonly uploadFormandDocumentService: FormsAndDocumentDataService,
@@ -72,6 +75,7 @@ export class FormsAndDocumentFacade {
                 this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
                 this.hideLoader();
                 this.loadFolderFile(true);
+                this.getFolderName();
             } 
         },
           error: (err) => 
@@ -107,4 +111,22 @@ export class FormsAndDocumentFacade {
               },
                });
           }
+
+          
+      uploadAttachments(uploadRequest:any , documentTemplateId :string){
+        this.showLoader()
+        this.uploadFormandDocumentService.uploadAttachments(uploadRequest, documentTemplateId).subscribe({
+          next: (response:any) => {
+            this.uploadNewVersionDocumentSubject.next(response);
+            if (response) {
+              this.loaderService.hide();
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+            }
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.loaderService.hide();
+          },
+        })
+      }
 }
