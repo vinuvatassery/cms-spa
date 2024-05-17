@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ActiveInactiveFlag } from '@cms/shared/ui-common';
 import { FormsAndDocumentFacade, LovFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -19,7 +20,11 @@ fileFolderPayload :any
     this.getFolderName();
     this.formsAndDocumentFacade.uploadNewVersionDocument$.subscribe(res =>{
       if(res){
-        this.formsAndDocumentFacade.loadFolderFile(true)
+        var filter={
+          sort : true,
+          active: ActiveInactiveFlag.All
+        }
+        this.formsAndDocumentFacade.loadFolderFile(filter)
       }
   })
   }
