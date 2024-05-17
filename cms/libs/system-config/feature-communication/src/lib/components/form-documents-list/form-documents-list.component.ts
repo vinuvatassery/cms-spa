@@ -36,7 +36,7 @@ export class FormDocumentsListComponent implements OnInit {
     this.loadSortDropDown(); 
     this.loadFoldersTree();
     this.uploadNewVersionDocument$.subscribe((res:any) =>{
-      this.uploadFileDialog.close()
+      this.uploadFileDialog?.close()
     })
   }
   fileName =""

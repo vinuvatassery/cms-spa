@@ -108,6 +108,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   updateCaseStatusSubscription$! : Subscription ;
   showButton:boolean = true;
   caseManagerEmail: any = null;
+
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
@@ -442,8 +443,13 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
       if (val) {
         if(!this.workflowFacade.clientCaseEligibilityId && ! this.workflowFacade.clientId){
           this.ifClientHasAddress = false;
-          this.isShowSaveLaterPopup = false;
+          if(this.workflowFacade.ApplicationDetailsValidationsSuccess){
+          this.isShowSaveLaterPopup = true;
+          }else{
+            this.isShowSaveLaterPopup = false;
           this.router.navigate(['/case-management/cases']);
+
+          }
           return;
         }
         this.loaderService.show()
