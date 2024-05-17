@@ -7,10 +7,8 @@
       </div>
       <kendo-treeview [nodes]="foldersTree" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
             kendoTreeViewExpandable expandBy="documentTemplateId" [hasChildren]="hasChildren" [children]="children" [expandedKeys]="[1]"
-            kendoTreeViewLoadMore kendoTreeViewDragAndDrop kendoTreeViewDragAndDropEditing kendoTreeViewLoadMore
-            (nodeDragStart)="log('nodeDragStart', $event)" (nodeDrag)="log('nodeDrag', $event)"
-            (nodeDrop)="handleDrop($event)" (addItem)="log('addItem', $event)" (removeItem)="log('removeItem', $event)"
-            (nodeDragEnd)="log('nodeDragEnd', $event)" [pageSize]="10">
+            kendoTreeViewLoadMore
+      [pageSize]="10">
             <ng-template kendoTreeViewNodeTemplate let-dataItem>
                   <div class="attachments-lists-wrap"
                         [ngClass]="dataItem.isFolder===false ? 'file_list' : 'directory_list'">
@@ -31,10 +29,10 @@
                                           </button>
                                     </span>
                                     <label *ngIf="dataItem.isFolder===false">{{dataItem.text}}
-                                          <label>({{dataItem.fileSize| number: '1.0-0'}} MB)</label></label>
+                                          <label>({{dataItem.fileSize| number: '1.0-0'}} MB, <span>{{getFlagValue(dataItem.activeFlag)}})</span></label></label>
                                     <label *ngIf="dataItem.isFolder===true">{{dataItem.text}} <span
-                                                *ngIf="dataItem.isFolder===true">{{dataItem.fileCount}}
-                                                Files</span></label>
+                                                *ngIf="dataItem.isFolder===true">({{dataItem.fileCount}}
+                                                Files, <span>{{getFlagValue(dataItem.activeFlag)}})</span></span></label>
                               </div>
                         </div>
                         <span *ngIf="!isPopUp" class="attachments-date">Last Updated

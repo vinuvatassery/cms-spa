@@ -10,6 +10,7 @@ import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActiveInactiveFlag } from 'libs/shared/ui-common/src/lib/enums/active-inactive-flag.enum';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -198,7 +199,11 @@ export class FormDocumentsListComponent implements OnInit {
     });
   }
   loadFoldersTree(){
-    this.loadFolders.emit(true);
+    var filter={
+      sort : true,
+      active: ActiveInactiveFlag.All
+    }
+    this.loadFolders.emit(filter);
   }
 
   uploadFilesEvent(formdata: any)
