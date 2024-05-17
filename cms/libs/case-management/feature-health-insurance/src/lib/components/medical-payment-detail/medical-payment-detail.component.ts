@@ -105,6 +105,7 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
   groupedPaymentRequestTypes:any;
   isDisabled: boolean = true;
   isClientInEligibleForDates= false;
+  specialCharAdded!: boolean;
   /** Constructor **/
   constructor(
     private formBuilder: FormBuilder,
@@ -896,5 +897,18 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.showIneligibleSubscription.unsubscribe();
 
+  }
+
+  restrictSpecialChar(event: any) {
+    const status = ((event.charCode > 64 && event.charCode < 91) ||
+      (event.charCode > 96 && event.charCode < 123) ||
+      event.charCode == 8 || event.charCode == 32 ||
+      (event.charCode >= 48 && event.charCode <= 57) ||
+      event.charCode == 45);
+    if (status) {
+      this.claimForm.controls['invoiceId'].setErrors(null);
+      this.specialCharAdded = false;
+    }
+    return status;
   }
 }
