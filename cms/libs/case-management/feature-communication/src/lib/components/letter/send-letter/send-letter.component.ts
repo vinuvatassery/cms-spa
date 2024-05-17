@@ -115,6 +115,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   typeName!: string;
   vendorMailCodesubscription!: Subscription;
   userDataSubscription!: Subscription;
+  snackBarMessage:any;
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -381,7 +382,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             downloadLink.download = documentName;
             downloadLink.click();
             this.onCloseNewLetterClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated! An event has been logged.');
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , this.snackBarMessage);
           }
           this.loaderService.hide();
           this.navigateConditionally();
@@ -621,18 +622,27 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     switch(event){
       case CommunicationEventTypeCode.PendingNoticeLetter:
         this.confirmPopupHeader = 'Send Pending Letter to print?';
+        this.snackBarMessage = 'Pending Letter generated! An event has been logged.';
         break;
       case CommunicationEventTypeCode.RejectionNoticeLetter:
         this.confirmPopupHeader = 'Send Rejection Letter to print?';
+        this.snackBarMessage = 'Rejection Letter generated! An event has been logged.';
         break;
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
         this.confirmPopupHeader = 'Send Approval Letter to print?';
+        this.snackBarMessage = 'Approval Letter generated! An event has been logged.';
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         this.confirmPopupHeader = 'Send Disenrollment Letter to print?';
+        this.snackBarMessage = 'Disenrollment Letter generated! An event has been logged.';
+        break;
+      case CommunicationEventTypeCode.RestrictedNoticeLetter:
+        this.confirmPopupHeader = 'Send Restricted Letter to print?';
+        this.snackBarMessage = 'Restricted Letter generated! An event has been logged.';
         break;
       default:
-        this.confirmPopupHeader = 'Send Email';
+        this.confirmPopupHeader = 'Send Letter to print?';
+        this.snackBarMessage = 'Letter generated! An event has been logged.';
         break;
     }
   }
