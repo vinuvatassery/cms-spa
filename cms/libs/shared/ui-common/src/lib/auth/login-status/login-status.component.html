@@ -5,7 +5,7 @@
     <div class="app-c-avatar">
       <span class="profile-text-avatar">
         <div [hidden]="imageLoaderVisible" class="app-c-avatar avatar-img-sm avatar-sm">
-          <img [hidden]="imageLoaderVisible" [src]="userImageSubject | async" alt="User Profile photo"
+          <img [hidden]="imageLoaderVisible" [src]="userImage$ | async" alt="User Profile photo"
             class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()" />
         </div>
         <div *ngIf="imageLoaderVisible">
@@ -68,5 +68,5 @@
     <span class="material-icons mr-1" aria-label="account settings" aria-hidden="true">person</span>
     <span class="text-bold">Account Settings</span>
   </kendo-dialog-titlebar>
-  <common-account-settings (closeFormEvent)="onCloseAccountSettingsClicked()"  (loadUserInfoDataEvent)="loadUserInfoData()" (submitUserInfoDataEvent)="submitUserInfoData($event)" [userInfoData$] = "userInfoData$"></common-account-settings>
+  <common-account-settings (uploadProfilePhotoEvent)="uploadProfilePhoto($event)" (removeProfilePhotoEvent)="removeProfilePhoto($event)" (closeFormEvent)="onCloseAccountSettingsClicked()"  (loadUserInfoDataEvent)="loadUserInfoData()" (submitUserInfoDataEvent)="submitUserInfoData($event)" [userInfoData$] = "userInfoData$" [userImage$] = "userImage$" [removePhotoResponse$] = "removePhotoResponse$" [userId] = "userInfo"></common-account-settings>
 </kendo-dialog>

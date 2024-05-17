@@ -1,14 +1,14 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, TemplateRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LovFacade, UserDeviceType, UserManagementFacade, UserType } from '@cms/system-config/domain';
 import { PronounTypeCode } from '../enums/pronoun-type-code.enum';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '../enums/status-flag.enum';
-
-
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 
 @Component({
   selector: 'common-account-settings',
@@ -18,6 +18,11 @@ import { StatusFlag } from '../enums/status-flag.enum';
 })
 export class AccountSettingsComponent implements OnInit, OnDestroy {
   @Input() userInfoData$: any;
+  @Input() userId: any;
+  @Input() userImage$: any;
+  @Input() removePhotoResponse$: any;
+  @Output() uploadProfilePhotoEvent = new EventEmitter<any>();
+  @Output() removeProfilePhotoEvent = new EventEmitter<any>();
   @Output() loadUserInfoDataEvent = new EventEmitter<any>();
   @Output() submitUserInfoDataEvent = new EventEmitter<any>();
   @Output() closeFormEvent = new EventEmitter<any>();
@@ -32,6 +37,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   ddlStates$ = this.userManagementFacade.ddlStates$;
   pronounLovSubscription = new Subscription();
   userDeviceTypeSubscription = new Subscription();
+  removeProfilePhotoSubscription = new Subscription();
   pronounList : any;
   userDeviceList : any;
   dateFormat = this.configProvider.appSettings.dateFormat;
@@ -41,6 +47,16 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   userDeviceType: typeof UserDeviceType = UserDeviceType;
   phoneData:any;
   isButtonDisabled=true;
+  defaultDeskPhoneIndex! : number;
+  imageLoaderVisible = true;
+  deleteDialog!:any
+  @ViewChild('deleteTemplate', { read: TemplateRef })
+  deleteTemplateRef!: TemplateRef<any>;
+  file:any
+  fileUploadRestrictions: FileRestrictions = {
+    maxFileSize: this.configurationProvider.appSettings.uploadFileSizeLimit,
+  };
+
    /** Constructor**/
    constructor(private readonly cdr :ChangeDetectorRef,
     private readonly formBuilder: FormBuilder,
@@ -48,9 +64,13 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     private readonly userManagementFacade: UserManagementFacade,
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
+    private readonly dialogService : DialogService,
+    private readonly configurationProvider: ConfigurationProvider,
+
     ) {}
 
   ngOnInit(): void {
+    this.userManagementFacade.getUserImage(this.userId.loginUserId);
     this.userManagementFacade.loadDdlStates();
     this.lovFacade.getUserPhoneTypeLov();
     this.lovFacade.getPronounLovs();
@@ -68,11 +88,20 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         this.userDeviceList = response;
       }
     });
+
+    this.removeProfilePhotoSubscription = this.removePhotoResponse$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.imageLoaderVisible = true;
+        this.cdr.detectChanges();
+      }
+    });
+
   }
 
   ngOnDestroy(): void {
     this.userInfoSubsriction.unsubscribe();
     this.pronounLovSubscription.unsubscribe();
+    this.removeProfilePhotoSubscription.unsubscribe();
   }
 
   initUserForm() {
@@ -144,10 +173,6 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   addPhoneGroup() {
-    if(this.addPhoneForm.length > 1 )
-    { 
-      return;
-    }
     let phoneForm = this.formBuilder.group({
       smsTextConsentFlag: new FormControl(
         null ),
@@ -157,7 +182,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       ),
 
       phoneType: new FormControl(
-        ''
+        '',Validators.required
       ),
 
       loginUserPhoneId: new FormControl(
@@ -234,6 +259,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       phoneForm.controls['loginUserPhoneId'].setValue(phone.loginUserPhoneId);
       if (phone.deviceTypeCode === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
         {
+          this.defaultDeskPhoneIndex = i;
           this.saveDefaultDeskPhoneData(phoneForm)
           this.disablePhoneFields(i);
         }
@@ -264,13 +290,10 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userForm.controls['faxNbr'].disable();
   }
 
-  disablePhoneFields(index: any)
+  disablePhoneFields(index:any)
   {
-    if(index == 0)
-      {
-        const phoneForm = this.addPhoneForm.at(index) as FormGroup;
-        phoneForm.disable();
-      }
+    const phoneForm = this.addPhoneForm.at(index) as FormGroup;
+    phoneForm.disable();
   }
 
   onSave()
@@ -412,9 +435,6 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.addPhoneForm.controls.forEach((element, index) => {
       this.addPhoneForm.at(index).get('phoneNbr')?.setValidators(Validators.required);
       this.addPhoneForm.at(index).get('phoneNbr')?.updateValueAndValidity();
-      this.addPhoneForm.at(index).get('phoneType')?.setValidators(Validators.required);
-      this.addPhoneForm.at(index).get('phoneType')?.updateValueAndValidity();
-
     });
 
   }
@@ -423,7 +443,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     let form = this.addPhoneForm.at(index) as FormGroup;
     let control = form.controls[controlName];
     if(control){
-      return control?.errors?.['required'];
+      return control?.errors?.['required'] && control.touched;
     }
     return false;
   }
@@ -443,18 +463,18 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
   isDisableRemoveButton(index : any)
   {
-    if(index === 0)
-    {
-      const phoneForm = this.addPhoneForm.at(index) as FormGroup;
-      if(phoneForm.controls['phoneType'].value === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
-        {
-          return true;
-        }
-        else{
-          return false;
-        }
-    }
-    return false;
+    if(index == this.defaultDeskPhoneIndex)
+      {
+        const phoneForm = this.addPhoneForm.at(index) as FormGroup;
+        if(phoneForm.controls['phoneType'].value === this.userDeviceType.DeskPhone && this.userInfo.userTypeCode === UserType.Internal)
+          {
+            return true;
+          }
+          else{
+            return false;
+          }
+      }
+      return false;
   }
 
   onCancel()
@@ -462,5 +482,90 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.closeFormEvent.emit();
   }
 
+  phoneTypeChange(value:any, index:any)
+  {
+    let form = this.addPhoneForm.at(index) as FormGroup;
+    form.controls['phoneType'].setErrors({ incorrect: false });
+    form.controls['phoneType'].updateValueAndValidity();
+    let deskPhoneCount = 0;
+    for (let i =0; i < this.addPhoneForm.controls.length; i++)
+      {
+        if(this.addPhoneForm.at(i).get('phoneType')?.value === this.userDeviceType.DeskPhone)
+          {
+            deskPhoneCount++;
+            break;
+          }
+      }
+
+    if(deskPhoneCount > 0 && value === this.userDeviceType.DeskPhone)
+      {
+        form.controls['phoneType'].setErrors({ incorrect: true });
+      }
+  }
+  
+  isPhoneTypeControlValid(index:any)
+  {
+    let form = this.addPhoneForm.at(index) as FormGroup;
+    let control = form.controls['phoneType'];
+    if(control){
+      return control?.errors?.['incorrect'];
+    }
+    return false;
+  }
+
+  onLoad()
+  {
+    this.imageLoaderVisible = false;
+  }
+
+  onDeleteProfilePhotoClicked(): void {
+
+    this.deleteDialog = this.dialogService.open({
+      content: this.deleteTemplateRef,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onCloseDeleteClicked(event:any)
+  {
+    if (event) {
+      this.deleteDialog.close();
+    }
+  }
+
+  onConfirmDeleteClicked(event:any)
+  {
+    if (event) {
+      this.deleteDialog.close();
+      this.removeProfilePhotoEvent.emit(this.userInfo?.loginUserId);
+    }
+  }
+
+  handleFileSelected(e: any) {
+    this.file = e.currentTarget.files[0];
+    if (this.file.type !== 'image/png' || this.file.type !== 'image/png' || this.file.type !== 'image/png') {
+      this.userManagementFacade.showHideSnackBar(
+        SnackBarNotificationType.WARNING,
+        "Invalid file type"
+      );
+      return;
+      }
+    if(this.file)
+      {
+        const maxSizeInBytes: number = 2 * 1024 * 1024;
+        if (this.file.size > maxSizeInBytes){
+          this.userManagementFacade.showHideSnackBar(
+            SnackBarNotificationType.WARNING,
+            "Image size exceeds maximum limit"
+          );
+          return;
+        }
+        let payload = {
+          loginUserId : this.userInfo.loginUserId,
+          profilePhoto : this.file 
+        }
+        this.uploadProfilePhotoEvent.emit(payload);
+      }
+  }
 
 }
