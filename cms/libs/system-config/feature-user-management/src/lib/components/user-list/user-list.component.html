@@ -210,7 +210,7 @@
 </section>
 <!-- Add User Modal Html-->
 <kendo-dialog *ngIf="isUserDetailsPopup" (close)="onUserDetailsClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar>{{isEditUsersData ? 'Edit User' : 'Add New User'}}</kendo-dialog-titlebar>
   <system-config-user-detail [isEditValue]="isEditUsersData"
     (isDeactivatePopupOpened)="onUserDetailsClosed()"></system-config-user-detail>
