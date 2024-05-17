@@ -87,10 +87,14 @@ export class FormsAndDocumentFacade {
             this.addFolderSubject.next(response);
             if (response) 
             {
-                this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
-                this.hideLoader();
-                this.loadFolderFile(true);
-                this.getFolderName();
+              var filter={
+                sort : true,
+                active: 'A'
+              }
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+              this.hideLoader();
+              this.loadFolderFile(filter);
+              this.getFolderName();
             } 
         },
           error: (err) => 
@@ -115,10 +119,14 @@ export class FormsAndDocumentFacade {
             this.showLoader()
             this.uploadFormandDocumentService.uploadFiles(formData).subscribe({
               next:(response) => {
+                var filter={
+                  sort : true,
+                  active: 'A'
+                }
                 this.uploadFilesSubject.next(response);
                 this.hideLoader();
                 this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
-                this.loadFolderFile(true);
+                this.loadFolderFile(filter);
               },
               error: (err) => {
                 this.showHideSnackBar(SnackBarNotificationType.ERROR, err)

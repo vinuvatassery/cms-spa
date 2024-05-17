@@ -19,7 +19,7 @@ fileFolderPayload :any
     this.getFolderName();
     this.formsAndDocumentFacade.uploadNewVersionDocument$.subscribe(res =>{
       if(res){
-        this.formsAndDocumentFacade.loadFolderFile( this.fileFolderPayload)
+        this.formsAndDocumentFacade.loadFolderFile(this.fileFolderPayload);
       }
     })
   }
