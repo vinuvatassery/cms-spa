@@ -4,8 +4,15 @@
                 <p class="text-muted mb-2">{{isFolder ? 'To rename the folder Enter the Folder Name and click "UPDATE':
                      'To rename the file Enter the Name and click "UPDATE'}}</p>
               <kendo-floatinglabel text="Folder Name">
-                  <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="folderName">
+                  <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="folderName"
+                  (valueChange)="onCustomValueChange($event)"
+                  [maxlength]="CustomMaxLength">
                   </kendo-textbox>
+                  <kendo-textarea-suffix class="justify-content-end">
+                    <span class="customcounter">{{
+                      CustomCounter
+                    }}</span>
+                  </kendo-textarea-suffix>
                   <kendo-formerror *ngIf="Form.get('folderName').hasError('required')">
                     {{isFolder ? 'Folder Name' : 'File Name'}} is required
                   </kendo-formerror>

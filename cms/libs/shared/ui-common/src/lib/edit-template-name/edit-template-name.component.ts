@@ -55,4 +55,8 @@ updateTemplates() {
     this.onCloseAddNewEditFolderClicked.emit(true);
   }
 }
+onCustomValueChange(event: any): void {
+  this.CustomCharactersCount = event.length;
+  this.CustomCounter = `${this.CustomCharactersCount}/${this.CustomMaxLength}`;
+ }
 }
