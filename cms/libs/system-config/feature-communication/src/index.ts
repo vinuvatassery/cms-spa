@@ -38,3 +38,5 @@ export * from './lib/containers/template-layout-page/template-layout-page.compon
 export * from './lib/components/add-folder/add-folder.component';
 
 export * from './lib/components/upload-files/upload-files.component';
+
+export * from './lib/components/edit-name-template/edit-name-template.component';
