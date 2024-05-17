@@ -22,9 +22,11 @@ export class FormDocumentsListComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Input() folderSortList$: any;
   @Input() folderFileList$:any;
+  @Input() uploadNewVersionDocument$ :any
   @Output() addFolder = new EventEmitter<any>();
   @Output() loadFolders = new EventEmitter<any>();
   @Output() uploadFiles = new EventEmitter<any>();
+  @Output() newVersionFileUploadEvent = new EventEmitter<any>();
   @Input() getFolders$: any; 
   uploadFileDialog :any
 
@@ -33,7 +35,13 @@ export class FormDocumentsListComponent implements OnInit {
   ngOnInit(): void {
     this.loadSortDropDown(); 
     this.loadFoldersTree();
+    this.uploadNewVersionDocument$.subscribe((res:any) =>{
+      this.uploadFileDialog.close()
+    })
   }
+  fileName =""
+  file!:any
+  selectedDocument!:any
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addFolderTemplate', { read: TemplateRef })
   addFolderTemplate!: TemplateRef<any>;
@@ -63,133 +71,6 @@ export class FormDocumentsListComponent implements OnInit {
     public formBuilder: FormBuilder,
     private dialogService: DialogService,private readonly cdr: ChangeDetectorRef, 
   ) {}
-  public moreActions = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Rename',
-      icon: 'edit',
-      click: (data: any): void => {
-        this.onAddNewEditFolderClicked();
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Reorder',
-      icon: 'format_list_numbered',
-      click: (data: any): void => {
-        this.isDragDropEnabled = true;
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'New Version',
-      icon: 'upload',
-      click: (data: any): void => {
-        this.onUploadFileVersionOpenClicked();
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Deactivate',
-      icon: 'block',
-      click: (data: any): void => {
-        this.onFormsDocumentDeactivateClicked();
-      },
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Delete',
-      icon: 'delete',
-      click: (data: any): void => {
-        this.onFormsDocumentDeleteClicked();
-      },
-    },
-  ];
-  public data: any[] = [
-    {
-      id: 2,
-      text: 'Kendo UI Project',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 3,
-          text: 'about.html',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 4,
-          text: 'index.html',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 5,
-          text: 'logo.png',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-    {
-      id: 6,
-      text: 'New Web Site',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 7,
-          text: 'mockup.jpg',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 8,
-          text: 'Research.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-    {
-      id: 9,
-      text: 'Reports',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 10,
-          text: 'February.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 11,
-          text: 'March.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 12,
-          text: 'April.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-  ];
 
   public iconClass({ text }: any): any {
     return {
@@ -246,8 +127,13 @@ export class FormDocumentsListComponent implements OnInit {
   onUploadFileVersionOpenClicked() {
     this.isUploadFileVersionDetailPopup = true;
   }
-  onCloseUploadFileVersionDetailClicked() {
+  onCloseUploadFileVersionDetailClicked($event:any) {
+    this.file = undefined
+    this.fileName = ""
     this.isUploadFileVersionDetailPopup = false;
+    this.attachedFileValidatorSize = false;
+    this.showAttachmentRequiredError = false;
+  this.uploadFileDialog.close()
   }
   onUploadFolderOpenClicked() {
     this.isUploadFolderDetailPopup = true;
@@ -319,6 +205,8 @@ export class FormDocumentsListComponent implements OnInit {
   {
    this.uploadFiles.emit(formdata);
   }
+
+
 uploadFilesClicked(template: TemplateRef<unknown>): void
  {
   this.uploadFileDialog = this.dialogService.open({
@@ -328,6 +216,23 @@ uploadFilesClicked(template: TemplateRef<unknown>): void
 }
 onCloseUploadFileDetailClicked() {
   this.uploadFileDialog.close();
+}
+
+newVersionFileUploadClick(data:any, template: TemplateRef<unknown>){
+if(data){
+this.selectedDocument = data;
+this.fileName =data.text
+this.uploadFilesClicked(template);
+
+}
+
+}
+
+onNewVersionUploadButtonClicked(event:any){
+  this.newVersionFileUploadEvent.emit({
+    data:event,
+    documentTemplateId : this.selectedDocument.documentTemplateId
+  })
 }
 
 }
