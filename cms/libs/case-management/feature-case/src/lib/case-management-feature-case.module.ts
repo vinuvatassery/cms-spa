@@ -41,6 +41,7 @@ import { Case360HeaderNotificationsComponent } from './components/case360-header
 import { ClientImportantInfoComponent } from './components/client-important-info/client-important-info.component';
 import { Case360HeaderToolsComponent } from './components/case360-header-tools/case360-header-tools.component';
 import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-tools/feature-notification';
+
 @NgModule({
   imports: [
     CaseManagementFeatureCaseRoutingModule,
