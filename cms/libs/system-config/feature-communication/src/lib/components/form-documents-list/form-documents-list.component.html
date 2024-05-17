@@ -15,206 +15,41 @@
                   </p>
                   </div>
             <div class="flex-col" *ngIf="!isDragDropEnabled">
-                  <div class="mt-3 mb-3">
+                  <div class="flex-row">
+                        <div class="flex-col flex-col-4 mb-3">
+                              <kendo-floatinglabel text="Sort">
+                                    <kendo-dropdownlist aria-label="Folder Sort"
+                                          [fillMode]="formUiStyle.dropDownFillMode" [data]="folderSortLovList"
+                                          textField="lovDesc" valueField="lovCode"  [(ngModel)]="sortOrder"
+                                          (valueChange)="onSortChange($event)">
+                                    </kendo-dropdownlist>
+                              </kendo-floatinglabel>
+                        </div>
                         <button kendoButton fillMode="clear" themeColor="primary" aria-label="NEW FOLDER"
                               (click)="onAddNewEditFolderClicked()" (click)="onAddFolderClicked(addFolderTemplate )"  > <span class="material-icons"> add</span> NEW FOLDER
                         </button>
                         <button kendoButton fillMode="clear" themeColor="primary" aria-label="UPLOAD FILE"
-                              (click)="onUploadFileOpenClicked()"> <span class="material-icons"> upload</span> UPLOAD
+                        (click)="uploadFilesClicked(uploadFileTemplate)"> <span class="material-icons"> upload</span>
+                              UPLOAD
                               FILE </button>
-                        <button kendoButton fillMode="clear" themeColor="primary" aria-label="UPLOAD FOLDER"
-                              (click)="onUploadFolderOpenClicked()">  <span class="material-icons"> upload</span> UPLOAD FOLDER   </button>
-
                   </div>
-            </div>
-            <div class="flex-col flex-col-4 mb-3" *ngIf="isDragDropEnabled"> 
-                  <kendo-floatinglabel text="Sort">
-                  <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  value="Alphabetically Ascending">
-                  </kendo-dropdownlist>
-                  </kendo-floatinglabel>
-
             </div>
       </div>
 
 
 
 </section>
-<div class="flex-row forms_doc-lists">
- 
-      <kendo-treeview [nodes]="data" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
-            kendoTreeViewExpandable expandBy="id" [expandedKeys]="[1]" kendoTreeViewDragAndDrop  
-             
-            kendoTreeViewDragAndDropEditing  kendoTreeViewLoadMore  (nodeDragStart)="log('nodeDragStart', $event)" 
-            (nodeDrag)="log('nodeDrag', $event)" (nodeDrop)="handleDrop($event)" (addItem)="log('addItem', $event)"  
-            (removeItem)="log('removeItem', $event)" (nodeDragEnd)="log('nodeDragEnd', $event)" [pageSize]="10">
-
-            <ng-template kendoTreeViewNodeTemplate let-dataItem>
-                  <div class="attachments-lists-wrap"
-                        [ngClass]="dataItem.isFolder===false ? 'file_list' : 'directory_list'">
-                        <div class="align-items-center">
-                              <span class="material-icons folder_icon" aria-hidden="true"
-                                    *ngIf="dataItem.isFolder===true">folder</span>
-                              <div class="file-section-inner">
-
-
-                                    <span class="attachments-buttons-wrap" *ngIf="dataItem.isFolder===false">
-                                          <button kendoButton look="flat" title="Download" aria-label="Download">
-                                                <span class="material-icons" aria-label="download"
-                                                      aria-hidden="true">file_download</span>
-                                          </button>
-                                          <button kendoButton look="flat" title="Open in new tab"
-                                                aria-label="open in new tab">
-                                                <span class="material-icons" aria-label="open in new tab"
-                                                      aria-hidden="true">open_in_new</span>
-                                          </button>
-                                    </span>
-                                    <label *ngIf="dataItem.isFolder===false">{{dataItem.text}}
-                                          <label>({{dataItem.fileSize| number: '1.0-0'}} MB)</label></label>
-                                    <label *ngIf="dataItem.isFolder===true">{{dataItem.text}}  <span
-                                          *ngIf="dataItem.isFolder===true">{{dataItem.fileCount}} Files</span></label>
-                              </div>
-                        </div>
-                        <span class="attachments-date">Last Updated
-                              {{dataItem.lastModificationTime | date: 'MM/dd/YYYY'}} by
-                              <button kendoButton [primary]="true" class="avatar-sm-btn c-default ml-1"
-                                    kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
-                                    [attr.aria-label]="dataItem.modifiedBy">
-                                    <div class="app-c-avatar avatar-sm">
-                                          <span class="profile-text-avatar">AK</span>
-                                    </div>
-                              </button>
-                              <kendo-dropdownbutton [data]="moreActions" title="More option" aria-label="more actions"
-                                    class="TableActionPopup app-dropdown-action ml-1" buttonClass="k-icon-button"
-                                    [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-                                    <span class="material-icons"> more_vert </span>
-                                    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
-                                          let-dataItem>
-                                          <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
-                                                [class]="dataItem.buttonType" aria-hidden="false"
-                                                (click)="dataItem.click">
-                                                <span class="material-icons"
-                                                      [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
-                                                <label> {{ dataItem.text }} </label>
-                                          </button>
-
-                                    </ng-template>
-                              </kendo-dropdownbutton>
-                        </span>
-                  </div>
-            </ng-template>
-            <ng-template kendoTreeViewDragClueTemplate let-action="action" let-destinationItem="destinationItem"
-                  let-text="text">
-                  <span class="k-drag-status k-font-icon k-icon"
-                        [ngClass]="getDragStatus(action, destinationItem)"></span>
-                  <span>{{ text }}</span>
-            </ng-template>
-      </kendo-treeview>
-      <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-            <ng-template kendoPopoverBodyTemplate>
-                  <common-user-profile-card> </common-user-profile-card>
-            </ng-template>
-      </kendo-popover>
-</div>
+<system-config-common-form-document-list
+ [foldersTree] ="folderFileList$ | async" 
+ [treeViewSize]='"large"'
+(newVersionFileUploadOpenEvent)="newVersionFileUploadClick($event, newVersionTemplate)"
+></system-config-common-form-document-list>
 <div class="bottom-fixed-wrapper text-right flex-gap" *ngIf="isDragDropEnabled"> 
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Update" class="">Update</button>
 </div>
-<kendo-dialog *ngIf="isUploadFileDetailPopup" (close)="onCloseUploadFileDetailClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar> Upload New File </kendo-dialog-titlebar>
-      <section class="k-dialog-body">
-            <p>
-                  Select the file and which folder to upload it to.
-            </p>
-            <div class="flex-row">
-                  <div class="flex-col">
-                        <kendo-floatinglabel text="Folder Name">
-                              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode">
-                              </kendo-dropdownlist>
-                        </kendo-floatinglabel>
-                  </div>
-                  <div class="flex-col mt-2">
 
-                        <kendo-fileselect>
-                              <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-                                    <span>
-                                          <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
-                                          <button [attr.aria-label]="files[0].name" *ngIf="files[0]?.documentId"
-                                                kendoButton look="flat" class="card-link-button">
-                                                <a>{{ files[0].name }} </a>
-                                          </button>
-                                          <br>
-                                          <span>{{ files[0]?.size | fileSize }}</span>
-                                    </span>
-                              </ng-template>
-                        </kendo-fileselect>
-                        <kendo-formhint>Max file size 25MB</kendo-formhint>
 
-                  </div>
-            </div>
-      </section>
-
-      <kendo-dialog-actions>
-            <div class="justify-content-between">
-                  <div class="justify-content-end">
-                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-                              (click)="onCloseUploadFileDetailClicked()"> Cancel
-                        </button>
-                        <button kendoButton [primary]="true" aria-label="Upload"> Upload </button>
-                  </div>
-            </div>
-
-      </kendo-dialog-actions>
-</kendo-dialog>
-
-<kendo-dialog *ngIf="isUploadFileVersionDetailPopup" (close)="onCloseUploadFileVersionDetailClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar> Upload New File Version </kendo-dialog-titlebar>
-      <section class="k-dialog-body">
-            <p>
-                  The current version will be replaced and will not be accessible to users. This action cannot be
-                  undone. Update the file name if needed and select the new file.
-            </p>
-            <div class="flex-row">
-                  <div class="flex-col">
-                        <kendo-floatinglabel text="File Name">
-                              <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-                              </kendo-textbox>
-                        </kendo-floatinglabel>
-                  </div>
-                  <div class="flex-col mt-2">
-
-                        <kendo-fileselect>
-                              <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-                                    <span>
-                                          <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
-                                          <button [attr.aria-label]="files[0].name" *ngIf="files[0]?.documentId"
-                                                kendoButton look="flat" class="card-link-button">
-                                                <a>{{ files[0].name }} </a>
-                                          </button>
-                                          <br>
-                                          <span>{{ files[0]?.size | fileSize }}</span>
-                                    </span>
-                              </ng-template>
-                        </kendo-fileselect>
-                        <kendo-formhint>Max file size 25MB</kendo-formhint>
-
-                  </div>
-            </div>
-      </section>
-
-      <kendo-dialog-actions>
-            <div class="justify-content-between">
-                  <div class="justify-content-end">
-                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-                              (click)="onCloseUploadFileVersionDetailClicked()"> Cancel
-                        </button>
-                        <button kendoButton [primary]="true" aria-label="Upload"> Upload </button>
-                  </div>
-            </div>
-
-      </kendo-dialog-actions>
-</kendo-dialog>
 <kendo-dialog *ngIf="isUploadFolderDetailPopup" (close)="onCloseUploadFolderDetailClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Upload New Folder </kendo-dialog-titlebar>
@@ -335,4 +170,23 @@
       <system-config-add-folder (addFolder)="addFolderData($event)"
       (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"> 
   </system-config-add-folder> 
+</ng-template>
+
+<ng-template #uploadFileTemplate >
+      <kendo-dialog-titlebar (close)="onCloseUploadFileDetailClicked()"> Upload New File </kendo-dialog-titlebar>
+      <system-config-upload-files
+        (uploadFilesEvent)="uploadFilesEvent($event)" 
+         (onCloseUploadFileDetailClicked)="onCloseUploadFileDetailClicked()"
+          [getFolders$]="getFolders$" > 
+      </system-config-upload-files>
+</ng-template>
+
+<ng-template #newVersionTemplate>
+      <kendo-dialog-titlebar (close)="onCloseUploadFileVersionDetailClicked(false)"> Upload New File Version </kendo-dialog-titlebar>
+<new-version-file-upload [fileName]="fileName"
+  (onNewVersionUploadButtonClicked)="onNewVersionUploadButtonClicked($event)"
+ (onCloseUploadFileVersionClicked)="onCloseUploadFileVersionDetailClicked($event)">
+
+</new-version-file-upload>
+
 </ng-template>

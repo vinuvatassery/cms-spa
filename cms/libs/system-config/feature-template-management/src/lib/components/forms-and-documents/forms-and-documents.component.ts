@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy , OnInit, TemplateRef,} from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { TemplateManagementFacade } from '@cms/system-config/domain';
+import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
 import { DialogService } from '@progress/kendo-angular-dialog';
 
@@ -16,10 +16,11 @@ export class FormsAndDocumentsComponent implements OnInit {
   foldersList: any = [];
   foldersTree: any = [];
   selectedfolder: string = "";
-  isShowLoader: boolean = true;
   public formsDocumentDialog : any;
+  formsDocumentsList$ = this.formsAndDocumentFacade.formsDocumentsList$;
   public constructor(
     private readonly templateManagementFacade: TemplateManagementFacade,
+    private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService,
@@ -27,15 +28,7 @@ export class FormsAndDocumentsComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
-    this.templateManagementFacade.getDirectoryContent('Form','').subscribe((documentlist: any) => {
-      this.isShowLoader = false;
-      this.loaderService.hide();
-      if (!!documentlist && this.foldersTree.length == 0) {
-        this.foldersTree = this.folderstreeformatting(documentlist);
-      }
-    })
-  }
+  ngOnInit() {}
   /** Internal event methods **/
   onCloseAttachmentClicked() {
     this.formsDocumentDialog.close()
@@ -49,10 +42,7 @@ export class FormsAndDocumentsComponent implements OnInit {
       cssClass: 'app-c-modal app-c-modal-xls app-c-modal-np app-c-modal-top',
     });
     this.isOpenAttachment = true;
-    if (this.isShowLoader)
-      this.loaderService.show();
-    else
-      this.loaderService.hide();
+      this.loadFolderFiles(true);
   }
 
   fetchSubfolders = (node: any) =>
@@ -106,5 +96,19 @@ export class FormsAndDocumentsComponent implements OnInit {
   });
 
   return folderdata;
+  }
+
+  loadFolderFiles(payload:any) {
+    this.loaderService.show();
+    this.formsAndDocumentFacade.loadFolderFile(payload); 
+    this.formsDocumentsList$.subscribe({
+      next: (response) => {
+        this.foldersTree =response;
+        this.loaderService.hide()
+      },
+      error: (err) => {
+          this.loaderService.hide()
+      },
+  })
   }
 }

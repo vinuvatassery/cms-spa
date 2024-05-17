@@ -51,11 +51,17 @@
 <kendo-dialog *ngIf="isShowSaveLaterPopup" (close)="onCloseSaveLaterClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="{{isCerForm ? 'Finish the CER Later?' : 'Finish the Application Later?'}}">
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">
+    <p class="text-muted mb-2" *ngIf="!isCerForm">
       The application status will be set to REJECT if not completed within 45
       days. Select the case status below, specify if you need to send the client
       a letter or email, then click “Save & Exit.”
     </p>
+    <p class="text-muted mb-2" *ngIf="isCerForm">
+    The application status will be set 
+    to Disenrolled if not completed by the eligibility 
+    period end date.  Select the case status below, 
+    specify if you need to send the client a letter or email, then click “Save & Exit.
+   </p>
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
@@ -150,7 +156,7 @@
 
     <!-- Send New Email Modal -->
     <ng-template #sendNewEmailModalDialog>
-<case-management-send-email [notificationGroup]="ScreenName" [paperlessFlag]="paperlessFlag"
+<case-management-send-email [notificationGroup]="ScreenName" [paperlessFlag]="paperlessFlag" [caseManagerEmail]="caseManagerEmail"
 (closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
 </ng-template>
 <ng-template #sendNewLetterModalDialog>

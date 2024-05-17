@@ -64,7 +64,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly contactFacade: ContactFacade,
     private readonly vendorContactFacade: VendorContactsFacade,
     private readonly userDataService: UserDataService,
-    private readonly router: Router, 
+    private readonly router: Router,
     private readonly sanitizer: DomSanitizer) { }
 
   /** Public properties **/
@@ -109,6 +109,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   draftedTemplate:any='';
   isContentMissing:boolean = false;
   isMailCodeMissing:boolean = false;
+  isMailingAddressMissing: boolean = false;
   isFormValid: boolean = true;
   selectedMailingCode!: string;
   variableName!: string;
@@ -213,6 +214,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.clientAddressSubscription = this.contactFacade.address$.subscribe((address: any) => {
       let selectedAddress = address.filter((x: any) => x.activeFlag == StatusFlag.Yes && x.addressTypeCode === AddressTypeCode.Mail)[0];
       this.mailingAddress = selectedAddress;
+      if(this.mailingAddress){
+        this.isMailingAddressMissing = false;
+      }
       this.ref.detectChanges();
     });
   }
@@ -233,7 +237,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
-    let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId); 
+    let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
     letterRequestFormdata.append('address1', this.mailingAddress?.address1 ?? '');
     letterRequestFormdata.append('address2', this.mailingAddress?.address2 ?? '');
     letterRequestFormdata.append('city', this.mailingAddress?.city ?? '');
@@ -275,6 +279,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
+    if(!this.mailingAddress){
+      this.isMailingAddressMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+      }
     if(this.notificationGroup === ScreenType.VendorProfile){
       if(this.mailingAddress === undefined || this.mailingAddress === ''){
       this.isMailCodeMissing = true;
@@ -294,7 +303,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
    }
   }
 
-  onSendLetterToPrintDialogClicked(event: any) { 
+  onSendLetterToPrintDialogClicked(event: any) {
     this.isShowSendLetterToPrintPopupClicked = false;
     if (event === CommunicationEvents.Print) {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
@@ -353,6 +362,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.onCloseSaveForLaterClicked();
       }
     }
+    if(!this.mailingAddress){
+      this.isMailingAddressMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+      }
     if(this.isFormValid){
     this.loaderService.show();
     if(this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
@@ -367,7 +381,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     let {templateTypeCode, eventGroupCode} = this.getApiTemplateTypeCode();
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, eventGroupCode, this.notificationGroup,this.entityId, this.entityType);
     formData.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
-    formData.append('mailCode', this.selectedMailCode?.mailCode ?? '');      
+    formData.append('mailCode', this.selectedMailCode?.mailCode ?? '');
     this.communicationFacade.sendLetterToPrint(entityId, clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
@@ -380,9 +394,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             downloadLink.href = fileUrl;
             downloadLink.download = documentName;
             downloadLink.click();
-            this.communicationLetterTypeCode = '';
             this.onCloseNewLetterClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated! Event Logged.');
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated! An event has been logged.');
           }
           this.loaderService.hide();
           this.navigateConditionally();
@@ -401,7 +414,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         case CommunicationEventTypeCode.PendingNoticeLetter:
           case CommunicationEventTypeCode.RejectionNoticeLetter:
           this.router.navigate([`/case-management/cases/`]);
-          break;        
+          break;
         case CommunicationEventTypeCode.ApprovalNoticeLetter:
         case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
           this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
@@ -443,7 +456,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         eventGroupCode = EventGroupCode.CER;
         break;
         case CommunicationEventTypeCode.ApplicationAuthorizationLetter:
-        templateTypeCode = CommunicationEventTypeCode.ApplicationAndCERLetterSent;
+        templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetterSent;
         eventGroupCode = EventGroupCode.Application;
         break;
         case CommunicationEventTypeCode.VendorLetter:
@@ -455,7 +468,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           eventGroupCode = EventGroupCode.ClientProfile;
           break;
           case CommunicationEventTypeCode.CerAuthorizationLetter:
-            templateTypeCode = CommunicationEventTypeCode.CerLetterSent;
+            templateTypeCode = CommunicationEventTypeCode.CerAuthorizationLetterSent;
             eventGroupCode = EventGroupCode.CER;
             break;
           case CommunicationEventTypeCode.RestrictedNoticeLetter:
@@ -496,6 +509,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.isFormValid = false;
       }
     }
+    if(!this.mailingAddress){
+      this.isMailingAddressMissing = true;
+      this.isFormValid = false;
+      }
     if(this.isFormValid){
     this.isNewLetterClicked=true;
     this.isShowSendLetterToPrintPopupClicked=true;
@@ -528,7 +545,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.isShowSendLetterToPrintPopupClicked = false;
   }
 
-  private loadDropdownLetterTemplates() { 
+  private loadDropdownLetterTemplates() {
     if (this.notificationGroup !== undefined && this.templateLoadType !== undefined) {
       this.loaderService.show();
       this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.templateLoadType, this.communicationLetterTypeCode ?? '')
@@ -547,9 +564,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RestrictedNoticeLetter) {
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RestrictedNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter
+              || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
                 this.templateDrpDisable = true;
-                this.cancelDisplay = false;                
+                this.cancelDisplay = false;
               }
             this.sortDropdownValues(defaultOption, otherOptions);
             }
@@ -589,6 +608,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
+    this.isMailingAddressMissing = false;
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      this.isMailCodeMissing = false;
+    }
     if(this.communicationLetterTypeCode === undefined || this.communicationLetterTypeCode === ''){
       this.communicationLetterTypeCode = event.templateTypeCode;
     }
@@ -609,16 +632,16 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         });
     } else if((event.subTypeCode === CommunicationEventTypeCode.VendorLetter || event.subTypeCode === CommunicationEventTypeCode.ClientLetter) && (this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile)){
       this.setDraftedTemplate(event);
-    } 
+    }
     else{
       this.loadNewTemplate(event);
-    }   
+    }
   }
 
   loadNewTemplate(event:any){
     if (event.documentTemplateId) {
       this.loaderService.show();
-   
+
       this.communicationFacade.loadTemplateById(event.documentTemplateId)
         .subscribe({
           next: (data: any) => {
@@ -627,7 +650,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
               this.selectedTemplateContent = data.templateContent;
               this.updatedTemplateContent = data.templateContent;
               this.isOpenLetterTemplate = true;
-              this.loadMailingAddress();            
+              this.loadMailingAddress();
               this.ref.detectChanges();
             }
             this.loaderService.hide();
@@ -637,7 +660,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
           },
         });
-    } 
+    }
     else {
       this.setDraftedTemplate(event);
     }
@@ -646,7 +669,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   private setDraftedTemplate(event: any) {
     if(this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile) {
       this.communicationLetterTypeCode = event.subTypeCode;
-    } 
+    }
     if (event.subTypeCode === this.communicationLetterTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.isOpenLetterTemplate = true;
@@ -678,7 +701,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
     this.ref.detectChanges();
   }
-  
+
   private saveDraftEsignLetterRequest(draftTemplate: any) {
     this.loaderService.show();
     draftTemplate.entity = this.communicationLetterTypeCode;
@@ -721,7 +744,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
  }
 
  cerEmailAttachments(event:any){
-  let isFileExists = false; 
+  let isFileExists = false;
   if (this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
   {
     if(event.length > 0){

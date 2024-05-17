@@ -1,0 +1,55 @@
+
+      <section class="k-dialog-body">
+            <p>
+                  The current version will be replaced and will not be accessible to users. This action cannot be
+                  undone. Update the file name if needed and select the new file.
+            </p>
+            <div class="flex-row">
+                  <div class="flex-col">
+                        <kendo-floatinglabel text="File Name">
+                              <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="fileName">
+                              </kendo-textbox>
+                        </kendo-floatinglabel>
+                  </div>
+                  <div class="flex-col mt-2">
+
+                        <kendo-fileselect
+                        [multiple]="false"
+                        (select)="handleFileSelected($event)"
+                        (remove)="handleFileRemoved($event)"
+                        [(ngModel)]="file"
+                        [ngModelOptions]="{standalone: true}"
+                        [id]="'email'"
+                        >>
+                              <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+                                    <span>
+                                          <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
+                                          <button [attr.aria-label]="files[0].name" *ngIf="files[0]?.documentId"
+                                                kendoButton look="flat" class="card-link-button">
+                                                <a>{{ files[0].name }} </a>
+                                          </button>
+                                          <br>
+                                          <span>{{ files[0]?.size | fileSize }}</span>
+                                    </span>
+                              </ng-template>
+                        </kendo-fileselect>
+                        <kendo-formhint>Max file size 25MB</kendo-formhint>
+                        <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+                        <kendo-formerror *ngIf="showAttachmentRequiredError">
+                          Attachment is required. Please select a file to upload.
+                      </kendo-formerror>
+                  </div>
+            </div>
+      </section>
+
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                              (click)="onCloseUploadFileVersionDetailClicked()"> Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Upload" (click)="uploadClicked()"> Upload </button>
+                  </div>
+            </div>
+
+      </kendo-dialog-actions>

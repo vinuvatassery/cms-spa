@@ -1971,37 +1971,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.workflowFacade.saveForLaterCompleted(true)
-            this.loaderService.hide();
-            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-              else {
-                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-            }else{
-              this.router.navigate(['/case-management/cases']);
-            }
+            this.loaderService.hide();   
           }
         })
       }
       else {
-        if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-          else {
-            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-        }
+        this.workflowFacade.saveForLaterCompleted(true)
       }
     });
   }
@@ -2033,6 +2008,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     else {
       isValid = true;
+    }
+    if(this.contactInfoForm.valid){
+      isValid = true
+    }else{
+      isValid = false
     }
     return isValid;
   }

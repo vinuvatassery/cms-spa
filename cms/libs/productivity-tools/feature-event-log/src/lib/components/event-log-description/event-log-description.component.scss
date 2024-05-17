@@ -1,5 +1,33 @@
 .innerHtmlWrapper {
     height: 400px;
     overflow: auto;
-    padding: 0px 15px;
+    padding: 15px;
+}
+
+.view_sms_cont{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    display: inline-block;
+    width: 100%;
+    h5{
+        margin-top: 0px;
+        margin-bottom: 4px;
+    }
+}
+.address_bg{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7f7f7;
+    border-radius: 4px;
+    padding: 10px;
+}
+.textborder{
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+    h5{
+        margin-top: 0;
+    }
 }

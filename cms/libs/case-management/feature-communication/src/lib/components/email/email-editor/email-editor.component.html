@@ -141,6 +141,7 @@
   [entityId]="clientId"
   (cerEmailAttachments)="cerEmailAttachmentEvent($event)"
   (contentValidateEvent)="contentValidateHandler($event)"
+  [caseManagerEmail]="caseManagerEmail"
 ></case-management-send-email>
     <kendo-toolbar>
       <kendo-toolbar-buttongroup>
@@ -217,7 +218,7 @@
         <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
        
       </kendo-toolbar-buttongroup>
-      <kendo-toolbar-dropdownbutton
+      <kendo-toolbar-dropdownbutton *ngIf="isAttachmentIconVisible"
       aria-label="attachment"
         icon="attachment"
         [data]="editorUploadOptions"

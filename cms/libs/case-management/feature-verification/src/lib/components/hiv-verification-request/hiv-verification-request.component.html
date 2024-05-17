@@ -1,8 +1,7 @@
 <section [formGroup]="hivVerificationForm">
   <div *ngIf="!isSendRequest">
-    <div
-     > 
-      <div class="verificaton_email"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
+    <div class="flex-row"> 
+      <div class="verificaton_email flex-col flex-col-8"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
         <div  *ngIf="isSendEmailVisiable && isEmailFieldVisible" class="mb-1">
         <kendo-floatinglabel text="Healthcare Provider’s Email Address">
           <kendo-textbox aria-label="healthcare providers email address"
@@ -162,7 +161,7 @@
         <span class="app-c-badge badge-primary">
           <span class="material-icons" aria-label="information" aria-hidden="true" #refresh>info_outline</span>
           <span *ngIf="providerOption === 'CASE_MANAGER'">You will receive a notification once the Case Manager submits the HIV Verification</span>
-          <span *ngIf="providerOption === 'HEALTHCARE_PROVIDER'">You will receive a notification once the provider submits the HIV Verification</span>
+          <span *ngIf="providerOption === 'HEALTHCARE_PROVIDER'">You will receive a notification once the provider submits the HIV Verification. If a Re-send request is sent, the initial request will be cancelled.​</span>
         </span>
       </div>
       <div class="flex-col mt-1" *ngIf ="(uploadedAttachment[0]?.verificationStatusCode !== 'ACCEPT' 

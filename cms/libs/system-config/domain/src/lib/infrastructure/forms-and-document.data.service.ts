@@ -16,4 +16,41 @@ export class FormsAndDocumentDataService
     {
         return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folders`,payLoad);
     }
-}
+
+    loadfolderSort() {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/`);
+    }
+
+    loadFolderFile(payload:any) {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/${payload}`);
+    }
+
+    getFolderName()
+    {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folders`,);
+    }
+
+    uploadFiles(formData:any) {
+        return this.http.post<any>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/files`,
+          formData
+        );
+      }
+    
+    getFormsandDocumentsViewDownload(templateId: string) {
+        let url = `/case-management/forms-documents-config/${templateId}/content`;
+        return this.http.get(
+          `${this.configurationProvider.appSettings.caseApiUrl}` +url,
+          {
+            responseType: 'blob',
+          }
+        );
+      }
+
+
+      uploadAttachments(uploadRequest:FormData, documentTemplateId:any){
+       
+        return this.http.post(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/files/${documentTemplateId}/new-version`,uploadRequest);
+        }
+    }
