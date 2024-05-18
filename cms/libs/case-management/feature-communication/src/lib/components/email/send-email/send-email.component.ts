@@ -16,7 +16,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode, WorkflowTypeCode, VendorContactsFacade, ScreenType, EntityTypeCode, EventGroupCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { UserDataService } from '@cms/system-config/domain';
+import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-config/domain';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
@@ -152,6 +152,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private readonly router: Router,
     private readonly vendorContactFacade: VendorContactsFacade,
+    private readonly fabBadgeFacade: FabBadgeFacade,
     private readonly sanitizer: DomSanitizer) { }
 
   /** Lifecycle hooks **/
@@ -448,6 +449,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           if (data) {
             this.onCloseSendEmailClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Email Saved As Draft');
+            if(this.entityId && this.entityType == FabEntityTypeCode.Client){
+              this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
+            }
           }
           this.loaderService.hide();
           this.navigateConditionally();
