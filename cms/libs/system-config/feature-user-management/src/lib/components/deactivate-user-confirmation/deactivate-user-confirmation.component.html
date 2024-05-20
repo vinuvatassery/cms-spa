@@ -1,15 +1,14 @@
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    The selected user will be deactivated and won�t be able to access the
-    application.
+    The user will not be able to access the system. You may re-activate them at any time.
   </p>
 </section>
 
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" aria-label="Cancel" look="outline">Cancel</button>
-      <button kendoButton [primary]="true" aria-label="Deactivate" >Deactivate</button>
+      <button kendoButton [primary]="true" (click)="onDialougeClose()" aria-label="Cancel" look="outline">Cancel</button>
+      <button kendoButton [primary]="true" (click)="onDeactivateClick()" onclick="onDeactivateClick" aria-label="Deactivate" >Deactivate</button>
     </div>
   </div>
 </kendo-dialog-actions>

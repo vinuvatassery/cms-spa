@@ -50,6 +50,7 @@ export class UserListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   showExportLoader = false;
+  loginUserId= "";
   active = "Active";
   inActive = "Inactive";
   statusList: any = [{ code: this.active, name: this.active }, { code: this.inActive, name: this.inActive }];
@@ -267,6 +268,10 @@ export class UserListComponent implements OnInit, OnChanges {
     this.isUserDeactivatePopup = false;
   }
   onUserDeactivateClicked(data: any) {
+    if(data.loginUserId)
+    {
+      this.loginUserId = data.loginUserId;
+    }
     this.isUserDeactivatePopup = true;
   }
 
@@ -451,5 +456,14 @@ export class UserListComponent implements OnInit, OnChanges {
 
   ngAfterViewInit() {
     this.defaultColumnState = this.usersGrid.columns.toArray();
+  }  filterActionButtonOptions(options: any[], actionType: any): any[] {
+    let filteredOptions: any[] = [];
+    if (actionType.status !== "Active") {
+      filteredOptions = options.filter((option) => option.type != 'Deactivate');
+    } else {
+      filteredOptions = options.filter((option) => option.type != 'Reactivate');
+    }
+    return filteredOptions;
   }
+
 }

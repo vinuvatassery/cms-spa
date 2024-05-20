@@ -213,6 +213,7 @@
 <!-- Deactivate User Modal Html-->
 <kendo-dialog *ngIf="isUserDeactivatePopup" (close)="onUserDeactivateClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Deactivate User </kendo-dialog-titlebar>
-  <system-config-deactivate-user-confirmation></system-config-deactivate-user-confirmation>
+  <kendo-dialog-titlebar> Deactivate user?</kendo-dialog-titlebar>
+  <system-config-deactivate-user-confirmation 
+    [userId]="loginUserId" [status]="inActive" (closeDeactivateUsers)="onUserDeactivateClosed()" ></system-config-deactivate-user-confirmation>
 </kendo-dialog>

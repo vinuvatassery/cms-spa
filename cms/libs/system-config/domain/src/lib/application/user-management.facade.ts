@@ -597,4 +597,17 @@ export class UserManagementFacade {
       },
     });
   }
+
+  deactivateUser(user : any){
+    this.userDataService.deActivateUserRole(user).subscribe({
+      next: () => {
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Added Successfully');
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    })
+  }
+
+
 }
