@@ -10,6 +10,7 @@ import {
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { group } from '@angular/animations';
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
@@ -27,12 +28,14 @@ export class UserDetailComponent implements OnInit {
   userAccessTypeLovData: any = null;
   userRoleTypeCodeLovData: any = null;
   isCaseManagerSelected = true;
-  isAccessTypeInternal = false;
+  isAccessTypeInternal = true;
   activeFlag = 'Y';
   userAccessType: any;
   userRoleType: string = "";
-  userRolesList = [];
+  selectedUserRolesList: any = [];
   userFormGroup!: FormGroup;
+  selectedDomain: any = null;
+  selectedGroup: any = null;
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
@@ -93,13 +96,6 @@ export class UserDetailComponent implements OnInit {
       },
       error: (err) => {},
     });
-
-    this.ddlUserRole$.subscribe({
-      next: (data) => {
-        this.userRolesList = data;
-      },
-      error: (err) => {}
-    })
   }
 
   onUserAccessValueChange(event: Event){
@@ -138,6 +134,26 @@ export class UserDetailComponent implements OnInit {
 
   onUserSaveButtonClick(){
     this.userFormGroup.markAllAsTouched();
+    let formControls = this.userFormGroup.controls;
+    let user = {
+      userTypeCode: formControls["userAccessType"].value,
+      firstName: formControls["firstName"].value,
+      lastName: formControls["lastName"].value,
+      email: formControls["email"].value,
+      roles: this.selectedUserRolesList,
+      domainCode: formControls["domain"].value.lovCode,
+      assistorGroupCode: formControls["group"].value.lovCode,
+      pOrNbr: formControls["pNumber"].value
+    };
+    this.userManagementFacade.addUser(user);
   }
+
+  onRoleValueChange(roles: any){
+    this.selectedUserRolesList = [];
+    roles.forEach((role: any) => {
+      this.selectedUserRolesList.push(role.roleCode);
+    });
+  }
+
 
 }

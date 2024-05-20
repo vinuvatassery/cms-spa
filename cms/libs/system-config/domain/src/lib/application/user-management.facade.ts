@@ -583,4 +583,18 @@ export class UserManagementFacade {
       },
     });
   }
+
+  addUser(userData: any) {
+    this.showLoader();
+    this.userDataService.addUser(userData).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message)
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 }
