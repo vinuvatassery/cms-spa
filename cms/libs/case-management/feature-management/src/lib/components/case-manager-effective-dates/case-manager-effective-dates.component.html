@@ -42,6 +42,9 @@
           <kendo-formerror
           *ngIf="!effectiveDatesForm.controls['endDate'].valid && !endDateValidator && startDateIsGreaterThanEndDate">End date must be after Start date
         </kendo-formerror>
+        <kendo-formerror
+          *ngIf="!effectiveDatesForm.controls['endDate'].valid && !endDateValidator && endDateInvalid">End date must be valid date
+        </kendo-formerror>
         </div>
       </div>
   </section>
