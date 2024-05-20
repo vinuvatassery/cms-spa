@@ -42,5 +42,12 @@ export class CptCodeService {
     }
     return this.http.put(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/cpt-code/${cptCodeId}`, body);
   }
+  
+  changeCptCodeStatus(cptCodeId: string, status: boolean) {
+    const options = {
+      status: status,
+    }
+    return this.http.patch(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/cpt-code/${cptCodeId}`, options);
+  }
 
 }

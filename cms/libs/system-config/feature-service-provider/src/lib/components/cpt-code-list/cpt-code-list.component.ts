@@ -6,11 +6,13 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { Subject, first } from 'rxjs';
+import { DocumentFacade } from '@cms/shared/util-core';
 
 
 
@@ -20,6 +22,14 @@ import { Subject, first } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CptCodeListComponent implements OnInit, OnChanges {
+
+
+  constructor(
+    private readonly documentFacade: DocumentFacade,
+    private readonly cdr: ChangeDetectorRef,
+  ) {
+
+  }
 
   /** Public properties **/
   isCptCodeDetailPopup = false;
@@ -37,13 +47,17 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   @Input() editCptCode$: any;
   @Input() cptCodeProfilePhoto$: any;
   @Input() cptCodeListDataLoader$: any;
+  @Input() cptCodeChangeStatus$: any;
+  @Input() exportButtonShow$: any;
   @Output() loadCptCodeListsEvent = new EventEmitter<any>();
   @Output() cptCodeFilterColumnEvent = new EventEmitter<any>();
   @Output() addCptCodeEvent = new EventEmitter<string>();
   @Output() editCptCodeEvent = new EventEmitter<string>();
-
+  @Output() deactivateConfimEvent = new EventEmitter<string>();
+  @Output() reactivateConfimEvent = new EventEmitter<string>();
+  @Output() exportGridEvent$ = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'cptCode1';
+  sortColumn = 'CPT Code';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -51,12 +65,11 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   isFiltered = false;
   isEditCptCode = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn: any = 'ALL';
   gridDataResult!: GridDataResult;
   isCptCodeListGridLoaderShow = false;
   gridCptCodeDataSubject = new Subject<any>();
-  gridCptCodeData$ =
-  this.gridCptCodeDataSubject.asObservable();
+  gridCptCodeData$ = this.gridCptCodeDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -64,8 +77,21 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   cptCodeId!: any;
   editButtonEmitted = false;
   selectedCptCode!: any;
+  changeStatusButtonEmitted = false;
+  columnName: any = "";
+  selectedActiveFlag = "";
+  showExportLoader = false;
+  columns: any = {
+    ALL: 'All Columns',
+    cptCode1: "CPT Code",
+    serviceDesc: "Service Description",
+    lastModificationTime: "Last Modified",
+    medicaidRate: "Medicaid Rate",
+    activeFlag: "Status",
+  };
 
-  public moreActions = [
+
+  public moreActions = (dataItem: any) => [
     {
       buttonType: "btn-h-primary",
       text: "Edit",
@@ -79,10 +105,17 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     },
     {
       buttonType: "btn-h-primary",
-      text: "Deactivate",
-      icon: "block",
+      text: dataItem.activeFlag === 'Active' ? 'Deactivate' : 'Reactivate',
+      icon: dataItem.activeFlag === 'Active' ? "block" : 'done',
       click: (data: any): void => {
-        this.onCptCodeDeactivateClicked();
+        if (!this.changeStatusButtonEmitted && data.cptCodeId) {
+          this.changeStatusButtonEmitted = true;
+          if (dataItem.activeFlag === 'Active') {
+            this.onCptCodeDeactivateClicked(data.cptCodeId);
+          } else {
+            this.onCptCodeReactiveClicked(data.cptCodeId);
+          }
+        }
       },
     }
   ];
@@ -111,6 +144,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       this.sortType
     );
   }
+
   loadCptCodeLitData(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -123,10 +157,9 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       maxResultCount: maxResultCountValue,
       sorting: sortValue,
       sortType: sortTypeValue,
-      filter: JSON.stringify(this.filter)
+      filter: this.filter !== null && this.filter !== '' ? JSON.stringify(this.filter) : null
     };
     this.loadCptCodeListsEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
   }
   loadCptCodeFilterColumn() {
     this.cptCodeFilterColumnEvent.emit();
@@ -134,7 +167,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   }
   onChange(data: any) {
     this.defaultGridState();
-
+    let operator = 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
@@ -142,7 +175,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
           filters: [
             {
               field: this.selectedColumn ?? 'cptCode1',
-              operator: 'startswith',
+              operator: operator,
               value: data,
             },
           ],
@@ -154,6 +187,11 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
+
+  onSearch(searchValue: any) {
+    this.onChange(searchValue);
+  }
+
   dropdownFilterChange(
     field: string,
     value: any,
@@ -170,6 +208,10 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       ],
       logic: 'or',
     });
+
+    // if(field == "activeFlag"){
+    //   this.selectedActiveFlag = value;
+    // }
   }
 
   defaultGridState() {
@@ -191,6 +233,35 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = this.columns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    
+    if (stateData.filter?.filters.length > 0) {
+      const filterList = [];
+      this.isFiltered = true;
+      debugger;
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      //this.filter = "";
+      this.isFiltered = false;
+    }
+   
+    this.loadCptCodeList();
+  }
+
+  setToDefault() {
+    this.defaultGridState();
+    this.sortColumn = 'CPT Code';
+    this.sortType = 'asc';
+    this.sortDir = this.sortType === 'asc' ?  'Ascending' : "";
+    this.filter = '';
+    this.isFiltered = false;
+    this.sortValue = 'cptCode1';
+    this.sort = this.sortValue;
+    this.searchValue = '';
     this.loadCptCodeList();
   }
 
@@ -205,22 +276,24 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.cptCodeDataLists$.subscribe((data: GridDataResult) => {
+  onClickedExport() {
+    this.showExportLoader = true;
+     const params = {
+       SortType: this.sortType,
+       Sorting: this.sortValue,
+       Filter: JSON.stringify(this.state?.filter?.filters ?? []),
+     };
+     this.exportGridEvent$.emit(params);
+     this.exportButtonShow$.subscribe((response: any) =>
+     {
+       if(response)
+       {
+         this.showExportLoader = false
+         this.cdr.detectChanges()
+       }
+     });
+   }
 
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridCptCodeDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isCptCodeListGridLoaderShow = false;
-      }
-    }
-    );
-    this.isCptCodeListGridLoaderShow = false;
-  }
 
   onEditCptCodeDetailsClicked(cptCode: any) {
     this.selectedCptCode = cptCode;
@@ -246,12 +319,13 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.isCptCodeDeletePopupShow = true;
   }
   onCloseCptCodeDeactivateClicked() {
+    this.changeStatusButtonEmitted = false;
     this.isCptCodeDeactivatePopupShow = false;
   }
-  onCptCodeDeactivateClicked() {
+  onCptCodeDeactivateClicked(cptCodeId: any) {
+    this.cptCodeId = cptCodeId;
     this.isCptCodeDeactivatePopupShow = true;
   }
-
   addCptCode(data: any): void {
     this.addCptCodeEvent.emit(data);
     this.addCptCode$.pipe(first((response: any) => response != null))
@@ -262,7 +336,10 @@ export class CptCodeListComponent implements OnInit, OnChanges {
         this.onCloseCptCodeDetailClicked();
       })
   }
-
+  onCptCodeReactiveClicked(cptCodeId: string) {
+    this.cptCodeId = cptCodeId;
+    this.handleCptCodeReactive(true);
+  }
   editCptCode(data: any): void {
     data["cptCodeId"] = this.cptCodeId;
     this.editCptCodeEvent.emit(data);
@@ -273,7 +350,35 @@ export class CptCodeListComponent implements OnInit, OnChanges {
         }
         this.onCloseCptCodeDetailClicked();
       })
-    
+  }
+
+  handleCptCodeDeactive(isDeactivate: any) {
+    if (isDeactivate) {
+      this.changeStatusButtonEmitted = false;
+      this.deactivateConfimEvent.emit(this.cptCodeId);
+
+      this.cptCodeChangeStatus$.pipe(first((response: any) => response != null))
+        .subscribe((response: any) => {
+          if (response ?? false) {
+            this.loadCptCodeList()
+          }
+          this.onCloseCptCodeDeactivateClicked();
+        })
+    }
+  }
+
+  handleCptCodeReactive(isReactivate: any) {
+    if (isReactivate) {
+      this.changeStatusButtonEmitted = false;
+      this.reactivateConfimEvent.emit(this.cptCodeId);
+
+      this.cptCodeChangeStatus$.pipe(first((response: any) => response != null))
+        .subscribe((response: any) => {
+          if (response ?? false) {
+            this.loadCptCodeList()
+          }
+        })
+    }
   }
 
 }
