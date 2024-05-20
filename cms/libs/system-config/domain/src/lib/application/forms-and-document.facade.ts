@@ -160,9 +160,13 @@ export class FormsAndDocumentFacade {
           next: (response:any) => {
             this.renameSubject.next(response);
             if (response) {
+              var filter={
+                sort : true,
+                active: 'A'
+              }
               this.loaderService.hide();
               this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
-              this.loadFolderFile(true);
+              this.loadFolderFile(filter);
               this.getFolderName();
             }
           },
