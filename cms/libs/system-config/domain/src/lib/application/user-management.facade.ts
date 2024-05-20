@@ -97,6 +97,7 @@ export class UserManagementFacade {
   rolesUserListProfilePhotoSubject = new Subject();
   private removePhotoResponseSubject = new Subject<any>();
   private uploadPhotoResponseSubject = new Subject<any>();
+  private isShowUserDetailPopupSubject = new Subject<any>();
 
   /** Public properties **/
   users$ = this.userSubject.asObservable();
@@ -132,6 +133,7 @@ export class UserManagementFacade {
   ddlStates$ = this.ddlStatesSubject.asObservable();
   removePhotoResponse$ = this.removePhotoResponseSubject.asObservable();
   uploadPhotoResponse$ = this.uploadPhotoResponseSubject.asObservable();
+  isShowUserDetailPopup$ = this.isShowUserDetailPopupSubject.asObservable();
 
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
@@ -589,12 +591,17 @@ export class UserManagementFacade {
     this.userDataService.addUser(userData).subscribe({
       next: (response : any) => {
         this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message)
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+        this.showOrHideUserDetailPopup(false);
       },
       error: (err) => {
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+  }
+
+  showOrHideUserDetailPopup(isShowPopup: boolean){
+    this.isShowUserDetailPopupSubject.next(isShowPopup);
   }
 }
