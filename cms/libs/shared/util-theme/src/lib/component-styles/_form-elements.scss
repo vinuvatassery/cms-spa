@@ -1194,3 +1194,21 @@ kendo-timepicker {
   min-height: 80px;
   max-height: 120px;
 }
+
+.doc_activeflag{
+
+}
+
+.file_status{
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+ &.active_file{
+  color: #ffffff;
+  background: #0b7241;
+ }
+ &.inactive_file{
+  color: #ffffff;
+  background: #804a01;
+ }
+}
