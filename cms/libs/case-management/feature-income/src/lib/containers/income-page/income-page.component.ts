@@ -238,7 +238,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private save() {
-    debugger
     this.removeValidations();
     this.hasClientDependentsMinorAdditionalIncomeFlag = false
     this.hasClientDependentsMinorEmployedFlag = false
