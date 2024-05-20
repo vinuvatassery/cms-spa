@@ -201,12 +201,6 @@
       </ng-template>
     </kendo-grid>
   </div>
-  <div class="mt-2 block-section">
-    <!-- Add User Button -->
-    <button icon="add" kendoButton [primary]="true" aria-label="User" (click)="onUserDetailsClicked(false)">
-      User
-    </button>
-  </div>
 </section>
 <!-- Add User Modal Html-->
 <kendo-dialog *ngIf="isUserDetailsPopup" (close)="onUserDetailsClosed()"

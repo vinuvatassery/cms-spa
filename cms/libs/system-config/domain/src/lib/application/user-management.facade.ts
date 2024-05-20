@@ -323,8 +323,8 @@ export class UserManagementFacade {
     });
   }
 
-  loadUserAssignedRolesByUserId(data: any){
-    return this.userDataService.loadUserAssignedRolesByUserId(data);
+  loadUserAssignedRolesByUserId(userId:any, data: any){
+    return this.userDataService.loadUserAssignedRolesByUserId(userId, data);
    }
 
   loadUserFilterColumn(): void {
