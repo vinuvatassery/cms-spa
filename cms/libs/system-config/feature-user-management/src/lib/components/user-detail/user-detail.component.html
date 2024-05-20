@@ -55,31 +55,43 @@
           name="email"> </kendo-textbox>
         </kendo-floatinglabel>
       </div>
+
       <div class="flex-col">
-        <kendo-floatinglabel text="User Role">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlUserRole$ | async"
-            valueField="roleCode" textField="roleDesc"
-            formControlName="role"
-            name="role"> </kendo-dropdownlist>
-            <kendo-formerror *ngIf="userFormControls?.role.errors?.required
-                              && userFormControls?.role.touched">
+        <kendo-floatinglabel text="Role" class="inline-search-loader">
+        <kendo-multiselect
+        [readonly]="false"
+        [fillMode]="formUiStyle.dropDownFillMode"
+        [data]="ddlUserRole$ | async"
+        [allowCustom]="true"
+        aria-label="role"
+        valueField="roleCode" 
+        textField="roleDesc"  
+        (valueChange)="onRoleValueChange($event)"
+        [valuePrimitive]="false"
+        ></kendo-multiselect>
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="userFormGroup.touched
+                              && selectedUserRolesList.length <= 0">
                               Role is required.
         </kendo-formerror>
-        </kendo-floatinglabel>
       </div>
-      <div class="flex-col" *ngIf="isCaseManagerSelected">
+
+      <div class="flex-col" *ngIf="!isAccessTypeInternal">
         <kendo-floatinglabel text="Domain">
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="caseManagerDomainLov$ | async"
             valueField="lovCode" textField="lovDesc"
             formControlName="domain"
-            name="domain"> </kendo-dropdownlist>
+            [(ngModel)]="selectedDomain"
+            [valuePrimitive] = false
+            > </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col" *ngIf="isCaseManagerSelected">
+      <div class="flex-col" *ngIf="!isAccessTypeInternal">
         <kendo-floatinglabel text="Group">
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="caseManagerAssistorGrp$ | async"
             valueField="lovCode" textField="lovDesc"
             formControlName="group"
+            [(ngModel)]="selectedGroup"
             name="group"> </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
