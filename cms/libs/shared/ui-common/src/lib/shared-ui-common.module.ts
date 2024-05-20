@@ -58,6 +58,7 @@ import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboar
 import { ClientAttachmentModelComponent } from './client-attachment-model/client-attachment-model.component';
 import { CommonFormDocumentListComponent } from './common-form-document-list/common-form-document-list.component';
 import { DeleteProfilePhotoConfirmationComponent } from './delete-profile-photo-confirmation/delete-profile-photo-confirmation.component';
+import { EditTemplateNameComponent } from './edit-template-name/edit-template-name.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -109,6 +110,7 @@ import { DeleteProfilePhotoConfirmationComponent } from './delete-profile-photo-
     LastMessageDateTimePipe,
     CommonFormDocumentListComponent,
     DeleteProfilePhotoConfirmationComponent,
+    EditTemplateNameComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -159,6 +161,7 @@ import { DeleteProfilePhotoConfirmationComponent } from './delete-profile-photo-
     LastMessageDateTimePipe,
     CommonFormDocumentListComponent,
     DeleteProfilePhotoConfirmationComponent,
+    EditTemplateNameComponent,
   ],
 })
 export class SharedUiCommonModule {}
