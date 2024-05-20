@@ -134,7 +134,7 @@
     </div>
   </kendo-popup>
   <!-- Editor -->
-  <kendo-editor #editor [(value)]="selectedTemplateContent" (valueChange)="editorValueChange($event)">
+  <kendo-editor #editor [(value)]="selectedTemplateContent" [ngClass]="isContentMissing?'invalidEditor':''" (valueChange)="editorValueChange($event)">
   <case-management-send-email
   (editorValue)="emailEditorValueEvent($event)"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
