@@ -302,7 +302,7 @@ export class CommonFormDocumentListComponent implements OnInit {
   onAddFolderClicked(template: TemplateRef<unknown>): void {
     this.renameDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     });
   }
   updateTemplate(payload:any){
