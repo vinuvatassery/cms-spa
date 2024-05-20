@@ -23,34 +23,43 @@
                         <span class="filter-section_items filter--search">
                               <span class="material-icons">search</span>
                               <kendo-floatinglabel text="Search">
-                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" 
-                                    [clearButton]="true" rounded="medium" >
+                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="searchValue"
+                                          (afterValueChanged)="onChange($event)" [clearButton]="true" rounded="medium">
                                     </kendo-textbox>
                               </kendo-floatinglabel>
                         </span>
+                        <span class="right-overlay-export">
+                              <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export"
+                                    (click)="onClickedExport()" [disabled]="showExportLoader">
+                                    <span *ngIf="!showExportLoader" class="material-icons"
+                                          aria-hidden="true">exit_to_app</span>
 
-                        <button kendoButton [primary]="true" look="flat" aria-label="Export">
-                              <span class="material-icons" aria-label="Export"
-                                    aria-invalid="true">exit_to_app</span>Export
-                        </button>
-
+                                    <span *ngIf="showExportLoader"
+                                          class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i
+                                          class="exp_button-text">Export</i>
+                              </button>
+                        </span>
                   </div>
             </div>
       </div>
 
       <!-- Sorted Info show only in list -->
       <div class="table-sorted-info">
-            Sorted by <span class="sort-items">Cpt Code</span>
-            <span class="sort-items">No Filters</span>
+            Sorted {{sortDir}} by <span class="sort-items">{{sortColumn}}</span>
+            <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+            <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
             <span class="sort-items">All Columns</span>
+            <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+                  <a>Set to Default</a>
+            </button>
       </div>
 
       <div class="app-c-table">
             <kendo-grid [data]="cptCodeDataLists$ | async" [loading]="(cptCodeListDataLoader$  | async) === true"
                   [resizable]="true" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
                   [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-                  [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" 
-                  (columnReorder)="onColumnReorder($event)" >
+                  [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
+                  (columnReorder)="onColumnReorder($event)">
                   <kendo-grid-column field="cptCode1" title="CPT Code" [width]="160">
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                               let-filterService="filterService">
@@ -98,20 +107,20 @@
                               </common-grid-cell-date-range-filter>
                         </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="lastModifierId" title="Modified By" [width]="120" class="text-center" [columnMenu]="false" [sortable]="false" [filterable]="false">
+                  <kendo-grid-column field="lastModifierId" title="Modified By" [width]="120" class="text-center"
+                        [columnMenu]="false" [sortable]="false" [filterable]="false">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                          <common-user-photo-icon  
-                          [userId]="dataItem.lastModifierId" 
-                          [userFirstName]="dataItem.userFirstName"
-                          [userLastName]="dataItem.userLastName"
-                          [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
-                          [linkType]="'profileIcon'"
-                          [userPhotos$]="cptCodeProfilePhoto$"></common-user-photo-icon>
+                              <common-user-photo-icon [userId]="dataItem.lastModifierId"
+                                    [userFirstName]="dataItem.userFirstName" [userLastName]="dataItem.userLastName"
+                                    [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+                                    [linkType]="'profileIcon'"
+                                    [userPhotos$]="cptCodeProfilePhoto$"></common-user-photo-icon>
                         </ng-template>
-                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                    
+                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
+                              let-filterService="filterService">
+
                         </ng-template>
-                      </kendo-grid-column>
+                  </kendo-grid-column>
                   <kendo-grid-column field="activeFlag" title="Status" [width]="130">
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                               let-filterService="filterService">
@@ -130,8 +139,9 @@
                   <kendo-grid-column field="cptCodeId" title="Options" [width]="50" class="text-center" [sticky]="true"
                         [columnMenu]="false">
                         <ng-template kendoGridCellTemplate let-dataItem let-cptCodeId="field">
-                              <kendo-dropdownbutton [data]="moreActions(dataItem)" title="More option" aria-label="more actions"
-                                    class="TableActionPopup app-dropdown-action  " buttonClass="k-icon-button"
+                              <kendo-dropdownbutton [data]="moreActions(dataItem)" title="More option"
+                                    aria-label="more actions" class="TableActionPopup app-dropdown-action  "
+                                    buttonClass="k-icon-button"
                                     [popupSettings]="{ popupClass: popupClassAction, animate: true }">
                                     <span class="material-icons" aria-label="More option"> more_vert </span>
                                     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
@@ -190,13 +200,14 @@
 <kendo-dialog *ngIf="isCptCodeDetailPopup" (close)="onCloseCptCodeDetailClicked()"
       class="app-c-modal app-c-modal-md app-c-modal-np">
       <kendo-dialog-titlebar> {{ isEditCptCode ? 'Edit CPT Code' : 'Add New CPT Code' }} </kendo-dialog-titlebar>
-      <system-config-cpt-code-form-details [isEditCptCode]="isEditCptCode" (addCptCodeEvent)="addCptCode($event)" 
-      [selectedCptCode]="selectedCptCode" (editCptCodeEvent)="editCptCode($event)"
-      (closeCptCode)="onCloseCptCodeDetailClicked()"></system-config-cpt-code-form-details>
+      <system-config-cpt-code-form-details [isEditCptCode]="isEditCptCode" (addCptCodeEvent)="addCptCode($event)"
+            [selectedCptCode]="selectedCptCode" (editCptCodeEvent)="editCptCode($event)"
+            (closeCptCode)="onCloseCptCodeDetailClicked()"></system-config-cpt-code-form-details>
 </kendo-dialog>
 
 
 <kendo-dialog *ngIf="isCptCodeDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar (close)="onCloseCptCodeDeactivateClicked()"> Deactivate CPT Code? </kendo-dialog-titlebar>
-      <system-config-cpt-code-deactivate (close)="onCloseCptCodeDeactivateClicked()" (deactivateConfimEvent)="handleCptCodeDeactive($event)"></system-config-cpt-code-deactivate>
+      <system-config-cpt-code-deactivate (close)="onCloseCptCodeDeactivateClicked()"
+            (deactivateConfimEvent)="handleCptCodeDeactive($event)"></system-config-cpt-code-deactivate>
 </kendo-dialog>

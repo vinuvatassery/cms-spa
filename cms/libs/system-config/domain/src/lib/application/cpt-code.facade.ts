@@ -1,7 +1,9 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import {
+  ApiType,
   ConfigurationProvider,
+  DocumentFacade,
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
@@ -55,6 +57,7 @@ export class CptCodeFacade {
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly userManagementFacade: UserManagementFacade,
+    private readonly documentFacade: DocumentFacade,
   ) {}
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -173,6 +176,11 @@ export class CptCodeFacade {
           },
         });
     }
+  }
+
+  onExportAllUser(params: any){
+    const fileName = 'CPT Code List'
+    this.documentFacade.getExportFile(params,`cptCode`, fileName,ApiType.SystemConfig);
   }
 
 }

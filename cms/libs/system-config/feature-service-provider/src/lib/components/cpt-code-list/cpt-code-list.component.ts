@@ -6,11 +6,13 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { Subject, first } from 'rxjs';
+import { DocumentFacade } from '@cms/shared/util-core';
 
 
 
@@ -20,6 +22,14 @@ import { Subject, first } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CptCodeListComponent implements OnInit, OnChanges {
+
+
+  constructor(
+    private readonly documentFacade: DocumentFacade,
+    private readonly cdr: ChangeDetectorRef,
+  ) {
+
+  }
 
   /** Public properties **/
   isCptCodeDetailPopup = false;
@@ -38,15 +48,16 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   @Input() cptCodeProfilePhoto$: any;
   @Input() cptCodeListDataLoader$: any;
   @Input() cptCodeChangeStatus$: any;
+  @Input() exportButtonShow$: any;
   @Output() loadCptCodeListsEvent = new EventEmitter<any>();
   @Output() cptCodeFilterColumnEvent = new EventEmitter<any>();
   @Output() addCptCodeEvent = new EventEmitter<string>();
   @Output() editCptCodeEvent = new EventEmitter<string>();
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
-
+  @Output() exportGridEvent$ = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'cptCode1';
+  sortColumn = 'CPT Code';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -67,6 +78,18 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   editButtonEmitted = false;
   selectedCptCode!: any;
   changeStatusButtonEmitted = false;
+  columnName: any = "";
+  selectedActiveFlag = "";
+  showExportLoader = false;
+  columns: any = {
+    ALL: 'All Columns',
+    cptCode1: "CPT Code",
+    serviceDesc: "Service Description",
+    lastModificationTime: "Last Modified",
+    medicaidRate: "Medicaid Rate",
+    activeFlag: "Status",
+  };
+
 
   public moreActions = (dataItem: any) => [
     {
@@ -134,7 +157,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       maxResultCount: maxResultCountValue,
       sorting: sortValue,
       sortType: sortTypeValue,
-      filter: JSON.stringify(this.filter)
+      filter: this.filter !== null && this.filter !== '' ? JSON.stringify(this.filter) : null
     };
     this.loadCptCodeListsEvent.emit(gridDataRefinerValue);
   }
@@ -185,6 +208,10 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       ],
       logic: 'or',
     });
+
+    // if(field == "activeFlag"){
+    //   this.selectedActiveFlag = value;
+    // }
   }
 
   defaultGridState() {
@@ -206,7 +233,35 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = this.columns[this.sortValue];
     this.filter = stateData?.filter?.filters;
+    
+    if (stateData.filter?.filters.length > 0) {
+      const filterList = [];
+      this.isFiltered = true;
+      debugger;
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      //this.filter = "";
+      this.isFiltered = false;
+    }
+   
+    this.loadCptCodeList();
+  }
+
+  setToDefault() {
+    this.defaultGridState();
+    this.sortColumn = 'CPT Code';
+    this.sortType = 'asc';
+    this.sortDir = this.sortType === 'asc' ?  'Ascending' : "";
+    this.filter = '';
+    this.isFiltered = false;
+    this.sortValue = 'cptCode1';
+    this.sort = this.sortValue;
+    this.searchValue = '';
     this.loadCptCodeList();
   }
 
@@ -220,6 +275,24 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+     const params = {
+       SortType: this.sortType,
+       Sorting: this.sortValue,
+       Filter: JSON.stringify(this.state?.filter?.filters ?? []),
+     };
+     this.exportGridEvent$.emit(params);
+     this.exportButtonShow$.subscribe((response: any) =>
+     {
+       if(response)
+       {
+         this.showExportLoader = false
+         this.cdr.detectChanges()
+       }
+     });
+   }
 
 
   onEditCptCodeDetailsClicked(cptCode: any) {

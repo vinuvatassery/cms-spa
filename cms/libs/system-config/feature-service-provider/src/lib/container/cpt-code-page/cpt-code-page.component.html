@@ -5,9 +5,11 @@
     [addCptCode$]="addCptCode$"
     [editCptCode$]="editCptCode$"
     [cptCodeChangeStatus$]="cptCodeChangeStatus$"
+    [exportButtonShow$]="exportButtonShow$" 
     (loadCptCodeListsEvent)="loadCptCodeLists($event)"
     (editCptCodeEvent) ="handleEditCptCode($event)"
     (addCptCodeEvent)="handleAddCptCode($event)"
     (deactivateConfimEvent)="handleDeactivateCptCode($event)" 
-    (reactivateConfimEvent)="handleReactivateCptCode($event)" >
+    (reactivateConfimEvent)="handleReactivateCptCode($event)"
+    (exportGridEvent$)="onExportAllCPTCode($event)" >
 </system-config-cpt-code-list>
