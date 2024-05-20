@@ -1194,3 +1194,7 @@ kendo-timepicker {
   min-height: 80px;
   max-height: 120px;
 }
+
+.invalidEditor{
+  border: 1px solid $error-color-1 !important;
+}

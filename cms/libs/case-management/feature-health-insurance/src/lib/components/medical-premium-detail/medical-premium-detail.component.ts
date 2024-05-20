@@ -1233,8 +1233,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     // Setting the date to December 31st of the current year
     const endOfYearDate = new Date(nextYear, 0, 0);
 
-    // Subtracting one day to get the last day of the current year
-    endOfYearDate.setDate(endOfYearDate.getDate() - 1);
     return endOfYearDate;
   }
 

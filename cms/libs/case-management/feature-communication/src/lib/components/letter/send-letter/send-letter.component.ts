@@ -201,8 +201,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   handleDdlMailCodesChange(mailCode: any) {
     this.mailingAddress = mailCode;
     this.isMailCodeMissing = false;
+    this.isMailingAddressMissing = false;
     this.selectedMailingCode = mailCode?.mailCode;
     this.isFormValid = true;
+    this.ngDirtyInValid();
   }
 
   private loadClientMailingAddress() {
@@ -270,28 +272,33 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   onSaveForLaterClicked() {
-    this.isShowSaveForLaterPopupClicked = true;
-  }
-
-  onSaveForLaterTemplateClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
-    if(!this.mailingAddress){
+    if (!this.mailingAddress) {
       this.isMailingAddressMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
-      }
-    if(this.notificationGroup === ScreenType.VendorProfile){
-      if(this.mailingAddress === undefined || this.mailingAddress === ''){
-      this.isMailCodeMissing = true;
-      this.isFormValid = false;
-      this.onCloseSaveForLaterClicked();
+    }
+    if (this.notificationGroup === ScreenType.VendorProfile) {
+      if (this.mailingAddress === undefined || this.mailingAddress === '') {
+        this.isMailCodeMissing = true;
+        this.isFormValid = false;
+        this.onCloseSaveForLaterClicked();
       }
     }
+
+    if (this.isFormValid) {
+      this.isShowSaveForLaterPopupClicked = true;
+    }
+
+    this.ngDirtyInValid();
+  }
+
+  onSaveForLaterTemplateClicked() {    
     if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = true;
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
@@ -351,10 +358,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
   }
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
+    }
+    else{
+      this.isContentMissing = false;
     }
     if(this.notificationGroup === ScreenType.VendorProfile){
       if(this.mailingAddress === undefined || this.mailingAddress === ''){
@@ -500,9 +510,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   onSendLetterToPrintClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
       this.isContentMissing = true;
       this.isFormValid = false;
+    }
+    else{
+      this.isContentMissing = false;
     }
     if(this.notificationGroup === ScreenType.VendorProfile){
       if(this.mailingAddress === undefined || this.mailingAddress === ''){
@@ -519,6 +532,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.isShowSendLetterToPrintPopupClicked=true;
     this.isShowPreviewLetterPopupClicked=false;
     }
+
+    this.ngDirtyInValid();
   }
 
   onCloseNewLetterClicked() {
@@ -856,10 +871,27 @@ loadMailingAddress() {
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;
+  if(!(this.updatedTemplateContent  === undefined) || !(this.updatedTemplateContent === '') || !(this.updatedTemplateContent === "") || !(this.updatedTemplateContent.trim() === '<p></p>')){
+    this.isContentMissing = false;
+  }
+  this.ref.detectChanges();
 }
 
 contentValidateEvent(event: boolean){
   this.isFormValid = event;
+}
+
+ngDirtyInValid() {
+  if (this.isMailCodeMissing) {
+    document.getElementById('mailCode')?.classList.remove('ng-valid');
+    document.getElementById('mailCode')?.classList.add('ng-invalid');
+    document.getElementById('mailCode')?.classList.add('ng-dirty');
+  }
+  else {
+    document.getElementById('mailCode')?.classList.remove('ng-invalid');
+    document.getElementById('mailCode')?.classList.remove('ng-dirty');
+    document.getElementById('mailCode')?.classList.add('ng-valid');
+  }
 }
 
 }
