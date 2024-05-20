@@ -37,23 +37,35 @@
         <kendo-floatinglabel text="First Name">
           <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
           name="firstName"
-          formControlName="firstName"> </kendo-textbox>
+          formControlName="firstName"> </kendo-textbox>          
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="userFormControls?.firstName.errors?.required
+                              && userFormControls?.firstName.touched">
+                              First Name is required.
+        </kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Last Name">
           <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
           formControlName="lastName"
-          name="lastName"> </kendo-textbox>
+          name="lastName"> </kendo-textbox>          
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="userFormControls?.lastName.errors?.required
+                              && userFormControls?.lastName.touched">
+                              Last Name is required.
+        </kendo-formerror>
       </div>
 
       <div class="flex-col">
         <kendo-floatinglabel text="Email Address">
           <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
           formControlName="email"
-          name="email"> </kendo-textbox>
+          name="email"> </kendo-textbox>          
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="userFormControls?.email.errors?.required
+                              && userFormControls?.email.touched">
+                              Email is required.
+        </kendo-formerror>
         <kendo-formerror *ngIf="userFormGroup?.get('email')?.invalid && userFormGroup?.get('email')?.errors?.['pattern'] && (userFormGroup?.get('email')?.touched)">Incorrect Email Format.</kendo-formerror>
       </div>
 
@@ -86,7 +98,7 @@
             > </kendo-dropdownlist>
             <kendo-formerror *ngIf="userFormControls?.domain.errors?.required
                                 && userFormControls?.domain.touched">
-                              Role is required.
+                              Domain is required.
         </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -99,7 +111,7 @@
             name="group"> </kendo-dropdownlist>
             <kendo-formerror *ngIf="userFormControls?.group.errors?.required
                                 && userFormControls?.group.touched">
-                              Role is required.
+                              Group is required.
         </kendo-formerror>
         </kendo-floatinglabel>
       </div>

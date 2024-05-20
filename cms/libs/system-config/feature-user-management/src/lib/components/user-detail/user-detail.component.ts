@@ -31,7 +31,7 @@ export class UserDetailComponent implements OnInit {
   isAccessTypeInternal = true;
   activeFlag = 'Y';
   userAccessType: any = UserAccessType.Internal;
-  userRoleType: string = "";
+  userRoleType: string = UserAccessType.Internal;
   selectedUserRolesList: any = [];
   userFormGroup!: FormGroup;
   selectedDomain: any = null;
@@ -59,9 +59,9 @@ export class UserDetailComponent implements OnInit {
     this.userFormGroup = new FormGroup({
       userAccessType: new FormControl(''),
       pNumber: new FormControl('', { validators: Validators.required }),
-      firstName: new FormControl(''),
-      lastName: new FormControl(''),
-      email: new FormControl('', {validators: Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)}),
+      firstName: new FormControl('', { validators: Validators.required }),
+      lastName: new FormControl('', { validators: Validators.required }),
+      email: new FormControl('', {validators: [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]}),
       role: new FormControl([], { validators: Validators.required }),
       domain: new FormControl({}),
       group: new FormControl({})
@@ -103,17 +103,17 @@ export class UserDetailComponent implements OnInit {
     let value = (event.target as HTMLInputElement).value.toUpperCase();
     if(value == UserAccessType.Internal){
       this.isAccessTypeInternal = true;
-      this.setValidators(null);
+      this.setValidators(null, Validators.required);
     }else{
       this.isAccessTypeInternal = false;
-      this.setValidators(Validators.required);
+      this.setValidators(Validators.required, null);
     }
     this.disableFields();
     this.userRoleType = this.getUserRoleType(value);
     this.loadDdlUserRole();
   }
 
-  setValidators(vaidator: any){
+  setValidators(vaidator: any, pNumberValidator: any){
     this.userFormGroup.controls['domain'].setValidators(
       vaidator
     );
@@ -123,6 +123,11 @@ export class UserDetailComponent implements OnInit {
       vaidator
     );
     this.userFormGroup.controls['group'].updateValueAndValidity();
+
+    this.userFormGroup.controls['pNumber'].setValidators(
+      pNumberValidator
+    );
+    this.userFormGroup.controls['pNumber'].updateValueAndValidity();
   }
 
   getUserRoleType(userType: any){
