@@ -4,7 +4,7 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
-import { map } from 'rxjs';
+import { ActiveInactiveFlag } from '../enums/active-inactive-flag.enum';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -308,4 +308,13 @@ export class CommonFormDocumentListComponent implements OnInit {
   updateTemplate(payload:any){
     this.formsAndDocumentFacade.updateTemplate(payload);
   }
+  getFlagValue(flag:any){
+    if(flag== ActiveInactiveFlag.Yes)
+      return 'Active';
+    else
+      return 'Inactive';
+  }
 }
+
+ 
+

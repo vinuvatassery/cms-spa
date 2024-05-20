@@ -51,12 +51,12 @@
                   <kendo-grid-column field="scenarioDescription" title="Scenario Description" [width]="220">
                   </kendo-grid-column>
                   <kendo-grid-column field="defaultMethod" title="Default Method" [width]="130">
-                        <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-formGroup="formGroup">
+                        <ng-template  *ngIf="isGridRowEdit"  let-dataItem="dataItem" let-formGroup="formGroup">
                               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"> </kendo-dropdownlist>
 
                         </ng-template>
 
-                        <ng-template kendoGridCellTemplate let-dataItem>
+                        <ng-template  *ngIf="!isGridRowEdit"  let-dataItem>
                               {{ dataItem.defaultMethod }}
                         </ng-template>
                   </kendo-grid-column>
@@ -82,18 +82,18 @@
                   </kendo-grid-column>
                   <kendo-grid-column field="status" title="Status" [width]="130">
                   </kendo-grid-column>
-                  <kendo-grid-column field="" title="" [width]="50" class="text-center" [sticky]="true"
+                  <kendo-grid-column field="" title="" [width]="optionWidth" class="text-center" [sticky]="true"
                         [columnMenu]="false">
-                        <ng-template kendoGridCellTemplate let-isNew="isNew">
+                        <ng-template kendoGridCellTemplate let-isNew="isNew" let-dataItem>
 
-                              <button kendoGridEditCommand class="clear-icon-btn" [primary]="true" fillMode="flat"
+                              <button *ngIf="!isGridRowEdit" (click)="editHandler(dataItem)" kendoButton class="clear-icon-btn" [primary]="true" fillMode="flat"
                                     aria-label="Edit Default" title="Edit Default">
                                     <span class="material-icons" aria-hidden="true"> edit </span></button>
-                              <div class="d-flex">
-                                    <button kendoGridSaveCommand [primary]="true" aria-label="Save" title="Save">
+                              <div class="d-flex" *ngIf="isGridRowEdit">
+                                    <button kendoButton [primary]="true" (click)="saveHandler(dataItem)" aria-label="Save" title="Save">
                                           <span class="material-icons" aria-hidden="true"> save </span>
                                     </button>
-                                    <button kendoGridCancelCommand
+                                    <button kendoButton (click)="cancelHandler(dataItem)"
                                           class="k-icon-button small-i-btn fade-5 btn-h-danger ml-1" aria-label="cancel"
                                           title="cancel">
                                           <span class="material-icons" aria-hidden="true">close</span>
@@ -164,7 +164,7 @@
                               (click)="onCloseUpdateDefaultNotificationClicked()">
                               Cancel
                         </button>
-                        <button kendoButton [primary]="true" aria-label="Update">
+                        <button kendoButton [primary]="true" (click)="updateButton()" aria-label="Update">
                               Update
                         </button>
                   </div>

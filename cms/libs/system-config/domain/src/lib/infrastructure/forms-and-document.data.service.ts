@@ -22,7 +22,7 @@ export class FormsAndDocumentDataService
     }
 
     loadFolderFile(payload:any) {
-        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/${payload}`);
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/${payload.sort}/${payload.active}`);
     }
 
     getFolderName()

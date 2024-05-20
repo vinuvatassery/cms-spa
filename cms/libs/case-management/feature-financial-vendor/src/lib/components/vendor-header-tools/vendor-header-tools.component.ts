@@ -88,7 +88,7 @@ export class VendorHeaderToolsComponent {
           this.saveForLaterHeadterText = "Letter Draft Saved";
           this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the vendor's profile";
           this.confirmPopupHeader = 'Send Letter to Print?';
-          this.confirmationModelText="This action cannot be undone.";
+          this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
           this.notificationDraftCheck(this.vendorId, this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
@@ -111,7 +111,7 @@ export class VendorHeaderToolsComponent {
           this.saveForLaterHeadterText = "Email Draft Saved";
           this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the vendor's profile";
           this.confirmPopupHeader = 'Send Email?';
-          this.confirmationModelText="This action cannot be undone.";
+          this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
           this.notificationDraftCheck(this.vendorId, this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },

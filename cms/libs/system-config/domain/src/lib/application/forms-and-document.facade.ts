@@ -11,6 +11,8 @@ export class FormsAndDocumentFacade {
     addNewFolder$ =  this.addFolderSubject.asObservable();
     private formsDocumentsSubject = new Subject<any>();
     formsDocumentsList$ = this.formsDocumentsSubject.asObservable();
+    private popupFormsDocumentsSubject = new Subject<any>();
+    popupFormsDocumentsList$ = this.popupFormsDocumentsSubject.asObservable();
     private folderSortSubject = new Subject<any>();
     folderSort$ = this.folderSortSubject.asObservable();
     private getFolderSubject = new BehaviorSubject<any>([]);
@@ -63,6 +65,19 @@ export class FormsAndDocumentFacade {
             },
         })
     }
+    loadFolderFilePopup(payLoad:any) {
+      this.showLoader();
+      this.uploadFormandDocumentService.loadFolderFile(payLoad).subscribe({
+          next: (response) => {
+              this.popupFormsDocumentsSubject.next(response);
+              this.hideLoader();
+          },
+          error: (err) => {
+              this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+              this.hideLoader();
+          },
+      })
+  }
     getFormsandDocumentsViewDownload(id: string) {
         return this.uploadFormandDocumentService.getFormsandDocumentsViewDownload(id);
       }
@@ -74,10 +89,14 @@ export class FormsAndDocumentFacade {
             this.addFolderSubject.next(response);
             if (response) 
             {
-                this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
-                this.hideLoader();
-                this.loadFolderFile(true);
-                this.getFolderName();
+              var filter={
+                sort : true,
+                active: 'A'
+              }
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+              this.hideLoader();
+              this.loadFolderFile(filter);
+              this.getFolderName();
             } 
         },
           error: (err) => 
@@ -102,10 +121,14 @@ export class FormsAndDocumentFacade {
             this.showLoader()
             this.uploadFormandDocumentService.uploadFiles(formData).subscribe({
               next:(response) => {
+                var filter={
+                  sort : true,
+                  active: 'A'
+                }
                 this.uploadFilesSubject.next(response);
                 this.hideLoader();
                 this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
-                this.loadFolderFile(true);
+                this.loadFolderFile(filter);
               },
               error: (err) => {
                 this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
