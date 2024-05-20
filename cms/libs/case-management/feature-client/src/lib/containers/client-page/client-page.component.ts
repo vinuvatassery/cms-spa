@@ -1629,18 +1629,9 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
             
               }
             });
-          } 
-          else if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
+          }else{ 
+            this.workFlowFacade.ApplicationDetailsValidationsSuccess = true
+          this.workFlowFacade.saveForLaterCompleted(true)
           }
         }
       );
@@ -1653,6 +1644,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (!this.checkValidations()) {
             this.workFlowFacade.showCancelApplicationPopup(true);
           } else {
+            this.workFlowFacade.ApplicationDetailsValidationsSuccess = true
             this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
           }
         }

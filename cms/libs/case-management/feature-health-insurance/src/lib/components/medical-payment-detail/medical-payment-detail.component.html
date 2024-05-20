@@ -75,7 +75,7 @@
                 <div class="flex-col flex-col-4">
                         <kendo-floatinglabel text="Invoice ID">
                             <kendo-textbox aria-label="Invoice ID" [fillMode]="formUiStyle.inputFillMode"
-                                formControlName="invoiceId">
+                                formControlName="invoiceId" [maxlength]="20" (keypress)="restrictSpecialChar($event)">
                             </kendo-textbox>
                         </kendo-floatinglabel>
                         <kendo-formerror *ngIf="(!claimForm.controls['invoiceId'].valid) && isSubmitted"

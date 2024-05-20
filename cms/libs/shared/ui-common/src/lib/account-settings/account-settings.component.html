@@ -227,6 +227,7 @@
                   <kendo-floatinglabel class="k-form" text="City">
                     <kendo-textbox [maxlength]="20" [fillMode]="formUiStyle.inputFillMode" formControlName="city"> </kendo-textbox>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!userForm.controls['city'].valid && userInfo?.userTypeCode === userType.External ">City is required</kendo-formerror>
                 </div>
               </div>
               <div class="flex-row">
@@ -237,11 +238,13 @@
                         <kendo-dropdownlist [data]="ddlStates$ | async" textField="stateName"
                         valueField="stateCode" [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true"formControlName="state"> </kendo-dropdownlist>
                       </kendo-floatinglabel>
+                      <kendo-formerror *ngIf="!userForm.controls['state'].valid && userInfo?.userTypeCode === userType.External">State is required</kendo-formerror>
                     </div>
                     <div class="flex-col flex-col-6">
                       <kendo-floatinglabel class="k-form" text="Zip">
                         <kendo-textbox [maxlength]="10" [fillMode]="formUiStyle.inputFillMode" formControlName="zip"> </kendo-textbox>
                       </kendo-floatinglabel>
+                      <kendo-formerror *ngIf="!userForm.controls['zip'].valid && userInfo?.userTypeCode === userType.External">Zip is required</kendo-formerror>
                     </div>
                   </div>
                 </div>
@@ -253,6 +256,7 @@
                   <kendo-floatinglabel class="k-form" text="County">
                     <kendo-textbox [maxlength]="50"  placeholder="County" [fillMode]="formUiStyle.inputFillMode" formControlName="county"> </kendo-textbox>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!userForm.controls['county'].valid && userInfo?.userTypeCode === userType.External">County is required</kendo-formerror>
                 </div>
               </div>
             </div>

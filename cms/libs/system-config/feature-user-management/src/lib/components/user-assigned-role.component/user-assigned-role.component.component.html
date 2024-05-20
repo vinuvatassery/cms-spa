@@ -1,23 +1,42 @@
 <kendo-grid [data]="gridUserAssignedRoles$ | async" 
-    [pageSize]="state.take" 
-    [pageable]="false" 
-    [skip]="state.skip"
-    [sort]="state.sort" 
+    [pageable]="true" 
+    [sortable]="true"
     [resizable]="true" 
-    [sortable]="false"
-    (dataStateChange)="dataStateChange($event)"
-    [loading]="(loader$ | async) === true"
-    [rowClass]="rowClass">
+    [groupable]="false" 
+    [reorderable]="true" 
+    [columnMenu]="{ filter: true }"
+    [filter]="state.filter" 
+    [skip]="state.skip" 
+    [sort]="state.sort" 
+    [pageSize]="state.take"
+    (dataStateChange)="dataStateChange($event)" 
+    (filterChange)="filterChange($event)" 
+    [rowClass]="rowClass"
+    [loading]="(loader$ | async) ?? false">
     <kendo-grid-column field="roleDesc" title="Role Assigned" [width]="190">
         <ng-template kendoGridCellTemplate let-dataItem>
             <span class="d-flex align-items-center">
                 <span [ngClass]="getRolesClassByRoleCode(dataItem)"></span>{{ dataItem.roleDesc }}
             </span>
         </ng-template>
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="lastModificationTime" title="Last Modified" [width]="120">
-        <ng-template kendoGridCellTemplate let-dataItem>
+          <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.lastModificationTime |date:'MM/dd/YYYY'}}
+          </ng-template>
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <common-grid-cell-date-range-filter [field]="'lastModificationTime'" [filter]="filter"
+              [filterService]="filterService">
+            </common-grid-cell-date-range-filter>
           </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="lastModifierId" title="Modified By" [width]="80" [sortable]="false" [filterable]="false" class="text-center">
@@ -32,13 +51,14 @@
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="activeFlag" title="Status" [width]="120">
-        <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="d-flex align-items-center">
-                <span class="getRolesClassByRoleCode(dataItem)"></span>{{ dataItem.activeFlag }}
-            </span>
+        <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+          let-filterService="filterService">
+          <kendo-dropdownlist [data]="statusList" textField="name" valueField="code" [(ngModel)]="selectedActiveFlag"
+            [valuePrimitive]="true" (valueChange)="dropdownFilterChange('activeFlag',$event, filterService)">
+          </kendo-dropdownlist>
         </ng-template>
       </kendo-grid-column>
-    <kendo-grid-column field="" title="Options" [width]="70" class="text-center" [columnMenu]="false">
+    <kendo-grid-column field="" title="Options" [width]="70" class="text-center"  [columnMenu]="true" [sortable]="false" [filterable]="false" [includeInChooser]="false">
         <ng-template *ngIf="assignedRoleCount > 1 && userStatus === active" kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="moreactions" title="More option" aria-label="more actions"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -46,7 +66,7 @@
                 <span class="material-icons" aria-label="More option"> more_vert </span>
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                     <ng-container
-                      *ngIf="buttondataItem.text === 'Deactivate' && dataItem.activeFlag ==='Active' && assignedRoleCount > 1; else reactivate">
+                      *ngIf="buttondataItem.text === 'Delete' && assignedRoleCount > 1">
                       <button kendoButton look="flat" 
                         [attr.aria-label]="buttondataItem.text"
                         [class]="buttondataItem.buttonType" 
@@ -58,7 +78,7 @@
                     </ng-container>
                     <ng-template #reactivate>
                       <ng-container
-                        *ngIf="buttondataItem.text === 'Reactivate' && dataItem.activeFlag ==='Inactive' && assignedRoleCount > 1">
+                        *ngIf="buttondataItem.text === 'DELETE' && dataItem.activeFlag ==='Inactive' && assignedRoleCount > 1">
                         <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                           [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)"
                           >
@@ -72,10 +92,36 @@
             </kendo-dropdownbutton>
         </ng-template>
     </kendo-grid-column>
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+        let-currentPage="currentPage">
+        <div class="grid-custom-paginationtemplates d-flex">
+          <div class="d-flex align-items-center">
+            <label class="mr-1" for="userRolesListRowsPerPage">Rows Per Page</label>
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+              [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="userRolesListRowsPerPage"
+              [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+            <kendo-pager-info> </kendo-pager-info>
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+
+          </div>
+          <div class="d-flex">
+            <kendo-pager-input></kendo-pager-input>
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+            <kendo-pager-next-buttons></kendo-pager-next-buttons>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+      </ng-template>
+      <!-- grid No data Template -->
+      <ng-template kendoGridNoRecordsTemplate>
+        <common-grid-no-records></common-grid-no-records>
+      </ng-template>
 </kendo-grid>
 <!-- Deactivate User Modal Html-->
-<kendo-dialog *ngIf="isUserDeactivatePopup" (close)="onUserDeactivateClosed()"
+<kendo-dialog *ngIf="isUserRoleDeletePopup" (close)="onUserRoleDeleteClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Deactivate User </kendo-dialog-titlebar>
-  <system-config-deactivate-user-confirmation></system-config-deactivate-user-confirmation>
+  <kendo-dialog-titlebar> Delete User Role </kendo-dialog-titlebar>
+  <common-delete-confirmation></common-delete-confirmation>
 </kendo-dialog>

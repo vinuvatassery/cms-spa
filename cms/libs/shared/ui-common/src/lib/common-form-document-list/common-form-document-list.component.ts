@@ -3,7 +3,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
-import { map } from 'rxjs';
+import { ActiveInactiveFlag } from '../enums/active-inactive-flag.enum';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -287,5 +287,12 @@ export class CommonFormDocumentListComponent implements OnInit {
       this.loggingService.logException(err)
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
+  }
+
+  getFlagValue(flag:any){
+    if(flag== ActiveInactiveFlag.Yes)
+      return 'Active';
+    else
+      return 'Inactive';
   }
 }

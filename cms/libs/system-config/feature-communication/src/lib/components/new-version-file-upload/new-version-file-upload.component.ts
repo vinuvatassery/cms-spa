@@ -12,11 +12,13 @@ export class NewVersionFileUploadComponent implements OnInit {
   public selectedAttachedFile: any = [];
   public uploadedAttachedFile: any;
   attachedFileValidatorSize: boolean = false;
+  isSubmitted = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   value: any
   forms!: FormGroup;
 
   @Input() fileName =""
+  fileNameRegex =/^[A-Za-z0-9-_,\s]$/
   attachedFiles: any;
   isValidateForm= false;
   multipleFilesUpload = true;
@@ -27,6 +29,10 @@ export class NewVersionFileUploadComponent implements OnInit {
 }
  
   ngOnInit(): void {
+    this.forms = this.formBuilder.group({
+      fileName: [this.fileName, Validators.pattern('^[A-Za-z0-9-_,.()\s ]+$')],
+      uploadedFile:[[], [Validators.required, Validators.maxLength(25 * 1024 * 1024)]]
+    });
 
   }
 
@@ -52,31 +58,25 @@ export class NewVersionFileUploadComponent implements OnInit {
 }
 
 
-
 onCloseUploadFileVersionDetailClicked(){
   this.onCloseUploadFileVersionClicked.emit(false)
 }
 
 
 uploadClicked() {
-  if(this.attachedFileValidatorSize || this.showAttachmentRequiredError){
-    return;
-  }
-  let SystemAttachmentsRequests: any = {};
-  const formData = new FormData();
-  if (!this.selectedAttachedFile) {
+  this.isSubmitted= true
+  this.forms.markAllAsTouched()
+  if(this.forms.invalid ||(this.selectedAttachedFile && this.selectedAttachedFile.length <=0)||this.attachedFileValidatorSize || this.showAttachmentRequiredError || this.forms.controls["fileName"].invalid){
     this.showAttachmentRequiredError = true;
     return;
   }
-  this.showAttachmentRequiredError = false;
+  const formData = new FormData();
   if (this.selectedAttachedFile) {
     if (!this.attachedFileValidatorSize) {
       formData.append("UploadedAttachments", this.selectedAttachedFile);
 
     }
-    formData.append("fileNameDesc", this.fileName)
-    formData.append("fileSize", "0")
-
+    formData.append("fileNameDesc", this.forms.controls["fileName"].value)
   this.onNewVersionUploadButtonClicked.emit(formData);
 
   }

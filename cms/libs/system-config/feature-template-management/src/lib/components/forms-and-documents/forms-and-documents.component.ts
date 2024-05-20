@@ -4,6 +4,7 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { ActiveInactiveFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'system-config-forms-and-documents',
@@ -17,7 +18,7 @@ export class FormsAndDocumentsComponent implements OnInit {
   foldersTree: any = [];
   selectedfolder: string = "";
   public formsDocumentDialog : any;
-  formsDocumentsList$ = this.formsAndDocumentFacade.formsDocumentsList$;
+  popupFormsDocumentsList$ = this.formsAndDocumentFacade.popupFormsDocumentsList$;
   public constructor(
     private readonly templateManagementFacade: TemplateManagementFacade,
     private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
@@ -42,7 +43,7 @@ export class FormsAndDocumentsComponent implements OnInit {
       cssClass: 'app-c-modal app-c-modal-xls app-c-modal-np app-c-modal-top',
     });
     this.isOpenAttachment = true;
-      this.loadFolderFiles(true);
+      this.loadFolderFiles();
   }
 
   fetchSubfolders = (node: any) =>
@@ -98,10 +99,14 @@ export class FormsAndDocumentsComponent implements OnInit {
   return folderdata;
   }
 
-  loadFolderFiles(payload:any) {
+  loadFolderFiles() {
+    var payload={
+      sort : true,
+      active: ActiveInactiveFlag.Yes
+    }
     this.loaderService.show();
-    this.formsAndDocumentFacade.loadFolderFile(payload); 
-    this.formsDocumentsList$.subscribe({
+    this.formsAndDocumentFacade.loadFolderFilePopup(payload); 
+    this.popupFormsDocumentsList$.subscribe({
       next: (response) => {
         this.foldersTree =response;
         this.loaderService.hide()

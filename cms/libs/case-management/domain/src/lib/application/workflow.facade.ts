@@ -100,6 +100,7 @@ export class WorkflowFacade {
   sessionData!: SessionData;
   sendLetterEmailFlag!:string;
   caseStatus!:string;
+  ApplicationDetailsValidationsSuccess = false;
   
   /**Constructor */
   constructor(

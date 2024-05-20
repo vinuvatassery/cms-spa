@@ -45,6 +45,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   endDateValidator = false;
   addressControlsList = ["address1", "address2", "city", "state", "zip", "county"]
   userDeviceType: typeof UserDeviceType = UserDeviceType;
+  userType: typeof UserType = UserType;
   phoneData:any;
   isButtonDisabled=true;
   defaultDeskPhoneIndex! : number;
@@ -397,6 +398,19 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
     }
 
+    if(this.userInfo?.userTypeCode === UserType.External)
+      {
+        this.userForm.controls['city'].setValidators(Validators.required);
+        this.userForm.controls["city"].updateValueAndValidity();
+        this.userForm.controls['state'].setValidators(Validators.required);
+        this.userForm.controls['state'].updateValueAndValidity();
+        this.userForm.controls['zip'].setValidators(Validators.required);
+        this.userForm.controls['zip'].updateValueAndValidity();
+        this.userForm.controls['county'].setValidators(Validators.required);
+        this.userForm.controls['county'].updateValueAndValidity();
+      }
+
+
     this.setPhoneValidations()
   }
 
@@ -413,11 +427,24 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   {
     if(this.addPhoneForm.length > 1 ){
       this.addPhoneForm.removeAt(i);
+      if(this.userInfo.userTypeCode === UserType.Internal)
+        {
+          for (let i =0; i < this.addPhoneForm.controls.length; i++)
+            {
+              if(this.addPhoneForm.at(i).get('phoneType')?.value === this.userDeviceType.DeskPhone)
+                {
+                  this.defaultDeskPhoneIndex = i;
+                  break;
+                }
+            }
+        }
+  
       }
     else if(this.addPhoneForm.length == 1)
       {
         this.addPhoneForm.reset();
       }
+      
 
   }
   checkAddressControls()

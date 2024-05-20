@@ -128,15 +128,17 @@ export class UserDataService {
     );
     }
 
-  loadUserAssignedRolesByUserId(data:any) {
+  loadUserAssignedRolesByUserId(userId:any, data:any) {
       const pageAndSortedRequestDto =
       {
         SkipCount : data.skipCount,
         MaxResultCount : data.maxResultCount,
-        SortType : "asc"
+        SortType : data.sortType,
+        Sorting : data.sortColumn,
+        Filter : data.filter
       }
       return this.http.post(
-        `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${data.userId}/roles`,
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${userId}/roles`,
         pageAndSortedRequestDto
       );
   }
