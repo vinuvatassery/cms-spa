@@ -2,8 +2,8 @@
     <p>
           Select the file(s) and which folder to upload to.
     </p>
-    <div class="flex-row" >
-          <div class="flex-col">
+   <div class="flex-row" >
+           <div class="flex-col">
                 <kendo-floatinglabel text="Folder Name">
                       <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
                       formControlName="folderName"
@@ -11,6 +11,7 @@
                       textField="templateDesc"
                       valueField="documentTemplateId"
                       [valuePrimitive]="true"
+                      (valueChange)="dropdownFilterChange($event)"
                        >
                       </kendo-dropdownlist>
                       <kendo-formerror *ngIf="!forms.controls['folderName']?.valid && isValidateForm">
@@ -18,7 +19,7 @@
                           </kendo-formerror>
                 </kendo-floatinglabel>
           </div>
-          <div class="flex-col mt-2">
+           <!--<div class="flex-col mt-2">
     <common-document-upload
      [typeCode]="'File_upload'"
      [file]="uploadedAttachedFile"
@@ -33,11 +34,29 @@
           Select a document.    
 </kendo-formerror>
 
+          </div> -->
+          <div class="flex-col mt-2">
+    <kendo-upload
+    [saveUrl]="fileUploadUrl"
+    [removeUrl]="uploadRemoveUrl"
+    [autoUpload]="false"
+    [concurrent]="false"
+    (upload)="upload($event)"
+    (select)="select($event)"
+    (complete)="complete()"
+    (uploadProgress)="uploadProgressEventHandler($event)"
+    >
+    <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+      <div>Name: {{ files[0].name }}</div>
+      <div>Size: {{ files[0].size }} Kb</div>
+      <div>status : {{ showSuccess(state) }} Kb</div>
+    </ng-template>
+  </kendo-upload>
           </div>
-    </div>
+</div>
 </section>
 
-<kendo-dialog-actions>
+<!-- <kendo-dialog-actions>
     <div class="justify-content-between">
           <div class="justify-content-end">
                 <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCloseUploadFileClicked()"> Cancel
@@ -46,4 +65,4 @@
           </div>
     </div>
 
-</kendo-dialog-actions>
+</kendo-dialog-actions> -->

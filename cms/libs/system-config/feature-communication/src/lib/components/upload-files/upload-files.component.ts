@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { FormsAndDocumentDataService } from '@cms/system-config/domain';
+import { FileRestrictions, FileState, SelectEvent, UploadEvent, UploadProgressEvent } from '@progress/kendo-angular-upload';
 
 @Component({
   selector: 'system-config-upload-files',
@@ -8,6 +10,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadFilesComponent implements OnInit {
+  uploadSaveUrl = 'saveUrl'; // should represent an actual API endpoint
+  uploadRemoveUrl = 'removeUrl'; // should represent an actual API endpoint
   showAttachmentRequiredError: boolean = false;
   public selectedAttachedFile: any = [];
   public uploadedAttachedFile: any;
@@ -19,9 +23,13 @@ export class UploadFilesComponent implements OnInit {
   attachedFiles: any;
   isValidateForm= false;
   multipleFilesUpload = true;
+  fileUploadUrl =this.formsDocumentsService.fileUploadUrl
   @Output() uploadFilesEvent = new EventEmitter<any>();
   @Output () onCloseUploadFileDetailClicked = new EventEmitter<any>();
-  constructor(public formBuilder: FormBuilder){
+  public myRestrictions: FileRestrictions = {
+    maxFileSize: 4194304
+};
+  constructor(public formBuilder: FormBuilder, public  formsDocumentsService : FormsAndDocumentDataService){
 }
  
   ngOnInit(): void {
@@ -90,5 +98,33 @@ changeOnfolderName(){
   if(this.getFolders$){
     this.isValidateForm= false;
   }
+}
+public upload(e: UploadEvent): void {
+  if(!this.forms.valid)
+  {
+    return
+  }
+  debugger
+  console.log(`upload event ${e.files[0].name}`);
+}
+
+public select(e: SelectEvent): void {
+  debugger
+}
+
+public complete(){
+  //this.onCloseUploadFileClicked()
+}
+
+dropdownFilterChange(folderId : any)
+{
+ this.fileUploadUrl = this.formsDocumentsService.fileUploadUrl +'/'+folderId
+}
+uploadProgressEventHandler(e: UploadProgressEvent) {
+  console.log(e.files[0].name + ' is ' + e.percentComplete + ' uploaded');
+}
+
+public showSuccess(state: FileState): boolean {
+  return state === FileState.Uploaded ? true : false;
 }
 }
