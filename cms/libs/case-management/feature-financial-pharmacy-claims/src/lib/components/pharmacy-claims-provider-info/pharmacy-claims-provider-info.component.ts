@@ -102,6 +102,8 @@ export class PharmacyClaimsProviderInfoComponent {
      
     }
   });
+  this.specialHandling = this.vendorProfile.address.specialHandlingDesc;
+  this.specialHandlingWordCount();
   this.createContactsFormArray() 
 }
 createContactsFormArray() {
