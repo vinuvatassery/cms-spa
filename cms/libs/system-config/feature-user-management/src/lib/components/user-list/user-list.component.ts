@@ -6,6 +6,7 @@ import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, debounceTime } from 'rxjs';
 import { DocumentFacade } from '@cms/shared/util-core';
+import { UserManagementFacade } from 'libs/system-config/domain/src/lib/application/user-management.facade';
 
 @Component({
   selector: 'system-config-user-list',
@@ -53,6 +54,7 @@ export class UserListComponent implements OnInit, OnChanges {
   loginUserId= "";
   active = "Active";
   inActive = "Inactive";
+  currentUserStatus = "";
   statusList: any = [{ code: this.active, name: this.active }, { code: this.inActive, name: this.inActive }];
   @ViewChild('usersGrid') usersGrid: any;
   defaultColumnState: ColumnBase[] = [];
@@ -82,8 +84,9 @@ export class UserListComponent implements OnInit, OnChanges {
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private readonly documentFacade: DocumentFacade
-  ) {
+    private readonly documentFacade: DocumentFacade,
+    private readonly userManagementFacade: UserManagementFacade)
+   {
 
   }
   public moreactions = [
@@ -93,6 +96,10 @@ export class UserListComponent implements OnInit, OnChanges {
       icon: "edit",
       type: "Edit",
       click: (data: any): void => {
+        if(data.activeFlag){
+        this.currentUserStatus = data.activeFlag;
+        this.loginUserId = data.loginUserId;
+      }
         this.onUserDetailsClicked(true);
       },
     },
@@ -131,7 +138,7 @@ export class UserListComponent implements OnInit, OnChanges {
     this.loadUserListGrid();
   }
 
-  private loadUserListGrid(): void {
+  loadUserListGrid(): void {
     this.loadUsersLitData(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -276,13 +283,20 @@ export class UserListComponent implements OnInit, OnChanges {
   }
 
   onUserReactivateClicked(data: any) {
-    this.isUserReactivatePopup = true;
-    this.isUserDeactivatePopup = true;
+        
+    if(data.loginUserId)
+      {
+        const userData={
+          userId: data.loginUserId,
+          activeFlag: this.active
+        };
+        this.userManagementFacade.deactivateUser(userData);
+        this.loadUserListGrid();
+      }  
   }
 
   onUserReactivateClosed() {
     this.isUserReactivatePopup = false;
-    this.isUserDeactivatePopup = false;
   }
 
   searchColumnChangeHandler(data: any) {

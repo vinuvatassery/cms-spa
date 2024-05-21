@@ -10,7 +10,9 @@ export class DeactivateUserConfirmationComponent {
   @Input() userId: any;
   @Input() status: any;
   @Output() closeDeactivateUsers = new EventEmitter();
-
+  @Output() refreshGrid = new EventEmitter();
+  reactivate = "Active";
+  deactivate = "Inactive";
   /** Constructor **/ 
   constructor(
     private readonly userManagementFacade: UserManagementFacade)
@@ -21,6 +23,10 @@ export class DeactivateUserConfirmationComponent {
     onDialougeClose(){
       this.closeDeactivateUsers.emit();
     }
+
+    refreshUsersGrid(){
+      this.refreshGrid.emit();
+    }
     onDeactivateClick()
     {
       const userData={
@@ -28,6 +34,8 @@ export class DeactivateUserConfirmationComponent {
         activeFlag: this.status
       };
       this.userManagementFacade.deactivateUser(userData);
+      this.onDialougeClose();
+      this.refreshUsersGrid();
     }
 }
 

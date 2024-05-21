@@ -12,7 +12,7 @@ import { User } from '../entities/user';
 import { UserDataService } from '../infrastructure/user.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { ZipCodeFacade } from './zip-code.facade';
-
+import { NotificationService } from '@progress/kendo-angular-notification';
 @Injectable({ providedIn: 'root' })
 export class UserManagementFacade {
   /** Private properties **/
@@ -137,6 +137,7 @@ export class UserManagementFacade {
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly notificationService: NotificationService,
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly zipCodeFacade: ZipCodeFacade,
@@ -599,12 +600,30 @@ export class UserManagementFacade {
   }
 
   deactivateUser(user : any){
+    this.showLoader();
     this.userDataService.deActivateUserRole(user).subscribe({
-      next: () => {
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Added Successfully');
+      next: (success:any) => {
+        this.hideLoader();
+        if(success.status == 1){
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, success.message);
+      }
+      else{
+        success.message=success.message.replace('!baseurl-!',window.location.origin);
+        console.log(success.message);
+        this.notificationService.show({
+          content: success.message,
+          position: { horizontal: 'right', vertical: 'bottom' },
+          animation: { type: "slide", duration: 400 },
+          closable: true,
+          type: { style: 'error', icon: true },
+          cssClass: 'reminder-notification-bar',
+        });
+        this.showHideSnackBar(SnackBarNotificationType.WARNING, success.message);
+      }
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err.message);
       },
     })
   }

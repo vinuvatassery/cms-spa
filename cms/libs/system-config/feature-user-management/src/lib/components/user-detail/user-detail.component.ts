@@ -19,12 +19,16 @@ import { group } from '@angular/animations';
 export class UserDetailComponent implements OnInit {
   @Input() isEditValue!: boolean;
   @Output() isDeactivatePopupOpened = new EventEmitter();
+  @Input() userId: any;
+  @Input() status: any;
+  @Output() refreshGrid = new EventEmitter();
+  isUserDeactivatePopup = false;
+  deactivate = "Inactive";
   ddlUserRole$ = this.userManagementFacade.ddlUserRole$;
   userAccessTypeLov$ = this.lovFacade.userAccessTypeLov$;
   userRoleTypeCode$ = this.lovFacade.userRoleTypeLov$;
   caseManagerDomainLov$ = this.lovFacade.caseManagerDomainLov$;
   caseManagerAssistorGrp$ = this.lovFacade.caseManagerAssistorGrp$;
-  isDeactivateValue!: boolean;
   userAccessTypeLovData: any = null;
   userRoleTypeCodeLovData: any = null;
   isCaseManagerSelected = true;
@@ -75,11 +79,6 @@ export class UserDetailComponent implements OnInit {
   private loadDdlUserRole() {    
     if(this.userRoleType == "") return;
     this.userManagementFacade.loadDdlUserRole(this.userRoleType, this.activeFlag);
-  }
-
-  onDeactivateClicked() {
-    this.isDeactivatePopupOpened.emit();
-    this.isDeactivateValue = true;
   }
 
   subscribeLovData() {
@@ -155,5 +154,17 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
+  onUserDeactivateClosed(){
+    //this.isDeactivatePopupOpened.emit();
+    this.isUserDeactivatePopup=false;
+  }
+  loadUserListGrid(){
+    this.refreshGrid.emit();
+  }
+
+  onDeactivateClicked()
+    {
+      this.isUserDeactivatePopup = true;
+    }
 
 }

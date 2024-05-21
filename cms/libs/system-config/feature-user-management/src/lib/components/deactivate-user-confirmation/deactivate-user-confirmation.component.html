@@ -1,5 +1,8 @@
 <section class="k-dialog-body">
-  <p class="text-muted mb-2">
+  <p class="text-muted mb-2" *ngIf="status===deactivate">
+    The user will not be able to access the system. You may re-activate them at any time.
+  </p>
+  <p class="text-muted mb-2" *ngIf="status===reactivate">
     The user will not be able to access the system. You may re-activate them at any time.
   </p>
 </section>
@@ -8,7 +11,9 @@
   <div class="justify-content-between">
     <div class="justify-content-end">
       <button kendoButton [primary]="true" (click)="onDialougeClose()" aria-label="Cancel" look="outline">Cancel</button>
-      <button kendoButton [primary]="true" (click)="onDeactivateClick()" onclick="onDeactivateClick" aria-label="Deactivate" >Deactivate</button>
+      <button [hidden]="status===reactivate" kendoButton [primary]="true" (click)="onDeactivateClick()"  aria-label="Deactivate" >Deactivate</button>
+      <button [hidden]="status===deactivate" kendoButton [primary]="true" (click)="onDeactivateClick()"  aria-label="Reactivate" >Reactivate</button>
+      
     </div>
   </div>
 </kendo-dialog-actions>
