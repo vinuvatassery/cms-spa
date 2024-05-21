@@ -37,8 +37,7 @@
           </div> -->
           <div class="flex-col mt-2">
     <kendo-upload
-    [saveUrl]="fileUploadUrl"
-    [removeUrl]="uploadRemoveUrl"
+    [saveUrl]="fileUploadUrl"    
     [autoUpload]="false"
     [concurrent]="false"
     (upload)="upload($event)"
@@ -46,11 +45,11 @@
     (complete)="complete()"
     (uploadProgress)="uploadProgressEventHandler($event)"
     >
-    <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+    <!-- <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
       <div>Name: {{ files[0].name }}</div>
       <div>Size: {{ files[0].size }} Kb</div>
       <div>status : {{ showSuccess(state) }} Kb</div>
-    </ng-template>
+    </ng-template> -->
   </kendo-upload>
           </div>
 </div>
