@@ -165,12 +165,46 @@ export class CommonFormDocumentListComponent implements OnInit {
 
   public getDragStatus(
     action: DropAction,
-    destinationItem: TreeItemLookup
+    destinationItem: TreeItemLookup,
+    sourceItem : TreeItemLookup
   ): string {
     if (
       destinationItem &&
       action === DropAction.Add &&
-      isFile(destinationItem.item.dataItem.text)
+      !destinationItem.item.dataItem.isFolder
+    ) {
+      return 'k-i-cancel';
+    }
+
+    if (
+      destinationItem &&
+      (action === DropAction.Add 
+        ||action === DropAction.InsertBottom 
+        || action === DropAction.InsertTop 
+       || action === DropAction.InsertMiddle )
+      && !destinationItem.item.dataItem.isFolder
+      && sourceItem.item.dataItem.isFolder
+    ) {
+      return 'k-i-cancel';
+    }
+
+    if (
+      destinationItem &&
+      (action === DropAction.Add)
+      && destinationItem.item.dataItem.isFolder
+      && sourceItem.item.dataItem.isFolder
+    ) {
+      return 'k-i-cancel';
+    }
+
+    if (
+      destinationItem &&
+      (action === DropAction.InsertBottom 
+        ||action === DropAction.InsertTop
+      || action === DropAction.InsertMiddle 
+       )
+      && destinationItem.item.dataItem.isFolder
+      && !sourceItem.item.dataItem.isFolder
     ) {
       return 'k-i-cancel';
     }
@@ -190,20 +224,58 @@ export class CommonFormDocumentListComponent implements OnInit {
     }
   }
 
-  public log(event: string, args?: any): void {
+  public logAdd(event: string, args?: any): void {
+    console.log(event, args);
+  }
+
+  public logRemove(event: string, args?: any): void {
     console.log(event, args);
   }
 
   public handleDrop(event: TreeItemDropEvent): void {
-    this.log('nodeDrop', event);
 
     // prevent drop if attempting to add to file
     if (
-      isFile(event.destinationItem.item.dataItem.text) &&
+      !event.destinationItem.item.dataItem.isFolder &&
       event.dropPosition === DropPosition.Over
     ) {
       event.setValid(false);
     }
+
+    if (
+     event.sourceItem.item.dataItem.isFolder 
+      && !event.destinationItem.item.dataItem.isFolder
+      && (event.dropPosition === DropPosition.Over
+        || event.dropPosition === DropPosition.Before
+        || event.dropPosition === DropPosition.After
+      )
+    ) {
+      event.setValid(false);
+    }
+
+    if (
+      event.sourceItem.item.dataItem.isFolder 
+       && event.destinationItem.item.dataItem.isFolder
+       && event.dropPosition === DropPosition.Over
+         
+       )
+     {
+       event.setValid(false);
+     }
+
+     
+    if (
+      !event.sourceItem.item.dataItem.isFolder 
+       && event.destinationItem.item.dataItem.isFolder
+       && (event.dropPosition === DropPosition.After
+       || event.dropPosition === DropPosition.Before
+       )
+         
+       )
+     {
+       event.setValid(false);
+     }
+
   }
 
   /** Internal event methods **/

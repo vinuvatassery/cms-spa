@@ -5,9 +5,16 @@
               <span class=" k-icon k-i-loading k-input-loading-icon"></span>
             </div>
       </div>
-      <kendo-treeview [nodes]="foldersTree" textField="text" kendoTreeViewHierarchyBinding childrenField="items"
-            kendoTreeViewExpandable expandBy="documentTemplateId" [hasChildren]="hasChildren" [children]="children" [expandedKeys]="[1]"
-            kendoTreeViewLoadMore [pageSize]="10">
+      <kendo-treeview [nodes]="foldersTree" textField="text" kendoTreeViewHierarchyBinding 
+            childrenField="items"
+            kendoTreeViewExpandable expandBy="documentTemplateId" 
+            [hasChildren]="hasChildren" [children]="children" [expandedKeys]="[1]"
+            kendoTreeViewLoadMore [pageSize]="10"
+            kendoTreeViewDragAndDrop="true"
+            (addItem)="logAdd('addItem', $event)"
+            (removeItem)="logRemove('removeItem', $event)"
+            (nodeDrop)="handleDrop($event)"
+            kendoTreeViewDragAndDropEditing>
             <ng-template kendoTreeViewNodeTemplate let-dataItem>
                   <div class="attachments-lists-wrap"
                         [ngClass]="dataItem.isFolder===false ? 'file_list' : 'directory_list'">
@@ -71,10 +78,10 @@
                         </span>
                   </div>
             </ng-template>
-            <ng-template kendoTreeViewDragClueTemplate let-action="action" let-destinationItem="destinationItem"
+            <ng-template kendoTreeViewDragClueTemplate let-action="action" let-destinationItem="destinationItem" let-sourceItem="sourceItem"
                   let-text="text">
                   <span class="k-drag-status k-font-icon k-icon"
-                        [ngClass]="getDragStatus(action, destinationItem)"></span>
+                        [ngClass]="getDragStatus(action, destinationItem, sourceItem)"></span>
                   <span>{{ text }}</span>
             </ng-template>
       </kendo-treeview>
