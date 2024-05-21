@@ -211,7 +211,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         { field: 'ActiveFlag', operator: 'eq', value: 'Y' }
       ]
     }])).subscribe(resp => {
-      this.emails = resp?.items?.map((contact: any) => contact?.emailAddress?.trim());
+      this.emails = resp.items?.map((item: any) => item.emailAddress).filter((email: any) => email && this.isValidEmail(email)) as string[];
       this.selectedToEmails = this.emails;
       this.showToEmailLoader = false;
       this.ref.detectChanges();
@@ -221,6 +221,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
     this.isMailCodeMissing = false;
     this.isFormValid = true;
+    this.ref.detectChanges();
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
   }
 
   handleEmailsChanged(values: any) {
@@ -771,12 +777,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.isShowToEmailLoader$.next(true);
               this.isOpenDdlEmailDetails = true;
               this.selectedToEmails = [];
-              for (let email of this.toEmail) {
-                if (this.selectedToEmails.filter((x: any) => x === email).length === 0) {
-                  this.selectedToEmails.push(email?.trim());
-                }
-              }
-              this.emails = this.selectedToEmails;
+              this.getToEmail(this.toEmail);
+              this.selectedToEmails = this.emails;
               if (data.description === 'Draft Custom Email') {
                 this.emailSubject = '';
               } else {
@@ -822,8 +824,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isOpenDdlEmailDetails = true;
       this.selectedMailCodeId = event.vendorAddressId;
       this.selectedToEmails = [];
-      this.selectedToEmails = event.to;
-      this.emails = this.selectedToEmails;
+      this.getToEmail(event.to);
+      this.selectedToEmails = this.emails;
+
       this.emailSubject = event?.requestSubject ?? event.description;
       this.defaultBCCEmail = event.bcc;
       if (event?.bcc?.length > 0) {
@@ -852,6 +855,17 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
     else {
       this.selectedTemplate.notificationDraftId = event.notificationDraftId;
+    }
+  }
+
+  
+  getToEmail(to: any) {
+    if(to?.length > 0){
+    for (let email of to) {
+    if (email && email.trim() !== "" && (this.selectedToEmails.filter((x: any) => x === email).length === 0) && this.isValidEmail(email)) {
+          this.emails.push(email?.trim());
+        }
+      }
     }
   }
 
