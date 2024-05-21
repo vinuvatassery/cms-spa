@@ -22,7 +22,7 @@ fileFolderPayload :any
       if(res){
         var filter={
           sort : true,
-          active: ActiveInactiveFlag.All
+          active: ActiveInactiveFlag.Yes
         }
         this.formsAndDocumentFacade.loadFolderFile(filter)
       }

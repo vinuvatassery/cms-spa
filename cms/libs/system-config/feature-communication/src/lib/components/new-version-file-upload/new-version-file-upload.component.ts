@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { FileRestrictions } from '@progress/kendo-angular-upload';
 
 @Component({
   selector: 'new-version-file-upload',
@@ -27,11 +28,14 @@ export class NewVersionFileUploadComponent implements OnInit {
   @Output () onNewVersionUploadButtonClicked = new EventEmitter<any>();
   constructor(public formBuilder: FormBuilder){
 }
+fileUploadRestrictions: FileRestrictions = {
+  maxFileSize: 26214400
+};
  
   ngOnInit(): void {
     this.forms = this.formBuilder.group({
       fileName: [this.fileName, Validators.pattern('^[A-Za-z0-9-_,.()\s ]+$')],
-      uploadedFile:[[], [Validators.required, Validators.maxLength(25 * 1024 * 1024)]]
+      uploadedFile:[[], [Validators.required]]
     });
 
   }
@@ -64,21 +68,21 @@ onCloseUploadFileVersionDetailClicked(){
 
 
 uploadClicked() {
-  this.isSubmitted= true
+  this.isSubmitted= true 
   this.forms.markAllAsTouched()
-  if(this.forms.invalid ||(this.selectedAttachedFile && this.selectedAttachedFile.length <=0)||this.attachedFileValidatorSize || this.showAttachmentRequiredError || this.forms.controls["fileName"].invalid){
+  if((!this.selectedAttachedFile || this.showAttachmentRequiredError || this.selectedAttachedFile?.length >=0)){
     this.showAttachmentRequiredError = true;
+  }
+  if(this.forms.controls["fileName"].invalid || this.showAttachmentRequiredError || this.attachedFileValidatorSize){
     return;
   }
   const formData = new FormData();
   if (this.selectedAttachedFile) {
     if (!this.attachedFileValidatorSize) {
       formData.append("UploadedAttachments", this.selectedAttachedFile);
-
     }
     formData.append("fileNameDesc", this.forms.controls["fileName"].value)
   this.onNewVersionUploadButtonClicked.emit(formData);
-
   }
 
 }
