@@ -77,3 +77,9 @@
             </ng-template>
       </kendo-treeview>
 </div>
+<ng-template #renameTemplate >
+      <kendo-dialog-titlebar (close)="onCloseAddNewEditFolderClicked()" > {{isFolder ? 'Rename Folder': 'Rename File'}}</kendo-dialog-titlebar>
+      <common-edit-template-name [templateDesc] = "templateDesc"  [documentTemplateId] = "documentTemplateId"   [isFolder] = "isFolder"  (updateTemplate)="updateTemplate($event)" 
+       (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"> 
+  </common-edit-template-name> 
+</ng-template>
