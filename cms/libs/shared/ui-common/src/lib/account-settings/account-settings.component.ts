@@ -635,9 +635,4 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  checkAspectRatioOfImage()
-  {
-
-  }
-
 }
