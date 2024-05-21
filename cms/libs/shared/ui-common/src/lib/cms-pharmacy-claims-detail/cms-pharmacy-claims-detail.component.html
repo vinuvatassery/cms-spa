@@ -277,7 +277,7 @@
 
                                             <kendo-floatinglabel text="RX Quantity">
                                                 <kendo-textbox aria-label="RX Quantity" [fillMode]="formUiStyle.inputFillMode"
-                                                formControlName="dispensingQty">
+                                                formControlName="dispensingQty" (keypress)="restrictSpecialChar($event)">
                                                 </kendo-textbox>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('dispensingQty', i) && isSubmitted)"
@@ -287,7 +287,7 @@
                                         <div class="flex-col flex-col-3">
                                             <kendo-floatinglabel text="RX Days Supply">
                                                 <kendo-textbox aria-label="RX Days Supply" [fillMode]="formUiStyle.inputFillMode"
-                                                formControlName="daySupply">
+                                                formControlName="daySupply" (keypress)="restrictSpecialChar($event)">
                                                 </kendo-textbox>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('daySupply', i) && isSubmitted)"
