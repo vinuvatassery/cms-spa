@@ -1198,17 +1198,62 @@ kendo-timepicker {
 .doc_activeflag{
 
 }
+.file_label{
+  .file_status{
+    // font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+   &.active_file{
+    color: #ffffff;
+    background: #005994;
+   }
+   &.inactive_file{
+    color: #ffffff;
+    background: #804a01;
+   }
+  }
+}
+.folder_label{
+  .filecount{
+    font-size: 14px;
+    background-color:#005994 ;
+    padding: 2px 6px;
+      border-radius: 4px; 
+      margin-right: 4px;
+      position: relative;
+      color: #ffffff;
+    top: -2px;
+  }
+  .file_status{
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #ffffff;
+    position: relative;
+    top: -2px;
+   &.active_file{
+    color: #ffffff;
+    background: #005994;
+   }
+   &.inactive_file{
+    color: #ffffff;
+    background: #804a01;
+   }
+  }
+}
 
-.file_status{
-  font-size: 14px;
-  padding: 4px 8px;
-  border-radius: 4px;
- &.active_file{
-  color: #ffffff;
-  background: #0b7241;
- }
- &.inactive_file{
-  color: #ffffff;
-  background: #804a01;
- }
+.data_mb{
+  background-color:#005994 ;
+  padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+    color: #ffffff;
+}
+
+.fileversion{
+  background-color:#005994 ;
+  padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+    color: #ffffff;
 }
