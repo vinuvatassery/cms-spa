@@ -452,7 +452,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isOpenSendEmailClicked = true;
   }
 
-  onSaveForLaterClicked() {   
+  onSaveForLaterClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
     if (this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0) {
       this.isToEmailMissing = true;
@@ -469,7 +469,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
-   
+
 
     if (this.notificationGroup === ScreenType.VendorProfile) {
       if (this.selectedMailCode?.mailCode === undefined || this.selectedMailCode?.mailCode === '') {
@@ -480,9 +480,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
     if(this.isFormValid){
       this.isShowSaveForLaterPopupClicked = true;
-    }    
+    }
     this.ngDirtyInValid();
-    
+
   }
 
   onSendEmailDailougeConfirmationClicked() {
@@ -730,26 +730,38 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.PendingNoticeEmail:
         this.confirmPopupHeader = 'Send Pending Email';
         this.snackBarMessage = 'Pending Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Pending Email Later?';
+        this.saveForLaterModelText="You must send the Pending Email within 14 Days";
         break;
       case CommunicationEventTypeCode.RejectionNoticeEmail:
         this.confirmPopupHeader = 'Send Rejection Email';
         this.snackBarMessage = 'Rejection Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Rejection Email Later?';
+        this.saveForLaterModelText="You must send the Rejection Email within 14 Days";
         break;
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
         this.confirmPopupHeader = 'Send Approval Email';
         this.snackBarMessage = 'Approval Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Approval Email Later?';
+        this.saveForLaterModelText="You must send the Approval Email within 14 Days";
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
         this.confirmPopupHeader = 'Send Disenrollment Email';
         this.snackBarMessage = 'Disenrollment Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Disenrollment Email Later?';
+        this.saveForLaterModelText="You must send the Disenrollment Email within 2 Days";
         break;
       case CommunicationEventTypeCode.RestrictedNoticeEmail:
         this.confirmPopupHeader = 'Send Restricted Email';
         this.snackBarMessage = 'Restricted Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Restricted Email Later?';
+        this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
         break;
       default:
         this.confirmPopupHeader = 'Send Email';
         this.snackBarMessage = 'Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = "Email Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
         break;
     }
   }
