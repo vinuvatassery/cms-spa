@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { group } from '@angular/animations';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
@@ -30,7 +29,7 @@ export class UserDetailComponent implements OnInit {
   isCaseManagerSelected = true;
   isAccessTypeInternal = true;
   activeFlag = 'Y';
-  userAccessType: any = UserAccessType.Internal;
+  userAccessType: any = "";
   userRoleType: string = UserAccessType.Internal;
   selectedUserRolesList: any = [];
   userFormGroup!: FormGroup;
@@ -57,7 +56,7 @@ export class UserDetailComponent implements OnInit {
 
   private buildUserForm(){
     this.userFormGroup = new FormGroup({
-      userAccessType: new FormControl(''),
+      userAccessType: new FormControl('', { validators: Validators.required }),
       pNumber: new FormControl('', { validators: Validators.required }),
       firstName: new FormControl('', { validators: Validators.required }),
       lastName: new FormControl('', { validators: Validators.required }),
@@ -71,7 +70,6 @@ export class UserDetailComponent implements OnInit {
   get userFormControls() : any {
     return this.userFormGroup.controls;
   }
-
 
   private loadDdlUserRole() {    
     if(this.userRoleType == "") return;
@@ -103,17 +101,17 @@ export class UserDetailComponent implements OnInit {
     let value = (event.target as HTMLInputElement).value.toUpperCase();
     if(value == UserAccessType.Internal){
       this.isAccessTypeInternal = true;
-      this.setValidators(null, Validators.required);
+      this.setValidators(null);
     }else{
       this.isAccessTypeInternal = false;
-      this.setValidators(Validators.required, null);
+      this.setValidators(Validators.required);
     }
     this.disableFields();
     this.userRoleType = this.getUserRoleType(value);
     this.loadDdlUserRole();
   }
 
-  setValidators(vaidator: any, pNumberValidator: any){
+  setValidators(vaidator: any){
     this.userFormGroup.controls['domain'].setValidators(
       vaidator
     );
@@ -123,11 +121,6 @@ export class UserDetailComponent implements OnInit {
       vaidator
     );
     this.userFormGroup.controls['group'].updateValueAndValidity();
-
-    this.userFormGroup.controls['pNumber'].setValidators(
-      pNumberValidator
-    );
-    this.userFormGroup.controls['pNumber'].updateValueAndValidity();
   }
 
   getUserRoleType(userType: any){

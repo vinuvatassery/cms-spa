@@ -22,6 +22,10 @@
             <kendo-label class="k-radio-label" for="externalUserAccessType" text="External" ></kendo-label>
           </span>          
         </div>
+        <kendo-formerror *ngIf="userFormControls?.userAccessType.errors?.required
+                              && userFormControls?.userAccessType.touched">
+                              User Access Type is required.
+        </kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="PNumber or ORNumber">
