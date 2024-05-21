@@ -54,4 +54,8 @@ export class FormsAndDocumentDataService
         return this.http.post(
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/files/${documentTemplateId}/new-version`,uploadRequest);
         }
+        updateTemplate(payload:any){
+          return this.http.put(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/template`,payload);
+          }
     }

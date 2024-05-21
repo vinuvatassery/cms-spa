@@ -28,10 +28,13 @@
                                           </button>
                                     </span>
                                     <label *ngIf="dataItem.isFolder===false">{{dataItem.text}}
-                                          <label>({{dataItem.fileSize| number: '1.0-0'}} MB, <span>{{getFlagValue(dataItem.activeFlag)}})</span></label></label>
-                                    <label *ngIf="dataItem.isFolder===true">{{dataItem.text}} <span
-                                                *ngIf="dataItem.isFolder===true">({{dataItem.fileCount}}
-                                                Files, <span>{{getFlagValue(dataItem.activeFlag)}})</span></span></label>
+                                    <label class="file_label"> <span class="data_mb">{{dataItem.fileSize| number: '1.0-0'}} MB</span> 
+                                          <span class="fileversion">V1</span>
+                                           <!-- <span class="file_status" [ngClass]="dataItem.activeFlag=== 'Y' ? 'active_file' : 'inactive_file' ">{{getFlagValue(dataItem.activeFlag)}}</span> -->
+                                          </label></label>
+                                    <label class="folder_label" *ngIf="dataItem.isFolder===true">{{dataItem.text}} <span *ngIf="dataItem.isFolder===true" class="filecount">{{dataItem.fileCount}} Files</span> 
+                                          <!-- <span class="file_status"  [ngClass]="dataItem.activeFlag=== 'Y' ? 'active_file' : 'inactive_file' ">{{getFlagValue(dataItem.activeFlag)}}</span> -->
+                                    </label>
                               </div>
                         </div>
                         <span *ngIf="!isPopUp" class="attachments-date">Last Updated
@@ -79,3 +82,9 @@
             </ng-template>
       </kendo-treeview>
 </div>
+<ng-template #renameTemplate >
+      <kendo-dialog-titlebar (close)="onCloseAddNewEditFolderClicked()" > {{isFolder ? 'Rename Folder': 'Rename File'}}</kendo-dialog-titlebar>
+      <common-edit-template-name [templateDesc] = "templateDesc"  [documentTemplateId] = "documentTemplateId"   [isFolder] = "isFolder"  (updateTemplate)="updateTemplate($event)" 
+       (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"> 
+  </common-edit-template-name> 
+</ng-template>

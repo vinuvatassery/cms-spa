@@ -8,10 +8,10 @@
 <kendo-dialog-actions>
       <div class="justify-content-between">
             <div class="justify-content-end">
-                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel">
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancelClick()">
                         Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Deactivate">
+                  <button kendoButton [primary]="true" aria-label="Deactivate" (click)="onDeactivateConfirm(true)">
                         Deactivate
                   </button>
             </div>

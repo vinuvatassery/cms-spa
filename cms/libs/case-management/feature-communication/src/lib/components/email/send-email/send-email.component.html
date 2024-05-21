@@ -29,6 +29,7 @@
               valueField="mailCode"
               [(ngModel)]="selectedMailCode"
               (valueChange)="handleDdlMailCodesChange($event)"
+              id = "mailCode"
             >
             </kendo-dropdownlist>
           </kendo-floatinglabel>
@@ -48,6 +49,7 @@
         [readonly]="communicationEmailTypeCode === 'APPLICATION_AUTHORIZATION_EMAIL' || communicationEmailTypeCode === 'CER_AUTHORIZATION_EMAIL'"
         (valueChange)="handleEmailsChanged($event)"
         aria-label="to address"
+        id="toEmailAddress"
         ></kendo-multiselect>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="isToEmailMissing">
@@ -105,7 +107,8 @@
         <div class="flex-col">
           <kendo-floatinglabel text="Subject">
             <kendo-textbox  placeholder="Subject" [(ngModel)]="emailSubject" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode" 
-            [maxlength]="subjectMax" (valueChange)="handleSubjectChanged($event)">   </kendo-textbox>
+            [maxlength]="subjectMax" (valueChange)="handleSubjectChanged($event)"
+            id="subject">   </kendo-textbox>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="isEmailSubjectMissing">
             Subject is required.
