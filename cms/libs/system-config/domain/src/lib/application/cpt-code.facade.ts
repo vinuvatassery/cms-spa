@@ -1,7 +1,9 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import {
+  ApiType,
   ConfigurationProvider,
+  DocumentFacade,
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
@@ -25,10 +27,10 @@ export class CptCodeFacade {
 
   public sortValueCptCode = 'cptCode1'; 
   public sortCptCodeGrid: SortDescriptor[] = [{
-    field: this.sortValueCptCode,
+    field: this.sortValueCptCode, dir: 'asc'
   }];
 
-  private loadCptCodeListsServiceSubject = new BehaviorSubject<any>([]);
+  private loadCptCodeListsServiceSubject = new Subject<any>();
   loadCptCodeListsService$ = this.loadCptCodeListsServiceSubject.asObservable();
 
   private cptCodeListDataLoaderSubject = new BehaviorSubject<boolean>(false);
@@ -43,6 +45,9 @@ export class CptCodeFacade {
   private editCptCodeSubject = new Subject<boolean>();
   editCptCode$ = this.editCptCodeSubject.asObservable();
 
+  private cptCodeChangeStatusSubject = new Subject<any>();
+  cptCodeChangeStatus$ = this.cptCodeChangeStatusSubject.asObservable();
+
 
   /** Constructor **/
   constructor(
@@ -52,6 +57,7 @@ export class CptCodeFacade {
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly userManagementFacade: UserManagementFacade,
+    private readonly documentFacade: DocumentFacade,
   ) {}
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -140,6 +146,23 @@ export class CptCodeFacade {
     });
   }
 
+  changeCptCodeStatus(cptCodeId: any, status: boolean) {
+    this.showLoader();
+    this.cptCodeService.changeCptCodeStatus(cptCodeId, status)
+      .subscribe({
+        next: (response: any) => {
+          if (response.status) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message)
+          }
+          this.cptCodeChangeStatusSubject.next(true);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loggingService.logException(err);
+        },
+      });
+  }
 
   loadSupportGroupDistinctUserIdsAndProfilePhoto(data: any[]) {
     const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');
@@ -153,6 +176,11 @@ export class CptCodeFacade {
           },
         });
     }
+  }
+
+  onExportAllUser(params: any){
+    const fileName = 'CPT Code List'
+    this.documentFacade.getExportFile(params,`cptCode`, fileName,ApiType.SystemConfig);
   }
 
 }

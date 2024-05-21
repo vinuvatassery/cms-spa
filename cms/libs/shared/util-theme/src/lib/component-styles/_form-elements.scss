@@ -1195,9 +1195,10 @@ kendo-timepicker {
   max-height: 120px;
 }
 
-.doc_activeflag{
-
+.invalidEditor{
+  border: 1px solid $error-color-1 !important;
 }
+
 .file_label{
   .file_status{
     // font-size: 12px;

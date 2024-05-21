@@ -10,7 +10,8 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnChanges
 } from '@angular/core';
 /** Facades **/
 import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, ScreenType} from '@cms/case-management/domain';
@@ -30,7 +31,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class EmailEditorComponent implements OnInit {
+export class EmailEditorComponent implements OnInit, OnChanges {
   /** Input properties **/
   @Input() selectedTemplate!: any;
   @Input() selectedTemplateContent !:any;
@@ -289,7 +290,6 @@ export class EmailEditorComponent implements OnInit {
   }
 
   editorValueChange(event: any){
-    this.isContentMissing = false;
     this.editorValueChangeEvent.emit(event);
     this.contentValidateHandler(true);
   }
