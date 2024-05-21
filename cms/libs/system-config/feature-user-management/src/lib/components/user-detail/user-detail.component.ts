@@ -10,6 +10,7 @@ import {
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { group } from '@angular/animations';
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
@@ -27,18 +28,20 @@ export class UserDetailComponent implements OnInit {
   userAccessTypeLovData: any = null;
   userRoleTypeCodeLovData: any = null;
   isCaseManagerSelected = true;
-  isAccessTypeInternal = false;
+  isAccessTypeInternal = true;
   activeFlag = 'Y';
-  userAccessType: any;
-  userRoleType: string = "";
-  userRolesList = [];
+  userAccessType: any = UserAccessType.Internal;
+  userRoleType: string = UserAccessType.Internal;
+  selectedUserRolesList: any = [];
   userFormGroup!: FormGroup;
+  selectedDomain: any = null;
+  selectedGroup: any = null;
+  isFormSubmit: boolean = false;
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
     private userManagementFacade: UserManagementFacade,
     private lovFacade: LovFacade,
-    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -49,16 +52,17 @@ export class UserDetailComponent implements OnInit {
     this.lovFacade.getRoleTypeLov();
     this.lovFacade.getCaseManagerDomainLov();
     this.lovFacade.getCaseManagerAssistorGrpLov();
+    this.disableFields();
   }
 
   private buildUserForm(){
     this.userFormGroup = new FormGroup({
       userAccessType: new FormControl(''),
       pNumber: new FormControl('', { validators: Validators.required }),
-      firstName: new FormControl(''),
-      lastName: new FormControl(''),
-      email: new FormControl(''),
-      role: new FormControl({}),
+      firstName: new FormControl('', { validators: Validators.required }),
+      lastName: new FormControl('', { validators: Validators.required }),
+      email: new FormControl('', {validators: [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]}),
+      role: new FormControl([], { validators: Validators.required }),
       domain: new FormControl({}),
       group: new FormControl({})
     });
@@ -93,25 +97,37 @@ export class UserDetailComponent implements OnInit {
       },
       error: (err) => {},
     });
-
-    this.ddlUserRole$.subscribe({
-      next: (data) => {
-        this.userRolesList = data;
-      },
-      error: (err) => {}
-    })
   }
 
   onUserAccessValueChange(event: Event){
     let value = (event.target as HTMLInputElement).value.toUpperCase();
     if(value == UserAccessType.Internal){
-      this.isAccessTypeInternal = true;      
+      this.isAccessTypeInternal = true;
+      this.setValidators(null, Validators.required);
     }else{
       this.isAccessTypeInternal = false;
+      this.setValidators(Validators.required, null);
     }
     this.disableFields();
     this.userRoleType = this.getUserRoleType(value);
     this.loadDdlUserRole();
+  }
+
+  setValidators(vaidator: any, pNumberValidator: any){
+    this.userFormGroup.controls['domain'].setValidators(
+      vaidator
+    );
+    this.userFormGroup.controls['domain'].updateValueAndValidity();
+
+    this.userFormGroup.controls['group'].setValidators(
+      vaidator
+    );
+    this.userFormGroup.controls['group'].updateValueAndValidity();
+
+    this.userFormGroup.controls['pNumber'].setValidators(
+      pNumberValidator
+    );
+    this.userFormGroup.controls['pNumber'].updateValueAndValidity();
   }
 
   getUserRoleType(userType: any){
@@ -138,6 +154,30 @@ export class UserDetailComponent implements OnInit {
 
   onUserSaveButtonClick(){
     this.userFormGroup.markAllAsTouched();
+    this.isFormSubmit = true;
+    if(this.userFormGroup.status == 'INVALID'){
+      return;
+    }
+    let formControls = this.userFormGroup.controls;
+    let user = {
+      userTypeCode: formControls["userAccessType"].value,
+      firstName: formControls["firstName"].value,
+      lastName: formControls["lastName"].value,
+      email: formControls["email"].value,
+      roles: this.selectedUserRolesList,
+      domainCode: formControls["domain"].value?.lovCode,
+      assistorGroupCode: formControls["group"].value?.lovCode,
+      pOrNbr: formControls["pNumber"].value
+    };
+    this.userManagementFacade.addUser(user);
   }
+
+  onRoleValueChange(roles: any){
+    this.selectedUserRolesList = [];
+    roles.forEach((role: any) => {
+      this.selectedUserRolesList.push(role.roleId);
+    });
+  }
+
 
 }
