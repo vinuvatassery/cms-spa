@@ -85,9 +85,3 @@
         <common-grid-no-records></common-grid-no-records>
       </ng-template>
 </kendo-grid>
-<!-- Deactivate User Modal Html-->
-<kendo-dialog *ngIf="isUserRoleDeletePopup" (close)="onUserRoleDeleteClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Delete User Role </kendo-dialog-titlebar>
-  <common-delete-confirmation></common-delete-confirmation>
-</kendo-dialog>
