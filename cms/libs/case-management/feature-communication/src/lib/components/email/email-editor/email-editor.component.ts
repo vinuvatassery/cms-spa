@@ -16,7 +16,8 @@ import {
 /** Facades **/
 import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, ScreenType} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { EditorComponent } from '@progress/kendo-angular-editor';
+import { EditorComponent, schema } from '@progress/kendo-angular-editor';
+import { DOMParser as ProseDOMParser, Slice } from 'prosemirror-model';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
@@ -113,6 +114,7 @@ export class EmailEditorComponent implements OnInit, OnChanges {
   otherCount!: number;
   caseManagerEmail: any = null;
   isAttachmentIconVisible = true;
+  customStyleContent= '.k-content .hilightcolor{background: yellow};';
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -284,8 +286,15 @@ export class EmailEditorComponent implements OnInit, OnChanges {
   }
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {
-    editor.exec('insertText', { text: '{{' +item + '}}' });
-    editor.value = editor.value.replace(/#CURSOR#/, item);
+    let strResult: string = "<span class='hilightcolor'> {{"+ item +"}}</span>";
+    const view = editor.view;
+    const state = view.state;
+    const parser = new DOMParser();
+    const tmpNode = parser.parseFromString(strResult, 'text/html');
+    const domParser = ProseDOMParser.fromSchema(schema);
+    const newNodes = domParser.parse(tmpNode);
+    view.dispatch(state.tr.insert(state.selection.head, newNodes));
+    view.focus();
     this.onSearchClosed();
   }
 
