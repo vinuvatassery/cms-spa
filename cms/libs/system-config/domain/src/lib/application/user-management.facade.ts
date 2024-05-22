@@ -604,21 +604,11 @@ export class UserManagementFacade {
     this.userDataService.deActivateUserRole(user).subscribe({
       next: (success:any) => {
         this.hideLoader();
-        if(success.status == 1){
+        if(success.status > 0){
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, success.message);
       }
       else{
-        success.message=success.message.replace('!baseurl-!',window.location.origin);
-        console.log(success.message);
-        this.notificationService.show({
-          content: success.message,
-          position: { horizontal: 'right', vertical: 'bottom' },
-          animation: { type: "slide", duration: 400 },
-          closable: true,
-          type: { style: 'error', icon: true },
-          cssClass: 'reminder-notification-bar',
-        });
-        this.showHideSnackBar(SnackBarNotificationType.WARNING, success.message);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, success.message);
       }
       },
       error: (err) => {
