@@ -16,8 +16,7 @@ import {
 /** Facades **/
 import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, ScreenType} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { EditorComponent, schema } from '@progress/kendo-angular-editor';
-import { DOMParser as ProseDOMParser, Slice } from 'prosemirror-model';
+import { EditorComponent } from '@progress/kendo-angular-editor';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
@@ -287,14 +286,8 @@ export class EmailEditorComponent implements OnInit, OnChanges {
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {
     let strResult: string = "<span class='hilightcolor'> {{"+ item +"}}</span>";
-    const view = editor.view;
-    const state = view.state;
-    const parser = new DOMParser();
-    const tmpNode = parser.parseFromString(strResult, 'text/html');
-    const domParser = ProseDOMParser.fromSchema(schema);
-    const newNodes = domParser.parse(tmpNode);
-    view.dispatch(state.tr.insert(state.selection.head, newNodes));
-    view.focus();
+    editor.exec("insertText", { text: "#CURSOR#" });
+    editor.value = editor.value.replace(/#CURSOR#/, strResult);
     this.onSearchClosed();
   }
 
