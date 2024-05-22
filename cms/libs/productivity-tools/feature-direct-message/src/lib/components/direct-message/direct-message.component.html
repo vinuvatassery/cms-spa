@@ -100,7 +100,7 @@
     </div>
   
     </div>
-    <div class="chat_bottom_stickey">
+    <div class="chat_bottom_stickey" *ngIf="outOfOfficeBanner">
       <small class="outofoffice_text"><strong class="outhead">Out Of Office</strong> 
         <!-- <p>  2 members are out of office <a kendoPopoverAnchor [popover]="outOfOfficePopover"  showOn="hover">   See More   </a> </p> -->
         <p class="outofofc"><strong>Caseworkername</strong> is out of office <a kendoPopoverAnchor [popover]="outOfOfficePopover"  showOn="hover">   See More   </a></p>
