@@ -8,10 +8,20 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 export class DeactivateTemplateComponent {
 @Output() onCloseFormsDocumentDeactivateClicked = new EventEmitter()
 @Input () isFolder :any;
-
-
+@Input() documentTemplateId : any
+@Input() SubtypeCode : any
+@Output() deactivateTemplateStatus= new EventEmitter()
 onCancelClick(){
-  debugger
   this.onCloseFormsDocumentDeactivateClicked.emit(true);
 }
+onDeactivateClicked(){
+  const payload = {
+    isActive :false,
+    DocumentTemplateId: this.documentTemplateId,
+    subTypeCode: this.isFolder ? "FOLDER" : "FILE"
+  };
+  this.deactivateTemplateStatus.emit(payload)
+  this.onCloseFormsDocumentDeactivateClicked.emit(true)
+  }
 }
+

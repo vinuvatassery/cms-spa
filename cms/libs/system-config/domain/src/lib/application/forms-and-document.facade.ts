@@ -23,12 +23,17 @@ export class FormsAndDocumentFacade {
     uploadNewVersionDocument$ =  this.uploadNewVersionDocumentSubject.asObservable();
     private renameSubject = new BehaviorSubject<any>([]);
     renameSubject$ =  this.renameSubject.asObservable();
+    private deActiveTemplateSubject = new BehaviorSubject<any>([]);
+    deActiveTemplate$ =  this.deActiveTemplateSubject.asObservable();
+    private reActiveTemplateSubject = new BehaviorSubject<any>([]);
+    reActiveTemplate$ =  this.reActiveTemplateSubject.asObservable();
   
     showLoader() { this.loaderService.show(); }
     hideLoader() { this.loaderService.hide(); }
     constructor(private readonly uploadFormandDocumentService: FormsAndDocumentDataService,
         private readonly loggingService: LoggingService,
         private readonly loaderService: LoaderService,
+        private readonly snackbarService: NotificationSnackbarService,
         private readonly notificationSnackbarService: NotificationSnackbarService) {}
 
     showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -176,20 +181,50 @@ export class FormsAndDocumentFacade {
           },
         })
       }
-      // reActivatePharmacies(clientPharmacyId: string,pharmacy: any,isShowHistoricalData?:boolean){
-      //   this.loaderService.show();
-      //    this.updateStatus.activeDrugPharmacy(clientPharmacyId,pharmacy).subscribe({
-      //     next: (response:any) => {
-      //       this.loaderService.hide();
-      //       this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Re-Activated Successfully');
-    
-      //       this.loadClientPharmacyList(pharmacy.ClientId,false,isShowHistoricalData);
-      //     },
-      //     error: (err) => {
-      //       this.loaderService.hide();
-      //       this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-      //       this.loggingService.logException(err);
-      //     },
-      //   });
-      // }
+      deactiveTemplateStatus(payload:any){
+          this.loaderService.show();
+          this.uploadFormandDocumentService.updateStatus(payload).subscribe({
+           next: (response:any) => {
+             if(response){
+              var filter={
+                sort : true,
+                active: 'A'
+              }
+              this.deActiveTemplateSubject.next(true);
+              this.loadFolderFile(filter);
+             }
+             this.loaderService.hide();
+             
+             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+           },
+           error: (err) => {
+             this.loaderService.hide();
+             this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+           },
+         });
+      }
+
+      reactiveTemplateStatus(payload:any){
+          this.loaderService.show();
+          this.uploadFormandDocumentService.updateStatus(payload).subscribe({
+           next: (response:any) => {
+             if(response){
+              var filter={
+                sort : true,
+                active: 'A'
+              }
+              this.reActiveTemplateSubject.next(true);
+              this.loadFolderFile(filter);
+             }
+             this.loaderService.hide();
+             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+
+             
+           },
+           error: (err) => {
+             this.loaderService.hide();
+             this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+           },
+         });
+      }
 }

@@ -5,7 +5,7 @@
     <div class="justify-content-between">
         <div class="justify-content-end">
             <button kendoButton [primary]="true" look="outline" (click)="onCancelClick()" aria-label="Cancel"> Cancel </button>
-            <button kendoButton [primary]="true" aria-label="Deactivate"> REACTIVATE </button>
+            <button kendoButton [primary]="true" (click)="onReactivateClicked()" aria-label="Deactivate" > REACTIVATE </button>
         </div>
     </div>
 </kendo-dialog-actions>

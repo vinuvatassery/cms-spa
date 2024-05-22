@@ -47,6 +47,8 @@ export class CommonFormDocumentListComponent implements OnInit {
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
   documentTemplateId = '';
+  SubtypeCode=' ';
+
   isDragDropEnabled = false;
   templateDesc: any
   activeflag:any;
@@ -91,6 +93,9 @@ export class CommonFormDocumentListComponent implements OnInit {
         this.temData = data;
         if(!this.isdeactivateOpen)
           {  this.isFolder = data.isFolder ? true: false;
+            this.documentTemplateId =data.documentTemplateId;
+            this.SubtypeCode=data.SubtypeCode;
+
             this.isdeactivateOpen = true;
             this.deactivateTemplate(this.deactivateTemplates);
           }
@@ -104,6 +109,8 @@ export class CommonFormDocumentListComponent implements OnInit {
         if(!this.reactivateOpen)
           {
             this.isFolder = data.isFolder ? true: false;
+            this.documentTemplateId =data.documentTemplateId;
+            this.SubtypeCode=data.SubtypeCode;
             this.reactivateOpen = true;
             this.reactivateTemplate(this.activateTemplates);
           }
@@ -354,6 +361,15 @@ export class CommonFormDocumentListComponent implements OnInit {
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
+  }
+
+  deactivateTemplateStatus(payload:any){
+    this.formsAndDocumentFacade.deactiveTemplateStatus(payload)
+
+  }
+  reactivateTemplateStatus(payload:any){
+    this.formsAndDocumentFacade.reactiveTemplateStatus(payload)
+
   }
 }
 
