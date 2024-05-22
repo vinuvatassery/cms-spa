@@ -68,7 +68,7 @@ export class DirectMessageComponent implements OnInit {
    private notificationReminderDialog: any;
    disableChatInput = false;
    /** Public properties **/
- 
+   outOfscheduleData : any;
    uploadDocumentTypeDetails:any;
    ListModel = [
     {
@@ -94,7 +94,7 @@ export class DirectMessageComponent implements OnInit {
      {
        text: "Attach from Client’s Attachments",
      },
- 
+
    ];
   constructor(private directMessageFacade: DirectMessageFacade
     , private changeDetection : ChangeDetectorRef
@@ -144,16 +144,17 @@ export class DirectMessageComponent implements OnInit {
         this.showChatLoader = false;
         this.groupedMessages = undefined
         this.disableChatInput = true;
-        this.changeDetection.detectChanges()  
+        this.changeDetection.detectChanges()
         return;
-      } 
+      }
       this.communicationDetails = res.communicationDetails;
+      this.outOfscheduleData = res.outOfscheduleData;
         this.threadId = res.threadId
         this.threadCreationTime = res.creationTime
         this.chatClient = this.directMessageFacade.getChatClient(res.communicationDetails?.token)
         this.setupHandlers()
-       
-        this.changeDetection.detectChanges()     
+
+        this.changeDetection.detectChanges()
         this.showChatLoader = false
       })
           this.directMessageFacade.getCommunicationDetails(this.clientId)
@@ -162,10 +163,10 @@ export class DirectMessageComponent implements OnInit {
      })
 
   }
- 
+
 
   /** Internal event methods **/
- 
+
   onCloseDirectMessageClicked() {
     this.closeAction.emit();
     this.isShownDirectMessage = !this.isShownDirectMessage;
@@ -244,7 +245,7 @@ export class DirectMessageComponent implements OnInit {
   }
 
   async sendMessage() {
-   
+
     if (!this.sendMsg.message) {
       return;
     }else{
@@ -267,11 +268,11 @@ message:  JSON.stringify(clientMessage)
                     type: 'text',
                     userToken : this.communicationDetails.token,
                     threadId: this.threadId,
-                    clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId, 
+                    clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId,
                     clientDisplayName : this.communicationDetails.clientUserName,
                     clientMessage : JSON.stringify(clientMessageContent)
                   })
-    }            
+    }
     this.sendMsg.message =""
 }
 
@@ -293,7 +294,7 @@ message:  JSON.stringify(clientMessage)
       return;
     }
 
-     for await (const message of messages) {           
+     for await (const message of messages) {
          if (message.type == "text") {
         let messageObj = this.messages.find((x:any) => x.id == message.id);
         if(this.checkJson(message.content.message)) {
@@ -309,11 +310,11 @@ message:  JSON.stringify(clientMessage)
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
-              image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined 
+              image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined
             };
           }
           else {
-           
+
             let msg = {
               id: message.id,
               sequenceId :message.sequenceId,
@@ -369,7 +370,7 @@ message:  JSON.stringify(clientMessage)
     this.keys =  Object.keys(this.groupedMessages).sort()
     this.scrollToBottom()
     this.changeDetection.detectChanges()
-  
+
   }
 
    mySortingFunction = (a :any, b:any) => {
@@ -404,11 +405,11 @@ onUploadDocumentsOpenClicked(template: TemplateRef<unknown>, event:any): void {
     cssClass:
       'app-c-modal app-c-modal-md app-c-modal-np',
   });
-  
-} 
+
+}
 
 
-onUploadDocumentsClosed(event: any) { 
+onUploadDocumentsClosed(event: any) {
   this.notificationReminderDialog.close();
 }
 getUploadedDocuments(uploadedRequest:any){
@@ -444,7 +445,7 @@ message:  JSON.stringify(clientMessage)
         type: 'text',
         threadId: this.threadId,
         userToken : this.communicationDetails.token,
-        clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId, 
+        clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId,
                     clientDisplayName : this.communicationDetails.clientUserName,
                     clientMessage : JSON.stringify(clientMessageContent)
       }

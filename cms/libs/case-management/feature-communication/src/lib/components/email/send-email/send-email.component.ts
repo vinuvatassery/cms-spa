@@ -212,7 +212,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         { field: 'ActiveFlag', operator: 'eq', value: 'Y' }
       ]
     }])).subscribe(resp => {
-      this.emails = resp?.items?.map((contact: any) => contact?.emailAddress?.trim());
+      this.emails = resp.items?.map((item: any) => item.emailAddress).filter((email: any) => email && this.isValidEmail(email)) as string[];
       this.selectedToEmails = this.emails;
       this.showToEmailLoader = false;
       this.ref.detectChanges();
@@ -222,6 +222,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
     this.isMailCodeMissing = false;
     this.isFormValid = true;
+    this.ref.detectChanges();
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
   }
 
   handleEmailsChanged(values: any) {
@@ -239,6 +245,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         this.isFormValid = true;
       }
     }
+    this.ngDirtyInValid();
   }
 
   handleSubjectChanged(subject: any) {
@@ -247,6 +254,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isEmailSubjectMissing = false;
       this.isFormValid = true;
     }
+
+    this.ngDirtyInValid();
   }
 
   getProfileName() {
@@ -394,31 +403,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Internal event methods **/
   onSaveForLaterTemplateClicked() {
-    this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if (this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0) {
-      this.isToEmailMissing = true;
-      this.isFormValid = false;
-      this.onCloseSaveForLaterClicked();
-    }
-    if (this.emailSubject === undefined || this.emailSubject === '') {
-      this.isEmailSubjectMissing = true;
-      this.isFormValid = false;
-      this.onCloseSaveForLaterClicked();
-    }
-    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>') {
-      this.isContentMissing = true;
-      this.isFormValid = false;
-      this.onCloseSaveForLaterClicked();
-    }
-
-    if (this.notificationGroup === ScreenType.VendorProfile) {
-      if (this.selectedMailCode?.mailCode === undefined || this.selectedMailCode?.mailCode === '') {
-        this.isMailCodeMissing = true;
-        this.isFormValid = false;
-        this.onCloseSaveForLaterClicked();
-      }
-    }
-    if (this.isFormValid) {
+      if (this.isFormValid) {
       this.isShowSaveForLaterPopupClicked = false;
       this.isOpenSendEmailClicked = true;
       this.selectedTemplate.toEmailAddress = this.selectedToEmails;
@@ -478,7 +463,36 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onSaveForLaterClicked() {
-    this.isShowSaveForLaterPopupClicked = true;
+    this.selectedTemplate.templateContent = this.updatedTemplateContent;
+    if (this.selectedToEmails === undefined || this.selectedToEmails === '' || this.selectedToEmails?.length === 0) {
+      this.isToEmailMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
+    if (this.emailSubject === undefined || this.emailSubject === '') {
+      this.isEmailSubjectMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
+      this.isContentMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+    }
+
+
+    if (this.notificationGroup === ScreenType.VendorProfile) {
+      if (this.selectedMailCode?.mailCode === undefined || this.selectedMailCode?.mailCode === '') {
+        this.isMailCodeMissing = true;
+        this.isFormValid = false;
+        this.onCloseSaveForLaterClicked();
+      }
+    }
+    if(this.isFormValid){
+      this.isShowSaveForLaterPopupClicked = true;
+    }
+    this.ngDirtyInValid();
+
   }
 
   onSendEmailDailougeConfirmationClicked() {
@@ -656,7 +670,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isFormValid = false;
       this.onSendEmailDailougeConfirmationClicked();
     }
-    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>') {
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -669,10 +683,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       }
     }
     if (this.isFormValid) {
-    this.isOpenSendEmailClicked = true;
-    this.isShowPreviewEmailPopupClicked = false;
-    this.isShowSendEmailConfirmationPopupClicked = true;
+      this.isOpenSendEmailClicked = true;
+      this.isShowPreviewEmailPopupClicked = false;
+      this.isShowSendEmailConfirmationPopupClicked = true;
     }
+    this.ngDirtyInValid();
   }
 
   onCloseSendEmailClicked() {
@@ -717,6 +732,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     else {
       this.loadNewTemplate(event);
     }
+    this.ngDirtyInValid();
   }
 
   handleconfirmPopupHeader(event: any){
@@ -724,26 +740,38 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.PendingNoticeEmail:
         this.confirmPopupHeader = 'Send Pending Email';
         this.snackBarMessage = 'Pending Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Pending Email Later?';
+        this.saveForLaterModelText="You must send the Pending Email within 14 Days";
         break;
       case CommunicationEventTypeCode.RejectionNoticeEmail:
         this.confirmPopupHeader = 'Send Rejection Email';
         this.snackBarMessage = 'Rejection Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Rejection Email Later?';
+        this.saveForLaterModelText="You must send the Rejection Email within 14 Days";
         break;
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
         this.confirmPopupHeader = 'Send Approval Email';
         this.snackBarMessage = 'Approval Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Approval Email Later?';
+        this.saveForLaterModelText="You must send the Approval Email within 14 Days";
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
         this.confirmPopupHeader = 'Send Disenrollment Email';
         this.snackBarMessage = 'Disenrollment Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Disenrollment Email Later?';
+        this.saveForLaterModelText="You must send the Disenrollment Email within 2 Days";
         break;
       case CommunicationEventTypeCode.RestrictedNoticeEmail:
         this.confirmPopupHeader = 'Send Restricted Email';
         this.snackBarMessage = 'Restricted Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Restricted Email Later?';
+        this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
         break;
       default:
         this.confirmPopupHeader = 'Send Email';
         this.snackBarMessage = 'Email Sent! An event has been logged.';
+        this.saveForLaterHeadterText = "Email Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
         break;
     }
   }
@@ -765,12 +793,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.isShowToEmailLoader$.next(true);
               this.isOpenDdlEmailDetails = true;
               this.selectedToEmails = [];
-              for (let email of this.toEmail) {
-                if (this.selectedToEmails.filter((x: any) => x === email).length === 0) {
-                  this.selectedToEmails.push(email?.trim());
-                }
-              }
-              this.emails = this.selectedToEmails;
+              this.getToEmail(this.toEmail);
+              this.selectedToEmails = this.emails;
               if (data.description === 'Draft Custom Email') {
                 this.emailSubject = '';
               } else {
@@ -816,8 +840,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isOpenDdlEmailDetails = true;
       this.selectedMailCodeId = event.vendorAddressId;
       this.selectedToEmails = [];
-      this.selectedToEmails = event.to;
-      this.emails = this.selectedToEmails;
+      this.getToEmail(event.to);
+      this.selectedToEmails = this.emails;
+
       this.emailSubject = event?.requestSubject ?? event.description;
       this.defaultBCCEmail = event.bcc;
       if (event?.bcc?.length > 0) {
@@ -846,6 +871,17 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
     else {
       this.selectedTemplate.notificationDraftId = event.notificationDraftId;
+    }
+  }
+
+  
+  getToEmail(to: any) {
+    if(to?.length > 0){
+    for (let email of to) {
+    if (email && email.trim() !== "" && (this.selectedToEmails.filter((x: any) => x === email).length === 0) && this.isValidEmail(email)) {
+          this.emails.push(email?.trim());
+        }
+      }
     }
   }
 
@@ -1117,10 +1153,49 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   editorValueChange(event: any) {
     this.updatedTemplateContent = event;
+    if(!(this.updatedTemplateContent  === undefined) || !(this.updatedTemplateContent === '') || !(this.updatedTemplateContent === "") || !(this.updatedTemplateContent.trim() === '<p></p>')){
+      this.isContentMissing = false;
+    }
+    this.ref.detectChanges();
   }
 
   contentValidateEvent(event: boolean) {
     this.isFormValid = event;
+  }
+
+  ngDirtyInValid() {
+    if (this.isToEmailMissing) {
+      document.getElementById('toEmailAddress')?.classList.remove('ng-valid');
+      document.getElementById('toEmailAddress')?.classList.add('ng-invalid');
+      document.getElementById('toEmailAddress')?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById('toEmailAddress')?.classList.remove('ng-invalid');
+      document.getElementById('toEmailAddress')?.classList.remove('ng-dirty');
+      document.getElementById('toEmailAddress')?.classList.add('ng-valid');
+    }
+
+    if (this.isEmailSubjectMissing) {
+      document.getElementById('subject')?.classList.remove('ng-valid');
+      document.getElementById('subject')?.classList.add('ng-invalid');
+      document.getElementById('subject')?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById('subject')?.classList.remove('ng-invalid');
+      document.getElementById('subject')?.classList.remove('ng-dirty');
+      document.getElementById('subject')?.classList.add('ng-valid');
+    }
+
+    if (this.isMailCodeMissing) {
+      document.getElementById('mailCode')?.classList.remove('ng-valid');
+      document.getElementById('mailCode')?.classList.add('ng-invalid');
+      document.getElementById('mailCode')?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById('mailCode')?.classList.remove('ng-invalid');
+      document.getElementById('mailCode')?.classList.remove('ng-dirty');
+      document.getElementById('mailCode')?.classList.add('ng-valid');
+    }
   }
 
 }

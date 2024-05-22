@@ -128,6 +128,13 @@ export class UserDataService {
     );
     }
 
+    addUser(userData: any) {      
+      return this.http.post(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/add-user`,
+        userData
+      );
+      }
+
   loadUserAssignedRolesByUserId(userId:any, data:any) {
       const pageAndSortedRequestDto =
       {
@@ -167,6 +174,13 @@ export class UserDataService {
     formData.append('ProfilePhoto', uploadRequest?.profilePhoto ?? '');
     return this.http.post(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${uploadRequest.loginUserId}/profile-photo`, formData);
+  }
+
+  searchPNumber(pNumber:string){
+    return this.http.get<LoginUser[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/${pNumber}/ad-user-data`
+    );
   }
 
   loadUsersRoleAndPermissions() {
@@ -617,4 +631,13 @@ export class UserDataService {
       },
     ]);
   }
+
+  deActivateUserRole(user : any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/deactivate`, user
+    );
+  }
+
+
 }

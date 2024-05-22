@@ -202,8 +202,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   handleDdlMailCodesChange(mailCode: any) {
     this.mailingAddress = mailCode;
     this.isMailCodeMissing = false;
+    this.isMailingAddressMissing = false;
     this.selectedMailingCode = mailCode?.mailCode;
     this.isFormValid = true;
+    this.ngDirtyInValid();
   }
 
   private loadClientMailingAddress() {
@@ -274,28 +276,33 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   onSaveForLaterClicked() {
-    this.isShowSaveForLaterPopupClicked = true;
-  }
-
-  onSaveForLaterTemplateClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
-    if(!this.mailingAddress){
+    if (!this.mailingAddress) {
       this.isMailingAddressMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
-      }
-    if(this.notificationGroup === ScreenType.VendorProfile){
-      if(this.mailingAddress === undefined || this.mailingAddress === ''){
-      this.isMailCodeMissing = true;
-      this.isFormValid = false;
-      this.onCloseSaveForLaterClicked();
+    }
+    if (this.notificationGroup === ScreenType.VendorProfile) {
+      if (this.mailingAddress === undefined || this.mailingAddress === '') {
+        this.isMailCodeMissing = true;
+        this.isFormValid = false;
+        this.onCloseSaveForLaterClicked();
       }
     }
+
+    if (this.isFormValid) {
+      this.isShowSaveForLaterPopupClicked = true;
+    }
+
+    this.ngDirtyInValid();
+  }
+
+  onSaveForLaterTemplateClicked() {
     if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = true;
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
@@ -355,10 +362,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
   }
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
+    }
+    else{
+      this.isContentMissing = false;
     }
     if(this.notificationGroup === ScreenType.VendorProfile){
       if(this.mailingAddress === undefined || this.mailingAddress === ''){
@@ -504,9 +514,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   onSendLetterToPrintClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
       this.isContentMissing = true;
       this.isFormValid = false;
+    }
+    else{
+      this.isContentMissing = false;
     }
     if(this.notificationGroup === ScreenType.VendorProfile){
       if(this.mailingAddress === undefined || this.mailingAddress === ''){
@@ -523,6 +536,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.isShowSendLetterToPrintPopupClicked=true;
     this.isShowPreviewLetterPopupClicked=false;
     }
+
+    this.ngDirtyInValid();
   }
 
   onCloseNewLetterClicked() {
@@ -649,26 +664,38 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.PendingNoticeLetter:
         this.confirmPopupHeader = 'Send Pending Letter to print?';
         this.snackBarMessage = 'Pending Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Pending Letter Later?';
+        this.saveForLaterModelText="You must send the Pending Letter within 14 Days";
         break;
       case CommunicationEventTypeCode.RejectionNoticeLetter:
         this.confirmPopupHeader = 'Send Rejection Letter to print?';
         this.snackBarMessage = 'Rejection Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Rejection Letter Later?';
+        this.saveForLaterModelText="You must send the Rejection Letter within 14 Days";
         break;
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
         this.confirmPopupHeader = 'Send Approval Letter to print?';
         this.snackBarMessage = 'Approval Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Approval Letter Later?';
+        this.saveForLaterModelText="You must send the Approval Letter within 14 Days";
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         this.confirmPopupHeader = 'Send Disenrollment Letter to print?';
         this.snackBarMessage = 'Disenrollment Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Disenrollment Letter Later?';
+        this.saveForLaterModelText="You must send the Disenrollment Letter within 2 Days";
         break;
       case CommunicationEventTypeCode.RestrictedNoticeLetter:
         this.confirmPopupHeader = 'Send Restricted Letter to print?';
         this.snackBarMessage = 'Restricted Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Restricted Letter Later?';
+        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
         break;
       default:
         this.confirmPopupHeader = 'Send Letter to print?';
         this.snackBarMessage = 'Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
         break;
     }
   }
@@ -860,10 +887,27 @@ loadMailingAddress() {
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;
+  if(!(this.updatedTemplateContent  === undefined) || !(this.updatedTemplateContent === '') || !(this.updatedTemplateContent === "") || !(this.updatedTemplateContent.trim() === '<p></p>')){
+    this.isContentMissing = false;
+  }
+  this.ref.detectChanges();
 }
 
 contentValidateEvent(event: boolean){
   this.isFormValid = event;
+}
+
+ngDirtyInValid() {
+  if (this.isMailCodeMissing) {
+    document.getElementById('mailCode')?.classList.remove('ng-valid');
+    document.getElementById('mailCode')?.classList.add('ng-invalid');
+    document.getElementById('mailCode')?.classList.add('ng-dirty');
+  }
+  else {
+    document.getElementById('mailCode')?.classList.remove('ng-invalid');
+    document.getElementById('mailCode')?.classList.remove('ng-dirty');
+    document.getElementById('mailCode')?.classList.add('ng-valid');
+  }
 }
 
 }

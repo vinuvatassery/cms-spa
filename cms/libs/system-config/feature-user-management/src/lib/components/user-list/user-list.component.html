@@ -203,16 +203,18 @@
   </div>
 </section>
 <!-- Add User Modal Html-->
-<kendo-dialog *ngIf="isUserDetailsPopup" (close)="onUserDetailsClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog *ngIf="isShowUserDetailPopup$ | async" (close)="onUserDetailsClosed()"
+  class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar>{{isEditUsersData ? 'Edit User' : 'Add New User'}}</kendo-dialog-titlebar>
   <system-config-user-detail [isEditValue]="isEditUsersData"
-    (isDeactivatePopupOpened)="onUserDetailsClosed()"></system-config-user-detail>
+    [userId]="loginUserId" [status]="currentUserStatus" (refreshGrid)="loadUserListGrid()"  (isDeactivatePopupOpened)="onUserDetailsClosed()"></system-config-user-detail>
 </kendo-dialog>
 
 <!-- Deactivate User Modal Html-->
 <kendo-dialog *ngIf="isUserDeactivatePopup" (close)="onUserDeactivateClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Deactivate User </kendo-dialog-titlebar>
-  <system-config-deactivate-user-confirmation></system-config-deactivate-user-confirmation>
+  <kendo-dialog-titlebar> Deactivate user?</kendo-dialog-titlebar>
+  <system-config-deactivate-user-confirmation 
+    [userId]="loginUserId" [status]="inActive" (closeDeactivateUsers)="onUserDeactivateClosed()" (refreshGrid)="loadUserListGrid()" ></system-config-deactivate-user-confirmation>
 </kendo-dialog>
+

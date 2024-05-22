@@ -238,24 +238,38 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private save() {
-    this.hasClientDependentsMinorAdditionalIncomeFlag = false
-   this.hasClientDependentsMinorEmployedFlag = false
-
-    var hasAdditionalIncometypes= [IncomeType.work,IncomeType.otherIncome,IncomeType.selfEmployed].includes(this.incomeData.clientIncomes);
-    var hasMinorIncometypes= [IncomeType.Unemployment,IncomeType.SSI, IncomeType.SSDI,IncomeType.SLD,IncomeType.RI,IncomeType.PRVB].includes(this.incomeData.clientIncomes);
-    if(this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes && 
-      !hasAdditionalIncometypes
-    ){
-    this.hasClientDependentsMinorAdditionalIncomeFlag = true
-  }
-
-  if(this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes && 
-  !hasMinorIncometypes
-){
-    this.hasClientDependentsMinorEmployedFlag= true
-  }
-
     this.removeValidations();
+    this.hasClientDependentsMinorAdditionalIncomeFlag = false
+    this.hasClientDependentsMinorEmployedFlag = false
+
+    let hasAdditionalIncometype = false;
+    if (this.incomeData.clientIncomes == null) {
+      hasAdditionalIncometype = false;
+    } else {
+      this.incomeData.clientIncomes.forEach((element: any) => {
+        if (element.incomeTypeCodeDesc == IncomeType.work || element.incomeTypeCodeDesc == IncomeType.otherIncome || element.incomeTypeCodeDesc == IncomeType.selfEmployed) {
+          hasAdditionalIncometype = true;
+        }
+      });
+    }
+    let hasMinorIncometypes = false;
+    if (this.incomeData.clientIncomes == null) {
+      hasMinorIncometypes = false;
+    } else {
+      this.incomeData.clientIncomes.forEach((element: any) => {
+        if (element.incomeTypeCodeDesc == IncomeType.Unemployment || element.incomeTypeCodeDesc == IncomeType.SSI || element.incomeTypeCodeDesc == IncomeType.SSDI || element.incomeTypeCodeDesc == IncomeType.SLD || element.incomeTypeCodeDesc == IncomeType.RI || element.incomeTypeCodeDesc == IncomeType.PRVB) {
+          hasMinorIncometypes = true;
+        }
+      });
+    }
+    if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes && !hasAdditionalIncometype) {
+      this.hasClientDependentsMinorAdditionalIncomeFlag = true
+    }
+    if (this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes && !hasMinorIncometypes) {
+      this.hasClientDependentsMinorEmployedFlag = true
+    } 
+
+
     this.checkValidations();
     this.UploadDocumentValidation();
     let cerFormValid = true;
@@ -287,28 +301,28 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
       else if (this.incomeData.clientIncomes != null && this.isProofOfSchoolDocumentUploaded) {
-          this.loaderService.show();
-          this.incomeFacade.incomeValidSubject.next(true);
-          this.noIncomeData.clientDependentsMinorEmployedFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value;
-          this.noIncomeData.clientDependentsMinorAdditionalIncomeFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value;
-          this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
-          this.noIncomeData.clientId = this.clientId
-          this.noIncomeData.noIncomeClientSignedDate = null;
-          this.noIncomeData.noIncomeSignatureNotedDate = null;
-          this.noIncomeData.noIncomeNote = null;
-          this.noIncomeData.isCERRequest = this.isCerForm;
-          return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
-            catchError((err: any) => {
-              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-              this.loaderService.hide();
-              return of(false);
-            })
-          )
-        }
-        else if (!this.incomeData.clientIncomes) {
-          this.incomeFacade.incomeValidSubject.next(false);
-          return of(false);
-        }
+        this.loaderService.show();
+        this.incomeFacade.incomeValidSubject.next(true);
+        this.noIncomeData.clientDependentsMinorEmployedFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value;
+        this.noIncomeData.clientDependentsMinorAdditionalIncomeFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value;
+        this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
+        this.noIncomeData.clientId = this.clientId
+        this.noIncomeData.noIncomeClientSignedDate = null;
+        this.noIncomeData.noIncomeSignatureNotedDate = null;
+        this.noIncomeData.noIncomeNote = null;
+        this.noIncomeData.isCERRequest = this.isCerForm;
+        return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
+          catchError((err: any) => {
+            this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+            this.loaderService.hide();
+            return of(false);
+          })
+        )
+      }
+      else if (!this.incomeData.clientIncomes) {
+        this.incomeFacade.incomeValidSubject.next(false);
+        return of(false);
+      }
     }
     this.cdr.detectChanges();
     return of(false)
@@ -555,6 +569,18 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.incomeFacade.incomeValidSubject.next(false);
       return false;
     }
+    if(this.hasClientDependentsMinorAdditionalIncomeFlag == true && this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes){
+      this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setErrors({'incorrect':true});
+    }
+    else {
+      this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setErrors(null);
+    }
+    if(this.hasClientDependentsMinorEmployedFlag == true && this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes) {
+      this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setErrors({'incorrect':true});
+    } else {
+      this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setErrors(null);
+    }
+
     return true;
 
   }

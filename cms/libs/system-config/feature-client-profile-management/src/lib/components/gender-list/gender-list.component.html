@@ -64,13 +64,9 @@
   <div class="app-c-table">
     <kendo-grid [data]="genderDataLists$ |async" [resizable]="true" [pageSize]="state.take"
     [pageable]="true" [loading]="isGenderListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
-    [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
+    [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"  [rowReorderable]="true"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
-      <kendo-grid-column field="" title="" [width]="50" class="text-center text-muted">
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="material-icons">drag_indicator</span>
-        </ng-template>
-      </kendo-grid-column>
+      <kendo-grid-rowreorder-column [columnMenu]="false" [width]="40"></kendo-grid-rowreorder-column>
       <kendo-grid-column field="order" title="Order" [width]="60">
       </kendo-grid-column>
       <kendo-grid-column field="gender" title="Gender" [width]="150">
@@ -184,6 +180,23 @@
       <div class="justify-content-end">
         <button kendoButton [primary]="true" aria-label="Cancel" look="outline">Cancel</button>
         <button kendoButton [primary]="true" aria-label="Deactivate">Deactivate</button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+
+
+<!-- Reactivate Gender Modal Html-->
+<kendo-dialog *ngIf="isGenderReactivatePopup" (close)="onCloseGenderReactivateClicked()"
+  class="app-c-modal app-c-modal-sm">
+  <kendo-dialog-titlebar> Reactivate Gender </kendo-dialog-titlebar>
+Are you sure you want to reactivate the gender
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline">Cancel</button>
+        <button kendoButton [primary]="true" aria-label="Reactivate">Reactivate</button>
       </div>
     </div>
   </kendo-dialog-actions>

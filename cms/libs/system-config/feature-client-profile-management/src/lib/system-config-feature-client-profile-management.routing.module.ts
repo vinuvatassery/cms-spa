@@ -19,21 +19,21 @@ const routes: Routes = [
     path: 'languages',
     component: LanguagePageComponent,
     data: {
-      title: 'languages',
+      title: 'Languages',
     },
   },
   {
     path: 'racial-or-ethnic-identity',
     component: RacialOrEthnicIdentityPageComponent,
     data: {
-      title: 'racial or ethnic identity',
+      title: 'Racial or Ethnic Identity',
     },
   },
   {
     path: 'gender',
     component: GenderPageComponent,
     data: {
-      title: 'gender',
+      title: 'Gender',
     },
   },
   {
@@ -47,7 +47,7 @@ const routes: Routes = [
     path: '',
     component: PronounsPageComponent,
     data: {
-      title: 'Case Assignment',
+      title: 'Pronouns',
     },
   },
   {

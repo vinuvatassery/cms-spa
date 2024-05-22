@@ -10,7 +10,8 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnChanges
 } from '@angular/core';
 /** Facades **/
 import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, ScreenType} from '@cms/case-management/domain';
@@ -30,7 +31,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class EmailEditorComponent implements OnInit {
+export class EmailEditorComponent implements OnInit, OnChanges {
   /** Input properties **/
   @Input() selectedTemplate!: any;
   @Input() selectedTemplateContent !:any;
@@ -112,6 +113,7 @@ export class EmailEditorComponent implements OnInit {
   otherCount!: number;
   caseManagerEmail: any = null;
   isAttachmentIconVisible = true;
+  customStyleContent= '.k-content .hilightcolor{background: yellow};';
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -283,13 +285,13 @@ export class EmailEditorComponent implements OnInit {
   }
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {
-    editor.exec('insertText', { text: '{{' +item + '}}' });
-    editor.value = editor.value.replace(/#CURSOR#/, item);
+    let strResult: string = "<span class='hilightcolor'> {{"+ item +"}}</span>";
+    editor.exec("insertText", { text: "#CURSOR#" });
+    editor.value = editor.value.replace(/#CURSOR#/, strResult);
     this.onSearchClosed();
   }
 
   editorValueChange(event: any){
-    this.isContentMissing = false;
     this.editorValueChangeEvent.emit(event);
     this.contentValidateHandler(true);
   }

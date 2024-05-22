@@ -14,6 +14,7 @@ export class GenderListComponent implements OnInit, OnChanges {
 
  /** Public properties **/
  isGenderDeactivatePopup = false;
+ isGenderReactivatePopup = false;
  isGenderDetailPopup = false;
  
  public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -202,6 +203,13 @@ gridDataHandle() {
  onGenderDeactivateClicked() {
    this.isGenderDeactivatePopup = true;
  }
+
+ onCloseGenderReactivateClicked() {
+  this.isGenderReactivatePopup = false;
+}
+onGenderReactivateClicked() {
+  this.isGenderReactivatePopup = true;
+}
  onCloseGenderDetailClicked() {
    this.isGenderDetailPopup = false;
  }

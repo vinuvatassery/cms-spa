@@ -11,7 +11,8 @@
       display: block;
       overflow-y: auto;
       height: calc(100vh - 318px);
-
+      padding-bottom: 70px;
+      position: relative;
       .center-date {
         font-size: $font-size-s;
         letter-spacing: 0.18px;
@@ -262,24 +263,37 @@
   }
 
 }
+.chat-view-container-wrappers{
+  position: relative;
+}
 
-.text-message-preview-wrapper {
- 
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  .text-message-preview{
-    margin-bottom: 1rem;
-    max-width: 300px;
-    p {
-      background: $success-green-dark;
-      padding: 10px;
-      border-radius: 8px 8px 2px 8px;
-      color: $white;
+ .chat_bottom_stickey{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  line-height: normal;
+  width: 100%;
+  .outofoffice_text{
+    display: block;
+    background: #fff2f2;
+    padding: 5px 4px 2px 4px;
+    border-left: 2px solid #c3372c;
+    line-height: 12px;
+    .outhead{
+      color: #c3372c;
     }
-    a{
-      color: $white;
+    p{
+      font-size: 12px;
     }
   }
+ }
 
-}
+ .outofofc{
+  font-size: 12px;
+ }
+ .popoverbodyooo{
+  padding:10px;
+  .outofofc{
+    margin-bottom: 6px;
+  }
+ }
