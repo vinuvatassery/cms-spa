@@ -424,19 +424,19 @@ export class EventLogDescriptionComponent implements OnDestroy {
 
   openConfirmation() {
     if (this.isViewLetter) {
-      this.confirmationTitle = 'Print Letter';
+      this.confirmationTitle = 'Print Letter?';
       this.confirmationModelContent = 'This action cannot be undone. The client will receive an SMS text if applicable.';
       this.confirmationButtonText = 'RE-PRINT';
       this.openConfirmationPopup();
     }
     else if (this.isViewEmail) {
-      this.confirmationTitle = 'Send Email';
+      this.confirmationTitle = 'Send Email?';
       this.confirmationModelContent = 'This action cannot be undone. The client will receive an SMS text if applicable.';
       this.confirmationButtonText = 'RE-SEND';
       this.openConfirmationPopup();
     }
     else if (this.isViewSmsText) {
-      this.confirmationTitle = 'Send SMS';
+      this.confirmationTitle = 'Send SMS?';
       this.confirmationModelContent = 'This action cannot be undone.';
       this.confirmationButtonText = 'RE-SEND';
       this.openConfirmationPopup();
