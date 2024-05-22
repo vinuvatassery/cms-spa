@@ -134,7 +134,8 @@
     </div>
   </kendo-popup>
   <!-- Editor -->
-  <kendo-editor #editor [(value)]="selectedTemplateContent" [ngClass]="isContentMissing?'invalidEditor':''" (valueChange)="editorValueChange($event)">
+  <kendo-editor #editor [(value)]="selectedTemplateContent" (valueChange)="editorValueChange($event)"
+  [iframeCss]="{ content: customStyleContent }">
   <case-management-send-email
   (editorValue)="emailEditorValueEvent($event)"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
@@ -216,7 +217,6 @@
           kendoEditorCreateLinkButton
         ></kendo-toolbar-button>
         <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
-       
       </kendo-toolbar-buttongroup>
       <kendo-toolbar-dropdownbutton *ngIf="isAttachmentIconVisible"
       aria-label="attachment"

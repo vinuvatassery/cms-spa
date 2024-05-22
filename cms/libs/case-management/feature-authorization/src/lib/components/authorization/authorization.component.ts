@@ -328,9 +328,11 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     const isLargeFile = (this.uploadedCopyOfSignedApplication?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
     if (applicationSignedDate?.value > new Date()) {
       this.invalidSignatureDate$.next(true);
+      this.invalidApplicantSignatureDate$.next(false);
       isValid = false;
     }
     if (applicationSignedDate?.value < new Date(this.minApplicantSignedDate)) {
+      this.invalidSignatureDate$.next(false);
       this.invalidApplicantSignatureDate$.next(true);
       isValid = false;
     }
@@ -524,6 +526,8 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
       this.updateDataPoints('applicantSignedDate', false);
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+      this.invalidApplicantSignatureDate$.next(false);
+      this.invalidSignatureDate$.next(false);
       this.ref.detectChanges();
     }
     else if (signedDate > todayDate) {
