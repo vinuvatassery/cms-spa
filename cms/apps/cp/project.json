@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/cp/src",
-  "prefix": "cms",
+  "prefix": "cp",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -15,7 +15,12 @@
         "polyfills": "apps/cp/src/polyfills.ts",
         "tsConfig": "apps/cp/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": ["apps/cp/src/favicon.ico", "apps/cp/src/assets"],
+        "assets": [
+          "apps/cp/src/favicon.ico",
+          "apps/cp/src/assets",
+          "apps/cp/src/silent-renew.html",
+          "apps/cp/src/web.config"
+        ],
         "styles": [    "node_modules/@progress/kendo-theme-material/dist/all.scss",
         "libs/shared/util-theme/src/lib/styles.scss",
         "apps/cp/src/styles.scss"],

@@ -11,7 +11,13 @@ const routes: Routes = [
           title: '',
         },
       },
- 
+      {
+        path: 'signin',
+        component: SigninComponent,
+        data: {
+          title: '',
+        },
+      },
     ];
     
     @NgModule({

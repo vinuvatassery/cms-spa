@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
+import { CommonModule } from '@angular/common'; 
+import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { featureUserLoginSignupRoutingModule } from './feature-user-login-signup.routing.module';
 import { SigninComponent } from './component/signin/signin.component';
 import { AccountSetupComponent } from './component/account-setup/account-setup.component';
@@ -8,7 +8,7 @@ import { AccountPersonalInfoComponent } from './component/account-personal-info/
 import { AccountHomeAddressInfoComponent } from './component/account-home-address-info/account-home-address-info.component';
 
 @NgModule({
-  imports: [CommonModule, featureUserLoginSignupRoutingModule],
+  imports: [CommonModule, SharedUiTpaModule, featureUserLoginSignupRoutingModule],
   declarations: [
     SigninComponent,
     AccountSetupComponent,

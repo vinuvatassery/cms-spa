@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './layout.component.html',
 })
 export class CpLayoutComponent {
- 
+  isCpNavigationShow = false;
+  isCpHeaderShow = false;
 }

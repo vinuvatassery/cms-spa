@@ -1,6 +1,6 @@
 /** Angular **/
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'; 
 /** External libraries **/
 import { GridModule } from '@progress/kendo-angular-grid';
 import { IntlModule } from '@progress/kendo-angular-intl';

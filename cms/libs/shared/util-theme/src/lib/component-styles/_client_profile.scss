@@ -1,0 +1,63 @@
+
+
+.app-full_cp-container{
+  
+}
+
+.layout-one-wrapper{
+      display: grid;
+      grid-template-columns: .24fr 1fr;
+      min-height: 100vh;
+}
+
+.layout-one-left-side{
+     position: relative;
+     background: $app-primary;
+     .bgimage{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height:100%;
+     }
+     .logoimg{
+      position: absolute;
+    bottom: 60px;
+    margin: 0 auto;
+    width: 120px;
+    z-index: 1;
+    left: 0;
+    right: 0;
+     }
+}
+
+.layout-one-right-side{
+padding: 2rem;
+height: 100vh;
+overflow-y: auto;
+}
+.layout-one-form-wrapper{
+     
+      height: 100%;
+}
+
+.layout-one-inner-wrapper-right{
+      h2{
+            justify-content: flex-end;
+      }
+}
+
+.fullwidbtn{
+      max-width: 400px;
+      margin-top: 20px;
+      button{
+            width:100%
+      }
+}
+
+.mt_vh25{
+      margin-top: 25vh;
+}
+.fullwidbtn{
+      width: 100%;
+}
