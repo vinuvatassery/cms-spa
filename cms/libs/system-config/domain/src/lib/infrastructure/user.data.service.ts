@@ -176,6 +176,13 @@ export class UserDataService {
       `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${uploadRequest.loginUserId}/profile-photo`, formData);
   }
 
+  searchPNumber(pNumber:string){
+    return this.http.get<LoginUser[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/${pNumber}/ad-user-data`
+    );
+  }
+
   loadUsersRoleAndPermissions() {
     return of([
       {
