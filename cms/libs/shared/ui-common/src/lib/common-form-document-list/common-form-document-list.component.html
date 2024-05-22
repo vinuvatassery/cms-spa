@@ -106,14 +106,14 @@
 
 <ng-template #deactivateTemplates >
  
-      <kendo-dialog-titlebar (close)="onCloseFormsDocumentDeactivateClicked()">{{isFolder ? 'Deactivate Folder': 'Deactivate File'}} </kendo-dialog-titlebar>
+      <kendo-dialog-titlebar (close)="onCloseFormsDocumentDeactivateClicked()">{{isFolder ? 'Deactivate folder?': 'Deactivate file?'}} </kendo-dialog-titlebar>
       <common-deactivate-template  [documentTemplateId] = "documentTemplateId"   [SubtypeCode] = "SubtypeCode"   [isFolder] = "isFolder" (onCloseFormsDocumentDeactivateClicked)="onCloseFormsDocumentDeactivateClicked()"
       (deactivateTemplateStatus)="deactivateTemplateStatus($event)"> 
   </common-deactivate-template> 
 </ng-template>
 
 <ng-template #activateTemplates>
-      <kendo-dialog-titlebar (close)="onCloseFormsDocumentReactivateClicked()">{{isFolder ? 'Reactivate Folder': 'Reactivate File'}} </kendo-dialog-titlebar>
+      <kendo-dialog-titlebar (close)="onCloseFormsDocumentReactivateClicked()">{{isFolder ? 'Reactivate folder?': 'Reactivate file?'}} </kendo-dialog-titlebar>
       <common-reactivate-template [documentTemplateId] = "documentTemplateId"   [SubtypeCode] = "SubtypeCode"    [isFolder] = "isFolder" (onCloseFormsDocumentReactivateClicked)="onCloseFormsDocumentReactivateClicked()"  (reactivateTemplateStatus)="reactivateTemplateStatus($event)"> 
   </common-reactivate-template> 
 </ng-template>
