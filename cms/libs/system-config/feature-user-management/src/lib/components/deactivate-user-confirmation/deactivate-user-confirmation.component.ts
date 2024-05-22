@@ -20,7 +20,7 @@ export class DeactivateUserConfirmationComponent {
 
     }
 
-    onDialougeClose(){
+    onDeactivationDialougeClose(){
       this.closeDeactivateUsers.emit();
     }
 
@@ -34,7 +34,7 @@ export class DeactivateUserConfirmationComponent {
         activeFlag: this.status
       };
       this.userManagementFacade.deactivateUser(userData);
-      this.onDialougeClose();
+      this.onDeactivationDialougeClose();
       this.refreshUsersGrid();
     }
 }
