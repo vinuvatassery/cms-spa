@@ -100,8 +100,22 @@
     </div>
   
     </div>
-    <div class="chat_bottom_stickey">
-      <small class="outofoffice_text"><strong>Out Of Office</strong> Will in out of office until 5/25</small>
+    <div class="chat_bottom_stickey" *ngIf="outOfOfficeBanner">
+      <small class="outofoffice_text"><strong class="outhead">Out Of Office</strong> 
+        <!-- <p>  2 members are out of office <a kendoPopoverAnchor [popover]="outOfOfficePopover"  showOn="hover">   See More   </a> </p> -->
+        <p class="outofofc"><strong>Caseworkername</strong> is out of office <a kendoPopoverAnchor [popover]="outOfOfficePopover"  showOn="hover">   See More   </a></p>
+      </small>
+
+      <kendo-popover #outOfOfficePopover [width]="250" position="top">
+        <ng-template kendoPopoverBodyTemplate>
+      <div class="popoverbodyooo">
+        <p class="outofofc"><strong>Caseworkername</strong> - 05/22 to 05/26,  Will in out of office please expect delay in response </p>
+        <!-- <p class="outofofc"><strong>Caseworkername</strong> - 05/22 to 05/26,  Will in out of office please expect delay in response </p> -->
+      </div>
+        </ng-template>
+  
+ 
+      </kendo-popover>
     </div>
   </div>
   
