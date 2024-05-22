@@ -33,7 +33,6 @@ export class UserDetailComponent implements OnInit {
   userRoleTypeCodeLovData: any = null;
   isCaseManagerSelected = true;
   isAccessTypeInternal = true;
-  isAccessTypeInternal = true;
   activeFlag = 'Y';
   userAccessType: any = "";
   userRoleType: string = UserAccessType.Internal;
