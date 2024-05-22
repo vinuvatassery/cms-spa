@@ -298,7 +298,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.ngDirtyInValid();
   }
 
-  onSaveForLaterTemplateClicked() {    
+  onSaveForLaterTemplateClicked() {
     if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = true;
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
@@ -660,26 +660,38 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       case CommunicationEventTypeCode.PendingNoticeLetter:
         this.confirmPopupHeader = 'Send Pending Letter to print?';
         this.snackBarMessage = 'Pending Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Pending Letter Later?';
+        this.saveForLaterModelText="You must send the Pending Letter within 14 Days";
         break;
       case CommunicationEventTypeCode.RejectionNoticeLetter:
         this.confirmPopupHeader = 'Send Rejection Letter to print?';
         this.snackBarMessage = 'Rejection Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Rejection Letter Later?';
+        this.saveForLaterModelText="You must send the Rejection Letter within 14 Days";
         break;
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
         this.confirmPopupHeader = 'Send Approval Letter to print?';
         this.snackBarMessage = 'Approval Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Approval Letter Later?';
+        this.saveForLaterModelText="You must send the Approval Letter within 14 Days";
         break;
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
         this.confirmPopupHeader = 'Send Disenrollment Letter to print?';
         this.snackBarMessage = 'Disenrollment Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Disenrollment Letter Later?';
+        this.saveForLaterModelText="You must send the Disenrollment Letter within 2 Days";
         break;
       case CommunicationEventTypeCode.RestrictedNoticeLetter:
         this.confirmPopupHeader = 'Send Restricted Letter to print?';
         this.snackBarMessage = 'Restricted Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Restricted Letter Later?';
+        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
         break;
       default:
         this.confirmPopupHeader = 'Send Letter to print?';
         this.snackBarMessage = 'Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
         break;
     }
   }

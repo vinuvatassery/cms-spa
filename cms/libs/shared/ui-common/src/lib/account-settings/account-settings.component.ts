@@ -188,7 +188,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
       loginUserPhoneId: new FormControl(
         ''),
-      
+
     });
     this.addPhoneForm.push(phoneForm);
   }
@@ -204,7 +204,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     this.userForm.controls['pOrNbr'].setValue(userInfo.pOrNbr);
     this.userForm.controls['email'].setValue(userInfo.email);
     this.userForm.controls['notificationSummaryFlag'].setValue(userInfo?.notificationSummaryEmailCheck);
-    
+
     if(!userInfo.state && userInfo.userTypeCode === UserType.External)
     {
       this.userForm.controls["state"].setValue('OR');
@@ -374,7 +374,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         payload.userPhones = [];
       }
 
-      
+
       this.submitUserInfoDataEvent.emit(payload);
     }
   }
@@ -438,13 +438,13 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
                 }
             }
         }
-  
+
       }
     else if(this.addPhoneForm.length == 1)
       {
         this.addPhoneForm.reset();
       }
-      
+
 
   }
   checkAddressControls()
@@ -529,7 +529,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         form.controls['phoneType'].setErrors({ incorrect: true });
       }
   }
-  
+
   isPhoneTypeControlValid(index:any)
   {
     let form = this.addPhoneForm.at(index) as FormGroup;
@@ -569,30 +569,70 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   handleFileSelected(e: any) {
-    this.file = e.currentTarget.files[0];
-    if (this.file.type !== 'image/png' || this.file.type !== 'image/png' || this.file.type !== 'image/png') {
+    this.file = e.target.files[0];
+    if(this.file)
+      {
+        if(!this.checkFileType())
+          {
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (e: any) => {
+            const img = new Image();
+            img.onload = () => {
+              const width = img.width;
+              const height = img.height;
+              if (width > height) {
+
+                this.userManagementFacade.showHideSnackBar(
+                  SnackBarNotificationType.WARNING,
+                  "Please select an image with an aspect ratio less than or equal to 1:1"
+                );
+                return;
+              }
+              else{
+                if (!this.checkFileSize)
+                  {
+                    return;
+                  }
+
+                let payload = {
+                  loginUserId : this.userInfo.loginUserId,
+                  profilePhoto : this.file
+                }
+                this.uploadProfilePhotoEvent.emit(payload);
+              }
+
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(this.file);
+      }
+  }
+
+  checkFileType()
+  {
+    if (this.file.type !== 'image/png' && this.file.type !== 'image/jpg' && this.file.type !== 'image/jpeg') {
       this.userManagementFacade.showHideSnackBar(
         SnackBarNotificationType.WARNING,
         "Invalid file type"
       );
-      return;
+      return false;
       }
-    if(this.file)
-      {
-        const maxSizeInBytes: number = 2 * 1024 * 1024;
-        if (this.file.size > maxSizeInBytes){
-          this.userManagementFacade.showHideSnackBar(
-            SnackBarNotificationType.WARNING,
-            "Image size exceeds maximum limit"
-          );
-          return;
-        }
-        let payload = {
-          loginUserId : this.userInfo.loginUserId,
-          profilePhoto : this.file 
-        }
-        this.uploadProfilePhotoEvent.emit(payload);
-      }
+      return true;
+  }
+
+  checkFileSize()
+  {
+    const maxSizeInBytes: number = 2 * 1024 * 1024;
+    if (this.file.size > maxSizeInBytes){
+      this.userManagementFacade.showHideSnackBar(
+        SnackBarNotificationType.WARNING,
+        "Image size exceeds maximum limit"
+      );
+      return false;
+    }
+    return true;
   }
 
 }
