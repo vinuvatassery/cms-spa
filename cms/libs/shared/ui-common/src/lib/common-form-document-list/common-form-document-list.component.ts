@@ -5,6 +5,7 @@ import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-co
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
 import { ActiveInactiveFlag } from '../enums/active-inactive-flag.enum';
+import { StatusFlag } from '../enums/status-flag.enum';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -26,11 +27,18 @@ export class CommonFormDocumentListComponent implements OnInit {
   isShowLoader: boolean = true;
   @ViewChild('renameTemplate', { read: TemplateRef })
   renameTemplate!: TemplateRef<any>;
+  @ViewChild('deactivateTemplates', { read: TemplateRef })
+  deactivateTemplates!: TemplateRef<any>;
+  @ViewChild('activateTemplates', { read: TemplateRef })
+  activateTemplates!: TemplateRef<any>;
   renameDialog:any
+  deactivateDialog:any
+  activateDialog:any
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isAddNewEditFolderPopup = false;
   isFolder = false;
+  templateData = '';
   temData ='';
   isFormsDocumentDeletePopupShow = false;
   isFormsDocumentDeactivatePopupShow = false;
@@ -41,6 +49,9 @@ export class CommonFormDocumentListComponent implements OnInit {
   documentTemplateId = '';
   isDragDropEnabled = false;
   templateDesc: any
+  activeflag:any;
+  isdeactivateOpen = false;
+  reactivateOpen=false;
   public constructor(
     private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
     private readonly loaderService: LoaderService,
@@ -76,8 +87,26 @@ export class CommonFormDocumentListComponent implements OnInit {
       buttonType: 'btn-h-primary',
       text: 'Deactivate',
       icon: 'block',
-      click: (data: any): void => {
-        this.onFormsDocumentDeactivateClicked();
+      click: (event: any, data:any): void => {
+        this.temData = data;
+        if(!this.isdeactivateOpen)
+          {  this.isFolder = data.isFolder ? true: false;
+            this.isdeactivateOpen = true;
+            this.deactivateTemplate(this.deactivateTemplates);
+          }
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Reactivate',
+      icon: 'block',
+      click: (event: any, data:any): void => {
+        if(!this.reactivateOpen)
+          {
+            this.isFolder = data.isFolder ? true: false;
+            this.reactivateOpen = true;
+            this.reactivateTemplate(this.activateTemplates);
+          }
       },
     },
   ];
@@ -253,18 +282,17 @@ export class CommonFormDocumentListComponent implements OnInit {
     this.isFormsDocumentDeletePopupShow = false;
   }
 
-  onFormsDocumentDeactivateClicked() {
-    this.isFormsDocumentDeactivatePopupShow = true;
-  }
   onCloseFormsDocumentDeactivateClicked() {
-    this.isFormsDocumentDeactivatePopupShow = false;
+    this.isdeactivateOpen = false;
+    this.deactivateDialog.close();
   }
 
   onFormsDocumentReactivateClicked() {
     this.isFormsDocumentReactivatePopupShow = true;
   }
   onCloseFormsDocumentReactivateClicked() {
-    this.isFormsDocumentReactivatePopupShow = false;
+    this.reactivateOpen = false;
+    this.activateDialog.close();
   }
 
   onDownloadViewFileClick(viewType: string, templateId: string, templateName: string) {
@@ -313,6 +341,19 @@ export class CommonFormDocumentListComponent implements OnInit {
       return 'Active';
     else
       return 'Inactive';
+  }
+  deactivateTemplate(template: TemplateRef<unknown>): void {
+    this.deactivateDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  reactivateTemplate(template: TemplateRef<unknown>): void {
+    this.activateDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
   }
 }
 

@@ -57,4 +57,9 @@ export class FormsAndDocumentDataService
           return this.http.put(
             `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/template`,payload);
           }
+
+          updateStatus(payload:any){
+            return this.http.put(
+              `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/template/status`,payload);
+            }
     }

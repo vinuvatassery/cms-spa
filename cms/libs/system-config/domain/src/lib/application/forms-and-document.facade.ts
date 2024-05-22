@@ -176,4 +176,20 @@ export class FormsAndDocumentFacade {
           },
         })
       }
+      // reActivatePharmacies(clientPharmacyId: string,pharmacy: any,isShowHistoricalData?:boolean){
+      //   this.loaderService.show();
+      //    this.updateStatus.activeDrugPharmacy(clientPharmacyId,pharmacy).subscribe({
+      //     next: (response:any) => {
+      //       this.loaderService.hide();
+      //       this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Re-Activated Successfully');
+    
+      //       this.loadClientPharmacyList(pharmacy.ClientId,false,isShowHistoricalData);
+      //     },
+      //     error: (err) => {
+      //       this.loaderService.hide();
+      //       this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+      //       this.loggingService.logException(err);
+      //     },
+      //   });
+      // }
 }
