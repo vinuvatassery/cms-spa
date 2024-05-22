@@ -502,11 +502,6 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
 
   restrictSpecialChar(event: any) {
     const status = (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8;
-
-    if (status) {
-      // this.claimForm.controls['invoiceId'].setErrors(null);
-      // this.specialCharAdded = false;
-    }
     return status;
   }
 }
