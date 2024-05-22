@@ -19,7 +19,16 @@
             <div class="flex-col">
                   <p class="pt-1">Add, edit, re-assign or deactivate CPT Code.</p>
                   <div class="table-filter-section mat-form-no-b-space">
-
+                        <span class="filter-section_items filter--select">
+                              <kendo-floatinglabel>
+                                    <kendo-dropdownlist aria-label="All Columns"
+                                          [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
+                                          textField="columnDesc" valueField="columnCode" [valuePrimitive]="true"
+                                          [(ngModel)]="selectedSearchColumn"
+                                          (valueChange)="searchColumnChangeHandler($event)">
+                                    </kendo-dropdownlist>
+                              </kendo-floatinglabel>
+                        </span>
                         <span class="filter-section_items filter--search">
                               <span class="material-icons">search</span>
                               <kendo-floatinglabel text="Search">
