@@ -66,6 +66,29 @@ export class CommonFormDocumentListComponent implements OnInit {
     },
     {
       buttonType: 'btn-h-primary',
+      text: 'Deactivate',
+      icon: 'block',
+      click: (data: any): void => {
+        this.onFormsDocumentDeactivateClicked();
+      },
+    },
+  ];
+
+  public fileMoreActions = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Rename',
+      icon: 'edit',
+      click: (event: any, data:any): void => {
+        this.templateDesc = data.isFolder ? data.description : data.text;
+        this.documentTemplateId =data.documentTemplateId;
+        this.isFolder = data.isFolder ? true: false;
+        this.temData = data;
+        this.onAddFolderClicked(this.renameTemplate);
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
       text: 'New Version',
       icon: 'upload',
       click: (event: any, data:any): void => {
