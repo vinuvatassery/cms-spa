@@ -11,7 +11,7 @@
       display: block;
       overflow-y: auto;
       height: calc(100vh - 318px);
-      padding-bottom: 30px;
+      padding-bottom: 70px;
       position: relative;
       .center-date {
         font-size: $font-size-s;
@@ -279,8 +279,21 @@
     padding: 5px 4px 2px 4px;
     border-left: 2px solid #c3372c;
     line-height: 12px;
-    strong{
+    .outhead{
       color: #c3372c;
     }
+    p{
+      font-size: 12px;
+    }
+  }
+ }
+
+ .outofofc{
+  font-size: 12px;
+ }
+ .popoverbodyooo{
+  padding:10px;
+  .outofofc{
+    margin-bottom: 6px;
   }
  }
