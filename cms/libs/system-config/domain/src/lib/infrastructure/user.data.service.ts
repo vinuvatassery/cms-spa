@@ -631,4 +631,13 @@ export class UserDataService {
       },
     ]);
   }
+
+  deActivateUserRole(user : any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/deactivate`, user
+    );
+  }
+
+
 }

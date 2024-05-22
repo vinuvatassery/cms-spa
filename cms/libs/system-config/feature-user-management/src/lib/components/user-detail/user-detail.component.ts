@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { group } from '@angular/animations';
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
@@ -19,6 +20,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class UserDetailComponent implements OnInit {
   @Input() isEditValue!: boolean;
   @Output() isDeactivatePopupOpened = new EventEmitter();
+  @Input() userId: any;
+  @Input() status: any;
+  @Output() refreshGrid = new EventEmitter();
+  isUserDeactivatePopup = false;
+  deactivate = "Inactive";
   ddlUserRole$ = this.userManagementFacade.ddlUserRole$;
   userAccessTypeLov$ = this.lovFacade.userAccessTypeLov$;
   userRoleTypeCode$ = this.lovFacade.userRoleTypeLov$;
@@ -84,11 +90,6 @@ export class UserDetailComponent implements OnInit {
   private loadDdlUserRole() {    
     if(this.userRoleType == "") return;
     this.userManagementFacade.loadDdlUserRole(this.userRoleType, this.activeFlag);
-  }
-
-  onDeactivateClicked() {
-    this.isDeactivatePopupOpened.emit();
-    this.isDeactivateValue = true;
   }
 
   subscribeLovData() {
@@ -211,6 +212,21 @@ export class UserDetailComponent implements OnInit {
       this.selectedUserRolesList.push(role.roleId);
     });
   }
+
+  onUserDeactivateClosed(){
+    this.isUserDeactivatePopup=false;
+  }
+  loadUserListGrid(){
+    this.refreshGrid.emit();
+  }
+
+
+
+
+  onDeactivateClicked()
+    {
+      this.isUserDeactivatePopup = true;
+    }
 
   onPNumberValueChange(pNumber: any) {
     if(pNumber == ""){

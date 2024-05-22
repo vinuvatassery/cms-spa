@@ -87,6 +87,7 @@
         <kendo-formerror *ngIf="userFormGroup?.get('email')?.invalid && userFormGroup?.get('email')?.errors?.['pattern'] && (userFormGroup?.get('email')?.touched)">Incorrect Email Format.</kendo-formerror>
       </div>
 
+
       <div class="flex-col">
         <kendo-floatinglabel text="Role" class="inline-search-loader">
         <kendo-multiselect
@@ -140,11 +141,11 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div *ngIf="isEditValue">
-      <button kendoButton [primary]="true" aria-label="Deactivate" look="flat"
+      <button [disabled]="status===deactivate" kendoButton [primary]="true" aria-label="Deactivate" look="flat"
         (click)="onDeactivateClicked()">Deactivate</button>
     </div>
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="onDeactivateClicked()">Cancel</button>
+      <button kendoButton [primary]="true" aria-label="Cancel" look="outline">Cancel</button>
       <button kendoButton [primary]="true" attr.aria-label=" {{ isEditValue ? 'Update' : 'Add' }}"
       (click)="onUserSaveButtonClick()">
         {{ isEditValue ? 'Update' : 'Add' }}
@@ -152,3 +153,11 @@
     </div>
   </div>
 </kendo-dialog-actions>
+
+<!-- Deactivate User Modal Html-->
+<kendo-dialog *ngIf="isUserDeactivatePopup" (close)="onUserDeactivateClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Deactivate user?</kendo-dialog-titlebar>
+  <system-config-deactivate-user-confirmation 
+    [userId]="userId" [status]="deactivate" (closeDeactivateUsers)="onUserDeactivateClosed()" (refreshGrid)="loadUserListGrid()" ></system-config-deactivate-user-confirmation>
+</kendo-dialog>
