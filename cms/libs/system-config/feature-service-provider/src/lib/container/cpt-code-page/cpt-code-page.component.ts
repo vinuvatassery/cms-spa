@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DocumentFacade } from '@cms/shared/util-core';
 import { CptCodeFacade } from '@cms/system-config/domain';
 import { State } from '@progress/kendo-data-query';
 
@@ -21,9 +22,13 @@ export class CptCodePageComponent {
   cptCodeProfilePhoto$ = this.cptCodeFacade.cptCodeProfilePhoto$;
   cptCodeListDataLoader$ = this.cptCodeFacade.cptCodeListDataLoader$;
   editCptCode$ = this.cptCodeFacade.editCptCode$;
+  cptCodeChangeStatus$ = this.cptCodeFacade.cptCodeChangeStatus$;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
   /** Constructor **/
-  constructor(private readonly cptCodeFacade: CptCodeFacade) { }
+  constructor(private readonly cptCodeFacade: CptCodeFacade,
+    private readonly documentFacade: DocumentFacade
+  ) { }
 
 
  
@@ -34,8 +39,19 @@ export class CptCodePageComponent {
   handleAddCptCode(event: any) {
     this.cptCodeFacade.addCptCode(event);
   }
+
   handleEditCptCode(event: any) {
     this.cptCodeFacade.editCptCode(event);
+  }
+
+  handleDeactivateCptCode(event: any) {
+    this.cptCodeFacade.changeCptCodeStatus(event, false);
+  }
+  handleReactivateCptCode(event: any) {
+    this.cptCodeFacade.changeCptCodeStatus(event, true);
+  }
+  onExportAllCPTCode(event: any){
+    this.cptCodeFacade.onExportAllUser(event);
   }
 
 }

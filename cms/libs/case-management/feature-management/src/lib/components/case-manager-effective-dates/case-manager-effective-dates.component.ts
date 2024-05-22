@@ -26,6 +26,8 @@ export class CaseManagerEffectiveDatesComponent implements OnInit {
 
   public min: Date = new Date(1917, 0, 1);
 
+  maxDate = new Date('9999/12/31');
+
   startDateValidator: boolean = false;
   endDateValidator: boolean = false;
   startDateIsGreaterThanEndDate: boolean = false;
@@ -34,6 +36,7 @@ export class CaseManagerEffectiveDatesComponent implements OnInit {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() changeDateConfimEvent = new EventEmitter<any>();
+  public endDateInvalid = false;
   constructor(
     public intl: IntlService,
     private configurationProvider: ConfigurationProvider,
@@ -111,9 +114,17 @@ export class CaseManagerEffectiveDatesComponent implements OnInit {
         break;
       case "END_DATE":
         this.endDateValidator = false;
+        this.endDateInvalid = false;
         this.effectiveDatesForm.controls['endDate'].setErrors(null);
         break
     }
+
+    if(endDate < this.min || endDate > this.maxDate){
+      this.endDateInvalid = true;
+      this.effectiveDatesForm.controls['endDate'].setErrors({ 'incorrect': true });
+      return;
+    }
+    
     if(startDate>endDate){
       this.startDateIsGreaterThanEndDate = true;
       this.effectiveDatesForm.controls['endDate'].setErrors({ 'incorrect': true });

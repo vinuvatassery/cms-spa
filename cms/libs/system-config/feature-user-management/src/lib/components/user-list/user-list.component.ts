@@ -6,7 +6,7 @@ import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, debounceTime } from 'rxjs';
 import { DocumentFacade } from '@cms/shared/util-core';
-import { UserManagementFacade } from 'libs/system-config/domain/src/lib/application/user-management.facade';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'system-config-user-list',
@@ -81,12 +81,14 @@ export class UserListComponent implements OnInit, OnChanges {
     },
   ];
   selectedActiveFlag = "";
+  isShowUserDetailPopup$ = this.userManagementFacade.isShowUserDetailPopup$;
+
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly documentFacade: DocumentFacade,
-    private readonly userManagementFacade: UserManagementFacade)
-   {
+    private userManagementFacade: UserManagementFacade,
+  ) {
 
   }
   public moreactions = [
@@ -266,10 +268,12 @@ export class UserListComponent implements OnInit, OnChanges {
 
   onUserDetailsClosed() {
     this.isUserDetailsPopup = false;
+    this.userManagementFacade.showOrHideUserDetailPopup(this.isUserDetailsPopup);
   }
   onUserDetailsClicked(editValue: boolean) {
     this.isUserDetailsPopup = true;
     this.isEditUsersData = editValue;
+    this.userManagementFacade.showOrHideUserDetailPopup(this.isUserDetailsPopup);
   }
   onUserDeactivateClosed() {
     this.isUserDeactivatePopup = false;

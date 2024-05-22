@@ -22,39 +22,57 @@
             <kendo-label class="k-radio-label" for="externalUserAccessType" text="External" ></kendo-label>
           </span>          
         </div>
+        <kendo-formerror *ngIf="userFormControls?.userAccessType.errors?.required
+                              && userFormControls?.userAccessType.touched">
+                              User Access Type is required.
+        </kendo-formerror>
       </div>
       <div class="flex-col">
-        <kendo-floatinglabel text="PNumber or QRNumber">
+        <kendo-floatinglabel text="PNumber or ORNumber">
           <kendo-textbox [fillMode]="formUiStyle.inputFillMode"
           formControlName="pNumber"> </kendo-textbox>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="userFormControls?.pNumber.errors?.required
                               && userFormControls?.pNumber.touched">
-                              PNumber or QRNumber is required.
+                              PNumber or ORNumber is required.
         </kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="First Name">
           <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
           name="firstName"
-          formControlName="firstName"> </kendo-textbox>
+          formControlName="firstName"> </kendo-textbox>          
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="userFormControls?.firstName.errors?.required
+                              && userFormControls?.firstName.touched">
+                              First Name is required.
+        </kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Last Name">
           <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
           formControlName="lastName"
-          name="lastName"> </kendo-textbox>
+          name="lastName"> </kendo-textbox>          
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="userFormControls?.lastName.errors?.required
+                              && userFormControls?.lastName.touched">
+                              Last Name is required.
+        </kendo-formerror>
       </div>
 
       <div class="flex-col">
         <kendo-floatinglabel text="Email Address">
           <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
           formControlName="email"
-          name="email"> </kendo-textbox>
+          name="email"> </kendo-textbox>          
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="userFormControls?.email.errors?.required
+                              && userFormControls?.email.touched">
+                              Email is required.
+        </kendo-formerror>
+        <kendo-formerror *ngIf="userFormGroup?.get('email')?.invalid && userFormGroup?.get('email')?.errors?.['pattern'] && (userFormGroup?.get('email')?.touched)">Incorrect Email Format.</kendo-formerror>
       </div>
+
 
       <div class="flex-col">
         <kendo-floatinglabel text="Role" class="inline-search-loader">
@@ -62,16 +80,15 @@
         [readonly]="false"
         [fillMode]="formUiStyle.dropDownFillMode"
         [data]="ddlUserRole$ | async"
-        [allowCustom]="true"
         aria-label="role"
-        valueField="roleCode" 
+        valueField="roleId" 
         textField="roleDesc"  
+        formControlName="role"
         (valueChange)="onRoleValueChange($event)"
-        [valuePrimitive]="false"
         ></kendo-multiselect>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="userFormGroup.touched
-                              && selectedUserRolesList.length <= 0">
+        <kendo-formerror *ngIf="userFormControls?.role.errors?.required
+                                && userFormControls?.role.touched">
                               Role is required.
         </kendo-formerror>
       </div>
@@ -84,6 +101,10 @@
             [(ngModel)]="selectedDomain"
             [valuePrimitive] = false
             > </kendo-dropdownlist>
+            <kendo-formerror *ngIf="userFormControls?.domain.errors?.required
+                                && userFormControls?.domain.touched">
+                              Domain is required.
+        </kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col" *ngIf="!isAccessTypeInternal">
@@ -93,6 +114,10 @@
             formControlName="group"
             [(ngModel)]="selectedGroup"
             name="group"> </kendo-dropdownlist>
+            <kendo-formerror *ngIf="userFormControls?.group.errors?.required
+                                && userFormControls?.group.touched">
+                              Group is required.
+        </kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
@@ -106,7 +131,7 @@
         (click)="onDeactivateClicked()">Deactivate</button>
     </div>
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" aria-label="Cancel" look="outline">Cancel</button>
+      <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="onDeactivateClicked()">Cancel</button>
       <button kendoButton [primary]="true" attr.aria-label=" {{ isEditValue ? 'Update' : 'Add' }}"
       (click)="onUserSaveButtonClick()">
         {{ isEditValue ? 'Update' : 'Add' }}

@@ -203,8 +203,8 @@
   </div>
 </section>
 <!-- Add User Modal Html-->
-<kendo-dialog *ngIf="isUserDetailsPopup" (close)="onUserDetailsClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog *ngIf="isShowUserDetailPopup$ | async" (close)="onUserDetailsClosed()"
+  class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar>{{isEditUsersData ? 'Edit User' : 'Add New User'}}</kendo-dialog-titlebar>
   <system-config-user-detail [isEditValue]="isEditUsersData"
     [userId]="loginUserId" [status]="currentUserStatus" (refreshGrid)="loadUserListGrid()"  (isDeactivatePopupOpened)="onUserDetailsClosed()"></system-config-user-detail>
