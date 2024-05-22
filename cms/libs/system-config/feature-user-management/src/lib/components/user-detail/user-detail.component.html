@@ -30,11 +30,25 @@
       <div class="flex-col">
         <kendo-floatinglabel text="PNumber or ORNumber">
           <kendo-textbox [fillMode]="formUiStyle.inputFillMode"
-          formControlName="pNumber"> </kendo-textbox>
+          formControlName="pNumber"
+          (valueChange)="onPNumberValueChange($event)"> </kendo-textbox>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="userFormControls?.pNumber.errors?.required
                               && userFormControls?.pNumber.touched">
                               PNumber or ORNumber is required.
+        </kendo-formerror>
+        <kendo-formerror *ngIf="userFormControls?.pNumber.touched
+                                && isPNumberValueChanging
+                                && adUserPNumberData == null
+                                && !isRequestingPNumber">
+                              {{enteredPnumberValue}} not in ORCares Active Directory Group.
+        </kendo-formerror>
+        <kendo-formerror *ngIf="userFormControls?.pNumber.touched
+                                && isPNumberValueChanging
+                                && isPNumberAlreadyExists
+                                && adUserPNumberData != null
+                                && !isRequestingPNumber">
+                              {{enteredPnumberValue}} already entered.
         </kendo-formerror>
       </div>
       <div class="flex-col">

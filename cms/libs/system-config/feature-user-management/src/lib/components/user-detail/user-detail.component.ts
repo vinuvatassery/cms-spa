@@ -6,6 +6,7 @@ import {
   Input,
   Output,
   EventEmitter,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -23,6 +24,8 @@ export class UserDetailComponent implements OnInit {
   userRoleTypeCode$ = this.lovFacade.userRoleTypeLov$;
   caseManagerDomainLov$ = this.lovFacade.caseManagerDomainLov$;
   caseManagerAssistorGrp$ = this.lovFacade.caseManagerAssistorGrp$;
+  pNumberSearchSubject$ = this.userManagementFacade.pNumberSearchSubject$;
+  addUserResponse$ = this.userManagementFacade.addUserResponse$;
   isDeactivateValue!: boolean;
   userAccessTypeLovData: any = null;
   userRoleTypeCodeLovData: any = null;
@@ -36,11 +39,17 @@ export class UserDetailComponent implements OnInit {
   selectedDomain: any = null;
   selectedGroup: any = null;
   isFormSubmit: boolean = false;
+  adUserPNumberData: any = null;
+  isPNumberValueChanging: boolean = false;
+  enteredPnumberValue: any;
+  isRequestingPNumber: boolean = false;
+  isPNumberAlreadyExists: boolean = false;
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
     private userManagementFacade: UserManagementFacade,
     private lovFacade: LovFacade,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +72,8 @@ export class UserDetailComponent implements OnInit {
       email: new FormControl('', {validators: [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]}),
       role: new FormControl([], { validators: Validators.required }),
       domain: new FormControl({}),
-      group: new FormControl({})
+      group: new FormControl({}),
+      jobTitle: new FormControl('')
     });
   }
 
@@ -83,7 +93,7 @@ export class UserDetailComponent implements OnInit {
 
   subscribeLovData() {
     this.userAccessTypeLov$.subscribe({
-      next: (data) => {
+      next: (data: any) => {      
         this.userAccessTypeLovData = data;
       },
       error: (err) => {},
@@ -95,6 +105,35 @@ export class UserDetailComponent implements OnInit {
       },
       error: (err) => {},
     });
+    
+    this.addUserResponse$.subscribe({
+      next: (data) => {
+        if(data.status == 0){
+          this.isPNumberAlreadyExists = true;
+        } else {
+          this.isPNumberAlreadyExists = false;
+        }
+        this.cd.detectChanges();
+      },
+      error: (err) => {},
+    });
+
+    this.pNumberSearchSubject$.subscribe({
+      next: (data) => {
+        this.isRequestingPNumber = false;
+        if(data != null){          
+          let formControls = this.userFormGroup.controls;
+          formControls["firstName"].setValue(data.firstName);
+          formControls["lastName"].setValue(data.lastName);
+          formControls["email"].setValue(data.emailAddress);  
+          this.adUserPNumberData = data;        
+        }
+        this.cd.detectChanges();         
+      },
+      error: (err) =>{
+        this.isRequestingPNumber = false;
+      }
+    })
   }
 
   onUserAccessValueChange(event: Event){
@@ -160,7 +199,8 @@ export class UserDetailComponent implements OnInit {
       roles: this.selectedUserRolesList,
       domainCode: formControls["domain"].value?.lovCode,
       assistorGroupCode: formControls["group"].value?.lovCode,
-      pOrNbr: formControls["pNumber"].value
+      pOrNbr: formControls["pNumber"].value,
+      jobTitle: formControls["jobTitle"].value
     };
     this.userManagementFacade.addUser(user);
   }
@@ -170,6 +210,18 @@ export class UserDetailComponent implements OnInit {
     roles.forEach((role: any) => {
       this.selectedUserRolesList.push(role.roleId);
     });
+  }
+
+  onPNumberValueChange(pNumber: any) {
+    if(pNumber == ""){
+      this.isPNumberValueChanging = false
+    } else {
+      this.isPNumberValueChanging = true;
+    }    
+    this.enteredPnumberValue = pNumber;
+    this.isRequestingPNumber = true;
+    this.adUserPNumberData = null;
+    this.userManagementFacade.searchPNumber(pNumber);
   }
 
 
