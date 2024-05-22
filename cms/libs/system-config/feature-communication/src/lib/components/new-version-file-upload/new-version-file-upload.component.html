@@ -21,6 +21,7 @@
 
                         <kendo-fileselect
                         [multiple]="false"
+                        [restrictions]="fileUploadRestrictions"
                         (select)="handleFileSelected($event)"
                         (remove)="handleFileRemoved($event)"
                         formControlName="uploadedFile"
@@ -39,7 +40,7 @@
                         </kendo-fileselect>
                         <kendo-formhint>Max file size 25MB</kendo-formhint>
                         <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
-                        <kendo-formerror *ngIf="!forms.controls['uploadedFile'].valid && isSubmitted">
+                        <kendo-formerror *ngIf="forms?.hasError('required','uploadedFile') && isSubmitted">
                           File is required.
                       </kendo-formerror>
                   </div>

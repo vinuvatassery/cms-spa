@@ -36,17 +36,7 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   active = "Active";
   inActive = "Inactive";
   statusList: any = [{ code: this.active, name: this.active }, { code: this.inActive, name: this.inActive }];
-  public moreactions = [
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Delete',
-      icon: 'delete',
-      type: 'Delete',
-      click: (data: any): void => {
-        this.onUserRoleDeleteClicked(data);
-      },
-    },
-  ];
+
   columns: any = {
     roleDesc: "Role Assigned",
     lastModificationTime: "Last Modified",
@@ -153,14 +143,6 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
     };
-  }
-
-  onUserRoleDeleteClicked(data: any) {
-    this.isUserRoleDeletePopup = true;
-  }
-
-  onUserRoleDeleteClosed() {
-    this.isUserRoleDeletePopup = false;
   }
 
   public rowClass = (args:any) => ({

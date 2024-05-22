@@ -68,6 +68,7 @@ export class DirectMessageComponent implements OnInit {
    private notificationReminderDialog: any;
    disableChatInput = false;
    /** Public properties **/
+   outOfOfficeBanner = false;
  
    uploadDocumentTypeDetails:any;
    ListModel = [

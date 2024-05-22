@@ -128,6 +128,13 @@ export class UserDataService {
     );
     }
 
+    addUser(userData: any) {      
+      return this.http.post(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/add-user`,
+        userData
+      );
+      }
+
   loadUserAssignedRolesByUserId(userId:any, data:any) {
       const pageAndSortedRequestDto =
       {

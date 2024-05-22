@@ -13,7 +13,7 @@ const routes: Routes = [
     },
   },
   {
-    path: 'case-management',
+    path: 'case-assignment',
     component: CaseAssignmentPageComponent,
     data: {
       title: 'Case Assignment',

@@ -91,7 +91,7 @@ export class FormsAndDocumentFacade {
             {
               var filter={
                 sort : true,
-                active: 'A'
+                active: 'Y'
               }
               this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
               this.hideLoader();
@@ -123,7 +123,7 @@ export class FormsAndDocumentFacade {
               next:(response) => {
                 var filter={
                   sort : true,
-                  active: 'A'
+                  active: 'Y'
                 }
                 this.uploadFilesSubject.next(response);
                 this.hideLoader();
@@ -162,7 +162,7 @@ export class FormsAndDocumentFacade {
             if (response) {
               var filter={
                 sort : true,
-                active: 'A'
+                active: 'Y'
               }
               this.loaderService.hide();
               this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
