@@ -188,7 +188,7 @@ export class FormsAndDocumentFacade {
              if(response){
               var filter={
                 sort : true,
-                active: 'A'
+                active: 'Y'
               }
               this.deActiveTemplateSubject.next(true);
               this.loadFolderFile(filter);
@@ -211,7 +211,7 @@ export class FormsAndDocumentFacade {
              if(response){
               var filter={
                 sort : true,
-                active: 'A'
+                active: 'Y'
               }
               this.reActiveTemplateSubject.next(true);
               this.loadFolderFile(filter);
