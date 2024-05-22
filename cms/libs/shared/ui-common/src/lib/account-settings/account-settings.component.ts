@@ -576,37 +576,16 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
           {
             return;
           }
-          const reader = new FileReader();
-          reader.onload = (e: any) => {
-            const img = new Image();
-            img.onload = () => {
-              const width = img.width;
-              const height = img.height;
-              if (width > height) {
+        if (!this.checkFileSize)
+          {
+            return;
+          }
 
-                this.userManagementFacade.showHideSnackBar(
-                  SnackBarNotificationType.WARNING,
-                  "Please select an image with an aspect ratio less than or equal to 1:1"
-                );
-                return;
-              }
-              else{
-                if (!this.checkFileSize)
-                  {
-                    return;
-                  }
-
-                let payload = {
-                  loginUserId : this.userInfo.loginUserId,
-                  profilePhoto : this.file
-                }
-                this.uploadProfilePhotoEvent.emit(payload);
-              }
-
-            };
-            img.src = e.target.result;
-          };
-          reader.readAsDataURL(this.file);
+        let payload = {
+          loginUserId : this.userInfo.loginUserId,
+          profilePhoto : this.file
+        }
+        this.uploadProfilePhotoEvent.emit(payload);
       }
   }
 
