@@ -339,6 +339,9 @@ export class SendTextMessageComponent implements OnInit {
         this.onCloseSendMessageClicked();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Sms sent.');
         this.loaderService.hide();
+        if(this.entityId && this.entityType == FabEntityTypeCode.Client){
+          this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
+        }
       },
       error: (err: any) => {
         this.loaderService.hide();

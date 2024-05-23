@@ -573,6 +573,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           if (data) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message);
             this.onCloseSendEmailClicked();
+            if(this.entityId && this.entityType == FabEntityTypeCode.Client){
+              this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
+            }
           }
           this.ref.detectChanges();
           this.loaderService.hide();
