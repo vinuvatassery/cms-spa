@@ -8,12 +8,5 @@ import { eyeIcon, SVGIcon } from "@progress/kendo-svg-icons";
 })
 export class SigninComponent {
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  public current = 0;
-  public eyeIcon: SVGIcon = eyeIcon;
-  popupClassMultiSelect = 'multiSelectSearchPopup';
-  public steps = [
-    { label: "Personal Info"},
-    { label: "Home Address" },
-    { label: "Contact Information" }, 
-  ];
+ 
 }

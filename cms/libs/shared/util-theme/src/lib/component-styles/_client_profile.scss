@@ -1,63 +1,104 @@
+.app-full_cp-container {}
 
-
-.app-full_cp-container{
-  
-}
-
-.layout-one-wrapper{
+.layout-one-wrapper {
       display: grid;
       grid-template-columns: .24fr 1fr;
       min-height: 100vh;
 }
 
-.layout-one-left-side{
-     position: relative;
-     background: $app-primary;
-     .bgimage{
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height:100%;
-     }
-     .logoimg{
-      position: absolute;
-    bottom: 60px;
-    margin: 0 auto;
-    width: 120px;
-    z-index: 1;
-    left: 0;
-    right: 0;
-     }
+.layout-one-left-side {
+      position: relative;
+      background: $app-primary;
+
+      .bgimage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+      }
+
+      .logoimg {
+            position: absolute;
+            bottom: 60px;
+            margin: 0 auto;
+            width: 10vw;
+            z-index: 1;
+            left: 0;
+            right: 0;
+      }
 }
 
-.layout-one-right-side{
-padding: 2rem;
-height: 100vh;
-overflow-y: auto;
+.layout-one-right-side {
+      padding: 2rem;
+      height: 100vh;
+      overflow-y: auto;
 }
-.layout-one-form-wrapper{
-     
+
+.layout-one-form-wrapper {
+
       height: 100%;
 }
 
-.layout-one-inner-wrapper-right{
-      h2{
+.layout-one-inner-wrapper-right {
+      h2 {
             justify-content: flex-end;
       }
 }
 
-.fullwidbtn{
-      max-width: 400px;
+.fullwidbtn {
       margin-top: 20px;
-      button{
-            width:100%
+
+      button {
+            width: 100%
       }
 }
 
-.mt_vh25{
+.mt_vh25 {
       margin-top: 25vh;
 }
-.fullwidbtn{
+
+.fullwidbtn {
       width: 100%;
+}
+
+.normal_top_gap {
+      margin-top: 5rem;
+}
+
+.steper_container {
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+
+      .k-stepper .k-step-indicator {
+            width: 50px;
+            height: 50px;
+            font-size: 18px;
+      }
+
+      .k-step-list-horizontal~.k-progressbar {
+            top: calc(((50px + 2* 2px) / 2) + 2px / 2);
+      }
+
+      .k-stepper .k-step-current .k-step-indicator,
+      .k-stepper .k-step-done .k-step-indicator {
+            border-color: $app-primary;
+            background-color: $app-primary;
+      }
+
+      .k-progressbar .k-selected {
+            color: white;
+            background-color: $app-primary;
+            ;
+      }
+}
+
+.stepper_btn_wrap {
+      padding: 10px 0px;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+
+      button {
+            margin-right: 10px;
+      }
 }
