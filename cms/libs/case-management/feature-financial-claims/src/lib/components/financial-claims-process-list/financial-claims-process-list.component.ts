@@ -453,7 +453,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.addEditClaimsFormDialog.close();
   }
   private collapseRowsInGrid() {
-    debugger
     this.gridFinancialClaimsProcessData$.pipe(take(1)).subscribe(({ data }) => {
       data.forEach((item: any, idx: number) => {
         this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
