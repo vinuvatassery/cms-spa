@@ -19,6 +19,8 @@ export class FormsAndDocumentFacade {
     getFolder$ =  this.getFolderSubject.asObservable();
     private uploadFilesSubject = new Subject<any>();
     uploadFiles$ =  this.uploadFilesSubject.asObservable();
+    private gridStateSubject = new Subject<any>();
+    gridState$ =  this.gridStateSubject.asObservable();
     private uploadNewVersionDocumentSubject = new BehaviorSubject<any>([]);
     uploadNewVersionDocument$ =  this.uploadNewVersionDocumentSubject.asObservable();
     private renameSubject = new BehaviorSubject<any>([]);
@@ -177,6 +179,65 @@ export class FormsAndDocumentFacade {
           },
           error: (err) => {
             this.showHideSnackBar(SnackBarNotificationType.ERROR," ");
+            this.loaderService.hide();
+          },
+        })
+      }
+
+      reOrder(reOrderRequest:any){
+        this.showLoader()
+        this.uploadFormandDocumentService.reOrder(reOrderRequest).subscribe({
+          next: (response:any) => {
+            if (response) {
+              var filter={
+                sort : true,
+                active: 'Y'
+              }
+              this.loadFolderFile(filter);
+              this.loaderService.hide();
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+            }
+          },
+          error: (err) => {
+            var filter={
+              sort : true,
+              active: 'Y'
+            }
+            this.loadFolderFile(filter);
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.loaderService.hide();
+          },
+        })
+      }
+
+      saveGridState(sortType:string){
+        this.showLoader()
+        this.uploadFormandDocumentService.saveGridState(sortType).subscribe({
+          next: (response:any) => {
+            if (response) {
+              this.loaderService.hide();
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+            }
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.loaderService.hide();
+          },
+        })
+      }
+
+      getGridState(){
+        this.showLoader()
+        this.uploadFormandDocumentService.getGridState().subscribe({
+          next: (response:any) => {
+            if (response) {
+              this.gridStateSubject.next(response);
+              this.loaderService.hide();
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+            }
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
             this.loaderService.hide();
           },
         })

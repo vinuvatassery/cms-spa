@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
@@ -13,7 +13,7 @@ const isFile = (name: string) => name.split('.').length > 1;
   selector: 'system-config-common-form-document-list',
   templateUrl: './common-form-document-list.component.html',
 })
-export class CommonFormDocumentListComponent implements OnInit {
+export class CommonFormDocumentListComponent implements OnInit, OnChanges {
 
   /** Public properties **/
   isOpenAttachment = false;
@@ -22,6 +22,7 @@ export class CommonFormDocumentListComponent implements OnInit {
   @Input() hasChildren: any;
   @Input() children:any;
   @Input() isPopUp:any;
+  @Input() filter =""
   @Output() newVersionFileUploadOpenEvent = new EventEmitter()
   selectedfolder: string = "";
   isShowLoader: boolean = true;
@@ -61,6 +62,17 @@ export class CommonFormDocumentListComponent implements OnInit {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService,) {
 
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['filter']){
+    if (!changes['filter'].firstChange) {
+      if(changes['filter'].currentValue == 'cust'){
+        this.isDragDropEnabled = true
+      }else{
+        this.isDragDropEnabled = false
+      }
+    } 
+  }
   }
   ngOnInit(): void {
   }
@@ -236,12 +248,46 @@ export class CommonFormDocumentListComponent implements OnInit {
 
   public getDragStatus(
     action: DropAction,
-    destinationItem: TreeItemLookup
+    destinationItem: TreeItemLookup,
+    sourceItem : TreeItemLookup
   ): string {
     if (
       destinationItem &&
       action === DropAction.Add &&
-      isFile(destinationItem.item.dataItem.text)
+      !destinationItem.item.dataItem.isFolder
+    ) {
+      return 'k-i-cancel';
+    }
+
+    if (
+      destinationItem &&
+      (action === DropAction.Add 
+        ||action === DropAction.InsertBottom 
+        || action === DropAction.InsertTop 
+       || action === DropAction.InsertMiddle )
+      && !destinationItem.item.dataItem.isFolder
+      && sourceItem.item.dataItem.isFolder
+    ) {
+      return 'k-i-cancel';
+    }
+
+    if (
+      destinationItem &&
+      (action === DropAction.Add)
+      && destinationItem.item.dataItem.isFolder
+      && sourceItem.item.dataItem.isFolder
+    ) {
+      return 'k-i-cancel';
+    }
+
+    if (
+      destinationItem &&
+      (action === DropAction.InsertBottom 
+        ||action === DropAction.InsertTop
+      || action === DropAction.InsertMiddle 
+       )
+      && destinationItem.item.dataItem.isFolder
+      && !sourceItem.item.dataItem.isFolder
     ) {
       return 'k-i-cancel';
     }
@@ -261,22 +307,75 @@ export class CommonFormDocumentListComponent implements OnInit {
     }
   }
 
-  public log(event: string, args?: any): void {
+  public logAdd(event: string, args?: any): void {
+    console.log(event, args);
+    const payload={
+      destinationItem: args.destinationItem.item.dataItem,
+      sourceItem :args.sourceItem.item.dataItem,
+      dropPosition :args.dropPosition
+    }
+    this.formsAndDocumentFacade.reOrder(payload)
+  }
+
+  public logRemove(event: string, args?: any): void {
     console.log(event, args);
   }
 
   public handleDrop(event: TreeItemDropEvent): void {
-    this.log('nodeDrop', event);
 
     // prevent drop if attempting to add to file
     if (
-      isFile(event.destinationItem.item.dataItem.text) &&
+      !event.destinationItem.item.dataItem.isFolder &&
       event.dropPosition === DropPosition.Over
     ) {
       event.setValid(false);
     }
+
+    if (
+     event.sourceItem.item.dataItem.isFolder 
+      && !event.destinationItem.item.dataItem.isFolder
+      && (event.dropPosition === DropPosition.Over
+        || event.dropPosition === DropPosition.Before
+        || event.dropPosition === DropPosition.After
+      )
+    ) {
+      event.setValid(false);
+    }
+
+    if (
+      event.sourceItem.item.dataItem.isFolder 
+       && event.destinationItem.item.dataItem.isFolder
+       && event.dropPosition === DropPosition.Over
+         
+       )
+     {
+       event.setValid(false);
+     }
+
+     
+    if (
+      !event.sourceItem.item.dataItem.isFolder 
+       && event.destinationItem.item.dataItem.isFolder
+       && (event.dropPosition === DropPosition.After
+       || event.dropPosition === DropPosition.Before
+       )
+         
+       )
+     {
+       event.setValid(false);
+     }
+
+ 
+
   }
 
+  public handlestart(event: any)
+    {
+       if(!this.isDragDropEnabled){
+       event.preventDefault();
+       }
+        return
+    }
   /** Internal event methods **/
   onUploadFileVersionOpenClicked(data:any) {
     this.newVersionFileUploadOpenEvent.emit(data)
