@@ -39,7 +39,7 @@ export class DeactivateUserConfirmationComponent implements OnDestroy  {
       this.notifyDeactivation();
     }
 
-    onDeactivationDialougeClose(){
+    onDeactivateDialogueClose(){
       this.closeDeactivateUsers.emit();
     }
 
@@ -75,7 +75,7 @@ export class DeactivateUserConfirmationComponent implements OnDestroy  {
             hideAfter:this.hideAfter
           });
         }
-        this.onDeactivationDialougeClose();
+        this.onDeactivateDialogueClose();
         this.refreshUsersGrid();  
       });
     }
@@ -85,8 +85,7 @@ export class DeactivateUserConfirmationComponent implements OnDestroy  {
           this.notificationSnackbarService.manageSnackBar(type, subtitle, NotificationSource.API, title)
     }
 
-    ngOnDestroy(): void {
-      
+    ngOnDestroy(): void {     
       if(this.deactivatSubscription){
         this.deactivatSubscription.unsubscribe();
     }
