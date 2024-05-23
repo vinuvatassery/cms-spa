@@ -18,7 +18,7 @@
                   <div class="flex-row">
                         <div class="flex-col flex-col-4 mb-3">
                               <kendo-floatinglabel text="Sort">
-                                    <kendo-dropdownlist aria-label="Folder Sort"
+                                    <kendo-dropdownlist aria-label="Folder Sort" *ngIf="folderSortLovList"
                                           [fillMode]="formUiStyle.dropDownFillMode" [data]="folderSortLovList"
                                           textField="lovDesc" valueField="lovCode"  [(ngModel)]="sortOrder"
                                           (valueChange)="onSortChange($event)">
@@ -42,6 +42,7 @@
 <system-config-common-form-document-list
  [foldersTree] ="folderFileList$ | async" 
  [treeViewSize]='"large"'
+ [filter]="sortOrder?.lovCode?.toLowerCase()"
 (newVersionFileUploadOpenEvent)="newVersionFileUploadClick($event, newVersionTemplate)"
 ></system-config-common-form-document-list>
 <div class="bottom-fixed-wrapper text-right flex-gap" *ngIf="isDragDropEnabled"> 
