@@ -73,5 +73,9 @@ export * from './lib/client-attachment-model/client-attachment-model.component';
 export * from './lib/common-form-document-list/common-form-document-list.component';
 export * from './lib/delete-profile-photo-confirmation/delete-profile-photo-confirmation.component';
 export * from './lib/edit-template-name/edit-template-name.component';
-export * from  './lib/enums/income-type.enum';
-export * from './lib/enums/active-inactive-flag.enum'
+export * from './lib/enums/income-type.enum';
+export * from './lib/enums/active-inactive-flag.enum';
+
+export * from './lib/deactivate-template/deactivate-template.component';
+
+export * from './lib/reactivate-template/reactivate-template.component';
