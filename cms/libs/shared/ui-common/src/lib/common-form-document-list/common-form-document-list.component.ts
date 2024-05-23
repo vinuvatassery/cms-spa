@@ -64,15 +64,14 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes){
-    if (!changes['filter']?.firstChange) {
-      console.log(changes['filter']?.currentValue);
-      if(changes['filter']?.currentValue == 'cust'){
+    if(changes['filter']){
+    if (!changes['filter'].firstChange) {
+      if(changes['filter'].currentValue == 'cust'){
         this.isDragDropEnabled = true
       }else{
         this.isDragDropEnabled = false
       }
-    }
+    } 
   }
   }
   ngOnInit(): void {
