@@ -12,8 +12,7 @@ import { User } from '../entities/user';
 import { UserDataService } from '../infrastructure/user.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { ZipCodeFacade } from './zip-code.facade';
-import { NotificationService } from '@progress/kendo-angular-notification';
-import { NotificationService } from '@progress/kendo-angular-notification';
+
 @Injectable({ providedIn: 'root' })
 export class UserManagementFacade {
   /** Private properties **/
@@ -144,7 +143,6 @@ export class UserManagementFacade {
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly notificationService: NotificationService,
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly zipCodeFacade: ZipCodeFacade,
