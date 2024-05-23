@@ -59,6 +59,8 @@ import { ClientAttachmentModelComponent } from './client-attachment-model/client
 import { CommonFormDocumentListComponent } from './common-form-document-list/common-form-document-list.component';
 import { DeleteProfilePhotoConfirmationComponent } from './delete-profile-photo-confirmation/delete-profile-photo-confirmation.component';
 import { EditTemplateNameComponent } from './edit-template-name/edit-template-name.component';
+import { DeactivateTemplateComponent } from './deactivate-template/deactivate-template.component';
+import { ReactivateTemplateComponent } from './reactivate-template/reactivate-template.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -111,6 +113,8 @@ import { EditTemplateNameComponent } from './edit-template-name/edit-template-na
     CommonFormDocumentListComponent,
     DeleteProfilePhotoConfirmationComponent,
     EditTemplateNameComponent,
+    DeactivateTemplateComponent,
+    ReactivateTemplateComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -162,6 +166,8 @@ import { EditTemplateNameComponent } from './edit-template-name/edit-template-na
     CommonFormDocumentListComponent,
     DeleteProfilePhotoConfirmationComponent,
     EditTemplateNameComponent,
+    DeactivateTemplateComponent,
+    ReactivateTemplateComponent,
   ],
 })
 export class SharedUiCommonModule {}

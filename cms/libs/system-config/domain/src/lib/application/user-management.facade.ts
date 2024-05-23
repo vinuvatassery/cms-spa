@@ -13,6 +13,7 @@ import { UserDataService } from '../infrastructure/user.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { ZipCodeFacade } from './zip-code.facade';
 import { NotificationService } from '@progress/kendo-angular-notification';
+import { NotificationService } from '@progress/kendo-angular-notification';
 @Injectable({ providedIn: 'root' })
 export class UserManagementFacade {
   /** Private properties **/
