@@ -236,6 +236,9 @@ uploadFilesClicked(template: TemplateRef<unknown>): void
 }
 onCloseUploadFileDetailClicked() {
   this.uploadFileDialog.close();
+}
+onReloadFiles()
+{
   this.loadFoldersTree()
 }
 

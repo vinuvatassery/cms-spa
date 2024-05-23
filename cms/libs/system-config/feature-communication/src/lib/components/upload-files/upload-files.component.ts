@@ -8,9 +8,9 @@ import { FileRestrictions, FileState, SelectEvent, UploadEvent, UploadProgressEv
 @Component({
   selector: 'system-config-upload-files',
   styles: [
-    `kendo-upload-action-buttons.k-actions.k-actions-end.ng-star-inserted {
-      display: none;
-     }`
+    `#uploadForm k-actions k-actions-end {
+      display: none !important;
+  }`
      
   ],
   templateUrl: './upload-files.component.html',
@@ -29,6 +29,7 @@ export class UploadFilesComponent implements OnInit {
   value: any
   fileUploadError = false
   forms!: FormGroup;
+  btnDisabled = false;
   @Input()getFolders$: any;
   attachedFiles: any;
   isValidateForm= false;
@@ -36,6 +37,7 @@ export class UploadFilesComponent implements OnInit {
   fileUploadUrl =this.formsDocumentsService.fileUploadUrl
   @Output() uploadFilesEvent = new EventEmitter<any>();
   @Output () onCloseUploadFileDetailClicked = new EventEmitter<any>();
+  @Output () reloadFilesEvent = new EventEmitter<any>();
   public myRestrictions: FileRestrictions = {
     maxFileSize: 26214400
 };
@@ -121,13 +123,14 @@ public select(e: SelectEvent): void {
 }
 
 public complete(e: any){
-  debugger
+  
   this.uploadControl
 
   if(this.fileUploadError === false)
     {
       this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,'Files Uploaded Sucessfuly');
-  this.onCloseUploadFileClicked()
+  this.reloadFilesEvent.emit()
+  this.onCloseUploadFileDetailClicked.emit(false);
     }
 }
 onError(event :  any)
@@ -168,6 +171,9 @@ public onUploadButtonClick(upload : any): void {
     {
       return
     }
+    
+    
+    this.btnDisabled = true;
   upload.uploadFiles();
 }
 
