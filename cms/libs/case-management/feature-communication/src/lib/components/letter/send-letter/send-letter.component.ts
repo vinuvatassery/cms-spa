@@ -19,7 +19,7 @@ import { Observable, Subscription } from 'rxjs';
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
-import { UserDataService } from '@cms/system-config/domain';
+import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -65,6 +65,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly vendorContactFacade: VendorContactsFacade,
     private readonly userDataService: UserDataService,
     private readonly router: Router,
+    private readonly fabBadgeFacade: FabBadgeFacade,
     private readonly sanitizer: DomSanitizer) { }
 
   /** Public properties **/
@@ -258,6 +259,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           if (data) {
             this.onCloseNewLetterClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter Saved As Draft');
+            if(this.entityId && this.entityType == FabEntityTypeCode.Client){
+              this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
+            }
           }
           this.loaderService.hide();
           this.navigateConditionally();

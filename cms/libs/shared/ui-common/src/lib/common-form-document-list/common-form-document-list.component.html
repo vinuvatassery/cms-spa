@@ -28,8 +28,8 @@
                                           </button>
                                     </span>
                                     <label *ngIf="dataItem.isFolder===false">{{dataItem.text}}
-                                    <label class="file_label"> <span class="data_mb">{{dataItem.fileSize| number: '1.0-0'}} MB</span> 
-                                          <span class="fileversion">V1</span>
+                                    <label class="file_label"> <span class="data_mb">{{dataItem.fileSize| number: '1.2-2'}} MB</span> 
+                                          <span class="fileversion">V{{dataItem.templateVersion}}</span>
                                            <!-- <span class="file_status" [ngClass]="dataItem.activeFlag=== 'Y' ? 'active_file' : 'inactive_file' ">{{getFlagValue(dataItem.activeFlag)}}</span> -->
                                           </label></label>
                                     <label class="folder_label" *ngIf="dataItem.isFolder===true">{{dataItem.text}} <span *ngIf="dataItem.isFolder===true" class="filecount">{{dataItem.fileCount}} Files</span> 
@@ -46,25 +46,59 @@
                                           <span class="profile-text-avatar">{{dataItem.lastModifierName}}</span>
                                     </div>
                               </button>
-                              <kendo-dropdownbutton [data]="moreActions" title="More option" aria-label="more actions"
+                              <kendo-dropdownbutton  *ngIf="dataItem.isFolder===true" [data]="moreActions" title="More option" aria-label="more actions"
                                     class="TableActionPopup app-dropdown-action ml-1" buttonClass="k-icon-button"
                                     [popupSettings]="{ popupClass: popupClassAction, animate: true }">
                                     <span class="material-icons"> more_vert </span>
                                     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
                                           let-datalink>
-                                          <button kendoButton look="flat" 
-                                          [attr.aria-label]="datalink.text"
-                                                [class]="datalink.buttonType"
-                                                 aria-hidden="false"
-                                                (click)="datalink.click($event, dataItem)"
-                                                >
-                                                <span class="material-icons"
-                                                      [attr.aria-label]="datalink.text">{{datalink.icon}}</span>
-                                                <label> {{ datalink.text }} </label>
-                                          </button>
-
+                                          <div *ngIf="dataItem.activeFlag ==='Y' ; else reactiveButton">
+                                                <button  *ngIf="datalink.text !== 'Reactivate'" kendoButton look="flat" 
+                                                [attr.aria-label]="datalink.text"
+                                                      [class]="datalink.buttonType"
+                                                      aria-hidden="false"
+                                                      (click)="datalink.click($event, dataItem)"
+                                                      >
+                                                      <span class="material-icons"
+                                                            [attr.aria-label]="datalink.text">{{datalink.icon}}</span>
+                                                      <label> {{ datalink.text }} </label>
+                                                </button>
+                                          </div>
+                                          <ng-template #reactiveButton>
+                                                <div  *ngIf="datalink.text !== 'Deactivate'">
+                                                      <button kendoButton look="flat" 
+                                                      [attr.aria-label]="datalink.text"
+                                                            [class]="datalink.buttonType"
+                                                            aria-hidden="false"
+                                                            (click)="datalink.click($event, dataItem)"
+                                                            >
+                                                            <span class="material-icons"
+                                                                  [attr.aria-label]="datalink.text">{{datalink.icon}}</span>
+                                                            <label> {{ datalink.text }} </label>
+                                                      </button>
+                                                </div>
+                                              </ng-template>
                                     </ng-template>
                               </kendo-dropdownbutton>
+                              <kendo-dropdownbutton *ngIf="dataItem.isFolder===false" [data]="fileMoreActions" title="More option" aria-label="more actions"
+                              class="TableActionPopup app-dropdown-action ml-1" buttonClass="k-icon-button"
+                              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+                              <span class="material-icons"> more_vert </span>
+                              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
+                                    let-datalink>
+                                    <button kendoButton look="flat" 
+                                    [attr.aria-label]="datalink.text"
+                                          [class]="datalink.buttonType"
+                                           aria-hidden="false"
+                                          (click)="datalink.click($event, dataItem)"
+                                          >
+                                          <span class="material-icons"
+                                                [attr.aria-label]="datalink.text">{{datalink.icon}}</span>
+                                          <label> {{ datalink.text }} </label>
+                                    </button>
+
+                              </ng-template>
+                        </kendo-dropdownbutton>
                               <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
                                     <ng-template kendoPopoverBodyTemplate>
                                           <common-user-profile-card [userId]="dataItem.lastModifierId">
@@ -87,4 +121,18 @@
       <common-edit-template-name [templateDesc] = "templateDesc"  [documentTemplateId] = "documentTemplateId"   [isFolder] = "isFolder"  (updateTemplate)="updateTemplate($event)" 
        (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"> 
   </common-edit-template-name> 
+</ng-template>
+
+<ng-template #deactivateTemplates >
+ 
+      <kendo-dialog-titlebar (close)="onCloseFormsDocumentDeactivateClicked()">{{isFolder ? 'Deactivate folder?': 'Deactivate file?'}} </kendo-dialog-titlebar>
+      <common-deactivate-template  [documentTemplateId] = "documentTemplateId"   [SubtypeCode] = "SubtypeCode"   [isFolder] = "isFolder" (onCloseFormsDocumentDeactivateClicked)="onCloseFormsDocumentDeactivateClicked()"
+      (deactivateTemplateStatus)="deactivateTemplateStatus($event)"> 
+  </common-deactivate-template> 
+</ng-template>
+
+<ng-template #activateTemplates>
+      <kendo-dialog-titlebar (close)="onCloseFormsDocumentReactivateClicked()">{{isFolder ? 'Reactivate folder?': 'Reactivate file?'}} </kendo-dialog-titlebar>
+      <common-reactivate-template [documentTemplateId] = "documentTemplateId"   [SubtypeCode] = "SubtypeCode"    [isFolder] = "isFolder" (onCloseFormsDocumentReactivateClicked)="onCloseFormsDocumentReactivateClicked()"  (reactivateTemplateStatus)="reactivateTemplateStatus($event)"> 
+  </common-reactivate-template> 
 </ng-template>
