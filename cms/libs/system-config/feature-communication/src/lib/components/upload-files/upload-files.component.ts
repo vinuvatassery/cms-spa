@@ -1,13 +1,16 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FormsAndDocumentDataService } from '@cms/system-config/domain';
 import { FileRestrictions, FileState, SelectEvent, UploadEvent, UploadProgressEvent } from '@progress/kendo-angular-upload';
 
 @Component({
   selector: 'system-config-upload-files',
   styles: [
-    
+    `kendo-upload-action-buttons.k-actions.k-actions-end.ng-star-inserted {
+      display: none;
+     }`
      
   ],
   templateUrl: './upload-files.component.html',
@@ -24,6 +27,7 @@ export class UploadFilesComponent implements OnInit {
   attachedFileValidatorSize: boolean = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   value: any
+  fileUploadError = false
   forms!: FormGroup;
   @Input()getFolders$: any;
   attachedFiles: any;
@@ -35,7 +39,9 @@ export class UploadFilesComponent implements OnInit {
   public myRestrictions: FileRestrictions = {
     maxFileSize: 26214400
 };
-  constructor(public formBuilder: FormBuilder, public  formsDocumentsService : FormsAndDocumentDataService){
+  constructor(public formBuilder: FormBuilder, public  formsDocumentsService : FormsAndDocumentDataService,
+    private readonly snackbarService: NotificationSnackbarService
+  ){
 }
  
   ngOnInit(): void {
@@ -114,13 +120,24 @@ public select(e: SelectEvent): void {
   
 }
 
-public complete(){
+public complete(e: any){
+  debugger
+  this.uploadControl
+
+  if(this.fileUploadError === false)
+    {
+      this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,'Files Uploaded Sucessfuly');
   this.onCloseUploadFileClicked()
+    }
+}
+onError(event :  any)
+{
+  this.fileUploadError =true
 }
 
-dropdownFilterChange(folderId : any)
-{
- this.fileUploadUrl = this.formsDocumentsService.fileUploadUrl +'/'+folderId
+dropdownFilterChange(folderId : string)
+{  
+ this.fileUploadUrl = this.formsDocumentsService.fileUploadUrl +'/'+folderId.toString()+'/files'
 }
 uploadProgressEventHandler(e: UploadProgressEvent) {
   console.log(e.files[0].name + ' is ' + e.percentComplete + ' uploaded');
