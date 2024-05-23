@@ -394,6 +394,9 @@ export class CommonFormDocumentListComponent implements OnInit {
     this.formsAndDocumentFacade.reactiveTemplateStatus(payload)
 
   }
+  onFormsDocumentDeactivateClicked() {
+    this.isFormsDocumentDeactivatePopupShow = true;
+  }
 }
 
  
