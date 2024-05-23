@@ -2,14 +2,14 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
-import { forkJoin, mergeMap, of, Subscription, first, catchError } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, first, catchError, tap } from 'rxjs';
 /** Internal Libraries **/
-import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, WorkflowTypeCode, VerificationStatusCode } from '@cms/case-management/domain';
+import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, VerificationStatusCode } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { UserDataService } from '@cms/system-config/domain';
-import { StatusFlag } from '@cms/shared/ui-common';
+
 
 @Component({
   selector: 'case-management-verification-page',
@@ -107,31 +107,27 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     });
 
   }
-  private addSaveSubscription(): void {
+  private addSaveSubscription(): void {    
+    this.loaderService.show()
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
-    ).subscribe({
-      next: ([navigationType, isSaved]) => {
-        this.loaderService.hide();
-        if (isSaved) {
-          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'HIV Verification status updated');
-          this.workflowFacade.navigate(navigationType);
-        } else {
-          this.workflowFacade.enableSaveButton();
-        }
-      },
-      error: (err) => {
-        this.loaderService.hide();
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        this.loggingService.logException(err);
-      },
+    ).subscribe(([navigationType, isSaved ]) => {
+      if (isSaved) {
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'HIV Verification status updated')
+        this.workflowFacade.navigate(navigationType);
+      } else {
+        this.workflowFacade.enableSaveButton();
+      }
     });
+    
   }
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      this.loaderService.show();
       this.validateForm();
       if (this.hivVerificationForm.valid) {
         this.save().subscribe((response: any) => {
@@ -310,7 +306,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.cdr.detectChanges();
     if (this.hivVerificationForm.valid) {
       if (this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && this.isNotUploaded) {
-        this.loaderService.show()
+        this.loaderService.hide()
         this.verificationFacade.isSaveandContinueSubject.next(true);
         return of(true)
       }
@@ -351,6 +347,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       .pipe(
         catchError((error: any) => {
           if (error) {
+            this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
             this.verificationFacade.healthcareInvalidSubject.next(true);
             return of(false);
           }
