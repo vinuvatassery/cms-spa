@@ -445,7 +445,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.openAddEditClaimDialoge();
   }
   modalCloseAddEditClaimsFormModal(result: any) {
-    debugger
     if (result === true) {
       this.collapseRowsInGrid();
       this.loadFinancialClaimsProcessListGrid();
