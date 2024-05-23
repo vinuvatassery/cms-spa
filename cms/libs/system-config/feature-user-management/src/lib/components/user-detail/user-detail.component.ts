@@ -10,8 +10,7 @@ import {
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { group } from '@angular/animations';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
@@ -79,7 +78,8 @@ export class UserDetailComponent implements OnInit {
       role: new FormControl([], { validators: Validators.required }),
       domain: new FormControl({}),
       group: new FormControl({}),
-      jobTitle: new FormControl('')
+      jobTitle: new FormControl(''),
+      adUserId: new FormControl('')
     });
   }
 
@@ -122,12 +122,20 @@ export class UserDetailComponent implements OnInit {
     this.pNumberSearchSubject$.subscribe({
       next: (data) => {
         this.isRequestingPNumber = false;
-        if(data != null){          
-          let formControls = this.userFormGroup.controls;
-          formControls["firstName"].setValue(data.firstName);
-          formControls["lastName"].setValue(data.lastName);
+        this.adUserPNumberData = data;  
+        let formControls = this.userFormGroup.controls;
+        if(data != null){                    
+          formControls["firstName"].setValue(data.firstName == null ? '' : data.firstName);
+          formControls["lastName"].setValue(data.lastName == null ? '' : data.lastName);
           formControls["email"].setValue(data.emailAddress);  
-          this.adUserPNumberData = data;        
+          formControls["jobTitle"].setValue(data.JobTitle == null ? '' : data.jobTitle);
+          formControls["adUserId"].setValue(data.userId == null ? '' : data.userId);  
+        } else {
+          formControls["firstName"].setValue('');
+          formControls["lastName"].setValue('');
+          formControls["email"].setValue('');  
+          formControls["jobTitle"].setValue('');
+          formControls["adUserId"].setValue('');
         }
         this.cd.detectChanges();         
       },
@@ -141,17 +149,27 @@ export class UserDetailComponent implements OnInit {
     let value = (event.target as HTMLInputElement).value.toUpperCase();
     if(value == UserAccessType.Internal){
       this.isAccessTypeInternal = true;
-      this.setValidators(null);
+      this.setValidators(null, Validators.required);
     }else{
       this.isAccessTypeInternal = false;
-      this.setValidators(Validators.required);
+      this.setValidators(Validators.required, null);              
     }
     this.disableFields();
     this.userRoleType = this.getUserRoleType(value);
     this.loadDdlUserRole();
   }
 
-  setValidators(vaidator: any){
+  setValidators(vaidator: any, pNumberValidator: any){
+    this.userFormGroup.controls['firstName'].setValidators(
+      vaidator
+    );
+    this.userFormGroup.controls['firstName'].updateValueAndValidity();
+
+    this.userFormGroup.controls['lastName'].setValidators(
+      vaidator
+    );
+    this.userFormGroup.controls['lastName'].updateValueAndValidity();
+
     this.userFormGroup.controls['domain'].setValidators(
       vaidator
     );
@@ -161,6 +179,11 @@ export class UserDetailComponent implements OnInit {
       vaidator
     );
     this.userFormGroup.controls['group'].updateValueAndValidity();
+
+    this.userFormGroup.controls['pNumber'].setValidators(
+      pNumberValidator
+    );
+    this.userFormGroup.controls['pNumber'].updateValueAndValidity();
   }
 
   getUserRoleType(userType: any){
@@ -191,6 +214,9 @@ export class UserDetailComponent implements OnInit {
     if(this.userFormGroup.status == 'INVALID'){
       return;
     }
+    if(this.isPNumberValueChanging && (this.adUserPNumberData == null || this.isPNumberAlreadyExists)){
+          return;
+      }
     let formControls = this.userFormGroup.controls;
     let user = {
       userTypeCode: formControls["userAccessType"].value,
@@ -201,7 +227,8 @@ export class UserDetailComponent implements OnInit {
       domainCode: formControls["domain"].value?.lovCode,
       assistorGroupCode: formControls["group"].value?.lovCode,
       pOrNbr: formControls["pNumber"].value,
-      jobTitle: formControls["jobTitle"].value
+      jobTitle: formControls["jobTitle"].value,
+      adUserId: formControls["adUserId"].value,
     };
     this.userManagementFacade.addUser(user);
   }
@@ -220,13 +247,9 @@ export class UserDetailComponent implements OnInit {
     this.refreshGrid.emit();
   }
 
-
-
-
-  onDeactivateClicked()
-    {
+  onDeactivateClicked(){
       this.isUserDeactivatePopup = true;
-    }
+  }
 
   onPNumberValueChange(pNumber: any) {
     if(pNumber == ""){
@@ -236,8 +259,14 @@ export class UserDetailComponent implements OnInit {
     }    
     this.enteredPnumberValue = pNumber;
     this.isRequestingPNumber = true;
+    this.isPNumberAlreadyExists = false;
     this.adUserPNumberData = null;
     this.userManagementFacade.searchPNumber(pNumber);
+  }
+
+  onCancel(){
+    this.isDeactivatePopupOpened.emit();
+    this.isDeactivateValue = true;
   }
 
 
