@@ -35,17 +35,17 @@
                   (click)="uploadFilesClicked(uploadFileTemplate)"> <span class="material-icons"> upload</span>
                         UPLOAD
                         FILE </button>
-                  </div>
+            </div>
                         </div>
 
-                              <div class = "flex-col flex-col-2 text-right">
-                                    <span class="mt-3" style="display: inline-block;">
-                                          <input type="checkbox" Checked="isOnlyPremiumsWith12Months" kendoCheckBox
-                                            aria-labelledby="showactive" 
-                                            id="showactive" />
-                                          <label class="k-checkbox-label" for="showactive">Show only active</label>
-                                        </span>
-                              </div>
+                        <div class="flex-col flex-col-2 text-right">
+                              <span class="mt-3" style="display: inline-block;">
+                                <input type="checkbox" kendoCheckBox aria-labelledby="showactive"
+                                       id="showactive" [(ngModel)]="isActiveChecked"
+                                       (ngModelChange)="onShowActiveClickedEvent()" />
+                                <label class="k-checkbox-label" for="showactive">Show only active</label>
+                              </span>
+                            </div>
                   </div>
             </div>
            
@@ -181,7 +181,7 @@
 <ng-template #addFolderTemplate >
       <kendo-dialog-titlebar (close)="onCloseAddNewEditFolderClicked()"> Add New Folder </kendo-dialog-titlebar>
       <system-config-add-folder (addFolder)="addFolderData($event)"
-      (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"> 
+      (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()" [isActiveChecked]="isActiveChecked">
   </system-config-add-folder> 
 </ng-template>
 

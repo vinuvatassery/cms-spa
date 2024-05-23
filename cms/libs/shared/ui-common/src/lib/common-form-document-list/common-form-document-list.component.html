@@ -86,17 +86,32 @@
                               <span class="material-icons"> more_vert </span>
                               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
                                     let-datalink>
-                                    <button kendoButton look="flat" 
-                                    [attr.aria-label]="datalink.text"
-                                          [class]="datalink.buttonType"
-                                           aria-hidden="false"
-                                          (click)="datalink.click($event, dataItem)"
-                                          >
-                                          <span class="material-icons"
-                                                [attr.aria-label]="datalink.text">{{datalink.icon}}</span>
-                                          <label> {{ datalink.text }} </label>
-                                    </button>
-
+                                    <div *ngIf="dataItem.activeFlag ==='Y' ; else reactiveButton">
+                                          <button  *ngIf="datalink.text !== 'Reactivate'" kendoButton look="flat" 
+                                          [attr.aria-label]="datalink.text"
+                                                [class]="datalink.buttonType"
+                                                aria-hidden="false"
+                                                (click)="datalink.click($event, dataItem)"
+                                                >
+                                                <span class="material-icons"
+                                                      [attr.aria-label]="datalink.text">{{datalink.icon}}</span>
+                                                <label> {{ datalink.text }} </label>
+                                          </button>
+                                    </div>
+                                    <ng-template #reactiveButton>
+                                          <div  *ngIf="datalink.text !== 'Deactivate'">
+                                                <button kendoButton look="flat" 
+                                                [attr.aria-label]="datalink.text"
+                                                      [class]="datalink.buttonType"
+                                                      aria-hidden="false"
+                                                      (click)="datalink.click($event, dataItem)"
+                                                      >
+                                                      <span class="material-icons"
+                                                            [attr.aria-label]="datalink.text">{{datalink.icon}}</span>
+                                                      <label> {{ datalink.text }} </label>
+                                                </button>
+                                          </div>
+                                        </ng-template>
                               </ng-template>
                         </kendo-dropdownbutton>
                               <kendo-popover #onUserProfileDetailsHovered width="330" position="left">

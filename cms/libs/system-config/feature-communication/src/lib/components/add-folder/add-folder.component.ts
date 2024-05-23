@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ActiveInactiveFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { AddFolder } from '@cms/system-config/domain';
 
@@ -13,6 +14,7 @@ export class AddFolderComponent implements OnInit {
   @Output() addFolder = new EventEmitter<any>();
   @Output () onCloseAddNewEditFolderClicked = new EventEmitter<any>();
   Form:any
+  @Input() isActiveChecked:any;
   isValidateForm= false;
   CustomDescription = '';
   CustomCharactersCount!: number;
@@ -29,14 +31,16 @@ export class AddFolderComponent implements OnInit {
   }
   addNewFolder() {
     this.isValidateForm=true;
-      if (this.Form.valid ) {
+      if (this.Form.valid) {
         const payload = {
           TemplateDesc: this.Form.controls['folderName'].value,
           SubtypeCode: AddFolder.SubtypeCode,
+          active: this.isActiveChecked ? 'A' : 'Y',
+          isActiveChecked: this.isActiveChecked,
         };
         this.addFolder.emit(payload);
         this.onCloseAddNewEditFolderClicked.emit(false);
-      }
+      }  
   }
 onCustomValueChange(event: any): void {
   this.CustomCharactersCount = event.length;

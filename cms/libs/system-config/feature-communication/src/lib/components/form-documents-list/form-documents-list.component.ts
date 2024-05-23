@@ -30,6 +30,7 @@ export class FormDocumentsListComponent implements OnInit {
   @Output() newVersionFileUploadEvent = new EventEmitter<any>();
   @Input() getFolders$: any; 
   uploadFileDialog :any
+  isActiveChecked: boolean = false;
 
   folderSortLovSubscription!: Subscription;
   folderSortLovList : any;
@@ -243,5 +244,12 @@ onNewVersionUploadButtonClicked(event:any){
     documentTemplateId : this.selectedDocument.documentTemplateId
   })
 }
-
+onShowActiveClickedEvent(){
+  const payload = {
+    active: this.isActiveChecked ? 'A' : 'Y',
+    sort : true,
+    isActiveChecked:this.isActiveChecked
+  };
+  this.loadFolders.emit(payload);
+}
 }

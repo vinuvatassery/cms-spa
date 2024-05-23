@@ -96,7 +96,7 @@ export class FormsAndDocumentFacade {
             {
               var filter={
                 sort : true,
-                active: 'Y'
+                active:payLoad.isActiveChecked ? 'A' : 'Y',
               }
               this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
               this.hideLoader();
@@ -167,7 +167,7 @@ export class FormsAndDocumentFacade {
             if (response) {
               var filter={
                 sort : true,
-                active: 'Y'
+                active:'Y',
               }
               this.loaderService.hide();
               this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
@@ -211,7 +211,7 @@ export class FormsAndDocumentFacade {
              if(response){
               var filter={
                 sort : true,
-                active: 'Y'
+                active:'Y'
               }
               this.reActiveTemplateSubject.next(true);
               this.loadFolderFile(filter);
