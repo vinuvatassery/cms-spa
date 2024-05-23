@@ -12,7 +12,7 @@ import { User } from '../entities/user';
 import { UserDataService } from '../infrastructure/user.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { ZipCodeFacade } from './zip-code.facade';
-import { NotificationService } from '@progress/kendo-angular-notification';
+
 @Injectable({ providedIn: 'root' })
 export class UserManagementFacade {
   /** Private properties **/
@@ -100,7 +100,7 @@ export class UserManagementFacade {
   private isShowUserDetailPopupSubject = new Subject<any>();
   private pNumberSearchSubject = new Subject<any>();
   private addUserResponseSubject = new Subject<any>();
-
+  private deactivateUserSubject = new Subject<any>();
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -138,12 +138,11 @@ export class UserManagementFacade {
   isShowUserDetailPopup$ = this.isShowUserDetailPopupSubject.asObservable();
   pNumberSearchSubject$ = this.pNumberSearchSubject.asObservable();
   addUserResponse$ = this.addUserResponseSubject.asObservable();
-
+  deactivateUser$ = this.deactivateUserSubject.asObservable();
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly notificationService: NotificationService,
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly zipCodeFacade: ZipCodeFacade,
@@ -596,12 +595,7 @@ export class UserManagementFacade {
     this.userDataService.deActivateUserRole(user).subscribe({
       next: (success:any) => {
         this.hideLoader();
-        if(success.status > 0){
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, success.message);
-      }
-      else{
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, success.message);
-      }
+        this.deactivateUserSubject.next(success);
       },
       error: (err) => {
         this.hideLoader();
