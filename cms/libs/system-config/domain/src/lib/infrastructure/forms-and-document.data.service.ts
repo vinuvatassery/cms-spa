@@ -5,6 +5,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 @Injectable({ providedIn: 'root' })
 export class FormsAndDocumentDataService 
 {
+  fileUploadUrl = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/files`
     /** Constructor **/
     constructor(
     private readonly http: HttpClient,

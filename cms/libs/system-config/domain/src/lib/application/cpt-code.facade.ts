@@ -157,9 +157,15 @@ export class CptCodeFacade {
           this.cptCodeChangeStatusSubject.next(true);
         },
         error: (err) => {
-          this.hideLoader();
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-          this.loggingService.logException(err);
+          if (err?.error?.error?.code?.includes('CPT_CODE_ASSOCIATED_WITH_PENDING_CLAIMS')) {
+            this.showHideSnackBar(SnackBarNotificationType.WARNING, err?.error?.error?.message);
+            this.loggingService.logException(err?.error?.error?.message);
+            this.hideLoader();
+          } else{
+            this.hideLoader();
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+            this.loggingService.logException(err);
+          }
         },
       });
   }

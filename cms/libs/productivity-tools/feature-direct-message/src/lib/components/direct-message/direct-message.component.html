@@ -14,23 +14,23 @@
       </button>
     </div>
   </div>
- 
+
   <div   class="direct-chat-wrapper">
     <div class="chat-view-container-wrappers" *ngIf="!disableChatInput">
     <div  class="chat-view-container" #scrollMe >
-      
+
       <ng-container *ngIf="groupedMessages">
       <ng-container *ngFor="let item of groupedMessages | keyvalue:mySortingFunction">
         <label class="center-date">{{ item.key}}</label>
-        
+
         <ng-container *ngFor="let value of getVlauesWithKey(item.value)">
-  
+
 
         <div class="chat-grey chat-left-side" *ngIf="!value.isOwner">
           <div class="time-status"><span class="chat-time">{{value.sender}}</span> </div>
           <p *ngIf="value.message">{{value.message}}</p>
           <div class="msg-attachment-wrapper" *ngIf="value.attachments">
-            <div  *ngFor="let attachment of value.attachments"> 
+            <div  *ngFor="let attachment of value.attachments">
             <div class="attachment-container-list" (click)="download(value,attachment)">
               <span class="material-icons attach" aria-hidden="true" *ngIf="!value.showDownloadLoader">  attach_file  </span>
               <span class="material-icons download" aria-hidden="true" *ngIf="!value.showDownloadLoader">    file_download   </span>
@@ -39,26 +39,26 @@
             </div>
           </div>
           </div>
-          <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}}</span> 
+          <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}}</span>
           </div>
-         
+
         </div>
         <div class="chat-green chat-right-side" *ngIf="value.isOwner">
           <div class="app-c-avatar avatar-sm">
-            <common-user-photo-icon  
-            [userId]="value.loginUserId" 
+            <common-user-photo-icon
+            [userId]="value.loginUserId"
             [userFirstName]="value.senderDisplayName.split(' ')[0]"
             [userLastName]="value.senderDisplayName.split(' ')[1]"
             [linkType]="'profileIcon'"
            ></common-user-photo-icon>
           </div>
-          <div class="msg_right"> 
+          <div class="msg_right">
             <p *ngIf="value.message">{{value.message}}</p>
           <div class="msg-attachment-wrapper" *ngIf="value.attachments">
             <div  *ngFor="let attachment of value.attachments">
 
-           
-            <div class="attachment-container-list" (click)="download(value,attachment)" > 
+
+            <div class="attachment-container-list" (click)="download(value,attachment)" >
               <span class="material-icons attach" aria-hidden="true" *ngIf="!value.showDownloadLoader">  attach_file  </span>
               <span class="material-icons download" aria-hidden="true" *ngIf="!value.showDownloadLoader">    file_download   </span>
               <span class=" k-icon k-i-loading k-input-loading-icon mr-1" *ngIf="value.showDownloadLoader"></span>
@@ -69,27 +69,27 @@
           <div class="time-status"><span class="chat-time">{{value.createdOn | date:'h:mm a'}} </span> </div>
         </div>
         </div>
-     
+
       </ng-container>
       </ng-container>
-     
+
     </ng-container>
     <div *ngIf="showChatLoader">
 
       <div *ngFor="let skeletonCount of skeletonCounts" class="msg_loader">
         <div class="left-msgloader">
 
-      
+
         <kendo-skeleton  shape="rectangle"   animation="pulse"   class="msg_bgloader" ></kendo-skeleton>
       <div class="msg_loader_second">
         <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
         <kendo-skeleton shape="text" animation="pulse"  width="50%" ></kendo-skeleton>
       </div>
-     
+
     </div>
     <div class="right-msgloader">
 
-      
+
       <kendo-skeleton  shape="rectangle"   animation="pulse"   class="msg_bgloader" ></kendo-skeleton>
     <div class="msg_loader_second">
       <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
@@ -98,37 +98,36 @@
   </div>
       </div>
     </div>
-  
+
     </div>
-    <div class="chat_bottom_stickey" *ngIf="outOfOfficeBanner">
-      <small class="outofoffice_text"><strong class="outhead">Out Of Office</strong> 
-        <!-- <p>  2 members are out of office <a kendoPopoverAnchor [popover]="outOfOfficePopover"  showOn="hover">   See More   </a> </p> -->
-        <p class="outofofc"><strong>Caseworkername</strong> is out of office <a kendoPopoverAnchor [popover]="outOfOfficePopover"  showOn="hover">   See More   </a></p>
+    <div class="chat_bottom_stickey" *ngIf="outOfscheduleData?.length > 0">
+      <small class="outofoffice_text"><strong class="outhead">Out Of Office</strong>
+        <p *ngIf="outOfscheduleData?.length > 1"> {{outOfscheduleData?.length}} members are out of office <a kendoPopoverAnchor [popover]="outOfOfficePopover"  showOn="hover">   See More   </a> </p>
+        <p *ngIf="outOfscheduleData?.length === 1" class="outofofc"><strong>{{outOfscheduleData[0]?.userName}}</strong> is out of office <a kendoPopoverAnchor [popover]="outOfOfficePopover"  showOn="hover">   See More   </a></p>
       </small>
 
       <kendo-popover #outOfOfficePopover [width]="250" position="top">
         <ng-template kendoPopoverBodyTemplate>
-      <div class="popoverbodyooo">
-        <p class="outofofc"><strong>Caseworkername</strong> - 05/22 to 05/26,  Will in out of office please expect delay in response </p>
-        <!-- <p class="outofofc"><strong>Caseworkername</strong> - 05/22 to 05/26,  Will in out of office please expect delay in response </p> -->
+      <div class="popoverbodyooo" *ngFor="let schedule of outOfscheduleData; let i = index">
+        <p class="outofofc"><strong>{{schedule.userName}}</strong> - {{schedule.startDate | date:'MM/dd'}} to {{schedule.endDate | date:'MM/dd'}},  {{schedule.message}} </p>
       </div>
         </ng-template>
-  
- 
+
+
       </kendo-popover>
     </div>
   </div>
-  
+
     <div  class="chat-view-container text-center mt-4" *ngIf="disableChatInput">
-      <span class="material-icons" aria-label="Info icon">    info   </span>  
+      <span class="material-icons" aria-label="Info icon">    info   </span>
      <p>Client does not have an active ORCares account.</p>
     </div>
 
     <div class="chat-bottom-container">
-  
+
       <div class="chat-input">
         <input type="text" [placeholder]="placeHolderText"
-         class="message-normal-text-box" *ngIf="!messageToolBarShow" 
+         class="message-normal-text-box" *ngIf="!messageToolBarShow"
          [(ngModel)]="sendMsg.message"  (keydown.control.enter)="sendMessage()"
          [disabled]="disableChatInput || showChatLoader" />
         <kendo-editor [value]="value" class="message-editor" [iframe]="false"
@@ -162,6 +161,6 @@
 
 
 <ng-template #UploadDocumentInDirectMessage>
- 
+
  <productivity-tools-direct-message-upload-docs (uploadDocumentsClosedDialog)="onUploadDocumentsClosed($event)" (uploadedDocuments)="getUploadedDocuments($event)"  [uploadDocumentTypeDetails]="uploadDocumentTypeDetails" [threadId]="threadId"></productivity-tools-direct-message-upload-docs>
 </ng-template>

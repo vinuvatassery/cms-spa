@@ -113,6 +113,7 @@ export class EmailEditorComponent implements OnInit, OnChanges {
   otherCount!: number;
   caseManagerEmail: any = null;
   isAttachmentIconVisible = true;
+  customStyleContent= '.k-content .hilightcolor{background: yellow};';
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -284,8 +285,9 @@ export class EmailEditorComponent implements OnInit, OnChanges {
   }
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {
-    editor.exec('insertText', { text: '{{' +item + '}}' });
-    editor.value = editor.value.replace(/#CURSOR#/, item);
+    let strResult: string = "<span class='hilightcolor'> {{"+ item +"}}</span>";
+    editor.exec("insertText", { text: "#CURSOR#" });
+    editor.value = editor.value.replace(/#CURSOR#/, strResult);
     this.onSearchClosed();
   }
 

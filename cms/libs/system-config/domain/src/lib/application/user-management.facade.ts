@@ -12,7 +12,7 @@ import { User } from '../entities/user';
 import { UserDataService } from '../infrastructure/user.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { ZipCodeFacade } from './zip-code.facade';
-
+import { NotificationService } from '@progress/kendo-angular-notification';
 @Injectable({ providedIn: 'root' })
 export class UserManagementFacade {
   /** Private properties **/
@@ -98,6 +98,8 @@ export class UserManagementFacade {
   private removePhotoResponseSubject = new Subject<any>();
   private uploadPhotoResponseSubject = new Subject<any>();
   private isShowUserDetailPopupSubject = new Subject<any>();
+  private pNumberSearchSubject = new Subject<any>();
+  private addUserResponseSubject = new Subject<any>();
 
   /** Public properties **/
   users$ = this.userSubject.asObservable();
@@ -134,11 +136,14 @@ export class UserManagementFacade {
   removePhotoResponse$ = this.removePhotoResponseSubject.asObservable();
   uploadPhotoResponse$ = this.uploadPhotoResponseSubject.asObservable();
   isShowUserDetailPopup$ = this.isShowUserDetailPopupSubject.asObservable();
+  pNumberSearchSubject$ = this.pNumberSearchSubject.asObservable();
+  addUserResponse$ = this.addUserResponseSubject.asObservable();
 
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly notificationService: NotificationService,
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly zipCodeFacade: ZipCodeFacade,
@@ -586,13 +591,37 @@ export class UserManagementFacade {
     });
   }
 
+  deactivateUser(user : any){
+    this.showLoader();
+    this.userDataService.deActivateUserRole(user).subscribe({
+      next: (success:any) => {
+        this.hideLoader();
+        if(success.status > 0){
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, success.message);
+      }
+      else{
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, success.message);
+      }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err.message);
+      },
+    })
+  }
+
+
+
   addUser(userData: any) {
     this.showLoader();
     this.userDataService.addUser(userData).subscribe({
       next: (response : any) => {
         this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
-        this.showOrHideUserDetailPopup(false);
+        if(response.status == 1){
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+          this.showOrHideUserDetailPopup(false);
+        }        
+        this.addUserResponseSubject.next(response);
       },
       error: (err) => {
         this.hideLoader();
@@ -604,4 +633,16 @@ export class UserManagementFacade {
   showOrHideUserDetailPopup(isShowPopup: boolean){
     this.isShowUserDetailPopupSubject.next(isShowPopup);
   }
+
+  searchPNumber(pNumber: string){
+    this.userDataService.searchPNumber(pNumber).subscribe({
+      next: (response: any) => {
+        this.pNumberSearchSubject.next(response);
+      },
+      error: (err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    });
+  }
+
 }
