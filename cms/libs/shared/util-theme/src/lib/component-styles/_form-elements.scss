@@ -910,6 +910,9 @@ kendo-datepicker {
   &.k-state-disabled+.k-label {
     background: var(--hive-neutral-palette-50);
   }
+  .k-actions{
+    display: none;
+  }
 }
 
 kendo-timepicker {
@@ -1258,3 +1261,5 @@ kendo-timepicker {
     margin-right: 4px;
     color: #ffffff;
 }
+
+ 
