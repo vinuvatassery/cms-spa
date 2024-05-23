@@ -126,8 +126,9 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     }
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
-      this.isHistoricalDataLoad? null: this.clientCaseEligibilityId,
+      this.clientCaseEligibilityId,
       typeParam,
+      this.isHistoricalDataLoad,
       gridFilterParam
     );
   }

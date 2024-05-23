@@ -9,8 +9,10 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   TemplateRef,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import {
   BatchClaim,
@@ -20,12 +22,13 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   FilterService,
+  GridComponent,
   GridDataResult,
   SelectableMode,
   SelectableSettings,
 } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Subject, Subscription, first } from 'rxjs';
+import { Subject, Subscription, first, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
@@ -84,6 +87,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   paymentStatuses$ = this.lovFacade.paymentStatus$
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
 
   @ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
@@ -441,12 +445,21 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.openAddEditClaimDialoge();
   }
   modalCloseAddEditClaimsFormModal(result: any) {
+    debugger
     if (result === true) {
+      this.collapseRowsInGrid();
       this.loadFinancialClaimsProcessListGrid();
     }
     this.addEditClaimsFormDialog.close();
   }
-
+  private collapseRowsInGrid() {
+    debugger
+    this.gridFinancialClaimsProcessData$.pipe(take(1)).subscribe(({ data }) => {
+      data.forEach((item: any, idx: number) => {
+        this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
+      });
+    });
+  }
   onBatchClaimsGridSelectedClicked() {
     this.isProcessGridExpand = false;
   }
