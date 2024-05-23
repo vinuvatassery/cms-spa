@@ -1,0 +1,11 @@
+<section class="k-dialog-body">
+    <p class="text-muted mb-2">  {{isFolder ? 'Users will be able to access the folder and its contents. You may deactivate it at any time.'
+        : 'Users will be able to access the file. You may deactivate it at any time.'}}    </section>
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" (click)="onCancelClick()" aria-label="Cancel"> Cancel </button>
+            <button kendoButton [primary]="true" (click)="onReactivateClicked()" aria-label="Deactivate" > REACTIVATE </button>
+        </div>
+    </div>
+</kendo-dialog-actions>

@@ -65,7 +65,6 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   isFiltered = false;
   isEditCptCode = false;
   filter!: any;
-  selectedColumn: any = 'ALL';
   gridDataResult!: GridDataResult;
   isCptCodeListGridLoaderShow = false;
   gridCptCodeDataSubject = new Subject<any>();
@@ -81,6 +80,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   columnName: any = "";
   selectedActiveFlag = "";
   showExportLoader = false;
+  selectedSearchColumn = 'ALL';
   columns: any = {
     ALL: 'All Columns',
     cptCode1: "CPT Code",
@@ -89,7 +89,10 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     medicaidRate: "Medicaid Rate",
     activeFlag: "Status",
   };
-
+  dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
+    { columnCode: 'cptCode1', columnDesc: 'CPT Code' }
+  ];
 
   public moreActions = (dataItem: any) => [
     {
@@ -174,7 +177,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'cptCode1',
+              field: this.selectedSearchColumn ?? 'cptCode1',
               operator: operator,
               value: data,
             },
@@ -188,6 +191,13 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.dataStateChange(stateData);
   }
 
+  searchColumnChangeHandler(value: string) {
+    this.selectedSearchColumn = value;
+    this.filter = [];
+    if (this.searchValue) {
+      this.onSearch(this.searchValue);
+    }
+  }
   onSearch(searchValue: any) {
     this.onChange(searchValue);
   }
@@ -235,7 +245,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = this.columns[this.sortValue];
     this.filter = stateData?.filter?.filters;
-    
+
     if (stateData.filter?.filters.length > 0) {
       const filterList = [];
       this.isFiltered = true;
@@ -248,7 +258,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       //this.filter = "";
       this.isFiltered = false;
     }
-   
+
     this.loadCptCodeList();
   }
 
@@ -256,8 +266,9 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     this.defaultGridState();
     this.sortColumn = 'CPT Code';
     this.sortType = 'asc';
-    this.sortDir = this.sortType === 'asc' ?  'Ascending' : "";
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "";
     this.filter = '';
+    this.selectedSearchColumn = 'ALL';
     this.isFiltered = false;
     this.sortValue = 'cptCode1';
     this.sort = this.sortValue;
@@ -278,21 +289,19 @@ export class CptCodeListComponent implements OnInit, OnChanges {
 
   onClickedExport() {
     this.showExportLoader = true;
-     const params = {
-       SortType: this.sortType,
-       Sorting: this.sortValue,
-       Filter: JSON.stringify(this.state?.filter?.filters ?? []),
-     };
-     this.exportGridEvent$.emit(params);
-     this.exportButtonShow$.subscribe((response: any) =>
-     {
-       if(response)
-       {
-         this.showExportLoader = false
-         this.cdr.detectChanges()
-       }
-     });
-   }
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.state?.filter?.filters ?? []),
+    };
+    this.exportGridEvent$.emit(params);
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+    });
+  }
 
 
   onEditCptCodeDetailsClicked(cptCode: any) {
