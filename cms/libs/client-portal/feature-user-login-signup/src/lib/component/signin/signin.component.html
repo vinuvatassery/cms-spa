@@ -4,14 +4,14 @@
         <img class="bgimage" src="../assets/images/cp_left_banner.png" alt="logo" />
     </div>
     <div class="layout-one-right-side">
-        <div class="layout-one-form-wrapper mt_vh25 flex-row">
+        <div class="layout-one-form-wrapper align-items-center flex-row">
             <div class="layout-one-inner-wrapper flex-col flex-col-7">
                 <h1 class="text-bold">Sign in to<span class="text-muted"> [Portal Name]</span></h1>
                 <div style="margin-top: 2rem;">
                     <p>Enter your email address and password below.</p>
                     <div>
                         <div class="flex-row">
-                            <div class="flex-col flex-col-6">
+                            <div class="flex-col flex-col-8">
                                 <kendo-floatinglabel text="Email Address">
                                     <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
@@ -22,7 +22,7 @@
 
 
                         <div class="flex-row">
-                            <div class="flex-col flex-col-6">
+                            <div class="flex-col flex-col-8">
                                 <kendo-floatinglabel text="Password">
                                     <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> <ng-template
                                             kendoTextBoxSuffixTemplate>
@@ -37,24 +37,24 @@
                     </div>
 
                     <div class="flex-row mt-1">
-                        <div class="flex-col flex-col-3"> 
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="RememberUsername"
-                                        id="RememberUsername" />
-                                    <label class="k-checkbox-label" for="RememberUsername">Remember username</label>
-                                </span> 
+                        <div class="flex-col flex-col-4">
+                            <span class="app-checkboxwidtext-wrapper">
+                                <input type="checkbox" kendoCheckBox aria-labelledby="RememberUsername"
+                                    id="RememberUsername" />
+                                <label class="k-checkbox-label" for="RememberUsername">Remember username</label>
+                            </span>
                         </div>
-                        <div class="flex-col flex-col-3 text-right">
+                        <div class="flex-col flex-col-4 text-right">
                             <button kendoButton look="flat" class="card-link-button mt-1"> Forgot Password? </button>
                         </div>
                     </div>
                     <div class="flex-row mt-1">
-                    <div class="fullwidbtn flex-col flex-col-6">
-                        <button kendoButton [primary]="true" class="mt-1" aria-label="LOGIN"> LOGIN </button>
+                        <div class="fullwidbtn flex-col flex-col-8">
+                            <button kendoButton [primary]="true" class="mt-1" aria-label="LOGIN"> LOGIN </button>
 
-                        <p class="text-center mt-2 mb-1">I don’t have an account</p>
-                        <button kendoButton [primary]="true" look="outline"> GET STARTED </button>
-                    </div>
+                            <p class="text-center mt-2 mb-1">I don’t have an account</p>
+                            <button kendoButton [primary]="true" look="outline"> GET STARTED </button>
+                        </div>
                     </div>
                 </div>
             </div>

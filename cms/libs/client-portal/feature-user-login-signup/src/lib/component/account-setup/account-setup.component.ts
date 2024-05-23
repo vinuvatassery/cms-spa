@@ -7,8 +7,11 @@ import { eyeIcon, SVGIcon } from "@progress/kendo-svg-icons";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountSetupComponent {
-
- 
+  getStartFirst = true;
+  isCompleteYourProfileView = false;
+  isNotReceivingServices = false;
+  isReceivedServices = false;
+  isActivationEmailSent = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public current = 0;
   public eyeIcon: SVGIcon = eyeIcon;
@@ -29,5 +32,29 @@ export class AccountSetupComponent {
       this.current = this.current - 1;
      }
     
+  }
+
+  notReceivingServiceClicked(){
+    this.getStartFirst = false;
+    this.isCompleteYourProfileView = false;
+    this.isNotReceivingServices = true;
+    this.isReceivedServices = false;
+  }
+  receivedServiceClicked(){
+    this.getStartFirst = false;
+    this.isCompleteYourProfileView = false;
+    this.isNotReceivingServices = false;
+    this.isReceivedServices = true;
+  }
+
+  createAccountClicked(){
+    this.getStartFirst = false;
+    this.isCompleteYourProfileView = true;
+    this.isNotReceivingServices = false;
+    this.isReceivedServices = false;
+  }
+
+  onCloseActivationEmailSentClicked(){
+    this.isActivationEmailSent = false;
   }
 }

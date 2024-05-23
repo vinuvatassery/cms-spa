@@ -313,6 +313,8 @@
     display: inline-flex;
     align-items: center;
     user-select: text;
+    word-wrap: break-word;
+    text-wrap: wrap;
   }
 }
 

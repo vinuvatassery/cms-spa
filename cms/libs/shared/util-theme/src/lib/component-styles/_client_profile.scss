@@ -9,6 +9,7 @@
 .layout-one-left-side {
       position: relative;
       background: $app-primary;
+      min-width: 200px;
 
       .bgimage {
             position: absolute;
@@ -26,6 +27,7 @@
             z-index: 1;
             left: 0;
             right: 0;
+            min-width: 120px;
       }
 }
 
@@ -35,10 +37,7 @@
       overflow-y: auto;
 }
 
-.layout-one-form-wrapper {
 
-      height: 100%;
-}
 
 .layout-one-inner-wrapper-right {
       h2 {
