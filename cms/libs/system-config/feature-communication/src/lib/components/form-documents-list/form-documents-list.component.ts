@@ -217,7 +217,7 @@ export class FormDocumentsListComponent implements OnInit {
   loadFoldersTree(){
     var filter={
       sort : true,
-      active: ActiveInactiveFlag.Yes
+      active: this.isActiveChecked ? 'A' : 'Y',
     }
     this.loadFolders.emit(filter);
   }
