@@ -101,6 +101,8 @@ export class UserManagementFacade {
   private pNumberSearchSubject = new Subject<any>();
   private addUserResponseSubject = new Subject<any>();
   private deactivateUserSubject = new Subject<any>();
+  private loginUserDetailSubject = new Subject<any>();
+
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -139,6 +141,8 @@ export class UserManagementFacade {
   pNumberSearchSubject$ = this.pNumberSearchSubject.asObservable();
   addUserResponse$ = this.addUserResponseSubject.asObservable();
   deactivateUser$ = this.deactivateUserSubject.asObservable();
+  loginUserDetail$ = this.loginUserDetailSubject.asObservable();
+
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
@@ -309,8 +313,6 @@ export class UserManagementFacade {
     });
   }
 
-
-
   loadUsersData(params: any): void {
     this.showLoader();
     this.userDataService.loadUsersData(params).subscribe({
@@ -402,9 +404,6 @@ export class UserManagementFacade {
       },
     });
   }
-
-
-
 
   loadSexualOrientationList(){
     this.userDataService.loadSexualOrientationList().subscribe({
@@ -636,6 +635,38 @@ export class UserManagementFacade {
       error: (err: any) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       }
+    });
+  }
+
+  getUserDetail(userId: string){
+    this.showLoader();
+    this.userDataService.getUserDetail(userId).subscribe({
+      next:(response: any) => {
+        this.hideLoader();
+        this.loginUserDetailSubject.next(response);
+      },
+      error: (err: any) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    })
+  }
+
+  updateUserDetail(userData: any) {
+    this.showLoader();
+    this.userDataService.updateUserDetail(userData).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        if(response.status == 1){
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+          this.showOrHideUserDetailPopup(false);
+        }        
+        this.addUserResponseSubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
     });
   }
 
