@@ -59,10 +59,9 @@
           <span *ngIf="userInfo?.userAddresses?.length > 0">
             <p *ngIf="userInfo?.userAddresses[0].address1" class="app-card-details">
               <span class="material-icons">location_pin</span>
-              {{userInfo?.userAddresses[0].address1}}
+              {{userInfo?.userAddresses[0].address1}} {{userInfo?.userAddresses[0].address2}}
             </p>
-            <p class="app-card-details">
-              <span class="material-icons">location_pin</span>
+            <p style="margin-left: 29px;" class="app-card-details">
               {{userInfo?.userAddresses[0].city}} {{userInfo?.userAddresses[0].state}}-{{userInfo?.userAddresses[0].zip}}
             </p>
           </span>

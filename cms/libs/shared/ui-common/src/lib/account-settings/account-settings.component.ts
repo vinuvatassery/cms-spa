@@ -8,7 +8,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '../enums/status-flag.enum';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
+import { FileRestrictions } from '@progress/kendo-angular-upload';
 
 @Component({
   selector: 'common-account-settings',
@@ -427,6 +427,21 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   {
     if(this.addPhoneForm.length > 1 ){
       this.addPhoneForm.removeAt(i);
+      let deskPhoneCount = 0;
+      let deskPhoneIndex = 0;
+      for (let i =0; i < this.addPhoneForm.controls.length; i++)
+        {
+          if(this.addPhoneForm.at(i).get('phoneType')?.value === this.userDeviceType.DeskPhone)
+            {
+              deskPhoneCount++;
+              deskPhoneIndex = i;
+            }
+        }
+        if (deskPhoneCount === 1)
+          {
+            this.addPhoneForm.at(deskPhoneIndex).get('phoneType')?.setErrors({ incorrect: false });
+            this.addPhoneForm.at(deskPhoneIndex).get('phoneType')?.updateValueAndValidity();
+          }
       if(this.userInfo.userTypeCode === UserType.Internal)
         {
           for (let i =0; i < this.addPhoneForm.controls.length; i++)
@@ -520,11 +535,18 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
         if(this.addPhoneForm.at(i).get('phoneType')?.value === this.userDeviceType.DeskPhone)
           {
             deskPhoneCount++;
-            break;
+            if (this.userInfo.userTypeCode === this.userType.Internal)
+            {
+              break;
+            }
           }
       }
 
-    if(deskPhoneCount > 0 && value === this.userDeviceType.DeskPhone)
+    if((deskPhoneCount > 0 && this.userInfo.userTypeCode === this.userType.Internal) && value === this.userDeviceType.DeskPhone)
+      {
+        form.controls['phoneType'].setErrors({ incorrect: true });
+      }
+    else if((deskPhoneCount > 1 && this.userInfo.userTypeCode === this.userType.External) && value === this.userDeviceType.DeskPhone)
       {
         form.controls['phoneType'].setErrors({ incorrect: true });
       }
@@ -576,7 +598,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
           {
             return;
           }
-        if (!this.checkFileSize)
+        if (!this.checkFileSize())
           {
             return;
           }
