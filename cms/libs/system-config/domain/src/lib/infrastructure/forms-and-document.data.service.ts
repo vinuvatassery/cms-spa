@@ -5,7 +5,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 @Injectable({ providedIn: 'root' })
 export class FormsAndDocumentDataService 
 {
-  fileUploadUrl = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/files`
+  fileUploadUrl  = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/folders`
     /** Constructor **/
     constructor(
     private readonly http: HttpClient,
@@ -58,6 +58,24 @@ export class FormsAndDocumentDataService
           return this.http.put(
             `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/template`,payload);
           }
+       reOrder(reOrderRequest:FormData){
+       
+          return this.http.post(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/re-order`,reOrderRequest);
+          }
+
+        saveGridState(sortType:String){
+          return this.http.post(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/grid-state?sortType=${sortType}`,null);
+          
+        }
+
+        getGridState(){
+          return this.http.get(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/grid-state`);
+          
+        }
+          
 
           updateStatus(payload:any){
             return this.http.put(
