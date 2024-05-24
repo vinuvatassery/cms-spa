@@ -133,7 +133,7 @@ export class UserDataService {
         `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/add-user`,
         userData
       );
-      }
+    }
 
   loadUserAssignedRolesByUserId(userId:any, data:any) {
       const pageAndSortedRequestDto =
@@ -180,6 +180,19 @@ export class UserDataService {
     return this.http.get<LoginUser[]>(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
         `/system-config/users/${pNumber}/ad-user-data`
+    );
+  }
+
+  getUserDetail(userId: string) {
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/${userId}/detail`);
+  }
+
+  updateUserDetail(userData: any) {      
+    return this.http.post(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${userData.loginUserId}/update-user`,
+      userData
     );
   }
 
