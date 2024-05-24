@@ -93,41 +93,5 @@ export class DeactivateUserConfirmationComponent implements OnDestroy  {
 
     }
 
-    notifyDeactivation(){
-      this.deactivatSubscription = this.deactivateUserStatus$.subscribe((response: any) => {
-        if(response.status > 0){
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
-        }
-        else
-        {
-            this.notificationService.show({
-            content: this.notificationTemplate,        
-            position: { horizontal: 'center', vertical: 'top' },
-            animation: { type: 'fade', duration: this.duration },
-            closable: true,
-            type: { style: "error", icon: true },        
-            cssClass: 'reminder-notification-bar',
-            hideAfter:this.hideAfter
-          });
-        }
-        this.onDeactivateDialogueClose();
-        this.refreshUsersGrid();  
-      });
-    }
-
-    showHideSnackBar(type : SnackBarNotificationType , subtitle : any, title : string = '')
-    {
-          this.notificationSnackbarService.manageSnackBar(type, subtitle, NotificationSource.API, title)
-    }
-
-    ngOnDestroy(): void {     
-      if(this.deactivatSubscription){
-        this.deactivatSubscription.unsubscribe();
-    }
-  }
-
-}
-
-
 
 
