@@ -410,6 +410,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       this.clientId,
       this.clientCaseEligibilityId,
       typeParam,
+      true,
       gridFilterParam      
     );
   }

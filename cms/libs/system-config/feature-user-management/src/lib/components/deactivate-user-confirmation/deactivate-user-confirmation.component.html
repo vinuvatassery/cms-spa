@@ -7,9 +7,15 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" (click)="onDeactivationDialougeClose()" aria-label="Cancel" look="outline">Cancel</button>
+      <button kendoButton [primary]="true" (click)="onDeactivateDialogueClose()" aria-label="Cancel" look="outline">Cancel</button>
       <button kendoButton [primary]="true" (click)="onDeactivateClick()"  aria-label="Deactivate" >Deactivate</button>
       
     </div>
   </div>
 </kendo-dialog-actions>
+
+<ng-template #notificationTemplate>
+  <span>User has assigned clients. </span>
+  <a href="#" class="notification-link" (click)="navigateToDetails()">Re-assign their clients</a>
+  <span> before deactivating.</span>
+</ng-template>
