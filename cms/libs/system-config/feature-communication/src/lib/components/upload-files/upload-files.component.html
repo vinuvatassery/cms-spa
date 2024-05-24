@@ -2,7 +2,7 @@
     <p>
           Select the file(s) and which folder to upload to.
     </p>
-   <div class="flex-row" >
+   <div class="flex-row" id="uploadForm">
            <div class="flex-col">
                 <kendo-floatinglabel text="Folder Name">
                       <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
@@ -48,7 +48,8 @@
           <div class="justify-content-end">
                 <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCloseUploadFileClicked()"> Cancel
                 </button>
-                <button kendoButton [primary]="true" aria-label="Upload" (click)="onUploadButtonClick(upload)"> Upload </button>
+                <button kendoButton [primary]="true" aria-label="Upload" (click)="onUploadButtonClick(upload)"
+                [disabled]="btnDisabled"> Upload </button>
           </div>
     </div>
 

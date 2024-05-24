@@ -178,6 +178,7 @@
       <system-config-upload-files
         (uploadFilesEvent)="uploadFilesEvent($event)" 
          (onCloseUploadFileDetailClicked)="onCloseUploadFileDetailClicked()"
+         (reloadFilesEvent)="onReloadFiles()"
           [getFolders$]="getFolders$" > 
       </system-config-upload-files>
 </ng-template>
