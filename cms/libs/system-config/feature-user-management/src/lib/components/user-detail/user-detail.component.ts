@@ -99,6 +99,7 @@ export class UserDetailComponent implements OnInit {
 
   private loadDdlUserRole() {    
     if(this.userRoleType == "") return;
+    this.userFormGroup.controls["role"].setValue([]);
     this.userManagementFacade.loadDdlUserRole(this.userRoleType, this.activeFlag);
   }
 
