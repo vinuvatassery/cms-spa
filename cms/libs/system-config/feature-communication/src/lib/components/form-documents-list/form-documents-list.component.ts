@@ -24,11 +24,14 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() folderSortList$: any;
   @Input() folderFileList$:any;
   @Input() uploadNewVersionDocument$ :any
+  @Input() gridState$:any
   @Output() addFolder = new EventEmitter<any>();
   @Output() loadFolders = new EventEmitter<any>();
   @Output() uploadFiles = new EventEmitter<any>();
+  @Output() sortChangeEvent = new EventEmitter<any>();
   @Output() newVersionFileUploadEvent = new EventEmitter<any>();
   @Input() getFolders$: any; 
+  @Output() getGridState = new EventEmitter<any>()
   uploadFileDialog :any
 
   folderSortLovSubscription!: Subscription;
@@ -38,6 +41,12 @@ export class FormDocumentsListComponent implements OnInit {
     this.loadFoldersTree();
     this.uploadNewVersionDocument$.subscribe((res:any) =>{
       this.uploadFileDialog?.close()
+    })
+    this.gridState$.subscribe((res:any)=>{
+      if(res){
+      this.sortOrder = this.folderSortLovList.filter((x :any)=> x.lovCode == res.gridState)[0]
+      console.log()
+      }
     })
   }
   fileName =""
@@ -180,6 +189,7 @@ export class FormDocumentsListComponent implements OnInit {
       sort : this.sortOrder.lovCode.toLowerCase(),
       active: ActiveInactiveFlag.Yes
     }
+    this.sortChangeEvent.emit(this.sortOrder.lovCode.toLowerCase())
     this.loadFolders.emit(filter);
   }
   addFolderData(payLoad:any){
@@ -197,6 +207,7 @@ export class FormDocumentsListComponent implements OnInit {
         if(response.length > 0){
           this.sortOrder = response[0];
           this.folderSortLovList = response;
+          this.getGridState.emit(true)
           this.cdr.detectChanges();
         }
       }
@@ -225,6 +236,10 @@ uploadFilesClicked(template: TemplateRef<unknown>): void
 }
 onCloseUploadFileDetailClicked() {
   this.uploadFileDialog.close();
+}
+onReloadFiles()
+{
+  this.loadFoldersTree()
 }
 
 newVersionFileUploadClick(data:any, template: TemplateRef<unknown>){

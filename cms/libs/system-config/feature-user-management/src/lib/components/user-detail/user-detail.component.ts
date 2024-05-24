@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { group } from '@angular/animations';
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
@@ -247,9 +248,13 @@ export class UserDetailComponent implements OnInit {
     this.refreshGrid.emit();
   }
 
-  onDeactivateClicked(){
+
+
+
+  onDeactivateClicked()
+    {
       this.isUserDeactivatePopup = true;
-  }
+    }
 
   onPNumberValueChange(pNumber: any) {
     if(pNumber == ""){

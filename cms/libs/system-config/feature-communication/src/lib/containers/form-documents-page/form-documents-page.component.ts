@@ -11,12 +11,14 @@ export class FormDocumentsPageComponent implements OnInit {
   folderSortList$ = this.lovFacade.folderSortLov$;;
   formsDocumentsList$ = this.formsAndDocumentFacade.formsDocumentsList$;
   getFolders$ = this.formsAndDocumentFacade. getFolder$;
+  gridState$ = this.formsAndDocumentFacade.gridState$;
   uploadNewVersionDocument$ = this.formsAndDocumentFacade.uploadNewVersionDocument$
 fileFolderPayload :any
   constructor(private readonly formsAndDocumentFacade: FormsAndDocumentFacade, private readonly lovFacade: LovFacade) { }
   
   ngOnInit(): void {
     this.loadFolderSort();
+    
     this.getFolderName();
     this.formsAndDocumentFacade.uploadNewVersionDocument$.subscribe(res =>{
       if(res){
@@ -27,6 +29,13 @@ fileFolderPayload :any
         this.formsAndDocumentFacade.loadFolderFile(filter)
       }
   })
+  }
+
+  getGridState(){
+    this.formsAndDocumentFacade.getGridState()
+  }
+  sortChange(sortType:string){
+    this.formsAndDocumentFacade.saveGridState(sortType);
   }
 
   addFolder(payload:any){
