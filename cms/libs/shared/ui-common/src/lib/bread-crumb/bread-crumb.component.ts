@@ -193,6 +193,13 @@ export class BreadCrumbComponent {
   }
 
 
+ /**
+ * Creates a breadcrumb trail for a given URL by searching through a navigation menu list.
+ * 
+ * @param menuList - An array of navigation menu items to search through.
+ * @param urlToFind - The URL to find within the navigation menu.
+ * @returns An array of BreadCrumbItems representing the hierarchy of the found item, or null if not found.
+ */
   private newCreateBreadcrumbs(menuList: NavigationMenu[], urlToFind: string): BreadCrumbItem[] | null {
 
 
@@ -205,6 +212,15 @@ export class BreadCrumbComponent {
 
     return null;
   }
+
+  /**
+  * Recursively finds a menu item by URL and constructs its breadcrumb hierarchy.
+  * 
+  * @param menus - An array of navigation menu items to search through.
+  * @param url - The URL to find within the navigation menus.
+  * @param hierarchy - The current hierarchy of breadcrumb items being constructed.
+  * @returns An array of BreadCrumbItems representing the hierarchy of the found item, or null if not found.
+  */
 
   private findItemRecursively(menus: NavigationMenu[], url: string, hierarchy: BreadCrumbItem[]): BreadCrumbItem[] | null {
     for (const menu of menus) {
