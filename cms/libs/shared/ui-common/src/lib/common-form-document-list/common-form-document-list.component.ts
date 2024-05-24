@@ -93,8 +93,30 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
       buttonType: 'btn-h-primary',
       text: 'Deactivate',
       icon: 'block',
-      click: (data: any): void => {
-        this.onFormsDocumentDeactivateClicked();
+      click: (event: any, data:any): void => {
+        this.temData = data;
+        if(!this.isdeactivateOpen)
+          {  this.isFolder = data.isFolder ? true: false;
+            this.documentTemplateId =data.documentTemplateId;
+            this.SubtypeCode=data.SubtypeCode;
+            this.isdeactivateOpen = true;
+            this.deactivateTemplate(this.deactivateTemplates);
+          }
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Reactivate',
+      icon: 'block',
+      click: (event: any, data:any): void => {
+        if(!this.reactivateOpen)
+          {
+            this.isFolder = data.isFolder ? true: false;
+            this.documentTemplateId =data.documentTemplateId;
+            this.SubtypeCode=data.SubtypeCode;
+            this.reactivateOpen = true;
+            this.reactivateTemplate(this.activateTemplates);
+          }
       },
     },
   ];

@@ -25,19 +25,32 @@
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
                         </div>
+                        <div class="flex-col flex-col-6">
+
+                  <div style="margin-top: 24px;">
                         <button kendoButton fillMode="clear" themeColor="primary" aria-label="NEW FOLDER"
-                              (click)="onAddNewEditFolderClicked()" (click)="onAddFolderClicked(addFolderTemplate )"  > <span class="material-icons"> add</span> NEW FOLDER
-                        </button>
-                        <button kendoButton fillMode="clear" themeColor="primary" aria-label="UPLOAD FILE"
-                        (click)="uploadFilesClicked(uploadFileTemplate)"> <span class="material-icons"> upload</span>
-                              UPLOAD
-                              FILE </button>
+                        (click)="onAddNewEditFolderClicked()" (click)="onAddFolderClicked(addFolderTemplate )"  > <span class="material-icons"> add</span> NEW FOLDER
+                  </button>
+                  <button kendoButton fillMode="clear" themeColor="primary" aria-label="UPLOAD FILE"
+                  (click)="uploadFilesClicked(uploadFileTemplate)"> <span class="material-icons"> upload</span>
+                        UPLOAD
+                        FILE </button>
+            </div>
+                        </div>
+
+                        <div class="flex-col flex-col-2 text-right">
+                              <span class="mt-4" style="display: inline-block;">
+                                <input type="checkbox" kendoCheckBox aria-labelledby="showactive"
+                                       id="showactive" [(ngModel)]="isActiveChecked"
+                                       (ngModelChange)="onShowActiveClickedEvent()" />
+                                <label class="k-checkbox-label" for="showactive">Show Inactive</label>
+                              </span>
+                            </div>
                   </div>
             </div>
+           
       </div>
-
-
-
+    
 </section>
 <system-config-common-form-document-list
  [foldersTree] ="folderFileList$ | async" 
@@ -169,7 +182,7 @@
 <ng-template #addFolderTemplate >
       <kendo-dialog-titlebar (close)="onCloseAddNewEditFolderClicked()"> Add New Folder </kendo-dialog-titlebar>
       <system-config-add-folder (addFolder)="addFolderData($event)"
-      (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()"> 
+      (onCloseAddNewEditFolderClicked)="onCloseAddNewEditFolderClicked()" [isActiveChecked]="isActiveChecked">
   </system-config-add-folder> 
 </ng-template>
 
