@@ -304,6 +304,7 @@ export class UserDetailComponent implements OnInit {
   onPNumberValueChange(pNumber: any) {
     if(pNumber == ""){
       this.isPNumberValueChanging = false
+      return;
     } else {
       this.isPNumberValueChanging = true;
     }    
