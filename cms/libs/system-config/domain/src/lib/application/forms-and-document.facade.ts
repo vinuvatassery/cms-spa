@@ -29,6 +29,7 @@ export class FormsAndDocumentFacade {
     deActiveTemplate$ =  this.deActiveTemplateSubject.asObservable();
     private reActiveTemplateSubject = new BehaviorSubject<any>([]);
     reActiveTemplate$ =  this.reActiveTemplateSubject.asObservable();
+    isActive :any;
   
     showLoader() { this.loaderService.show(); }
     hideLoader() { this.loaderService.hide(); }
@@ -64,6 +65,7 @@ export class FormsAndDocumentFacade {
         this.uploadFormandDocumentService.loadFolderFile(payLoad).subscribe({
             next: (response) => {
                 this.formsDocumentsSubject.next(response);
+                this.isActive = payLoad.ischecked;
                 this.hideLoader();
             },
             error: (err) => {
@@ -130,7 +132,7 @@ export class FormsAndDocumentFacade {
               next:(response) => {
                 var filter={
                   sort : true,
-                  active: 'Y'
+                  active: this.isActive ? 'A' : 'Y',
                 }
                 this.uploadFilesSubject.next(response);
                 this.hideLoader();
@@ -169,7 +171,7 @@ export class FormsAndDocumentFacade {
             if (response) {
               var filter={
                 sort : true,
-                active:'Y',
+                active: this.isActive ? 'A' : 'Y',
               }
               this.loaderService.hide();
               this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
@@ -191,7 +193,7 @@ export class FormsAndDocumentFacade {
             if (response) {
               var filter={
                 sort : true,
-                active: 'Y'
+                active:  this.isActive ? 'A' : 'Y',
               }
               this.loadFolderFile(filter);
               this.loaderService.hide();
@@ -249,7 +251,7 @@ export class FormsAndDocumentFacade {
              if(response){
               var filter={
                 sort : true,
-                active: 'Y'
+                active:  this.isActive ? 'A' : 'Y',
               }
               this.deActiveTemplateSubject.next(true);
               this.loadFolderFile(filter);
@@ -272,7 +274,7 @@ export class FormsAndDocumentFacade {
              if(response){
               var filter={
                 sort : true,
-                active:'Y'
+                active: this.isActive ? 'A' : 'Y',
               }
               this.reActiveTemplateSubject.next(true);
               this.loadFolderFile(filter);

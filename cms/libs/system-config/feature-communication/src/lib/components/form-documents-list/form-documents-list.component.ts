@@ -263,7 +263,8 @@ onShowActiveClickedEvent(){
   const payload = {
     active: this.isActiveChecked ? 'A' : 'Y',
     sort : true,
-    isActiveChecked:this.isActiveChecked
+    isActiveChecked:this.isActiveChecked,
+    ischecked : this.isActiveChecked ? true:false
   };
   this.loadFolders.emit(payload);
 }
