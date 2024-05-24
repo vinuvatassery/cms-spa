@@ -7,29 +7,31 @@
 
 
         <div class="layout-one-form-wrapper mt_vh25 flex-row" *ngIf="getStartFirst">
-                <div class="layout-one-inner-wrapper flex-col flex-col-7">
-                    <h1 class="text-bold">Get Started</h1>
-                    <div style="margin-top: 2rem;">
-                        <p>Are you receive through service any of our programs?</p>
-                        <div class="flex-row">
+            <div class="layout-one-inner-wrapper flex-col flex-col-7">
+                <h1 class="text-bold">Get Started</h1>
+                <div style="margin-top: 2rem;">
+                    <p>Are you receive through service any of our programs?</p>
+                    <div class="flex-row">
                         <div class="fullwidbtn flex-col flex-col-8">
-                            <button kendoButton [primary]="true" (click)="notReceivingServiceClicked()"  aria-label="Cancel"> No, I am not currently receiving services </button>
-                            <button kendoButton [primary]="true" (click)="receivedServiceClicked()"   class="mt-1"  look="outline"> Yes, I am currently receiving services </button>
-                      </div>
+                            <button kendoButton [primary]="true" (click)="notReceivingServiceClicked()"
+                                aria-label="Cancel"> No, I am not currently receiving services </button>
+                            <button kendoButton [primary]="true" (click)="receivedServiceClicked()" class="mt-1"
+                                look="outline"> Yes, I am currently receiving services </button>
                         </div>
-                    </div>            
-                </div>
-                <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
-                    <div class="right_stckey_img" style="text-align: right;">
-                        <h2 style="font-weight: 200;text-align: right;">Need Assistance?</h2>
-                        <h5 class=""><strong>Call CAREAssist</strong></h5>
-                        <p class="mb-2">(404)-470-1763</p>
-                        <h5><strong>Call CAREAssist</strong></h5>
-                        <p class="mb-2">(404)-470-1763</p>
-                        <img style="max-width: 300px;" src="../assets/images/help_banner.png" alt="" />
                     </div>
                 </div>
             </div>
+            <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
+                <div class="right_stckey_img" style="text-align: right;">
+                    <h2 style="font-weight: 200;text-align: right;">Need Assistance?</h2>
+                    <h5 class=""><strong>Call CAREAssist</strong></h5>
+                    <p class="mb-2">(404)-470-1763</p>
+                    <h5><strong>Call CAREAssist</strong></h5>
+                    <p class="mb-2">(404)-470-1763</p>
+                    <img style="max-width: 300px;" src="../assets/images/help_banner.png" alt="" />
+                </div>
+            </div>
+        </div>
 
 
         <div class="layout-one-form-wrapper normal_top_gap flex-row" *ngIf="isNotReceivingServices">
@@ -63,7 +65,7 @@
                                                     kendoTextBoxSuffixTemplate>
                                                     <button kendoButton look="clear"> <span class="material-icons">
                                                             visibility </span>
- 
+
                                                     </button>
                                                 </ng-template></kendo-textbox>
                                         </kendo-floatinglabel>
@@ -72,273 +74,10 @@
                                 <div class="flex-row">
                                     <div class="flex-col flex-col-6">
                                         <kendo-floatinglabel text="Confirm Password">
-                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> <ng-template
-                                                    kendoTextBoxSuffixTemplate>
-                                                    <button kendoButton look="clear"> <span class="material-icons">
-                                                            visibility </span> 
-                                                    </button>
-                                                </ng-template></kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-                                </div>
-                                <div class="flex-row">
-                                    <div class="flex-col flex-col-6">
-                                        <fieldset class="k-form-fieldset mt-2">
-                                            <legend class="k-form-legend">
-                                                <h5 class="mb-0"> Your password must have at least: </h5>
-                                            </legend>
-                                            <div class="component-list-h mt-4">
-                                                <span class="app-radiobtnwidtext-wrapper">
-                                                    <input type="radio" kendoRadioButton aria-labelledby="characters"
-                                                        name="password" id="characters" value="8 characters" />
-                                                    <kendo-label class="k-radio-label" text="8 characters"
-                                                        for="characters"></kendo-label>
-                                                </span>
-                                                <span class="app-radiobtnwidtext-wrapper">
-                                                    <input type="radio" kendoRadioButton aria-labelledby="letter"
-                                                        name="password" id="letter" value="1 letter" />
-                                                    <kendo-label class="k-radio-label" text="1 letter"
-                                                        for="letter"></kendo-label>
-                                                </span>
-                                                <span class="app-radiobtnwidtext-wrapper">
-                                                    <input type="radio" kendoRadioButton aria-labelledby="number"
-                                                        name="password" id="number" value="number"  />
-                                                    <kendo-label class="k-radio-label" text="1 number"
-                                                        for="number"></kendo-label>
-                                                </span>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-innercontainer">
-                            <h3>Personal Information</h3>
-                            <div class=" ac-block">
-                                <div class="flex-row">
-                                    <div class="flex-col flex-col-6">
-                                        <kendo-floatinglabel class="k-form" text="First Name">
-                                            <kendo-textbox placeholder="First Name"
-                                                [fillMode]="formUiStyle.inputFillMode">
-                                            </kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-
-                                    <div class="flex-col flex-col-6">
-                                        <kendo-floatinglabel class="k-form" text="Middle Initial (optional)">
-                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-                                </div>
-                                <div class="flex-row">
-                                    <div class="flex-col-6 flex-col">
-                                        <kendo-floatinglabel class="k-form" text="Last Name">
-                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-
-                                </div>
-                                <div class="flex-row">
-                                    <div class="flex-col flex-col-6">
-                                        <kendo-floatinglabel text="First Name on Official ID (Optional)">
-                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-
-                                    <div class="flex-col flex-col-6">
-                                        <kendo-floatinglabel text="Last Name on Official ID (Optional)">
-                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-                                </div>
-
-                                <div class="flex-row">
-                                    <div class="flex-col-6 flex-col">
-                                        <kendo-floatinglabel class="k-form" text="Date of Birth">
-                                            <kendo-datepicker [fillMode]="formUiStyle.inputFillMode"></kendo-datepicker>
-                                        </kendo-floatinglabel>
-                                    </div>
-                                </div>
-                                <div class="flex-row">
-                                    <div class="flex-col flex-col-6">
-                                        <kendo-floatinglabel text="Social Security Number">
-                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-
-                                    <div class="flex-col flex-col-6">
-                                        <span class="app-checkboxwidtext-wrapper mt-4">
-                                            <input type="checkbox" kendoCheckBox aria-labelledby="don’thaveaSSN"
-                                                id="don’thaveaSSN" />
-                                            <label class="k-checkbox-label" for="don’thaveaSSN">I don’t have a
-                                                SSN</label>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-innercontainer">
-                            <h3>Security Questions</h3>
-
-                            <div class="ac-block">
-
-
-                                <div class="ac-block-fields mb-4">
-                                    <h5>We will ask these questions to verify your identity if you ever forget your sign
-                                        in  details.</h5>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Question 1">
-                                                <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
-                                                </kendo-dropdownlist>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel class="k-form" text="Answer">
-                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Question 1">
-                                                <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
-                                                </kendo-dropdownlist>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel class="k-form" text="Answer">
-                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Question 1">
-                                                <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
-                                                </kendo-dropdownlist>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel class="k-form" text="Answer">
-                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div> 
-                                 </div>
-                            </div>
-                        </div>
-                        <div class="flex-col">
-                            <span class="app-checkboxwidtext-wrapper mt-1">
-                                <input type="checkbox" kendoCheckBox aria-labelledby="don’thaveaSSN"
-                                    id="don’thaveaSSN" />
-                                <label class="k-checkbox-label" for="don’thaveaSSN">I agree with all statements in
-                                    <a>Terms of Service</a></label>
-                            </span>
-
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <button kendoButton [primary]="true" class="fullwidbtn" (click)="createAccountClicked()"> CREATE USER ACCOUNT</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
-                <div class="right_stckey_img" style="text-align: right;">
-                    <h2 style="font-weight: 200;text-align: right;">Need Assistance?</h2>
-                    <h5 class=""><strong>Call CAREAssist</strong></h5>
-                    <p class="mb-2">(404)-470-1763</p>
-                    <h5><strong>Call CAREAssist</strong></h5>
-                    <p class="mb-2">(404)-470-1763</p>
-                    <img style="max-width: 300px;" src="../assets/images/help_banner.png" alt="" />
-                </div>
-            </div>
-        </div>
-        <div class="layout-one-form-wrapper normal_top_gap flex-row" *ngIf="isReceivedServices">
-            <div class="layout-one-inner-wrapper flex-col flex-col-7">
-                <h1 class="text-bold">Get Started</h1>
-                <div style="margin-top: 2rem;">
-                    <p>The information you enter here must match the information you provided when completing your program application.</p>
-                    <div class="form-innercontainer">
-                            <div class="flex-row">
-                                <div class="flex-col flex-col-6">
-                                    <kendo-floatinglabel text="Member ID">
-                                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                            <div class="flex-row">
-                                <div class="flex-col  flex-col-6">
-                                    <kendo-floatinglabel text="First Name">
-                                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                            <div class="flex-row">
-                                <div class="flex-col  flex-col-6">
-                                    <kendo-floatinglabel text="Last Name">
-                                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                            <div class="flex-row">
-                                <div class="flex-col-6 flex-col">
-                                    <kendo-floatinglabel class="k-form" text="Date of Birth">
-                                        <kendo-datepicker [fillMode]="formUiStyle.inputFillMode"></kendo-datepicker>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                            <div class="flex-col flex-col-6 stepper_btn_wrap">
-                                <button kendoButton [primary]="true" class="fullwidbtn"> CREATE USER ACCOUNT</button>
-                            </div>
-                    </div>
-
-                    <div class="accountsetting-form-wrapper">
-                        <div class="form-innercontainer">
-                            <h3>Account</h3>
-                            <div class=" ac-block">
-                                <div class="flex-row">
-                                    <div class="flex-col flex-col-6">
-                                        <kendo-floatinglabel text="Email">
-                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-                                </div>
-                                <div class="flex-row">
-                                    <div class="flex-col  flex-col-6">
-                                        <kendo-floatinglabel text="Confirm Email">
-                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-                                </div>
-                                <div class="flex-row">
-                                    <div class="flex-col flex-col-6 ">
-                                        <kendo-floatinglabel text="Password">
                                             <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> <ng-template
                                                     kendoTextBoxSuffixTemplate>
                                                     <button kendoButton look="clear"> <span class="material-icons">
                                                             visibility </span>
- 
-                                                    </button>
-                                                </ng-template></kendo-textbox>
-                                        </kendo-floatinglabel>
-                                    </div>
-                                </div>
-                                <div class="flex-row">
-                                    <div class="flex-col flex-col-6">
-                                        <kendo-floatinglabel text="Confirm Password">
-                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> <ng-template
-                                                    kendoTextBoxSuffixTemplate>
-                                                    <button kendoButton look="clear"> <span class="material-icons">
-                                                            visibility </span> 
                                                     </button>
                                                 </ng-template></kendo-textbox>
                                         </kendo-floatinglabel>
@@ -373,7 +112,7 @@
                                         </fieldset>
                                     </div>
                                 </div>
-                            >
+                            </div>
                         </div>
 
                         <div class="form-innercontainer">
@@ -449,7 +188,7 @@
 
                                 <div class="ac-block-fields mb-4">
                                     <h5>We will ask these questions to verify your identity if you ever forget your sign
-                                        in  details.</h5>
+                                        in details.</h5>
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Question 1">
@@ -494,8 +233,8 @@
                                                 <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
                                             </kendo-floatinglabel>
                                         </div>
-                                    </div> 
-                                 </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="flex-col">
@@ -507,13 +246,285 @@
                             </span>
 
                         </div>
-                        <div class="flex-col flex-col-6 stepper_btn_wrap">
-                            <button kendoButton [primary]="true" class="fullwidbtn"> CREATE USER ACCOUNT</button>
+                        <div class="flex-col flex-col-6">
+                            <button kendoButton [primary]="true" class="fullwidbtn" (click)="createAccountClicked()">
+                                CREATE USER ACCOUNT</button>
+                            <button kendoButton (click)="onOpenInsuranceActivationEmailSentClicked()"> email Sent
+                                Success popup</button>
                         </div>
 
                     </div>
                 </div>
             </div>
+            <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
+                <div class="right_stckey_img" style="text-align: right;">
+                    <h2 style="font-weight: 200;text-align: right;">Need Assistance?</h2>
+                    <h5 class=""><strong>Call CAREAssist</strong></h5>
+                    <p class="mb-2">(404)-470-1763</p>
+                    <h5><strong>Call CAREAssist</strong></h5>
+                    <p class="mb-2">(404)-470-1763</p>
+                    <img style="max-width: 300px;" src="../assets/images/help_banner.png" alt="" />
+                </div>
+            </div>
+        </div>
+        <div class="layout-one-form-wrapper normal_top_gap flex-row" *ngIf="isReceivedServices">
+            <div class="layout-one-inner-wrapper flex-col flex-col-7">
+                <h1 class="text-bold">Get Started</h1>
+                <div style="margin-top: 2rem;">
+                    <p>The information you enter here must match the information you provided when completing your
+                        program application.</p>
+                    <div class="form-innercontainer">
+                        <div class="flex-row">
+                            <div class="flex-col flex-col-6">
+                                <kendo-floatinglabel text="Member ID">
+                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                        </div>
+                        <div class="flex-row">
+                            <div class="flex-col  flex-col-6">
+                                <kendo-floatinglabel text="First Name">
+                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                        </div>
+                        <div class="flex-row">
+                            <div class="flex-col  flex-col-6">
+                                <kendo-floatinglabel text="Last Name">
+                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                        </div>
+                        <div class="flex-row">
+                            <div class="flex-col-6 flex-col">
+                                <kendo-floatinglabel class="k-form" text="Date of Birth">
+                                    <kendo-datepicker [fillMode]="formUiStyle.inputFillMode"></kendo-datepicker>
+                                </kendo-floatinglabel>
+                            </div>
+                        </div>
+                        <div class="flex-col flex-col-6 stepper_btn_wrap">
+                            <button kendoButton [primary]="true" class="fullwidbtn"> CREATE USER ACCOUNT</button>
+                        </div>
+                    </div>
+
+                    <div class="accountsetting-form-wrapper">
+                        <div class="form-innercontainer">
+                            <h3>Account</h3>
+                            <div class=" ac-block">
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="Email">
+                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+                                </div>
+                                <div class="flex-row">
+                                    <div class="flex-col  flex-col-6">
+                                        <kendo-floatinglabel text="Confirm Email">
+                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+                                </div>
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6 ">
+                                        <kendo-floatinglabel text="Password">
+                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> <ng-template
+                                                    kendoTextBoxSuffixTemplate>
+                                                    <button kendoButton look="clear"> <span class="material-icons">
+                                                            visibility </span>
+
+                                                    </button>
+                                                </ng-template></kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+                                </div>
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="Confirm Password">
+                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> <ng-template
+                                                    kendoTextBoxSuffixTemplate>
+                                                    <button kendoButton look="clear"> <span class="material-icons">
+                                                            visibility </span>
+                                                    </button>
+                                                </ng-template></kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+                                </div>
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6">
+                                        <fieldset class="k-form-fieldset mt-2">
+                                            <legend class="k-form-legend">
+                                                <h5 class="mb-0"> Your password must have at least: </h5>
+                                            </legend>
+                                            <div class="component-list-h mt-4">
+                                                <span class="app-radiobtnwidtext-wrapper">
+                                                    <input type="radio" kendoRadioButton aria-labelledby="characters"
+                                                        name="password" id="characters" value="8 characters" />
+                                                    <kendo-label class="k-radio-label" text="8 characters"
+                                                        for="characters"></kendo-label>
+                                                </span>
+                                                <span class="app-radiobtnwidtext-wrapper">
+                                                    <input type="radio" kendoRadioButton aria-labelledby="letter"
+                                                        name="password" id="letter" value="1 letter" />
+                                                    <kendo-label class="k-radio-label" text="1 letter"
+                                                        for="letter"></kendo-label>
+                                                </span>
+                                                <span class="app-radiobtnwidtext-wrapper">
+                                                    <input type="radio" kendoRadioButton aria-labelledby="number"
+                                                        name="password" id="number" value="number" />
+                                                    <kendo-label class="k-radio-label" text="1 number"
+                                                        for="number"></kendo-label>
+                                                </span>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                >
+                            </div>
+
+                            <div class="form-innercontainer">
+                                <h3>Personal Information</h3>
+                                <div class=" ac-block">
+                                    <div class="flex-row">
+                                        <div class="flex-col flex-col-6">
+                                            <kendo-floatinglabel class="k-form" text="First Name">
+                                                <kendo-textbox placeholder="First Name"
+                                                    [fillMode]="formUiStyle.inputFillMode">
+                                                </kendo-textbox>
+                                            </kendo-floatinglabel>
+                                        </div>
+
+                                        <div class="flex-col flex-col-6">
+                                            <kendo-floatinglabel class="k-form" text="Middle Initial (optional)">
+                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                            </kendo-floatinglabel>
+                                        </div>
+                                    </div>
+                                    <div class="flex-row">
+                                        <div class="flex-col-6 flex-col">
+                                            <kendo-floatinglabel class="k-form" text="Last Name">
+                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                            </kendo-floatinglabel>
+                                        </div>
+
+                                    </div>
+                                    <div class="flex-row">
+                                        <div class="flex-col flex-col-6">
+                                            <kendo-floatinglabel text="First Name on Official ID (Optional)">
+                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                            </kendo-floatinglabel>
+                                        </div>
+
+                                        <div class="flex-col flex-col-6">
+                                            <kendo-floatinglabel text="Last Name on Official ID (Optional)">
+                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                            </kendo-floatinglabel>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex-row">
+                                        <div class="flex-col-6 flex-col">
+                                            <kendo-floatinglabel class="k-form" text="Date of Birth">
+                                                <kendo-datepicker
+                                                    [fillMode]="formUiStyle.inputFillMode"></kendo-datepicker>
+                                            </kendo-floatinglabel>
+                                        </div>
+                                    </div>
+                                    <div class="flex-row">
+                                        <div class="flex-col flex-col-6">
+                                            <kendo-floatinglabel text="Social Security Number">
+                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                            </kendo-floatinglabel>
+                                        </div>
+
+                                        <div class="flex-col flex-col-6">
+                                            <span class="app-checkboxwidtext-wrapper mt-4">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="don’thaveaSSN"
+                                                    id="don’thaveaSSN" />
+                                                <label class="k-checkbox-label" for="don’thaveaSSN">I don’t have a
+                                                    SSN</label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-innercontainer">
+                                <h3>Security Questions</h3>
+
+                                <div class="ac-block">
+
+
+                                    <div class="ac-block-fields mb-4">
+                                        <h5>We will ask these questions to verify your identity if you ever forget your
+                                            sign
+                                            in details.</h5>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-6">
+                                                <kendo-floatinglabel text="Question 1">
+                                                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-dropdownlist>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-6">
+                                                <kendo-floatinglabel class="k-form" text="Answer">
+                                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-6">
+                                                <kendo-floatinglabel text="Question 1">
+                                                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-dropdownlist>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-6">
+                                                <kendo-floatinglabel class="k-form" text="Answer">
+                                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-6">
+                                                <kendo-floatinglabel text="Question 1">
+                                                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-dropdownlist>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-6">
+                                                <kendo-floatinglabel class="k-form" text="Answer">
+                                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-col">
+                                <span class="app-checkboxwidtext-wrapper mt-1">
+                                    <input type="checkbox" kendoCheckBox aria-labelledby="don’thaveaSSN"
+                                        id="don’thaveaSSN" />
+                                    <label class="k-checkbox-label" for="don’thaveaSSN">I agree with all statements in
+                                        <a>Terms of Service</a></label>
+                                </span>
+
+                            </div>
+                            <div class="flex-col flex-col-6 stepper_btn_wrap">
+                                <button kendoButton [primary]="true" class="fullwidbtn"> CREATE USER ACCOUNT</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
                 <div class="right_stckey_img" style="text-align: right;">
@@ -1358,10 +1369,10 @@
                         </div>
                     </div>
                     <div *ngIf="current === 2">
- 
+
                         <div class="client-data-block">
                             <h3>Contact Info</h3>
-                            <section> 
+                            <section>
                                 <div class="block-section">
 
 
@@ -1429,7 +1440,7 @@
 
 
 
-                                </div> 
+                                </div>
                                 <div class="block-section">
                                     <h5 class="text-capital mt-3 pt-2 mb-0">Phone & Email</h5>
                                     <div class="flex-row">
@@ -1627,7 +1638,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="block-section">
                                     <div class="flex-row">
                                         <div class="flex-col mat-split-list mt-2">
@@ -1687,13 +1698,29 @@
                 </div>
             </div>
         </div>
-
-
-
-
     </div>
-
-
 </div>
 
 
+
+
+<kendo-dialog *ngIf="isActivationEmailSent" (close)="onCloseInsuranceActivationEmailSentClicked()"
+    class="app-c-modal app-c-modal-lg-100 app-c-modal-np">
+    <kendo-dialog-titlebar> </kendo-dialog-titlebar>
+    <section class="k-dialog-body">
+        <div class="flex-row align-items-center">
+            <div class="flex-col flex-col-6">
+                <h1 class="text-bold mb-3"> Activation Email Sent!</h1>
+                <p>Didn’t get the email? <button kendoButton look="flat" class="card-link-button mt-1"
+                        style="display:inline-block"> CLICK HERE TO RESEND IT in 60 </button></p>
+                <div class="mt-2">
+                    <button kendoButton [primary]="true" look="outline"> <span
+                            class="material-icons">chevron_left</span> Back </button>
+                </div>
+            </div>
+            <div class="flex-col flex-col-6">
+                <img src="../assets/images/email_send.png" class="" style="max-width:100%" alt="email_send" />
+            </div>
+        </div>
+    </section>
+</kendo-dialog>

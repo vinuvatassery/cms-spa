@@ -12,6 +12,7 @@ export class AccountSetupComponent {
   isNotReceivingServices = false;
   isReceivedServices = false;
   isActivationEmailSent = false;
+  IsActivationEmailSent= false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public current = 0;
   public eyeIcon: SVGIcon = eyeIcon;
@@ -55,6 +56,12 @@ export class AccountSetupComponent {
   }
 
   onCloseActivationEmailSentClicked(){
+    this.isActivationEmailSent = false;
+  }
+  onOpenInsuranceActivationEmailSentClicked(){
+    this.isActivationEmailSent = true;
+  }
+  onCloseInsuranceActivationEmailSentClicked(){
     this.isActivationEmailSent = false;
   }
 }

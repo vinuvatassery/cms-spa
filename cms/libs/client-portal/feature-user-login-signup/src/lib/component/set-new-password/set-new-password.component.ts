@@ -8,4 +8,12 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class SetNewPasswordComponent {
   public formUiStyle : UIFormStyle = new UIFormStyle();
+  isNewPasswordSaved = false;
+
+  onCloseNewPasswordSavedClicked(){
+    this.isNewPasswordSaved = false;
+  }
+  onOpenNewPasswordSavedClicked(){
+    this.isNewPasswordSaved = true;
+  }
 }
