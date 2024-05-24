@@ -1,0 +1,62 @@
+<div class="layout-one-wrapper">
+      <div class="layout-one-left-side">
+          <img class="logoimg" src="../assets/images/OHA_logo.png" alt="logo" />
+          <img class="bgimage" src="../assets/images/cp_left_banner.png" alt="logo" />
+      </div>
+      <div class="layout-one-right-side">
+          <div class="layout-one-form-wrapper mt_vh25 flex-row">
+              <div class="layout-one-inner-wrapper flex-col flex-col-7">
+                  <h1 class="text-bold">Verify Your Identity</h1>
+                  <div style="margin-top: 2rem;" *ngIf="!isShowEmailAddress">
+       
+                          <div class="flex-row">
+                              <div class="flex-col flex-col-8">
+                                    <p>What is the name of your first pet?</p>
+                                  <kendo-floatinglabel  text="Answer">
+                                      <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>  
+                                  </kendo-floatinglabel>  
+                              </div>
+                          </div>   
+                           
+                      <div class="flex-row">
+                          <div class="fullwidbtn flex-col flex-col-8">
+                              <button kendoButton [primary]="true" class="mt-1" aria-label="LOGIN" (click)="isShowEmailAddress = !isShowEmailAddress"> VERIFY </button>  
+                              
+                              <button kendoButton [primary]="true" class="mt-2" look="outline" aria-label="LOGIN">TRY ANOTHER QUESTION</button>
+                              
+                          </div>
+                        
+                      </div>
+                  </div>
+
+                  <div style="margin-top: 2rem;" *ngIf="isShowEmailAddress">
+                        <p>Your Email ID</p>
+                       
+                            <div class="flex-row">
+                                <div class="flex-col flex-col-8 mt-2">
+                                     <h3>Your email id is joh......@gmail.com</h3>
+                                </div>
+                            </div>   
+                             
+                        <div class="flex-row">
+                            <div class="fullwidbtn flex-col flex-col-8">
+                                <button kendoButton [primary]="true" class="mt-1" aria-label="LOGIN"> BACK TO LOGIN </button>                         
+                                
+                            </div>
+                          
+                        </div>
+                    </div>
+              </div>
+              <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
+                  <div class="right_stckey_img" style="text-align: right;">
+                      <h2 style="font-weight: 200;text-align: right;">Need Assistance?</h2>
+                      <h5 class=""><strong>Call CAREAssist</strong></h5>
+                      <p class="mb-2">(404)-470-1763</p>
+                      <h5><strong>Call CAREAssist</strong></h5>
+                      <p class="mb-2">(404)-470-1763</p>
+                      <img style="max-width: 300px;" src="../assets/images/help_banner.png" alt="" />
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
