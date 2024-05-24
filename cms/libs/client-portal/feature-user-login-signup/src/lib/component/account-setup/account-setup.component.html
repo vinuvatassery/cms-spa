@@ -40,9 +40,9 @@
                 <div style="margin-top: 2rem;">
                     <p>Fill your details below to create your user account</p>
 
-                    <div class="accountsetting-form-wrapper">
+                    <div class="accountsetting-form-wrapper mt-3">
                         <div class="form-innercontainer">
-                            <h3>Account</h3>
+                            <h3 class="text-bold">Account</h3>
                             <div class=" ac-block">
                                 <div class="flex-row">
                                     <div class="flex-col flex-col-6">
@@ -89,7 +89,7 @@
                                             <legend class="k-form-legend">
                                                 <h5 class="mb-0"> Your password must have at least: </h5>
                                             </legend>
-                                            <div class="component-list-h mt-4">
+                                            <div class="component-list-h mt-1">
                                                 <span class="app-radiobtnwidtext-wrapper">
                                                     <input type="radio" kendoRadioButton aria-labelledby="characters"
                                                         name="password" id="characters" value="8 characters" />
@@ -116,7 +116,7 @@
                         </div>
 
                         <div class="form-innercontainer">
-                            <h3>Personal Information</h3>
+                            <h3 class="text-bold">Personal Information</h3>
                             <div class=" ac-block">
                                 <div class="flex-row">
                                     <div class="flex-col flex-col-6">
@@ -181,7 +181,7 @@
                             </div>
                         </div>
                         <div class="form-innercontainer">
-                            <h3>Security Questions</h3>
+                            <h3 class="text-bold">Security Questions</h3>
 
                             <div class="ac-block">
 
@@ -278,7 +278,11 @@
                             <div class="flex-col flex-col-6">
                                 <kendo-floatinglabel text="Member ID">
                                     <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                </kendo-floatinglabel>
+                                </kendo-floatinglabel> 
+                            </div>
+                            <div class="flex-col">
+                                <kendo-formhint>If you don’t have your Member ID, please contact us at one of the phone numbers to the right.</kendo-formhint>
+
                             </div>
                         </div>
                         <div class="flex-row">
@@ -301,6 +305,14 @@
                                     <kendo-datepicker [fillMode]="formUiStyle.inputFillMode"></kendo-datepicker>
                                 </kendo-floatinglabel>
                             </div>
+                            <div class="flex-col">
+                                <kendo-formerror  > <span class="material-icons">
+                                    info
+                                    </span>
+                                    We could not find you in the system. Please verify the information you entered and try again.
+                    </kendo-formerror>
+                                 
+                                </div>
                         </div>
                         <div class="flex-col flex-col-6 stepper_btn_wrap">
                             <button kendoButton [primary]="true" class="fullwidbtn"> CREATE USER ACCOUNT</button>
@@ -309,7 +321,7 @@
 
                     <div class="accountsetting-form-wrapper">
                         <div class="form-innercontainer">
-                            <h3>Account</h3>
+                            <h3 class="text-bold">Account</h3>
                             <div class=" ac-block">
                                 <div class="flex-row">
                                     <div class="flex-col flex-col-6">
@@ -551,8 +563,12 @@
                         stated.</p>
                     <div *ngIf="current === 0">
 
-
+                        <div class="accountsetting-form-wrapper">
+                            <div class="form-innercontainer">
+                                <h3 class="text-bold">Personal Information</h3>
+                                <div class=" ac-block">
                         <section>
+                            <h5 class="text-bold mb-1">Sexual Orientation and Gender Identity</h5>
                             <h5>What pronouns do they use? (check all that apply)</h5>
                             <div class="component-list-h">
                                 <span class="app-checkboxwidtext-wrapper">
@@ -1295,7 +1311,9 @@
                                 </span>
                             </div>
                         </section>
-
+                        </div>
+                        </div>
+                        </div>
                         <div class="stepper_btn_wrap">
                             <button kendoButton [primary]="true" (click)="nextProcess()"> Next <span
                                     class="material-icons">chevron_right</span> </button>
