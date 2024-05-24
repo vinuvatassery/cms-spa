@@ -33,6 +33,7 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() getFolders$: any; 
   @Output() getGridState = new EventEmitter<any>()
   uploadFileDialog :any
+  isActiveChecked: boolean = false;
 
   folderSortLovSubscription!: Subscription;
   folderSortLovList : any;
@@ -214,7 +215,7 @@ export class FormDocumentsListComponent implements OnInit {
   loadFoldersTree(){
     var filter={
       sort : true,
-      active: ActiveInactiveFlag.Yes
+      active: this.isActiveChecked ? 'A' : 'Y',
     }
     this.loadFolders.emit(filter);
   }
@@ -256,5 +257,13 @@ onNewVersionUploadButtonClicked(event:any){
     documentTemplateId : this.selectedDocument.documentTemplateId
   })
 }
-
+onShowActiveClickedEvent(){
+  const payload = {
+    active: this.isActiveChecked ? 'A' : 'Y',
+    sort : true,
+    isActiveChecked:this.isActiveChecked,
+    ischecked : this.isActiveChecked ? true:false
+  };
+  this.loadFolders.emit(payload);
+}
 }
