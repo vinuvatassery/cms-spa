@@ -233,7 +233,6 @@ export class FormsAndDocumentFacade {
             if (response) {
               this.gridStateSubject.next(response);
               this.loaderService.hide();
-              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
             }
           },
           error: (err) => {
