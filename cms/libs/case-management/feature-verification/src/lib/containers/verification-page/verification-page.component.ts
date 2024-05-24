@@ -107,8 +107,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     });
 
   }
-  private addSaveSubscription(): void {    
-    this.loaderService.show()
+  private addSaveSubscription(): void {     
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
@@ -127,7 +126,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
-      this.loaderService.show();
       this.validateForm();
       if (this.hivVerificationForm.valid) {
         this.save().subscribe((response: any) => {
@@ -301,10 +299,11 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     });
   }
 
-  private save() {
+  private save() { 
     this.validateForm();
     this.cdr.detectChanges();
     if (this.hivVerificationForm.valid) {
+      this.loaderService.show()
       if (this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && this.isNotUploaded) {
         this.loaderService.hide()
         this.verificationFacade.isSaveandContinueSubject.next(true);
