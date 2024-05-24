@@ -881,8 +881,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   getToEmail(to: any) {
     if(to?.length > 0){
     for (let email of to) {
-    if (email && email.trim() !== "" && (this.selectedToEmails.filter((x: any) => x === email).length === 0) && this.isValidEmail(email)) {
-          this.emails.push(email?.trim());
+    if (email && email.trim() !== "" && this.isValidEmail(email)) {
+      let emailExists = this.emails?.includes(email.trim());
+          if(!emailExists){
+            this.emails.push(email.trim());
+          }
         }
       }
     }
