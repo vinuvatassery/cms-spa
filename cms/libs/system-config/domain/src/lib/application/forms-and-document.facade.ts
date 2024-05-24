@@ -206,7 +206,7 @@ export class FormsAndDocumentFacade {
           next: (response:any) => {
             if (response) {
               var filter={
-                sort : true,
+                sort : 'cust',
                 active:  this.isActive$ ? 'A' : 'Y',
               }
               this.loadFolderFile(filter);
@@ -249,7 +249,6 @@ export class FormsAndDocumentFacade {
             if (response) {
               this.gridStateSubject.next(response);
               this.loaderService.hide();
-              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
             }
           },
           error: (err) => {
