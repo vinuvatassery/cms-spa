@@ -190,7 +190,7 @@ export class FormsAndDocumentFacade {
           next: (response:any) => {
             if (response) {
               var filter={
-                sort : true,
+                sort : 'cust',
                 active: 'Y'
               }
               this.loadFolderFile(filter);
