@@ -5,11 +5,13 @@
     [addCptCode$]="addCptCode$"
     [editCptCode$]="editCptCode$"
     [cptCodeChangeStatus$]="cptCodeChangeStatus$"
+    [checkHasPendingClaimsStatus$] = "checkHasPendingClaimsStatus$"
     [exportButtonShow$]="exportButtonShow$" 
     (loadCptCodeListsEvent)="loadCptCodeLists($event)"
     (editCptCodeEvent) ="handleEditCptCode($event)"
     (addCptCodeEvent)="handleAddCptCode($event)"
     (deactivateConfimEvent)="handleDeactivateCptCode($event)" 
     (reactivateConfimEvent)="handleReactivateCptCode($event)"
+    (checkHasPendingClaimsStatusEvent)="handleCheckHasPendingClaimsStatus($event)" 
     (exportGridEvent$)="onExportAllCPTCode($event)" >
 </system-config-cpt-code-list>
