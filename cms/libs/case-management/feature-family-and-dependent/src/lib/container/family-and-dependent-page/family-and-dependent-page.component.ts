@@ -332,23 +332,17 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+     if(this.checkValidations()){
       this.save().subscribe((response: any) => {
         if (response) {
+          this.workflowFacade.saveForLaterCompleted(true)  
           this.loaderService.hide();
-          if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-          }
-        }
+     
+        } 
       })
+    } else {
+      this.workflowFacade.saveForLaterCompleted(true)
+    }
     });
   }
 

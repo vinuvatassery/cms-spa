@@ -171,7 +171,11 @@ export class PharmacyClaimsAllPaymentsListComponent
     this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
   addDrug$ = this.drugsFacade.addDrug$;
   fromDrugPurchased: any = false;
-  gridColumns: { [key: string]: string } = {
+  excludedPaymentStatus: string[] = ['Failed', 'On Hold', 'Pending', 'Submitted'];
+  pharmacyPaymentStatusList : any[]=[];
+  selectedPaymentStatus: string | null = null;
+  selectedPaymentMethod: string | null = null;
+  gridColumns: any = {
     ALL: 'All Columns',
     itemNbr: 'Item #',
     batchName: 'Batch #',
@@ -307,6 +311,10 @@ export class PharmacyClaimsAllPaymentsListComponent
           this.financialVendorFacade.manufacturerListSubject.next(data);
         },
       });
+    this.paymentStatus$.subscribe(values => 
+      {
+        this.pharmacyPaymentStatusList = values.filter(value => !this.excludedPaymentStatus.includes(value.lovDesc))
+      })
   }
 
   pharmacyClaimsAllPaymentsSubscription() {
@@ -562,6 +570,7 @@ export class PharmacyClaimsAllPaymentsListComponent
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.clearIndividualSelectionOnClear(stateData);
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
     this.loadPharmacyClaimsAllPaymentsListGrid();
@@ -720,7 +729,7 @@ export class PharmacyClaimsAllPaymentsListComponent
     value: any,
     filterService: FilterService
   ): void {
-    if (field === 'paymentMethodCode') {
+    if (field === 'paymentMethodDesc') {
       this.paymentMethodFilter = value;
     } else if (field === 'paymentStatus') {
       this.paymentStatusFilter = value;
@@ -1047,5 +1056,35 @@ export class PharmacyClaimsAllPaymentsListComponent
           this.loadPharmacyClaimsAllPaymentsListGrid();
         }
       });
+  }
+  columnName: any = "";
+  clearIndividualSelectionOnClear(stateData: any)
+  {
+    if(stateData.filter?.filters.length > 0)
+      {
+        let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+        this.columnName = stateFilter.field;
+
+          this.filter = stateFilter.value;
+
+        this.isFiltered = true;
+        const filterList = []
+        for(const filter of stateData.filter.filters)
+        {
+          filterList.push(this.gridColumns[filter.filters[0].field]);
+        }
+        this.isFiltered =true;
+        this.filteredBy =  filterList.toString();
+      }
+      else
+      {
+        this.filter = "";
+        this.isFiltered = false
+        this.selectedPaymentMethod = '';
+        this.selectedPaymentStatus = '';
+      }
+      this.state=stateData;
+      if (!this.filteredBy.includes(this.gridColumns.paymentStatus)) this.selectedPaymentStatus = '';
+      if (!this.filteredBy.includes(this.gridColumns.paymentMethodDesc)) this.selectedPaymentMethod = '';
   }
 }

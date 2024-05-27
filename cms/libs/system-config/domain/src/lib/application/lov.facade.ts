@@ -103,6 +103,13 @@ export class LovFacade {
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceSupportGroupSubject = new BehaviorSubject<Lov[]>([]);
+  private userAccessTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private userRoleTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private caseManagerDomainSubject = new BehaviorSubject<Lov[]>([]);
+  private userDeviceTypeLovSubject = new Subject<any>();
+  private caseManagerAssistorGrpSubject = new BehaviorSubject<Lov[]>([]);
+
+  private folderSortSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
@@ -175,7 +182,7 @@ export class LovFacade {
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
   deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
   VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
-  frequencyTypeCodeSubject$ = this.lovFrequencyTypeCodeSubject.asObservable()  
+  frequencyTypeCodeSubject$ = this.lovFrequencyTypeCodeSubject.asObservable()
   entityTypeCodeSubject$ = this.lovEntityTypeCodeSubject.asObservable()
   lovProofOfIncomeByType$ = this.lovProofOfIncomeByTypeSubject.asObservable();
 
@@ -184,6 +191,13 @@ export class LovFacade {
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
   interfaceSupportGroupLov$ = this.interfaceSupportGroupSubject.asObservable();
   eventAttachmentTypeLov$ = this.eventAttachmentTypeLovSubject.asObservable();
+  userAccessTypeLov$ = this.userAccessTypeSubject.asObservable();
+  userRoleTypeLov$ = this.userRoleTypeSubject.asObservable();
+  caseManagerDomainLov$ = this.caseManagerDomainSubject.asObservable();
+  userDeviceTypeLov$ = this.userDeviceTypeLovSubject.asObservable();
+  caseManagerAssistorGrp$ = this.caseManagerAssistorGrpSubject.asObservable();
+  folderSortLov$ = this.folderSortSubject.asObservable()
+
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -215,17 +229,6 @@ export class LovFacade {
       },
     });
   }
-
-  // getEventAttachmentTypeLov(): void {
-  //   this.lovDataService.getLovsbyType(LovType.EventAttachemntType).subscribe({
-  //     next: (lovResponse) => {
-  //       this.eventAttachmentTypeLovSubject.next(lovResponse);
-  //     },
-  //     error: (err) => {
-  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-  //     }
-  //   });
-  // }
   getRelationShipsLovs(): void {
     this.lovDataService.getLovsbyType(LovType.RelationshipCode).subscribe({
       next: (relationsResponse) => {
@@ -258,7 +261,7 @@ export class LovFacade {
     });
 
   }
-  
+
   getPronounLovs(): void {
     this.lovDataService.getLovsbyType(LovType.Pronoun).subscribe({
       next: (lovPronounResponse) => {
@@ -503,11 +506,7 @@ export class LovFacade {
     this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).subscribe({
       next: (lovResponse) => {
         this.lovHealthInsuranceTypeSubject.next(lovResponse);
-        //const acceptedCaseStatusCodes = Object.values(AcceptedCaseStatusCode)
         const filteredLov = lovResponse.filter((item: any) => item.lovCode)
-        // filteredLov.forEach((item: any) => {
-        //   item.lovDesc = item.lovDesc.toUpperCase();
-        // });
         this.lovHealthInsuranceTypeSubject.next(filteredLov);
       },
       error: (err) => {
@@ -1034,6 +1033,75 @@ export class LovFacade {
       }
     });
   }
+
+  getUserAccessTypeLov() {
+    return this.lovDataService.getLovsbyType(LovType.UserTypeCode).subscribe({
+      next: (lovResponse) => {
+        this.userAccessTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getRoleTypeLov() {
+    return this.lovDataService.getLovsbyType(LovType.RoleTypeCode).subscribe({
+      next: (lovResponse) => {
+        this.userRoleTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getCaseManagerDomainLov() {
+    return this.lovDataService.getLovsbyType(LovType.CaseManagerDomain).subscribe({
+      next: (lovResponse) => {
+        this.caseManagerDomainSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getUserPhoneTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.UserDeviceType).subscribe({
+      next: (lovResponse) => {
+        this.userDeviceTypeLovSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+
+  getFolderSortLov() {
+    return this.lovDataService.getLovsbyType(LovType.FolderSort).subscribe({
+      next: (lovResponse) => {
+        this.folderSortSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getCaseManagerAssistorGrpLov() {
+    return this.lovDataService.getLovsbyType(LovType.CaseManagerAssistorGrp).subscribe({
+      next: (lovResponse) => {
+        this.caseManagerAssistorGrpSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
 }
+
 
 

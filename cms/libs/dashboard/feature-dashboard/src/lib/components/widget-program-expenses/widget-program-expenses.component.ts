@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { Legend, LegendLabels, LegendMarkers } from '@progress/kendo-angular-charts';
+import { Legend } from '@progress/kendo-angular-charts';
 import { Subject, takeUntil } from 'rxjs'; 
 
 
@@ -63,7 +63,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
 
   dataYear  = ['Current Year','Last Year']
   selectFrequency ="M"
-  selectedTimeFrame = 'Current Year'
+  selectedTimeFrame = 'Last Year'
   @Input() isEditDashboard!: any; 
   @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();

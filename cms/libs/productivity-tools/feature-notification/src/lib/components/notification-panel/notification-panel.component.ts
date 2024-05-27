@@ -21,12 +21,13 @@ import {
 import {
   LoggingService,
   SnackBarNotificationType,
+  NotificationDataFacade
 } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'productivity-tools-notification-panel',
@@ -41,6 +42,8 @@ export class NotificationPanelComponent implements OnInit {
   deleteReminderTemplate!: TemplateRef<any>;
   @ViewChild('NewReminderTemplate', { read: TemplateRef })
   NewReminderTemplate!: TemplateRef<any>;
+  @ViewChild('notificationsAndRemindersDialog', { read: TemplateRef })
+  notificationsAndRemindersDialog!: TemplateRef<any>;
   // data: Array<any> = [{}];
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
@@ -63,6 +66,7 @@ export class NotificationPanelComponent implements OnInit {
   alertsData:any = {};
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
+  notificationAndReminderDataList$ = this.notificationDataFacade.notificationAndReminderDataList$;
   isNotificationPopupOpened = false;
   unViewedCount : number = 0;
   selectedAlertId =""
@@ -77,6 +81,9 @@ export class NotificationPanelComponent implements OnInit {
   isReminderOpenClicked = false
   getTodo$ = this.todoFacade.getTodo$
   crudText ="Create New"
+  notificationAndReminderPageTab="NOTIFICATION";
+  notificationListSubscription = new Subscription();
+
   public data = [
     {
       buttonType: 'btn-h-primary',
@@ -138,6 +145,7 @@ export class NotificationPanelComponent implements OnInit {
   /** Constructor **/
   constructor(
     private readonly notificationFacade: NotificationFacade,
+    private readonly notificationDataFacade: NotificationDataFacade,
     private readonly todoFacade: TodoFacade,
     private loggingService: LoggingService,
     private dialogService: DialogService,
@@ -157,6 +165,14 @@ export class NotificationPanelComponent implements OnInit {
         this.alertsData = data;
         this.cdr.detectChanges();
       });
+      this.notificationAndReminderDataList$.subscribe((data: any) => {
+       if(data){
+        this.notificationAndReminderPageTab = data;
+        this.onNotificationsAndRemindersOpenClicked(this.notificationsAndRemindersDialog);
+       }
+        this.cdr.detectChanges();
+      });
+      
     this.loadSignalrGeneralNotifications();
     this.loadSignalrReminders();
   }
@@ -252,14 +268,18 @@ export class NotificationPanelComponent implements OnInit {
       this.itemsLoader = true;
       this.isViewAll = false;
       this.loadNotificationsAndReminders(this.isViewAll);
-      this.notificationList$.subscribe((data: any) => {
+      this.notificationListSubscription = this.notificationList$.subscribe((data: any) => {
         if(data){
           this.itemsLoader = false;
         }
         this.alertsData = data;
         this.cdr.detectChanges();
-      });
         this.viewNotifications();
+      });
+      }
+      else
+      {
+        this.notificationListSubscription.unsubscribe();
       }
       this.isViewAll = true;
   }
@@ -314,13 +334,7 @@ export class NotificationPanelComponent implements OnInit {
       this.notificationaAndReminderDataSubject.next(this.gridDataResult);
     });
     this.notificationListBell$.subscribe((data: any) => {
-      //this.gridDataResult = data?.items;
-      
-     // if (data?.totalCount >= 0 || data?.totalCount === -1) {
-        
       this.unViewedCount =  !isNaN(data) ? data : 0
-     //   this.isToDoGridLoaderShow.next(false);
-     //}
       this.notificationaAndReminderDataSubject.next(this.gridDataResult);
     });
   }

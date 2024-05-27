@@ -2,10 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
-import { Event } from '../entities/event';
 import { ConfigurationProvider } from "@cms/shared/util-core";
 
 @Injectable({ providedIn: 'root' })
@@ -28,6 +25,48 @@ export class EventDataService {
     let eventFormData = this.bindFormData(eventData);
     return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/`, eventFormData)
 
+  }
+
+  loadEventLog(eventLogId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${eventLogId}`)
+  }
+
+  loadNotificationEmail(eventLogId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/email?eventLogId=${eventLogId}`)
+  }
+
+  loadNotificationLetter(eventLogId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/letter?eventLogId=${eventLogId}`)
+  }
+
+  loadNotificationSms(eventLogId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/events/${eventLogId}/sms`)
+  }
+
+  loadAttachmentPreview(attachmentId: any, attachmentType:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/${attachmentType}/log-attachment/${attachmentId}`, null
+      , {
+        responseType: 'blob'
+      });
+  }
+
+  reSentEmailNotification(eventLogId:any)
+  {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/re-send/${eventLogId}`, null);
+  }
+
+  reSentLetterNotification(eventLogId:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/re-print/${eventLogId}`,null,
+      {responseType: 'blob'}
+    )
+  }
+
+  reSendSmsNotification(eventLogId:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/events/${eventLogId}/re-send-sms`,null);
   }
 
   private bindFormData(event: any): FormData {

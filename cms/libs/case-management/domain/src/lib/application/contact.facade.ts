@@ -727,6 +727,7 @@ export class ContactFacade {
   }
 
   removeClientPhone(clientId: number, clientPhoneId: string) {
+    this.showLoader();
     return this.contactDataService
       .removeClientPhone(clientId, clientPhoneId, true)
       .subscribe({
@@ -738,10 +739,12 @@ export class ContactFacade {
               SnackBarNotificationType.SUCCESS,
               message
             );
+            this.hideLoader();
           }
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
         },
       });
   }
@@ -774,5 +777,8 @@ export class ContactFacade {
     });
   }
 
+  lodAssignedCaseManager(clientId: any, clientCaseId: any) {
+    return this.contactDataService.getAssignedCaseManager(clientId, clientCaseId);
+  }
   //#endregion client phone//NOSONAR
 }

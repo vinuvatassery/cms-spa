@@ -133,6 +133,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   specialCharAdded!: boolean;
   informativeText!: string;
   minServiceDate: Date = new Date(2000, 1, 1);
+  todayDate: Date = new Date();
   dataLoaded = false;
 
 
@@ -631,6 +632,28 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     return false;
   }
 
+  isStartGreaterThanCurrentDate(index : any){
+    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+    let startDate = serviceFormData.controls['serviceStartDate'].value;
+    if (startDate > this.todayDate) {
+      serviceFormData.get('serviceStartDate')?.setErrors({invalid : true});
+      return true;
+    }
+    serviceFormData.get('serviceStartDate')?.setErrors(null);
+    return false;
+  }
+
+  isEndGreaterThanCurrentDate(index : any){
+    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+    let endDate = serviceFormData.controls['serviceEndDate'].value;
+    if (endDate > this.todayDate) {
+      serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
+      return true;
+    }
+    serviceFormData.get('serviceEndDate')?.setErrors(null);
+    return false;
+  }
+
   isStartEndDateValid(startDate: any, endDate: any): boolean {
     if (startDate == "" || endDate == "" || startDate < this.minServiceDate || endDate < this.minServiceDate || startDate > endDate) {
       return false;
@@ -877,10 +900,11 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             SnackBarNotificationType.SUCCESS,
             response.message
           );
-          this.navigationMenuFacade.pcaReassignmentCount();
-          this.closeAddEditClaimsFormModalClicked(true);
+         this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
+          this.navigationMenuFacade.pcaReassignmentCount();
+          
         } else {
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,

@@ -83,6 +83,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   prevClientCaseEligibilityId!: string;
   nform!: FormGroup;
   workflowTypeCode:any;
+  clientCerNotes: any[] = [];
   /** Constructor **/
   constructor(
     private workFlowFacade: WorkflowFacade,
@@ -231,7 +232,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
             this.clientFacade.hideLoader()
             /**Populating Client */
             this.applicantInfo.client = response.client;
-
+            this.clientCerNotes = response.clientCerNotes;
             /* Populate Client Case Eligibility */
             if (
               this.applicantInfo.clientCaseEligibilityAndFlag
@@ -1623,33 +1624,14 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.checkValidations()) {
             this.saveAndUpdate().subscribe((response: any) => {
               if (response) {
+                this.workFlowFacade.saveForLaterCompleted(true)
                 this.loaderService.hide();
-                if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-                  if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-                    this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                      queryParamsHandling: "preserve"
-                    });
-                  }
-                  else {
-                    this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                      queryParamsHandling: "preserve"
-                    });
-                  }
-                }
+            
               }
             });
-          } 
-          else if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
+          }else{ 
+            this.workFlowFacade.ApplicationDetailsValidationsSuccess = true
+          this.workFlowFacade.saveForLaterCompleted(true)
           }
         }
       );
@@ -1662,6 +1644,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (!this.checkValidations()) {
             this.workFlowFacade.showCancelApplicationPopup(true);
           } else {
+            this.workFlowFacade.ApplicationDetailsValidationsSuccess = true
             this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
           }
         }

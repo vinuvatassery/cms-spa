@@ -295,7 +295,6 @@ this.reloadEmailsEvent.emit();
 
   handleAcceptPhoneRemove(isDelete: boolean) {
     if (isDelete) {
-      this.loader.next(true);
       this.deletebuttonEmitted = false;
       this.removeClientPhoneEvent.emit(this.selectedclientPhoneId);
 

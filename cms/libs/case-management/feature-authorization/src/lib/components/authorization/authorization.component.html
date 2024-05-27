@@ -21,7 +21,7 @@
     </div>
     <div class="flex-row" [formGroup]="authorizationForm">
       <div class="flex-col flex-col-6">
-        <kendo-floatinglabel text="Date Applicant Signed">
+        <kendo-floatinglabel text="Date Client Signed">
           <kendo-datepicker
           [incompleteDateValidation]="true"
           [fillMode]="formUiStyle.dateInputFillMode"
@@ -32,9 +32,9 @@
             (valueChange)="onChange($event)"
           >
           </kendo-datepicker>
-          <kendo-formerror *ngIf="authForm?.applicantSignedDate?.errors?.required">Date Applicant Signed is required</kendo-formerror>
-          <kendo-formerror *ngIf="invalidSignatureDate$ | async">Date Applicant Signed cannot be greater than Current Date.</kendo-formerror>
-          <kendo-formerror *ngIf="invalidApplicantSignatureDate$ | async">Date Applicant Signed is not valid.</kendo-formerror>
+          <kendo-formerror *ngIf="authForm?.applicantSignedDate?.errors?.required">Date Client Signed is required</kendo-formerror>
+          <kendo-formerror *ngIf="invalidSignatureDate$ | async">Date Client Signed cannot be greater than Current Date.</kendo-formerror>
+          <kendo-formerror *ngIf="invalidApplicantSignatureDate$ | async">Date Client Signed is not valid.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
@@ -114,7 +114,7 @@
           </div>
           <div class="flex-col flex-col-6">
             <common-document-upload
-              [typeCode]="'COPY_OF_PAPER_APPLICATION'"
+              [typeCode]="'COPY_OF_SIGNED_APPLICATION'"
               [fieldName]="'COPY OF SIGNED APPLICATION'"
               [file]="copyOfSignedApplication"
               [isFileViewable]="true"
@@ -224,6 +224,7 @@
   [saveForLaterHeadterText]="saveForLaterHeadterText" 
   [saveForLaterModelText]="saveForLaterModelText"
   [entityType]="entityType"
+  [caseManagerEmail]="caseManagerEmail"
   kendoTooltip
 ></case-management-send-email>
 </ng-template>

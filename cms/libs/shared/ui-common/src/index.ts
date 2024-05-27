@@ -59,6 +59,7 @@ export * from './lib/enums/pending-approval-payment-type-code.enum';
 export * from './lib/enums/case-status-code.enum';
 export * from './lib/enums/payment-method-code.enum';
 export * from './lib/enums/to-do-entity-type-code.enum';
+export * from './lib/enums/pronoun-type-code.enum';
 
 export * from './lib/document-upload/document-upload.component';
 export * from './lib/clients-attachment/clients-attachment.component';
@@ -68,4 +69,13 @@ export * from './lib/grid-no-records/grid-no-records.component';
 export * from './lib/read-more/read-more.component';
 export * from './lib/delete-todo-confirmation/delete-todo-confirmation.component';
 export * from './lib/directives/placeholder.directive';
-export * from './lib/client-attachment-model/client-attachment-model.component'
+export * from './lib/client-attachment-model/client-attachment-model.component';
+export * from './lib/common-form-document-list/common-form-document-list.component';
+export * from './lib/delete-profile-photo-confirmation/delete-profile-photo-confirmation.component';
+export * from './lib/edit-template-name/edit-template-name.component';
+export * from './lib/enums/income-type.enum';
+export * from './lib/enums/active-inactive-flag.enum';
+
+export * from './lib/deactivate-template/deactivate-template.component';
+
+export * from './lib/reactivate-template/reactivate-template.component';

@@ -1,8 +1,7 @@
 <section [formGroup]="hivVerificationForm">
   <div *ngIf="!isSendRequest">
-    <div
-     >
-      <div class="verificaton_email"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
+    <div class="flex-row"> 
+      <div class="verificaton_email flex-col flex-col-8"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
         <div  *ngIf="isSendEmailVisiable && isEmailFieldVisible" class="mb-1">
         <kendo-floatinglabel text="Healthcare Provider’s Email Address">
           <kendo-textbox aria-label="healthcare providers email address"
@@ -77,7 +76,7 @@
             </ng-template>
           </kendo-fileselect>
           <kendo-formhint>Max file size 25 MB</kendo-formhint>
-          <kendo-formerror *ngIf="!hivVerificationForm.controls['computerAttachment'].valid"> HIV Verification form is required
+          <kendo-formerror *ngIf="!hivVerificationForm.controls['computerAttachment'].valid"> HIV Verification is required.
           </kendo-formerror>
           <kendo-formerror *ngIf="showHivVerificationAttachmentSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
       </div>
@@ -125,17 +124,48 @@
   </div>
 </section>
 
-<!-- Show this after send a request -->
-<section *ngIf="(providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER') && (isSendRequest || isResendRequest || emailSentDate != null)">
+
+  <section *ngIf="(providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER') && (isSendRequest || isResendRequest || emailSentDate != null)">
+   <div *ngIf="providerOption === 'HEALTHCARE_PROVIDER' && uploadedAttachment.length >0 
+    && (uploadedAttachment[0].verificationStatusCode === 'ACCEPT' || uploadedAttachment[0].verificationStatusCode === 'REJECT')" class="attachment-from-client-lists-wrapper mt-2">
+    <div class="attachment-from-client-lists-container">
+      <div class="attachment-from-client-lists">
+        <span class="material-icons" aria-hidden="true">
+          file_present
+        </span>
+        <div>
+          <span>{{uploadedAttachment[0]?.name}}</span>
+        </div>  
+        <kendo-dropdownbutton [data]="data"  title="More option" look="bare"
+              aria-label="more actions" class="more_input small-i-btn app-dropdown-action"
+              [popupSettings]="{ popupClass: popupClass1,  animate: true }">
+              <span class="material-icons" aria-label="More option"> more_vert    </span>
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+                <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+                  aria-hidden="false" (click)="dataItem.click">
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                  <label> {{ dataItem.text }} </label>
+                </button>
+              </ng-template>
+            </kendo-dropdownbutton>    
+      </div>     
+    </div>
+  </div>
+  <kendo-formerror *ngIf="!isHealthCareValid"> HIV Verification is required.
+  </kendo-formerror>
+  
+
+
     <div class="flex-row mt-3 align-items-center">
-      <div class="flex-col">
+      <div class="flex-col" *ngIf="(uploadedAttachment[0]?.verificationStatusCode !== 'REJECT' && uploadedAttachment[0]?.verificationStatusCode !== 'ACCEPT')">
         <span class="app-c-badge badge-primary">
           <span class="material-icons" aria-label="information" aria-hidden="true" #refresh>info_outline</span>
           <span *ngIf="providerOption === 'CASE_MANAGER'">You will receive a notification once the Case Manager submits the HIV Verification</span>
-          <span *ngIf="providerOption === 'HEALTHCARE_PROVIDER'">You will receive a notification once the provider submits the HIV Verification</span>
+          <span *ngIf="providerOption === 'HEALTHCARE_PROVIDER'">You will receive a notification once the provider submits the HIV Verification. If a Re-send request is sent, the initial request will be cancelled.​</span>
         </span>
       </div>
-      <div class="flex-col mt-1">
+      <div class="flex-col mt-1" *ngIf ="(uploadedAttachment[0]?.verificationStatusCode !== 'ACCEPT' 
+      && uploadedAttachment[0]?.verificationStatusCode !== 'REJECT')">
         <span>Sent {{emailSentDate}} by
           <a
             kendoPopoverAnchor
@@ -148,6 +178,18 @@
           Re-send Request
         </button>
       </div>
+      <div class="flex-col mt-1" *ngIf ="(uploadedAttachment[0]?.verificationStatusCode === 'ACCEPT'
+      || uploadedAttachment[0]?.verificationStatusCode === 'REJECT')">
+        <span>​Submitted by Healthcare Provider.</span> <span *ngIf ="uploadedAttachment[0]?.verificationStatusCode === 'ACCEPT'"> Accepted by </span> 
+        <span *ngIf ="uploadedAttachment[0]?.verificationStatusCode === 'REJECT'"> Rejected by </span> 
+        <span><a
+            kendoPopoverAnchor
+            [popover]="onUserProfileDetailsHovered"
+            showOn="hover"
+            >{{modifiedUserName}}</a>
+            on {{ uploadedAttachment[0]?.verificationStatusDate | date : 'MM/dd/YYYY' }}</span>       
+      </div>
+      
     </div>
   <div class="flex-col mt-2" *ngIf="isSendEmailFailed">
     <p  style="color:red">ERROR: {{errorMessage}}</p>
@@ -155,9 +197,9 @@
 </section>
 
 <!-- User Profile Details Card -->
-
 <kendo-popover #onUserProfileDetailsHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
     <common-user-profile-card [userId]="loginUserId"></common-user-profile-card>
   </ng-template>
 </kendo-popover>
+

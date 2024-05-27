@@ -35,6 +35,9 @@ import { TemplateLayoutListsComponent } from './components/template-layout-lists
 import { TemplateLayoutNewFormComponent } from './components/template-layout-new-form/template-layout-new-form.component';
 import { TemplateLayoutNewFormPageComponent } from './containers/template-layout-new-form-page/template-layout-new-form-page.component';
 import { TemplateLayoutPageComponent } from './containers/template-layout-page/template-layout-page.component';
+import { AddFolderComponent } from './components/add-folder/add-folder.component';
+import { UploadFilesComponent } from './components/upload-files/upload-files.component';
+import { NewVersionFileUploadComponent } from './components/new-version-file-upload/new-version-file-upload.component';
 
 @NgModule({
   imports: [
@@ -76,7 +79,10 @@ import { TemplateLayoutPageComponent } from './containers/template-layout-page/t
     TemplateLayoutNewFormComponent,
     TemplateLayoutNewFormPageComponent,
     TemplateLayoutPageComponent,
-    TemplateLayoutListsComponent
+    TemplateLayoutListsComponent,
+    AddFolderComponent,
+    NewVersionFileUploadComponent,
+    UploadFilesComponent,
   ],
   exports: [
     ClientNotificationDefaultsListComponent,
@@ -108,7 +114,9 @@ import { TemplateLayoutPageComponent } from './containers/template-layout-page/t
     TemplateLayoutNewFormComponent,
     TemplateLayoutNewFormPageComponent,
     TemplateLayoutPageComponent,
-    TemplateLayoutListsComponent
+    TemplateLayoutListsComponent,
+    AddFolderComponent,
+    UploadFilesComponent,
   ],
 })
 export class SystemConfigFeatureCommunicationModule {}

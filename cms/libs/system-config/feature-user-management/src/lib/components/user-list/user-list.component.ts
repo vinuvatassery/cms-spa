@@ -1,23 +1,25 @@
 /** Angular **/
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { GridDataResult } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { ColumnBase, ColumnComponent, ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { Subject, Subscription, debounceTime } from 'rxjs';
+import { DocumentFacade, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'system-config-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit, OnChanges {
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-
+export class UserListComponent implements OnInit, OnChanges, OnDestroy {
+  public formUiStyle: UIFormStyle = new UIFormStyle();
 
   isUserDetailsPopup = false;
   isUserDeactivatePopup = false;
+  isUserReactivatePopup = false;
   isEditUsersData!: boolean;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Input() pageSizes: any;
@@ -28,8 +30,14 @@ export class UserListComponent implements OnInit, OnChanges {
   @Input() usersFilterColumn$: any;
   @Output() loadUserListEvent = new EventEmitter<any>();
   @Output() usersFilterColumnEvent = new EventEmitter<any>();
-  public state!: State;
-  sortColumn = 'vendorName';
+  @Input() userListProfilePhoto$!: any;
+  @Output() exportGridEvent$ = new EventEmitter<any>();
+  @Input() exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  deactivateUserStatus$ = this.userManagementFacade.deactivateUser$;
+  deactivatSubscription!: Subscription;
+
+  public state!: any;
+  sortColumn = 'User Name';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -37,49 +45,93 @@ export class UserListComponent implements OnInit, OnChanges {
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
+  selectedSearchColumn = 'ALL';
   gridDataResult!: GridDataResult;
   isUserListGridLoaderShow = false;
   gridUserDataSubject = new Subject<any>();
-  gridUserData$ =
-    this.gridUserDataSubject.asObservable();
+  gridUserData$ = this.gridUserDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  showExportLoader = false;
+  loginUserId= "";
+  active = "Active";
+  inActive = "Inactive";
+  currentUserStatus = "";
+  statusList: any = [{ code: this.active, name: this.active }, { code: this.inActive, name: this.inActive }];
+  @ViewChild('usersGrid') usersGrid: any;
+  defaultColumnState: ColumnBase[] = [];
+  addRemoveColumns = "Default Columns"
+  defaultColumns = ["userName", "email", "lastModificationTime", "lastModifierId", "activeFlag"];
+  columns: any = {
+    ALL: 'All Columns',
+    userName: "User Name",
+    email: "Email Address",
+    lastModificationTime: "Last Modified",
+    lastModifierId: "Modified By",
+    activeFlag: "Status",
+  };
 
+  dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
+    {
+      columnCode: 'userName',
+      columnDesc: 'User Name',
+    },
+    {
+      columnCode: 'email',
+      columnDesc: 'Email Address',
+    },
+  ];
+  selectedActiveFlag = "";
+  isShowUserDetailPopup$ = this.userManagementFacade.isShowUserDetailPopup$;
+
+
+  constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly documentFacade: DocumentFacade,
+    private userManagementFacade: UserManagementFacade,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+  ) {
+    this.notifyOnReactivatingUser();
+  }
   public moreactions = [
     {
-      buttonType:"btn-h-primary",
+      buttonType: "btn-h-primary",
       text: "Edit",
       icon: "edit",
-      click: (): void => {
+      type: "Edit",
+      click: (data: any): void => {
+        if(data.activeFlag){
+        this.currentUserStatus = data.activeFlag;
+        this.loginUserId = data.loginUserId;
+      }
         this.onUserDetailsClicked(true);
       },
     },
     {
-      buttonType:"btn-h-primary",
-      text: "Block",
-      icon: "block",
-      click: (): void => {
-       this.onUserDeactivateClicked()
+      buttonType: 'btn-h-danger',
+      text: 'Deactivate',
+      icon: 'block',
+      type: 'Deactivate',
+      click: (data: any): void => {
+        this.onUserDeactivateClicked(data);
       },
     },
     {
-      buttonType:"btn-h-danger",
-      text: "Delete",
-      icon: "delete",
-      click: (): void => {
-      // this.onOpenDeleteTodoClicked()
-      },
+      buttonType: 'btn-h-primary',
+      text: 'Reactivate',
+      icon: 'done',
+      type: 'Reactivate',
+      click: (data: any): void => {
+        this.onUserReactivateClicked(data);
+      }
     },
-    
- 
   ];
 
-  constructor() { }
 
-  
   ngOnInit(): void {
-    this.loadUserListGrid();
+    this.addSearchSubjectSubscription();
     this.loadUserFilterColumn();
   }
   ngOnChanges(): void {
@@ -92,7 +144,7 @@ export class UserListComponent implements OnInit, OnChanges {
     this.loadUserListGrid();
   }
 
-  private loadUserListGrid(): void {
+  loadUserListGrid(): void {
     this.loadUsersLitData(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -112,24 +164,47 @@ export class UserListComponent implements OnInit, OnChanges {
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
     };
     this.loadUserListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
-  loadUserFilterColumn(){
+
+  loadUserFilterColumn() {
     this.usersFilterColumnEvent.emit();
 
   }
+
+  setToDefault() {
+    this.defaultGridState();
+    this.sortColumn = 'User Name';
+    this.sortType = 'asc';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "";
+    this.filter = '';
+    this.selectedSearchColumn = 'ALL';
+    this.isFiltered = false;
+    this.columnsReordered = false;
+    this.sortValue = 'userName';
+    this.sort = this.sortValue;
+    this.searchValue = '';
+    this.defaultColumnState.forEach((item: any) => {
+      if (this.defaultColumns.includes(item.field)) {
+        item.hidden = false;
+      }
+    });
+    this.cdr.detectChanges();
+    this.loadUserListGrid();
+  }
+
   onChange(data: any) {
     this.defaultGridState();
-
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
+              field: this.selectedSearchColumn ?? 'userName',
               operator: 'startswith',
               value: data,
             },
@@ -159,9 +234,13 @@ export class UserListComponent implements OnInit, OnChanges {
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = this.columns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    this.clearIndividualSelectionOnClear(stateData);
+    this.cdr.detectChanges();
     this.loadUserListGrid();
   }
 
@@ -177,35 +256,254 @@ export class UserListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
+    this.isUserListGridLoaderShow = true;
     this.usersDataLists$.subscribe(
-      (data: GridDataResult) => {
+      (data: any) => {
         this.gridDataResult = data;
-        this.gridDataResult.data = filterBy(
-          this.gridDataResult.data,
-          this.filterData
-        );
         this.gridUserDataSubject.next(this.gridDataResult);
         if (data?.total >= 0 || data?.total === -1) {
           this.isUserListGridLoaderShow = false;
         }
+        this.cdr.detectChanges();
       }
     );
     this.isUserListGridLoaderShow = false;
   }
 
   onUserDetailsClosed() {
-    this.isUserDetailsPopup = false; 
+    this.isUserDetailsPopup = false;
+    this.userManagementFacade.showOrHideUserDetailPopup(this.isUserDetailsPopup);
   }
   onUserDetailsClicked(editValue: boolean) {
     this.isUserDetailsPopup = true;
     this.isEditUsersData = editValue;
+    this.userManagementFacade.showOrHideUserDetailPopup(this.isUserDetailsPopup);
   }
   onUserDeactivateClosed() {
     this.isUserDeactivatePopup = false;
   }
-  onUserDeactivateClicked() {
+  onUserDeactivateClicked(data: any) {
+    if(data.loginUserId)
+    {
+      this.loginUserId = data.loginUserId;
+    }
     this.isUserDeactivatePopup = true;
   }
 
+  onUserReactivateClicked(data: any) {
+        
+    if(data.loginUserId)
+      {
+        const userData={
+          userId: data.loginUserId,
+          activeFlag: this.active
+        };
+        this.userManagementFacade.deactivateUser(userData);        
+      }  
+  }
 
+  onUserReactivateClosed() {
+    this.isUserReactivatePopup = false;
+  }
+
+  searchColumnChangeHandler(data: any) {
+    this.filter = [];
+    if (this.searchValue) {
+      this.onSearch(this.searchValue);
+    }
+  }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
+    };
+    this.exportGridEvent$.emit(params);
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+    });
+  }
+
+  dropdownFilterChange(field: string, value: any, filterService: FilterService): void {
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value: value
+      }],
+      logic: "or"
+    });
+    if (field == "activeFlag") {
+      this.selectedActiveFlag = value;
+    }
+  }
+
+  columnName: any = "";
+  clearIndividualSelectionOnClear(stateData: any) {
+    if (stateData.filter?.filters.length > 0) {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.columnName = stateFilter.field;
+
+      this.filter = stateFilter.value;
+
+      this.isFiltered = true;
+      const filterList = []
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.isFiltered = true;
+      this.filteredBy = filterList.toString();
+    }
+    else {
+      this.filter = "";
+      this.isFiltered = false;
+      this.selectedActiveFlag = '';
+    }
+    this.state = stateData;
+    if (!this.filteredBy.includes(this.columns.activeFlag)) this.selectedActiveFlag = '';
+  }
+
+  onSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    if (isDateSearch && !searchValue) return;
+    this.setFilterBy(false, searchValue, []);
+    this.searchSubject.next(searchValue);
+  }
+  filteredByColumnDesc = '';
+  private setFilterBy(
+    isFromGrid: boolean,
+    searchValue: any = '',
+    filter: any = []
+  ) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters
+            ?.filter((fld: any) => fld.value)
+            ?.map((fld: any) => this.columns[fld.field]);
+          return [...new Set(filteredColumns)];
+        });
+
+        this.filteredByColumnDesc =
+          [...new Set(filteredColumns)]?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc =
+        this.dropDowncolumns?.find(
+          (i: any) => i.columnName === this.selectedSearchColumn
+        )?.columnDesc ?? '';
+    }
+  }
+  private searchSubject = new Subject<string>();
+  private addSearchSubjectSubscription() {
+    this.searchSubject.pipe(debounceTime(300)).subscribe((searchValue) => {
+      this.performSearch(searchValue);
+    });
+  }
+
+  performSearch(data: any) {
+    this.defaultGridState();
+    let operator = 'contains';
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedSearchColumn ?? 'ALL',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+  }
+
+  public rowClass = (args: any) => ({
+    "table-row-disabled": (args.dataItem.activeFlag != this.active),
+  });
+  
+  public columnChange(e: any) {
+    let event = e as ColumnVisibilityChangeEvent;
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    const columnsAdded = event?.columns.filter(x => x.hidden === false).length
+
+    if (columnsAdded > 0) {
+      this.addRemoveColumns = 'Columns Added';
+    }
+    else {
+      this.addRemoveColumns = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+    }
+
+    event.columns.forEach(column => {
+      if (column.hidden) {
+        const field = (column as ColumnComponent)?.field;
+        const mainFilters = this.state.filter.filters;
+
+        mainFilters.forEach((filter: any) => {
+          const filterList = filter.filters;
+
+          const foundFilter = filterList.find((x: any) => x.field === field);
+
+          if (foundFilter) {
+            filter.filters = filterList.filter((x: any) => x.field !== field);
+            this.loadUserListGrid();
+          }
+        });
+      }
+      if (!column.hidden) {
+        let columnData = column as ColumnComponent;
+        this.columns[columnData.field] = columnData.title;
+      }
+
+    });
+
+    this.defaultGridState();
+  }
+
+  ngAfterViewInit() {
+    this.defaultColumnState = this.usersGrid.columns.toArray();
+  }  filterActionButtonOptions(options: any[], actionType: any): any[] {
+    let filteredOptions: any[] = [];
+    if (actionType.status !== "Active") {
+      filteredOptions = options.filter((option) => option.type != 'Deactivate');
+    } else {
+      filteredOptions = options.filter((option) => option.type != 'Reactivate');
+    }
+    return filteredOptions;
+  }
+
+  notifyOnReactivatingUser(){
+    this.deactivatSubscription = this.deactivateUserStatus$.subscribe((response: any) => {
+      if(response.status > 0){
+      this.loadUserListGrid();
+      this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+    }
+    });
+  }
+
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any, title : string = '')
+  {
+        this.notificationSnackbarService.manageSnackBar(type, subtitle, NotificationSource.API, title)
+  }
+
+  ngOnDestroy(): void {     
+    if(this.deactivatSubscription){
+      this.deactivatSubscription.unsubscribe();
+  }
+}
 }

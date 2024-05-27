@@ -405,11 +405,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
     let typeParam = { type: 'INSURANCE', insuranceStatusType: 'ALL' }
-    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.maxResultCount, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
       typeParam,
+      true,
       gridFilterParam      
     );
   }
@@ -474,35 +475,13 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       if (this.checkValidations()) {
         this.save().subscribe((response: any) => {
           if (response) {
-            this.loaderService.hide();
-            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-              else {
-                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-            }
+            this.workflowFacade.saveForLaterCompleted(true)  
+            this.loaderService.hide();  
           }
         })
       }
       else {
-        if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-          else {
-            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-        }
+        this.workflowFacade.saveForLaterCompleted(true)  
       }
     });
   }

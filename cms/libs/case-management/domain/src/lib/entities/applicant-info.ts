@@ -16,4 +16,5 @@ export class ApplicantInfo{
     clientRaceList:ClientRace[]=[]
     clientGenderList:ClientGender[]=[]
     ClientNotes:any[] | [] = [];
+    clientCerNotes: any[]=[]
 }

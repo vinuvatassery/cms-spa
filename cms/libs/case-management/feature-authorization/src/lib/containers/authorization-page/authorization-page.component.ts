@@ -50,7 +50,6 @@ export class AuthorizationPageComponent implements OnInit{
     ngOnInit(): void {
       this.loadCurrentSession();
       this.loadEligibilityReviewUrlData();
-    
     }
   
   private loadCurrentSession() {

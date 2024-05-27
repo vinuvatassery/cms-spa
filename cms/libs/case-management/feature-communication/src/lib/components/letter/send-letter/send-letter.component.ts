@@ -19,7 +19,7 @@ import { Observable, Subscription } from 'rxjs';
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
-import { UserDataService } from '@cms/system-config/domain';
+import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -64,7 +64,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly contactFacade: ContactFacade,
     private readonly vendorContactFacade: VendorContactsFacade,
     private readonly userDataService: UserDataService,
-    private readonly router: Router, 
+    private readonly router: Router,
+    private readonly fabBadgeFacade: FabBadgeFacade,
     private readonly sanitizer: DomSanitizer) { }
 
   /** Public properties **/
@@ -109,18 +110,22 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   draftedTemplate:any='';
   isContentMissing:boolean = false;
   isMailCodeMissing:boolean = false;
+  isMailingAddressMissing: boolean = false;
   isFormValid: boolean = true;
   selectedMailingCode!: string;
   variableName!: string;
   typeName!: string;
   vendorMailCodesubscription!: Subscription;
   userDataSubscription!: Subscription;
+  snackBarMessage:any;
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
-    this.addSubscriptions();
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      this.addSubscriptions();
+    }
     if (this.templateLoadType === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.templateLoadType === CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadClientAndVendorDraftLetterTemplates();
     }else{
@@ -133,13 +138,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       }
     }
     this.isNewLetterClicked =  this.notificationGroup ? true : false;
-  }
-
-  addSubscriptions() {
-    this.vendorMailCodesubscription =  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
-      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
-      this.ref.detectChanges();
-    });
     if(this.entityType == EntityTypeCode.Vendor){
       this.variableName = 'Vendor';
       this.typeName = 'VENDOR_VARIABLE'
@@ -148,6 +146,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.variableName = 'Client';
       this.typeName = 'CLIENT_VARIABLE'
     }
+  }
+
+  addSubscriptions() {
+    this.vendorMailCodesubscription =  this.vendorContactFacade.mailCodes$.subscribe((resp: any[]) => {
+      this.ddlMailCodes = resp.filter((address: any) => address.activeFlag === "Y");
+      this.ref.detectChanges();
+    });
   }
 
   getProfileName() {
@@ -197,8 +202,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   handleDdlMailCodesChange(mailCode: any) {
     this.mailingAddress = mailCode;
     this.isMailCodeMissing = false;
+    this.isMailingAddressMissing = false;
     this.selectedMailingCode = mailCode?.mailCode;
     this.isFormValid = true;
+    this.ngDirtyInValid();
   }
 
   private loadClientMailingAddress() {
@@ -211,6 +218,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.clientAddressSubscription = this.contactFacade.address$.subscribe((address: any) => {
       let selectedAddress = address.filter((x: any) => x.activeFlag == StatusFlag.Yes && x.addressTypeCode === AddressTypeCode.Mail)[0];
       this.mailingAddress = selectedAddress;
+      if(this.mailingAddress){
+        this.isMailingAddressMissing = false;
+      }
       this.ref.detectChanges();
     });
   }
@@ -231,7 +241,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
-    let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId); 
+    let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
     letterRequestFormdata.append('address1', this.mailingAddress?.address1 ?? '');
     letterRequestFormdata.append('address2', this.mailingAddress?.address2 ?? '');
     letterRequestFormdata.append('city', this.mailingAddress?.city ?? '');
@@ -249,6 +259,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           if (data) {
             this.onCloseNewLetterClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter Saved As Draft');
+            if(this.entityId && this.entityType == FabEntityTypeCode.Client){
+              this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
+            }
           }
           this.loaderService.hide();
           this.navigateConditionally();
@@ -263,23 +276,33 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   onSaveForLaterClicked() {
-    this.isShowSaveForLaterPopupClicked = true;
-  }
-
-  onSaveForLaterTemplateClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
-    if(this.notificationGroup === ScreenType.VendorProfile){
-      if(this.mailingAddress === undefined || this.mailingAddress === ''){
-      this.isMailCodeMissing = true;
+    if (!this.mailingAddress) {
+      this.isMailingAddressMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
+    }
+    if (this.notificationGroup === ScreenType.VendorProfile) {
+      if (this.mailingAddress === undefined || this.mailingAddress === '') {
+        this.isMailCodeMissing = true;
+        this.isFormValid = false;
+        this.onCloseSaveForLaterClicked();
       }
     }
+
+    if (this.isFormValid) {
+      this.isShowSaveForLaterPopupClicked = true;
+    }
+
+    this.ngDirtyInValid();
+  }
+
+  onSaveForLaterTemplateClicked() {
     if(this.isFormValid){
     this.isShowSaveForLaterPopupClicked = true;
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
@@ -292,7 +315,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
    }
   }
 
-  onSendLetterToPrintDialogClicked(event: any) { 
+  onSendLetterToPrintDialogClicked(event: any) {
     this.isShowSendLetterToPrintPopupClicked = false;
     if (event === CommunicationEvents.Print) {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
@@ -339,10 +362,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
   }
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
+    }
+    else{
+      this.isContentMissing = false;
     }
     if(this.notificationGroup === ScreenType.VendorProfile){
       if(this.mailingAddress === undefined || this.mailingAddress === ''){
@@ -351,6 +377,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.onCloseSaveForLaterClicked();
       }
     }
+    if(!this.mailingAddress){
+      this.isMailingAddressMissing = true;
+      this.isFormValid = false;
+      this.onCloseSaveForLaterClicked();
+      }
     if(this.isFormValid){
     this.loaderService.show();
     if(this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
@@ -365,7 +396,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     let {templateTypeCode, eventGroupCode} = this.getApiTemplateTypeCode();
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments, templateTypeCode, eventGroupCode, this.notificationGroup,this.entityId, this.entityType);
     formData.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
-    formData.append('mailCode', this.selectedMailCode?.mailCode ?? '');      
+    formData.append('mailCode', this.selectedMailCode?.mailCode ?? '');
     this.communicationFacade.sendLetterToPrint(entityId, clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
@@ -379,7 +410,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             downloadLink.download = documentName;
             downloadLink.click();
             this.onCloseNewLetterClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter generated! Event Logged.');
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , this.snackBarMessage);
+            if(this.entityId && this.entityType == FabEntityTypeCode.Client){
+              this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
+            }
           }
           this.loaderService.hide();
           this.navigateConditionally();
@@ -398,7 +432,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         case CommunicationEventTypeCode.PendingNoticeLetter:
           case CommunicationEventTypeCode.RejectionNoticeLetter:
           this.router.navigate([`/case-management/cases/`]);
-          break;        
+          break;
         case CommunicationEventTypeCode.ApprovalNoticeLetter:
         case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
           this.router.navigate([`/case-management/cases/case360/${this.entityId}`]);
@@ -440,7 +474,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         eventGroupCode = EventGroupCode.CER;
         break;
         case CommunicationEventTypeCode.ApplicationAuthorizationLetter:
-        templateTypeCode = CommunicationEventTypeCode.ApplicationAndCERLetterSent;
+        templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetterSent;
         eventGroupCode = EventGroupCode.Application;
         break;
         case CommunicationEventTypeCode.VendorLetter:
@@ -452,7 +486,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
           eventGroupCode = EventGroupCode.ClientProfile;
           break;
           case CommunicationEventTypeCode.CerAuthorizationLetter:
-            templateTypeCode = CommunicationEventTypeCode.CerLetterSent;
+            templateTypeCode = CommunicationEventTypeCode.CerAuthorizationLetterSent;
+            eventGroupCode = EventGroupCode.CER;
+            break;
+          case CommunicationEventTypeCode.RestrictedNoticeLetter:
+            templateTypeCode = CommunicationEventTypeCode.RestrictedLetterSent;
             eventGroupCode = EventGroupCode.CER;
             break;
     }
@@ -479,9 +517,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   onSendLetterToPrintClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
       this.isContentMissing = true;
       this.isFormValid = false;
+    }
+    else{
+      this.isContentMissing = false;
     }
     if(this.notificationGroup === ScreenType.VendorProfile){
       if(this.mailingAddress === undefined || this.mailingAddress === ''){
@@ -489,11 +530,17 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.isFormValid = false;
       }
     }
+    if(!this.mailingAddress){
+      this.isMailingAddressMissing = true;
+      this.isFormValid = false;
+      }
     if(this.isFormValid){
     this.isNewLetterClicked=true;
     this.isShowSendLetterToPrintPopupClicked=true;
     this.isShowPreviewLetterPopupClicked=false;
     }
+
+    this.ngDirtyInValid();
   }
 
   onCloseNewLetterClicked() {
@@ -521,7 +568,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.isShowSendLetterToPrintPopupClicked = false;
   }
 
-  private loadDropdownLetterTemplates() { 
+  private loadDropdownLetterTemplates() {
     if (this.notificationGroup !== undefined && this.templateLoadType !== undefined) {
       this.loaderService.show();
       this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.templateLoadType, this.communicationLetterTypeCode ?? '')
@@ -539,9 +586,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
               if (this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
                 || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
-                || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter) {
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.DisenrollmentNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.RestrictedNoticeLetter
+                || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter
+              || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
                 this.templateDrpDisable = true;
-                this.cancelDisplay = false;                
+                this.cancelDisplay = false;
               }
             this.sortDropdownValues(defaultOption, otherOptions);
             }
@@ -581,6 +631,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
+    this.handleconfirmPopupHeader(event.templateTypeCode);
+    this.isMailingAddressMissing = false;
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      this.isMailCodeMissing = false;
+    }
     if(this.communicationLetterTypeCode === undefined || this.communicationLetterTypeCode === ''){
       this.communicationLetterTypeCode = event.templateTypeCode;
     }
@@ -601,16 +656,57 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         });
     } else if((event.subTypeCode === CommunicationEventTypeCode.VendorLetter || event.subTypeCode === CommunicationEventTypeCode.ClientLetter) && (this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile)){
       this.setDraftedTemplate(event);
-    } 
+    }
     else{
       this.loadNewTemplate(event);
-    }   
+    }
+  }
+
+  handleconfirmPopupHeader(event: any){
+    switch(event){
+      case CommunicationEventTypeCode.PendingNoticeLetter:
+        this.confirmPopupHeader = 'Send Pending Letter to print?';
+        this.snackBarMessage = 'Pending Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Pending Letter Later?';
+        this.saveForLaterModelText="You must send the Pending Letter within 14 Days";
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeLetter:
+        this.confirmPopupHeader = 'Send Rejection Letter to print?';
+        this.snackBarMessage = 'Rejection Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Rejection Letter Later?';
+        this.saveForLaterModelText="You must send the Rejection Letter within 14 Days";
+        break;
+      case CommunicationEventTypeCode.ApprovalNoticeLetter:
+        this.confirmPopupHeader = 'Send Approval Letter to print?';
+        this.snackBarMessage = 'Approval Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Approval Letter Later?';
+        this.saveForLaterModelText="You must send the Approval Letter within 14 Days";
+        break;
+      case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
+        this.confirmPopupHeader = 'Send Disenrollment Letter to print?';
+        this.snackBarMessage = 'Disenrollment Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Disenrollment Letter Later?';
+        this.saveForLaterModelText="You must send the Disenrollment Letter within 2 Days";
+        break;
+      case CommunicationEventTypeCode.RestrictedNoticeLetter:
+        this.confirmPopupHeader = 'Send Restricted Letter to print?';
+        this.snackBarMessage = 'Restricted Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = 'Send Restricted Letter Later?';
+        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+        break;
+      default:
+        this.confirmPopupHeader = 'Send Letter to print?';
+        this.snackBarMessage = 'Letter generated! An event has been logged.';
+        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+        break;
+    }
   }
 
   loadNewTemplate(event:any){
     if (event.documentTemplateId) {
       this.loaderService.show();
-   
+
       this.communicationFacade.loadTemplateById(event.documentTemplateId)
         .subscribe({
           next: (data: any) => {
@@ -619,7 +715,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
               this.selectedTemplateContent = data.templateContent;
               this.updatedTemplateContent = data.templateContent;
               this.isOpenLetterTemplate = true;
-              this.loadMailingAddress();            
+              this.loadMailingAddress();
               this.ref.detectChanges();
             }
             this.loaderService.hide();
@@ -629,7 +725,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
           },
         });
-    } 
+    }
     else {
       this.setDraftedTemplate(event);
     }
@@ -638,7 +734,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   private setDraftedTemplate(event: any) {
     if(this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile) {
       this.communicationLetterTypeCode = event.subTypeCode;
-    } 
+    }
     if (event.subTypeCode === this.communicationLetterTypeCode) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.isOpenLetterTemplate = true;
@@ -670,7 +766,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
     this.ref.detectChanges();
   }
-  
+
   private saveDraftEsignLetterRequest(draftTemplate: any) {
     this.loaderService.show();
     draftTemplate.entity = this.communicationLetterTypeCode;
@@ -713,7 +809,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
  }
 
  cerEmailAttachments(event:any){
-  let isFileExists = false; 
+  let isFileExists = false;
   if (this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
   {
     if(event.length > 0){
@@ -738,7 +834,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       this.clientAndVendorAttachedFiles = event;
     }else{
       if(event.documentTemplateId){
-        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.description);
+        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){
           this.clientAndVendorAttachedFiles?.push(event);
         }
@@ -794,10 +890,27 @@ loadMailingAddress() {
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;
+  if(!(this.updatedTemplateContent  === undefined) || !(this.updatedTemplateContent === '') || !(this.updatedTemplateContent === "") || !(this.updatedTemplateContent.trim() === '<p></p>')){
+    this.isContentMissing = false;
+  }
+  this.ref.detectChanges();
 }
 
 contentValidateEvent(event: boolean){
   this.isFormValid = event;
+}
+
+ngDirtyInValid() {
+  if (this.isMailCodeMissing) {
+    document.getElementById('mailCode')?.classList.remove('ng-valid');
+    document.getElementById('mailCode')?.classList.add('ng-invalid');
+    document.getElementById('mailCode')?.classList.add('ng-dirty');
+  }
+  else {
+    document.getElementById('mailCode')?.classList.remove('ng-invalid');
+    document.getElementById('mailCode')?.classList.remove('ng-dirty');
+    document.getElementById('mailCode')?.classList.add('ng-valid');
+  }
 }
 
 }

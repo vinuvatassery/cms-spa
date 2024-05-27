@@ -136,15 +136,15 @@ export class HealthcareProviderFacade {
     });
   }
 
-  updateHealthCareProvidersFlagonCheck(clientId : number, nohealthCareProviderFlag : string)  {
+  updateHealthCareProvidersFlagonCheck(clientId : number, nohealthCareProviderFlag : string, saveContinueFlag : string)  {
   
-   return this.healthcareProviderDataService.updateHealthCareProvidersFlag(clientId,nohealthCareProviderFlag)
+   return this.healthcareProviderDataService.updateHealthCareProvidersFlag(clientId,nohealthCareProviderFlag,saveContinueFlag)
   }
 
-  updateHealthCareProvidersFlag(clientId : number, nohealthCareProviderFlag : string)
+  updateHealthCareProvidersFlag(clientId : number, nohealthCareProviderFlag : string, saveContinueFlag : string)
   {
  
-    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(clientId,nohealthCareProviderFlag)
+    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(clientId,nohealthCareProviderFlag, saveContinueFlag)
   }
 
   loadHealthCareProviders(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated = false): void {

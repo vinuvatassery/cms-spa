@@ -209,7 +209,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         {
           this.showProvidervalidationboxSubject.next(false)
           this.healthProvider.showLoader();    
-          return  this.healthProvider.updateHealthCareProvidersFlag(this.clientId,this.providersStatus)
+          return  this.healthProvider.updateHealthCareProvidersFlag(this.clientId,this.providersStatus,StatusFlag.Yes )
           .pipe(
             catchError((err: any) => { 
               this.healthProvider.hideLoader();                     
@@ -240,7 +240,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
     this.showProvidervalidationboxSubject.next(false)
     
     this.healthProvider.updateHealthCareProvidersFlagonCheck
-      (this.clientId,this.providersStatus).subscribe((isSaved) => {  
+      (this.clientId,this.providersStatus, StatusFlag.No).subscribe((isSaved) => {  
         this.healthProvider.hideLoader();       
         if (isSaved) {    
           this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
@@ -290,23 +290,16 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+     if(this.checkValidations()){
       this.save().subscribe((response: any) => {
         if (response) {
+          this.workFlowFacade.saveForLaterCompleted(true)  
           this.loaderService.hide();
-          if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-          }
         }
       })
+    }else{
+      this.workFlowFacade.saveForLaterCompleted(true)  
+    }
     });
   }
 

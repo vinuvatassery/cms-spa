@@ -1,12 +1,14 @@
 /** Angular **/
 import { Component, OnInit, Output, ChangeDetectionStrategy, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
-import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
+
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { CaseFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { ConfigurationProvider, SnackBarNotificationType, } from '@cms/shared/util-core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Observable, Subject } from 'rxjs';
 @Component({
@@ -170,7 +172,12 @@ export class ReminderDetailComponent implements OnInit {
       this.entityTypeCode= res.entityTypeCode
       this.entityId = res.entityId
       this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
+      if(res.entityTypeCode){
+        this.clientReminderForm.controls['linkTo'].disable()
+      
      if(res.entityTypeCode !=='CLIENT'){
+      this.clientReminderForm.controls['vendorId'].disable()    
+
       this.showVendorSearch = true;
       this.showClientSearch = false;
       this.placeholderText = this.vendorPlaceHolderText;
@@ -193,6 +200,8 @@ export class ReminderDetailComponent implements OnInit {
       this.clientReminderForm.controls['vendorId'].updateValueAndValidity();
      
     }else{
+      this.clientReminderForm.controls['clientId'].disable()    
+
       this.showVendorSearch = false;
       this.showClientSearch = true;
       this.placeholderText = this.clientPlaceHolderText;
@@ -210,6 +219,7 @@ export class ReminderDetailComponent implements OnInit {
         clientId : res.entityId
       })
      }
+    }
    }
   })
 }
@@ -428,8 +438,6 @@ export class ReminderDetailComponent implements OnInit {
   }
 }
   else{
-    //this.clientReminderForm.controls['time'].setErrors({ 'incorrect': null })
-    //this.clientReminderForm.controls['time'].updateValueAndValidity();
     return;
   }
   }

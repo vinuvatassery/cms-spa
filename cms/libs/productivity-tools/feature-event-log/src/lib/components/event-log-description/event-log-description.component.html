@@ -1,10 +1,12 @@
 <div *ngIf="hasUrl">
     <span *ngFor="let item of anchorArray">
         <span class="mb-1" *ngIf="(!item.isBaseUrlFlag && !item.isFilePathUrl)" [innerHtml]="item.sanitizedHtml"></span>
-        <a *ngIf="item.isBaseUrlFlag && !item.isFilePathUrl" href="{{item.url}}" title="{{item.title}}">{{item.text}}</a>
+        <a *ngIf="item.isBaseUrlFlag && !item.isFilePathUrl" href="{{item.url}}"
+            title="{{item.title}}">{{item.text}}</a>
 
         <span class="mb-1" *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" [innerHtml]="sanitizedHtml"></span>
-        <a *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" (click)="downloadOldAttachment(item.url)" title="{{item.title}}">{{item.text}}</a>
+        <a *ngIf="!item.isBaseUrlFlag && item.isFilePathUrl" (click)="downloadOldAttachment(item.url)"
+            title="{{item.title}}">{{item.text}}</a>
     </span>
     <span class="mb-1" *ngIf="getViewFlag() && (anchorArray.length<=0)">
         {{data}}
@@ -15,20 +17,176 @@
     <common-read-more [content]="content" [limit]="limit" [completeWords]="completeWords">
     </common-read-more>
 </div>
-<kendo-dialog *ngIf="isViewLetterEmailTextDialog" class="app-c-modal app-c-modal-xlg app-c-modal-xlg">
-    <kendo-dialog-titlebar (close)="onCloseLetterEmailSmsTextClicked()"> View </kendo-dialog-titlebar>
-    <section class="k-dialog-body newcase">
-        <p class="mb-2">
-            This is View Email, View Letter & View Text(s) dialog.
-        </p>
+<ng-template #viewLetterEmailTextDialog>
+    <!-- <kendo-dialog *ngIf="isViewLetterEmailTextDialog" class="app-c-modal app-c-modal-xlg app-c-modal-xlg"> -->
+    <kendo-dialog-titlebar (close)="onCloseLetterEmailSmsTextClicked()"> {{headerText}} </kendo-dialog-titlebar>
+
+    <section class="k-dialog-body" *ngIf="(entityTypeCode === 'EMAIL_LOG' || entityTypeCode === 'LETTER_LOG')">
+
+        <div class="app-c-editor letter-editor-height">
+            <p class="mb-2">
+                {{bodyText}}
+            </p>
+            <!-- Letter mailing address -->
+            <div *ngIf="mailCode">
+                <p class="text-capital text-bold">Mail Code</p>
+                <p>{{mailCode}}</p>
+            </div>
+            <div class="flex-col mb-2" *ngIf="buttonText == 'RE-PRINT'">
+                <p class="text-capital text-bold">Mailing Address</p>
+                <span *ngIf="mailingAddress" class="address_bg">
+                    <span class="material-icons mr-1" aria-hidden="true">location_on</span>
+                    <div>
+                        <span *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</span>
+                        <span *ngIf="mailingAddress?.address2">, {{ mailingAddress?.address2 }} </span>
+                        <br />
+                        <span *ngIf="mailingAddress?.city || mailingAddress?.state || mailingAddress?.zip">{{
+                            mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</span>
+
+                    </div>
+                </span>
+            </div>
+
+            <!-- Email -->
+
+            <div>
+                <div *ngIf="toEmailAddress?.length>0" class="mb-1 textborder">
+                    <h5> TO </h5>
+
+                    <kendo-chip-list selection="multiple">
+                        <kendo-chip *ngFor="let toEmail of toEmailAddress" [label]="toEmail">
+                        </kendo-chip>
+                    </kendo-chip-list>
+
+                </div>
+                <div *ngIf="ccEmailAddress?.length>0" class="mb-1 textborder">
+                    <h5> CC </h5>
+                    <kendo-chip-list selection="multiple">
+                        <kendo-chip *ngFor="let ccEmail of ccEmailAddress" [label]="ccEmail">
+                        </kendo-chip>
+                    </kendo-chip-list>
+
+                </div>
+                <div *ngIf="bccEmailAddress?.length>0" class="mb-1 textborder">
+                    <h5> BCC </h5>
+                    <kendo-chip-list selection="multiple">
+                        <kendo-chip *ngFor="let bccEmail of bccEmailAddress" [label]="bccEmail">
+                        </kendo-chip>
+                    </kendo-chip-list>
+                </div>
+                <div *ngIf="subject" class="mb-1 textborder">
+                    <h5> SUBJECT </h5>
+
+                    <span>{{subject}}</span>
+
+                </div>
+            </div>
+            <div class="innerHtmlWrapper k-editor mt-1">
+                <div [innerHtml]="previewContent"></div>
+            </div>
+
+
+            <!-- Attachment Panel -->
+            <div class="panelbar-wrapper">
+                <kendo-panelbar>
+                    <kendo-panelbar-item *ngIf="attachments?.length > 0" title="{{attachments?.length}} attachment(s)">
+                        <ng-template kendoPanelBarContent>
+                            <div class="attachment-item-list" kendoTooltip
+                                *ngFor="let item of attachments;let index = index">
+                                <a class="attachment-item_name"
+                                    (click)="viewAttachment(item)">{{item.attachmentName}}</a>
+                                <span *ngIf="item.attachmentSize > 0" class="attachment-item_size">{{item.attachmentSize
+                                    | fileSize}}</span>
+                            </div>
+                        </ng-template>
+                    </kendo-panelbar-item>
+                </kendo-panelbar>
+            </div>
+        </div>
     </section>
+
+
+    <!-- SMS -->
+    <section class="k-dialog-body" *ngIf="(entityTypeCode === 'SMS_LOG')">
+        <div class="app-c-editor letter-editor-height">
+            <p class="mb-2">
+                {{bodyText}}
+            </p>
+        </div>
+        <div *ngIf="smsTo?.length>0">
+            <h5>
+                <strong class="mr-1">Send to:</strong> <kendo-chip-list>
+                    <kendo-chip *ngFor="let to of smsTo" [label]="to | phone"> </kendo-chip>
+                </kendo-chip-list>
+            </h5>
+
+
+        </div>
+        <div class="view_sms_cont">
+            <h5> MESSAGE </h5> {{previewContent}}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- common -->
+    <section class="k-dialog-body">
+        <span *ngIf="createdDate">Originally {{infoText}} <strong>{{ createdDate | date : 'MM/dd/YYYY' }}</strong> by
+            <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
+                [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="createdUser">
+                {{createdUser}}
+            </button>
+        </span>
+    </section>
+
+
     <kendo-dialog-actions>
         <div class="justify-content-between">
             <div class="justify-content-end">
-                <button aria-label="Close" kendoButton look="outline" (click)="onCloseLetterEmailSmsTextClicked()">
+                <button aria-label="Close" [primary]="true" kendoButton look="outline"
+                    (click)="onCloseLetterEmailSmsTextClicked()">
                     CLOSE
                 </button>
+                <button attr.aria-label="{{buttonText}}" kendoButton [primary]="true" (click)="openConfirmation()">
+                    {{buttonText}}
+                </button>
             </div>
+
         </div>
     </kendo-dialog-actions>
-</kendo-dialog>
+
+</ng-template>
+<!-- User Profile Details Card -->
+<kendo-popover #onUserProfileDetailsHovered width="330">
+    <ng-template kendoPopoverBodyTemplate>
+        <common-user-profile-card [userId]="creatorId"></common-user-profile-card>
+    </ng-template>
+</kendo-popover>
+
+<!-- Confirmation Modal -->
+
+<ng-template #confirmationDialog>
+    <kendo-dialog (close)="closeConfirmation()" class="app-c-modal app-c-modal-sm app-c-modal-np"
+        [title]="confirmationTitle">
+        <section class="k-dialog-body">
+            <p class="mb-3">
+                {{confirmationModelContent}}
+            </p>
+        </section>
+        <kendo-dialog-actions>
+            <div class="justify-content-between">
+                <div class="justify-content-end">
+                    <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                        (click)="closeConfirmation()">
+                        CANCEL
+                    </button>
+                    <button kendoButton [primary]="true" aria-label="Send" (click)="reSendNotification()">
+                        {{confirmationButtonText}}
+                    </button>
+                </div>
+            </div>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+</ng-template>

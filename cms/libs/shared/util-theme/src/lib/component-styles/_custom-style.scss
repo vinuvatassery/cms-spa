@@ -599,7 +599,7 @@ color: $app-primary-font-color;
 
 .add-button-top {
   position: fixed;
-  right: 14px;
+  right: 40px;
   top: 82px;
   z-index: 9;
 }
@@ -1379,7 +1379,7 @@ padding: 8px;
 .event-filters{
   padding-left: 1rem;
   padding-right: 1rem;
-  button{width: 100%; margin-bottom: 4px; text-align: left; justify-content: flex-start};
+  button{width: 100%; margin-bottom: 4px; text-align: left; justify-content: flex-start}
   .k-button-text{justify-content: flex-start;}
 }
 

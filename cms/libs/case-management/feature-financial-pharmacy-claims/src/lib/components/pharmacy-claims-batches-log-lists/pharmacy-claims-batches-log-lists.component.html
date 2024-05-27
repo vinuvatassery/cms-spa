@@ -17,7 +17,7 @@
           </ng-template>
           <section class="app-l-client-wrapper ">
               <section class="app-l-wrapper">
-                  <p> Click "BULK" to execute bulk actions for this batch. Click on a row to view that claim.</p>
+                  <p> Click "BULK" to execute bulk actions for one or more claims. Click on a row to view that claim.</p>
                   <section class="table-filter-section mat-form-no-b-space">
                       <span class="filter-section_items filter--select">
                         <kendo-floatinglabel>
@@ -274,7 +274,7 @@
 
 
   <ng-template #PrintAuthorizationDialogTemplate>
-  <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization Letter(s)</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Preview & Print Authorization Letter(s)</kendo-dialog-titlebar>
   <cms-pharmacy-claims-print-authorization
   [printOption]="true"
   [batchId]="batchId"

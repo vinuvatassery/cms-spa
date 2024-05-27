@@ -1,7 +1,7 @@
 
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource, DocumentFacade, ApiType } from '@cms/shared/util-core';
 import { Subject, first } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -11,6 +11,7 @@ import { User } from '../entities/user';
 /** Data services **/
 import { UserDataService } from '../infrastructure/user.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { ZipCodeFacade } from './zip-code.facade';
 
 @Injectable({ providedIn: 'root' })
 export class UserManagementFacade {
@@ -21,48 +22,50 @@ export class UserManagementFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueUserListGrid = 'creationTime'; 
+  public sortValueUserListGrid = 'userName'; 
   public sortUserListGrid: SortDescriptor[] = [{
     field: this.sortValueUserListGrid,
   }];
 
-  public sortValueRolesPermissionListGrid = 'creationTime'; 
+  public sortValueRolesPermissionListGrid = 'creationTime';
   public sortRolesPermissionListGrid: SortDescriptor[] = [{
     field: this.sortValueRolesPermissionListGrid,
   }];
 
 
-  public sortValueDirectMessageListGrid = 'creationTime'; 
+  public sortValueDirectMessageListGrid = 'creationTime';
   public sortDirectMessageListGrid: SortDescriptor[] = [{
     field: this.sortValueDirectMessageListGrid,
   }];
 
-  public sortValueGenderListGrid = 'creationTime'; 
+  public sortValueGenderListGrid = 'creationTime';
   public sortGenderListGrid: SortDescriptor[] = [{
     field: this.sortValueGenderListGrid,
   }];
-  public sortValueLanguageListGrid = 'creationTime'; 
+  public sortValueLanguageListGrid = 'creationTime';
   public sortLanguageListGrid: SortDescriptor[] = [{
     field: this.sortValueLanguageListGrid,
   }];
 
-  public sortValuePronounsListGrid = 'creationTime'; 
+  public sortValuePronounsListGrid = 'creationTime';
   public sortPronounsListGrid: SortDescriptor[] = [{
     field: this.sortValuePronounsListGrid,
   }];
-  
-  public sortValueRacialEthnicListGrid = 'creationTime'; 
+
+  public sortValueRacialEthnicListGrid = 'creationTime';
   public sortRacialEthnicListGrid: SortDescriptor[] = [{
     field: this.sortValueRacialEthnicListGrid,
   }];
 
-  public sortValueSexualOrientationListGrid = 'creationTime'; 
+  public sortValueSexualOrientationListGrid = 'creationTime';
   public sortSexualOrientationListGrid: SortDescriptor[] = [{
     field: this.sortValueSexualOrientationListGrid,
   }];
 
   private userListSubject = new BehaviorSubject<User[]>([]);
   private usersDataSubject = new BehaviorSubject<any>([]);
+  private userInfoDataSubject = new Subject<any>();
+  private submitUserInfoDataSubject = new Subject<any>();
   private usersFilterColumnSubject = new BehaviorSubject<any>([]);
   private ddlUserRoleSubject = new BehaviorSubject<any>([]);
   private usersRoleAndPermissionsSubject = new BehaviorSubject<any>([]);
@@ -85,9 +88,21 @@ export class UserManagementFacade {
   private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
   private usersByRoleSubject = new BehaviorSubject<LoginUser[]>([]);
   private userImageSubject = new Subject<any>();
-  private userByIdSubject = new Subject<any>(); 
+  private userByIdSubject = new Subject<any>();
   private profilePhotosSubject = new BehaviorSubject<any>([]);
- 
+  private ddlStatesSubject = new BehaviorSubject<any>([]);
+  private userListDataLoaderSubject = new Subject<any>();
+  userListDataLoader$ = this.userListDataLoaderSubject.asObservable();
+  userListProfilePhotoSubject = new Subject();
+  rolesUserListProfilePhotoSubject = new Subject();
+  private removePhotoResponseSubject = new Subject<any>();
+  private uploadPhotoResponseSubject = new Subject<any>();
+  private isShowUserDetailPopupSubject = new Subject<any>();
+  private pNumberSearchSubject = new Subject<any>();
+  private addUserResponseSubject = new Subject<any>();
+  private deactivateUserSubject = new Subject<any>();
+  private loginUserDetailSubject = new Subject<any>();
+
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -116,14 +131,26 @@ export class UserManagementFacade {
   usersByRole$ = this.usersByRoleSubject.asObservable();
   userImage$ = this.userImageSubject.asObservable();
   usersById$ = this.userByIdSubject.asObservable();
-  profilePhotos$ = this.profilePhotosSubject.asObservable(); 
-  
+  profilePhotos$ = this.profilePhotosSubject.asObservable();
+  userInfoData$ = this.userInfoDataSubject.asObservable();
+  submitUserInfoData$ = this.submitUserInfoDataSubject.asObservable();
+  ddlStates$ = this.ddlStatesSubject.asObservable();
+  removePhotoResponse$ = this.removePhotoResponseSubject.asObservable();
+  uploadPhotoResponse$ = this.uploadPhotoResponseSubject.asObservable();
+  isShowUserDetailPopup$ = this.isShowUserDetailPopupSubject.asObservable();
+  pNumberSearchSubject$ = this.pNumberSearchSubject.asObservable();
+  addUserResponse$ = this.addUserResponseSubject.asObservable();
+  deactivateUser$ = this.deactivateUserSubject.asObservable();
+  loginUserDetail$ = this.loginUserDetailSubject.asObservable();
+
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider,
+    private readonly zipCodeFacade: ZipCodeFacade,
+    private readonly documentFacade: DocumentFacade,
     ) {}
 
 
@@ -286,18 +313,27 @@ export class UserManagementFacade {
     });
   }
 
-
-
-  loadUsersData(): void {
-    this.userDataService.loadUsersData().subscribe({
-      next: (response) => {
-        this.usersDataSubject.next(response);
+  loadUsersData(params: any): void {
+    this.showLoader();
+    this.userDataService.loadUsersData(params).subscribe({
+      next: (response:any) => {
+        const gridView = {
+          data: response['items'],
+          total: response['totalCount'],
+        };
+        this.usersDataSubject.next(gridView);
+        this.loadUserListDistinctUserIdsAndProfilePhoto(response['items']);
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
   }
+
+  loadUserAssignedRolesByUserId(userId:any, data: any){
+    return this.userDataService.loadUserAssignedRolesByUserId(userId, data);
+   }
 
   loadUserFilterColumn(): void {
     this.userDataService.loadUserFilterColumn().subscribe({
@@ -310,8 +346,8 @@ export class UserManagementFacade {
     });
   }
 
-  loadDdlUserRole(): void {
-    this.userDataService.loadDdlUserRole().subscribe({
+  loadDdlUserRole(roleType: any, activeFlag: any): void {
+    this.userDataService.loadDdlUserRole(roleType, activeFlag).subscribe({
       next: (response) => {
         this.ddlUserRoleSubject.next(response);
       },
@@ -369,9 +405,6 @@ export class UserManagementFacade {
     });
   }
 
- 
- 
-
   loadSexualOrientationList(){
     this.userDataService.loadSexualOrientationList().subscribe({
       next: (response) => {
@@ -414,12 +447,12 @@ export class UserManagementFacade {
     });
   }
 
-    
+
   reassignCase(caseReassignData : any){
     return this.userDataService.reassignCase(caseReassignData);
   }
 
-  getUserProfilePhotosByIds(userIds : string, gridItems: any) {    
+  getUserProfilePhotosByIds(userIds : string, gridItems: any) {
     return this.userDataService.getUserProfilePhotos(userIds)
     .subscribe({
       next: (data: any[]) => {
@@ -434,13 +467,13 @@ export class UserManagementFacade {
         }
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
   }
 
 
-  getProfilePhotosByUserIds(userIds : string) {    
+  getProfilePhotosByUserIds(userIds : string) {
     return this.userDataService.getUserProfilePhotos(userIds);
   }
   loadDirectMessageLogEvent() {
@@ -453,4 +486,188 @@ export class UserManagementFacade {
       },
     });
   }
+
+  loadUserInfoData(userId : any) {
+    this.showLoader();
+    this.userDataService.loadUserInfoData(userId).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        this.userInfoDataSubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  submitUserInfoData(userInfoData : any) {
+    this.showLoader();
+    this.userDataService.submitUserInfoData(userInfoData).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        this.submitUserInfoDataSubject.next(response);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message)
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  loadDdlStates(): void {
+    this.zipCodeFacade.getStates().subscribe({
+      next: (ddlStatesResponse) => {
+        this.ddlStatesSubject.next(ddlStatesResponse);
+      },
+      error: (err) => {
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
+  loadUserListDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');
+    if(distinctUserIds){
+      this.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (photoData: any[]) => {
+          if (photoData.length > 0) {
+            this.userListProfilePhotoSubject.next(photoData);
+          }
+        },
+      });
+    }
+  }  
+
+  onExportAllUser(params: any){
+    const fileName = 'Users List'
+    this.documentFacade.getExportFile(params,`users`, fileName,ApiType.SystemConfig);
+  }
+
+  loadRolesUserListDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');
+    if(distinctUserIds){
+      this.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (photoData: any[]) => {
+          if (photoData.length > 0) {
+            this.rolesUserListProfilePhotoSubject.next(photoData);
+          }
+        },
+      });
+    }
+  }  
+
+  removeUserProfilePhoto(userId : any) {
+    this.showLoader();
+    this.userDataService.removeUserProfilePhoto(userId).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        this.removePhotoResponseSubject.next(response);
+        // this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message)
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  uploadUserProfilePhoto(uploadRequest : any) {
+    this.showLoader();
+    this.userDataService.uploadUserProfilePhoto(uploadRequest).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        this.uploadPhotoResponseSubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  deactivateUser(user : any){
+    this.showLoader();
+    this.userDataService.deActivateUserRole(user).subscribe({
+      next: (success:any) => {
+        this.hideLoader();
+        this.deactivateUserSubject.next(success);
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err.message);
+      },
+    })
+  }
+
+
+
+  addUser(userData: any) {
+    this.showLoader();
+    this.userDataService.addUser(userData).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        if(response.status == 1){
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+          this.showOrHideUserDetailPopup(false);
+        }        
+        this.addUserResponseSubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  showOrHideUserDetailPopup(isShowPopup: boolean){
+    this.isShowUserDetailPopupSubject.next(isShowPopup);
+  }
+
+  searchPNumber(pNumber: string){
+    this.userDataService.searchPNumber(pNumber).subscribe({
+      next: (response: any) => {
+        this.pNumberSearchSubject.next(response);
+      },
+      error: (err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    });
+  }
+
+  getUserDetail(userId: string){
+    this.showLoader();
+    this.userDataService.getUserDetail(userId).subscribe({
+      next:(response: any) => {
+        this.hideLoader();
+        this.loginUserDetailSubject.next(response);
+      },
+      error: (err: any) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    })
+  }
+
+  updateUserDetail(userData: any) {
+    this.showLoader();
+    this.userDataService.updateUserDetail(userData).subscribe({
+      next: (response : any) => {
+        this.hideLoader();
+        if(response.status == 1){
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+          this.showOrHideUserDetailPopup(false);
+        }        
+        this.addUserResponseSubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
 }

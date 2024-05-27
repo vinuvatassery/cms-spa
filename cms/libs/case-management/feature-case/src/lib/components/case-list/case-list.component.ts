@@ -370,7 +370,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       if(profile?.length>0){
        this.loginUserId= profile[0]?.loginUserId;
        if(!this.casesLoaded){ 
-        if (!this.caseStatus && !this.healthInsuranceType && !this.group){ 
+        if (!this.caseStatus && !this.healthInsuranceType && !this.group && this.loginUserId != undefined){ 
           this.getGridState();
         }         
         this.casesLoaded = true;
@@ -397,9 +397,6 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     });
   }
   private getGridState(){
-    if(this.loginUserId == undefined){
-      return;
-    }
     this.gridFacade.hideLoader();
     this.isGridLoaderShow = true;
     this.gridFacade.loadGridState(this.loginUserId,GridStateKey.GRID_STATE,this.module).subscribe({
@@ -606,12 +603,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.columnName = "";
       this.isFiltered = false;
     }
-    if(this.sortValue === "eligibilityStatusCode"){
-      this.sortValue = "caseStatus";
-    }
-    if(this.sortValue === "insuranceType"){
-      this.sortValue = "healthInsuranceType";
-    }
+    this.setSortValue();
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? "";
     this.sortType = stateData.sort[0]?.dir ?? "";
@@ -619,12 +611,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = "";
-    if(this.sort[0]?.dir === 'asc'){
-      this.sortDir = 'Ascending';
-    }
-    if(this.sort[0]?.dir === 'desc'){
-      this.sortDir = 'Descending';
-    }
+    this.setSortDir();
     if (this.filteredBy?.includes('Status')) {
       const eligibilityFilter = filters
         ?.flatMap((filter: any) => filter.filters)
@@ -646,6 +633,24 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         const obj = this.healthinsuranceTypes.find((x: any) => x.lovCode === filterValue);
         this.selectedHealthInsuranceType = obj;
       }
+    }
+  }
+
+  setSortDir(){
+    if(this.sort[0]?.dir === 'asc'){
+      this.sortDir = 'Ascending';
+    }
+    if(this.sort[0]?.dir === 'desc'){
+      this.sortDir = 'Descending';
+    }
+  }
+
+  setSortValue(){
+    if(this.sortValue === "eligibilityStatusCode"){
+      this.sortValue = "caseStatus";
+    }
+    if(this.sortValue === "insuranceType"){
+      this.sortValue = "healthInsuranceType";
     }
   }
 }

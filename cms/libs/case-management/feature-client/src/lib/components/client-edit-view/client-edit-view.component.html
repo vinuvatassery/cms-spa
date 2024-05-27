@@ -106,7 +106,7 @@
         <kendo-floatinglabel text="Middle Initial on Primary Insurance Card">
           <kendo-textbox aria-label="middle initial on primary insurance card"
             placeholder="Middle Initial on Primary Insurance Card" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="prmInsMiddleName" [maxlength]="lengthRestrictForty">
+            formControlName="prmInsMiddleName" [maxlength]="lengthRestrictThirty">
           </kendo-textbox>
           <kendo-formerror
             *ngIf="!appInfoForm.controls['prmInsMiddleName'].valid && !this.appInfoForm.controls['prmInsMiddleName'].disabled">Middle
@@ -169,7 +169,7 @@
         <kendo-floatinglabel text="Middle Initial on Official ID">
           <kendo-textbox aria-label="middle initial on official id" placeholder="Middle Initial on Official ID"
             [fillMode]="formUiStyle.inputFillMode" formControlName="officialIdMiddleName"
-            [maxlength]="lengthRestrictForty">
+            [maxlength]="lengthRestrictThirty">
           </kendo-textbox>
         </kendo-floatinglabel>
         <kendo-formerror

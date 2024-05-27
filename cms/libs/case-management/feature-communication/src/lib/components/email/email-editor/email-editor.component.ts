@@ -10,10 +10,11 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnChanges
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, DocumentFacade, ScreenType} from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, ScreenType} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
@@ -30,7 +31,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class EmailEditorComponent implements OnInit {
+export class EmailEditorComponent implements OnInit, OnChanges {
   /** Input properties **/
   @Input() selectedTemplate!: any;
   @Input() selectedTemplateContent !:any;
@@ -110,6 +111,9 @@ export class EmailEditorComponent implements OnInit {
   typeCount!: number;
   myCount!: number;
   otherCount!: number;
+  caseManagerEmail: any = null;
+  isAttachmentIconVisible = true;
+  customStyleContent= '.k-content .hilightcolor{background: yellow};';
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -132,7 +136,10 @@ export class EmailEditorComponent implements OnInit {
     this.cerAuthorizationForm = this.formBuilder.group({
       clientsAttachment:[]
     });
-
+    if(this.communicationTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail ||
+      this.communicationTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail){
+        this.isAttachmentIconVisible = false;
+      }
   }
 
   ngOnChanges(){
@@ -278,13 +285,13 @@ export class EmailEditorComponent implements OnInit {
   }
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {
-    editor.exec('insertText', { text: '{{' +item + '}}' });
-    editor.value = editor.value.replace(/#CURSOR#/, item);
+    let strResult: string = "<span class='hilightcolor'> {{"+ item +"}}</span>";
+    editor.exec("insertText", { text: "#CURSOR#" });
+    editor.value = editor.value.replace(/#CURSOR#/, strResult);
     this.onSearchClosed();
   }
 
   editorValueChange(event: any){
-    this.isContentMissing = false;
     this.editorValueChangeEvent.emit(event);
     this.contentValidateHandler(true);
   }
@@ -311,7 +318,14 @@ export class EmailEditorComponent implements OnInit {
     for (let file of event.files){
     const isFileExists = this.selectedAttachedFile?.some((item: any) => item.name === file.name);
     if(!isFileExists){
-      this.selectedAttachedFile.push(file);
+      let uploadedFile = {
+        'rawFile': file.rawFile,
+        'size': file.size,
+        'name': file.name,
+        'uid': file.uid,
+        'documentPath': ''
+      };
+      this.selectedAttachedFile.push(uploadedFile);
      }
     }
    }
@@ -335,7 +349,7 @@ export class EmailEditorComponent implements OnInit {
 
   clientAttachmentChange(event:any)
   {
-    if( event != undefined){
+    if(event != undefined){
     const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.documentName);
     if(!isFileExists){
     this.uploadedAttachedFile = [{
@@ -354,7 +368,7 @@ export class EmailEditorComponent implements OnInit {
        }
       }
     this.uploadedAttachedFile = [];
-    this.cerEmailAttachments.emit(event);
+    this.cerEmailAttachments.emit(this.selectedAttachedFile[0]);
     }
     this.showClientAttachmentUpload = false;
   }
@@ -381,7 +395,7 @@ export class EmailEditorComponent implements OnInit {
        }
       }
     this.uploadedAttachedFile = [];
-    this.cerEmailAttachments.emit(event);
+    this.cerEmailAttachments.emit(this.selectedAttachedFile[0]);
     }
     this.showFormsAndDocumentsUpload = false;
    }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SystemConfigFinancialFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { SystemConfigFinancialFacade } from '@cms/system-config/domain';
 import { State } from '@progress/kendo-data-query';
 
 @Component({

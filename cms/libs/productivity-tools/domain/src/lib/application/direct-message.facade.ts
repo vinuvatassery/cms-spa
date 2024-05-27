@@ -11,7 +11,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { DirectMessage } from '../entities/direct-message';
 /** Data services **/
 import { DirectMessageDataService } from '../infrastructure/direct-message.data.service';
-import { ChatClient, ChatThreadClient, ChatThreadItem, ChatThreadProperties } from '@azure/communication-chat';
+import { ChatClient, ChatThreadClient } from '@azure/communication-chat';
 import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
 
 @Injectable({ providedIn: 'root' })
@@ -77,7 +77,7 @@ export class DirectMessageFacade {
   ) {}
 
   getChatClient(userAccessToken :any): ChatClient{
-   var endpoint = parseConnectionString(this.configurationProvider.appSettings.azureCommunication.connectionString).endpoint;
+    let endpoint = parseConnectionString(this.configurationProvider.appSettings.azureCommunication.connectionString).endpoint;
     return new ChatClient(endpoint, new AzureCommunicationTokenCredential(userAccessToken))
   }
 
@@ -106,6 +106,7 @@ export class DirectMessageFacade {
         this.directMessagesListSubject.next(gridView);
       },
       error: (err) => {
+        this.loaderService.hide();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
@@ -130,8 +131,10 @@ export class DirectMessageFacade {
       next: (response:any) => {
         this.sendMessageSubject.next(response);
         if(!payload.isClient){
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+          if(response){
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
         }
+      }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -149,13 +152,12 @@ export class DirectMessageFacade {
       }
     })
   }
-  uploadAttachments(uploadRequest:any){
+  uploadAttachments(uploadRequest:any , threadId :string){
     this.showLoader()
-    this.directMessageDataService.uploadAttachments(uploadRequest).subscribe({
+    this.directMessageDataService.uploadAttachments(uploadRequest, threadId).subscribe({
       next: (Response) => {
         this.uploadDocumentSubject.next(Response);
         if (Response) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Document upload successfully.');
           this.loaderService.hide();
         }
       },

@@ -9,13 +9,11 @@ import {
   TemplateRef,
   ViewChild,
   ElementRef,
-  Renderer2,
-  DoCheck
+  Renderer2
 } from '@angular/core';
 import { take,Subscription, first } from 'rxjs';
 import { DirectMessageFacade } from '@cms/productivity-tools/domain';
-import { ChatClient, ChatThreadClient,ChatMessageContent, ChatThreadItem, ChatThreadProperties, SendMessageOptions, SendMessageRequest } from '@azure/communication-chat';
-import { AzureCommunicationTokenCredential, parseConnectionString } from '@azure/communication-common';
+import { ChatClient,ChatMessageContent } from '@azure/communication-chat';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
@@ -70,7 +68,7 @@ export class DirectMessageComponent implements OnInit {
    private notificationReminderDialog: any;
    disableChatInput = false;
    /** Public properties **/
- 
+   outOfscheduleData : any;
    uploadDocumentTypeDetails:any;
    ListModel = [
     {
@@ -96,7 +94,7 @@ export class DirectMessageComponent implements OnInit {
      {
        text: "Attach from Client’s Attachments",
      },
- 
+
    ];
   constructor(private directMessageFacade: DirectMessageFacade
     , private changeDetection : ChangeDetectorRef
@@ -146,16 +144,17 @@ export class DirectMessageComponent implements OnInit {
         this.showChatLoader = false;
         this.groupedMessages = undefined
         this.disableChatInput = true;
-        this.changeDetection.detectChanges()  
+        this.changeDetection.detectChanges()
         return;
-      } 
+      }
       this.communicationDetails = res.communicationDetails;
+      this.outOfscheduleData = res.outOfscheduleData;
         this.threadId = res.threadId
         this.threadCreationTime = res.creationTime
         this.chatClient = this.directMessageFacade.getChatClient(res.communicationDetails?.token)
         this.setupHandlers()
-       
-        this.changeDetection.detectChanges()     
+
+        this.changeDetection.detectChanges()
         this.showChatLoader = false
       })
           this.directMessageFacade.getCommunicationDetails(this.clientId)
@@ -164,10 +163,10 @@ export class DirectMessageComponent implements OnInit {
      })
 
   }
- 
+
 
   /** Internal event methods **/
- 
+
   onCloseDirectMessageClicked() {
     this.closeAction.emit();
     this.isShownDirectMessage = !this.isShownDirectMessage;
@@ -213,7 +212,7 @@ export class DirectMessageComponent implements OnInit {
       let msg = undefined;
       if(this.checkJson(data.message)) {
         let parsed = JSON.parse(data.message);
-        var mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
+        let mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
         msg = {
           id: data.id,
           sender: data.senderDisplayName,
@@ -246,18 +245,18 @@ export class DirectMessageComponent implements OnInit {
   }
 
   async sendMessage() {
-   
+
     if (!this.sendMsg.message) {
       return;
     }else{
-      var message ={ message : this.sendMsg.message,
+      let message ={ message : this.sendMsg.message,
                loginUserId :  this.communicationDetails.loginUserId
       }
     const messageContent: ChatMessageContent = {
       message:  JSON.stringify(message)
     };
 
-    var clientMessage ={ message : "Hi i received your message.",
+    let clientMessage ={ message : "Hi I received your message.",
       loginUserId :  this.communicationDetails.clientUsercommunicationUserId
 }
 const clientMessageContent: ChatMessageContent = {
@@ -269,11 +268,11 @@ message:  JSON.stringify(clientMessage)
                     type: 'text',
                     userToken : this.communicationDetails.token,
                     threadId: this.threadId,
-                    clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId, 
+                    clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId,
                     clientDisplayName : this.communicationDetails.clientUserName,
                     clientMessage : JSON.stringify(clientMessageContent)
                   })
-    }            
+    }
     this.sendMsg.message =""
 }
 
@@ -289,38 +288,36 @@ message:  JSON.stringify(clientMessage)
 
    async getListMessages() {
       this.messages = [];
-      let currentDate = new Date();
-
-   //Subtract one hour from the current time
-    let oneHourBefore = new Date(currentDate.getTime() - (4 * 60 * 60 * 1000));
     this.chatThreadClient = this.chatClient.getChatThreadClient(this.threadId);
    const messages = <any>this.chatThreadClient?.listMessages({});
     if (!messages) {
       return;
     }
 
-     for await (const message of messages) {     
+     for await (const message of messages) {
          if (message.type == "text") {
         let messageObj = this.messages.find((x:any) => x.id == message.id);
         if(this.checkJson(message.content.message)) {
           let parsed = JSON.parse(message.content.message);
-          var mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
+          let mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
           if (messageObj) {
             messageObj  = {
               id: message.id,
+              sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
               message: mesg.message,
               isOwner: message.sender?.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
-              image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined 
+              image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined
             };
           }
           else {
-           
+
             let msg = {
               id: message.id,
+              sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
               message: mesg.message ?? mesg.message,
               isOwner: message.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
@@ -339,6 +336,7 @@ message:  JSON.stringify(clientMessage)
           if (messageObj) {
             messageObj = {
               id: message.id,
+              sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
               message: message.content?.message,
               isOwner: message.sender?.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
@@ -350,6 +348,7 @@ message:  JSON.stringify(clientMessage)
           else {
             let msg = {
               id: message.id,
+              sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
               message: message.content.message,
               isOwner: message.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
@@ -365,17 +364,17 @@ message:  JSON.stringify(clientMessage)
 
 
     }
-    this.messages = this.messages.sort((a:any, b:any) => a.createdOn!.getTime() - b.createdOn!.getTime());
+    this.messages = this.messages.sort((a:any, b:any) => a.sequenceId - b.sequenceId);
     this.changeDetection.detectChanges();
      this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
     this.keys =  Object.keys(this.groupedMessages).sort()
     this.scrollToBottom()
     this.changeDetection.detectChanges()
-  
+
   }
 
    mySortingFunction = (a :any, b:any) => {
-    return new Date(a.key).getTime()-new Date(b.key).getTime();
+    return a.value?.sequenceId- b.value?.sequenceId;
   }
 
   getVlauesWithKey(value :any[] | unknown){
@@ -406,11 +405,11 @@ onUploadDocumentsOpenClicked(template: TemplateRef<unknown>, event:any): void {
     cssClass:
       'app-c-modal app-c-modal-md app-c-modal-np',
   });
-  
-} 
+
+}
 
 
-onUploadDocumentsClosed(event: any) { 
+onUploadDocumentsClosed(event: any) {
   this.notificationReminderDialog.close();
 }
 getUploadedDocuments(uploadedRequest:any){
@@ -418,11 +417,11 @@ getUploadedDocuments(uploadedRequest:any){
   this.uploadDocumentSubscription = this.directMessageFacade.uploadDocument$
   .pipe(first((res: any) => res != null))
   .subscribe((res:any) =>{
-    var message ={ message : "",
+    let message ={ message : "",
       loginUserId :  this.communicationDetails.loginUserId
 }
-      var filepaths = res.filePath.split('$')
-      var fileName = filepaths[filepaths.length -1]
+      let filepaths = res.filePath.split('$')
+      let fileName = filepaths[filepaths.length -1]
       const attachmentMessageContent: ChatMessageContent = {
         message: JSON.stringify(message),
         attachments: [
@@ -433,7 +432,7 @@ getUploadedDocuments(uploadedRequest:any){
           },
         ],
       };
-      var clientMessage ={ message : "Hi i received your message.",
+      let clientMessage ={ message : "Hi I received your message.",
       loginUserId :  this.communicationDetails.clientUsercommunicationUserId
 }
 const clientMessageContent: ChatMessageContent = {
@@ -446,13 +445,13 @@ message:  JSON.stringify(clientMessage)
         type: 'text',
         threadId: this.threadId,
         userToken : this.communicationDetails.token,
-        clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId, 
+        clientCommunicationUserId : this.communicationDetails.clientUsercommunicationUserId,
                     clientDisplayName : this.communicationDetails.clientUserName,
                     clientMessage : JSON.stringify(clientMessageContent)
       }
     );
     });
-  this.directMessageFacade.uploadAttachments(uploadedRequest);
+  this.directMessageFacade.uploadAttachments(uploadedRequest,this.threadId);
 }
 
 

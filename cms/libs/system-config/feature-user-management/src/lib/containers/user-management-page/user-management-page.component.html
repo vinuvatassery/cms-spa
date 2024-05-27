@@ -7,6 +7,9 @@
 [sortType]="sortType" [sort]="sortUserListGrid" 
 (loadUserListEvent)="loadUserLists($event)"
 (usersFilterColumnEvent)="loadUserGridFilterLists($event)"
+[userListProfilePhoto$]="userListProfilePhoto$"
+(exportGridEvent$)="onExportAllUser($event)"
+[exportButtonShow$]="exportButtonShow$" 
 > </system-config-user-list>
  
  

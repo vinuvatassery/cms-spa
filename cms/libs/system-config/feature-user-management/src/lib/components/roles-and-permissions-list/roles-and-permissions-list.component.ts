@@ -88,8 +88,6 @@ export class RolesAndPermissionsListComponent implements OnInit, OnChanges {
  
   ];
 
-  
-  constructor() { }
 
   
   ngOnInit(): void {

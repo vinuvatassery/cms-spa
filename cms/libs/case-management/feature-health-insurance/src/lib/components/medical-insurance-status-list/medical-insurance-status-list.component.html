@@ -117,6 +117,12 @@
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
         </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button"
+            (click)="onVendorClicked(dataItem.vendorId)" *ngIf="dataItem.vendorName">
+            {{ dataItem.vendorName }}
+          </button>
+        </ng-template>
       </kendo-grid-column>
         <kendo-grid-column
         field="insuranceProviderName"

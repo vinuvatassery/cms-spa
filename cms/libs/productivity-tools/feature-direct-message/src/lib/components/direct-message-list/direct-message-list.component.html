@@ -34,7 +34,7 @@
       </kendo-grid-column>
  
     
-      <kendo-grid-column field="unreadMessageCount" title="All Messages" [width]="200"></kendo-grid-column>
+      <kendo-grid-column field="unreadMessageCount" title="Total Messages Received" [width]="200"></kendo-grid-column>
       <kendo-grid-column field="lastMessageTime" title="Last Message Received" [width]="180">
         <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.lastMessageTime | lastMessageDateTime}}
@@ -47,9 +47,10 @@
       </ng-template>
       <!-- grid No data Template -->
       <ng-template kendoGridNoRecordsTemplate>
-        <common-grid-no-records></common-grid-no-records>
+        <div role="cell" > <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There are no messages</p>
       </ng-template>
-
     <!--Footer Paging-->
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
     let-currentPage="currentPage">

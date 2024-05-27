@@ -10,9 +10,7 @@ import {
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
-import { filter, first } from 'rxjs';
-import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
+import {  first } from 'rxjs';
 
 @Component({
   selector: 'notification-category-detail',

@@ -70,16 +70,18 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   isDeleteClaimsOption = false;
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isProcessGridExpand = true;
+   isProcessGridExpand = true;
   isPharmacyClaimsProcessGridLoaderShow = false;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
   vendorId: any;
   clientId: any;
- clientName: any;
- claimsType:any;
- paymentRequestId!: string;
-  @Input() addPharmacyClaim$: any;
+  clientName: any;
+  claimsType:any;
+  paymentRequestId!: string;
+  excludedPaymentStatus: string[] = ['Failed', 'On Hold', 'Pending', 'Submitted'];
+  
+ @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
   @Input() getPharmacyClaim$: any;
   @Input() searchPharmacies$: any;
@@ -130,7 +132,9 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
   pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
   fromDrugPurchased:any = false;
-
+  pharmacyPaymentStatusList! : any[];
+  selectedPaymentStatus: string | null = null;
+  selectedPaymentMethod: string | null = null;
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -187,7 +191,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   onSingleClaimDelete(selection: any) {
     this.selectedKeysChange(selection);
   }
-  gridColumns: { [key: string]: string } = {
+  gridColumns: any = {
     ALL: 'All Columns',
     pharmacyName: 'Pharmacy Name',
     paymentMethodDesc: 'Payment Method',
@@ -239,7 +243,11 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     this.loadPharmacyClaimsProcessListGrid();
     this.addSearchSubjectSubscription();
     this.lovFacade.getPaymentStatusLov();
-    this.lovFacade.getPaymentMethodLov();   
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentStatus$.subscribe(values => 
+      {
+        this.pharmacyPaymentStatusList = values.filter(value => !this.excludedPaymentStatus.includes(value.lovDesc))
+      })
   }
 
   ngOnChanges(): void {
@@ -291,6 +299,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.clearIndividualSelectionOnClear(stateData);
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
     this.loadPharmacyClaimsProcessListGrid();
@@ -590,7 +599,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     value: any,
     filterService: FilterService
   ): void {
-    if (field === 'paymentMethodDesc') {
+    if (field === 'paymentStatusDesc') {
       this.paymentMethodFilter = value;
     } else if (field === 'paymentTypeCode') {
       this.paymentTypeFilter = value;
@@ -618,5 +627,38 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   }
   loadRecentClaimListEventHandler(data : any){
     this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+  }
+
+  columnName: any = "";
+  isFiltered = false;
+  filteredBy = '';
+  clearIndividualSelectionOnClear(stateData: any)
+  {
+    if(stateData.filter?.filters.length > 0)
+      {
+        let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+        this.columnName = stateFilter.field;
+
+          this.filter = stateFilter.value;
+
+        this.isFiltered = true;
+        const filterList = []
+        for(const filter of stateData.filter.filters)
+        {
+          filterList.push(this.gridColumns[filter.filters[0].field]);
+        }
+        this.isFiltered =true;
+        this.filteredBy =  filterList.toString();
+      }
+      else
+      {
+        this.filter = "";
+        this.isFiltered = false
+        this.selectedPaymentMethod = '';
+        this.selectedPaymentStatus = '';
+      }
+      this.state=stateData;
+      if (!this.filteredBy.includes(this.gridColumns.paymentStatusDesc)) this.selectedPaymentStatus = '';
+      if (!this.filteredBy.includes(this.gridColumns.paymentMethodDesc)) this.selectedPaymentMethod = '';
   }
 }

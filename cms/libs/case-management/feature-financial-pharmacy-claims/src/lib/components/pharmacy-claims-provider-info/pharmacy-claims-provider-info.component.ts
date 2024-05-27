@@ -28,6 +28,10 @@ export class PharmacyClaimsProviderInfoComponent {
   @Input() ddlStates$ : Observable<any> | undefined;
   @Input() paymentMethodCode$ : Observable<any> | undefined;
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
+  specialHandling = '';
+  specialHandlingCharachtersCount!: number;
+  specialHandlingCounter!: string;
+  specialHandlingLength = 100;
   vendorProfile: any
   isDuplicateTin = false;
   accountingNumberValidated = true;
@@ -65,13 +69,20 @@ export class PharmacyClaimsProviderInfoComponent {
   }
   ngOnInit(): void {
     this.paymentRequestId= this.paymentRequestId ? this.paymentRequestId : this.activeRoute.snapshot.queryParams['pid'];
-     this.loadVendorInfo()
+    this.loadVendorInfo();
+    this.specialHandlingWordCount();
    }
   public formUiStyle : UIFormStyle = new UIFormStyle();
   closeViewProviderClicked() {
     this.closeViewProviderDetailClickedEvent.emit(true);
   }
 
+  private specialHandlingWordCount() {
+    this.specialHandlingCharachtersCount = this.specialHandling
+      ? this.specialHandling.length
+      : 0;
+    this.specialHandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingLength}`;
+  }
   editProviderClicked(){
   this.onEditProviderProfileEvent.emit()
   this.isEditProvider = !this.isEditProvider
@@ -91,6 +102,8 @@ export class PharmacyClaimsProviderInfoComponent {
      
     }
   });
+  this.specialHandling = this.vendorProfile.address.specialHandlingDesc;
+  this.specialHandlingWordCount();
   this.createContactsFormArray() 
 }
 createContactsFormArray() {
@@ -280,6 +293,10 @@ createPhonesFormArray(contact: any): FormArray {
     if(this.profileForm.controls['tin'].value.trim().length>=9){
       this.validateTin(this.profileForm.controls['tin'].value);
     }
+  }
+  onSpecialHandlingValueChange(event: any): void {
+    this.specialHandlingCharachtersCount = event.length;
+    this.specialHandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingLength}`;
   }
   validateTin(tinNbr: any) {
     this.tinValidationFacade.showLoader();

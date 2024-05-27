@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CaseAssignmentComponent } from './components/case-assignment/case-assignment.component';
 import { CaseAssignmentPageComponent } from './containers/case-assignment-page/case-assignment-page.component';
 import { EligibilityCheckPageComponent } from './containers/eligibility-check-page/eligibility-check-page.component';
  
@@ -14,7 +13,7 @@ const routes: Routes = [
     },
   },
   {
-    path: 'case-management',
+    path: 'case-assignment',
     component: CaseAssignmentPageComponent,
     data: {
       title: 'Case Assignment',

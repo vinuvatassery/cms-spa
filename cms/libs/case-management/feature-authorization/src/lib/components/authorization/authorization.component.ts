@@ -92,6 +92,8 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   saveForLaterModelText:any;
   confirmationModelText:any;
   entityType: string = EntityTypeCode.Client;
+  authorization!: any;
+  caseManagerEmail: any = null;
 
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
@@ -118,8 +120,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   {
     this.loadUserContactInfo(this.clientId, this.clientCaseEligibilityId);
     this.buildForm();
-    //this.addApplicationSignatureDetailsSubscription();
+    this.addApplicationSignatureDetailsSubscription();
     this.addSaveSubscription();
+    this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
   }
 
@@ -131,7 +134,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.templateHeader = 'CER Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
-        this.saveForLaterHeadterText = "Email Draft Saved";
+        this.saveForLaterHeadterText = "Send CER Authorization Email Later?";
         this.saveForLaterModelText="You must send the  Cer Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
@@ -141,10 +144,10 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.templateHeader = 'CER Authorization Letter';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
-        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterHeadterText = "Send CER Authorization Letter Later?";
         this.saveForLaterModelText="You must send the  CerAuthorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText="This action cannot be undone.";
+        this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
       }
     }else{
       if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
@@ -153,8 +156,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
-        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
-        this.saveForLaterHeadterText = "Email Draft Saved";
+        this.saveForLaterHeadterText = "Send Authorization Email Later?";
         this.saveForLaterModelText="You must send the  Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
@@ -164,7 +166,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.templateHeader = 'Application Authorization Letter';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
-        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterHeadterText = "Send Authorization Letter Later?";
         this.saveForLaterModelText="You must send the  Authorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send Letter to Print?';
         this.confirmationModelText="This action cannot be undone.";
@@ -190,9 +192,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
                 if(data?.email?.email !== null){
                   this.toEmail.push(data?.email?.email.trim());
                 }
-              this.loadPendingEsignRequestInfo();
               }
               this.getNotificationTypeCode(this.paperlessFlag ? true : false);
+              this.loadPendingEsignRequestInfo();
             }
             this.loaderService.hide();
       },
@@ -238,8 +240,11 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       if (resp?.applicantSignedDate) {
         this.signedApplication = resp;
         this.authorizationForm?.get('applicantSignedDate')?.patchValue(new Date(resp?.applicantSignedDate));
-        const signatureNotedDate = resp?.signatureNotedDate ? formatDate(new Date(resp?.signatureNotedDate), 'MM-dd-yyyy') : '';
-        this.authorizationForm?.get('signatureNotedDate')?.patchValue(signatureNotedDate);
+        const signatureNotedDate = resp?.signatureNotedDate == null ? null : formatDate(new Date(resp?.signatureNotedDate), 'MM-dd-yyyy');
+        if(signatureNotedDate != null){
+          this.authorizationForm?.get('signatureNotedDate')?.patchValue(signatureNotedDate);
+          this.dateSignatureNoted = signatureNotedDate;
+        }
         if (resp.signedApplication) {
           this.copyOfSignedApplication = [
             {
@@ -323,9 +328,11 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     const isLargeFile = (this.uploadedCopyOfSignedApplication?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
     if (applicationSignedDate?.value > new Date()) {
       this.invalidSignatureDate$.next(true);
+      this.invalidApplicantSignatureDate$.next(false);
       isValid = false;
     }
     if (applicationSignedDate?.value < new Date(this.minApplicantSignedDate)) {
+      this.invalidSignatureDate$.next(false);
       this.invalidApplicantSignatureDate$.next(true);
       isValid = false;
     }
@@ -441,6 +448,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.updateDataPoints('copyOfSignedApplication', true);
     this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
     this.saveDateAndSignedDoc();
+    this.ref.detectChanges();
   }
 
   handleFileRemoved(e: SelectEvent) {
@@ -458,6 +466,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
             this.loaderService.hide();
             this.updateDataPoints('copyOfSignedApplication', false);
             this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
+            this.ref.detectChanges();          
           }
         },
         error: (err) => {
@@ -472,6 +481,7 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       this.updateDataPoints('copyOfSignedApplication', false);
       this.loaderService.hide();
       this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
+      this.ref.detectChanges();
     }
 
   }
@@ -514,30 +524,37 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     if (signedDate == null) {
       this.currentDate = signedDate;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
+      this.updateDataPoints('applicantSignedDate', false);
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+      this.invalidApplicantSignatureDate$.next(false);
+      this.invalidSignatureDate$.next(false);
+      this.ref.detectChanges();
     }
     else if (signedDate > todayDate) {
       this.currentDate = signedDate;
       this.cerDateValidator = true;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+      this.validate();
     }else if (signedDate < new Date(this.minApplicantSignedDate)) {
       this.currentDate = signedDate;
       this.cerDateValidator = true;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+      this.validate();
     }else{
       this.currentDate = event;
       this.dateSignatureNoted = formatDate(new Date(todayDate), 'MM-dd-yyyy');
       this.authorizationForm?.get('signatureNotedDate')?.patchValue(this.dateSignatureNoted)
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
       this.saveDateAndSignedDoc();
+      this.ref.detectChanges();
     }
   }
 
   saveDateAndSignedDoc() {
     this.loaderService.show();
-    const authorization = {
+    this.authorization = {
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       applicantSignedDate: this.intl.formatDate(this.authorizationForm?.get('applicantSignedDate')?.value, this.dateFormat),
       signatureNotedDate: this.intl.formatDate(new Date(this.authorizationForm?.get('signatureNotedDate')?.value), this.dateFormat),
@@ -546,21 +563,25 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     }
     if (this.uploadedCopyOfSignedApplication) {
       const documentId = this.copyOfSignedApplication?.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
-      authorization.signedApplication = {
+      this.authorization.signedApplication = {
         documentId: documentId,
         documentName: this.uploadedCopyOfSignedApplication.name,
         documentSize: this.uploadedCopyOfSignedApplication.size,
         documentTypeCode: this.documentTypeCode,
       }
     }
-    this.authorizationFacade.saveDateSignedAndSignedFile(authorization).subscribe({
+    this.authorizationFacade.saveDateSignedAndSignedFile(this.authorization).subscribe({
       next: (response) => {
         if(response){
-          this.updateDataPoints('applicantSignedDate', false);
-          this.updateDataPoints('signatureNotedDate', false);
-          this.updateDataPoints('copyOfSignedApplication', false);
+          if(this.authorization?.applicantSignedDate){
+            this.updateDataPoints('applicantSignedDate', true);
+          }
+          if(this.uploadedCopyOfSignedApplication){
+          this.updateDataPoints('copyOfSignedApplication', true);
+          }
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Authorization Saved Successfully!");
+        this.ref.detectChanges();
         }
       },
       error: (err) => {
@@ -578,19 +599,23 @@ updateSendEmailSuccessStatus(event:any){
 
 loadPendingEsignRequestInfo(){
   this.loaderService.show();
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail : CommunicationEventTypeCode.ApplicationAuthorizationEmail)
+  let flowName = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail : CommunicationEventTypeCode.ApplicationAuthorizationEmail;
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', flowName ?? '')
     .subscribe({
       next: (data: any) =>{
         if (data != null && data?.esignRequestId != null) {
-          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.InProgress){
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.Started|| data?.esignRequestStatusCode == EsignStatusCode.InProgress){
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
             this.isSendEmailClicked=true;
             this.getLoggedInUserProfile();
+            if(this.signedApplication === null || this.signedApplication === undefined){
+              this.loadAuthorization();
+              }
           }
           else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
-            this.isSendEmailClicked=true;
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
             this.isCERApplicationSigned = true;
+            this.isSendEmailClicked = true;
             this.loadCompletedEsignRequestInfo();
             this.getLoggedInUserProfile();
           }else if(data?.esignRequestStatusCode == EsignStatusCode.Failed){
@@ -652,7 +677,7 @@ onGetSignedApplicationClicked(){
 }
 
 loadAuthorization() {
-  this.loaderService.show()
+  this.loaderService.show();
   this.authorizationFacade.bindAuthorizationDetails(this.clientCaseEligibilityId ?? '', CommunicationEventTypeCode.CopyOfSignedApplication ?? '')
   .subscribe({
     next: (data: any) => {
@@ -674,8 +699,10 @@ loadAuthorization() {
               documentId: data?.signedApplication?.documentId,
             },
           ];
+          this.isSendEmailClicked = false;
         }
         this.updateInitialDataPoints(data?.applicantSignedDate, data.signedApplication);
+        this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
       }
       this.loaderService.hide();
     },

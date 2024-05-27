@@ -7,7 +7,7 @@ import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/k
 import { forkJoin, mergeMap, of, Subscription, tap, first, filter } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, ButtonType, CaseStatusCode, ContactFacade, WorkflowTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, ButtonType, CaseStatusCode, ContactFacade, WorkflowTypeCode, ContactInfo } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -65,6 +65,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   sendNewEmailModalDialogService : any;
   paperless$ = this.contactFacade.paperless$;
   paperlessFlag!: any;
+  ifClientHasAddress = false;
   data: Array<any> = [
     {
       text: '',
@@ -104,7 +105,10 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   isWorkflowReady$ = this.workflowFacade.workflowReady$;
   isSaveButtonEnabled$ = this.workflowFacade.isSaveButtonEnabled$;
   showSplitButton$ = this.workflowFacade.showSplitButton$;
+  updateCaseStatusSubscription$! : Subscription ;
   showButton:boolean = true;
+  caseManagerEmail: any = null;
+
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
@@ -135,7 +139,46 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showCancelApplicationPopup();
     this.resetReadOnlyView();
     this.showSplitButtonSubscriptionInitializer();
-    this.paperLessFlagContactInfoChangeSubscription()
+    this.paperLessFlagContactInfoChangeSubscription();
+    this.workflowFacade.savedForLaterCompleted$
+    .subscribe(res =>{
+     if(res){
+      this.isShowSaveLaterPopup = false;
+     this.updateCaseStatusSubscription$ = this.caseFacade.updateCaseStatus(this.workflowFacade.clientCaseId, this.currentStatusCode,this.workflowFacade.clientCaseEligibilityId)
+       .subscribe({
+         next: (casesResponse: any) => {
+           this.workflowFacade.caseStatus = this.currentStatusCode;
+           this.caseFacade.loadActiveSession();
+           this.loaderService.hide();     
+           this.cdr.detectChanges()  
+           if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+            if (this.workflowType === WorkflowTypeCode.NewCase) {
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+            else {
+              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
+            }
+          }else {
+            if(this.workflowType === WorkflowTypeCode.NewCase){
+              this.router.navigate(['/case-management/cases']);
+
+            }else{
+              this.router.navigate([`/case-management/cases/case360/${this.clientId}`]);
+            }
+          }
+         },
+         error: (err: any) => {
+           this.loaderService.hide();
+           this.loggingService.logException(err);
+           this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+         }
+       })
+     }
+    })
   }
 
   ngOnDestroy(): void {
@@ -146,6 +189,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showSendNewsLetterSubscription.unsubscribe();
     this.showCancelApplicationSubscription.unsubscribe();
     this.showSplitButtonSubscription.unsubscribe();
+    this.updateCaseStatusSubscription$?.unsubscribe();
   }
 
   paperLessFlagContactInfoChangeSubscription(){
@@ -397,10 +441,36 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   private addConfirmationPopupSubscription(): void {
     this.showConfirmationPopupSubscription = this.workflowFacade.saveForLaterConfirmationClicked$.subscribe((val) => {
       if (val) {
-        this.isShowSaveLaterPopup = true;
-        this.sendLetterFlag = '';
-        this.currentStatusCode = '';
-        this.isSubmitted = false;
+        if(!this.workflowFacade.clientCaseEligibilityId && ! this.workflowFacade.clientId){
+          this.ifClientHasAddress = false;
+          if(this.workflowFacade.ApplicationDetailsValidationsSuccess){
+          this.isShowSaveLaterPopup = true;
+          }else{
+            this.isShowSaveLaterPopup = false;
+          this.router.navigate(['/case-management/cases']);
+
+          }
+          return;
+        }
+        this.loaderService.show()
+        this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '', this.prevClientCaseEligibilityId ?? '').subscribe({
+          next: (data: ContactInfo) => {
+            this.loaderService.hide()
+            console.log(data)
+            if( data.address?.length && data.address?.length >0 || data.email?.email){
+              this.ifClientHasAddress = true;
+            }      
+            else{
+              this.ifClientHasAddress = false;
+            }  
+            this.isShowSaveLaterPopup = true;
+            this.sendLetterFlag = '';
+            this.currentStatusCode = '';
+            this.isSubmitted = false;
+            this.cdr.detectChanges()
+          }
+      });
+     
       }
     });
   }
@@ -457,30 +527,21 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   onUpdateCaseStatusClicked() {    
     this.isSubmitted = true;
+ 
     if (this.currentStatusCode != "") {
       this.loaderService.show();
-      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId).subscribe({
-        next: (casesResponse: any) => {
-          this.loaderService.hide();
-          this.workflowFacade.caseStatus = this.currentStatusCode;
-          if (this.sendLetterFlag == StatusFlag.Yes) {
-            this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
-            this.workflowFacade.saveForLater(true);
-          }
-          else {
-            this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
-            this.workflowFacade.saveForLater(false);
-          }
-          this.isShowSaveLaterPopup = false;
-          this.cdr.detectChanges()
-          this.caseFacade.loadActiveSession();
-        },
-        error: (err: any) => {
-          this.loaderService.hide();
-          this.loggingService.logException(err);
-          this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-        }
-      })
+    
+      this.clientCaseEligibilityId = this.clientCaseEligibilityId == null ? this.workflowFacade.clientCaseEligibilityId : this.clientCaseEligibilityId;
+
+     
+   if (this.sendLetterFlag == StatusFlag.Yes) {
+    this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
+    this.workflowFacade.saveForLater(true);
+  }
+  else {
+    this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
+    this.workflowFacade.saveForLater(false);
+  }
     }
   }
 

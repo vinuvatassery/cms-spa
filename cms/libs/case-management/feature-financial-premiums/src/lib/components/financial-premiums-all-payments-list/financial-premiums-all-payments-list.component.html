@@ -119,7 +119,11 @@
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gt-operator></kendo-filter-gt-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lt-operator></kendo-filter-lt-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -132,7 +136,11 @@
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gt-operator></kendo-filter-gt-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lt-operator></kendo-filter-lt-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -197,10 +205,13 @@
 
     <kendo-grid-column field="pcaCode" title="PCA" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
+          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
-        </kendo-grid-numeric-filter-menu>
+          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
 
@@ -316,7 +327,7 @@
 </ng-template>
 
 <ng-template #PrintAuthorizationDialogTemplate>
-  <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Preview & Print Authorization Letter(s)</kendo-dialog-titlebar>
 <cms-financial-premiums-print-authorization
 [printOption]="true"
 [items]="selectedAllPaymentsList"

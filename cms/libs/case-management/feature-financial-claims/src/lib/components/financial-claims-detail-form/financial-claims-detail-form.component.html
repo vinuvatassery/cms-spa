@@ -187,12 +187,16 @@
                                                         formatPlaceholder="formatPattern"
                                                         formControlName="serviceStartDate" placeholder=""
                                                         [min]="minServiceDate"
+                                                        [max]="todayDate"
                                                         (valueChange)="onDateChange(i)">
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
                                                     *ngIf="(isControlValid('serviceStartDate', i) == true)"
                                                    > Service Start Date is required
+                                                </kendo-formerror>
+                                                <kendo-formerror *ngIf="(isStartGreaterThanCurrentDate(i))" >
+                                                    Service Start date must be equal to or less than current date
                                                 </kendo-formerror>
                                             </div>
                                             <div class="flex-col flex-col-6">
@@ -202,6 +206,7 @@
                                                         formatPlaceholder="formatPattern" placeholder=""
                                                         formControlName="serviceEndDate"
                                                         [min]="minServiceDate"
+                                                        [max]="todayDate"
                                                         (valueChange)="onDateChange(i)">
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
@@ -210,6 +215,9 @@
                                                 </kendo-formerror>
                                                 <kendo-formerror *ngIf="(isStartEndDateError(i))" >
                                                     Service End date must be equal to or greater than start date
+                                                </kendo-formerror>
+                                                <kendo-formerror *ngIf="(isEndGreaterThanCurrentDate(i))">
+                                                    Service End date must be equal to or less than current date
                                                 </kendo-formerror>
                                             </div>
                                             <div class="ml-2">
@@ -473,7 +481,7 @@
                 (click)="closeAddEditClaimsFormModalClicked(false)"> Cancel </button>
 
             <button kendoButton [primary]="true" [attr.aria-label]="addOrEdit" (click)="save(false)">
-                {{addOrEdit}}
+                {{addOrEdit}} 
             </button>
     </div>
 </kendo-dialog-actions>

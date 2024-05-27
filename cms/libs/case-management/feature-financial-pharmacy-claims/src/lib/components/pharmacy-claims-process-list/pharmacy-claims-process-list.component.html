@@ -95,10 +95,11 @@
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist 
         textField="lovDesc" 
-        valueField="lovCode"
+        valueField="lovDesc"
         [data]="paymentMethodType$ | async" 
         [value]="paymentMethodFilter" 
         [valuePrimitive]="true"
+        [(ngModel)]="selectedPaymentMethod"
         (valueChange)="dropdownFilterChange('paymentMethodDesc',$event, filterService)">
         </kendo-dropdownlist>
       </ng-template>     
@@ -186,10 +187,11 @@
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist
           textField="lovDesc" 
-          valueField="lovCode" 
-          [data]="paymentStatus$ | async" 
+          valueField="lovDesc" 
+          [data]="pharmacyPaymentStatusList" 
           [value]="paymentStatusFilter" 
           [valuePrimitive]="true"
+          [(ngModel)]="selectedPaymentStatus"
           (valueChange)="dropdownFilterChange('paymentStatusDesc',$event, filterService)">
         </kendo-dropdownlist>
       </ng-template>

@@ -1,6 +1,6 @@
 <!-- Table Top Filter, Search and Export -->
 
-<p class="mt-2"> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
+<p class="mt-2"> Click “Bulk” to execute bulk actions for one or more claims. Click on a row to view that claim.</p>
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
@@ -331,7 +331,7 @@
 
 
     <ng-template #PrintAuthorizationDialogTemplate>
-      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Preview & Print Authorization Letter(s)</kendo-dialog-titlebar>
     <cms-financial-claims-print-authorization
     [printOption]="true"
     [items]="selectedAllPaymentsList"
