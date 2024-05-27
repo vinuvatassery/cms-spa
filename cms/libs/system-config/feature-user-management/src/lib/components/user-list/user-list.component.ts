@@ -1,12 +1,14 @@
 /** Angular **/
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges , ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, OnDestroy, TemplateRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ColumnBase, ColumnComponent, ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription, debounceTime } from 'rxjs';
-import { DocumentFacade, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, DocumentFacade, NotificationSnackbarService, NotificationSource, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { Router } from '@angular/router';
+import { NotificationService } from '@progress/kendo-angular-notification';
 
 @Component({
   selector: 'system-config-user-list',
@@ -35,6 +37,13 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() exportButtonShow$ = this.documentFacade.exportButtonShow$;
   deactivateUserStatus$ = this.userManagementFacade.deactivateUser$;
   deactivatSubscription!: Subscription;
+  userStatus$ = this.userManagementFacade.canUserBeDeactivated$;
+  userAssignedActiveClientStatusSubscription!: Subscription;
+  public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
+  public duration =
+    this.configurationProvider.appSettings.snackbarAnimationDuration;
+  @ViewChild('notificationTemplate', { static: true }) notificationTemplate!: TemplateRef<any>;
+
 
   public state!: any;
   sortColumn = 'User Name';
@@ -92,8 +101,14 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     private readonly documentFacade: DocumentFacade,
     private userManagementFacade: UserManagementFacade,
     private readonly notificationSnackbarService : NotificationSnackbarService,
+    private configurationProvider:ConfigurationProvider,
+    private readonly notificationService: NotificationService,
+    private router: Router,
+    private readonly loaderService: LoaderService,
+    
   ) {
     this.notifyOnReactivatingUser();
+    this.IsUserValidForDeactivation();
   }
   public moreactions = [
     {
@@ -286,8 +301,8 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     if(data.loginUserId)
     {
       this.loginUserId = data.loginUserId;
+      this.userManagementFacade.getUserAssignedActiveClientCount(data.loginUserId);
     }
-    this.isUserDeactivatePopup = true;
   }
 
   onUserReactivateClicked(data: any) {
@@ -505,5 +520,36 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     if(this.deactivatSubscription){
       this.deactivatSubscription.unsubscribe();
   }
+  if(this.userAssignedActiveClientStatusSubscription){
+    this.userAssignedActiveClientStatusSubscription.unsubscribe();
+  }
 }
+
+  navigateToDetails() {
+    this.router.navigate(['/system-config/cases/case-assignment']);
+  }
+
+  IsUserValidForDeactivation(){
+    this.userAssignedActiveClientStatusSubscription = this.userStatus$.subscribe((response: any) => {
+      if(response.status > 0){
+        this.isUserDeactivatePopup = true;
+        this.cdr.detectChanges();
+        this.loaderService.hide();
+      }
+      else
+      {
+          this.notificationService.show({
+          content: this.notificationTemplate,        
+          position: { horizontal: 'center', vertical: 'top' },
+          animation: { type: 'fade', duration: this.duration },
+          closable: true,
+          type: { style: "error", icon: true },        
+          cssClass: 'reminder-notification-bar',
+          hideAfter:this.hideAfter
+        });
+        this.loaderService.hide();
+      }
+    });
+  }
+
 }
