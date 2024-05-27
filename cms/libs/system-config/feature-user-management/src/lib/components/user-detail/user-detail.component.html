@@ -31,6 +31,7 @@
         <kendo-floatinglabel text="PNumber or ORNumber">
           <kendo-textbox [fillMode]="formUiStyle.inputFillMode"
           formControlName="pNumber"
+          [disabled]="isEditValue"
           (valueChange)="onPNumberValueChange($event)"> </kendo-textbox>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="userFormControls?.pNumber.errors?.required
@@ -99,6 +100,7 @@
         textField="roleDesc"  
         formControlName="role"
         (valueChange)="onRoleValueChange($event)"
+        
         ></kendo-multiselect>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="userFormControls?.role.errors?.required

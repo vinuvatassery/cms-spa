@@ -27,14 +27,14 @@ export class UserDetailComponent implements OnInit {
   deactivate = "Inactive";
   ddlUserRole$ = this.userManagementFacade.ddlUserRole$;
   userAccessTypeLov$ = this.lovFacade.userAccessTypeLov$;
-  userRoleTypeCode$ = this.lovFacade.userRoleTypeLov$;
   caseManagerDomainLov$ = this.lovFacade.caseManagerDomainLov$;
   caseManagerAssistorGrp$ = this.lovFacade.caseManagerAssistorGrp$;
   pNumberSearchSubject$ = this.userManagementFacade.pNumberSearchSubject$;
   addUserResponse$ = this.userManagementFacade.addUserResponse$;
+  loginUserDetail$ = this.userManagementFacade.loginUserDetail$;
+
   isDeactivateValue!: boolean;
   userAccessTypeLovData: any = null;
-  userRoleTypeCodeLovData: any = null;
   isCaseManagerSelected = true;
   isAccessTypeInternal = true;
   activeFlag = 'Y';
@@ -43,13 +43,18 @@ export class UserDetailComponent implements OnInit {
   selectedUserRolesList: any = [];
   userFormGroup!: FormGroup;
   selectedDomain: any = null;
+  domainLovList: any = [];
   selectedGroup: any = null;
+  groupLovList: any = [];
+  userRoleLov: any = [];
   isFormSubmit: boolean = false;
   adUserPNumberData: any = null;
   isPNumberValueChanging: boolean = false;
   enteredPnumberValue: any;
   isRequestingPNumber: boolean = false;
   isPNumberAlreadyExists: boolean = false;
+  userDetailData: any;  
+  userDetailRoles: any = [];
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
@@ -60,13 +65,17 @@ export class UserDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildUserForm();
-    this.subscribeLovData();
-    this.loadDdlUserRole();
+    this.subscribeLovData();    
     this.lovFacade.getUserAccessTypeLov();
-    this.lovFacade.getRoleTypeLov();
     this.lovFacade.getCaseManagerDomainLov();
     this.lovFacade.getCaseManagerAssistorGrpLov();
     this.disableFields();
+    if(!this.isEditValue){
+      this.loadDdlUserRole();
+    }
+    if(this.isEditValue){
+      this.getUserDetail();      
+    }
   }
 
   private buildUserForm(){
@@ -90,6 +99,7 @@ export class UserDetailComponent implements OnInit {
 
   private loadDdlUserRole() {    
     if(this.userRoleType == "") return;
+    this.userFormGroup.controls["role"].setValue([]);
     this.userManagementFacade.loadDdlUserRole(this.userRoleType, this.activeFlag);
   }
 
@@ -101,9 +111,35 @@ export class UserDetailComponent implements OnInit {
       error: (err) => {},
     });
 
-    this.userRoleTypeCode$.subscribe({
+    this.caseManagerDomainLov$.subscribe({
       next: (data) => {
-        this.userRoleTypeCodeLovData = data;
+        this.domainLovList = data;
+      },
+      error: (err) => {},
+    });
+    
+    this.caseManagerAssistorGrp$.subscribe({
+      next: (data) => {
+        this.groupLovList = data;
+      },
+      error: (err) => {},
+    });
+
+    this.ddlUserRole$.subscribe({
+      next: (data) => {
+        this.userRoleLov = data;
+        if(this.isEditValue){
+          let selectedRoleValues: any = [];
+          for(var role of this.userDetailRoles){
+            var roleData = data.filter((x: any)=> x.roleCode == role);
+            if(roleData && roleData.length > 0){
+              this.selectedUserRolesList.push(roleData[0].roleId);
+              selectedRoleValues.push(roleData[0]);
+            }            
+          }
+          this.userFormGroup.controls["role"].setValue(selectedRoleValues);
+          this.cd.detectChanges();
+        }
       },
       error: (err) => {},
     });
@@ -148,7 +184,13 @@ export class UserDetailComponent implements OnInit {
 
   onUserAccessValueChange(event: Event){
     let value = (event.target as HTMLInputElement).value.toUpperCase();
-    if(value == UserAccessType.Internal){
+    this.userRoleType = this.getUserRoleType(value);
+    this.userTypeBasedValidation();
+    this.loadDdlUserRole();
+  }
+
+  userTypeBasedValidation() {
+    if(this.userRoleType == UserAccessType.Internal){
       this.isAccessTypeInternal = true;
       this.setValidators(null, Validators.required);
     }else{
@@ -156,8 +198,6 @@ export class UserDetailComponent implements OnInit {
       this.setValidators(Validators.required, null);              
     }
     this.disableFields();
-    this.userRoleType = this.getUserRoleType(value);
-    this.loadDdlUserRole();
   }
 
   setValidators(vaidator: any, pNumberValidator: any){
@@ -207,6 +247,10 @@ export class UserDetailComponent implements OnInit {
       this.userFormGroup.controls["lastName"].enable();
       this.userFormGroup.controls["email"].enable();
     }
+    if(this.isEditValue){
+      this.userFormGroup.controls["pNumber"].disable();
+      this.userFormGroup.controls["userAccessType"].disable();
+    }
   }
 
   onUserSaveButtonClick(){
@@ -230,8 +274,13 @@ export class UserDetailComponent implements OnInit {
       pOrNbr: formControls["pNumber"].value,
       jobTitle: formControls["jobTitle"].value,
       adUserId: formControls["adUserId"].value,
+      loginUserId: this.userId
     };
-    this.userManagementFacade.addUser(user);
+    if(!this.isEditValue){
+      this.userManagementFacade.addUser(user);
+    }else{
+      this.userManagementFacade.updateUserDetail(user);
+    }    
   }
 
   onRoleValueChange(roles: any){
@@ -248,9 +297,6 @@ export class UserDetailComponent implements OnInit {
     this.refreshGrid.emit();
   }
 
-
-
-
   onDeactivateClicked()
     {
       this.isUserDeactivatePopup = true;
@@ -259,6 +305,7 @@ export class UserDetailComponent implements OnInit {
   onPNumberValueChange(pNumber: any) {
     if(pNumber == ""){
       this.isPNumberValueChanging = false
+      return;
     } else {
       this.isPNumberValueChanging = true;
     }    
@@ -272,6 +319,35 @@ export class UserDetailComponent implements OnInit {
   onCancel(){
     this.isDeactivatePopupOpened.emit();
     this.isDeactivateValue = true;
+  }
+
+  getUserDetail() {
+    this.userManagementFacade.getUserDetail(this.userId);
+    this.loginUserDetail$.subscribe({
+      next: (user: any) => {
+        this.userDetailData = user;
+        this.userAccessType = user.userTypeCode;
+        this.userRoleType = this.getUserRoleType(user.userTypeCode);
+        this.userTypeBasedValidation();
+        this.userDetailRoles = user.roles;
+        this.loadDdlUserRole();
+        let formControls = this.userFormGroup.controls;
+        formControls["firstName"].setValue(user.firstName == null ? '' : user.firstName);
+        formControls["lastName"].setValue(user.lastName == null ? '' : user.lastName);
+        formControls["email"].setValue(user.email);  
+        formControls["jobTitle"].setValue(user.JobTitle == null ? '' : user.jobTitle);
+        formControls["adUserId"].setValue(user.adUserId == null ? '' : user.adUserId);
+        formControls["pNumber"].setValue(user.pOrNbr == null ? '' : user.pOrNbr);
+
+        formControls["domain"].setValue(user.domainCode == null ? '' : user.domainCode);
+        let domain = this.domainLovList.filter((x:any) => x.lovCode == user.domainCode);
+        this.selectedDomain = domain.length > 0 ? domain[0] : null;
+
+        formControls["group"].setValue(user.assistorGroupCode == null ? '' : user.assistorGroupCode);
+        let group = this.groupLovList.filter((x: any) => x.lovCode == user.assistorGroupCode)
+        this.selectedGroup = group.length > 0 ? group[0] : user.assistorGroupCode; 
+      }
+    })
   }
 
 

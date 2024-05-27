@@ -31,10 +31,11 @@ export class HivVerificationListComponent implements OnInit {
   hasDisabledSubmit = true;
   formValid = true;
   submit ="Submit";
-  saveToApplication="Saved To Application"
+  saveToApplication="Save To Application"
   submitButtonText:any ="Submit"
   confirmationBodyText!:any;
   confirmButtonText!:any;
+  confirmHeaderText!:any;
   toSave:
   {
     clientHivVerificationId: any,
@@ -151,10 +152,12 @@ export class HivVerificationListComponent implements OnInit {
     if(saveItems[0].status === this.acceptStatus){
       this.confirmationBodyText = "The HIV verification will be accepted and added to their application and attachments";
       this.confirmButtonText = "SAVE";
+      this.confirmHeaderText = "Save HIV verification?";
     }
     else if(saveItems[0].status === this.rejectStatus){
       this.confirmationBodyText = "The HIV verification will be rejected and added to their profile attachments.  This action cannot be undone";
       this.confirmButtonText = "REJECT" ;
+      this.confirmHeaderText = "Reject HIV verification?";
     }
     if(this.formValid){
       this.onSubmitConfirmClicked(this.submitRequestModalDialog);        
