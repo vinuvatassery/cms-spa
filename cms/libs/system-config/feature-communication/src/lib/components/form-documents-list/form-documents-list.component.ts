@@ -43,6 +43,7 @@ export class FormDocumentsListComponent implements OnInit {
     this.uploadNewVersionDocument$.subscribe((res:any) =>{
       this.uploadFileDialog?.close()
     })
+    this.onShowActiveClickedEvent();
     this.gridState$.subscribe((res:any)=>{
       if(res){
       this.sortOrder = this.folderSortLovList.filter((x :any)=> x.lovCode == res.gridState)[0]
