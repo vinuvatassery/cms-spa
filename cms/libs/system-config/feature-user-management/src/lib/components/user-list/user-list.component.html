@@ -196,3 +196,8 @@
     [userId]="loginUserId" [status]="inActive" (closeDeactivateUsers)="onUserDeactivateClosed()" (refreshGrid)="loadUserListGrid()" ></system-config-deactivate-user-confirmation>
 </kendo-dialog>
 
+<ng-template #notificationTemplate>
+  <span>User has assigned clients. </span>
+  <a class="notification-link" (click)="navigateToDetails()">Re-assign their clients</a>
+  <span> before deactivating.</span>
+</ng-template>
