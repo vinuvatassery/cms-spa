@@ -1,10 +1,9 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, TemplateRef, ViewChild, OnDestroy, OnInit} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, TemplateRef, ViewChild, OnDestroy} from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { NotificationService } from '@progress/kendo-angular-notification';
-import { NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
+import { NotificationSnackbarService, SnackBarNotificationType, NotificationSource ,ConfigurationProvider} from '@cms/shared/util-core';
 import { Router } from '@angular/router';
-import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Subscription } from 'rxjs';
 
 @Component({
