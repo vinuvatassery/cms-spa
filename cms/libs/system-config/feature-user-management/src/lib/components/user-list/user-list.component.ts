@@ -109,24 +109,6 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
         this.onUserDetailsClicked(true);
       },
     },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Deactivate',
-      icon: 'block',
-      type: 'Deactivate',
-      click: (data: any): void => {
-        this.onUserDeactivateClicked(data);
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Reactivate',
-      icon: 'done',
-      type: 'Reactivate',
-      click: (data: any): void => {
-        this.onUserReactivateClicked(data);
-      }
-    },
   ];
 
 
