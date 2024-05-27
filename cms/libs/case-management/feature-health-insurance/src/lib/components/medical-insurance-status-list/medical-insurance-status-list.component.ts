@@ -441,7 +441,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   }
 
   onProviderNameClick(event: any) {
-    debugger
     this.onProviderNameClickEvent.emit(event);
   }
 

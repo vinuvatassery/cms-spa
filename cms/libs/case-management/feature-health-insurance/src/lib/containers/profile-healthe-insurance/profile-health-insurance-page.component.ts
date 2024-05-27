@@ -198,7 +198,6 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.clientCaseEligibilityId,this.tabId);
    }
    onProviderNameClick(event: any) {
-    debugger
     this.vendorId = event;
     this.providerDetailsDialog = this.dialogService.open({
       content: this.providerDetailsTemplate,
@@ -216,12 +215,10 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   }
 
   getProviderPanel(event: any) {
-    debugger
     this.financialVendorFacade.getProviderPanel(event);
   }
 
   updateProviderProfile(event: any) {
-    console.log(event);
     this.financialVendorFacade.updateProviderPanel(event);
   }
 
