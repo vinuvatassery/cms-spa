@@ -249,8 +249,7 @@
                         <div class="flex-col flex-col-6">
                             <button kendoButton [primary]="true" class="fullwidbtn" (click)="createAccountClicked()">
                                 CREATE USER ACCOUNT</button>
-                            <button kendoButton (click)="onOpenInsuranceActivationEmailSentClicked()"> email Sent
-                                Success popup</button>
+                         
                         </div>
 
                     </div>
@@ -278,10 +277,11 @@
                             <div class="flex-col flex-col-6">
                                 <kendo-floatinglabel text="Member ID">
                                     <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                </kendo-floatinglabel> 
+                                </kendo-floatinglabel>
                             </div>
                             <div class="flex-col">
-                                <kendo-formhint>If you don’t have your Member ID, please contact us at one of the phone numbers to the right.</kendo-formhint>
+                                <kendo-formhint>If you don’t have your Member ID, please contact us at one of the phone
+                                    numbers to the right.</kendo-formhint>
 
                             </div>
                         </div>
@@ -306,13 +306,14 @@
                                 </kendo-floatinglabel>
                             </div>
                             <div class="flex-col">
-                                <kendo-formerror  > <span class="material-icons">
-                                    info
+                                <kendo-formerror> <span class="material-icons">
+                                        info
                                     </span>
-                                    We could not find you in the system. Please verify the information you entered and try again.
-                    </kendo-formerror>
-                                 
-                                </div>
+                                    We could not find you in the system. Please verify the information you entered and
+                                    try again.
+                                </kendo-formerror>
+
+                            </div>
                         </div>
                         <div class="flex-col flex-col-6 stepper_btn_wrap">
                             <button kendoButton [primary]="true" class="fullwidbtn"> CREATE USER ACCOUNT</button>
@@ -391,149 +392,146 @@
                                         </fieldset>
                                     </div>
                                 </div>
-                                >
-                            </div>
 
-                            <div class="form-innercontainer">
-                                <h3>Personal Information</h3>
-                                <div class=" ac-block">
+                            </div>
+                        </div>
+                        <div class="form-innercontainer">
+                            <h3>Personal Information</h3>
+                            <div class=" ac-block">
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel class="k-form" text="First Name">
+                                            <kendo-textbox placeholder="First Name"
+                                                [fillMode]="formUiStyle.inputFillMode">
+                                            </kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel class="k-form" text="Middle Initial (optional)">
+                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+                                </div>
+                                <div class="flex-row">
+                                    <div class="flex-col-6 flex-col">
+                                        <kendo-floatinglabel class="k-form" text="Last Name">
+                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+
+                                </div>
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="First Name on Official ID (Optional)">
+                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="Last Name on Official ID (Optional)">
+                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+                                </div>
+
+                                <div class="flex-row">
+                                    <div class="flex-col-6 flex-col">
+                                        <kendo-floatinglabel class="k-form" text="Date of Birth">
+                                            <kendo-datepicker [fillMode]="formUiStyle.inputFillMode"></kendo-datepicker>
+                                        </kendo-floatinglabel>
+                                    </div>
+                                </div>
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="Social Security Number">
+                                            <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+
+                                    <div class="flex-col flex-col-6">
+                                        <span class="app-checkboxwidtext-wrapper mt-4">
+                                            <input type="checkbox" kendoCheckBox aria-labelledby="don’thaveaSSN"
+                                                id="don’thaveaSSN" />
+                                            <label class="k-checkbox-label" for="don’thaveaSSN">I don’t have a
+                                                SSN</label>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-innercontainer">
+                            <h3>Security Questions</h3>
+
+                            <div class="ac-block">
+
+
+                                <div class="ac-block-fields mb-4">
+                                    <h5>We will ask these questions to verify your identity if you ever forget your
+                                        sign
+                                        in details.</h5>
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel class="k-form" text="First Name">
-                                                <kendo-textbox placeholder="First Name"
-                                                    [fillMode]="formUiStyle.inputFillMode">
+                                            <kendo-floatinglabel text="Question 1">
+                                                <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
+                                                </kendo-dropdownlist>
+                                            </kendo-floatinglabel>
+                                        </div>
+                                    </div>
+                                    <div class="flex-row">
+                                        <div class="flex-col flex-col-6">
+                                            <kendo-floatinglabel class="k-form" text="Answer">
+                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
                                                 </kendo-textbox>
                                             </kendo-floatinglabel>
                                         </div>
-
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel class="k-form" text="Middle Initial (optional)">
-                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-                                    <div class="flex-row">
-                                        <div class="flex-col-6 flex-col">
-                                            <kendo-floatinglabel class="k-form" text="Last Name">
-                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-
                                     </div>
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="First Name on Official ID (Optional)">
-                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Last Name on Official ID (Optional)">
-                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex-row">
-                                        <div class="flex-col-6 flex-col">
-                                            <kendo-floatinglabel class="k-form" text="Date of Birth">
-                                                <kendo-datepicker
-                                                    [fillMode]="formUiStyle.inputFillMode"></kendo-datepicker>
+                                            <kendo-floatinglabel text="Question 1">
+                                                <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
+                                                </kendo-dropdownlist>
                                             </kendo-floatinglabel>
                                         </div>
                                     </div>
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Social Security Number">
-                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                            <kendo-floatinglabel class="k-form" text="Answer">
+                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                                                </kendo-textbox>
                                             </kendo-floatinglabel>
                                         </div>
-
+                                    </div>
+                                    <div class="flex-row">
                                         <div class="flex-col flex-col-6">
-                                            <span class="app-checkboxwidtext-wrapper mt-4">
-                                                <input type="checkbox" kendoCheckBox aria-labelledby="don’thaveaSSN"
-                                                    id="don’thaveaSSN" />
-                                                <label class="k-checkbox-label" for="don’thaveaSSN">I don’t have a
-                                                    SSN</label>
-                                            </span>
+                                            <kendo-floatinglabel text="Question 1">
+                                                <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
+                                                </kendo-dropdownlist>
+                                            </kendo-floatinglabel>
+                                        </div>
+                                    </div>
+                                    <div class="flex-row">
+                                        <div class="flex-col flex-col-6">
+                                            <kendo-floatinglabel class="k-form" text="Answer">
+                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                                                </kendo-textbox>
+                                            </kendo-floatinglabel>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-innercontainer">
-                                <h3>Security Questions</h3>
+                        </div>
+                        <div class="flex-col">
+                            <span class="app-checkboxwidtext-wrapper mt-1">
+                                <input type="checkbox" kendoCheckBox aria-labelledby="don’thaveaSSN"
+                                    id="don’thaveaSSN" />
+                                <label class="k-checkbox-label" for="don’thaveaSSN">I agree with all statements in
+                                    <a>Terms of Service</a></label>
+                            </span>
 
-                                <div class="ac-block">
-
-
-                                    <div class="ac-block-fields mb-4">
-                                        <h5>We will ask these questions to verify your identity if you ever forget your
-                                            sign
-                                            in details.</h5>
-                                        <div class="flex-row">
-                                            <div class="flex-col flex-col-6">
-                                                <kendo-floatinglabel text="Question 1">
-                                                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
-                                                    </kendo-dropdownlist>
-                                                </kendo-floatinglabel>
-                                            </div>
-                                        </div>
-                                        <div class="flex-row">
-                                            <div class="flex-col flex-col-6">
-                                                <kendo-floatinglabel class="k-form" text="Answer">
-                                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-                                                    </kendo-textbox>
-                                                </kendo-floatinglabel>
-                                            </div>
-                                        </div>
-                                        <div class="flex-row">
-                                            <div class="flex-col flex-col-6">
-                                                <kendo-floatinglabel text="Question 1">
-                                                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
-                                                    </kendo-dropdownlist>
-                                                </kendo-floatinglabel>
-                                            </div>
-                                        </div>
-                                        <div class="flex-row">
-                                            <div class="flex-col flex-col-6">
-                                                <kendo-floatinglabel class="k-form" text="Answer">
-                                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-                                                    </kendo-textbox>
-                                                </kendo-floatinglabel>
-                                            </div>
-                                        </div>
-                                        <div class="flex-row">
-                                            <div class="flex-col flex-col-6">
-                                                <kendo-floatinglabel text="Question 1">
-                                                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
-                                                    </kendo-dropdownlist>
-                                                </kendo-floatinglabel>
-                                            </div>
-                                        </div>
-                                        <div class="flex-row">
-                                            <div class="flex-col flex-col-6">
-                                                <kendo-floatinglabel class="k-form" text="Answer">
-                                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-                                                    </kendo-textbox>
-                                                </kendo-floatinglabel>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex-col">
-                                <span class="app-checkboxwidtext-wrapper mt-1">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="don’thaveaSSN"
-                                        id="don’thaveaSSN" />
-                                    <label class="k-checkbox-label" for="don’thaveaSSN">I agree with all statements in
-                                        <a>Terms of Service</a></label>
-                                </span>
-
-                            </div>
-                            <div class="flex-col flex-col-6 stepper_btn_wrap">
-                                <button kendoButton [primary]="true" class="fullwidbtn"> CREATE USER ACCOUNT</button>
-                            </div>
-
+                        </div>
+                        <div class="flex-col flex-col-6 stepper_btn_wrap">
+                            <button kendoButton [primary]="true" class="fullwidbtn"> CREATE USER ACCOUNT</button>
                         </div>
                     </div>
                 </div>
@@ -567,752 +565,857 @@
                             <div class="form-innercontainer">
                                 <h3 class="text-bold">Personal Information</h3>
                                 <div class=" ac-block">
-                        <section>
-                            <h5 class="text-bold mb-1">Sexual Orientation and Gender Identity</h5>
-                            <h5>What pronouns do they use? (check all that apply)</h5>
-                            <div class="component-list-h">
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="pronounsSheHerHers"
-                                        id="pronounsSheHerHers" />
-                                    <label class="k-checkbox-label" for="pronounsSheHerHers">She/Her/Hers</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="pronounsHeHimHis"
-                                        id="pronounsHeHimHis" />
-                                    <label class="k-checkbox-label" for="pronounsHeHimHis">He/Him/His</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="pronounsTheyThemTheirs"
-                                        id="pronounsTheyThemTheirs" />
-                                    <label class="k-checkbox-label"
-                                        for="pronounsTheyThemTheirs">They/Them/Theirs</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="pronounsElla"
-                                        id="pronounsElla" />
-                                    <label class="k-checkbox-label" for="pronounsElla">Ella</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="pronounsÉl" id="pronounsÉl" />
-                                    <label class="k-checkbox-label" for="pronounsÉl">Él</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="pronounsElles"
-                                        id="pronounsElles" />
-                                    <label class="k-checkbox-label" for="pronounsElles">Elles</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="noPronounsUseTheirName"
-                                        id="noPronounsUseTheirName" />
-                                    <label class="k-checkbox-label" for="noPronounsUseTheirName">No pronouns, use their
-                                        name</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox id="notListedPleaseSpecify"
-                                        aria-labelledby="notListedPleaseSpecify" />
-                                    <label class="k-checkbox-label" for="notListedPleaseSpecify">Not listed, please
-                                        specify:</label>
-                                    <kendo-floatinglabel text="Enter Pronouns">
-                                        <kendo-textbox aria-label="enter pronouns"
-                                            [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="dontKnowWhatTheQuestionIs"
-                                        id="dontKnow1" />
-                                    <label class="k-checkbox-label" for="dontKnow1">Don’t know what this question is
-                                        asking</label>
-                                </span>
-                                <span class="option-with-check app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox id="dontWantToAnswer"
-                                        aria-labelledby="dontWantToAnswer" />
-                                    <label class="k-checkbox-label" for="dontWantToAnswer">Don’t want to answer</label>
-                                </span>
-                            </div>
-                            <div class="flex-row mb-4">
-                                <div class="flex-col flex-col-8">
-                                    <kendo-floatinglabel text="How do they describe their gender? Optional">
-                                        <kendo-textbox aria-label="how do they describe their gender"
-                                            [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                    <section>
+                                        <h5 class="text-bold mb-1">Sexual Orientation and Gender Identity</h5>
+                                        <h5>What pronouns do they use? (check all that apply)</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox
+                                                    aria-labelledby="pronounsSheHerHers" id="pronounsSheHerHers" />
+                                                <label class="k-checkbox-label"
+                                                    for="pronounsSheHerHers">She/Her/Hers</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="pronounsHeHimHis"
+                                                    id="pronounsHeHimHis" />
+                                                <label class="k-checkbox-label"
+                                                    for="pronounsHeHimHis">He/Him/His</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox
+                                                    aria-labelledby="pronounsTheyThemTheirs"
+                                                    id="pronounsTheyThemTheirs" />
+                                                <label class="k-checkbox-label"
+                                                    for="pronounsTheyThemTheirs">They/Them/Theirs</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="pronounsElla"
+                                                    id="pronounsElla" />
+                                                <label class="k-checkbox-label" for="pronounsElla">Ella</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="pronounsÉl"
+                                                    id="pronounsÉl" />
+                                                <label class="k-checkbox-label" for="pronounsÉl">Él</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="pronounsElles"
+                                                    id="pronounsElles" />
+                                                <label class="k-checkbox-label" for="pronounsElles">Elles</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox
+                                                    aria-labelledby="noPronounsUseTheirName"
+                                                    id="noPronounsUseTheirName" />
+                                                <label class="k-checkbox-label" for="noPronounsUseTheirName">No
+                                                    pronouns, use their
+                                                    name</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox id="notListedPleaseSpecify"
+                                                    aria-labelledby="notListedPleaseSpecify" />
+                                                <label class="k-checkbox-label" for="notListedPleaseSpecify">Not listed,
+                                                    please
+                                                    specify:</label>
+                                                <kendo-floatinglabel text="Enter Pronouns">
+                                                    <kendo-textbox aria-label="enter pronouns"
+                                                        [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox
+                                                    aria-labelledby="dontKnowWhatTheQuestionIs" id="dontKnow1" />
+                                                <label class="k-checkbox-label" for="dontKnow1">Don’t know what this
+                                                    question is
+                                                    asking</label>
+                                            </span>
+                                            <span class="option-with-check app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox id="dontWantToAnswer"
+                                                    aria-labelledby="dontWantToAnswer" />
+                                                <label class="k-checkbox-label" for="dontWantToAnswer">Don’t want to
+                                                    answer</label>
+                                            </span>
+                                        </div>
+                                        <div class="flex-row mb-4">
+                                            <div class="flex-col flex-col-8">
+                                                <kendo-floatinglabel text="How do they describe their gender? Optional">
+                                                    <kendo-textbox aria-label="how do they describe their gender"
+                                                        [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
-                                    </kendo-floatinglabel>
-                                </div>
-                                <div class="flex-col flex-col-4 pt-3">
-                                    <span class="app-checkboxwidtext-wrapper">
-                                        <input type="checkbox" kendoCheckBox
-                                            aria-labelledby="describeGenderNotApplicable" id="genderNotApplicable" />
-                                        <label class="k-checkbox-label" for="genderNotApplicable">Not Applicable</label>
-                                    </span>
-                                </div>
-                            </div>
-                        </section>
-                        <section>
-                            <h5>What is their gender? Select all that apply</h5>
-                            <div class="component-list-h">
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="womanOrGirl"
-                                        id="womanOrGirl" />
-                                    <label class="k-checkbox-label" for="womanOrGirl">Woman or Girl</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="manOrBoy" id="manOrBoy" />
-                                    <label class="k-checkbox-label" for="manOrBoy">Man or Boy</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="agenderOrNoGender"
-                                        id="agenderOrNoGender" />
-                                    <label class="k-checkbox-label" for="agenderOrNoGender">Agender or No Gender</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="feminineLearning"
-                                        id="feminineLearning" />
-                                    <label class="k-checkbox-label" for="feminineLearning">Feminine leaning</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="masculineLearning"
-                                        id="masculineLearning" />
-                                    <label class="k-checkbox-label" for="masculineLearning">Masculine Learning</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="nonBinary" id="nonBinary" />
-                                    <label class="k-checkbox-label" for="nonBinary">Non-binary</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="questioning"
-                                        id="questioning" />
-                                    <label class="k-checkbox-label" for="questioning">Questioning</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="genderNotListedPleaseSpecify"
-                                        id="genderNotListedPleaseSpecify" />
-                                    <label class="k-checkbox-label" for="genderNotListedPleaseSpecify">Not listed,
-                                        please specify:</label>
-                                    <kendo-floatinglabel text="Enter Gender">
-                                        <kendo-textbox aria-label="enter gender" [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-textbox>
-
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="dontKnow3" id="dontKnow3" />
-                                    <label class="k-checkbox-label" for="dontKnow3">Don't know</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="dontKnowWhatTheQuestionIs"
-                                        id="dontKnow4" />
-                                    <label class="k-checkbox-label" for="dontKnow4">Don't know what this question is
-                                        asking</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="dontWantToAnswer1"
-                                        id="dontWantToAnswer1" />
-                                    <label class="k-checkbox-label" for="dontWantToAnswer1">Don't want to answer</label>
-                                </span>
-                            </div>
-                        </section>
-
-                        <section>
-                            <h5 class="mt-3">Are they transgender?</h5>
-                            <div class="component-list-h">
-                                <span>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-8">
-                                            <div class="component-list-h">
-                                                <span class="app-radiobtnwidtext-wrapper">
-                                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
-                                                        id="conditions" />
-                                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                                </span>
-                                                <span class="app-radiobtnwidtext-wrapper">
-                                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
-                                                        id="conditions1" />
-                                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                                </span>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                            <div class="flex-col flex-col-4 pt-3">
                                                 <span class="app-checkboxwidtext-wrapper">
                                                     <input type="checkbox" kendoCheckBox
-                                                        aria-labelledby="genderNotListedPleaseSpecify"
-                                                        id="genderNotListedPleaseSpecify" />
-                                                    <label class="k-checkbox-label"
-                                                        for="genderNotListedPleaseSpecify">Not listed, please
-                                                        specify:</label>
-                                                    <kendo-floatinglabel text="Enter Gender">
-                                                        <kendo-textbox aria-label="enter gender"
-                                                            [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-
-                                                    </kendo-floatinglabel>
-                                                </span>
-                                                <span class="app-checkboxwidtext-wrapper">
-                                                    <input type="checkbox" kendoCheckBox aria-labelledby="dontKnow3"
-                                                        id="dontKnow3" />
-                                                    <label class="k-checkbox-label" for="dontKnow3">Don't know</label>
-                                                </span>
-                                                <span class="app-checkboxwidtext-wrapper">
-                                                    <input type="checkbox" kendoCheckBox
-                                                        aria-labelledby="dontKnowWhatTheQuestionIs" id="dontKnow4" />
-                                                    <label class="k-checkbox-label" for="dontKnow4">Don't know what this
-                                                        question is asking</label>
-                                                </span>
-                                                <span class="app-checkboxwidtext-wrapper">
-                                                    <input type="checkbox" kendoCheckBox
-                                                        aria-labelledby="dontWantToAnswer1" id="dontWantToAnswer1" />
-                                                    <label class="k-checkbox-label" for="dontWantToAnswer1">Don't want
-                                                        to answer</label>
+                                                        aria-labelledby="describeGenderNotApplicable"
+                                                        id="genderNotApplicable" />
+                                                    <label class="k-checkbox-label" for="genderNotApplicable">Not
+                                                        Applicable</label>
                                                 </span>
                                             </div>
                                         </div>
-                                    </div>
-                                </span>
-                            </div>
-                            <div class="flex-row mt-1">
-                                <div class="flex-col flex-col-8">
-                                    <kendo-floatinglabel
-                                        text="How do they describe their sexual orientation or sexual identity?">
-
-                                        <kendo-textbox
-                                            aria-label="how do they describe their sexual orientation or sexual identity"
-                                            [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-
-                                    </kendo-floatinglabel>
-                                </div>
-                                <div class="flex-col flex-col-4 mt-3">
-                                    <span class="app-checkboxwidtext-wrapper">
-                                        <input type="checkbox" aria-labelledby="sexualOrientationNotApplicable"
-                                            id="notApplicable" kendoCheckBox />
-                                        <label class="k-checkbox-label" for="notApplicable">Not Applicable</label>
-                                    </span>
-                                </div>
-                            </div>
-                        </section>
-                        <section>
-                            <h5>
-                                What is their sexual orientation or sexual identity? (Select all that apply)
-                            </h5>
-                            <div class="component-list-h">
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" aria-labelledby="sameGenderLoving" id="sameGenderLoving"
-                                        kendoCheckBox />
-                                    <label class="k-checkbox-label" for="sameGenderLoving">Same-gender loving</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="lesbian" id="lesbian" />
-                                    <label class="k-checkbox-label" for="lesbian">Lesbian</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="gay" id="gay" />
-                                    <label class="k-checkbox-label" for="gay">Gay</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="bisexual" id="bisexual" />
-                                    <label class="k-checkbox-label" for="bisexual">Bisexual</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="straight" id="straight" />
-                                    <label class="k-checkbox-label" for="straight">Straight</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="pansexual" id="pansexual" />
-                                    <label class="k-checkbox-label" for="pansexual">Pansexual</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="asexual" id="asexual" />
-                                    <label class="k-checkbox-label" for="asexual">Asexual</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="queer" id="queer" />
-                                    <label class="k-checkbox-label" for="queer">Queer</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="notListedPleaseSpecify1"
-                                        id="notListedPleaseSpecify1" />
-                                    <label class="k-checkbox-label" for="notListedPleaseSpecify1">Not listed, please
-                                        specify:</label>
-                                    <kendo-floatinglabel text="Enter sexual orientation or sexual identity">
-
-                                        <kendo-textbox aria-label="sexual orientation"
-                                            [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="dontKnow5" id="dontKnow5" />
-                                    <label class="k-checkbox-label" for="dontKnow5">Don't know</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="dontKnowWhatTheQuestionIs"
-                                        id="dontKnow6" />
-                                    <label class="k-checkbox-label" for="dontKnow6">Don't know what this question is
-                                        asking</label>
-                                </span>
-                                <span class="app-checkboxwidtext-wrapper">
-                                    <input type="checkbox" kendoCheckBox aria-labelledby="dontWantToAnswer2"
-                                        id="dontWantToAnswer2" />
-                                    <label class="k-checkbox-label" for="dontWantToAnswer2">Don't want to answer</label>
-                                </span>
-                            </div>
-                        </section>
-
-                        <section>
-                            <h5 class="mt-3">What is their sex assigned at birth? Optional</h5>
-                            <div class="component-list-h">
-                                <span>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-8">
-
-                                            <span class="app-radiobtnwidtext-wrapper">
-                                                <input type="radio" kendoRadioButton id="Female" value="Female"
-                                                    name="gender" aria-labelledby="Female" />
-
-                                                <kendo-label class="k-radio-label" text="Female"></kendo-label>
-
-
+                                    </section>
+                                    <section>
+                                        <h5>What is their gender? Select all that apply</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="womanOrGirl"
+                                                    id="womanOrGirl" />
+                                                <label class="k-checkbox-label" for="womanOrGirl">Woman or Girl</label>
                                             </span>
-                                            <span class="app-radiobtnwidtext-wrapper">
-                                                <input type="radio" kendoRadioButton id="Male" value="Male"
-                                                    name="gender" aria-labelledby="Male" />
-
-                                                <kendo-label class="k-radio-label" text="Male"></kendo-label>
-
-
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="manOrBoy"
+                                                    id="manOrBoy" />
+                                                <label class="k-checkbox-label" for="manOrBoy">Man or Boy</label>
                                             </span>
-                                            <span class="app-radiobtnwidtext-wrapper">
-                                                <input type="radio" kendoRadioButton id="Intersex" value="Intersex"
-                                                    name="gender" aria-labelledby="Intersex" />
-
-                                                <kendo-label class="k-radio-label" text="Intersex"></kendo-label>
-
-
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="agenderOrNoGender"
+                                                    id="agenderOrNoGender" />
+                                                <label class="k-checkbox-label" for="agenderOrNoGender">Agender or No
+                                                    Gender</label>
                                             </span>
-                                            <span class="app-radiobtnwidtext-wrapper">
-                                                <input type="radio" kendoRadioButton id="Not listed, please specify:"
-                                                    value="Not listed, please specify:" name="gender"
-                                                    aria-labelledby="Not listed, please specify:" />
-
-                                                <kendo-label class="k-radio-label"
-                                                    text="Not listed, please specify:"></kendo-label>
-
-
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="feminineLearning"
+                                                    id="feminineLearning" />
+                                                <label class="k-checkbox-label" for="feminineLearning">Feminine
+                                                    leaning</label>
                                             </span>
-                                            <span class="app-radiobtnwidtext-wrapper">
-                                                <input type="radio" kendoRadioButton id="Not listed, please specify:"
-                                                    value="Not listed, please specify:" name="gender"
-                                                    aria-labelledby="Not listed, please specify:" />
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="masculineLearning"
+                                                    id="masculineLearning" />
+                                                <label class="k-checkbox-label" for="masculineLearning">Masculine
+                                                    Learning</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="nonBinary"
+                                                    id="nonBinary" />
+                                                <label class="k-checkbox-label" for="nonBinary">Non-binary</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="questioning"
+                                                    id="questioning" />
+                                                <label class="k-checkbox-label" for="questioning">Questioning</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox
+                                                    aria-labelledby="genderNotListedPleaseSpecify"
+                                                    id="genderNotListedPleaseSpecify" />
+                                                <label class="k-checkbox-label" for="genderNotListedPleaseSpecify">Not
+                                                    listed,
+                                                    please specify:</label>
+                                                <kendo-floatinglabel text="Enter Gender">
+                                                    <kendo-textbox aria-label="enter gender"
+                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
 
-                                                <kendo-label class="k-radio-label"
-                                                    text="Not listed, please specify:"></kendo-label>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="dontKnow3"
+                                                    id="dontKnow3" />
+                                                <label class="k-checkbox-label" for="dontKnow3">Don't know</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox
+                                                    aria-labelledby="dontKnowWhatTheQuestionIs" id="dontKnow4" />
+                                                <label class="k-checkbox-label" for="dontKnow4">Don't know what this
+                                                    question is
+                                                    asking</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="dontWantToAnswer1"
+                                                    id="dontWantToAnswer1" />
+                                                <label class="k-checkbox-label" for="dontWantToAnswer1">Don't want to
+                                                    answer</label>
+                                            </span>
+                                        </div>
+                                    </section>
 
-                                                <kendo-floatinglabel text="Enter sex assigned at birth">
-                                                    <kendo-textbox aria-label="sex assigned at birth"
+                                    <section>
+                                        <h5 class="mt-3">Are they transgender?</h5>
+                                        <div class="component-list-h">
+                                            <span>
+                                                <div class="flex-row">
+                                                    <div class="flex-col flex-col-8">
+                                                        <div class="component-list-h">
+                                                            <span class="app-radiobtnwidtext-wrapper">
+                                                                <input type="radio" kendoRadioButton
+                                                                    name="rdoEmotionalConditions"
+                                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                                    id="conditions" />
+                                                                <kendo-label class="k-radio-label"
+                                                                    text="Yes"></kendo-label>
+                                                            </span>
+                                                            <span class="app-radiobtnwidtext-wrapper">
+                                                                <input type="radio" kendoRadioButton
+                                                                    name="rdoEmotionalConditions"
+                                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                                    id="conditions1" />
+                                                                <kendo-label class="k-radio-label"
+                                                                    text="No"></kendo-label>
+                                                            </span>
+                                                            <span class="app-checkboxwidtext-wrapper">
+                                                                <input type="checkbox" kendoCheckBox
+                                                                    aria-labelledby="genderNotListedPleaseSpecify"
+                                                                    id="genderNotListedPleaseSpecify" />
+                                                                <label class="k-checkbox-label"
+                                                                    for="genderNotListedPleaseSpecify">Not listed,
+                                                                    please
+                                                                    specify:</label>
+                                                                <kendo-floatinglabel text="Enter Gender">
+                                                                    <kendo-textbox aria-label="enter gender"
+                                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                                    </kendo-textbox>
+
+                                                                </kendo-floatinglabel>
+                                                            </span>
+                                                            <span class="app-checkboxwidtext-wrapper">
+                                                                <input type="checkbox" kendoCheckBox
+                                                                    aria-labelledby="dontKnow3" id="dontKnow3" />
+                                                                <label class="k-checkbox-label" for="dontKnow3">Don't
+                                                                    know</label>
+                                                            </span>
+                                                            <span class="app-checkboxwidtext-wrapper">
+                                                                <input type="checkbox" kendoCheckBox
+                                                                    aria-labelledby="dontKnowWhatTheQuestionIs"
+                                                                    id="dontKnow4" />
+                                                                <label class="k-checkbox-label" for="dontKnow4">Don't
+                                                                    know what this
+                                                                    question is asking</label>
+                                                            </span>
+                                                            <span class="app-checkboxwidtext-wrapper">
+                                                                <input type="checkbox" kendoCheckBox
+                                                                    aria-labelledby="dontWantToAnswer1"
+                                                                    id="dontWantToAnswer1" />
+                                                                <label class="k-checkbox-label"
+                                                                    for="dontWantToAnswer1">Don't want
+                                                                    to answer</label>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </div>
+                                        <div class="flex-row mt-1">
+                                            <div class="flex-col flex-col-8">
+                                                <kendo-floatinglabel
+                                                    text="How do they describe their sexual orientation or sexual identity?">
+
+                                                    <kendo-textbox
+                                                        aria-label="how do they describe their sexual orientation or sexual identity"
+                                                        [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+
+                                                </kendo-floatinglabel>
+                                            </div>
+                                            <div class="flex-col flex-col-4 mt-3">
+                                                <span class="app-checkboxwidtext-wrapper">
+                                                    <input type="checkbox"
+                                                        aria-labelledby="sexualOrientationNotApplicable"
+                                                        id="notApplicable" kendoCheckBox />
+                                                    <label class="k-checkbox-label" for="notApplicable">Not
+                                                        Applicable</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5>
+                                            What is their sexual orientation or sexual identity? (Select all that apply)
+                                        </h5>
+                                        <div class="component-list-h">
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" aria-labelledby="sameGenderLoving"
+                                                    id="sameGenderLoving" kendoCheckBox />
+                                                <label class="k-checkbox-label" for="sameGenderLoving">Same-gender
+                                                    loving</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="lesbian"
+                                                    id="lesbian" />
+                                                <label class="k-checkbox-label" for="lesbian">Lesbian</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="gay" id="gay" />
+                                                <label class="k-checkbox-label" for="gay">Gay</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="bisexual"
+                                                    id="bisexual" />
+                                                <label class="k-checkbox-label" for="bisexual">Bisexual</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="straight"
+                                                    id="straight" />
+                                                <label class="k-checkbox-label" for="straight">Straight</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="pansexual"
+                                                    id="pansexual" />
+                                                <label class="k-checkbox-label" for="pansexual">Pansexual</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="asexual"
+                                                    id="asexual" />
+                                                <label class="k-checkbox-label" for="asexual">Asexual</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="queer"
+                                                    id="queer" />
+                                                <label class="k-checkbox-label" for="queer">Queer</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox
+                                                    aria-labelledby="notListedPleaseSpecify1"
+                                                    id="notListedPleaseSpecify1" />
+                                                <label class="k-checkbox-label" for="notListedPleaseSpecify1">Not
+                                                    listed, please
+                                                    specify:</label>
+                                                <kendo-floatinglabel text="Enter sexual orientation or sexual identity">
+
+                                                    <kendo-textbox aria-label="sexual orientation"
                                                         [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
                                                 </kendo-floatinglabel>
                                             </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="dontKnow5"
+                                                    id="dontKnow5" />
+                                                <label class="k-checkbox-label" for="dontKnow5">Don't know</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox
+                                                    aria-labelledby="dontKnowWhatTheQuestionIs" id="dontKnow6" />
+                                                <label class="k-checkbox-label" for="dontKnow6">Don't know what this
+                                                    question is
+                                                    asking</label>
+                                            </span>
+                                            <span class="app-checkboxwidtext-wrapper">
+                                                <input type="checkbox" kendoCheckBox aria-labelledby="dontWantToAnswer2"
+                                                    id="dontWantToAnswer2" />
+                                                <label class="k-checkbox-label" for="dontWantToAnswer2">Don't want to
+                                                    answer</label>
+                                            </span>
                                         </div>
-                                    </div>
-                                </span>
-                            </div>
-                            <div class="flex-row mt-1">
-                                <div class="flex-col flex-col-10">
-                                    <h5>Race, Ethnicity, Language and Disability</h5>
-                                    <kendo-floatinglabel
-                                        text="Race, ethnicity, tribal affiliation, country of origin, or ancestry">
-                                        <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #tareaRaceAndEthinicities
-                                            resizable="auto" aria-label="describe race and ethnicity">
-                                            <kendo-textarea-suffix class="justify-content-end">
-                                                <span class="tareacounter">{{ 0/200
-                                                    }}</span>
-                                            </kendo-textarea-suffix>
-                                        </kendo-textarea>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3 mb-0">
-                                Which options describe their Racial or Ethnic Identity? (Select all that
-                                apply)
-                            </h5>
-                            <div class="flex-row">
-                                <div class="flex-col">
-                                    <kendo-floatinglabel text="Racial or Ethnic Identities"
-                                        class="k-multiselect-wrapper">
-                                        <span unselectable="on"
-                                            class="k-button-icon k-icon k-i-arrow-s multi-dropdown-icon"
-                                            aria-label="dropdown arrow" aria-hidden="true"></span>
+                                    </section>
 
-                                        <kendo-multiselect [checkboxes]="true" [clearButton]="false" [autoClose]="false"
-                                            [fillMode]="formUiStyle.dropDownFillMode" [textField]="'racialName'"
-                                            [valueField]="'racialName'"
-                                            [popupSettings]="{ popupClass: popupClassMultiSelect, animate: true }">
-                                            <ng-template kendoMultiSelectHeaderTemplate let-dataItem>
-                                                <div class="input-search">
-                                                    <span class="material-icons" aria-label="search racial identity"
-                                                        aria-hidden="true">search</span>
-                                                    <kendo-floatinglabel text="Search">
-                                                        <kendo-textbox aria-label="search racial identity"
-                                                            [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                    <section>
+                                        <h5 class="mt-3">What is their sex assigned at birth? Optional</h5>
+                                        <div class="component-list-h">
+                                            <span>
+                                                <div class="flex-row">
+                                                    <div class="flex-col flex-col-8">
 
-                                                    </kendo-floatinglabel>
+                                                        <span class="app-radiobtnwidtext-wrapper">
+                                                            <input type="radio" kendoRadioButton id="Female"
+                                                                value="Female" name="gender" aria-labelledby="Female" />
+
+                                                            <kendo-label class="k-radio-label"
+                                                                text="Female"></kendo-label>
+
+
+                                                        </span>
+                                                        <span class="app-radiobtnwidtext-wrapper">
+                                                            <input type="radio" kendoRadioButton id="Male" value="Male"
+                                                                name="gender" aria-labelledby="Male" />
+
+                                                            <kendo-label class="k-radio-label"
+                                                                text="Male"></kendo-label>
+
+
+                                                        </span>
+                                                        <span class="app-radiobtnwidtext-wrapper">
+                                                            <input type="radio" kendoRadioButton id="Intersex"
+                                                                value="Intersex" name="gender"
+                                                                aria-labelledby="Intersex" />
+
+                                                            <kendo-label class="k-radio-label"
+                                                                text="Intersex"></kendo-label>
+
+
+                                                        </span>
+                                                        <span class="app-radiobtnwidtext-wrapper">
+                                                            <input type="radio" kendoRadioButton
+                                                                id="Not listed, please specify:"
+                                                                value="Not listed, please specify:" name="gender"
+                                                                aria-labelledby="Not listed, please specify:" />
+
+                                                            <kendo-label class="k-radio-label"
+                                                                text="Not listed, please specify:"></kendo-label>
+
+
+                                                        </span>
+                                                        <span class="app-radiobtnwidtext-wrapper">
+                                                            <input type="radio" kendoRadioButton
+                                                                id="Not listed, please specify:"
+                                                                value="Not listed, please specify:" name="gender"
+                                                                aria-labelledby="Not listed, please specify:" />
+
+                                                            <kendo-label class="k-radio-label"
+                                                                text="Not listed, please specify:"></kendo-label>
+
+                                                            <kendo-floatinglabel text="Enter sex assigned at birth">
+                                                                <kendo-textbox aria-label="sex assigned at birth"
+                                                                    [fillMode]="formUiStyle.inputFillMode">
+                                                                </kendo-textbox>
+
+                                                            </kendo-floatinglabel>
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </ng-template>
-                                            <ng-template kendoMultiSelectItemTemplate let-dataItem>
-                                                <span class="app-checkboxwidtext-wrapper">
-                                                    <input type="checkbox" kendoCheckBox aria-labelledby="racialName"
-                                                        id="racialName" />
-                                                    <label class="k-checkbox-label" for="racialName">{{
-                                                        dataItem.racialName
-                                                        }}</label>
-                                                </span>
-                                            </ng-template>
-                                        </kendo-multiselect>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mb-0">
-                                If they selected multiple, is there one they think of as their primary
-                                racial or ethnic identity?
-                            </h5>
-                            <div class="flex-row">
-                                <div class="flex-col flex-col-4">
-                                    <kendo-floatinglabel text="Primary identity">
-                                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode">
-                                        </kendo-dropdownlist>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3">Do you need materials in alternate format (Braille, large print, audio
-                                recordings, etc.)?</h5>
-                            <div class="component-list-h">
-                                <span>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-8">
-                                            <div class="component-list-h">
-                                                <span class="app-radiobtnwidtext-wrapper">
-                                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
-                                                        id="conditions" />
-                                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                                    <kendo-floatinglabel text="Enter Gender">
-                                                        <kendo-textbox aria-label="enter gender"
-                                                            [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                                                    </kendo-floatinglabel>
-                                                </span>
-                                                <span class="app-radiobtnwidtext-wrapper">
-                                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
-                                                        id="conditions1" />
-                                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="flex-row mt-1">
+                                            <div class="flex-col flex-col-10">
+                                                <h5>Race, Ethnicity, Language and Disability</h5>
+                                                <kendo-floatinglabel
+                                                    text="Race, ethnicity, tribal affiliation, country of origin, or ancestry">
+                                                    <kendo-textarea [fillMode]="formUiStyle.inputFillMode"
+                                                        #tareaRaceAndEthinicities resizable="auto"
+                                                        aria-label="describe race and ethnicity">
+                                                        <kendo-textarea-suffix class="justify-content-end">
+                                                            <span class="tareacounter">{{ 0/200
+                                                                }}</span>
+                                                        </kendo-textarea-suffix>
+                                                    </kendo-textarea>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3 mb-0">
+                                            Which options describe their Racial or Ethnic Identity? (Select all that
+                                            apply)
+                                        </h5>
+                                        <div class="flex-row">
+                                            <div class="flex-col">
+                                                <kendo-floatinglabel text="Racial or Ethnic Identities"
+                                                    class="k-multiselect-wrapper">
+                                                    <span unselectable="on"
+                                                        class="k-button-icon k-icon k-i-arrow-s multi-dropdown-icon"
+                                                        aria-label="dropdown arrow" aria-hidden="true"></span>
 
+                                                    <kendo-multiselect [checkboxes]="true" [clearButton]="false"
+                                                        [autoClose]="false" [fillMode]="formUiStyle.dropDownFillMode"
+                                                        [textField]="'racialName'" [valueField]="'racialName'"
+                                                        [popupSettings]="{ popupClass: popupClassMultiSelect, animate: true }">
+                                                        <ng-template kendoMultiSelectHeaderTemplate let-dataItem>
+                                                            <div class="input-search">
+                                                                <span class="material-icons"
+                                                                    aria-label="search racial identity"
+                                                                    aria-hidden="true">search</span>
+                                                                <kendo-floatinglabel text="Search">
+                                                                    <kendo-textbox aria-label="search racial identity"
+                                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                                    </kendo-textbox>
+
+                                                                </kendo-floatinglabel>
+                                                            </div>
+                                                        </ng-template>
+                                                        <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                                                            <span class="app-checkboxwidtext-wrapper">
+                                                                <input type="checkbox" kendoCheckBox
+                                                                    aria-labelledby="racialName" id="racialName" />
+                                                                <label class="k-checkbox-label" for="racialName">{{
+                                                                    dataItem.racialName
+                                                                    }}</label>
+                                                            </span>
+                                                        </ng-template>
+                                                    </kendo-multiselect>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mb-0">
+                                            If they selected multiple, is there one they think of as their primary
+                                            racial or ethnic identity?
+                                        </h5>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-4">
+                                                <kendo-floatinglabel text="Primary identity">
+                                                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode">
+                                                    </kendo-dropdownlist>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3">Do you need materials in alternate format (Braille, large
+                                            print, audio
+                                            recordings, etc.)?</h5>
+                                        <div class="component-list-h">
+                                            <span>
+                                                <div class="flex-row">
+                                                    <div class="flex-col flex-col-8">
+                                                        <div class="component-list-h">
+                                                            <span class="app-radiobtnwidtext-wrapper">
+                                                                <input type="radio" kendoRadioButton
+                                                                    name="rdoEmotionalConditions"
+                                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                                    id="conditions" />
+                                                                <kendo-label class="k-radio-label"
+                                                                    text="Yes"></kendo-label>
+                                                                <kendo-floatinglabel text="Enter Gender">
+                                                                    <kendo-textbox aria-label="enter gender"
+                                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                                    </kendo-textbox>
+                                                                </kendo-floatinglabel>
+                                                            </span>
+                                                            <span class="app-radiobtnwidtext-wrapper">
+                                                                <input type="radio" kendoRadioButton
+                                                                    name="rdoEmotionalConditions"
+                                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                                    id="conditions1" />
+                                                                <kendo-label class="k-radio-label"
+                                                                    text="No"></kendo-label>
+                                                            </span>
+
+                                                            <span class="app-checkboxwidtext-wrapper">
+                                                                <input type="checkbox" kendoCheckBox
+                                                                    aria-labelledby="dontKnow3" id="dontKnow3" />
+                                                                <label class="k-checkbox-label" for="dontKnow3">Don't
+                                                                    know</label>
+                                                            </span>
+                                                            <span class="app-checkboxwidtext-wrapper">
+                                                                <input type="checkbox" kendoCheckBox
+                                                                    aria-labelledby="dontKnowWhatTheQuestionIs"
+                                                                    id="dontKnow4" />
+                                                                <label class="k-checkbox-label" for="dontKnow4">Do you
+                                                                    need printed
+                                                                    material in larger font?</label>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </div>
+                                        <div class="flex-row mt-1">
+                                            <div class="flex-col flex-col-8">
+                                                <kendo-floatinglabel
+                                                    text="How do they describe their sexual orientation or sexual identity?">
+                                                    <kendo-textbox
+                                                        aria-label="how do they describe their sexual orientation or sexual identity"
+                                                        [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+
+                                                </kendo-floatinglabel>
+                                            </div>
+                                            <div class="flex-col flex-col-4 mt-3">
                                                 <span class="app-checkboxwidtext-wrapper">
-                                                    <input type="checkbox" kendoCheckBox aria-labelledby="dontKnow3"
-                                                        id="dontKnow3" />
-                                                    <label class="k-checkbox-label" for="dontKnow3">Don't know</label>
-                                                </span>
-                                                <span class="app-checkboxwidtext-wrapper">
-                                                    <input type="checkbox" kendoCheckBox
-                                                        aria-labelledby="dontKnowWhatTheQuestionIs" id="dontKnow4" />
-                                                    <label class="k-checkbox-label" for="dontKnow4">Do you need printed
-                                                        material in larger font?</label>
+                                                    <input type="checkbox"
+                                                        aria-labelledby="sexualOrientationNotApplicable"
+                                                        id="notApplicable" kendoCheckBox />
+                                                    <label class="k-checkbox-label" for="notApplicable">Not
+                                                        Applicable</label>
                                                 </span>
                                             </div>
                                         </div>
-                                    </div>
-                                </span>
-                            </div>
-                            <div class="flex-row mt-1">
-                                <div class="flex-col flex-col-8">
-                                    <kendo-floatinglabel
-                                        text="How do they describe their sexual orientation or sexual identity?">
-                                        <kendo-textbox
-                                            aria-label="how do they describe their sexual orientation or sexual identity"
-                                            [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-
-                                    </kendo-floatinglabel>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-4">
+                                                <kendo-floatinglabel text="Spoken language">
+                                                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-dropdownlist>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-4">
+                                                <kendo-floatinglabel text="Written language">
+                                                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-dropdownlist>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                        <div class="flex-row">
+                                            <div class="flex-col flex-col-4">
+                                                <kendo-floatinglabel text="English proficiency">
+                                                    <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-dropdownlist>
+                                                </kendo-floatinglabel>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3">Do you need an interpreter?</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                    id="conditions" />
+                                                <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+                                                <kendo-floatinglabel text="Enter Gender">
+                                                    <kendo-textbox aria-label="enter gender"
+                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                    id="conditions1" />
+                                                <kendo-label class="k-radio-label" text="No"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
+                                                    id="conditions2" />
+                                                <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer"
+                                                    t />
+                                                <kendo-label class="k-radio-label"
+                                                    text="Don’t want to answer"></kendo-label>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3">Are you deaf or do you have serious difficulty hearing?</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                    id="conditions" />
+                                                <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+                                                <kendo-floatinglabel text="Enter Gender">
+                                                    <kendo-textbox aria-label="enter gender"
+                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                    id="conditions1" />
+                                                <kendo-label class="k-radio-label" text="No"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
+                                                    id="conditions2" />
+                                                <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
+                                                <kendo-label class="k-radio-label"
+                                                    text="Don’t want to answer"></kendo-label>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3">Are you blind or do you have serious difficulty seeing, even
+                                            when wearing
+                                            glasses?</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                    id="conditions" />
+                                                <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+                                                <kendo-floatinglabel text="Enter Gender">
+                                                    <kendo-textbox aria-label="enter gender"
+                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                    id="conditions1" />
+                                                <kendo-label class="k-radio-label" text="No"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
+                                                    id="conditions2" />
+                                                <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
+                                                <kendo-label class="k-radio-label"
+                                                    text="Don’t want to answer"></kendo-label>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3">Do you have any limiting physical, mental, or emotional
+                                            conditions?</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                    id="conditions" />
+                                                <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+                                                <kendo-floatinglabel text="Enter Gender">
+                                                    <kendo-textbox aria-label="enter gender"
+                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                    id="conditions1" />
+                                                <kendo-label class="k-radio-label" text="No"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
+                                                    id="conditions2" />
+                                                <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
+                                                <kendo-label class="k-radio-label"
+                                                    text="Don’t want to answer"></kendo-label>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3">Do you have serious difficulty walking or climbing stairs?</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                    id="conditions" />
+                                                <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+                                                <kendo-floatinglabel text="Enter Gender">
+                                                    <kendo-textbox aria-label="enter gender"
+                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                    id="conditions1" />
+                                                <kendo-label class="k-radio-label" text="No"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
+                                                    id="conditions2" />
+                                                <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
+                                                <kendo-label class="k-radio-label"
+                                                    text="Don’t want to answer"></kendo-label>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3">Do you have difficulty dressing or bathing?</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                    id="conditions" />
+                                                <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+                                                <kendo-floatinglabel text="Enter Gender">
+                                                    <kendo-textbox aria-label="enter gender"
+                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                    id="conditions1" />
+                                                <kendo-label class="k-radio-label" text="No"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
+                                                    id="conditions2" />
+                                                <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
+                                                <kendo-label class="k-radio-label"
+                                                    text="Don’t want to answer"></kendo-label>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3">Do you have serious difficulty concentrating, remembering, or
+                                            making
+                                            decisions due to a physical, mental, or emotional condition?</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                    id="conditions" />
+                                                <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+                                                <kendo-floatinglabel text="Enter Gender">
+                                                    <kendo-textbox aria-label="enter gender"
+                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                    id=" conditions1" />
+                                                <kendo-label class="k-radio-label" text="No"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
+                                                    id="conditions2" />
+                                                <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
+                                                <kendo-label class="k-radio-label"
+                                                    text="Don’t want to answer"></kendo-label>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h5 class="mt-3">Do you have serious difficulty doing errands alone due to a
+                                            physical,
+                                            mental, or emotional condition?</h5>
+                                        <div class="component-list-h">
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                                                    id="conditions" />
+                                                <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+                                                <kendo-floatinglabel text="Enter Gender">
+                                                    <kendo-textbox aria-label="enter gender"
+                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                    </kendo-textbox>
+                                                </kendo-floatinglabel>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                                                    id="conditions1" />
+                                                <kendo-label class="k-radio-label" text="No"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
+                                                    id="conditions2" />
+                                                <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
+                                            </span>
+                                            <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
+                                                    aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
+                                                <kendo-label class="k-radio-label"
+                                                    text="Don’t want to answer"></kendo-label>
+                                            </span>
+                                        </div>
+                                    </section>
                                 </div>
-                                <div class="flex-col flex-col-4 mt-3">
-                                    <span class="app-checkboxwidtext-wrapper">
-                                        <input type="checkbox" aria-labelledby="sexualOrientationNotApplicable"
-                                            id="notApplicable" kendoCheckBox />
-                                        <label class="k-checkbox-label" for="notApplicable">Not Applicable</label>
-                                    </span>
-                                </div>
                             </div>
-                            <div class="flex-row">
-                                <div class="flex-col flex-col-4">
-                                    <kendo-floatinglabel text="Spoken language">
-                                        <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-dropdownlist>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                            <div class="flex-row">
-                                <div class="flex-col flex-col-4">
-                                    <kendo-floatinglabel text="Written language">
-                                        <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-dropdownlist>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                            <div class="flex-row">
-                                <div class="flex-col flex-col-4">
-                                    <kendo-floatinglabel text="English proficiency">
-                                        <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-dropdownlist>
-                                    </kendo-floatinglabel>
-                                </div>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3">Do you need an interpreter?</h5>
-                            <div class="component-list-h">
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes" id="conditions" />
-                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                    <kendo-floatinglabel text="Enter Gender">
-                                        <kendo-textbox aria-label="enter gender" [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo" id="conditions1" />
-                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-                                        id="conditions2" />
-                                    <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" t />
-                                    <kendo-label class="k-radio-label" text="Don’t want to answer"></kendo-label>
-                                </span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3">Are you deaf or do you have serious difficulty hearing?</h5>
-                            <div class="component-list-h">
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes" id="conditions" />
-                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                    <kendo-floatinglabel text="Enter Gender">
-                                        <kendo-textbox aria-label="enter gender" [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo" id="conditions1" />
-                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-                                        id="conditions2" />
-                                    <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
-                                    <kendo-label class="k-radio-label" text="Don’t want to answer"></kendo-label>
-                                </span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3">Are you blind or do you have serious difficulty seeing, even when wearing
-                                glasses?</h5>
-                            <div class="component-list-h">
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes" id="conditions" />
-                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                    <kendo-floatinglabel text="Enter Gender">
-                                        <kendo-textbox aria-label="enter gender" [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo" id="conditions1" />
-                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-                                        id="conditions2" />
-                                    <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
-                                    <kendo-label class="k-radio-label" text="Don’t want to answer"></kendo-label>
-                                </span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3">Do you have any limiting physical, mental, or emotional conditions?</h5>
-                            <div class="component-list-h">
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes" id="conditions" />
-                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                    <kendo-floatinglabel text="Enter Gender">
-                                        <kendo-textbox aria-label="enter gender" [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo" id="conditions1" />
-                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-                                        id="conditions2" />
-                                    <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
-                                    <kendo-label class="k-radio-label" text="Don’t want to answer"></kendo-label>
-                                </span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3">Do you have serious difficulty walking or climbing stairs?</h5>
-                            <div class="component-list-h">
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes" id="conditions" />
-                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                    <kendo-floatinglabel text="Enter Gender">
-                                        <kendo-textbox aria-label="enter gender" [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo" id="conditions1" />
-                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-                                        id="conditions2" />
-                                    <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
-                                    <kendo-label class="k-radio-label" text="Don’t want to answer"></kendo-label>
-                                </span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3">Do you have difficulty dressing or bathing?</h5>
-                            <div class="component-list-h">
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes" id="conditions" />
-                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                    <kendo-floatinglabel text="Enter Gender">
-                                        <kendo-textbox aria-label="enter gender" [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo" id="conditions1" />
-                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-                                        id="conditions2" />
-                                    <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
-                                    <kendo-label class="k-radio-label" text="Don’t want to answer"></kendo-label>
-                                </span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3">Do you have serious difficulty concentrating, remembering, or making
-                                decisions due to a physical, mental, or emotional condition?</h5>
-                            <div class="component-list-h">
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes" id="conditions" />
-                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                    <kendo-floatinglabel text="Enter Gender">
-                                        <kendo-textbox aria-label="enter gender" [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo" id=" conditions1" />
-                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-                                        id="conditions2" />
-                                    <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
-                                    <kendo-label class="k-radio-label" text="Don’t want to answer"></kendo-label>
-                                </span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5 class="mt-3">Do you have serious difficulty doing errands alone due to a physical,
-                                mental, or emotional condition?</h5>
-                            <div class="component-list-h">
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes" id="conditions" />
-                                    <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-                                    <kendo-floatinglabel text="Enter Gender">
-                                        <kendo-textbox aria-label="enter gender" [fillMode]="formUiStyle.inputFillMode">
-                                        </kendo-textbox>
-                                    </kendo-floatinglabel>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo" id="conditions1" />
-                                    <kendo-label class="k-radio-label" text="No"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-                                        id="conditions2" />
-                                    <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-                                </span>
-                                <span class="app-radiobtnwidtext-wrapper">
-                                    <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
-                                        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer" />
-                                    <kendo-label class="k-radio-label" text="Don’t want to answer"></kendo-label>
-                                </span>
-                            </div>
-                        </section>
-                        </div>
-                        </div>
                         </div>
                         <div class="stepper_btn_wrap">
                             <button kendoButton [primary]="true" (click)="nextProcess()"> Next <span
@@ -1694,9 +1797,9 @@
                                         </div>
                                     </div>
                                     <div class="stepper_btn_wrap">
-                                        <button kendoButton [primary]="true" (click)="previousProcess()" look="outline"> <span
-                                                class="material-icons">chevron_left</span> Back </button>
-                                        <button kendoButton [primary]="true"> Save </button>
+                                        <button kendoButton [primary]="true" (click)="previousProcess()" look="outline">
+                                            <span class="material-icons">chevron_left</span> Back </button>
+                                        <button kendoButton [primary]="true" (click)="onOpenInsuranceActivationEmailSentClicked()"> Save </button>
                                     </div>
                                 </div>
                             </section>
