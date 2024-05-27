@@ -1,11 +1,11 @@
 /** Angular **/
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, ChangeDetectorRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ColumnBase, ColumnComponent, ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Subject, debounceTime } from 'rxjs';
-import { DocumentFacade } from '@cms/shared/util-core';
+import { Subject, Subscription, debounceTime } from 'rxjs';
+import { DocumentFacade, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -14,7 +14,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit, OnChanges {
+export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
   isUserDetailsPopup = false;
@@ -33,6 +33,9 @@ export class UserListComponent implements OnInit, OnChanges {
   @Input() userListProfilePhoto$!: any;
   @Output() exportGridEvent$ = new EventEmitter<any>();
   @Input() exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  deactivateUserStatus$ = this.userManagementFacade.deactivateUser$;
+  deactivatSubscription!: Subscription;
+
   public state!: any;
   sortColumn = 'User Name';
   sortDir = 'Ascending';
@@ -88,8 +91,9 @@ export class UserListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private readonly documentFacade: DocumentFacade,
     private userManagementFacade: UserManagementFacade,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
   ) {
-
+    this.notifyOnReactivatingUser();
   }
   public moreactions = [
     {
@@ -294,8 +298,7 @@ export class UserListComponent implements OnInit, OnChanges {
           userId: data.loginUserId,
           activeFlag: this.active
         };
-        this.userManagementFacade.deactivateUser(userData);
-        this.loadUserListGrid();
+        this.userManagementFacade.deactivateUser(userData);        
       }  
   }
 
@@ -484,4 +487,23 @@ export class UserListComponent implements OnInit, OnChanges {
     return filteredOptions;
   }
 
+  notifyOnReactivatingUser(){
+    this.deactivatSubscription = this.deactivateUserStatus$.subscribe((response: any) => {
+      if(response.status > 0){
+      this.loadUserListGrid();
+      this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+    }
+    });
+  }
+
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any, title : string = '')
+  {
+        this.notificationSnackbarService.manageSnackBar(type, subtitle, NotificationSource.API, title)
+  }
+
+  ngOnDestroy(): void {     
+    if(this.deactivatSubscription){
+      this.deactivatSubscription.unsubscribe();
+  }
+}
 }

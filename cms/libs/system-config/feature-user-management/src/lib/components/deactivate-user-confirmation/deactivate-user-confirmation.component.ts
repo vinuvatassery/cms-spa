@@ -46,8 +46,8 @@ export class DeactivateUserConfirmationComponent implements OnDestroy  {
     refreshUsersGrid(){
       this.refreshGrid.emit();
     }
-    navigateToDetails() {
-      this.router.navigate(['/system-config/cases/case-management']);
+    navigateToDetails(event: Event) {
+      this.router.navigate(['/system-config/cases/case-assignment']);
     }
     onDeactivateClick()
     {
@@ -91,8 +91,7 @@ export class DeactivateUserConfirmationComponent implements OnDestroy  {
     }
   }
 
-}
-
+    }
 
 
 

@@ -33,6 +33,7 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() getFolders$: any; 
   @Output() getGridState = new EventEmitter<any>()
   uploadFileDialog :any
+  isActiveChecked: boolean = false;
 
   folderSortLovSubscription!: Subscription;
   folderSortLovList : any;
@@ -45,7 +46,6 @@ export class FormDocumentsListComponent implements OnInit {
     this.gridState$.subscribe((res:any)=>{
       if(res){
       this.sortOrder = this.folderSortLovList.filter((x :any)=> x.lovCode == res.gridState)[0]
-      console.log()
       }
     })
   }
@@ -190,7 +190,7 @@ export class FormDocumentsListComponent implements OnInit {
       active: ActiveInactiveFlag.Yes
     }
     this.sortChangeEvent.emit(this.sortOrder.lovCode.toLowerCase())
-    this.loadFolders.emit(filter);
+   this.loadFolders.emit(filter);
   }
   addFolderData(payLoad:any){
     this.addFolder.emit(payLoad);
@@ -205,7 +205,6 @@ export class FormDocumentsListComponent implements OnInit {
     this.folderSortLovSubscription = this.folderSortList$.subscribe({
       next:(response: any[]) => {
         if(response.length > 0){
-          this.sortOrder = response[0];
           this.folderSortLovList = response;
           this.getGridState.emit(true)
           this.cdr.detectChanges();
@@ -216,7 +215,7 @@ export class FormDocumentsListComponent implements OnInit {
   loadFoldersTree(){
     var filter={
       sort : true,
-      active: ActiveInactiveFlag.Yes
+      active: this.isActiveChecked ? 'A' : 'Y',
     }
     this.loadFolders.emit(filter);
   }
@@ -258,5 +257,13 @@ onNewVersionUploadButtonClicked(event:any){
     documentTemplateId : this.selectedDocument.documentTemplateId
   })
 }
-
+onShowActiveClickedEvent(){
+  const payload = {
+    active: this.isActiveChecked ? 'A' : 'Y',
+    sort : true,
+    isActiveChecked:this.isActiveChecked,
+    ischecked : this.isActiveChecked ? true:false
+  };
+  this.loadFolders.emit(payload);
+}
 }
