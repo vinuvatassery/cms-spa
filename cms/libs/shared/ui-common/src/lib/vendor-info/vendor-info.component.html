@@ -1,0 +1,55 @@
+<ng-container >
+    <kendo-dialog-titlebar (close)="closeViewProviderClicked()">{{vendorData?.vendorName}}</kendo-dialog-titlebar> 
+    <section class="k-dialog-body newcase" *ngIf="vendorData">
+        <div class="detail-items-with-border mt-2 small-input-only-field">
+           <table>
+                  <caption hidden> Provider Details</caption>
+                  <tr hidden>
+                    <th>Field</th>
+                    <th> Details</th>
+                </tr>
+                  <tr>
+                    <td><strong>TIN</strong></td>
+                    <td>  {{vendorData.tin| tin}}</td>
+                </tr>
+                <tr>
+                    <td><strong>NPI</strong></td>
+                    <td>  {{vendorData.npiNbr}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Mail Code</strong></td>
+                    <td>{{vendorData.mailCode}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Accepts reports?</strong></td>
+                    <td>{{vendorData.acceptsReportsFlag==='Y'? "Yes":"No"}}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Accepts combined payments?</strong></td>
+                    <td>{{vendorData.acceptsCombinedPaymentsFlag ==='Y'? "Yes":"No"}}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Payment Method</strong></td>
+                    <td> {{vendorData.paymentMethod}}</td>
+                </tr>  
+                 
+                <tr>
+                    <td><strong>Address</strong></td>
+                    <td> <p>{{vendorData.address1}} </p>
+                         <p>{{vendorData.address2}} </p>
+                         <p>
+                          {{vendorData.cityCode}}, {{vendorData.stateCode}} {{vendorData.zip}}
+                        </p>
+                   </td>
+                </tr>
+
+            </table>
+         
+        </div>
+
+
+
+    </section>
+</ng-container>
