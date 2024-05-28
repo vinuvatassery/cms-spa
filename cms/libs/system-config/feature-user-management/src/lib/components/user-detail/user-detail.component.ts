@@ -193,7 +193,9 @@ export class UserDetailComponent implements OnInit {
     if(this.userRoleType == UserAccessType.Internal){
       this.isAccessTypeInternal = true;
       this.setValidators(null, Validators.required);
-    }else{
+    } else if(this.isEditValue && this.userRoleType == UserAccessType.External){
+      this.setValidators(null, Validators.required);
+    } else{
       this.isAccessTypeInternal = false;
       this.setValidators(Validators.required, null);              
     }
@@ -274,7 +276,7 @@ export class UserDetailComponent implements OnInit {
       pOrNbr: formControls["pNumber"].value,
       jobTitle: formControls["jobTitle"].value,
       adUserId: formControls["adUserId"].value,
-      loginUserId: this.userId
+      loginUserId: this.isEditValue ? this.userId : null
     };
     if(!this.isEditValue){
       this.userManagementFacade.addUser(user);

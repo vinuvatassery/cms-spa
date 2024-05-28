@@ -398,8 +398,9 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   }
 
   handleCheckHasPendingClaimsStatus() {
+    this.changeStatusButtonEmitted = false;
     this.checkHasPendingClaimsStatusEvent.emit(this.cptCodeId);
-
+    
     this.checkHasPendingClaimsStatus$.pipe(first((response: any) => response != null))
       .subscribe((response: any) => {
         if (response ?? false) {
