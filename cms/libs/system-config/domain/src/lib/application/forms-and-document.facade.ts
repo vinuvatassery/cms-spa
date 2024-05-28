@@ -31,6 +31,8 @@ export class FormsAndDocumentFacade {
     reActiveTemplate$ =  this.reActiveTemplateSubject.asObservable();
     private isActiveSubject = new BehaviorSubject<any>([]);
     isActive$ =  this.isActiveSubject.asObservable();
+
+    isShowInActive= false;
   
     showLoader() { this.loaderService.show(); }
     hideLoader() { this.loaderService.hide(); }
@@ -207,7 +209,7 @@ export class FormsAndDocumentFacade {
             if (response) {
               var filter={
                 sort : 'cust',
-                active:  this.isActive$ ? 'A' : 'Y',
+                active:  this.isShowInActive ? 'A' : 'Y',
               }
               this.loadFolderFile(filter);
               this.loaderService.hide();
@@ -217,10 +219,10 @@ export class FormsAndDocumentFacade {
           error: (err) => {
             var filter={
               sort : true,
-              active: 'Y'
+              active:  this.isShowInActive ? 'A' : 'Y',
             }
             this.loadFolderFile(filter);
-            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, '');
             this.loaderService.hide();
           },
         })
@@ -236,7 +238,7 @@ export class FormsAndDocumentFacade {
             }
           },
           error: (err) => {
-            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, '');
             this.loaderService.hide();
           },
         })
@@ -252,7 +254,7 @@ export class FormsAndDocumentFacade {
             }
           },
           error: (err) => {
-            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, '');
             this.loaderService.hide();
           },
         })
