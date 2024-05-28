@@ -115,30 +115,53 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
   onCheckChange(event:any){
  
   }
+
   loadProgramExpensesChart() {
-    this.programExpenses = null
-    const payload= {
-      expenseType : this.selectedType ? this.selectedType :this.dataExp.map(x=> x.Value) ,
-      frequency : this.selectFrequency,
-      TimeFrame : this.selectedTimeFrame
-    }
-    this.widgetFacade.loadProgramExpensesChart(this.dashboardId,payload);
+    this.programExpenses = null;
+    const payload = this.buildPayload();
+    this.widgetFacade.loadProgramExpensesChart(this.dashboardId, payload);
+  
     this.widgetFacade.programExpensesChart$
       .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response) {          
-            
-            this.programExpenses = response;
-          
-            if(this.programExpenses && this.programExpenses?.chartData && this.programExpenses?.chartData?.categoryAxis)
-            this.programExpenses.chartData.categoryAxis.title ={
-                  'text':this.selectFrequency == 'M'? 'Month' : this.selectFrequency == 'Q'? 'Quarter' :
-                  'Year'
-            }
-            this.changeDetectorRef.detectChanges()
-          }
-        }
-      });
+      .subscribe(response => this.handleProgramExpensesResponse(response));
+  }
+  
+  private buildPayload(): any {
+    return {
+      expenseType: this.selectedType ? this.selectedType : this.dataExp.map(x => x.Value),
+      frequency: this.selectFrequency,
+      TimeFrame: this.selectedTimeFrame,
+    };
+  }
+  
+  private handleProgramExpensesResponse(response: any) {
+    if (!response) {
+      return;
+    }
+  
+    this.programExpenses = response;
+    this.updateCategoryAxisTitle();
+    this.changeDetectorRef.detectChanges();
+  }
+  
+  private updateCategoryAxisTitle() {
+    if (!this.programExpenses || !this.programExpenses.chartData || !this.programExpenses.chartData.categoryAxis) {
+      return;
+    }
+  
+    this.programExpenses.chartData.categoryAxis.title = {
+      text: this.getFrequencyText(),
+    };
+  }
+  
+  private getFrequencyText(): string {
+    switch (this.selectFrequency) {
+      case 'M':
+        return 'Month';
+      case 'Q':
+        return 'Quarter';
+      default:
+        return 'Year';
+    }
   }
 }
