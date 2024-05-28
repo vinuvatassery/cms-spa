@@ -26,6 +26,7 @@
     [saveUrl]="fileUploadUrl"    
     [autoUpload]="false"
     [concurrent]="false"    
+    [withCredentials] = "false"
     (select)="select($event)"
     (complete)="complete($event)"
     (error)="onError($event)"
