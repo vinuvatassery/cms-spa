@@ -269,9 +269,9 @@ onShowActiveClickedEvent(){
     isActiveChecked:this.isActiveChecked,
     ischecked : this.isActiveChecked ? true:false
   };
+  this.loadFolders.emit(payload);
   this.formsAndDocumentFacade.isShowInActive =  this.isActiveChecked
   this.isShowDragEnabledText();
-  this.loadFolders.emit(payload);
 }
 
 isShowDragEnabledText(){
