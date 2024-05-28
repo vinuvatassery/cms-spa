@@ -291,7 +291,7 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     const dueDate = this.intl.formatDate(this.todoDetailsForm.controls['dueDate'].value,this.dateFormat);
     if ((endDate < dueDate || endDate == dueDate)  && this.todoDetailsForm.controls['endDate'].value) {
       this.todoDetailsForm.controls['endDate'].setErrors({ 'incorrect': true });
-      return;
+     
     }else{
       this.todoDetailsForm.controls['endDate'].clearValidators();
     }

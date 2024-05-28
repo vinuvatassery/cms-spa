@@ -403,7 +403,6 @@ export class CommonFormDocumentListComponent implements OnChanges {
        if(!this.isDragDropEnabled){
        event.preventDefault();
        }
-        return
     }
   /** Internal event methods **/
   onUploadFileVersionOpenClicked(data:any) {
