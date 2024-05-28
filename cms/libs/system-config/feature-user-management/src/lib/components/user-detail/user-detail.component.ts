@@ -194,6 +194,7 @@ export class UserDetailComponent implements OnInit {
       this.isAccessTypeInternal = true;
       this.setValidators(null, Validators.required);
     } else if(this.isEditValue && this.userRoleType == UserAccessType.External){
+      this.isAccessTypeInternal = false;
       this.setValidators(null, Validators.required);
     } else{
       this.isAccessTypeInternal = false;
@@ -240,7 +241,7 @@ export class UserDetailComponent implements OnInit {
   }
 
   disableFields(){
-    if(this.isAccessTypeInternal){
+    if(this.isAccessTypeInternal || this.isEditValue){
       this.userFormGroup.controls["firstName"].disable();
       this.userFormGroup.controls["lastName"].disable();
       this.userFormGroup.controls["email"].disable();
