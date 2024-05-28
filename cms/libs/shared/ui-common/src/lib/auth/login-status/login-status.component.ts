@@ -1,11 +1,9 @@
-import { LoginUser } from '@cms/system-config/domain';
 /** Angular **/
 import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, OnInit, ChangeDetectorRef,   HostListener, ViewEncapsulation } from '@angular/core';
 /** Services **/
 import { AuthService } from '@cms/shared/util-oidc';
-import { UserDataService } from '@cms/system-config/domain';
+import { UserDataService,UserManagementFacade } from '@cms/system-config/domain';
 import { Subject, Subscription } from 'rxjs';
-import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'common-login-status',

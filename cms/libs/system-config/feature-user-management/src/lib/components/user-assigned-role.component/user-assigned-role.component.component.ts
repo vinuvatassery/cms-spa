@@ -60,9 +60,6 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
-  /* LifeCycle Events */
-  ngOnInit(): void {
-  }
 
   ngOnChanges(): void {
     this.state = {

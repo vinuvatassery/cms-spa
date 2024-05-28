@@ -152,7 +152,7 @@ export class AlertBannerComponent implements OnInit {
   }  
   private loadTodoAlertBannerData(){
         this.alertList$.subscribe((data: any) => {
-          if(data==true){
+          if(data){
             this.isLoadAlertListEvent.emit(this.entityId)
           }
           if(data?.total > 0 ){

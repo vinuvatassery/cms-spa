@@ -8,13 +8,9 @@ import {
   OnChanges,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import {
-  CancelEvent,
-  EditEvent,
-  GridComponent,
-  GridDataResult,
-  SaveEvent,
+  GridDataResult
 } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,

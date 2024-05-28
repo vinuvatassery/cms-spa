@@ -1,8 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-/** External libraries **/
-import { of } from 'rxjs/internal/observable/of';
 /** Providers **/
 import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 import { Router } from '@angular/router';

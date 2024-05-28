@@ -225,6 +225,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
         this.infoText = "Sent"
         this.eventLogFacade.loadNotificationSms(this.eventLogId);
       }
+     
       this.onViewLetterEmailTextDialogClicked(this.viewLetterEmailTextDialog);
     });
   }

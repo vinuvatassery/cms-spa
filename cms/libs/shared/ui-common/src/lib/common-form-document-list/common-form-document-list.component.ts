@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges,  Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FormsAndDocumentFacade } from '@cms/system-config/domain';
@@ -12,7 +12,7 @@ const isFile = (name: string) => name.split('.').length > 1;
   selector: 'system-config-common-form-document-list',
   templateUrl: './common-form-document-list.component.html',
 })
-export class CommonFormDocumentListComponent implements OnInit, OnChanges {
+export class CommonFormDocumentListComponent implements OnChanges {
 
   /** Public properties **/
   isOpenAttachment = false;
@@ -82,9 +82,7 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
       this.isDragDropEnabled = false;
     }
   }
-  
-  ngOnInit(): void {
-  }
+
   public moreActions = [
     {
       buttonType: 'btn-h-primary',

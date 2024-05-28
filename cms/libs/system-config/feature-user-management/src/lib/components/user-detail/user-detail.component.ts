@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { group } from '@angular/animations';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
@@ -130,8 +130,8 @@ export class UserDetailComponent implements OnInit {
         this.userRoleLov = data;
         if(this.isEditValue){
           let selectedRoleValues: any = [];
-          for(var role of this.userDetailRoles){
-            var roleData = data.filter((x: any)=> x.roleCode == role);
+          for(let role of this.userDetailRoles){
+            let roleData = data.filter((x: any)=> x.roleCode == role);
             if(roleData && roleData.length > 0){
               this.selectedUserRolesList.push(roleData[0].roleId);
               selectedRoleValues.push(roleData[0]);

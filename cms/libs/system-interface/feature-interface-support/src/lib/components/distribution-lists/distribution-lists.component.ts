@@ -319,13 +319,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     stateData.filter = this.filterData;
 
     this.selectedInterface = this.selectedGroup.groupName
-
-    const gridDataRefinerValue = {
-      SkipCount: this.state?.skip ?? 0,
-      MaxResultCount: this.state?.take ?? 0,
-      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
-      notificationGroupId: this.selectedGroup.notificationGroupId,
-    };
     this.loadSupportGroupListEvent.emit(this.supportGroupGridDataRefinerValue);
   }
   
