@@ -12,6 +12,13 @@ const routes: Routes = [
         (m) => m.FeatureUserLoginSignupModule
       ),
   },
+  {
+    path: 'careAssist',
+    loadChildren: () =>
+      import('@cms/feature-cp-landing').then(
+        (m) => m.FeatureCpLandingModule
+      ),
+  },
   { path: '', redirectTo: 'account', pathMatch: 'full' },
 ];
 

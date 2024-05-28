@@ -5,3 +5,5 @@ export * from './lib/components/cp-home/cp-home.component';
 export * from './lib/components/cp-account-settings/cp-account-settings.component';
 
 export * from './lib/components/cp-my-profile/cp-my-profile.component';
+
+export * from './lib/components/cp-landing-screen/cp-landing-screen.component';

@@ -5,11 +5,26 @@ import { CpAccountSettingsComponent } from './components/cp-account-settings/cp-
 import { CpHomeComponent } from './components/cp-home/cp-home.component';
 import { CpMyProfileComponent } from './components/cp-my-profile/cp-my-profile.component';
 import { ProvidersInformationComponent } from './components/providers-information/providers-information.component';
+import { CpLandingScreenComponent } from './components/cp-landing-screen/cp-landing-screen.component';
 
 const routes: Routes = [
   {
+    path: '',
+    component: CpHomeComponent,
+    data: {
+      title: '',
+    },
+  },
+  {
     path: 'providerInfo',
     component: ProvidersInformationComponent,
+    data: {
+      title: '',
+    },
+  },
+  {
+    path: 'landing',
+    component: CpLandingScreenComponent,
     data: {
       title: '',
     },
