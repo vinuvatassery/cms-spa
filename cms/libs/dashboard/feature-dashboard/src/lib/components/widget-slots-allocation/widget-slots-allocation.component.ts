@@ -4,7 +4,6 @@ import { WidgetFacade } from '@cms/dashboard/domain';
 @Component({
   selector: 'dashboard-widget-slots-allocation',
   templateUrl: './widget-slots-allocation.component.html',
-  styleUrls: ['./widget-slots-allocation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WidgetSlotsAllocationComponent {

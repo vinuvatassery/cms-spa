@@ -6,8 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'dashboard-widget-program-income',
-  templateUrl: './widget-program-income.component.html',
-  styleUrls: ['./widget-program-income.component.scss']
+  templateUrl: './widget-program-income.component.html'
 })
 export class WidgetProgramIncomeComponent implements OnInit, OnDestroy {
     

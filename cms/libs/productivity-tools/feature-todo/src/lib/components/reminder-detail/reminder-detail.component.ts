@@ -417,8 +417,7 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   timeValidation(){
-    const timeInMinutes = new Date(this.clientReminderForm.controls['time'].value).getMinutes();
-    const timeInHours = new Date(this.clientReminderForm.controls['time'].value).getHours();
+   
     const dueDate = this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat);
     const todayDate =  this.intl.formatDate(new Date(), this.dateFormat);
    
