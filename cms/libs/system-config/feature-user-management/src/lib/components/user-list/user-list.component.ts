@@ -146,12 +146,6 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnInit(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[2]?.value,
-      sort: this.sort,
-      filter : this.filter === undefined?null:this.filter
-    };
     this.getLoggedInUserProfile();
     this.addSearchSubjectSubscription();
     this.loadUserFilterColumn();    
