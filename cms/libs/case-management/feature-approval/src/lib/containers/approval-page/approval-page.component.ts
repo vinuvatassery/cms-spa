@@ -276,7 +276,6 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   permissionServiceAndLevelArray:any[]=[];
 
   loadTabCount(){
-    // this.loadPendingApprovalPaymentLevel();
     this.navigationMenuFacade.getPendingApprovalGeneralCount();
     this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
     this.cd.detectChanges();
