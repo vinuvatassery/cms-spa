@@ -134,27 +134,6 @@
             [popupSettings]="{ popupClass: popupClassAction, animate: true }">
             <span class="material-icons" aria-label="More option"> more_vert </span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-              <ng-container
-                *ngIf="buttondataItem.text === 'Deactivate' && dataItem.activeFlag ==='Active'; else reactivate">
-                <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                  [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                  <span class="material-icons" aria-hidden="true"
-                    [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-                  <label> {{ buttondataItem.text }} </label>
-                </button>
-              </ng-container>
-              <ng-template #reactivate>
-                <ng-container
-                  *ngIf="buttondataItem.text === 'Reactivate' && dataItem.activeFlag ==='Inactive'; else edit">
-                  <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                    <span class="material-icons" aria-hidden="true"
-                      [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-                    <label> {{ buttondataItem.text }} </label>
-                  </button>
-                </ng-container>
-              </ng-template>
-              <ng-template #edit>
                 <ng-container *ngIf="buttondataItem.text === 'Edit'">
                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                     [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
@@ -164,7 +143,6 @@
                   </button>
                 </ng-container>
               </ng-template>
-            </ng-template>
           </kendo-dropdownbutton>
         </ng-template>
       </kendo-grid-column>
@@ -218,3 +196,8 @@
     [userId]="loginUserId" [status]="inActive" (closeDeactivateUsers)="onUserDeactivateClosed()" (refreshGrid)="loadUserListGrid()" ></system-config-deactivate-user-confirmation>
 </kendo-dialog>
 
+<ng-template #notificationTemplate>
+  <span>User has assigned clients. </span>
+  <a class="notification-link" (click)="navigateToDetails()">Re-assign their clients</a>
+  <span> before deactivating.</span>
+</ng-template>
