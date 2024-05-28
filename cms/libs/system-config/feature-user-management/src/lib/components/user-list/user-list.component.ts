@@ -29,7 +29,9 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() usersDataLists$: any;
-  @Input() usersFilterColumn$: any;
+  @Input() usersFilterColumn$: any;  
+  @Input() sortValueUserRoles : any;
+  @Input() sortUserRoles : any;
   @Output() loadUserListEvent = new EventEmitter<any>();
   @Output() usersFilterColumnEvent = new EventEmitter<any>();
   @Input() userListProfilePhoto$!: any;

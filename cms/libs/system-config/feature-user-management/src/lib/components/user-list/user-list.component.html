@@ -169,8 +169,13 @@
         </ng-template>
       </kendo-grid-column>
       <ng-template kendoGridDetailTemplate let-dataItem>
-        <system-config-user-assigned-role [userId]="dataItem?.loginUserId" [pageSizes]="pageSizes"
-          [userStatus]="dataItem?.activeFlag" [assignedRoleCount]="dataItem.assignedRoleCount">
+        <system-config-user-assigned-role [userId]="dataItem?.loginUserId" 
+          [pageSizes]="pageSizes" 
+          [sortValue]="sortValueUserRoles" 
+          [sort]="sortUserRoles"
+          [sortType]="sortType"
+          [userStatus]="dataItem?.activeFlag" 
+          [assignedRoleCount]="dataItem.assignedRoleCount">
         </system-config-user-assigned-role>
       </ng-template>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
