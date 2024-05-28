@@ -1,0 +1,51 @@
+{
+  "name": "feature-cp-landing",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client-portal/feature-cp-landing/src",
+  "prefix": "cms",
+  "tags": [],
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/client-portal/feature-cp-landing/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/client-portal/feature-cp-landing/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/client-portal/feature-cp-landing/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/client-portal/feature-cp-landing/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/client-portal/feature-cp-landing/**/*.ts",
+          "libs/client-portal/feature-cp-landing/**/*.html",
+          "libs/client-portal/feature-cp-landing/package.json"
+        ]
+      }
+    }
+  }
+}

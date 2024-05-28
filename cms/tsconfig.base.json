@@ -124,6 +124,9 @@
       "@cms/feature-client-portal-home": [
         "libs/client-portal/feature-client-portal-home/src/index.ts"
       ],
+      "@cms/feature-cp-landing": [
+        "libs/client-portal/feature-cp-landing/src/index.ts"
+      ],
       "@cms/feature-productivity-tools": [
         "libs/case-management/feature-productivity-tools/src/index.ts"
       ],

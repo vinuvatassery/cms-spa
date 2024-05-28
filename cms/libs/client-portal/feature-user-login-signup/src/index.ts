@@ -17,10 +17,5 @@ export * from './lib/component/set-new-password/set-new-password.component';
 
 export * from './lib/component/recover-email/recover-email.component';
 
-export * from './lib/component/providers-information/providers-information.component';
+export * from '../../feature-cp-landing/src/lib/components/providers-information/providers-information.component';
 
-export * from './lib/component/cp-home/cp-home.component';
-
-export * from './lib/component/cp-account-settings/cp-account-settings.component';
-
-export * from './lib/component/cp-my-profile/cp-my-profile.component';
