@@ -48,6 +48,9 @@ export class CptCodeFacade {
   private cptCodeChangeStatusSubject = new Subject<any>();
   cptCodeChangeStatus$ = this.cptCodeChangeStatusSubject.asObservable();
 
+  private checkHasPendingClaimsStatusSubject = new Subject<any>();
+  checkHasPendingClaimsStatus$ = this.checkHasPendingClaimsStatusSubject.asObservable();
+
 
   /** Constructor **/
   constructor(
@@ -158,7 +161,29 @@ export class CptCodeFacade {
         },
         error: (err) => {
           if (err?.error?.error?.code?.includes('CPT_CODE_ASSOCIATED_WITH_PENDING_CLAIMS')) {
-            this.showHideSnackBar(SnackBarNotificationType.WARNING, err?.error?.error?.message);
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            this.loggingService.logException(err?.error?.error?.message);
+            this.hideLoader();
+          } else{
+            this.hideLoader();
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+            this.loggingService.logException(err);
+          }
+        },
+      });
+  }
+
+  checkHasPendingClaimsStatus(cptCodeId: any) {
+    this.showLoader();
+    this.cptCodeService.checkHasPendingClaimsStatus(cptCodeId)
+      .subscribe({
+        next: (response: any) => {
+          this.checkHasPendingClaimsStatusSubject.next(true);
+          this.hideLoader();
+        },
+        error: (err) => {
+          if (err?.error?.error?.code?.includes('CPT_CODE_ASSOCIATED_WITH_PENDING_CLAIMS')) {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             this.loggingService.logException(err?.error?.error?.message);
             this.hideLoader();
           } else{

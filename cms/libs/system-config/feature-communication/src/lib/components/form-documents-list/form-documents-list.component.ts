@@ -33,6 +33,7 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() getFolders$: any; 
   @Output() getGridState = new EventEmitter<any>()
   uploadFileDialog :any
+  showDragEnabledText = false
   isActiveChecked: boolean = false;
 
   folderSortLovSubscription!: Subscription;
@@ -43,9 +44,12 @@ export class FormDocumentsListComponent implements OnInit {
     this.uploadNewVersionDocument$.subscribe((res:any) =>{
       this.uploadFileDialog?.close()
     })
+    this.onShowActiveClickedEvent();
     this.gridState$.subscribe((res:any)=>{
       if(res){
       this.sortOrder = this.folderSortLovList.filter((x :any)=> x.lovCode == res.gridState)[0]
+      this.isShowDragEnabledText()
+      this.cdr.detectChanges();
       }
     })
   }
@@ -190,6 +194,7 @@ export class FormDocumentsListComponent implements OnInit {
       active: ActiveInactiveFlag.Yes
     }
     this.sortChangeEvent.emit(this.sortOrder.lovCode.toLowerCase())
+    this.isShowDragEnabledText()
    this.loadFolders.emit(filter);
   }
   addFolderData(payLoad:any){
@@ -207,7 +212,7 @@ export class FormDocumentsListComponent implements OnInit {
         if(response.length > 0){
           this.folderSortLovList = response;
           this.getGridState.emit(true)
-          this.cdr.detectChanges();
+        
         }
       }
     });
@@ -264,6 +269,16 @@ onShowActiveClickedEvent(){
     isActiveChecked:this.isActiveChecked,
     ischecked : this.isActiveChecked ? true:false
   };
+  this.formsAndDocumentFacade.isShowInActive =  this.isActiveChecked
+  this.isShowDragEnabledText();
   this.loadFolders.emit(payload);
+}
+
+isShowDragEnabledText(){
+  if(!this.isActiveChecked && this.sortOrder.lovCode.toLowerCase()=='cust'){
+    this.showDragEnabledText = true
+  }else{
+    this.showDragEnabledText = false
+  }
 }
 }

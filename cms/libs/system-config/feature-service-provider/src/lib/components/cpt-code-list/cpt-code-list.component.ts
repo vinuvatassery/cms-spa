@@ -48,6 +48,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   @Input() cptCodeProfilePhoto$: any;
   @Input() cptCodeListDataLoader$: any;
   @Input() cptCodeChangeStatus$: any;
+  @Input() checkHasPendingClaimsStatus$: any;
   @Input() exportButtonShow$: any;
   @Output() loadCptCodeListsEvent = new EventEmitter<any>();
   @Output() cptCodeFilterColumnEvent = new EventEmitter<any>();
@@ -56,6 +57,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
   @Output() exportGridEvent$ = new EventEmitter<any>();
+  @Output() checkHasPendingClaimsStatusEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'CPT Code';
   sortDir = 'Ascending';
@@ -249,7 +251,6 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     if (stateData.filter?.filters.length > 0) {
       const filterList = [];
       this.isFiltered = true;
-      debugger;
       for (const filter of stateData.filter.filters) {
         filterList.push(this.columns[filter.filters[0].field]);
       }
@@ -333,8 +334,14 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   }
   onCptCodeDeactivateClicked(cptCodeId: any) {
     this.cptCodeId = cptCodeId;
-    this.isCptCodeDeactivatePopupShow = true;
+    this.handleCheckHasPendingClaimsStatus();
   }
+
+  onDeactivateClicked() {
+    this.isCptCodeDeactivatePopupShow = true;
+    this.cdr.detectChanges(); // Add this line to manually trigger change detection
+  }
+
   addCptCode(data: any): void {
     this.addCptCodeEvent.emit(data);
     this.addCptCode$.pipe(first((response: any) => response != null))
@@ -389,5 +396,18 @@ export class CptCodeListComponent implements OnInit, OnChanges {
         })
     }
   }
+
+  handleCheckHasPendingClaimsStatus() {
+    this.changeStatusButtonEmitted = false;
+    this.checkHasPendingClaimsStatusEvent.emit(this.cptCodeId);
+    
+    this.checkHasPendingClaimsStatus$.pipe(first((response: any) => response != null))
+      .subscribe((response: any) => {
+        if (response ?? false) {
+          this.onDeactivateClicked();
+        }
+      })
+  }
+
 
 }

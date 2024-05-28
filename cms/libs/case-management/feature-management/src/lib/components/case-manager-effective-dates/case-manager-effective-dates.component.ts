@@ -101,7 +101,6 @@ export class CaseManagerEffectiveDatesComponent implements OnInit {
   }
 
   dateValidate(type: any) {
-    const todayDate = new Date();
     this.startDateIsGreaterThanEndDate = false;
     // eslint-disable-next-line no-case-declarations
     const startDate = this.effectiveDatesForm.controls['startDate'].value;

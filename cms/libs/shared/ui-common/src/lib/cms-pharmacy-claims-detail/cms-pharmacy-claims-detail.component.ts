@@ -281,7 +281,6 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
        this.addClaimServicesForm.reset();
     }
     if(this.addClaimServicesForm.length > 1 ){
-    let form = this.addClaimServicesForm.value[i]
 
     this.addClaimServicesForm.removeAt(i);
 
@@ -502,11 +501,6 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
 
   restrictSpecialChar(event: any) {
     const status = (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8;
-
-    if (status) {
-      // this.claimForm.controls['invoiceId'].setErrors(null);
-      // this.specialCharAdded = false;
-    }
     return status;
   }
 }

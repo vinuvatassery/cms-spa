@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
+import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
 import { ActiveInactiveFlag } from '../enums/active-inactive-flag.enum';
-import { StatusFlag } from '../enums/status-flag.enum';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -24,6 +23,7 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   @Input() isPopUp:any;
   @Input() filter =""
   @Output() newVersionFileUploadOpenEvent = new EventEmitter()
+  @Input() isShowInActiveChecked = false;
   selectedfolder: string = "";
   isShowLoader: boolean = true;
   @ViewChild('renameTemplate', { read: TemplateRef })
@@ -55,6 +55,8 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   activeflag:any;
   isdeactivateOpen = false;
   reactivateOpen=false;
+  filterValue="";
+  activeFlag = false;
   public constructor(
     private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
     private readonly loaderService: LoaderService,
@@ -65,15 +67,22 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['filter']){
-    if (!changes['filter'].firstChange) {
-      if(changes['filter'].currentValue == 'cust'){
-        this.isDragDropEnabled = true
-      }else{
-        this.isDragDropEnabled = false
-      }
-    } 
+    if (!changes['filter'].firstChange) { 
+        this.filterValue = changes['filter'].currentValue
+    }
   }
+    if(changes['isShowInActiveChecked']){
+    if (!changes['isShowInActiveChecked'].firstChange) {  
+        this.activeFlag = changes['isShowInActiveChecked'].currentValue
+    }
   }
+    if(this.filterValue == 'cust' && !this.activeFlag){
+          this.isDragDropEnabled = true;
+    }else{
+      this.isDragDropEnabled = false;
+    }
+  }
+  
   ngOnInit(): void {
   }
   public moreActions = [
