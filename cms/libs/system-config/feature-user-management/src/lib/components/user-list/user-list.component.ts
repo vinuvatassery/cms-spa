@@ -44,7 +44,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     this.configurationProvider.appSettings.snackbarAnimationDuration;
   @ViewChild('notificationTemplate', { static: true }) notificationTemplate!: TemplateRef<any>;
 
-
+  defaultSort:any;
   public state!: any;
   sortColumn = 'User Name';
   sortDir = 'Ascending';
@@ -146,6 +146,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnInit(): void {
+    this.defaultSort = this.sort;
     this.getLoggedInUserProfile();
     this.addSearchSubjectSubscription();
     this.loadUserFilterColumn();    
@@ -155,6 +156,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      filter : this.filter === undefined?null:this.filter
     };
 
     this.loadUserListGrid();
@@ -190,13 +192,13 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     this.usersFilterColumnEvent.emit();
 
   }
-
+  
   setToDefault() {
     this.defaultGridState();
     this.sortColumn = 'User Name';
     this.sortType = 'asc';
-    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "";
-    this.filter = '';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "Descending";
+    this.filter = [];
     this.selectedSearchColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
@@ -238,7 +240,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: this.defaultSort,
       filter: { logic: 'and', filters: [] },
     };
   }
@@ -255,6 +257,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     if (this.sort[0]?.dir === undefined) {
       this.sortDir = '';
+      this.sortType = 'asc';
     }
     if (this.sort[0]?.dir !== undefined) {
       this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
@@ -274,7 +277,6 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
       this.isFiltered = false;
     }
     this.clearIndividualSelectionOnClear(stateData);
-    this.cdr.detectChanges();
     this.loadUserListGrid();
   }
 
