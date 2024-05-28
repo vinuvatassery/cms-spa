@@ -193,10 +193,10 @@ defaultPageSize=20;
   }
   loadDefaultListGrid() {
     this.updateStatusFilterValue(this.filter, this.statusArray, this.statusArrayDesc);
-
+    this.state.take=this.defaultPageSize
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
-      this.state.take=this.defaultPageSize,
+      this.state.take,
       this.sortValue,
       this.sortType);
     this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceType, !this.displayAll, param);

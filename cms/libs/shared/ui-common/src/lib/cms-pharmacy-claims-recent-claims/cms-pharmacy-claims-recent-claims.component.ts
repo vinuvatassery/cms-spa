@@ -7,8 +7,7 @@ import { Subject } from 'rxjs';
 
 @Component({
   selector: 'common-cms-pharmacy-claims-recent-claims',
-  templateUrl: './cms-pharmacy-claims-recent-claims.component.html',
-  styleUrls: ['./cms-pharmacy-claims-recent-claims.component.scss'],
+  templateUrl: './cms-pharmacy-claims-recent-claims.component.html'
 })
 export class CmsPharmacyClaimsRecentClaimsComponent {
   

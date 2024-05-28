@@ -82,9 +82,7 @@ export class CommonFormDocumentListComponent implements  OnChanges {
       this.isDragDropEnabled = false;
     }
   }
-  
-  ngOnInit(): void {
-  }
+
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -405,7 +403,6 @@ export class CommonFormDocumentListComponent implements  OnChanges {
        if(!this.isDragDropEnabled){
        event.preventDefault();
        }
-        return
     }
   /** Internal event methods **/
   onUploadFileVersionOpenClicked(data:any) {

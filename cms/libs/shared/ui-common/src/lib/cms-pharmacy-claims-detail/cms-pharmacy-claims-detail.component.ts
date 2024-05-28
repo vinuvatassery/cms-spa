@@ -21,7 +21,6 @@ import { PaymentMethodCode } from '../enums/payment-method-code.enum';
 @Component({
   selector: 'common-cms-pharmacy-claims-detail',
   templateUrl: './cms-pharmacy-claims-detail.component.html',
-  styleUrls: ['./cms-pharmacy-claims-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{

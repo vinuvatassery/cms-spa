@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy , OnInit, TemplateRef,} from '@angular/core';
+import { Component, ChangeDetectionStrategy , TemplateRef,} from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";

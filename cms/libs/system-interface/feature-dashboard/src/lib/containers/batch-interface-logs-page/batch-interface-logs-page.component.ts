@@ -10,7 +10,6 @@ import { LovFacade } from '../../../../../../system-config/domain/src/lib/applic
 @Component({
   selector: 'cms-system-interface-batch-interface-logs-page',
   templateUrl: './batch-interface-logs-page.component.html',
-  styleUrls: ['./batch-interface-logs-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

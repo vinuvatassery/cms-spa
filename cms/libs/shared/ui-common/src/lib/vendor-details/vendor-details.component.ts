@@ -528,6 +528,12 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   createVendorProfileData(formValues: any) {
+    let PreferredFlagStatus;
+    if (this.providerType === this.vendorTypes.Pharmacy) {
+      PreferredFlagStatus = formValues.isPreferedPharmacy ? StatusFlag.Yes : StatusFlag.No;
+    } else {
+      PreferredFlagStatus = null;
+    }
     let vendorProfileData = {
       vendorId: this.selectedClinicVendorId,
       vendorName: formValues.providerName,
@@ -553,7 +559,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
       AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
       PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
-      PreferredFlag: this.providerType != this.vendorTypes.Pharmacy ? null : ((formValues.isPreferedPharmacy) ? StatusFlag.Yes : StatusFlag.No),
+      PreferredFlag: PreferredFlagStatus,
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes : StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing,
       activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,

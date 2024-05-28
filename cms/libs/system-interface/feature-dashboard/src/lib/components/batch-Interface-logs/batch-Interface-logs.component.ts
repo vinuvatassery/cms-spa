@@ -171,11 +171,6 @@ closeallexpensions:any;
     this.loadActivityListGrid();
   }
 
-  childPageSelectionchange(data: any) {
-    this.state.take = data.value;
-    this.state.skip = 0;
-    this.loadActivityListGrid();
-  }
 
   handleShowHistoricalClick() {
     this.loadActivityListGrid();

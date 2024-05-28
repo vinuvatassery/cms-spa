@@ -190,7 +190,7 @@ export class FormsAndDocumentFacade {
         this.uploadFormandDocumentService.reOrder(reOrderRequest).subscribe({
           next: (response:any) => {
             if (response) {
-              var filter={
+              let filter={
                 sort : 'cust',
                 active:  this.isShowInActive ? 'A' : 'Y',
               }
@@ -200,9 +200,9 @@ export class FormsAndDocumentFacade {
             }
           },
           error: (err) => {
-            var filter={
+            let filter={
               sort : true,
-              active:  this.isShowInActive ? 'A' : 'Y',
+              active:  this.isShowInActive ? 'A' : 'Y'
             }
             this.loadFolderFile(filter);
             this.showHideSnackBar(SnackBarNotificationType.ERROR, '');

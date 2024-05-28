@@ -1,4 +1,3 @@
-
 /** Angular **/
 import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, OnInit, ChangeDetectorRef,   HostListener, ViewEncapsulation } from '@angular/core';
 /** Services **/
