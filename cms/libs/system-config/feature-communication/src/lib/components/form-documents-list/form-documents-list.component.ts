@@ -185,7 +185,7 @@ export class FormDocumentsListComponent implements OnInit {
 
   onSortChange(event:any){
     this.sortOrder = event;
-    var filter={
+    let filter={
       sort : this.sortOrder.lovCode.toLowerCase(),
       active: ActiveInactiveFlag.Yes
     }
@@ -213,7 +213,7 @@ export class FormDocumentsListComponent implements OnInit {
     });
   }
   loadFoldersTree(){
-    var filter={
+    let filter={
       sort : true,
       active: this.isActiveChecked ? 'A' : 'Y',
     }

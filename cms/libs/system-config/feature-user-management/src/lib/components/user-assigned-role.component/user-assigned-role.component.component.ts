@@ -61,9 +61,7 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
     private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
   /* LifeCycle Events */
-  ngOnInit(): void {
-    //this.loadUserAssignedRolesGrid();
-  }
+
 
   ngOnChanges(): void {
     this.state = {

@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { Subject, first } from 'rxjs';
 import { DocumentFacade } from '@cms/shared/util-core';
@@ -220,10 +220,6 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       ],
       logic: 'or',
     });
-
-    // if(field == "activeFlag"){
-    //   this.selectedActiveFlag = value;
-    // }
   }
 
   defaultGridState() {
@@ -256,7 +252,6 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       }
       this.filteredBy = filterList.toString();
     } else {
-      //this.filter = "";
       this.isFiltered = false;
     }
 
