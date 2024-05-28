@@ -135,7 +135,7 @@
             <span class="material-icons" aria-label="More option"> more_vert </span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
               <ng-container
-                *ngIf="buttondataItem.text === 'Deactivate' && !loggedInUserValiation(dataItem) && dataItem.activeFlag ==='Active'; else reactivate">
+                *ngIf="buttondataItem.text === 'Deactivate' && !loggedInUserValidation(dataItem) && dataItem.activeFlag ==='Active'; else reactivate">
                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                   [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                   <span class="material-icons" aria-hidden="true"
@@ -145,7 +145,7 @@
               </ng-container>
               <ng-template #reactivate>
                 <ng-container
-                  *ngIf="buttondataItem.text === 'Reactivate' && !loggedInUserValiation(dataItem) && dataItem.activeFlag ==='Inactive'; else edit">
+                  *ngIf="buttondataItem.text === 'Reactivate' && !loggedInUserValidation(dataItem) && dataItem.activeFlag ==='Inactive'; else edit">
                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                     [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                     <span class="material-icons" aria-hidden="true"

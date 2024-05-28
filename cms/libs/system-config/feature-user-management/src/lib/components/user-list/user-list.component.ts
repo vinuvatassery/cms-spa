@@ -560,7 +560,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  loggedInUserValiation(data:any)
+  loggedInUserValidation(data:any)
   {
     return (this.loggedInUserId == data.loginUserId);
   }
