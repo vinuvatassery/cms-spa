@@ -677,7 +677,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   //Get email subject details and notification template.
   private loadHivVerificationEmail() {
       this.hivVerificationApprovalFacade.showLoader();
-      this.loadEmailSubscription =this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
+      this.loadEmailSubscription =this.communicationFacade.loadTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
         .subscribe({
           next: (data: any) => {
             if (data) {

@@ -321,7 +321,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (this.templateLoadType === null || this.templateLoadType === undefined || this.templateLoadType === '') {
       this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
     }
-    this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.templateLoadType, this.communicationEmailTypeCode ?? '')
+    this.communicationFacade.loadTemplates(this.notificationGroup, this.templateLoadType, this.communicationEmailTypeCode ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {
