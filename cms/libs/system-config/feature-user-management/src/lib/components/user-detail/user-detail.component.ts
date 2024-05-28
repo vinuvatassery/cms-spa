@@ -11,7 +11,6 @@ import {
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',

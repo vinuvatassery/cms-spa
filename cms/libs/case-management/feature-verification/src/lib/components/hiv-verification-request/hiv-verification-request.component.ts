@@ -349,7 +349,7 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
 
   loadHivVerificationEmail() {
     this.verificationFacade.showLoader();
-    this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
+    this.communicationFacade.loadTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {

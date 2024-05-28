@@ -10,7 +10,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormGroup } from '@angular/forms';
 import {
-  GridDataResult
+  GridDataResult,
 } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,

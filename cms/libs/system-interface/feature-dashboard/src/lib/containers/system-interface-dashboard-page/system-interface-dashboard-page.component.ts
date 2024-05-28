@@ -410,7 +410,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     SystemInterfaceDashboardPageComponent.dashBoardContentData.push(item);
 
     this.dashBoardAllWidgetsData = this.dashBoardAllWidgetsData.filter(
-      (x: any) => (x.widgetId == item.widgetId)
+      (x: any) => (x.widgetId != item.widgetId)
     );
 
     this.dashboardContentListDataSubject.next(
@@ -426,7 +426,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
 
     SystemInterfaceDashboardPageComponent.dashBoardContentData =
     SystemInterfaceDashboardPageComponent.dashBoardContentData.filter(
-        (x: any) => (x.widgetId != item.widgetId)
+        (x: any) =>(x.widgetId != item.widgetId)
       );
 
     this.dashboardContentListDataSubject.next(

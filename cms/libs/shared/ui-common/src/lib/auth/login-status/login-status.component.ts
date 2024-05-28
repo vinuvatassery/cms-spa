@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, OnInit, ChangeDetectorRef,   HostListener, ViewEncapsulation } from '@angular/core';
 /** Services **/
 import { AuthService } from '@cms/shared/util-oidc';
-import { UserDataService,UserManagementFacade } from '@cms/system-config/domain';
+import { UserDataService,UserManagementFacade} from '@cms/system-config/domain';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({

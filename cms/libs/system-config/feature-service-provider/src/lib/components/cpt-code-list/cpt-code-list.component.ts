@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { Subject, first } from 'rxjs';
 import { DocumentFacade } from '@cms/shared/util-core';

@@ -1,6 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+/** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
 import { LoginUser } from '../entities/login-user';
