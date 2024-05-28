@@ -164,7 +164,7 @@ export class UserDetailComponent implements OnInit {
           formControls["firstName"].setValue(data.firstName == null ? '' : data.firstName);
           formControls["lastName"].setValue(data.lastName == null ? '' : data.lastName);
           formControls["email"].setValue(data.emailAddress);  
-          formControls["jobTitle"].setValue(data.JobTitle == null ? '' : data.jobTitle);
+          formControls["jobTitle"].setValue(data.jobTitle == null ? '' : data.jobTitle);
           formControls["adUserId"].setValue(data.userId == null ? '' : data.userId);  
         } else {
           formControls["firstName"].setValue('');
@@ -191,8 +191,6 @@ export class UserDetailComponent implements OnInit {
   userTypeBasedValidation() {
     if(this.userRoleType == UserAccessType.Internal){
       this.isAccessTypeInternal = true;
-      this.setValidators(null, Validators.required);
-    } else if(this.isEditValue && this.userRoleType == UserAccessType.External){
       this.setValidators(null, Validators.required);
     } else{
       this.isAccessTypeInternal = false;
@@ -249,6 +247,10 @@ export class UserDetailComponent implements OnInit {
       this.userFormGroup.controls["email"].enable();
     }
     if(this.isEditValue){
+      this.userFormGroup.controls["firstName"].disable();
+      this.userFormGroup.controls["lastName"].disable();
+      this.userFormGroup.controls["email"].disable();
+
       this.userFormGroup.controls["pNumber"].disable();
       this.userFormGroup.controls["userAccessType"].disable();
     }
