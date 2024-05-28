@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 
 /** Internal libraries **/
-import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, Dependent, CompletionChecklist, NavigationType, WorkflowTypeCode } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, Dependent, CompletionChecklist, NavigationType} from '@cms/case-management/domain';
 import {LovFacade } from '@cms/system-config/domain'
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';

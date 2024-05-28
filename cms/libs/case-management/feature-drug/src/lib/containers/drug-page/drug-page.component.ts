@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoi
 /** Facades **/
 import {
   DrugPharmacyFacade, WorkflowFacade, PrescriptionDrugFacade, PrescriptionDrug,
-  CompletionChecklist, NavigationType, WorkflowTypeCode
+  CompletionChecklist, NavigationType,
 } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/

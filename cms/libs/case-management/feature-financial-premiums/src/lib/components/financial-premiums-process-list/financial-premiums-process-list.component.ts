@@ -857,7 +857,6 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
       if (this.unCheckedProcessRequest?.length > 0) {
         this.recordCountWhenSelectallClicked = this.sendReportCount;
       } else {
-        //this.sendReportCount = this.totalGridRecordsCount;
         this.sendReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((x:any) => x.acceptsReportsFlag == 'Y').length;
       }
     } else {
