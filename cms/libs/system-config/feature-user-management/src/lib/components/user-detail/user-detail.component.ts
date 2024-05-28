@@ -194,7 +194,6 @@ export class UserDetailComponent implements OnInit {
       this.isAccessTypeInternal = true;
       this.setValidators(null, Validators.required);
     } else if(this.isEditValue && this.userRoleType == UserAccessType.External){
-      this.isAccessTypeInternal = true;
       this.setValidators(null, Validators.required);
     } else{
       this.isAccessTypeInternal = false;
