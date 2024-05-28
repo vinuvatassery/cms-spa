@@ -48,8 +48,13 @@
             </table>
          
         </div>
-
-
-
     </section>
+    <kendo-dialog-actions>
+        <div class="justify-content-between">
+            <button kendoButton [primary]="true" look="flat" class="" aria-label="Provider profile" (click)="onVendorProfileViewClicked()"> VENDOR PROFILE <span
+                    class="material-icons ml-1" aria-hidden="true">
+                    chevron_right
+                </span></button>
+        </div>
+    </kendo-dialog-actions>
 </ng-container>

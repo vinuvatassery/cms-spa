@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FinancialVendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 
 @Component({
   selector: 'common-vendor-info',
@@ -24,11 +25,11 @@ export class VendorInfoComponent {
 constructor(    public activeRoute: ActivatedRoute,
   private readonly changeDetectorRef: ChangeDetectorRef,
   private financialVendorFacade: FinancialVendorFacade,
+  private route: Router,
 ){
 
 }
   ngOnInit(): void {
-    //this.vendorId = this.vendorId ? this.vendorId : this.activeRoute.snapshot.queryParams['pid'];
     this.loadVendorInfo()
 
     this.loadVendorPnelInfo();
@@ -37,7 +38,6 @@ constructor(    public activeRoute: ActivatedRoute,
   private loadVendorPnelInfo() {
     this.selectedVendor$.subscribe({
       next:(value:any) => {
-        debugger
         this.vendorData = value;
       },
       error:(err) => {
@@ -50,6 +50,19 @@ constructor(    public activeRoute: ActivatedRoute,
   }
   closeViewProviderClicked() {
     this.closeViewProviderDetailClickedEvent.emit(true);
+  }
+  get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
+    return FinancialVendorProviderTabCode;
+  }
+  onVendorProfileViewClicked() {
+    const query = {
+      queryParams: {
+        v_id: this.vendorData.vendorId,
+        tab_code: FinancialVendorProviderTabCode.InsuranceVendors
+      },
+    };
+    this.route.navigate(['/financial-management/vendors/profile'], query)
+    this.closeViewProviderClicked()
   }
   
 }
