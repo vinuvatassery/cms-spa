@@ -165,7 +165,7 @@ export class UserDetailComponent implements OnInit {
           formControls["firstName"].setValue(data.firstName == null ? '' : data.firstName);
           formControls["lastName"].setValue(data.lastName == null ? '' : data.lastName);
           formControls["email"].setValue(data.emailAddress);  
-          formControls["jobTitle"].setValue(data.JobTitle == null ? '' : data.jobTitle);
+          formControls["jobTitle"].setValue(data.jobTitle == null ? '' : data.jobTitle);
           formControls["adUserId"].setValue(data.userId == null ? '' : data.userId);  
         } else {
           formControls["firstName"].setValue('');
