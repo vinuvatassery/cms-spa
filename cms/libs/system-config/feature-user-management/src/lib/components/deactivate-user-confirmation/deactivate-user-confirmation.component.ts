@@ -1,9 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { NotificationService } from '@progress/kendo-angular-notification';
 import { NotificationSnackbarService, SnackBarNotificationType, NotificationSource ,ConfigurationProvider} from '@cms/shared/util-core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
