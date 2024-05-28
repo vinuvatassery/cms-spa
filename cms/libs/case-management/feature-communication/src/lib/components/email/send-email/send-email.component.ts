@@ -422,7 +422,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
     const emailData = this.getEmailPayload(draftTemplate);
-    let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
+    let {templateTypeCode} = this.getApiTemplateTypeCode();
     emailData.templateTypeCode = templateTypeCode;
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     emailFormData.append('description', draftTemplate.description ?? '');

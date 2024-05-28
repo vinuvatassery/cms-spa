@@ -224,7 +224,6 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
           this.sortPrescriptions(
             this.selectedVendorRefundsList[index].prescriptionFillItems
           );
-        return;
       }
       this.rxRefundInfoFilter.forEach((element, ind) => {
         let rowNum = 0;
@@ -1168,7 +1167,6 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
     if ((this.refundRXForm.invalid) || InValidSelectedRefundPharmacyClaimInput.length >0) {
       this.scrollToValidationError();
-      return;
     } else {
 
       let selectedpharmacyClaimsDto = selectedpharmacyClaims.map(

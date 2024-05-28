@@ -459,7 +459,6 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     {
     this.pcaAssignmentForm?.controls["amount"].setErrors({'incorrect': true});
     this.remainingAmountValidate = true
-    return;
     }else{
       this.remainingAmountValidate = false
     }
