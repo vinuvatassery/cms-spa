@@ -24,6 +24,7 @@ export class CptCodePageComponent {
   editCptCode$ = this.cptCodeFacade.editCptCode$;
   cptCodeChangeStatus$ = this.cptCodeFacade.cptCodeChangeStatus$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  checkHasPendingClaimsStatus$ = this.cptCodeFacade.checkHasPendingClaimsStatus$;
 
   /** Constructor **/
   constructor(private readonly cptCodeFacade: CptCodeFacade,
@@ -49,6 +50,9 @@ export class CptCodePageComponent {
   }
   handleReactivateCptCode(event: any) {
     this.cptCodeFacade.changeCptCodeStatus(event, true);
+  }
+  handleCheckHasPendingClaimsStatus(event: any) {
+    this.cptCodeFacade.checkHasPendingClaimsStatus(event);
   }
   onExportAllCPTCode(event: any){
     this.cptCodeFacade.onExportAllUser(event);
