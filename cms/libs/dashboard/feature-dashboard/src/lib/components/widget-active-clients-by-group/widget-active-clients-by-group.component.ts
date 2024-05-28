@@ -26,7 +26,6 @@ import { UserDataService } from '@cms/system-config/domain';
 @Component({
   selector: 'dashboard-widget-active-clients-by-group',
   templateUrl: './widget-active-clients-by-group.component.html',
-  styleUrls: ['./widget-active-clients-by-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
