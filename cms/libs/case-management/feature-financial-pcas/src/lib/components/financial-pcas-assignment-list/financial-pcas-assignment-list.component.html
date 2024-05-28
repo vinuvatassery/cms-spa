@@ -13,7 +13,6 @@ aria-label="Assignment"> Assignment</button>
                               required [data]="objectCodesData$"
                               textField="ledgerName" valueField="objectCodeId" [valuePrimitive]="true"
                               [(ngModel)]="objectCodeIdValue"
-                              (close)="close()"
                               (selectionChange)="objectCodeChange($event)"
                           >
                         </kendo-dropdownlist>

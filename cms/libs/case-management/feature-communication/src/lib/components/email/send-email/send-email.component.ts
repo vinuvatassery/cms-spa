@@ -321,7 +321,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (this.templateLoadType === null || this.templateLoadType === undefined || this.templateLoadType === '') {
       this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
     }
-    this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.templateLoadType, this.communicationEmailTypeCode ?? '')
+    this.communicationFacade.loadTemplates(this.notificationGroup, this.templateLoadType, this.communicationEmailTypeCode ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -422,7 +422,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
     const emailData = this.getEmailPayload(draftTemplate);
-    let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
+    let {templateTypeCode} = this.getApiTemplateTypeCode();
     emailData.templateTypeCode = templateTypeCode;
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     emailFormData.append('description', draftTemplate.description ?? '');
@@ -1159,7 +1159,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   editorValueChange(event: any) {
     this.updatedTemplateContent = event;
-    if(!(this.updatedTemplateContent  === undefined) || !(this.updatedTemplateContent === '') || !(this.updatedTemplateContent === "") || !(this.updatedTemplateContent.trim() === '<p></p>')){
+    if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<p></p>')){
       this.isContentMissing = false;
     }
     this.ref.detectChanges();

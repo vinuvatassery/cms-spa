@@ -11,7 +11,7 @@ import { ActiveInactiveFlag } from '@cms/shared/ui-common';
   templateUrl: './forms-and-documents.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormsAndDocumentsComponent implements OnInit {
+export class FormsAndDocumentsComponent {
   /** Public properties **/
   isOpenAttachment = false;
   foldersList: any = [];
@@ -29,7 +29,6 @@ export class FormsAndDocumentsComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {}
   /** Internal event methods **/
   onCloseAttachmentClicked() {
     this.formsDocumentDialog.close()
@@ -100,7 +99,7 @@ export class FormsAndDocumentsComponent implements OnInit {
   }
 
   loadFolderFiles() {
-    var payload={
+    let payload={
       sort : true,
       active: ActiveInactiveFlag.Yes
     }

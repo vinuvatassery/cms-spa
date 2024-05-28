@@ -11,7 +11,7 @@ import {
   NavigationType, ContactInfo, ClientAddress, AddressTypeCode,
   ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact,
   CompletionChecklist, ClientDocument, ClientCaseElgblty,
-  ClientDocumentFacade, HomeAddressProof, StatesInUSA, WorkflowTypeCode
+  ClientDocumentFacade, HomeAddressProof, StatesInUSA,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';

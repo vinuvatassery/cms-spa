@@ -186,10 +186,7 @@ export class VendorHeaderToolsComponent {
         const preferredContact = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.preferredFlag === "Y" && contact.emailAddress?.trim());
         const contactWithValidEmail = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.emailAddress && contact.emailAddress.trim());
         this.toEmail = [];
-        if (preferredContact) {
-          this.toEmail = [];
-          this.sendActions[1].isVisible = true;
-        } else if (contactWithValidEmail) {
+        if (preferredContact || contactWithValidEmail ) {
           this.toEmail = [];
           this.sendActions[1].isVisible = true;
         }
