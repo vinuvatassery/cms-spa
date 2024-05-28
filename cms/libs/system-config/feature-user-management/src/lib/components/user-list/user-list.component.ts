@@ -6,7 +6,7 @@ import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { ConfigurationProvider, DocumentFacade, NotificationSnackbarService, NotificationSource, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { UserDataService, UserManagementFacade } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
 import { NotificationService } from '@progress/kendo-angular-notification';
 
@@ -80,7 +80,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     lastModifierId: "Modified By",
     activeFlag: "Status",
   };
-
+  loggedInUserId!: any;
   dropDowncolumns: any = [
     { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
@@ -105,6 +105,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     private readonly notificationService: NotificationService,
     private router: Router,
     private readonly loaderService: LoaderService,
+    private readonly userDataService: UserDataService,
     
   ) {
     this.notifyOnReactivatingUser();
@@ -123,13 +124,37 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
       }
         this.onUserDetailsClicked(true);
       },
+    },{
+      buttonType: 'btn-h-danger',
+      text: 'Deactivate',
+      icon: 'block',
+      type: 'Deactivate',
+      click: (data: any): void => {
+        this.onUserDeactivateClicked(data);
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Reactivate',
+      icon: 'done',
+      type: 'Reactivate',
+      click: (data: any): void => {
+        this.onUserReactivateClicked(data);
+      }
     },
   ];
 
 
   ngOnInit(): void {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[2]?.value,
+      sort: this.sort,
+      filter : this.filter === undefined?null:this.filter
+    };
+    this.getLoggedInUserProfile();
     this.addSearchSubjectSubscription();
-    this.loadUserFilterColumn();
+    this.loadUserFilterColumn();    
   }
   ngOnChanges(): void {
     this.state = {
@@ -533,5 +558,16 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
   }
+  getLoggedInUserProfile() {
+    this.userDataService.getProfile$.subscribe((profile: any) => {
+      if (profile?.length > 0) {
+        this.loggedInUserId = profile[0]?.loginUserId;
+      }
+    });
+  }
 
+  loggedInUserValiation(data:any)
+  {
+    return (this.loggedInUserId == data.loginUserId);
+  }
 }
