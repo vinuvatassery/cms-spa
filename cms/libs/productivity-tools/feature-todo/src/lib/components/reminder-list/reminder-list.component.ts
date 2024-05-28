@@ -258,8 +258,8 @@ export class ReminderListComponent implements  OnInit{
             this.itemsLoader =false;
           }
           this.todoItemList = todoItemList?.data ? todoItemList?.data : [];
-          var currentDate = new Date();
-          var validDate = new Date(currentDate.setDate(currentDate.getDate() +30));
+          let currentDate = new Date();
+          let validDate = new Date(currentDate.setDate(currentDate.getDate() +30));
           this.todoItemList = this.todoItemList.filter(todoItem => new Date(todoItem.alertDueDate) <= validDate);
           this.todoItemList.forEach((todoItem:any)=>{
           

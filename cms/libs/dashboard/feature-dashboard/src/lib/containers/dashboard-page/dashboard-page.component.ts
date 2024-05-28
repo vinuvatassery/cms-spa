@@ -419,7 +419,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  changedOptions() {}
 
   removeItem(item: any) {
     this.dashboard.splice(this.dashboard.indexOf(item), 1);

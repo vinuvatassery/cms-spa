@@ -35,9 +35,11 @@
                   (click)="uploadFilesClicked(uploadFileTemplate)"> <span class="material-icons"> upload</span>
                         UPLOAD
                         FILE </button>
+                        <span class="fileversion" *ngIf="showDragEnabledText">Drag Enabled</span>
             </div>
+         
                         </div>
-
+                     
                         <div class="flex-col flex-col-2 text-right">
                               <span class="mt-4" style="display: inline-block;">
                                 <input type="checkbox" kendoCheckBox aria-labelledby="showactive"
@@ -56,6 +58,7 @@
  [foldersTree] ="folderFileList$ | async" 
  [treeViewSize]='"large"'
  [filter]="sortOrder?.lovCode?.toLowerCase()"
+ [isShowInActiveChecked]="isActiveChecked"
 (newVersionFileUploadOpenEvent)="newVersionFileUploadClick($event, newVersionTemplate)"
 ></system-config-common-form-document-list>
 <div class="bottom-fixed-wrapper text-right flex-gap" *ngIf="isDragDropEnabled"> 

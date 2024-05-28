@@ -62,6 +62,11 @@ export class UserManagementFacade {
     field: this.sortValueSexualOrientationListGrid,
   }];
 
+  public sortValueUserRolesListGrid = 'roleDesc'; 
+  public sortUserRolesListGrid: SortDescriptor[] = [{
+    field: this.sortValueUserRolesListGrid,
+  }];
+
   private userListSubject = new BehaviorSubject<User[]>([]);
   private usersDataSubject = new BehaviorSubject<any>([]);
   private userInfoDataSubject = new Subject<any>();

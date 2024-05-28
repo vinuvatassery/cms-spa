@@ -25,6 +25,8 @@ export class UserManagementPageComponent {
   usersFilterColumn$ = this.userManagementFacade.usersFilterColumn$;
   userListProfilePhoto$ = this.userManagementFacade.userListProfilePhotoSubject;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  sortValueUserRolesListGrid = this.userManagementFacade.sortValueUserRolesListGrid;
+  sortUserRolesListGrid = this.userManagementFacade.sortUserRolesListGrid;
   /** Constructor **/
   constructor(private readonly userManagementFacade: UserManagementFacade, private readonly documentFacade: DocumentFacade ) { }
 

@@ -140,7 +140,7 @@ export class UserDataService {
         MaxResultCount : data.maxResultCount,
         SortType : data.sortType,
         Sorting : data.sortColumn,
-        Filter : data.filter
+        Filter : JSON.stringify(data.filter)
       }
       return this.http.post(
         `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${userId}/roles`,
