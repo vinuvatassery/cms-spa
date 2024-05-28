@@ -650,5 +650,12 @@ export class UserDataService {
     );
   }
 
+  checkUserStatus(userId : any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/get-user-active-client-count/${userId}` 
+    );
+  }
+
 
 }

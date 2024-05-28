@@ -35,13 +35,11 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   active = "Active";
   inActive = "Inactive";
-  statusList: any = [{ code: this.active, name: this.active }, { code: this.inActive, name: this.inActive }];
 
   columns: any = {
     roleDesc: "Role Assigned",
     lastModificationTime: "Last Modified",
     lastModifierId: "Modified By",
-    activeFlag: "Status",
   };
 
 

@@ -49,4 +49,8 @@ export class CptCodeService {
     return this.http.patch(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/cpt-code/${cptCodeId}`, options);
   }
 
+  checkHasPendingClaimsStatus(cptCodeId: string) {
+    return this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/cpt-code/${cptCodeId}`);
+  }
+
 }
