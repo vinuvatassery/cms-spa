@@ -47,6 +47,7 @@ export class FormDocumentsListComponent implements OnInit {
     this.gridState$.subscribe((res:any)=>{
       if(res){
       this.sortOrder = this.folderSortLovList.filter((x :any)=> x.lovCode == res.gridState)[0]
+      this.isShowDragEnabledText()
       this.cdr.detectChanges();
       }
     })
