@@ -68,21 +68,13 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['filter']){
-    if (!changes['filter'].firstChange) {
-      if(changes['filter'].currentValue == 'cust'){
+    if (!changes['filter'].firstChange) { 
         this.filterValue = changes['filter'].currentValue
-      }else{
-        this.filterValue = changes['filter'].currentValue
-      }
     }
   }
     if(changes['isShowInActiveChecked']){
-    if (!changes['isShowInActiveChecked'].firstChange) {
-      if(changes['isShowInActiveChecked'].currentValue){
+    if (!changes['isShowInActiveChecked'].firstChange) {  
         this.activeFlag = changes['isShowInActiveChecked'].currentValue
-      }else{
-        this.activeFlag = changes['isShowInActiveChecked'].currentValue
-      }
     }
   }
     if(this.filterValue == 'cust' && !this.activeFlag){
