@@ -23,6 +23,7 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   @Input() isPopUp:any;
   @Input() filter =""
   @Output() newVersionFileUploadOpenEvent = new EventEmitter()
+  @Input() isShowInActiveChecked = false;
   selectedfolder: string = "";
   isShowLoader: boolean = true;
   @ViewChild('renameTemplate', { read: TemplateRef })
@@ -54,6 +55,8 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   activeflag:any;
   isdeactivateOpen = false;
   reactivateOpen=false;
+  filterValue="";
+  activeFlag = false;
   public constructor(
     private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
     private readonly loaderService: LoaderService,
@@ -64,15 +67,22 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['filter']){
-    if (!changes['filter'].firstChange) {
-      if(changes['filter'].currentValue == 'cust'){
-        this.isDragDropEnabled = true
-      }else{
-        this.isDragDropEnabled = false
-      }
-    } 
+    if (!changes['filter'].firstChange) { 
+        this.filterValue = changes['filter'].currentValue
+    }
   }
+    if(changes['isShowInActiveChecked']){
+    if (!changes['isShowInActiveChecked'].firstChange) {  
+        this.activeFlag = changes['isShowInActiveChecked'].currentValue
+    }
   }
+    if(this.filterValue == 'cust' && !this.activeFlag){
+          this.isDragDropEnabled = true;
+    }else{
+      this.isDragDropEnabled = false;
+    }
+  }
+  
   ngOnInit(): void {
   }
   public moreActions = [
