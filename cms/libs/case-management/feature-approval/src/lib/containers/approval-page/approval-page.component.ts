@@ -140,6 +140,9 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   saveSubscription!:Subscription;
   loadEmailSubscription!:Subscription;
   esignSubscription!:Subscription;
+  pendingApprovalPaymentCountSubscription!: Subscription;
+  pendingApprovalGeneralCountSubscription!: Subscription;
+  pendingApprovalImportedClaimCountSubscription!: Subscription;
 
   /** Constructor **/
   constructor(
@@ -188,6 +191,9 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
     this.loadHivVerificationCountInit();
     this.navigationMenuFacade.getHivVerificationCount();
     this.loadWorkFlowSubscriptionInit();
+    this.paymentsCountSubscription();
+    this.generalsCountSubscription();
+    this.ImportedClaimsCountSubscription();
   }
 
   ngOnDestroy(): void {
@@ -195,10 +201,13 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
     this.saveSubscription?.unsubscribe();
     this.loadEmailSubscription?.unsubscribe();
     this.esignSubscription?.unsubscribe();
+    this.pendingApprovalPaymentCountSubscription?.unsubscribe();
+    this.pendingApprovalGeneralCountSubscription?.unsubscribe();
+    this.pendingApprovalImportedClaimCountSubscription?.unsubscribe();
   }
 
   loadWorkFlowSubscriptionInit() {
-    this.loadWorkFlowSubscription = this.loadWorkflow$.subscribe((response: any) => { 
+    this.loadWorkFlowSubscription = this.loadWorkflow$.subscribe((response: any) => {
       if (response === 'REJECT' && this.clientHivVerification.resentEmail) {
                 this.loadHivVerificationEmail();
       }
@@ -248,7 +257,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
       this.cd.detectChanges();
     });
   }
-  
+
   GetHivVerification(){
     this.hivVerificationApprovalFacade.getHivVerificationApproval();
   }
@@ -267,26 +276,34 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   permissionServiceAndLevelArray:any[]=[];
 
   loadTabCount(){
-    this.loadPendingApprovalPaymentLevel();
     this.navigationMenuFacade.getPendingApprovalGeneralCount();
-    this.navigationMenuFacade.getPendingApprovalImportedClaimCount(); 
-    this.pendingApprovalPaymentCount$.subscribe((response: any) => {
+    this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
+    this.cd.detectChanges();
+  }
+
+  paymentsCountSubscription()
+  {
+    this.pendingApprovalPaymentCountSubscription = this.pendingApprovalPaymentCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalPaymentCount = response;
       }
       this.cd.detectChanges();
     });
-    
-    this.cd.detectChanges();
+  }
 
-    this.pendingApprovalGeneralCount$.subscribe((response: any) => {
+  generalsCountSubscription()
+  {
+    this.pendingApprovalGeneralCountSubscription = this.pendingApprovalGeneralCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalGeneralCount = response;
       }
       this.cd.detectChanges();
     });
+  }
 
-    this.pendingApprovalImportedClaimCount$.subscribe((response: any) => {
+  ImportedClaimsCountSubscription()
+  {
+    this.pendingApprovalImportedClaimCountSubscription = this.pendingApprovalImportedClaimCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalImportedClaimCount = response;
       }
@@ -297,14 +314,14 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   loadApprovalsGeneralGrid(event: any): void {
     this.pendingApprovalGeneralFacade.loadApprovalsGeneral();
   }
-  
+
   loadPendingApprovalPaymentLevel() {
     this.userDataService.getProfile$.subscribe((profile: any) => {
       if (profile?.length > 0) {
         this.permissionLevels=[];
         this.pendingApprovalPaymentCount = 0;
         let level = this.setPermissionLevel(ApprovalLimitPermissionCode.InsurancePremiumPermissionCode);
-        this.addItemToArray(PendingApprovalPaymentTypeCode.InsurancePremium,level);       
+        this.addItemToArray(PendingApprovalPaymentTypeCode.InsurancePremium,level);
 
         level = this.setPermissionLevel(ApprovalLimitPermissionCode.MedicalClaimPermissionCode);
         this.addItemToArray(PendingApprovalPaymentTypeCode.TpaClaim,level);
@@ -318,7 +335,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
+
   addItemToArray(serviceTypeCode:string,level:number)
   {
     let object = {
@@ -329,19 +346,20 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   }
   setPermissionLevel(ifPermission : any)
   {
+    let level = UserLevel.Level1Value;
     if(this.userManagementFacade.hasPermission([ifPermission]))
     {
-      return UserLevel.Level1Value;
+      const maxApprovalAmount = this.userManagementFacade.getUserMaxApprovalAmount(ifPermission);
+      if(maxApprovalAmount != null && maxApprovalAmount > 0)
+      {
+        level = UserLevel.Level1Value;
+      }
+      else
+      {
+        level = UserLevel.Level2Value;
+      }
     }
-    let maxApprovalAmount = this.userManagementFacade.getUserMaxApprovalAmount(ifPermission);
-    if(maxApprovalAmount != undefined && maxApprovalAmount > 0)
-    {
-      return UserLevel.Level1Value;
-    }
-    else
-    {
-      return UserLevel.Level2Value;
-    }
+    return level;
   }
 
   loadApprovalsPaymentsGrid(gridDataValue: any): void {
@@ -365,7 +383,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
     this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
     this.importedClaimFacade.loadImportedClaimsLists(gridDataValue);
   }
- 
+
   loadApprovalsPaymentsMain(gridDataValue: any): void {
     if (
       !gridDataValue.selectedPaymentType ||
@@ -677,7 +695,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   //Get email subject details and notification template.
   private loadHivVerificationEmail() {
       this.hivVerificationApprovalFacade.showLoader();
-      this.loadEmailSubscription =this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
+      this.loadEmailSubscription =this.communicationFacade.loadTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
         .subscribe({
           next: (data: any) => {
             if (data) {
@@ -734,7 +752,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.saveHivVerificationData();           
+            this.saveHivVerificationData();
           }
           this.hivVerificationApprovalFacade.hideLoader();
         },
@@ -771,7 +789,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
         }
       }
     });
-  } 
+  }
 
   // navigate to workflow after ACCEPT/REJECT
   private navigateToWorkflowSection(){
@@ -784,12 +802,12 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
                 eid: response.entityID,
                 wtc: response?.workflowTypeCode
               },
-            });        
+            });
         }
       },
     })
   }
 
     ///Resent - ESign email code block end
-   
+
 }

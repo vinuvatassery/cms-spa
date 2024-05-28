@@ -31,9 +31,15 @@ export class FormsAndDocumentFacade {
     reActiveTemplate$ =  this.reActiveTemplateSubject.asObservable();
     private isActiveSubject = new BehaviorSubject<any>([]);
     isActive$ =  this.isActiveSubject.asObservable();
+
+    isShowInActive= false;
   
     showLoader() { this.loaderService.show(); }
     hideLoader() { this.loaderService.hide(); }
+    filter1={
+      sort : true,
+      active: "",
+    }
     constructor(private readonly uploadFormandDocumentService: FormsAndDocumentDataService,
         private readonly loggingService: LoggingService,
         private readonly loaderService: LoaderService,
@@ -68,6 +74,7 @@ export class FormsAndDocumentFacade {
                 this.formsDocumentsSubject.next(response);
                 if(payLoad.ischecked != undefined){
                   this.isActiveSubject.next(payLoad.ischecked);
+                  
                 }
                 this.hideLoader();
             },
@@ -100,14 +107,9 @@ export class FormsAndDocumentFacade {
         {
             this.addFolderSubject.next(response);
             if (response) 
-            {
-              var filter={
-                sort : true,
-                active:payLoad.isActiveChecked ? 'A' : 'Y',
-              }
-              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+            { this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
               this.hideLoader();
-              this.loadFolderFile(filter);
+              this.isActiveSubscription();
               this.getFolderName();
             } 
         },
@@ -133,18 +135,10 @@ export class FormsAndDocumentFacade {
             this.showLoader()
             this.uploadFormandDocumentService.uploadFiles(formData).subscribe({
               next:(response) => {
-                this.isActive$.subscribe({
-                  next :(data) =>{
-                    var filter={
-                      sort : true,
-                      active: data? 'A' : 'Y',
-                    }
                     this.uploadFilesSubject.next(response);
-                    this.hideLoader();
                     this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
-                    this.loadFolderFile(filter);
-                  }
-                })
+                    this.hideLoader();
+                    this.isActiveSubscription();
               },
               error: (err) => {
                 this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -176,19 +170,10 @@ export class FormsAndDocumentFacade {
           next: (response:any) => {
             this.renameSubject.next(response);
             if (response) {
-              this.isActive$.subscribe({
-                next: (data)=>{
-                  var filter={
-                    sort : true,
-                    active:data? 'A' : 'Y',
-                  }
-                  this.loaderService.hide();
-                  this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
-                  this.loadFolderFile(filter);
-                  this.getFolderName();
-                }
-                
-              })
+              this.loaderService.hide();
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+              this.isActiveSubscription();
+              this.getFolderName();
               
              
             }
@@ -207,7 +192,7 @@ export class FormsAndDocumentFacade {
             if (response) {
               var filter={
                 sort : 'cust',
-                active:  this.isActive$ ? 'A' : 'Y',
+                active:  this.isShowInActive ? 'A' : 'Y',
               }
               this.loadFolderFile(filter);
               this.loaderService.hide();
@@ -217,10 +202,10 @@ export class FormsAndDocumentFacade {
           error: (err) => {
             var filter={
               sort : true,
-              active: 'Y'
+              active:  this.isShowInActive ? 'A' : 'Y',
             }
             this.loadFolderFile(filter);
-            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, '');
             this.loaderService.hide();
           },
         })
@@ -236,7 +221,7 @@ export class FormsAndDocumentFacade {
             }
           },
           error: (err) => {
-            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, '');
             this.loaderService.hide();
           },
         })
@@ -252,7 +237,7 @@ export class FormsAndDocumentFacade {
             }
           },
           error: (err) => {
-            this.showHideSnackBar(SnackBarNotificationType.ERROR, 'attachment required');
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, '');
             this.loaderService.hide();
           },
         })
@@ -262,18 +247,10 @@ export class FormsAndDocumentFacade {
           this.uploadFormandDocumentService.updateStatus(payload).subscribe({
            next: (response:any) => {
              if(response){
-              this.isActive$.subscribe({
-                next :(data) =>{
-                  var filter={
-                    sort : true,
-                    active:  data ? 'A' : 'Y',
-                  }
-                  this.deActiveTemplateSubject.next(true);
-              this.loadFolderFile(filter);
+              this.deActiveTemplateSubject.next(true);
               this.loaderService.hide();
-                }
-              })
              }
+             this.isActiveSubscription();
              this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,response.message);
            },
            error: (err) => {
@@ -288,19 +265,11 @@ export class FormsAndDocumentFacade {
           this.uploadFormandDocumentService.updateStatus(payload).subscribe({
            next: (response:any) => {
              if(response){
-              this.isActive$.subscribe({
-                next :(data) =>{
-                  var filter={
-                    sort : true,
-                    active: data ? 'A' : 'Y',
-                  }
-                  this.reActiveTemplateSubject.next(true);
+              this.reActiveTemplateSubject.next(true);
+                this.isActiveSubscription();
                   this.loaderService.hide();
-                  this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
-                  this.loadFolderFile(filter);
-                }
-              })
              }
+             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
            },
            error: (err) => {
              this.loaderService.hide();
@@ -308,4 +277,14 @@ export class FormsAndDocumentFacade {
            },
          });
       }
+
+      isActiveSubscription(){
+      
+              this.isActive$.subscribe({
+                next :(data) =>{
+                  this.filter1.active = data ? 'A' : 'Y',
+                  this.loadFolderFile(this.filter1);
+                }
+              })
+             }
 }

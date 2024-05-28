@@ -179,10 +179,10 @@ defaultPageSize=20;
 
   loadListGrid() {
     this.updateStatusFilterValue(this.filter, this.statusArray, this.statusArrayDesc);
-
+    this.state.take=this.defaultPageSize;
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
-      this.state.take=this.defaultPageSize,
+      this.state.take,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
@@ -325,7 +325,7 @@ defaultPageSize=20;
    if(this.interfaceType==this.Usps)
 {
 
-  var errorMessageparse=JSON.parse(error);
+  let errorMessageparse=JSON.parse(error);
   this.errorCode=errorMessageparse.requestStatusCode;
   this.message=errorMessageparse.ErrorMessage;
   this.address=errorMessageparse.Address; 

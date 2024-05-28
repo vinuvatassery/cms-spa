@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'common-edit-template-name',

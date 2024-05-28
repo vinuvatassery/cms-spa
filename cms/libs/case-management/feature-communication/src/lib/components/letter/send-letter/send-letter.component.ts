@@ -250,7 +250,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     letterRequestFormdata.append('selectedMailCode', this.mailingAddress?.mailCode ?? '');
     letterRequestFormdata.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
     letterRequestFormdata.append('documentTemplateId', this.documentTemplate?.documentTemplateId ?? '');
-    let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
+    let {templateTypeCode} = this.getApiTemplateTypeCode();
     letterRequestFormdata.append('templateTypeCode', templateTypeCode);
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorLetterData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.entityType);
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
@@ -571,7 +571,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   private loadDropdownLetterTemplates() {
     if (this.notificationGroup !== undefined && this.templateLoadType !== undefined) {
       this.loaderService.show();
-      this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.templateLoadType, this.communicationLetterTypeCode ?? '')
+      this.communicationFacade.loadTemplates(this.notificationGroup, this.templateLoadType, this.communicationLetterTypeCode ?? '')
         .subscribe({
           next: (data: any) => {
             if (data) {
@@ -890,7 +890,7 @@ loadMailingAddress() {
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;
-  if(!(this.updatedTemplateContent  === undefined) || !(this.updatedTemplateContent === '') || !(this.updatedTemplateContent === "") || !(this.updatedTemplateContent.trim() === '<p></p>')){
+  if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<p></p>')){
     this.isContentMissing = false;
   }
   this.ref.detectChanges();

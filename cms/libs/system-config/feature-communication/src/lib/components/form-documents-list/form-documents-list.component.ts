@@ -33,6 +33,7 @@ export class FormDocumentsListComponent implements OnInit {
   @Input() getFolders$: any; 
   @Output() getGridState = new EventEmitter<any>()
   uploadFileDialog :any
+  showDragEnabledText = false
   isActiveChecked: boolean = false;
 
   folderSortLovSubscription!: Subscription;
@@ -43,9 +44,12 @@ export class FormDocumentsListComponent implements OnInit {
     this.uploadNewVersionDocument$.subscribe((res:any) =>{
       this.uploadFileDialog?.close()
     })
+    this.onShowActiveClickedEvent();
     this.gridState$.subscribe((res:any)=>{
       if(res){
       this.sortOrder = this.folderSortLovList.filter((x :any)=> x.lovCode == res.gridState)[0]
+      this.isShowDragEnabledText()
+      this.cdr.detectChanges();
       }
     })
   }
@@ -185,11 +189,12 @@ export class FormDocumentsListComponent implements OnInit {
 
   onSortChange(event:any){
     this.sortOrder = event;
-    var filter={
+    let filter={
       sort : this.sortOrder.lovCode.toLowerCase(),
       active: ActiveInactiveFlag.Yes
     }
     this.sortChangeEvent.emit(this.sortOrder.lovCode.toLowerCase())
+    this.isShowDragEnabledText()
    this.loadFolders.emit(filter);
   }
   addFolderData(payLoad:any){
@@ -207,13 +212,13 @@ export class FormDocumentsListComponent implements OnInit {
         if(response.length > 0){
           this.folderSortLovList = response;
           this.getGridState.emit(true)
-          this.cdr.detectChanges();
+        
         }
       }
     });
   }
   loadFoldersTree(){
-    var filter={
+    let filter={
       sort : true,
       active: this.isActiveChecked ? 'A' : 'Y',
     }
@@ -265,5 +270,15 @@ onShowActiveClickedEvent(){
     ischecked : this.isActiveChecked ? true:false
   };
   this.loadFolders.emit(payload);
+  this.formsAndDocumentFacade.isShowInActive =  this.isActiveChecked
+  this.isShowDragEnabledText();
+}
+
+isShowDragEnabledText(){
+  if(!this.isActiveChecked && this.sortOrder.lovCode.toLowerCase()=='cust'){
+    this.showDragEnabledText = true
+  }else{
+    this.showDragEnabledText = false
+  }
 }
 }

@@ -22,7 +22,7 @@ fileFolderPayload :any
     this.getFolderName();
     this.formsAndDocumentFacade.uploadNewVersionDocument$.subscribe(res =>{
       if(res){
-        var filter={
+        let filter={
           sort : true,
           active: ActiveInactiveFlag.Yes
         }

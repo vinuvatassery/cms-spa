@@ -600,7 +600,7 @@ updateSendEmailSuccessStatus(event:any){
 loadPendingEsignRequestInfo(){
   this.loaderService.show();
   let flowName = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail : CommunicationEventTypeCode.ApplicationAuthorizationEmail;
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', flowName ?? '')
+    this.esignFacade.getEsignRequestInfo(this.nullCheck(this.workflowFacade.clientCaseEligibilityId ), this.nullCheck(flowName))
     .subscribe({
       next: (data: any) =>{
         if (data != null && data?.esignRequestId != null) {
@@ -713,4 +713,12 @@ loadAuthorization() {
     }
   });
 }
+nullCheck(value:any){
+  if(value){
+    return value;
+  }
+  else{
+    return '';
+  }
+ }
 }

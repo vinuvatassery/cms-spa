@@ -10,8 +10,7 @@ import {
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { group } from '@angular/animations';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
@@ -130,8 +129,8 @@ export class UserDetailComponent implements OnInit {
         this.userRoleLov = data;
         if(this.isEditValue){
           let selectedRoleValues: any = [];
-          for(var role of this.userDetailRoles){
-            var roleData = data.filter((x: any)=> x.roleCode == role);
+          for(let role of this.userDetailRoles){
+            let roleData = data.filter((x: any)=> x.roleCode == role);
             if(roleData && roleData.length > 0){
               this.selectedUserRolesList.push(roleData[0].roleId);
               selectedRoleValues.push(roleData[0]);
@@ -193,7 +192,9 @@ export class UserDetailComponent implements OnInit {
     if(this.userRoleType == UserAccessType.Internal){
       this.isAccessTypeInternal = true;
       this.setValidators(null, Validators.required);
-    }else{
+    } else if(this.isEditValue && this.userRoleType == UserAccessType.External){
+      this.setValidators(null, Validators.required);
+    } else{
       this.isAccessTypeInternal = false;
       this.setValidators(Validators.required, null);              
     }
@@ -274,7 +275,7 @@ export class UserDetailComponent implements OnInit {
       pOrNbr: formControls["pNumber"].value,
       jobTitle: formControls["jobTitle"].value,
       adUserId: formControls["adUserId"].value,
-      loginUserId: this.userId
+      loginUserId: this.isEditValue ? this.userId : null
     };
     if(!this.isEditValue){
       this.userManagementFacade.addUser(user);

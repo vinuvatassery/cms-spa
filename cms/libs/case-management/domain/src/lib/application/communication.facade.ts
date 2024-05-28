@@ -90,13 +90,7 @@ export class CommunicationFacade {
     });
   }
 
-  loadEmailTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
-    return this.emailDataService.loadEmailTemplates(
-      groupCode, categoryCode, templateTypeCode
-    );
-  }
-
-  loadLetterTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
+  loadTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
     return this.emailDataService.loadEmailTemplates(
       groupCode, categoryCode, templateTypeCode
     );
@@ -164,15 +158,15 @@ export class CommunicationFacade {
 
   prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any,eventGroupCode: string, notificationGroup:any,entityId: any, entityType: any) {
     const formData = new FormData();
-    formData.append('templateTypeCode', templateTypeCode ?? '');
-    formData.append('eventGroupCode', eventGroupCode ?? '');
-    formData.append('entityTypeCode', notificationGroup ?? '');
-    formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
-    formData.append('typeCode', draftTemplate?.subtypeCode ?? '');
-    formData.append('languageCode', draftTemplate?.languageCode ?? '');
-    formData.append('description', draftTemplate?.description ?? '');
-    formData.append('templateContent', draftTemplate?.templateContent ?? '');
-    formData.append('notifcationDraftId', draftTemplate?.notificationDraftId ?? '');
+    formData.append('templateTypeCode',this.nullCheck(templateTypeCode));
+    formData.append('eventGroupCode',this.nullCheck(eventGroupCode));
+    formData.append('entityTypeCode',this.nullCheck(notificationGroup));
+    formData.append('notificationTemplateId', this.nullCheck(draftTemplate?.notificationTemplateId));
+    formData.append('typeCode', this.nullCheck(draftTemplate?.subtypeCode));
+    formData.append('languageCode',this.nullCheck( draftTemplate?.languageCode));
+    formData.append('description',this.nullCheck(draftTemplate?.description));
+    formData.append('templateContent', this.nullCheck(draftTemplate?.templateContent));
+    formData.append('notifcationDraftId', this.nullCheck(draftTemplate?.notificationDraftId));
     formData.append('entityId', entityId);
     formData.append('entityType', entityType);
     if (clientAndVendorAttachedFiles?.length > 0){
@@ -182,7 +176,14 @@ export class CommunicationFacade {
         formData.append('systemAttachments[' + i + '][fileSize]', file.size);
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
-        formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode == undefined ? file?.document?.documentTypeCode : (file.typeCode == undefined && file?.document?.documentTypeCode == undefined ? '' : file.typeCode));
+        let typeCode = '';
+        if(file.typeCode == undefined){
+        typeCode =  file?.document?.documentTypeCode
+        }
+        else if (file.typeCode != undefined && file?.document?.documentTypeCode != undefined){
+         typeCode = file.typeCode
+        }
+        formData.append('systemAttachments[' + i + '][typeCode]',typeCode);
         formData.append('systemAttachments[' + i + '][clientDocumentId]', file?.document?.clientDocumentId ?? '');
         formData.append('systemAttachments[' + i + '][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
         i++;
@@ -207,39 +208,39 @@ export class CommunicationFacade {
 
   createFormDataForEmail(data: {templateTypeCode:string, eventGroupCode: string, subject: string, toEmail: string, ccEmail: any[], bccEmail: any[], eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[]}) {
     const formData = new FormData();
-    formData.append('templateTypeCode', data?.templateTypeCode ?? '');
-    formData.append('eventGroupCode', data?.eventGroupCode ?? '');
-    formData.append('requestSubject', data?.subject ?? '');
-    formData.append('loginUserId', data?.userId ?? '');
-    formData.append('clientCaseId', data?.caseId ?? '');
-    formData.append('entity', data?.entity ?? '');
-    formData.append('entityId', data?.entityId ?? '');
-    formData.append('clientCaseEligibilityId', data?.eligibilityId ?? '');
-    formData.append('documentTemplateId', data?.emailData?.documentTemplateId ?? '');
+    formData.append('templateTypeCode', this.nullCheck(data?.templateTypeCode));
+    formData.append('eventGroupCode', this.nullCheck(data?.eventGroupCode));
+    formData.append('requestSubject', this.nullCheck(data?.subject));
+    formData.append('loginUserId',this.nullCheck(data?.userId));
+    formData.append('clientCaseId', this.nullCheck(data?.caseId));
+    formData.append('entity', this.nullCheck(data?.entity));
+    formData.append('entityId', this.nullCheck(data?.entityId));
+    formData.append('clientCaseEligibilityId',this.nullCheck(data?.eligibilityId));
+    formData.append('documentTemplateId', this.nullCheck(data?.emailData?.documentTemplateId));
     this.addCommaSeperatedEmailToFormData(formData, data?.toEmail, 'to');
     if(data?.bccEmail){
       let i = 0;
       data?.bccEmail.forEach((item: any) =>{
-        formData.append('bcc[' + i + '][email]', item.email ?? '');
-        formData.append('bcc[' + i + '][isDefault]', item.isDefault ?? '');
+        formData.append('bcc[' + i + '][email]', this.nullCheck(item.email));
+        formData.append('bcc[' + i + '][isDefault]', this.nullCheck(item.isDefault));
         i++;
       });
     }
     if(data?.ccEmail){
       let i = 0;
       data?.ccEmail.forEach((item: any) =>{
-        formData.append('cc[' + i + '][email]', item.email ?? '');
-        formData.append('cc[' + i + '][isDefault]', item.isDefault ?? '');
+        formData.append('cc[' + i + '][email]', this.nullCheck(item.email));
+        formData.append('cc[' + i + '][isDefault]', this.nullCheck(item.isDefault));
         i++;
       });
     }
     if (data?.emailData) {
       let subTypeCode = data?.emailData?.subtypeCode?? data?.emailData?.subTypeCode
-      formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
+      formData.append('notificationTemplateId', this.nullCheck(data?.emailData?.notificationTemplateId));
       formData.append('typeCode', data?.emailData?.typeCode);
-      formData.append('subTypeCode', subTypeCode ?? '');
-      formData.append('requestBody', data?.emailData?.templateContent ?? '');
-      formData.append('notificationDraftId', data?.emailData?.notificationDraftId ?? '');
+      formData.append('subTypeCode', this.nullCheck(subTypeCode));
+      formData.append('requestBody', this.nullCheck(data?.emailData?.templateContent));
+      formData.append('notificationDraftId',this.nullCheck(data?.emailData?.notificationDraftId));
     }
     if (data?.clientAndVendorEmailAttachedFiles?.length > 0) {
       let i = 0;
@@ -247,8 +248,8 @@ export class CommunicationFacade {
         if (file.rawFile == undefined || file.rawFile == null) {
           formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
           formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file?.document));
-          formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode ?? '');
-          formData.append('systemAttachments[' + i + '][clientDocumentId]', file?.document?.clientDocumentId ?? '');
+          formData.append('systemAttachments[' + i + '][typeCode]',this.nullCheck(file.typeCode));
+          formData.append('systemAttachments[' + i + '][clientDocumentId]',this.nullCheck(file?.document?.clientDocumentId ));
           formData.append('systemAttachments[' + i + '][documentTemplateId]', file?.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
           i++;
         } else {
@@ -281,14 +282,14 @@ export class CommunicationFacade {
 
   prepareClientAndVendorLetterData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[], entityType: string) {
     let subTypeCode = emailData?.subTypeCode ?? emailData?.subtypeCode;
-    formData.append('notificationTemplateId', emailData?.notificationTemplateId ?? '');
-    formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
-    formData.append('description', emailData?.description ?? '');
+    formData.append('notificationTemplateId', this.nullCheck(emailData?.notificationTemplateId));
+    formData.append('documentTemplateId', this.nullCheck(emailData?.documentTemplateId));
+    formData.append('description', this.nullCheck(emailData?.description));
     formData.append('typeCode', emailData?.typeCode);
     formData.append('subTypeCode',subTypeCode);
-    formData.append('requestBody', emailData?.templateContent ?? '');
-    formData.append('notificationDraftId', emailData?.notificationDraftId ?? '');
-    formData.append('entity', entityType ?? '');
+    formData.append('requestBody',this.nullCheck(emailData?.templateContent));
+    formData.append('notificationDraftId', this.nullCheck(emailData?.notificationDraftId));
+    formData.append('entity',this.nullCheck(entityType));
     if(clientAndVendorEmailAttachedFiles?.length > 0){
     let i = 0;
     clientAndVendorEmailAttachedFiles.forEach((file: any) => {
@@ -296,7 +297,7 @@ export class CommunicationFacade {
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file.document.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
         formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode ?? file?.document?.documentTypeCode);
-        formData.append('systemAttachments[' + i + '][clientDocumentId]', file.document.clientDocumentId ?? '');
+        formData.append('systemAttachments[' + i + '][clientDocumentId]', this.nullCheck(file.document.clientDocumentId));
         formData.append('systemAttachments[' + i + '][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file.document.documentTemplateId : '');
         i++;
       } else {
@@ -366,12 +367,6 @@ export class CommunicationFacade {
     return this.emailDataService.sendSms(smsNotification);
   }
 
-  loadNotificationTemplates(groupCode: string, categoryCode: string, templateTypeCode: string) {
-    return this.emailDataService.loadEmailTemplates(
-      groupCode, categoryCode, templateTypeCode
-    );
-  }
-
   loadClientAttachments(clientId: any, typeCode: any) {
     return this.documentDataService.getDocumentsByClientCaseEligibilityId(
       clientId, 0, 1000, '', 'asc', null, null, typeCode
@@ -389,15 +384,15 @@ export class CommunicationFacade {
   prepareEsignLetterData(draftTemplate: any, entityId: any, loginUserId: string, cerEmailAttachedFiles: any[], entityType: string) {
     const formData = new FormData();
     let subTypeCode = draftTemplate?.subTypeCode ?? draftTemplate?.subtypeCode;
-    formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
-    formData.append('typeCode', draftTemplate?.typeCode ?? '');
-    formData.append('entityId', entityId ?? '');
-    formData.append('entity', entityType ?? '');
+    formData.append('documentTemplateId', this.nullCheck(draftTemplate?.documentTemplateId ));
+    formData.append('typeCode',this.nullCheck(draftTemplate?.typeCode));
+    formData.append('entityId',this.nullCheck(entityId));
+    formData.append('entity', this.nullCheck(entityType));
     formData.append('subTypeCode',subTypeCode)
-    formData.append('loginUserId', loginUserId ?? '');
-    formData.append('description', draftTemplate?.description ?? '');
-    formData.append('requestBody', draftTemplate?.templateContent ?? '');
-    formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
+    formData.append('loginUserId', this.nullCheck(loginUserId));
+    formData.append('description', this.nullCheck(draftTemplate?.description));
+    formData.append('requestBody', this.nullCheck(draftTemplate?.templateContent));
+    formData.append('notifcationDraftId',this.nullCheck(draftTemplate?.notifcationDraftId));
     if (cerEmailAttachedFiles?.length > 0){
     let i = 0;
     cerEmailAttachedFiles.forEach((file: any) => {
@@ -405,7 +400,7 @@ export class CommunicationFacade {
         formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
         formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
         formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode ?? file?.document?.documentTypeCode);
-        formData.append('systemAttachments[' + i + '][clientDocumentId]', file?.document?.clientDocumentId ?? '');
+        formData.append('systemAttachments[' + i + '][clientDocumentId]', this.nullCheck(file?.document?.clientDocumentId));
         formData.append('systemAttachments[' + i + '][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
         i++;
       } else {
@@ -414,5 +409,15 @@ export class CommunicationFacade {
     });
   }
     return formData;
+ }
+
+ nullCheck(value:any){
+  if(value){
+    return value;
+  }
+  else{
+    return '';
+  }
+
  }
 }

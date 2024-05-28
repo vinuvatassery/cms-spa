@@ -16,7 +16,6 @@ import {
   ClientEligibilityFacade,
   CaseFacade,
   ClientFacade,
-  ContactFacade
 } from '@cms/case-management/domain';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
