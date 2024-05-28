@@ -10,6 +10,10 @@ import { ForgotPasswordComponent } from './component/forgot-password/forgot-pass
 import { VerifyYourIdentyComponent } from './component/verify-your-identy/verify-your-identy.component';
 import { SetNewPasswordComponent } from './component/set-new-password/set-new-password.component';
 import { RecoverEmailComponent } from './component/recover-email/recover-email.component';
+import { ProvidersInformationComponent } from './component/providers-information/providers-information.component';
+import { CpHomeComponent } from './component/cp-home/cp-home.component';
+import { CpAccountSettingsComponent } from './component/cp-account-settings/cp-account-settings.component';
+import { CpMyProfileComponent } from './component/cp-my-profile/cp-my-profile.component';
 
 @NgModule({
   imports: [
@@ -26,6 +30,10 @@ import { RecoverEmailComponent } from './component/recover-email/recover-email.c
     VerifyYourIdentyComponent,
     SetNewPasswordComponent,
     RecoverEmailComponent,
+    ProvidersInformationComponent,
+    CpHomeComponent,
+    CpAccountSettingsComponent,
+    CpMyProfileComponent,
   ],
   exports: [
     SigninComponent,
@@ -37,6 +45,10 @@ import { RecoverEmailComponent } from './component/recover-email/recover-email.c
     VerifyYourIdentyComponent,
     SetNewPasswordComponent,
     RecoverEmailComponent,
+    ProvidersInformationComponent,
+    CpHomeComponent,
+    CpAccountSettingsComponent,
+    CpMyProfileComponent,
   ],
 })
 export class FeatureUserLoginSignupModule {}
