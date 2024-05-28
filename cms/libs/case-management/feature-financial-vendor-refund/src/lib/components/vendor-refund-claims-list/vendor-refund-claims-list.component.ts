@@ -93,9 +93,6 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges, OnDes
     this.tpaDataListSubscription = this.tpaData$.subscribe((res:any)=>{
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.cliams=res.data;
-      if(this.cliams){
-        
-      }
   })
   }
 

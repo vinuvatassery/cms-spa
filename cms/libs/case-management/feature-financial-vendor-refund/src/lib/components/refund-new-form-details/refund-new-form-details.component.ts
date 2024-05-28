@@ -1055,7 +1055,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       } else {
         dataItem.daySpyRfdGtDaySpy = false;
         if (!isNaN(refundRatio) && isFinite(refundRatio) && refundRatio > 0) {
-          inValid = !(rxRatio >= refundRatio);
+          inValid = !(rxRatio < refundRatio);
           dataItem.daySupplyRefundedRatioValid = inValid;
         } else {
           dataItem.daySupplyRefundedRatioValid = false;
@@ -1164,7 +1164,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       []
     );
 
-    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
+    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> !x.qtyRefundedValid|| !x.daySupplyRefundedValid || !x.refundedAmountValid)
     if ((this.refundRXForm.invalid) || InValidSelectedRefundPharmacyClaimInput.length >0) {
       this.scrollToValidationError();
     } else {
@@ -1211,7 +1211,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
         pharmacyRefundedItems: selectedpharmacyClaimsDto,
         vendorAddressId: this.vendorAddressId,
       };
-      if (this.isEdit == false) {
+      if (!this.isEdit) {
         this.financialVendorRefundFacade.showLoader();
         this.financialVendorRefundFacade
           .addNewRefundRx(refundRxData)

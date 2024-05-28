@@ -93,7 +93,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   totalIncome:any = 0;
   totalIncomeCalculated:any;
   fplPercentage:any
-  paperlessFlag:String | null= null;
+  paperlessFlag:string | null= null;
   workflowTypeCode:any;
   isOpenClientsAttachment=false;
   clientDependentId: any;

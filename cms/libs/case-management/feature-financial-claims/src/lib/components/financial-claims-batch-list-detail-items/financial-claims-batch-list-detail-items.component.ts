@@ -201,9 +201,6 @@ deletemodelbody =
 
   addPaymentServiceListSubscription() {
     this.batchItemsGridListSubjecription = this.batchItemsGridLists$.subscribe((service: any)=>{
-      if(service?.data){
-        
-      }
     });
   }
 

@@ -155,9 +155,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     this.priorityPopupShowSubscription();
     this.dentalInsuranceListSubscription =  this.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
       this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
-      if(this.medicalHealthPlansCount > 0){
-        
-      }
     })
   }
   ngOnChanges(): void {

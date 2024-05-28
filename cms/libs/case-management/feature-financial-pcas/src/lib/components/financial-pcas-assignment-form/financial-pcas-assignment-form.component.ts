@@ -336,7 +336,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
 
 
     if(!this.newForm){
-      this.pcaAssignmentDatesValidation$.subscribe((res:Boolean) =>{
+      this.pcaAssignmentDatesValidation$.subscribe((res:boolean) =>{
         if(res){
           this.pcaAssignmentForm.controls['openDate'].setErrors({ 'ispcaOpenDateDependency': true });
            this.ispcaOpenDateDependency = true
@@ -391,7 +391,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
 
 
     if(!this.newForm){
-      this.pcaAssignmentDatesValidation$.subscribe((res:Boolean) =>{
+      this.pcaAssignmentDatesValidation$.subscribe((res:boolean) =>{
         if(res){
           this.pcaAssignmentForm.controls['openDate'].setErrors({ 'ispcaOpenDateDependency': true });
            this.ispcaOpenDateDependency = true

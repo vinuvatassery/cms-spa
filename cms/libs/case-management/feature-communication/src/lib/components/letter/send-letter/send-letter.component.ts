@@ -890,7 +890,7 @@ loadMailingAddress() {
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;
-  if(!(this.updatedTemplateContent  === undefined) || !(this.updatedTemplateContent === '') || !(this.updatedTemplateContent === "") || !(this.updatedTemplateContent.trim() === '<p></p>')){
+  if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<p></p>')){
     this.isContentMissing = false;
   }
   this.ref.detectChanges();

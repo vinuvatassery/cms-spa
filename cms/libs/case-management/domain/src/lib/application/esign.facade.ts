@@ -121,11 +121,11 @@ prepareDraftAdobeEsignFormData(selectedToEmail: any, clientCaseEligibilityId: an
 
 prepareEsignLetterDraftFormData(clientCaseEligibilityId: any, entityId: any, loginUserId: any, isSaveForLater: boolean) {
   const formData = new FormData();
-    formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
-    formData.append('clientId', entityId ?? '');
-    formData.append('loginUserId', loginUserId ?? '');
+    formData.append('clientCaseEligibilityId',this.nullCheck( clientCaseEligibilityId));
+    formData.append('clientId',this.nullCheck(entityId));
+    formData.append('loginUserId',this.nullCheck(loginUserId));
     if(isSaveForLater){
-      formData.append('esignRequestStatusCode', EsignStatusCode.Draft ?? '');
+      formData.append('esignRequestStatusCode',this.nullCheck(EsignStatusCode.Draft));
     }
     formData.append('isSaveForLater', Boolean(isSaveForLater).toString()); 
     return formData;
