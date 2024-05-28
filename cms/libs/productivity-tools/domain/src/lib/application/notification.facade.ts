@@ -138,7 +138,7 @@ export class NotificationFacade {
             SnackBarNotificationType.SUCCESS,
             snoozeResponse.message
           );
-          if (isViewAll == true) {
+          if (isViewAll) {
             this.loadNotificationsAndReminders(true);
           } else {
             this.loadNotificationsAndReminders(false);

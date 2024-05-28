@@ -18,7 +18,6 @@
     </common-read-more>
 </div>
 <ng-template #viewLetterEmailTextDialog>
-    <!-- <kendo-dialog *ngIf="isViewLetterEmailTextDialog" class="app-c-modal app-c-modal-xlg app-c-modal-xlg"> -->
     <kendo-dialog-titlebar (close)="onCloseLetterEmailSmsTextClicked()"> {{headerText}} </kendo-dialog-titlebar>
 
     <section class="k-dialog-body" *ngIf="(entityTypeCode === 'EMAIL_LOG' || entityTypeCode === 'LETTER_LOG')">

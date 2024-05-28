@@ -5,7 +5,6 @@ import {
   Input,
   OnInit,
   TemplateRef,
-  Type,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
@@ -22,7 +21,7 @@ import { SnackBar } from '@cms/shared/ui-common';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 import { Router } from '@angular/router';
-import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
@@ -245,10 +244,10 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
       if (timeDifferenceMinutes <= 0) {
         this.dueDateText = 0-timeDifferenceMinutes + " Mins Over Due"
         if(0-timeDifferenceMinutes >60){
-          var timeInHours =  Math.floor(0-timeDifferenceMinutes/60);
+          let timeInHours =  Math.floor(0-timeDifferenceMinutes/60);
           this.dueDateText = timeInHours +" Hrs Over Due"
           if(timeInHours >24){
-           var timeInDays =  Math.floor(timeInHours/24);
+           let timeInDays =  Math.floor(timeInHours/24);
            this.dueDateText = timeInDays +" Days Over Due"
           }
         }

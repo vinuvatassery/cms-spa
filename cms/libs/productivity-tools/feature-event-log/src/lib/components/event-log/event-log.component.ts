@@ -257,7 +257,7 @@ eventListLoader = false;
 
   private setFilteredText()
   {
-    var text="";
+    let text="";
     if(this.eventLogFilterForm.controls["caseworkerfilterbyvalue"].value != "" && this.eventLogFilterForm.controls["caseworkerfilterbyvalue"].value != null)
     {
       text += " Case Worker,";
@@ -379,7 +379,7 @@ eventListLoader = false;
 
   private setDateFilters(field:string)
   {
-    var filterArray=[];
+    let filterArray=[];
     if(this.eventLogFilterForm.controls["afterdatefilter"].value != "" && this.eventLogFilterForm.controls["afterdatefilter"].value != null)
     {
       filterArray.push(
@@ -430,7 +430,6 @@ eventListLoader = false;
   public documentClick(event: KeyboardEvent): void {
     if (event) {
       if (!this.contains(event.target)) {
-        // this.toggleFilterPopoverOpen(false);
       }
     }
   }
