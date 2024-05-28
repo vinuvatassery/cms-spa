@@ -61,7 +61,6 @@ import { DeleteProfilePhotoConfirmationComponent } from './delete-profile-photo-
 import { EditTemplateNameComponent } from './edit-template-name/edit-template-name.component';
 import { DeactivateTemplateComponent } from './deactivate-template/deactivate-template.component';
 import { ReactivateTemplateComponent } from './reactivate-template/reactivate-template.component';
-import { VendorInfoComponent } from './vendor-info/vendor-info.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -116,7 +115,6 @@ import { VendorInfoComponent } from './vendor-info/vendor-info.component';
     EditTemplateNameComponent,
     DeactivateTemplateComponent,
     ReactivateTemplateComponent,
-    VendorInfoComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -170,7 +168,7 @@ import { VendorInfoComponent } from './vendor-info/vendor-info.component';
     EditTemplateNameComponent,
     DeactivateTemplateComponent,
     ReactivateTemplateComponent,
-    VendorInfoComponent
+    
   ],
 })
 export class SharedUiCommonModule {}

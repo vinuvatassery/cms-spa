@@ -1,16 +1,13 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FinancialVendorFacade, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { Observable } from 'rxjs';
-import { FinancialVendorFacade } from '@cms/case-management/domain';
-import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 
 @Component({
-  selector: 'common-vendor-info',
-  templateUrl: './vendor-info.component.html',
-  styleUrls: ['./vendor-info.component.scss'],
+  selector: 'case-management-vendor-panel-details',
+  templateUrl: './vendor-panel-details.component.html'
 })
-export class VendorInfoComponent {
-
+export class VendorPanelDetailsComponent {
   vendorProfile: any;
   emailAddress: any;
   phoneNbr: any;
@@ -66,3 +63,4 @@ constructor(    public activeRoute: ActivatedRoute,
   }
   
 }
+

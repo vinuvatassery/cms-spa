@@ -13,12 +13,12 @@
 </div>
 
 <ng-template #providerDetailsTemplate>
-  <common-vendor-info 
+  <case-management-vendor-panel-details
   [vendorId]="vendorId"
   (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
   [updateProviderPanelSubject$]="updateProviderPanelSubject$"
   (getProviderPanelEvent)="getProviderPanel($event)"
-  ></common-vendor-info>
+  ></case-management-vendor-panel-details>
 </ng-template>
 
 
