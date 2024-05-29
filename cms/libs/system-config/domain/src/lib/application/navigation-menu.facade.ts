@@ -97,7 +97,7 @@ export class NavigationMenuFacade {
             this.pendingApprovalPaymentCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
@@ -111,7 +111,7 @@ export class NavigationMenuFacade {
             this.pendingApprovalGeneralCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
@@ -125,7 +125,7 @@ export class NavigationMenuFacade {
             this.pendingApprovalImportedClaimCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
@@ -139,21 +139,21 @@ export class NavigationMenuFacade {
             this.hivVerificationCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
   }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
       if(type == SnackBarNotificationType.ERROR)
       {
-        const err= subtitle;    
+        const err= subtitle;
         this.loggingService.logException(err)
-      }  
+      }
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();   
+        this.hideLoader();
   }
 
   getDirectMessageCount() {
@@ -164,7 +164,7 @@ export class NavigationMenuFacade {
             this.directMessageCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );

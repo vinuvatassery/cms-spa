@@ -50,6 +50,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { WidgetFacade } from '@cms/dashboard/domain';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -143,7 +144,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
   pendingApprovalPaymentCountSubscription!: Subscription;
   pendingApprovalGeneralCountSubscription!: Subscription;
   pendingApprovalImportedClaimCountSubscription!: Subscription;
-
+  pendingApprovalCount = 0;
   /** Constructor **/
   constructor(
     private readonly caseManagerFacade: CaseManagerFacade,
@@ -168,7 +169,8 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly communicationFacade : CommunicationFacade,
     private readonly esignFacade : EsignFacade,
-    private readonly verificationFacade: VerificationFacade
+    private readonly verificationFacade: VerificationFacade,
+    private readonly widgetFacade: WidgetFacade
   ) {
     this.healthCareForm = this.formBuilder.group({});
     this.drugForm = this.formBuilder.group({});
@@ -286,6 +288,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
     this.pendingApprovalPaymentCountSubscription = this.pendingApprovalPaymentCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalPaymentCount = response;
+        this.setPendingApprovalsCount();
       }
       this.cd.detectChanges();
     });
@@ -296,6 +299,7 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
     this.pendingApprovalGeneralCountSubscription = this.pendingApprovalGeneralCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalGeneralCount = response;
+        this.setPendingApprovalsCount();
       }
       this.cd.detectChanges();
     });
@@ -306,9 +310,17 @@ export class ApprovalPageComponent implements OnInit, OnDestroy {
     this.pendingApprovalImportedClaimCountSubscription = this.pendingApprovalImportedClaimCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalImportedClaimCount = response;
+        this.setPendingApprovalsCount();
       }
       this.cd.detectChanges();
     });
+  }
+
+  setPendingApprovalsCount()
+  {
+    this.pendingApprovalCount =
+    this.pendingApprovalPaymentCount + this.pendingApprovalGeneralCount + this.pendingApprovalImportedClaimCount + this.hivVerificationCount;
+    this.widgetFacade.dashboardPendingApprovalCardCount = this.pendingApprovalCount;
   }
 
   loadApprovalsGeneralGrid(event: any): void {

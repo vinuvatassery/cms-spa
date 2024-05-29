@@ -10,6 +10,7 @@ import {
   UserDefaultRoles,
   UserLevel,
 } from '@cms/system-config/domain';
+import { WidgetFacade } from '@cms/dashboard/domain';
 import { MenuBadge } from '../enums/menu-badge.enum';
 import { ApprovalLimitPermissionCode } from '../enums/approval-limit-permission-code.enum';
 import { PendingApprovalPaymentTypeCode } from '../enums/pending-approval-payment-type-code.enum';
@@ -26,6 +27,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   subMenuExpandStatus: boolean[] = [];
   menus$ = this.navigationMenuFacade.navigationMenu$;
   pcaReassignmentCount$ = this.navigationMenuFacade.pcaReassignmentCount$;
+  dashboardPendingApprovalCardCountSubject = this.widgetFacade.dashboardPendingApprovalCardCountSubject;
   //add menu badges on this variable
   menuBadges = [
     { key: 'TO_DO_ITEMS', value: 5 },
@@ -55,7 +57,8 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly navigationMenuFacade: NavigationMenuFacade,
-    private userManagementFacade: UserManagementFacade
+    private userManagementFacade: UserManagementFacade,
+    private widgetFacade: WidgetFacade
   ) {}
 
   /** Lifecycle events **/
@@ -303,17 +306,19 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   private setProductivityToolsCount() {
     this.pendingApprovalCount =
       this.paymentCount + this.generalCount + this.importedClaimCount + this.hivVerificationCount;
+      this.widgetFacade.dashboardPendingApprovalCardCount = this.pendingApprovalCount;
+      this.widgetFacade.dashboardPendingApprovalCardCountSubject.next(this.pendingApprovalCount);
     this.productivityToolsCount =
       this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount;
     this.setBadgeValue(MenuBadge.pendingApprovals, this.pendingApprovalCount);
     this.setBadgeValue(MenuBadge.productivityTools, this.productivityToolsCount);
   }
 
-  
+
   loadPendingApprovalPaymentLevel() {
     this.permissionLevels=[];
         let level = this.setPermissionLevel(ApprovalLimitPermissionCode.InsurancePremiumPermissionCode);
-        this.addItemToArray(PendingApprovalPaymentTypeCode.InsurancePremium,level);       
+        this.addItemToArray(PendingApprovalPaymentTypeCode.InsurancePremium,level);
 
         level = this.setPermissionLevel(ApprovalLimitPermissionCode.MedicalClaimPermissionCode);
         this.addItemToArray(PendingApprovalPaymentTypeCode.TpaClaim,level);
@@ -325,7 +330,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
           this.permissionLevels
         );
   }
-  
+
   addItemToArray(serviceTypeCode:string,level:number)
   {
     let object = {
@@ -336,18 +341,19 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   }
   setPermissionLevel(ifPermission : any)
   {
+    let level = UserLevel.Level1Value;
     if(this.userManagementFacade.hasPermission([ifPermission]))
     {
-      return UserLevel.Level1Value;
+      const maxApprovalAmount = this.userManagementFacade.getUserMaxApprovalAmount(ifPermission);
+      if(maxApprovalAmount != null && maxApprovalAmount > 0)
+      {
+        level = UserLevel.Level1Value;
+      }
+      else
+      {
+        level = UserLevel.Level2Value;
+      }
     }
-    let maxApprovalAmount = this.userManagementFacade.getUserMaxApprovalAmount(ifPermission);
-    if(maxApprovalAmount != undefined && maxApprovalAmount > 0)
-    {
-      return UserLevel.Level1Value;
-    }
-    else
-    {
-      return UserLevel.Level2Value;
-    }
+    return level;
   }
 }
