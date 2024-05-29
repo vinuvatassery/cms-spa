@@ -96,7 +96,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   ];
   selectedActiveFlag = "";
   isShowUserDetailPopup$ = this.userManagementFacade.isShowUserDetailPopup$;
-
+  reactivationMessage = "User reactivated successfully.";
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -527,7 +527,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
 
   notifyOnReactivatingUser(){
     this.deactivatSubscription = this.deactivateUserStatus$.subscribe((response: any) => {
-      if(response.status > 0){
+      if(response.status > 0 && response.message === this.reactivationMessage){
       this.loadUserListGrid();
       this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
     }
@@ -540,12 +540,8 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {     
-    if(this.deactivatSubscription){
-      this.deactivatSubscription.unsubscribe();
-  }
-  if(this.userAssignedActiveClientStatusSubscription){
-    this.userAssignedActiveClientStatusSubscription.unsubscribe();
-  }
+      this.deactivatSubscription?.unsubscribe();
+      this.userAssignedActiveClientStatusSubscription?.unsubscribe();
 }
 
   navigateToDetails() {

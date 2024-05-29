@@ -47,10 +47,10 @@ export class DeactivateUserConfirmationComponent implements OnDestroy {
   notifyDeactivation() {
     this.deactivatSubscription = this.deactivateUserStatus$.subscribe((response: any) => {
       if (response.status > 0) {
+        this.refreshUsersGrid();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
       }
       this.onDeactivateDialogueClose();
-      this.refreshUsersGrid();
     });
   }
 

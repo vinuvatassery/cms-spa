@@ -7,16 +7,24 @@ import {
   Output,
   EventEmitter,
   ChangeDetectorRef,
+  ViewChild,
+  TemplateRef,
+  OnDestroy,
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { group } from '@angular/animations';
+import { Router } from '@angular/router';
+import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
+import { NotificationService } from '@progress/kendo-angular-notification';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserDetailComponent implements OnInit {
+export class UserDetailComponent implements OnInit, OnDestroy {
   @Input() isEditValue!: boolean;
   @Output() isDeactivatePopupOpened = new EventEmitter();
   @Input() userId: any;
@@ -31,6 +39,7 @@ export class UserDetailComponent implements OnInit {
   pNumberSearchSubject$ = this.userManagementFacade.pNumberSearchSubject$;
   addUserResponse$ = this.userManagementFacade.addUserResponse$;
   loginUserDetail$ = this.userManagementFacade.loginUserDetail$;
+  
 
   isDeactivateValue!: boolean;
   userAccessTypeLovData: any = null;
@@ -54,12 +63,24 @@ export class UserDetailComponent implements OnInit {
   isPNumberAlreadyExists: boolean = false;
   userDetailData: any;  
   userDetailRoles: any = [];
+  userStatus$ = this.userManagementFacade.canUserBeDeactivated$;
+  userAssignedActiveClientStatusSubscription!: Subscription;
+  public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
+  public duration =
+    this.configurationProvider.appSettings.snackbarAnimationDuration;
+  @ViewChild('notificationTemplate', { static: true }) notificationTemplate!: TemplateRef<any>;
 
+  
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
     private userManagementFacade: UserManagementFacade,
     private lovFacade: LovFacade,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private configurationProvider:ConfigurationProvider,
+    private readonly notificationService: NotificationService,
+    private router: Router,
+    private readonly loaderService: LoaderService,
+
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +89,7 @@ export class UserDetailComponent implements OnInit {
     this.lovFacade.getUserAccessTypeLov();
     this.lovFacade.getCaseManagerDomainLov();
     this.lovFacade.getCaseManagerAssistorGrpLov();
+    this.IsUserValidForDeactivation();
     this.disableFields();
     if(!this.isEditValue){
       this.loadDdlUserRole();
@@ -256,6 +278,10 @@ export class UserDetailComponent implements OnInit {
     }
   }
 
+  navigateToDetails() {
+    this.router.navigate(['/system-config/cases/case-assignment']);
+  }
+    
   onUserSaveButtonClick(){
     this.userFormGroup.markAllAsTouched();
     this.isFormSubmit = true;
@@ -292,9 +318,10 @@ export class UserDetailComponent implements OnInit {
       this.selectedUserRolesList.push(role.roleId);
     });
   }
-
   onUserDeactivateClosed(){
+    this.status = this.deactivate;
     this.isUserDeactivatePopup=false;
+    this.cd.detectChanges();
   }
   loadUserListGrid(){
     this.refreshGrid.emit();
@@ -302,7 +329,7 @@ export class UserDetailComponent implements OnInit {
 
   onDeactivateClicked()
     {
-      this.isUserDeactivatePopup = true;
+      this.userManagementFacade.getUserAssignedActiveClientCount(this.userId);      
     }
 
   onPNumberValueChange(pNumber: any) {
@@ -353,5 +380,30 @@ export class UserDetailComponent implements OnInit {
     })
   }
 
+  IsUserValidForDeactivation(){
+    this.userAssignedActiveClientStatusSubscription = this.userStatus$.subscribe((response: any) => {
+      if(response.status > 0){
+        this.isUserDeactivatePopup = true;
+        this.cd.detectChanges();
+        this.loaderService.hide();
+      }
+      else
+      {
+          this.notificationService.show({
+          content: this.notificationTemplate,        
+          position: { horizontal: 'center', vertical: 'top' },
+          animation: { type: 'fade', duration: this.duration },
+          closable: true,
+          type: { style: "error", icon: true },        
+          cssClass: 'reminder-notification-bar',
+          hideAfter:this.hideAfter
+        });
+        this.loaderService.hide();
+      }
+    });
+  }
 
+  ngOnDestroy(): void {
+      this.userAssignedActiveClientStatusSubscription?.unsubscribe();
+  }
 }
