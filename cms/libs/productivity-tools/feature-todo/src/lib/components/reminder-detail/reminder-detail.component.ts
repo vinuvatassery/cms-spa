@@ -411,30 +411,19 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   dueDateValidation(){
-    const dueDate = new Date(this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat));
-    const todayDate =  new Date(this.intl.formatDate(new Date(), this.dateFormat));
     this.timeValidation()
-    if ( this.clientReminderForm.controls['dueDate'].value && dueDate < todayDate) {
-      //this.clientReminderForm.controls['dueDate'].setErrors({ 'incorrect': true });
-      //return;
-    }
+  
     return true;
   }
 
   timeValidation(){
-    const timeInMinutes = new Date(this.clientReminderForm.controls['time'].value).getMinutes();
-    const timeInHours = new Date(this.clientReminderForm.controls['time'].value).getHours();
+   
     const dueDate = this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat);
     const todayDate =  this.intl.formatDate(new Date(), this.dateFormat);
    
     if ( this.clientReminderForm.controls['dueDate'].value && dueDate == todayDate) {
    {
-    if ( this.clientReminderForm.controls['time'].value &&
-    ((timeInHours ==  new Date().getHours() && timeInMinutes < new Date().getMinutes())
-    || timeInHours <  new Date().getHours())) {
-      //this.clientReminderForm.controls['time'].setErrors({ 'incorrect': true });
-      //return;
-    }
+
   }
 }
   else{

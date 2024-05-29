@@ -69,6 +69,8 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   isCERApplicationSigned: boolean = false;
   private saveClickSubscription !: Subscription;
   private discardChangesSubscription !: Subscription;
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
   private isSendLetterOpenedDialog : any;
   private isSendEmailOpenedDialog : any;
   uploadedCopyOfSignedApplication: any;
@@ -124,58 +126,34 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.addSaveSubscription();
     this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
 
   getNotificationTypeCode(sendEmailClick: boolean) {
-    if(this.isCerForm){
-      if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
+    if (this.isCerForm) {
+      if (this.paperlessFlag == StatusFlag.Yes && sendEmailClick) {
         this.templateLoadType = CommunicationEventTypeCode.CerAuthorizationEmail;
         this.communicationEmailTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
-        this.templateHeader = 'CER Authorization Email';
-        this.emailSubject = this.templateHeader;
-        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
-        this.saveForLaterHeadterText = "Send CER Authorization Email Later?";
-        this.saveForLaterModelText="You must send the  Cer Authorization Email within 45 Days";
-        this.confirmPopupHeader = 'Send Authorization Email?';
-        this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
-      }else{
+      } else {
         this.templateLoadType = CommunicationEventTypeCode.CerAuthorizationLetter;
         this.communicationLetterTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
-        this.templateHeader = 'CER Authorization Letter';
-        this.emailSubject = this.templateHeader;
-        this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
-        this.saveForLaterHeadterText = "Send CER Authorization Letter Later?";
-        this.saveForLaterModelText="You must send the  CerAuthorization Letter within 45 Days";
-        this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
       }
-    }else{
-      if(this.paperlessFlag == StatusFlag.Yes && sendEmailClick){
+    } else {
+      if (this.paperlessFlag == StatusFlag.Yes && sendEmailClick) {
         this.templateLoadType = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
         this.communicationEmailTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail;
-        this.templateHeader = 'Application Authorization Email';
-        this.emailSubject = this.templateHeader;
-        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email." ;
-        this.saveForLaterHeadterText = "Send Authorization Email Later?";
-        this.saveForLaterModelText="You must send the  Authorization Email within 45 Days";
-        this.confirmPopupHeader = 'Send Authorization Email?';
-        this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
-      }else{
+      } else {
         this.templateLoadType = CommunicationEventTypeCode.ApplicationAuthorizationLetter;
         this.communicationLetterTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetter;
-        this.templateHeader = 'Application Authorization Letter';
-        this.emailSubject = this.templateHeader;
-        this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter." ;
-        this.saveForLaterHeadterText = "Send Authorization Letter Later?";
-        this.saveForLaterModelText="You must send the  Authorization Letter within 45 Days";
-        this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText="This action cannot be undone.";
       }
     }
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
   /** Private methods **/
   private loadUserContactInfo(clientId: any, clientCaseEligibilityId: any) {
@@ -288,6 +266,31 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.authorizationForm.reset();
         this.reSetValidations();
         this.loadAuthorizationData.emit();
+      }
+    });
+  }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      if (this.validate()) {
+        this.save().subscribe((response: any) => {
+          if (response) {
+            this.workflowFacade.saveForLaterCompleted(true)  
+            this.loaderService.hide();  
+          }
+        })
+      }
+      else {
+        this.workflowFacade.saveForLaterCompleted(true)  
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        this.validate()
+        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }
@@ -600,7 +603,7 @@ updateSendEmailSuccessStatus(event:any){
 loadPendingEsignRequestInfo(){
   this.loaderService.show();
   let flowName = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail : CommunicationEventTypeCode.ApplicationAuthorizationEmail;
-    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '', flowName ?? '')
+    this.esignFacade.getEsignRequestInfo(this.nullCheck(this.workflowFacade.clientCaseEligibilityId ), this.nullCheck(flowName))
     .subscribe({
       next: (data: any) =>{
         if (data != null && data?.esignRequestId != null) {
@@ -713,4 +716,12 @@ loadAuthorization() {
     }
   });
 }
+nullCheck(value:any){
+  if(value){
+    return value;
+  }
+  else{
+    return '';
+  }
+ }
 }

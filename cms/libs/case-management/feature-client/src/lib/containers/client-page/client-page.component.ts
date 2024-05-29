@@ -40,7 +40,6 @@ import {
   NavigationType,
   PronounCode,
   TransGenderCode,
-  WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 
@@ -414,7 +413,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.applicantInfo.client.firstName =
       this.appInfoForm.controls['firstName'].value.trim() === ''
         ? null
-        : this.appInfoForm.controls['firstName'].value;
+        : this.appInfoForm.controls['firstName'].value.trim();
     if (this.appInfoForm.controls['chkmiddleName'].value ?? false) {
       this.applicantInfo.client.middleName = null;
       this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.Yes;
@@ -428,7 +427,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.applicantInfo.client.lastName =
       this.appInfoForm.controls['lastName'].value.trim() === ''
         ? null
-        : this.appInfoForm.controls['lastName'].value;
+        : this.appInfoForm.controls['lastName'].value.trim();
     this.applicantInfo.client.dob = new Date(
       this.intl.formatDate(
         this.appInfoForm.controls['dateOfBirth'].value,
@@ -546,7 +545,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName =
         this.appInfoForm.controls['prmInsFirstName'].value.trim() === ''
           ? null
-          : this.appInfoForm.controls['prmInsFirstName'].value;
+          : this.appInfoForm.controls['prmInsFirstName'].value.trim();
 
       if(this.appInfoForm.controls['chkPrmInsMiddleName'].value ?? false) {
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceMiddleName = null;
@@ -555,13 +554,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceMiddleName =
             this.appInfoForm.controls['prmInsMiddleName'].value.trim() === ''
             ? null
-            : this.appInfoForm.controls['prmInsMiddleName'].value;
+            : this.appInfoForm.controls['prmInsMiddleName'].value.trim();
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceMiddleNameNotApplicableFlag = StatusFlag.No;
           }
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName =
         this.appInfoForm.controls['prmInsLastName'].value.trim() === ''
           ? null
-          : this.appInfoForm.controls['prmInsLastName'].value;
+          : this.appInfoForm.controls['prmInsLastName'].value.trim();
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag =
         StatusFlag.No;
     }
@@ -583,7 +582,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName =
         this.appInfoForm.controls['officialIdFirstName'].value.trim() === ''
           ? null
-          : this.appInfoForm.controls['officialIdFirstName'].value;
+          : this.appInfoForm.controls['officialIdFirstName'].value.trim();
 
          if(this.appInfoForm.controls['chkOfficialIdMiddleName'].value ?? false) {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdMiddleName = null;
@@ -592,13 +591,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdMiddleName =
                 this.appInfoForm.controls['officialIdMiddleName'].value.trim() === ''
                 ? null
-                : this.appInfoForm.controls['officialIdMiddleName'].value;
+                : this.appInfoForm.controls['officialIdMiddleName'].value.trim();
               this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdMiddleNameNotApplicableFlag  = StatusFlag.No;
               }
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName =
         this.appInfoForm.controls['officialIdLastName'].value.trim() === ''
           ? null
-          : this.appInfoForm.controls['officialIdLastName'].value;
+          : this.appInfoForm.controls['officialIdLastName'].value.trim();
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag =
         StatusFlag.No;
     }
@@ -1626,10 +1625,10 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
               if (response) {
                 this.workFlowFacade.saveForLaterCompleted(true)
                 this.loaderService.hide();
-            
+
               }
             });
-          }else{ 
+          }else{
             this.workFlowFacade.ApplicationDetailsValidationsSuccess = true
           this.workFlowFacade.saveForLaterCompleted(true)
           }

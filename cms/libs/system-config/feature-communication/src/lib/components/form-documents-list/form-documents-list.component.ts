@@ -189,7 +189,7 @@ export class FormDocumentsListComponent implements OnInit {
 
   onSortChange(event:any){
     this.sortOrder = event;
-    var filter={
+    let filter={
       sort : this.sortOrder.lovCode.toLowerCase(),
       active: ActiveInactiveFlag.Yes
     }
@@ -218,7 +218,7 @@ export class FormDocumentsListComponent implements OnInit {
     });
   }
   loadFoldersTree(){
-    var filter={
+    let filter={
       sort : true,
       active: this.isActiveChecked ? 'A' : 'Y',
     }
@@ -269,9 +269,9 @@ onShowActiveClickedEvent(){
     isActiveChecked:this.isActiveChecked,
     ischecked : this.isActiveChecked ? true:false
   };
+  this.loadFolders.emit(payload);
   this.formsAndDocumentFacade.isShowInActive =  this.isActiveChecked
   this.isShowDragEnabledText();
-  this.loadFolders.emit(payload);
 }
 
 isShowDragEnabledText(){

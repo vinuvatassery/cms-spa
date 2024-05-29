@@ -7,8 +7,7 @@ import { SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-system-interface-web-service-logs-page',
-  templateUrl: './web-service-logs-page.component.html',
-  styleUrls: ['./web-service-logs-page.component.scss'],
+  templateUrl: './web-service-logs-page.component.html'
 })
 
 

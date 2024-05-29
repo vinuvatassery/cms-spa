@@ -54,7 +54,6 @@ export class MedicalPaymentListComponent implements OnInit {
   private triggeredPremiumPaymentSubscription!: Subscription;
   insurancePremiumProfilePhotoSubject = new Subject();
   insurancePremiumProfilePhotoSubscription = new Subscription();
-  //insurancePremiumProfilePhoto$ = this.insurancePolicyFacade.insurancePremiumProfilePhotoSubject;
 
   /** Constructor **/
 

@@ -25,7 +25,6 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'dashboard-widget-client-by-status',
   templateUrl: './widget-client-by-status.component.html',
-  styleUrls: ['./widget-client-by-status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WidgetClientByStatusComponent implements OnInit, OnDestroy {

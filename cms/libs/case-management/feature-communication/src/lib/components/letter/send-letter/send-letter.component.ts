@@ -42,13 +42,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   @Input() isNewNotificationClicked!: boolean;
   @Input() notificationDraftId!: string;
   @Input() templateLoadType!: string;
-  @Input() informationalText!:string
-  @Input() templateHeader !:string;
+ informationalText!:string
+ templateHeader !:string;
   @Input() triggerFrom !: string;
-  @Input() confirmPopupHeader!:string;
-  @Input() confirmationModelText!:string;
-  @Input() saveForLaterHeadterText!:string;
-  @Input() saveForLaterModelText!:string;
+ confirmPopupHeader!:string;
+ confirmationModelText!:string;
+ saveForLaterHeadterText!:string;
+ saveForLaterModelText!:string;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
@@ -120,7 +120,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   snackBarMessage:any;
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
+  ngOnInit(): void {   
+    this.handleConfirmPopupHeader(this.communicationLetterTypeCode);
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
     if(this.notificationGroup === ScreenType.VendorProfile){
@@ -250,7 +251,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     letterRequestFormdata.append('selectedMailCode', this.mailingAddress?.mailCode ?? '');
     letterRequestFormdata.append('vendorAddressId', this.mailingAddress?.vendorAddressId ?? '');
     letterRequestFormdata.append('documentTemplateId', this.documentTemplate?.documentTemplateId ?? '');
-    let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
+    let {templateTypeCode} = this.getApiTemplateTypeCode();
     letterRequestFormdata.append('templateTypeCode', templateTypeCode);
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorLetterData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.entityType);
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
@@ -571,7 +572,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   private loadDropdownLetterTemplates() {
     if (this.notificationGroup !== undefined && this.templateLoadType !== undefined) {
       this.loaderService.show();
-      this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.templateLoadType, this.communicationLetterTypeCode ?? '')
+      this.communicationFacade.loadTemplates(this.notificationGroup, this.templateLoadType, this.communicationLetterTypeCode ?? '')
         .subscribe({
           next: (data: any) => {
             if (data) {
@@ -631,7 +632,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
-    this.handleconfirmPopupHeader(event.templateTypeCode);
+    this.handleConfirmPopupHeader(event.templateTypeCode);
     this.isMailingAddressMissing = false;
     if(this.notificationGroup === ScreenType.VendorProfile){
       this.isMailCodeMissing = false;
@@ -662,43 +663,93 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleconfirmPopupHeader(event: any){
-    switch(event){
+  handleConfirmPopupHeader(event: any) {
+    switch (event) {
       case CommunicationEventTypeCode.PendingNoticeLetter:
-        this.confirmPopupHeader = 'Send Pending Letter to print?';
         this.snackBarMessage = 'Pending Letter generated! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Pending Letter Later?';
-        this.saveForLaterModelText="You must send the Pending Letter within 14 Days";
+        this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the letter is complete."
+        this.templateHeader = 'Send Pending Letter';
+        this.confirmPopupHeader = 'Send Pending Letter to print?';
+        this.saveForLaterHeadterText = "Send Pending Letter Later?";
+        this.saveForLaterModelText = "You must send the Pending Email within 14 Days";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal";
         break;
+
       case CommunicationEventTypeCode.RejectionNoticeLetter:
-        this.confirmPopupHeader = 'Send Rejection Letter to print?';
         this.snackBarMessage = 'Rejection Letter generated! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Rejection Letter Later?';
-        this.saveForLaterModelText="You must send the Rejection Letter within 14 Days";
+        this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
+        this.templateHeader = 'Send Denial Letter';
+        this.confirmPopupHeader = 'Send Denial Letter to print?';
+        this.saveForLaterHeadterText = "Send Denial Letter Later?";
+        this.saveForLaterModelText = "You must send the  Denial Letter within 14 Days";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
         break;
+
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
-        this.confirmPopupHeader = 'Send Approval Letter to print?';
         this.snackBarMessage = 'Approval Letter generated! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Approval Letter Later?';
-        this.saveForLaterModelText="You must send the Approval Letter within 14 Days";
+        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
+        this.templateHeader = 'Send Approval Letter';
+        this.confirmPopupHeader = 'Send Approval Letter to Print?';
+        this.saveForLaterHeadterText = "Send Approval Letter later?";
+        this.saveForLaterModelText = "You must send the  Approval Letter within 14 Days";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
         break;
+
       case CommunicationEventTypeCode.DisenrollmentNoticeLetter:
-        this.confirmPopupHeader = 'Send Disenrollment Letter to print?';
         this.snackBarMessage = 'Disenrollment Letter generated! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Disenrollment Letter Later?';
-        this.saveForLaterModelText="You must send the Disenrollment Letter within 2 Days";
+        this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
+        this.templateHeader = 'Send Disenrollment Letter';
+        this.confirmPopupHeader = 'Send Disenrollment Letter to print?';
+        this.saveForLaterHeadterText = "Send Disenrollment Letter Later?";
+        this.saveForLaterModelText = "You must send the  Disenrollment Letter within 2 Days";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
         break;
+
       case CommunicationEventTypeCode.RestrictedNoticeLetter:
-        this.confirmPopupHeader = 'Send Restricted Letter to print?';
         this.snackBarMessage = 'Restricted Letter generated! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Restricted Letter Later?';
-        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+        this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click " + '"Send to Print"' + " once the letter is complete."
+        this.templateHeader = 'Send Restricted Letter';
+        this.confirmPopupHeader = 'Send Restricted Letter to print?';
+        this.saveForLaterHeadterText = "Send Restricted Letter Later?";
+        this.saveForLaterModelText = "To pick up where you left off, click \"New Letter\" from the client's profile";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
         break;
-      default:
-        this.confirmPopupHeader = 'Send Letter to print?';
-        this.snackBarMessage = 'Letter generated! An event has been logged.';
+
+      case CommunicationEventTypeCode.VendorLetter:
+        this.informationalText = "Select an existing template or draft a custom letter."
+        this.templateHeader = 'Send New Letter';
         this.saveForLaterHeadterText = "Letter Draft Saved";
-        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
+        this.saveForLaterModelText = "To pick up where you left off, click \"New Letter\" from the vendor's profile";
+        this.confirmPopupHeader = 'Send Letter to Print?';
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        break;
+
+      case CommunicationEventTypeCode.CerAuthorizationLetter:
+        this.templateHeader = 'CER Authorization Letter';
+        this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
+        this.saveForLaterHeadterText = "Send CER Authorization Letter Later?";
+        this.saveForLaterModelText = "You must send the  CerAuthorization Letter within 45 Days";
+        this.confirmPopupHeader = 'Send CER Authorization Letter to Print?';
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
+        break;
+
+      case CommunicationEventTypeCode.ApplicationAuthorizationLetter:
+        this.templateHeader = 'Application Authorization Letter';
+        this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
+        this.saveForLaterHeadterText = "Send Authorization Letter Later?";
+        this.saveForLaterModelText = "You must send the  Authorization Letter within 45 Days";
+        this.confirmPopupHeader = 'Send Authorization Letter to Print?';
+        this.confirmationModelText = "This action cannot be undone.";
+        break;
+
+      default:
+        this.snackBarMessage = 'Letter generated! An event has been logged.';
+        this.informationalText = "Select an existing template or draft a custom letter."
+        this.templateHeader = 'Send New Letter';
+        this.saveForLaterHeadterText = "Letter Draft Saved";
+        this.saveForLaterModelText = "To pick up where you left off, click \"New Letter\" from the client's profile";
+        this.confirmPopupHeader = 'Send Letter to Print?';
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
         break;
     }
   }
@@ -890,7 +941,7 @@ loadMailingAddress() {
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;
-  if(!(this.updatedTemplateContent  === undefined) || !(this.updatedTemplateContent === '') || !(this.updatedTemplateContent === "") || !(this.updatedTemplateContent.trim() === '<p></p>')){
+  if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<p></p>')){
     this.isContentMissing = false;
   }
   this.ref.detectChanges();

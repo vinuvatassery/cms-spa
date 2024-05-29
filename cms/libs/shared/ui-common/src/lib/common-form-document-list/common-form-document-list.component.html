@@ -35,7 +35,7 @@
                                     </span>
                                     <label *ngIf="dataItem.isFolder===false">{{dataItem.text}}
                                     <label class="file_label"> <span class="data_mb">{{dataItem.fileSize| number: '1.4-4'}} MB</span> 
-                                          <span class="fileversion">V{{dataItem.templateVersion}}</span>
+                                          <span class="fileversion">v{{dataItem.templateVersion}}</span>
                                            <span class="file_status" [ngClass]="dataItem.activeFlag=== 'Y' ? 'active_file' : 'inactive_file' ">{{getFlagValue(dataItem.activeFlag)}}</span>
                                           </label></label>
                                     <label class="folder_label" *ngIf="dataItem.isFolder===true">{{dataItem.text}} <span *ngIf="dataItem.isFolder===true" class="filecount">{{dataItem.fileCount}} Files</span> 

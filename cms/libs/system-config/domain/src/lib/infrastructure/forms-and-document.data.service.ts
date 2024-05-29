@@ -64,7 +64,7 @@ export class FormsAndDocumentDataService
             `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/re-order`,reOrderRequest);
           }
 
-        saveGridState(sortType:String){
+        saveGridState(sortType:string){
           return this.http.post(
             `${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/grid-state?sortType=${sortType}`,null);
           

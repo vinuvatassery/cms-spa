@@ -436,13 +436,11 @@ export class CerListComponent implements OnInit, OnChanges {
 
   public getGridCellColor(eligibilityStatus: string) {
     let result;
-    switch (eligibilityStatus) {
-      case "RESTRICTED":
-        result = "#FFEDC4";
-        break;
-      default:
-        result = "transparent";
-        break;
+    if (eligibilityStatus == "RESTRICTED"){
+      result = "#FFEDC4";
+    }
+    else{
+      result = "transparent";
     }
     return result;
   }
