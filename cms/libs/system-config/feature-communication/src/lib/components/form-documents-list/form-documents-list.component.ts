@@ -276,7 +276,7 @@ onShowActiveClickedEvent(){
 }
 
 isShowDragEnabledText(){
-  if(!this.isActiveChecked && this.sortOrder.lovCode.toLowerCase()=='cust'){
+  if(!this.isActiveChecked && this.sortOrder?.lovCode?.toLowerCase()=='cust'){
     this.showDragEnabledText = true
   }else{
     this.showDragEnabledText = false
