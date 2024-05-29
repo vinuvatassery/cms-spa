@@ -5,6 +5,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
@@ -14,7 +15,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { InsurancePlanFacade, PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 import {
@@ -26,7 +27,7 @@ import { FormGroup } from '@angular/forms';
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
 })
-export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
+export class ApprovalsGeneralListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('submitRequestModalDialog', { read: TemplateRef })
   submitRequestModalDialog!: TemplateRef<any>;
 
@@ -56,7 +57,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
   @Input() clinicVendorLoader$!: Observable<any>;
   @Output() onVendorClickedEvent = new EventEmitter<any>();
-
+  submitGenerealRequestSubscription! : Subscription;
+  approvalsGeneralListsSubscription! : Subscription;
   pendingApprovalGeneralTypeCode: any;
   public state!: State;
   sortColumn = 'batch';
@@ -103,6 +105,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
   @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
   selectedMasterData!:any;
+  selectedMasterDetailSubscription! : Subscription;
   currentlyExpandedPanelId: any;
   @Input() deliveryMethodLov$! : any;
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
@@ -125,7 +128,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   subscribeToSubmitGeneralRequest(){
-    this.submitGenerealRequest$.subscribe((response: any) => {
+    this.submitGenerealRequestSubscription = this.submitGenerealRequest$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.onCloseSubmitGeneralRequestClicked();
         this.loadApprovalGeneralListGrid();
@@ -134,7 +137,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   private getMasterData() {
-    this.selectedMasterDetail$.subscribe((value: any) => {
+    this.selectedMasterDetailSubscription = this.selectedMasterDetail$.subscribe((value: any) => {
       this.selectedMasterData = value
     });
   }
@@ -229,7 +232,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.approvalsGeneralLists$.subscribe((response: any) => {
+    this.approvalsGeneralListsSubscription = this.approvalsGeneralLists$.subscribe((response: any) => {
       if (response.length > 0) {
         this.approvalsPaymentsGridPagedResult = response.map((item: any) => ({
           ...item,
@@ -625,5 +628,12 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         subTypeCode: this.selectedSubtypeCode,
       };
       this.getMasterDetailsEvent.emit(userObject);
+  }
+
+  ngOnDestroy(): void {
+    this.submitGenerealRequestSubscription?.unsubscribe();
+    this.selectedMasterDetailSubscription?.unsubscribe();
+    this.approvalsGeneralListsSubscription?.unsubscribe();
+
   }
 }

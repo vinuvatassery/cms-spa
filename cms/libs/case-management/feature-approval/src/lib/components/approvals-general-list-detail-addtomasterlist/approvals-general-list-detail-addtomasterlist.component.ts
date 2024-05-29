@@ -1,17 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
   GeneralApprovalApproveDeny,
   PendingApprovalGeneralTypeCode,
 } from '@cms/case-management/domain';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-approvals-general-list-detail-addtomasterlist',
   templateUrl: './approvals-general-list-detail-addtomasterlist.component.html',
 })
 export class ApprovalsGeneralListDetailAddtomasterlistComponent
-  implements OnInit
+  implements OnInit, OnDestroy
 {
   @Input() onUserProfileDetailsHovered: any;
   @Input() approvalId: any;
@@ -20,6 +20,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   @Input() selectedMasterDetail$!: Observable<any>;
   ifApproveOrDeny: any;
   isPanelExpanded = false;
+  selectedMasterDetailSubscription! : Subscription;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
   readonly approveOrDenyConst = GeneralApprovalApproveDeny;
@@ -29,7 +30,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   }
 
   private getMasterDetailData() {
-    this.selectedMasterDetail$.subscribe((value: any) => {
+    this.selectedMasterDetailSubscription = this.selectedMasterDetail$.subscribe((value: any) => {
         this.vendorData = value;
     });
   }
@@ -46,5 +47,8 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
     this.openEditModal.emit(detailData);
   }
 
+  ngOnDestroy(): void {
+    this.selectedMasterDetailSubscription?.unsubscribe();
+  }
   onCloseEditListItemsDetailClicked() {}
 }
