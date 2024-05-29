@@ -466,7 +466,7 @@ export class PharmacyClaimsAllPaymentsListComponent
 
   performSearch(data: any) {
     this.defaultGridState();
-    let operator = 'contains';
+    let operator = '';
     const isClientId = ['clientId'].includes(this.selectedSearchColumn);
     const isEntryDate = ['creationTime'].includes(this.selectedSearchColumn);
     if (isClientId) {

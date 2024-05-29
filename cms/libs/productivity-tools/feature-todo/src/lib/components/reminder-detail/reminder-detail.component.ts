@@ -323,8 +323,6 @@ export class ReminderDetailComponent implements OnInit {
    this.clientReminderForm.markAllAsTouched();
     this.afterCrudOperationAddSubscription();
     this.setLinkToAndEntity();
-    this.timeValidation();
-    this.dueDateValidation();
    if (this.clientReminderForm.valid) {
    if(this.isEdit){
     this.updateReminder()
@@ -410,21 +408,7 @@ export class ReminderDetailComponent implements OnInit {
     this.searchClientName.emit(clientSearchText)
   }
 
-  dueDateValidation(){
-    this.timeValidation()
-  
-    return true;
-  }
 
-  timeValidation(){
-   
-    const dueDate = this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat);
-    const todayDate =  this.intl.formatDate(new Date(), this.dateFormat);
-   
-    if ( this.clientReminderForm.controls['dueDate'].value && dueDate == todayDate) {
-}
-  else{
-    return;
-  }
-  }
+
+
 }

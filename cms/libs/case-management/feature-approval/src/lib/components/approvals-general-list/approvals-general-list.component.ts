@@ -503,9 +503,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   ) {
     dataItem.sendBackNotes = '';
     if (
-      dataItem.status === undefined ||
+     ( dataItem.status === undefined ||
       dataItem.status === '' ||
-      dataItem.status === null
+      dataItem.status === null) || (dataItem.status == this.denyStatus)
     ) {
       dataItem.status = this.approveStatus;
       dataItem.isExpanded = true;
@@ -513,10 +513,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       dataItem.status = '';
       dataItem.sendBackNotes = '';
       dataItem.isExpanded = false;
-    } else if (dataItem.status == this.denyStatus) {
-      dataItem.status = this.approveStatus;
-      dataItem.isExpanded = true;
-    }
+    } 
     this.isPanelExpanded = dataItem.isExpanded;
     if (
       dataItem.approvalTypeCode ===

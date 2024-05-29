@@ -2007,7 +2007,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     else {
-      isValid = true;
+      isValid = false;
     }
     if(this.contactInfoForm.valid){
       isValid = true
