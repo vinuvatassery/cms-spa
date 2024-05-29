@@ -71,6 +71,8 @@ export class ReminderDetailComponent implements OnInit {
  isSubmitted = false
  @Input() isFromNotificationPanel = false;
  allowCustom = false;
+  outlookLabel = "Add to Outlook Calendar";
+
   constructor(private readonly todoFacade: TodoFacade, 
     private router : Router,
     private route : ActivatedRoute,
@@ -120,6 +122,9 @@ export class ReminderDetailComponent implements OnInit {
 
     this.tareaVariablesIntialization();
     this.buildForm();
+    if(this.isEdit){
+      this.outlookLabel = "Update event in Outlook calendar";
+    }
   }
 
   /** Private methods **/
