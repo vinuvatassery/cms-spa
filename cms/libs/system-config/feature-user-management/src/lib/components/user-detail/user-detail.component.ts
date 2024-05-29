@@ -9,6 +9,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   TemplateRef,
+  OnDestroy,
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -23,7 +24,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './user-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserDetailComponent implements OnInit {
+export class UserDetailComponent implements OnInit, OnDestroy {
   @Input() isEditValue!: boolean;
   @Output() isDeactivatePopupOpened = new EventEmitter();
   @Input() userId: any;
@@ -38,6 +39,7 @@ export class UserDetailComponent implements OnInit {
   pNumberSearchSubject$ = this.userManagementFacade.pNumberSearchSubject$;
   addUserResponse$ = this.userManagementFacade.addUserResponse$;
   loginUserDetail$ = this.userManagementFacade.loginUserDetail$;
+  
 
   isDeactivateValue!: boolean;
   userAccessTypeLovData: any = null;
@@ -399,4 +401,7 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+      this.userAssignedActiveClientStatusSubscription?.unsubscribe();
+  }
 }
