@@ -160,7 +160,6 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
       this.pcaReassignmentForm.controls['openDate'].setErrors({ 'isAssignmentpcaOpenDateGreater': true });
       this.isAssignmentpcaOpenDateGreater = true;
       this.isAssignmentpcaCloseDateGreater = false;
-      return;
     }
   }
 

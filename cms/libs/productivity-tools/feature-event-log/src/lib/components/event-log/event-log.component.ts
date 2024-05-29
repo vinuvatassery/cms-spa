@@ -427,8 +427,7 @@ eventListLoader = false;
   }
 
   @HostListener('document:click', ['$event'])
-  public documentClick(event: KeyboardEvent): void {
-  }
+
 
   public toggleFilterPopoverOpen(show?: boolean): void {
     this.isEventFilterPopoverOpen = show ?? !this.isEventFilterPopoverOpen;
