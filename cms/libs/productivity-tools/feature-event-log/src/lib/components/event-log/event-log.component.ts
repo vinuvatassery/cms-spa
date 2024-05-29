@@ -428,10 +428,6 @@ eventListLoader = false;
 
   @HostListener('document:click', ['$event'])
   public documentClick(event: KeyboardEvent): void {
-    if (event) {
-      if (!this.contains(event.target)) {
-      }
-    }
   }
 
   public toggleFilterPopoverOpen(show?: boolean): void {

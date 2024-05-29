@@ -364,7 +364,8 @@ message:  JSON.stringify(clientMessage)
 
 
     }
-    this.messages = this.messages.sort((a:any, b:any) => a.sequenceId - b.sequenceId);
+    const sortedMessages = this.messages.sort((a: any, b: any) => a.sequenceId - b.sequenceId);
+    this.messages = sortedMessages;
     this.changeDetection.detectChanges();
      this.groupedMessages = this.groupBy(this.messages, (pet:any) => pet.pipedCreatedOn)
     this.keys =  Object.keys(this.groupedMessages).sort()

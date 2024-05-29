@@ -282,7 +282,7 @@ export class FormsAndDocumentFacade {
       
               this.isActive$.subscribe({
                 next :(data) =>{
-                  this.filter1.active = data ? 'A' : 'Y',
+                  this.filter1.active = data ? 'A' : 'Y'
                   this.loadFolderFile(this.filter1);
                 }
               })

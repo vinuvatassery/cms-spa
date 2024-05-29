@@ -422,9 +422,6 @@ export class ReminderDetailComponent implements OnInit {
     const todayDate =  this.intl.formatDate(new Date(), this.dateFormat);
    
     if ( this.clientReminderForm.controls['dueDate'].value && dueDate == todayDate) {
-   {
-
-  }
 }
   else{
     return;

@@ -392,7 +392,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
         this.authorizationForm?.get('signatureNotedDate')?.setValue(formatDate(today, 'MM-dd-yyyy'));
         this.invalidSignatureDate$.next(value > today);
       }
-      const isValid = value && value < today;
       this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
     })
   }
@@ -530,19 +529,15 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
       this.invalidSignatureDate$.next(false);
       this.ref.detectChanges();
     }
-    else if (signedDate > todayDate) {
+    else if (signedDate > todayDate || signedDate < new Date(this.minApplicantSignedDate) ){
       this.currentDate = signedDate;
       this.cerDateValidator = true;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
       this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
       this.validate();
-    }else if (signedDate < new Date(this.minApplicantSignedDate)) {
-      this.currentDate = signedDate;
-      this.cerDateValidator = true;
-      this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
-      this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
-      this.validate();
-    }else{
+    }
+    else
+    {
       this.currentDate = event;
       this.dateSignatureNoted = formatDate(new Date(todayDate), 'MM-dd-yyyy');
       this.authorizationForm?.get('signatureNotedDate')?.patchValue(this.dateSignatureNoted)
