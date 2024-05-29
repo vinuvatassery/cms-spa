@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { WidgetService } from '../infrastructure/widget.service'; 
+import { WidgetService } from '../infrastructure/widget.service';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class WidgetFacade {
   private recentlyViewedClientsSubject = new Subject<any>();
-  public recentlyViewedClientsList$ = this.recentlyViewedClientsSubject.asObservable(); 
- 
+  public recentlyViewedClientsList$ = this.recentlyViewedClientsSubject.asObservable();
+
   private recentlyViewedVendorsSubject = new Subject<any>();
-  public recentlyViewedVendorsList$ = this.recentlyViewedVendorsSubject.asObservable(); 
- 
+  public recentlyViewedVendorsList$ = this.recentlyViewedVendorsSubject.asObservable();
+
 
   private activeClientsByGroupSubject = new Subject<any>();
-  public activeClientsByGroupChart$ = this.activeClientsByGroupSubject.asObservable(); 
+  public activeClientsByGroupChart$ = this.activeClientsByGroupSubject.asObservable();
 
-   
+
   private activeClientsByStatusSubject = new Subject<any>();
-  public activeClientsByStatusChart$ = this.activeClientsByStatusSubject.asObservable(); 
+  public activeClientsByStatusChart$ = this.activeClientsByStatusSubject.asObservable();
 
   private netIncomeSubject =new Subject<any>();
   public netIncomeChart$ = this.netIncomeSubject.asObservable();
@@ -48,6 +48,10 @@ export class WidgetFacade {
   private insuranceTypeFPLStatsSubject =new Subject<any>();
   public  insuranceTypeFPLStats$ = this.insuranceTypeFPLStatsSubject.asObservable();
 
+  dashboardPendingApprovalCardCount = 0;
+  dashboardPendingApprovalCardCountSubject = new Subject<any>();
+  dashboardPendingApprovalCardCount$ = this.dashboardPendingApprovalCardCountSubject.asObservable();
+
   public selectedDashboardId! : any
   constructor(private widgetService: WidgetService,
     private readonly loaderService: LoaderService,
@@ -70,7 +74,7 @@ export class WidgetFacade {
       next: (clients: any) => {
         this.recentlyViewedClientsSubject.next(clients);
       },
-      error: (error) => { 
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -82,7 +86,7 @@ export class WidgetFacade {
       next: (clients: any) => {
         this.recentlyViewedVendorsSubject.next(clients);
       },
-      error: (error) => { 
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -95,16 +99,16 @@ export class WidgetFacade {
 
   loadActiveClientsByStatusChart(dashboardId : string  , userId : string) {
     this.widgetService.getActiveClientsByStatus(this.selectedDashboardId,userId).subscribe({
-      next: (result : any) => { 
-       
+      next: (result : any) => {
+
         let widgetProperties = JSON.parse(result.widgetProperties);
-        
+
         widgetProperties.chartData.series[0].data = result?.clientsByStatus
-        
+
         this.activeClientsByStatusSubject.next(widgetProperties);
       },
-       
-      error: (error) => { 
+
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -113,16 +117,16 @@ export class WidgetFacade {
 
   loadActiveClientsByGroupChart(dashboardId : string, userId : string) {
     this.widgetService.getActiveClientsByGroup(this.selectedDashboardId,userId).subscribe({
-      next: (result : any) => { 
-       
+      next: (result : any) => {
+
         let widgetProperties = JSON.parse(result.widgetProperties);
-        
+
         widgetProperties.chartData.series[0].data = result?.clientsbyGroup
-        
+
         this.activeClientsByGroupSubject.next(widgetProperties);
       },
-       
-      error: (error) => { 
+
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -130,11 +134,11 @@ export class WidgetFacade {
   }
   loadNetIncomeChart() {
     this.widgetService.getNetIncome().subscribe({
-      next: (result) => { 
+      next: (result) => {
         this.netIncomeSubject.next(result);
       },
-       
-      error: (error) => { 
+
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -143,17 +147,17 @@ export class WidgetFacade {
 
   loadPharmacyClaimsChart(dashboardId:string, payload:any) {
     this.widgetService.getPharmacyClaims(this.selectedDashboardId,payload).subscribe({
-      next: (result) => { 
+      next: (result) => {
         ;
         let widgetProperties = JSON.parse(result?.widgetProperties);
-        
+
         widgetProperties.chartData.series[0].data = result?.pharmacyClaims
-        
+
 
         this.pharmacyClaimsSubject.next({widgetProperties, result});
       },
-       
-      error: (error) => { 
+
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -161,14 +165,14 @@ export class WidgetFacade {
   }
   loadPremiumExpensesByInsuranceChart(dashboardId:any, payload:any) {
     this.widgetService.getPremiumExpensesByInsurance(this.selectedDashboardId,payload).subscribe({
-      next: (result) => { 
+      next: (result) => {
         let widgetProperties = JSON.parse(result.widgetProperties);
-        
+
         widgetProperties.chartData.series = [result?.barSeries]
         this.premiumExpensesByInsuranceSubject.next(widgetProperties);
       },
-       
-      error: (error) => { 
+
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -176,15 +180,15 @@ export class WidgetFacade {
   }
   loadProgramExpensesChart(dashboardId:string, payload:any) {
     this.widgetService.getProgramExpenses(this.selectedDashboardId,payload).subscribe({
-      next: (result : any) => { 
-       
+      next: (result : any) => {
+
         let widgetProperties = JSON.parse(result.widgetProperties);
-        
+
         widgetProperties.chartData.series = result?.series
         widgetProperties.chartData.categoryAxis.categories = result?.categories
         this.programExpensesSubject.next(widgetProperties);
-      },       
-      error: (error) => { 
+      },
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -193,11 +197,11 @@ export class WidgetFacade {
 
   loadProgramIncomeChart() {
     this.widgetService.getProgramIncome().subscribe({
-      next: (result) => { 
+      next: (result) => {
         this.programIncomeSubject.next(result);
       },
-       
-      error: (error) => { 
+
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -206,11 +210,11 @@ export class WidgetFacade {
 
   loadTodayGlance() {
     this.widgetService.getTodayGlance().subscribe({
-      next: (result) => { 
+      next: (result) => {
         this.todayGlanceSubject.next(result);
       },
-       
-      error: (error) => { 
+
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -219,10 +223,10 @@ export class WidgetFacade {
 
   loadApplicationCERStats(dashboardId : string) {
     this.widgetService.loadApplicationCERStats(this.selectedDashboardId).subscribe({
-      next: (result) => { 
+      next: (result) => {
         this.applicationCERStatsSubject.next(result);
-      }, 
-      error: (error) => { 
+      },
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -231,11 +235,11 @@ export class WidgetFacade {
 
   loadInsuranceTypeFPLStats(dashboardId : string) {
     this.widgetService.loadinsuranceTypeFPLtats(this.selectedDashboardId).subscribe({
-      next: (result) => { 
-        
+      next: (result) => {
+
         this.insuranceTypeFPLStatsSubject.next(result);
-      }, 
-      error: (error) => {              
+      },
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -243,11 +247,11 @@ export class WidgetFacade {
   }
   loadActivebyStatusClients() {
     this.widgetService.loadActiveClients().subscribe({
-      next: (result) => { 
+      next: (result) => {
         this.activeClientsOnStatusSubject.next(result);
-       
-      }, 
-      error: (error) => { 
+
+      },
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
@@ -255,10 +259,10 @@ export class WidgetFacade {
   }
   loadActivebyGroupClients() {
     this.widgetService.loadActiveClients().subscribe({
-      next: (result) => { 
+      next: (result) => {
         this.activeClientsOnGroupSubject.next(result);
-      }, 
-      error: (error) => { 
+      },
+      error: (error) => {
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
