@@ -46,14 +46,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() isNewNotificationClicked!: boolean;
   @Input() notificationDraftId!: string;
   @Input() templateLoadType!: string;
-  @Input() informationalText!: string;
-  @Input() templateHeader !: string;
+ informationalText!: string;
+ templateHeader !: string;
   @Input() triggerFrom !: string;
   @Input() loginUserEmail!: any;
-  @Input() confirmPopupHeader!: string;
-  @Input() confirmationModelText!: string;
-  @Input() saveForLaterHeadterText!: string;
-  @Input() saveForLaterModelText!: string;
+ confirmPopupHeader!: string;
+ confirmationModelText!: string;
+saveForLaterHeadterText!: string;
+ saveForLaterModelText!: string;
   @Input() emailSubject!: string;
   @Input() caseManagerEmail!: any;
 
@@ -157,6 +157,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.handleConfirmPopupHeader(this.communicationEmailTypeCode);
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
@@ -705,7 +706,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isToEmailMissing = false;
     this.isEmailSubjectMissing = false;
     this.isContentMissing = false;
-    this.handleconfirmPopupHeader(event.templateTypeCode);
+    this.handleConfirmPopupHeader(event.templateTypeCode);
     if (this.notificationGroup === ScreenType.VendorProfile)
     {
     this.isMailCodeMissing = false;
@@ -738,43 +739,98 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.ngDirtyInValid();
   }
 
-  handleconfirmPopupHeader(event: any){
-    switch(event){
+  handleConfirmPopupHeader(event: any) {
+    switch (event) {
       case CommunicationEventTypeCode.PendingNoticeEmail:
-        this.confirmPopupHeader = 'Send Pending Email';
         this.snackBarMessage = 'Pending Email Sent! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Pending Email Later?';
-        this.saveForLaterModelText="You must send the Pending Email within 14 Days";
+        this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''SEND EMAIL'' once the email is complete."
+        this.templateHeader = 'Send Pending Email';
+        this.emailSubject = '';
+        this.confirmPopupHeader = 'Send Pending Email?';
+        this.saveForLaterHeadterText = "Send Pending Email Later?";
+        this.saveForLaterModelText = "You must send the Pending Email within 14 Days";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal";
         break;
+
       case CommunicationEventTypeCode.RejectionNoticeEmail:
-        this.confirmPopupHeader = 'Send Rejection Email';
         this.snackBarMessage = 'Rejection Email Sent! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Rejection Email Later?';
-        this.saveForLaterModelText="You must send the Rejection Email within 14 Days";
+        this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
+        this.templateHeader = 'Send Denial Email';
+        this.emailSubject = "CAREAssist Denial Notice";
+        this.confirmPopupHeader = 'Send Denial Email?';
+        this.saveForLaterHeadterText = "Send Denial Email Later?";
+        this.saveForLaterModelText = "You must send the  Denial Email within 14 Days";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
         break;
+
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
-        this.confirmPopupHeader = 'Send Approval Email';
         this.snackBarMessage = 'Approval Email Sent! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Approval Email Later?';
-        this.saveForLaterModelText="You must send the Approval Email within 14 Days";
+        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
+        this.templateHeader = 'Send Approval Email';
+        this.emailSubject = "CareAssist Approval Notice";
+        this.confirmPopupHeader = 'Send Approval Email?';
+        this.saveForLaterHeadterText = "Send Approval Email Later?";
+        this.saveForLaterModelText = "You must send the  Approval Email within 14 Days";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via  SMS text, and/or their online portal.";
         break;
+
       case CommunicationEventTypeCode.DisenrollmentNoticeEmail:
-        this.confirmPopupHeader = 'Send Disenrollment Email';
         this.snackBarMessage = 'Disenrollment Email Sent! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Disenrollment Email Later?';
-        this.saveForLaterModelText="You must send the Disenrollment Email within 2 Days";
+        this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
+        this.templateHeader = 'Send Disenrollment Email';
+        this.emailSubject = "CAREAssist Disenrollment Notice";
+        this.confirmPopupHeader = 'Send Disenrollment Email?';
+        this.saveForLaterHeadterText = "Send Disenrollment Email Later?";
+        this.saveForLaterModelText = "You must send the  Disenrollment Email within 2 Days";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
         break;
+
       case CommunicationEventTypeCode.RestrictedNoticeEmail:
-        this.confirmPopupHeader = 'Send Restricted Email';
         this.snackBarMessage = 'Restricted Email Sent! An event has been logged.';
-        this.saveForLaterHeadterText = 'Send Restricted Email Later?';
-        this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
+        this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click " + '"Send Email"' + " once the email is complete."
+        this.templateHeader = 'Send Restricted Email';
+        this.emailSubject = "CAREAssist Restricted Notice";
+        this.confirmPopupHeader = 'Send Restricted Email?';
+        this.saveForLaterHeadterText = "Send Restricted Email Later?";
+        this.saveForLaterModelText = "To pick up where you left off, click \"New Email\" from the client's profile";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
         break;
-      default:
-        this.confirmPopupHeader = 'Send Email';
-        this.snackBarMessage = 'Email Sent! An event has been logged.';
+
+      case CommunicationEventTypeCode.VendorEmail:
+        this.informationalText = "Select an existing template or draft a custom email."
+        this.templateHeader = 'Send New Email';
         this.saveForLaterHeadterText = "Email Draft Saved";
-        this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
+        this.saveForLaterModelText = "To pick up where you left off, click \"New Email\" from the vendor's profile";
+        this.confirmPopupHeader = 'Send Email?';
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        break;
+
+      case CommunicationEventTypeCode.CerAuthorizationEmail:
+        this.templateHeader = 'CER Authorization Email';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
+        this.saveForLaterHeadterText = "Send CER Authorization Email Later?";
+        this.saveForLaterModelText = "You must send the  Cer Authorization Email within 45 Days";
+        this.confirmPopupHeader = 'Send Authorization Email?';
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
+        break;
+      case CommunicationEventTypeCode.ApplicationAuthorizationEmail:
+        this.templateHeader = 'Application Authorization Email';
+        this.emailSubject = this.templateHeader;
+        this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
+        this.saveForLaterHeadterText = "Send Authorization Email Later?";
+        this.saveForLaterModelText = "You must send the  Authorization Email within 45 Days";
+        this.confirmPopupHeader = 'Send Authorization Email?';
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
+        break;
+
+      default:
+        this.informationalText = "Select an existing template or draft a custom email."
+        this.templateHeader = 'Send New Email';
+        this.saveForLaterHeadterText = "Email Draft Saved";
+        this.saveForLaterModelText = "To pick up where you left off, click \"New Email\" from the client's profile";
+        this.confirmPopupHeader = 'Send Email?';
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
         break;
     }
   }
