@@ -27,8 +27,6 @@
             formControlName="time"
             format="hh:mm a"
             formatPlaceholder="formatPattern"
-            (keyup)="timeValidation()"
-            (valueChange)="timeValidation()"
           ></kendo-timepicker>
           <kendo-formerror *ngIf="clientReminderForm.controls['time'].hasError('incorrect')">
             Time cannot be before the current time.</kendo-formerror>

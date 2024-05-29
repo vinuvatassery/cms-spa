@@ -342,7 +342,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
   
   private updateWidgetsAndDashboard() {
-    const updatedWidgets = this.processUpdatedWidgets(DashboardPageComponent.updatedWidgets);
     const dashboardContent = this.processDashboardContent(DashboardPageComponent.dashBoardContentData);
   
     this.dashboardWrapperFacade.updateDashboardAllWidgets(this.selectedDashBoard, {

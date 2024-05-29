@@ -159,7 +159,6 @@ export class FinancialInsuranceProviderListComponent implements OnInit {
 
         this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
       }
-      return;
     }
 
   }

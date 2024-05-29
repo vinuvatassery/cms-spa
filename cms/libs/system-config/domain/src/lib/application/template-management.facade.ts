@@ -138,7 +138,7 @@ export class TemplateManagementFacade {
   }
   loadLetterTemplateLists() {
     this.templateDataService
-      .loadLetterTemplatesListsService()
+      .loadTemplatesListsService()
       .subscribe({
         next: (response) => {
           this.letterTemplatesListsSubject.next(response);
@@ -151,7 +151,7 @@ export class TemplateManagementFacade {
 
   loadSmsTextTemplateLists() {
     this.templateDataService
-      .loadSmsTemplatesListsService()
+      .loadTemplatesListsService()
       .subscribe({
         next: (response) => {
           this.smsTextTemplatesListsSubject.next(response);

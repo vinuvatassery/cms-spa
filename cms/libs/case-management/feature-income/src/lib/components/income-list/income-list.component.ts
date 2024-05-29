@@ -101,7 +101,6 @@ export class IncomeListComponent implements OnInit, OnDestroy {
       text: "Attach from client/'s attachments",
       id: "attachfromclient",
       click: (event: any, dataItem: any): void => {
-        //this.onProofSchoolDropdownOneBlur();
         this.isOpenClientsAttachment = true;
         this.clientDependentId = dataItem.clientDependentId;
       },

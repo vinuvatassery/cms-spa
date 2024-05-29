@@ -106,7 +106,7 @@ export class PharmacyClaimsBatchPageComponent {
         Filter : filter
       }
       const batchId = this.route.snapshot.queryParams['bid'];
-      const fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Pharmacy Batch Payments'
+      const fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substring(1).toLowerCase())  +' Pharmacy Batch Payments'
 
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`payment-batches/${batchId}/payments?isReconciled=${data.isReconciled}` , fileName)
     }

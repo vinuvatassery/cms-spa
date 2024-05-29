@@ -1055,7 +1055,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       } else {
         dataItem.daySpyRfdGtDaySpy = false;
         if (!isNaN(refundRatio) && isFinite(refundRatio) && refundRatio > 0) {
-          inValid = !(rxRatio < refundRatio);
+          inValid = (rxRatio >= refundRatio);
           dataItem.daySupplyRefundedRatioValid = inValid;
         } else {
           dataItem.daySupplyRefundedRatioValid = false;
@@ -1146,13 +1146,11 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
 
         if (!x.daySupplyRefunded) {
           x.daySupplyRefundedValid = false;
-          return;
         } else {
           x.daySupplyRefundedValid = true;
         }
         if (!x.refundedAmount) {
           x.refundedAmountValid = false;
-          return;
         } else {
           x.refundedAmountValid = true;
         }
