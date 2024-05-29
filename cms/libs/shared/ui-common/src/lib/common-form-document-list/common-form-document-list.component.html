@@ -133,7 +133,7 @@
                   let-text="text">
                   <span class="k-drag-status k-font-icon k-icon"
                         [ngClass]="getDragStatus(action, destinationItem, sourceItem)"></span>
-                  <span>{{ text }}</span>
+                  <span>{{ sourceItem?.item?.dataItem?.text }}</span>
             </ng-template>
       </kendo-treeview>
 </div>
