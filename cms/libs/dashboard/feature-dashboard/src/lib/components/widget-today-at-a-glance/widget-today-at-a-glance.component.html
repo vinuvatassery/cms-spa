@@ -7,7 +7,7 @@
           <p>TO DO ITEMS</p>
           <div class="justify-content-between">
             <span class="material-icons" aria-hidden="true">playlist_add_check</span>
-            <p class="mat-h3">0</p>
+            <p class="mat-h3">{{todayGlanceTodo}}</p>
           </div>
         </div>
         <div class="dash-info-card red_card" (click)="pendingApprovalsNavigate()">
@@ -25,7 +25,7 @@
             <span class="material-icons" aria-hidden="true">
               send
             </span>
-            <p class="mat-h3">0</p>
+            <p class="mat-h3">{{todayGlancedirectMessages}}</p>
           </div>
         </div>
         <div class="dash-info-card blue_card" (click)="remindersNavigate('REMINDER')">
@@ -35,7 +35,7 @@
               alarm
             </span>
 
-            <p class="mat-h3">0</p>
+            <p class="mat-h3">{{todayGlanceReminder }}</p>
           </div>
         </div>
         <div class="dash-info-card purple_card" (click)="notificationsNavigate('NOTIFICATION')">
@@ -44,7 +44,7 @@
             <span class="material-icons" aria-hidden="true">
               notifications_active
             </span>
-            <p class="mat-h3">0</p>
+            <p class="mat-h3">{{todayGlanceNotification}}</p>
           </div>
         </div>
       </div>

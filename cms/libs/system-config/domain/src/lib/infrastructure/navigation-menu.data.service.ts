@@ -41,6 +41,12 @@ export class NavigationMenuService {
     );
   }
 
+  getTodoItemCount() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/alerts/todo-count`
+    );
+  }
+
   getPendingApprovalImportedClaimCount() {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/imported-claims/count`

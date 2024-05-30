@@ -30,7 +30,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   dashboardPendingApprovalCardCountSubject = this.widgetFacade.dashboardPendingApprovalCardCountSubject;
   //add menu badges on this variable
   menuBadges = [
-    { key: 'TO_DO_ITEMS', value: 5 },
+    { key: MenuBadge.todoItems, value: 5 },
     { key: MenuBadge.directMessage, value: 0 },
     { key: MenuBadge.productivityTools, value: 0 },
     { key: MenuBadge.financialManagement, value: 0 },
@@ -214,6 +214,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
     this.getPcaAssignmentMenuCount();
     this.getPendingApprovalMenuCount();
     this.getDirectMessageCount();
+    this.getTodoItemCount()
   }
 
   private getPcaAssignmentMenuCount() {
@@ -268,6 +269,17 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
     this.navigationMenuFacade.getHivVerificationCount();
   }
 
+  private getTodoItemCount(){
+    this.navigationMenuFacade.todoItemCount$.subscribe({
+      next: (todoCount) => {
+        if (todoCount) {
+          this.toDoItemsCount = todoCount;
+          this.setProductivityToolsCount();
+        }
+      }
+
+    });
+  }
   private subscribeToPendingApprovalCount() {
     this.navigationMenuFacade.pendingApprovalPaymentCount$.subscribe({
       next: (paymentCount) => {
@@ -312,6 +324,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
       this.pendingApprovalCount + this.directMessageCount + this.toDoItemsCount;
     this.setBadgeValue(MenuBadge.pendingApprovals, this.pendingApprovalCount);
     this.setBadgeValue(MenuBadge.productivityTools, this.productivityToolsCount);
+    this.setBadgeValue(MenuBadge.todoItems, this.toDoItemsCount);
   }
 
 
