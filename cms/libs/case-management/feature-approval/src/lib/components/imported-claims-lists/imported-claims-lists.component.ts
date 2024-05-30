@@ -8,7 +8,8 @@ import {
   Output,
   TemplateRef,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { RowArgs, GridDataResult, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
@@ -17,7 +18,7 @@ import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { YesNoFlag } from '@cms/shared/ui-common';
 import { ImportedClaimFacade, FinancialClaimsFacade } from '@cms/case-management/domain';
@@ -29,7 +30,7 @@ import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter
   selector: 'productivity-tools-imported-claims-lists',
   templateUrl: './imported-claims-lists.component.html',
 })
-export class ImportedClaimsListsComponent implements OnInit, OnChanges {
+export class ImportedClaimsListsComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('submitModalDialog', { read: TemplateRef })
   submitModalDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -50,6 +51,13 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();
   @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+  
+  submitImportedClaimsSubscription! : Subscription;
+  approvalsImportedClaimsListsSubscription! : Subscription;
+  savePossibleMatchDataSubscription! : Subscription;
+  updateExceptionModalSubscription!: Subscription;
+  clientPolicyUpdateSubscription!: Subscription;
+  exportButtonShowSubscription!: Subscription;
   importedClaimId:any;
   clientName:any;
   dateOfBirth:any;
@@ -169,7 +177,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   subscribeToSubmitImportedClaims(){
-    this.submitImportedClaims$.subscribe((response: any) => {
+    this.submitImportedClaimsSubscription = this.submitImportedClaims$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.importedClaimsGridUpdatedResult = [];
         this.denyAndDeleteCount();
@@ -412,7 +420,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.approvalsImportedClaimsLists$.subscribe((response: GridDataResult) => {
+    this.approvalsImportedClaimsListsSubscription = this.approvalsImportedClaimsLists$.subscribe((response: GridDataResult) => {
       let gridData = {
         data: response.data,
         total: response.total,
@@ -479,7 +487,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   private closePossibleMatchModal() {
-    this.savePossibleMatchData$.subscribe((value: any) => {
+    this.savePossibleMatchDataSubscription = this.savePossibleMatchData$.subscribe((value: any) => {
       if (value) {
         this.onCloseReviewPossibleMatchesDialogClicked(true);
         this.cd.detectChanges();
@@ -622,7 +630,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   private closeExceptionModal() {
-    this.updateExceptionModalSubject$.subscribe((value: any) => {
+    this.updateExceptionModalSubscription = this.updateExceptionModalSubject$.subscribe((value: any) => {
       if (value) {
         this.onCloseMakeExpectationDialogClicked();
         this.cd.detectChanges();
@@ -632,7 +640,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   subscribeToPolicyUpdate(){
-    this.importedClaimFacade.clientPolicyUpdate$.subscribe({
+    this.clientPolicyUpdateSubscription = this.importedClaimFacade.clientPolicyUpdate$.subscribe({
       next:(response: any) => {
         if(response.status){
           this.onCloseSearchClientsDialogClicked();
@@ -665,7 +673,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.showExportLoader = true;
     this.exportGridDataEvent.emit();
 
-    this.exportButtonShow$.subscribe((response: any) => {
+    this.exportButtonShowSubscription = this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;
         this.cd.detectChanges();
@@ -673,4 +681,12 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     });
   }
 
+  ngOnDestroy(): void {
+      this.submitImportedClaimsSubscription?.unsubscribe();
+      this.approvalsImportedClaimsListsSubscription?.unsubscribe();
+      this.savePossibleMatchDataSubscription?.unsubscribe();
+      this.updateExceptionModalSubscription?.unsubscribe();
+      this.clientPolicyUpdateSubscription?.unsubscribe();
+      this.exportButtonShowSubscription?.unsubscribe();
+  }
 }

@@ -297,87 +297,88 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     phoneForm.disable();
   }
 
-  onSave()
-  {
+  onSave() {
     this.userForm.markAllAsTouched();
     this.setFormValidation();
-    if(!this.userForm.invalid && !this.endDateValidator)
-    {
-      let payload = {
-        loginUserId : this.userForm.controls['loginUserId'].value ? this.userForm.controls['loginUserId'].value : null,
-        userTypeCode : this.userInfo.userTypeCode,
-        initials:  this.userForm.controls['initials'].value ?? null,
-        pronouns: this.userForm.controls['pronoun'].value ?? null,
-        jobTitle:  this.userForm.controls['jobTitle'].value ?? null,
-        faxNbr:  this.userForm.controls['faxNbr'].value? this.userForm.controls['faxNbr'].value: null,
-        notificationSummaryEmailCheck : this.userForm.controls['notificationSummaryFlag'].value,
-        userSchedules: [{}],
-        userAddresses: [{}],
-        userPhones: [{}],
-      }
-      if(this.isScheduleOutOfOfficeSection)
-      {
-        let schedule = {
-          loginUserId : this.userForm.controls['loginUserId'].value ? this.userForm.controls['loginUserId'].value : null,
-          loginUserScheduleId : this.userForm.controls['loginUserScheduleId'].value ? this.userForm.controls['loginUserScheduleId'].value : null,
-          startDate: this.intl.formatDate(this.userForm.controls['startDate'].value,  this.dateFormat ),
-          endDate: this.intl.formatDate(this.userForm.controls['endDate'].value,  this.dateFormat ),
-          startTime: new Date(this.userForm.controls['startTime'].value).getHours()+":"+new Date(this.userForm.controls['startTime'].value).getMinutes(),
-          endTime: new Date(this.userForm.controls['endTime'].value).getHours()+":"+new Date(this.userForm.controls['endTime'].value).getMinutes(),
-          message: this.userForm.controls['outOfOfficeMsg'].value ?? null
-        }
-        payload.userSchedules.push(schedule);
-        payload.userSchedules.splice(0, 1);
-      }
-      else{
-        payload.userSchedules = [];
-      }
-      if(this.checkAddressControls() && this.userInfo.userTypeCode === UserType.External)
-        {
-          let address = {
-            loginUserId : this.userForm.controls['loginUserId'].value ? this.userForm.controls['loginUserId'].value : null,
-            loginUserAddressId : this.userForm.controls['loginUserAddressId'].value ? this.userForm.controls['loginUserAddressId'].value : null,
-            address1:  this.userForm.controls['address1'].value ? this.userForm.controls['address1'].value: null,
-            address2:  this.userForm.controls['address2'].value ? this.userForm.controls['address2'].value: null,
-            city:  this.userForm.controls['city'].value ? this.userForm.controls['city'].value: null,
-            state:  this.userForm.controls['state'].value ? this.userForm.controls['state'].value: null,
-            zip:  this.userForm.controls['zip'].value ? this.userForm.controls['zip'].value: null,
-            county: this.userForm.controls['county'].value ? this.userForm.controls['county'].value: null,
-          }
-          payload.userAddresses.push(address);
-          payload.userAddresses.splice(0, 1);
-        }
-        else{
-          payload.userAddresses = [];
-        }
-        let userform = this.userForm.value;
-        let phoneArrayForm = userform.phones
-        if(phoneArrayForm)
-          {
-        for (let element of phoneArrayForm) {
-          let phone = {
-            loginUserPhoneId: element.loginUserPhoneId ? element.loginUserPhoneId: null,
-            loginUserId: this.userInfo.loginUserId,
-            deviceTypeCode: element.phoneType ? element.phoneType: null,
-            deviceNbr: element.phoneNbr ? element.phoneNbr: null,
-            smsTextConsentFlag: element.smsTextConsentFlag ? StatusFlag.Yes : StatusFlag.No,
-          };
-          payload.userPhones.push(phone);
-        }
-        if(this.phoneData)
-          {
-            payload.userPhones.push(this.phoneData);
-          }
-        payload.userPhones.splice(0, 1);
-      }
-      else{
-        payload.userPhones = [];
-      }
-
-
-      this.submitUserInfoDataEvent.emit(payload);
+  
+    if (this.userForm.invalid || this.endDateValidator) {
+      return; // Exit early if form is invalid or there's an end date validation error
     }
+  
+    const payload = this.createPayload();
+    this.submitUserInfoDataEvent.emit(payload);
   }
+  
+  private createPayload() {
+    const payload = {
+      loginUserId: this.userForm.controls['loginUserId'].value || null,
+      userTypeCode: this.userInfo.userTypeCode,
+      initials: this.userForm.controls['initials'].value || null,
+      pronouns: this.userForm.controls['pronoun'].value || null,
+      jobTitle: this.userForm.controls['jobTitle'].value || null,
+      faxNbr: this.userForm.controls['faxNbr'].value || null,
+      notificationSummaryEmailCheck: this.userForm.controls['notificationSummaryFlag'].value,
+      userSchedules: this.createUserSchedules(),
+      userAddresses: this.createUserAddresses(),
+      userPhones: this.createUserPhones()
+    };
+  
+    return payload;
+  }
+  
+  private createUserSchedules() {
+    if (this.isScheduleOutOfOfficeSection) {
+      const schedule = {
+        loginUserId: this.userForm.controls['loginUserId'].value || null,
+        loginUserScheduleId: this.userForm.controls['loginUserScheduleId'].value || null,
+        startDate: this.intl.formatDate(this.userForm.controls['startDate'].value, this.dateFormat),
+        endDate: this.intl.formatDate(this.userForm.controls['endDate'].value, this.dateFormat),
+        startTime: new Date(this.userForm.controls['startTime'].value).getHours() + ":" + new Date(this.userForm.controls['startTime'].value).getMinutes(),
+        endTime: new Date(this.userForm.controls['endTime'].value).getHours() + ":" + new Date(this.userForm.controls['endTime'].value).getMinutes(),
+        message: this.userForm.controls['outOfOfficeMsg'].value || null
+      };
+      return [schedule];
+    }
+    return [];
+  }
+  
+  private createUserAddresses() {
+    if (this.checkAddressControls() && this.userInfo.userTypeCode === UserType.External) {
+      const address = {
+        loginUserId: this.userForm.controls['loginUserId'].value || null,
+        loginUserAddressId: this.userForm.controls['loginUserAddressId'].value || null,
+        address1: this.userForm.controls['address1'].value || null,
+        address2: this.userForm.controls['address2'].value || null,
+        city: this.userForm.controls['city'].value || null,
+        state: this.userForm.controls['state'].value || null,
+        zip: this.userForm.controls['zip'].value || null,
+        county: this.userForm.controls['county'].value || null,
+      };
+      return [address];
+    }
+    return [];
+  }
+  
+  private createUserPhones() {
+    const phoneArrayForm = this.userForm.value.phones;
+    if (phoneArrayForm) {
+      const userPhones = phoneArrayForm.map((element: any) => ({
+        loginUserPhoneId: element.loginUserPhoneId || null,
+        loginUserId: this.userInfo.loginUserId,
+        deviceTypeCode: element.phoneType || null,
+        deviceNbr: element.phoneNbr || null,
+        smsTextConsentFlag: element.smsTextConsentFlag ? StatusFlag.Yes : StatusFlag.No,
+      }));
+  
+      if (this.phoneData) {
+        userPhones.push(this.phoneData);
+      }
+  
+      return userPhones;
+    }
+    return [];
+  }
+  
 
   setFormValidation()
   {
@@ -423,55 +424,62 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  removeForm(i : any)
-  {
-    if(this.addPhoneForm.length > 1 ){
-      this.addPhoneForm.removeAt(i);
-      let deskPhoneCount = 0;
-      let deskPhoneIndex = 0;
-      for (let i =0; i < this.addPhoneForm.controls.length; i++)
-        {
-          if(this.addPhoneForm.at(i).get('phoneType')?.value === this.userDeviceType.DeskPhone)
-            {
-              deskPhoneCount++;
-              deskPhoneIndex = i;
-            }
-        }
-        if (deskPhoneCount === 1)
-          {
-            this.addPhoneForm.at(deskPhoneIndex).get('phoneType')?.setErrors({ incorrect: false });
-            this.addPhoneForm.at(deskPhoneIndex).get('phoneType')?.updateValueAndValidity();
-          }
-      if(this.userInfo.userTypeCode === UserType.Internal)
-        {
-          for (let i =0; i < this.addPhoneForm.controls.length; i++)
-            {
-              if(this.addPhoneForm.at(i).get('phoneType')?.value === this.userDeviceType.DeskPhone)
-                {
-                  this.defaultDeskPhoneIndex = i;
-                  break;
-                }
-            }
-        }
-
+  removeForm(i: any) {
+    if (this.addPhoneForm.length > 1) {
+      this.removePhoneFormAtIndex(i);
+      this.updateDeskPhoneValidity();
+      if (this.userInfo.userTypeCode === UserType.Internal) {
+        this.updateDefaultDeskPhoneIndex();
       }
-    else if(this.addPhoneForm.length == 1)
-      {
-        this.addPhoneForm.reset();
-      }
-
-
+    } else if (this.addPhoneForm.length === 1) {
+      this.resetPhoneForm();
+    }
   }
-  checkAddressControls()
-  {
-   for(let i = 0; i< this.addressControlsList.length; i++)
-    {
-      const control = this.addressControlsList[i]
-      if(this.userForm.controls[control].value)
+  
+  private removePhoneFormAtIndex(index: number): void {
+    this.addPhoneForm.removeAt(index);
+  }
+  
+  private updateDeskPhoneValidity(): void {
+    let deskPhoneCount = 0;
+    let deskPhoneIndex = 0;
+    for (let i = 0; i < this.addPhoneForm.controls.length; i++) {
+      if (this.addPhoneForm.at(i).get('phoneType')?.value === this.userDeviceType.DeskPhone) {
+        deskPhoneCount++;
+        deskPhoneIndex = i;
+      }
+    }
+    if (deskPhoneCount === 1) {
+      this.setDeskPhoneValidity(deskPhoneIndex);
+    }
+  }
+  
+  private setDeskPhoneValidity(index: number): void {
+    this.addPhoneForm.at(index).get('phoneType')?.setErrors({ incorrect: false });
+    this.addPhoneForm.at(index).get('phoneType')?.updateValueAndValidity();
+  }
+  
+  private updateDefaultDeskPhoneIndex(): void {
+    for (let i = 0; i < this.addPhoneForm.controls.length; i++) {
+      if (this.addPhoneForm.at(i).get('phoneType')?.value === this.userDeviceType.DeskPhone) {
+        this.defaultDeskPhoneIndex = i;
+        break;
+      }
+    }
+  }
+  
+  private resetPhoneForm(): void {
+    this.addPhoneForm.reset();
+  }
+  checkAddressControls() {
+    for (const control of this.addressControlsList) {
+      if (this.userForm.controls[control].value) {
         return true;
+      }
     }
     return false;
   }
+  
   setPhoneValidations()
   {
     this.addPhoneForm.controls.forEach((element, index) => {
@@ -542,14 +550,15 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
           }
       }
 
-    if((deskPhoneCount > 0 && this.userInfo.userTypeCode === this.userType.Internal) && value === this.userDeviceType.DeskPhone)
-      {
+      if (
+        (value === this.userDeviceType.DeskPhone) && 
+        (
+          (deskPhoneCount > 0 && this.userInfo.userTypeCode === this.userType.Internal) || 
+          (deskPhoneCount > 1 && this.userInfo.userTypeCode === this.userType.External)
+        )
+      ) {
         form.controls['phoneType'].setErrors({ incorrect: true });
-      }
-    else if((deskPhoneCount > 1 && this.userInfo.userTypeCode === this.userType.External) && value === this.userDeviceType.DeskPhone)
-      {
-        form.controls['phoneType'].setErrors({ incorrect: true });
-      }
+      }      
   }
 
   isPhoneTypeControlValid(index:any)

@@ -528,55 +528,75 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   createVendorProfileData(formValues: any) {
-    let PreferredFlagStatus;
-    if (this.providerType === this.vendorTypes.Pharmacy) {
-      PreferredFlagStatus = formValues.isPreferedPharmacy ? StatusFlag.Yes : StatusFlag.No;
-    } else {
-      PreferredFlagStatus = null;
-    }
-    let vendorProfileData = {
-      vendorId: this.selectedClinicVendorId,
-      vendorName: formValues.providerName,
-      firstName: formValues.firstName,
-      lastName: formValues.lastName,
-      vendorTypeCode: this.providerType,
-      tin: (formValues.tinNumber != null && formValues.tinNumber != '') ? formValues.tinNumber : null,
-      npiNbr: formValues.npiNbr,
-      mailCode: formValues.mailCode,
-      addressTypeCode: AddressType.Mailing,
-      address1: formValues.addressLine1,
-      address2: formValues.addressLine2,
-      cityCode: formValues.city,
-      stateCode: formValues.state,
-      zip: formValues.zip,
-      nameOnCheck: formValues.nameOnCheck,
-      nameOnEnvelope: formValues.nameOnEnvolop,
-      paymentMethodCode: formValues.paymentMethod,
-      clinicType: formValues.clinicType,
-      specialHandlingDesc: formValues.specialHandlingDesc,
-      phoneTypeCode: AddressType.Mailing,
-      vendorContacts: this.vendorContactList,
-      AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
-      AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
-      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
-      PreferredFlag: PreferredFlagStatus,
-      PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes : StatusFlag.No,
-      emailAddressTypeCode: AddressType.Mailing,
-      activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
-      parentVendorId : formValues.parentVendorId,
-    }
-    if (this.providerType === FinancialVendorTypeCode.Clinic) {
-      if (vendorProfileData.clinicType === FinancialVendorTypeCode.MedicalClinic) {
-        vendorProfileData.vendorTypeCode = FinancialVendorTypeCode.MedicalClinic;
-      } else {
-        vendorProfileData.vendorTypeCode = FinancialVendorTypeCode.DentalClinic;
-      }
-    }
-    if (this.vendorTypes.HealthcareProviders == this.providerType) {
-      vendorProfileData.vendorTypeCode = this.vendorTypes.MedicalProviders;
-    }
+    const PreferredFlagStatus = this.getPreferredFlagStatus(formValues);
+    let vendorProfileData = this.initializeVendorProfileData(formValues, PreferredFlagStatus);
+
+    this.adjustVendorTypeCode(vendorProfileData, formValues);
+
     return vendorProfileData;
-  }
+}
+
+private getPreferredFlagStatus(formValues: any): string | null {
+    if (this.providerType === this.vendorTypes.Pharmacy) {
+        return formValues.isPreferedPharmacy ? StatusFlag.Yes : StatusFlag.No;
+    } else {
+        return null;
+    }
+}
+
+private initializeVendorProfileData(formValues: any, PreferredFlagStatus: string | null): any {
+    return {
+        vendorId: this.selectedClinicVendorId,
+        vendorName: formValues.providerName,
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
+        vendorTypeCode: this.providerType,
+        tin: this.getValidValue(formValues.tinNumber),
+        npiNbr: formValues.npiNbr,
+        mailCode: formValues.mailCode,
+        addressTypeCode: AddressType.Mailing,
+        address1: formValues.addressLine1,
+        address2: formValues.addressLine2,
+        cityCode: formValues.city,
+        stateCode: formValues.state,
+        zip: formValues.zip,
+        nameOnCheck: formValues.nameOnCheck,
+        nameOnEnvelope: formValues.nameOnEnvolop,
+        paymentMethodCode: formValues.paymentMethod,
+        clinicType: formValues.clinicType,
+        specialHandlingDesc: formValues.specialHandlingDesc,
+        phoneTypeCode: AddressType.Mailing,
+        vendorContacts: this.vendorContactList,
+        AcceptsReportsFlag: this.getValidValue(formValues.isAcceptReports),
+        AcceptsCombinedPaymentsFlag: this.getValidValue(formValues.isAcceptCombinedPayment),
+        PaymentRunDateMonthly: this.getValidNumber(formValues.paymentRunDate),
+        PreferredFlag: PreferredFlagStatus,
+        PhysicalAddressFlag: formValues.physicalAddressFlag ? StatusFlag.Yes : StatusFlag.No,
+        emailAddressTypeCode: AddressType.Mailing,
+        activeFlag: this.hasCreateUpdatePermission ? StatusFlag.Yes : StatusFlag.No,
+        parentVendorId: formValues.parentVendorId,
+    };
+}
+
+private adjustVendorTypeCode(vendorProfileData: any, formValues: any) {
+    if (this.providerType === FinancialVendorTypeCode.Clinic) {
+        vendorProfileData.vendorTypeCode = formValues.clinicType === FinancialVendorTypeCode.MedicalClinic
+            ? FinancialVendorTypeCode.MedicalClinic
+            : FinancialVendorTypeCode.DentalClinic;
+    }
+    if (this.vendorTypes.HealthcareProviders === this.providerType) {
+        vendorProfileData.vendorTypeCode = this.vendorTypes.MedicalProviders;
+    }
+}
+
+private getValidValue(value: any): any {
+    return value != null && value != '' ? value : null;
+}
+
+private getValidNumber(value: any): number | null {
+    return value != null && value != '' ? Number(value) : null;
+}
+
 
   onChange() {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;

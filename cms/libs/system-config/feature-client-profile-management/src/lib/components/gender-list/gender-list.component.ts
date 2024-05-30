@@ -16,7 +16,7 @@ export class GenderListComponent implements OnInit, OnChanges {
  isGenderDeactivatePopup = false;
  isGenderReactivatePopup = false;
  isGenderDetailPopup = false;
- 
+ isReorderEnabled = false;
  public formUiStyle : UIFormStyle = new UIFormStyle();
  popupClassAction = 'TableActionPopup app-dropdown-action-list';
  @Input() pageSizes: any;
@@ -59,6 +59,7 @@ export class GenderListComponent implements OnInit, OnChanges {
      text: "Reorder",
      icon: "format_list_numbered",
      click: (): void => {
+      this.isReorderClicked();
      },
    },
    {
@@ -215,5 +216,9 @@ onGenderReactivateClicked() {
  }
  onGenderDetailClicked() {
    this.isGenderDetailPopup = true;
+ }
+
+ isReorderClicked(){
+  this.isReorderEnabled = !this.isReorderEnabled;
  }
 }

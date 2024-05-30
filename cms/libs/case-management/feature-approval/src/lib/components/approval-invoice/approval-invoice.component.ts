@@ -7,6 +7,7 @@ import {
   OnInit,
   EventEmitter,
   Output,
+  OnDestroy,
 } from '@angular/core';
 
 /** External libraries **/
@@ -27,7 +28,7 @@ import { PendingApprovalGeneralFacade } from '@cms/case-management/domain';
   templateUrl: './approval-invoice.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalInvoiceComponent implements OnInit {
+export class ApprovalInvoiceComponent implements OnInit, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isInvoiceGridLoaderShow = false;
@@ -51,6 +52,7 @@ export class ApprovalInvoiceComponent implements OnInit {
   gridDataResult!: GridDataResult;
 
   invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
+  invoiceDataSubscription! : Subscription;
   invoiceGridViewDataSubject = new Subject<any>();
   invoiceGridView$ =  this.invoiceGridViewDataSubject.asObservable();
   isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
@@ -69,7 +71,7 @@ export class ApprovalInvoiceComponent implements OnInit {
   selectedPaymentType: string | null = null;
   paymentRequestTypes$ = this.lovFacade.paymentRequestType$;
   paymentRequestTypes: any = [];
-
+  paymentRequestTypesSubscription! : Subscription;
   paymentTypeFilter = '';
   /** Constructor **/
   constructor(
@@ -176,7 +178,7 @@ export class ApprovalInvoiceComponent implements OnInit {
 
   gridDataHandle() {
     this.isInvoiceGridLoaderShow = true;
-    this.invoiceData$.subscribe((data: GridDataResult) => {
+    this.invoiceDataSubscription = this.invoiceData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.invoiceGridViewDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
@@ -299,7 +301,7 @@ export class ApprovalInvoiceComponent implements OnInit {
 
   private getCoPaymentRequestTypeLov() {
     this.lovFacade.getCoPaymentRequestTypeLov();
-    this.paymentRequestTypes$.subscribe({
+    this.paymentRequestTypesSubscription = this.paymentRequestTypes$.subscribe({
       next: (data: any) => {
         data.forEach((item: any) => {
           item.lovDesc = item.lovDesc.toUpperCase();
@@ -318,5 +320,10 @@ export class ApprovalInvoiceComponent implements OnInit {
       sort: [{ field: 'serviceStartDate', dir: 'desc' }],
     };
     this.sortColumnDesc = 'Service Start';
+  }
+
+  ngOnDestroy(): void {
+    this.paymentRequestTypesSubscription?.unsubscribe();
+    this.invoiceDataSubscription?.unsubscribe();
   }
 }

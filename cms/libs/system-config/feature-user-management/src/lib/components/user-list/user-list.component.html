@@ -100,7 +100,14 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
       </kendo-grid-column>
-
+      <kendo-grid-column field="userAccessType" title="User Access Type" [width]="120">
+        <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+          let-filterService="filterService">
+          <kendo-dropdownlist [data]="userAccessTypeLovs" textField="lovDesc" valueField="lovDesc" [(ngModel)]="selectedUserAccessType"
+            [valuePrimitive]="true" (valueChange)="dropdownFilterChange('userAccessType',$event, filterService)">
+          </kendo-dropdownlist>
+        </ng-template>
+      </kendo-grid-column>
       <kendo-grid-column field="lastModificationTime" title="Last Modified" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.lastModificationTime |date:'MM/dd/YYYY'}}

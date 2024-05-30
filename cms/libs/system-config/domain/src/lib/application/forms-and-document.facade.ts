@@ -248,6 +248,7 @@ export class FormsAndDocumentFacade {
            next: (response:any) => {
              if(response){
               this.deActiveTemplateSubject.next(true);
+              this.getFolderName()
               this.loaderService.hide();
              }
              this.isActiveSubscription();
@@ -267,6 +268,7 @@ export class FormsAndDocumentFacade {
              if(response){
               this.reActiveTemplateSubject.next(true);
                 this.isActiveSubscription();
+                this.getFolderName()
                   this.loaderService.hide();
              }
              this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
@@ -282,7 +284,7 @@ export class FormsAndDocumentFacade {
       
               this.isActive$.subscribe({
                 next :(data) =>{
-                  this.filter1.active = data ? 'A' : 'Y',
+                  this.filter1.active = data ? 'A' : 'Y'
                   this.loadFolderFile(this.filter1);
                 }
               })

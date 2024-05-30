@@ -394,7 +394,11 @@
     flex-direction: column;
     gap: $size-m;
     width: 100%;
-
+    p{
+    word-break: break-word;
+      
+      line-height: normal;
+    }
   }
 
   .k-dropdown-button {

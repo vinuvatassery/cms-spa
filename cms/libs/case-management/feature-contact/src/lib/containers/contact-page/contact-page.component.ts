@@ -20,8 +20,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-contact-page',
-  templateUrl: './contact-page.component.html',
-  styleUrls: ['./contact-page.component.scss'],
+  templateUrl: './contact-page.component.html'
 })
 
 export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -1996,26 +1995,29 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   checkValidations() {
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
-    let isValid = false;
+    
     if (this.homeAddress['homeAddressChangedFlag'].value === StatusFlag.Yes) {
-      const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name == undefined))
+      const isAddressProofRequired = 
+        !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) &&
+        (this.uploadedHomeAddressProof == undefined && 
+        (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name == undefined));
+      
       if (isAddressProofRequired) {
         this.showAddressProofRequiredValidation = true;
       }
+      
       if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation) {
-        isValid = true
+        return true;
       }
     }
-    else {
-      isValid = true;
+
+    if (this.contactInfoForm.valid) {
+      return true;
     }
-    if(this.contactInfoForm.valid){
-      isValid = true
-    }else{
-      isValid = false
-    }
-    return isValid;
-  }
+
+    return false;
+}
+
 
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {

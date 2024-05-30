@@ -10,7 +10,7 @@
       <span class="material-icons" aria-label="Menu" aria-hidden="true"
         >menu</span
       >
-      <span class="app-c-badge badge-round-right badge-warn">{{totalCount}}</span>
+      <span *ngIf="totalCount > 0" class="app-c-badge badge-round-right badge-warn">{{totalCount}}</span>
     </ng-template>
     <ng-template kendoDialItemTemplate>
       <div kendoTooltip position="left" class="app-c-fab-dial-items">
@@ -28,7 +28,7 @@
             aria-hidden="true"
             >notifications</span
           >
-          <span class="app-c-badge badge-round-right badge-warn">{{alertCount}}</span>
+          <span *ngIf="alertCount > 0" class="app-c-badge badge-round-right badge-warn">{{alertCount}}</span>
         </button>
         <button          
           *ngIf="entityTypeCode == entityTypeCodeEnum.Client"
@@ -45,6 +45,7 @@
             >send</span
           >
           <span
+          *ngIf="directMessageCount > 0"
             class="app-c-badge badge-round-right badge-warn"
             aria-label="Direct message count 2"
             aria-hidden="true"
@@ -66,6 +67,7 @@
             >assignment</span
           >
           <span
+            *ngIf="eventLogCount > 0"
             class="app-c-badge badge-round-right badge-warn"
             aria-label="Event Log Count 1"
             aria-hidden="true"

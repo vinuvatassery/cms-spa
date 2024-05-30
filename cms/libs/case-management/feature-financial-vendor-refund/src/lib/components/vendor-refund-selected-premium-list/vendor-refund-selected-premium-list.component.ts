@@ -67,7 +67,6 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
       if(!x.refundAmount)
       {
         x.refundAmountError = "Refund amount is required"
-        return
       }else if(x.refundAmountError)
       {
         return
@@ -82,7 +81,6 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
     })
     if (this.refundForm.invalid || (refundError && refundError.length >0)) {
       this.scrollToValidationError()
-      return;
     }else{
        const refundRequests :any[] =[]
       this.financialPremiumsRefundGridLists.forEach(x=>{

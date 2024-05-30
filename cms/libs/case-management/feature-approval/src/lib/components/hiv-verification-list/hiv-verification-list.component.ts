@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DocumentFacade, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-hiv-verification-list',
@@ -11,7 +12,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   styleUrls: ['./hiv-verification-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HivVerificationListComponent implements OnInit {
+export class HivVerificationListComponent implements OnInit, OnDestroy {
 
   @ViewChild('submitRequestModalDialog', { read: TemplateRef })
   submitRequestModalDialog!: TemplateRef<any>;
@@ -24,6 +25,7 @@ export class HivVerificationListComponent implements OnInit {
   /** Input Properties **/
   @Input() hivVerificationApproval$: any;
 
+  hivVerificationApprovalSubscription!: Subscription;
   hivVerificationApproval:any;
   tAreaCessationMaxLength: any = 250;
   acceptStatus: string = 'ACCEPT';
@@ -69,7 +71,7 @@ export class HivVerificationListComponent implements OnInit {
     
   ngOnInit(): void {
     this.getHivVerification.emit(true);
-    this.hivVerificationApproval$.subscribe((response:any)=>{
+    this.hivVerificationApprovalSubscription = this.hivVerificationApproval$.subscribe((response:any)=>{
       this.hivVerificationApproval = response;
       this.tAreaVariablesInitiation(this.hivVerificationApproval );
       this.cd.detectChanges();
@@ -258,5 +260,8 @@ export class HivVerificationListComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.hivVerificationApprovalSubscription?.unsubscribe();
+  }
 
 }

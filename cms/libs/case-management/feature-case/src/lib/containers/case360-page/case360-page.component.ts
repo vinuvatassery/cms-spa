@@ -435,16 +435,16 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     }
   }
 
-  onConfirmDeleteToDOClicked(result: any) 
-  {
-    if (result) {
-      this.deleteToDoDialog.close();
-      this.crudAlert$.subscribe(res =>{
-        this.getbannerAlertList(this.clientId)
-      })
-      this.onDeleteAlertGrid(this.selectedAlertId);
-    }
-  }
+  // onConfirmDeleteToDOClicked(result: any) 
+  // {
+  //   if (result) {
+  //     this.deleteToDoDialog.close();
+  //     this.crudAlert$.subscribe(res =>{
+  //       this.getbannerAlertList(this.clientId)
+  //     })
+  //     this.onDeleteAlertGrid(this.selectedAlertId);
+  //   }
+  // }
 
   onDeleteAlertGrid(selectedAlertId: any){
     this.todoFacade.deleteAlert(selectedAlertId);

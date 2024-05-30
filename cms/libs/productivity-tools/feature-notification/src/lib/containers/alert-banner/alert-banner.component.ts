@@ -152,7 +152,7 @@ export class AlertBannerComponent implements OnInit {
   }  
   private loadTodoAlertBannerData(){
         this.alertList$.subscribe((data: any) => {
-          if(data){
+          if(data === true){
             this.isLoadAlertListEvent.emit(this.entityId)
           }
           if(data?.total > 0 ){
@@ -180,7 +180,7 @@ export class AlertBannerComponent implements OnInit {
     let dueDate = new Date(alertItem.alertDueDate); 
          if (dueDate == dateNow) {
              return alertItem.alertTypeCode != 'TODO' ?  '(Due '+AlertDueOn.Today+')' : AlertDueOn.Today;
-          } else if(!(dueDate < dateNow) && 
+          } else if((dueDate >= dateNow) && 
             (dueDate <= this.addDays(dateNow,1))) {
              return alertItem.alertTypeCode != 'TODO' ?  '(Due in 1 day)' : AlertDueOn.Tomorrow;
            }else if(dueDate > dateNow){

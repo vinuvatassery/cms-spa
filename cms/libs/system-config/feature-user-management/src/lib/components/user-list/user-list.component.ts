@@ -6,7 +6,7 @@ import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { ConfigurationProvider, DocumentFacade, NotificationSnackbarService, NotificationSource, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDataService, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade, UserDataService, UserManagementFacade } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
 import { NotificationService } from '@progress/kendo-angular-notification';
 
@@ -40,6 +40,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   deactivateUserStatus$ = this.userManagementFacade.deactivateUser$;
   deactivatSubscription!: Subscription;
   userStatus$ = this.userManagementFacade.canUserBeDeactivated$;
+  reactivationFlag = false;
   userAssignedActiveClientStatusSubscription!: Subscription;
   public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
   public duration =
@@ -73,11 +74,12 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('usersGrid') usersGrid: any;
   defaultColumnState: ColumnBase[] = [];
   addRemoveColumns = "Default Columns"
-  defaultColumns = ["userName", "email", "lastModificationTime", "lastModifierId", "activeFlag"];
+  defaultColumns = ["userName", "email", "userAccessType", "lastModificationTime", "lastModifierId", "activeFlag"];
   columns: any = {
     ALL: 'All Columns',
     userName: "User Name",
     email: "Email Address",
+    userAccessType : "User Access Type",
     lastModificationTime: "Last Modified",
     lastModifierId: "Modified By",
     activeFlag: "Status",
@@ -95,9 +97,11 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     },
   ];
   selectedActiveFlag = "";
+  selectedUserAccessType = "";
+  userAccessTypeLov$ = this.lovFacade.userAccessTypeLov$;
+  userAccessTypeLovs:any=[];
   isShowUserDetailPopup$ = this.userManagementFacade.isShowUserDetailPopup$;
-  reactivationMessage = "User reactivated successfully.";
-
+  
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly documentFacade: DocumentFacade,
@@ -108,6 +112,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     private router: Router,
     private readonly loaderService: LoaderService,
     private readonly userDataService: UserDataService,
+    private lovFacade: LovFacade,
     
   ) {
     this.notifyOnReactivatingUser();
@@ -151,7 +156,9 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     this.defaultSort = this.sort;
     this.getLoggedInUserProfile();
     this.addSearchSubjectSubscription();
-    this.loadUserFilterColumn();    
+    this.loadUserFilterColumn(); 
+    this.lovFacade.getUserAccessTypeLov();  
+    this.loadUserAccessType();
   }
   ngOnChanges(): void {
     this.state = {
@@ -336,6 +343,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
           userId: data.loginUserId,
           activeFlag: this.active
         };
+        this.reactivationFlag = true;
         this.userManagementFacade.deactivateUser(userData);        
       }  
   }
@@ -379,6 +387,9 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     if (field == "activeFlag") {
       this.selectedActiveFlag = value;
     }
+    if (field == "userAccessType") {
+      this.selectedUserAccessType = value;
+    }
   }
 
   columnName: any = "";
@@ -401,9 +412,12 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
       this.filter = "";
       this.isFiltered = false;
       this.selectedActiveFlag = '';
+      this.selectedUserAccessType = '';
     }
     this.state = stateData;
+
     if (!this.filteredBy.includes(this.columns.activeFlag)) this.selectedActiveFlag = '';
+    if (!this.filteredBy.includes(this.columns.userAccessType)) this.selectedUserAccessType = '';
   }
 
   onSearch(searchValue: any) {
@@ -527,9 +541,10 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
 
   notifyOnReactivatingUser(){
     this.deactivatSubscription = this.deactivateUserStatus$.subscribe((response: any) => {
-      if(response.status > 0 && response.message === this.reactivationMessage){
+      if(response.status > 0 && this.reactivationFlag){
       this.loadUserListGrid();
       this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+      this.reactivationFlag = false;
     }
     });
   }
@@ -581,5 +596,14 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   loggedInUserValidation(data:any)
   {
     return (this.loggedInUserId == data.loginUserId);
+  }
+
+  private loadUserAccessType() {
+    this.userAccessTypeLov$
+    .subscribe({
+      next: (data: any) => {
+        this.userAccessTypeLovs=data;
+      }
+    });
   }
 }

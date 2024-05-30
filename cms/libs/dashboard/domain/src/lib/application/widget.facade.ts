@@ -37,6 +37,19 @@ export class WidgetFacade {
   private todayGlanceSubject =new Subject<any>();
   public  todayGlance$ = this.todayGlanceSubject.asObservable();
 
+  
+  private todayGlanceTodoSubject =new Subject<any>();
+  public  todayGlanceTodos$ = this.todayGlanceTodoSubject.asObservable();
+
+  
+  private todayGlanceRemindersSubject =new Subject<any>();
+  public  todayGlanceReminders$ = this.todayGlanceRemindersSubject.asObservable();
+
+  
+  private todayGlanceNotificationsSubject =new Subject<any>();
+  public  todayGlanceNotifications$ = this.todayGlanceNotificationsSubject.asObservable();
+
+
   private applicationCERStatsSubject =new Subject<any>();
   public  applicationCERStats$ = this.applicationCERStatsSubject.asObservable();
 
@@ -209,16 +222,23 @@ export class WidgetFacade {
   }
 
   loadTodayGlance() {
-    this.widgetService.getTodayGlance().subscribe({
-      next: (result) => {
-        this.todayGlanceSubject.next(result);
-      },
+   return this.widgetService.getTodayGlance()
+  }
 
-      error: (error) => {
-        this.hideLoader();
-        this.showSnackBar(SnackBarNotificationType.ERROR, error)
-      },
-    });
+  loadTodayGlanceTodo(){
+    return this.widgetService.getTodayGlanceTodo()
+  }
+
+  loadTodayGlanceReminders(){
+  return  this.widgetService.getTodayGlanceReminders()
+  }
+
+  loadTodayGlanceDirectMessageCount(){
+  return  this.widgetService.getTodayGlanceDirectMessageCount()
+
+  }
+  loadTodayGlanceNotification(){
+  return   this.widgetService.getTodayGlanceNotifications()
   }
 
   loadApplicationCERStats(dashboardId : string) {

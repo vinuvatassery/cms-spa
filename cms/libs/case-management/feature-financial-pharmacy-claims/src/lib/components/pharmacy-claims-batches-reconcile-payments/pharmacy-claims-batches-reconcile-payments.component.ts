@@ -355,7 +355,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit {
     this.defaultGridState();
   }
   onSearchChange(data: any) {
-    let operator = 'contains';
+    let operator = '';
     let searchValue = data;
     this.selectedColumn ?? 'vendorName';
     if (data !== '') {

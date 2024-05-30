@@ -10,7 +10,7 @@
     <span class="material-icons" aria-hidden="true" aria-label="Notifications"
       >notifications</span
     >
-    <span class="notification-badge">{{unViewedCount ? unViewedCount : 0}}</span>
+    <span *ngIf="unViewedCount > 0" class="notification-badge">{{unViewedCount}}</span>
     <common-signalr-status></common-signalr-status>
   </button>
   <kendo-popup

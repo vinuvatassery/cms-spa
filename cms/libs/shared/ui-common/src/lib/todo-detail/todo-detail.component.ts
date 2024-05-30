@@ -87,72 +87,84 @@ export class TodoDetailComponent implements OnInit {
     this.buildTodoForm()
   }
 
-  buildTodoForm(){
-    if(!this.isEdit){
-    this.todoDetailsForm.controls['clientId'].disable()
-    this.todoDetailsForm.controls['vendorId'].disable()
-    this.todoDetailsForm.controls['repeat'].setValue('NEVER')
-    this.todoDetailsForm.controls['repeat'].disable()
-    this.todoDetailsForm.controls['endDate'].disable()
-  }else{
-    this.getTodo$.subscribe(res =>{
-      if (this.isEdit && res) {
-        this.todoDetailsForm.patchValue({
-          title: res.alertName,
-          repeat: res.alertFrequencyCode,
-          alertDesc: res.alertDesc,
-          linkTo: res.entityTypeCode
-        })
-        this.todoDetailsForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
-        if(res.alertEndDate){
-        this.todoDetailsForm.controls["endDate"].setValue(new Date(res.alertEndDate));
-        }
-        else{
-        this.todoDetailsForm.controls["endDate"].setValue(null);
+  buildTodoForm() {
+    if (!this.isEdit) {
+        this.disableFormControls();
+    } else {
+        this.getTodo$.subscribe(res => {
+            if (this.isEdit && res) {
+                this.patchTodoForm(res);
+                this.setEntitySpecificValues(res);
+            }
+        });
+    }
+}
 
-        }
-       if(res.entityTypeCode !=='CLIENT' && res.entityTypeCode != ""){
+private disableFormControls() {
+    this.todoDetailsForm.controls['clientId'].disable();
+    this.todoDetailsForm.controls['vendorId'].disable();
+    this.todoDetailsForm.controls['repeat'].setValue('NEVER');
+    this.todoDetailsForm.controls['repeat'].disable();
+    this.todoDetailsForm.controls['endDate'].disable();
+}
+
+private patchTodoForm(res: any) {
+    this.todoDetailsForm.patchValue({
+        title: res.alertName,
+        repeat: res.alertFrequencyCode,
+        alertDesc: res.alertDesc,
+        linkTo: res.entityTypeCode
+    });
+    this.todoDetailsForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
+    this.todoDetailsForm.controls["endDate"].setValue(res.alertEndDate ? new Date(res.alertEndDate) : null);
+}
+
+private setEntitySpecificValues(res: any) {
+    if (res.entityTypeCode !== 'CLIENT' && res.entityTypeCode != "") {
         this.showVendorSearch = true;
         this.showClientSearch = false;
         this.placeholderText = this.vendorPlaceHolderText;
-        this.searchProviderSubject.next([
-          { providerName : res.providerName,
-            tin : res.tin,
+        this.searchProviderSubject.next([{
+            providerName: res.providerName,
+            tin: res.tin,
             providerId: res.entityId
-          }
-        ])
-        this.todoDetailsForm.controls["vendorId"].setValue({
-          providerName : res.providerName,
-          tin : res.tin,
-          providerId: res.entityId
-        })
-        this.todoDetailsForm.controls['vendorId'].setValidators([Validators.required]);
-        this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
-      }
-      else if(res.entityTypeCode =='CLIENT'){
+        }]);
+        this.setVendorIdControl(res);
+    } else if (res.entityTypeCode === 'CLIENT') {
         this.showVendorSearch = false;
         this.showClientSearch = true;
         this.placeholderText = this.clientPlaceHolderText;
-
         this.clientSubject.next([{
-          clientFullName : res.clientFullName,
-          dob : res.dob,
-          ssn: res.ssn,
-          clientId : res.entityId
-        }])
-        this.todoDetailsForm.controls["clientId"].setValue({
-          clientFullName : res.clientFullName,
-          dob : res.dob,
-          ssn: res.ssn,
-          clientId : res.entityId
-        })
-        this.todoDetailsForm.controls['clientId'].setValidators([Validators.required]);
-        this.todoDetailsForm.controls['clientId'].updateValueAndValidity();
-      }   
+            clientFullName: res.clientFullName,
+            dob: res.dob,
+            ssn: res.ssn,
+            clientId: res.entityId
+        }]);
+        this.setClientIdControl(res);
     }
+}
+
+private setVendorIdControl(res: any) {
+    this.todoDetailsForm.controls["vendorId"].setValue({
+        providerName: res.providerName,
+        tin: res.tin,
+        providerId: res.entityId
     });
-  }
-  }
+    this.todoDetailsForm.controls['vendorId'].setValidators([Validators.required]);
+    this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
+}
+
+private setClientIdControl(res: any) {
+    this.todoDetailsForm.controls["clientId"].setValue({
+        clientFullName: res.clientFullName,
+        dob: res.dob,
+        ssn: res.ssn,
+        clientId: res.entityId
+    });
+    this.todoDetailsForm.controls['clientId'].setValidators([Validators.required]);
+    this.todoDetailsForm.controls['clientId'].updateValueAndValidity();
+}
+
 
   loadVendorsBySearchText(vendorSearchText:any){
     if (!vendorSearchText || vendorSearchText.length == 0) {

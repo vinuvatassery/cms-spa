@@ -238,6 +238,33 @@ export class WidgetService {
     
   }
 
+  getTodayGlanceTodo(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/today-at-glance-todo`
+    ); 
+    
+  }
+
+  getTodayGlanceDirectMessageCount(){
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/today-glance-direct-messages`);
+    }
+
+
+  getTodayGlanceReminders(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/today-at-glance-reminders`
+    ); 
+    
+  }
+
+  getTodayGlanceNotifications(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/today-at-glance-notifications`
+    ); 
+    
+  }
+
   loadApplicationCERStats(dashboardId : string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/applications-cers-count`
