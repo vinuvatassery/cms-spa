@@ -8,7 +8,7 @@
         {{menu.icon}}
       </span>
       <label class="sidebar-menu_label" attr.aria-label="{{ menu.name }}">
-        {{ menu.name }} <span *ngIf="menu?.hasBadge && isShowBadge(menu.code)" class="sidebar-menu_label-badge"> {{
+        {{ menu.name }} <span *ngIf="menu?.hasBadge && isShowBadge(menu.code) && getBadge(menu.code) > 0" class="sidebar-menu_label-badge"> {{
           getBadge(menu.code)}} </span>
       </label>
     </a>
@@ -30,7 +30,7 @@
           <p class="submenu_list_heading" [attr.aria-label]="subMenu.name"
             *ngIf="isMenuHeadingVisible(subMenu.subMenus, menu.filterText) || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1">
             <span> {{ subMenu.name | uppercase }}
-              <span class="tab-batch-notify" *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> {{
+              <span class="tab-batch-notify" *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code) && getBadge(subMenu.code) > 0"> {{
                 getBadge(subMenu.code)}} </span></span>
           </p>
 
@@ -42,7 +42,7 @@
                 >
                 <span>
                   {{ sprSubMenu.name }}
-                  <span *ngIf="sprSubMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(sprSubMenu.code)}}
+                  <span *ngIf="sprSubMenu?.hasBadge && getBadge(sprSubMenu.code) > 0" class="tab-batch-notify"> {{ getBadge(sprSubMenu.code)}}
                   </span>
                 </span>
               </a>
@@ -56,7 +56,7 @@
             (click)="onMenuClick(subMenu, $event)">
             <span [attr.aria-label]="subMenu.name">
               {{ subMenu.name }}
-              <span *ngIf="subMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(subMenu.code)}} </span>
+              <span *ngIf="subMenu?.hasBadge && getBadge(subMenu.code) > 0" class="tab-batch-notify"> {{ getBadge(subMenu.code)}} </span>
             </span>
           </a>
         </div>
