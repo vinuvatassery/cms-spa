@@ -30,6 +30,9 @@ export class NotificationFacade {
   alertSearchLoaderVisibility$ =
     this.alertSearchLoaderVisibilitySubject.asObservable();
 
+    private reminderSnackbarsSubject = new Subject<any>();
+    reminderSnackbarsData$ = this.reminderSnackbarsSubject.asObservable();
+
   private todoAndReminderFabCountSubject = new Subject<boolean>();
   todoAndReminderFabCount$ = this.todoAndReminderFabCountSubject.asObservable();
   /** Constructor **/
@@ -40,6 +43,7 @@ export class NotificationFacade {
     private loggingService: LoggingService,
     private readonly signalrEventHandlerService: SignalrEventHandlerService
   ) {
+    this.loadReminderSnackbars()
     this.loadSignalrGeneralNotifications();
   }
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -56,6 +60,20 @@ export class NotificationFacade {
       this.signalrEventHandlerService.signalrNotificationsObservable(
         HubEventTypes.GeneralNotification
       );
+  }
+
+  loadReminderSnackbars(): void {
+    this.notificationDataService
+    .loadReminderSnackbars()
+    .subscribe({
+      next: (response: any) => {
+        this.reminderSnackbarsSubject.next(response);       
+             
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
   }
 
   loadNotificationsAndReminders(isViewAll : any): void {
