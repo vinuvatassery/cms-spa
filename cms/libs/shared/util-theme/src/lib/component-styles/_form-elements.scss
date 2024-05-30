@@ -180,7 +180,9 @@
   gap: $size-xx;
   border-radius: $border-radius-sm;
   transition: ease all 0.4s;
-
+  .text-bold{
+    word-break: break-word;
+  }
   .material-icons {
     font-size: $font-size-xl;
   }
