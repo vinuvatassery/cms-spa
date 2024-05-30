@@ -36,13 +36,9 @@ export class WebServiceLogsPageComponent implements OnInit {
       take: this.pageSizes[0]?.value,
       sort: this.sort
     };
-    this.loadActivityEventLog();
     this.lovFacade.getInterfaceWebLogLovs();
   }
 
-  loadActivityEventLog() {
-    this.systemInterfaceDashboardFacade.getEventLogLists();
-  }
 
   loadWebLogList(data: any) {
     this.interfaceTypeCode = data;

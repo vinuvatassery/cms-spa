@@ -186,8 +186,6 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
             {
               this.pcaAssignmentForm.controls['amount'].disable();  
             }
-            const openDate =   this.pcaAssignmentFormDataModel$?.openDate.split('T')[0]+'T00:00:00'
-            const closeDate =   this.pcaAssignmentFormDataModel$?.closeDate.split('T')[0]+'T00:00:00'
             this.pcaAssignmentForm.patchValue(
               {     
                 pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  

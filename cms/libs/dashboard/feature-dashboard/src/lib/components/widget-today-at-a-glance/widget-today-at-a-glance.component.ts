@@ -25,10 +25,11 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
   private notificationReminderDialog: any;
   private destroy$ = new Subject<void>();
   @Input() isEditDashboard!: any;
-  @Input() dashboardId! : any 
+  @Input() dashboardId! : any
   @Output() removeWidget = new EventEmitter<string>();
   @Input() focusedTab:any = 'REMINDER';
   isNotificationsAndRemindersOpened = false;
+  pendingApprovalCount = this.widgetFacade.dashboardPendingApprovalCardCount;
   constructor(private widgetFacade: WidgetFacade , private readonly router: Router,
     private readonly cd: ChangeDetectorRef,
     private dialogService: DialogService,
@@ -40,6 +41,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadTodayGlance();
+    this.loadPendingApprovalsCount();
   }
 
   ngOnDestroy(): void {
@@ -52,6 +54,18 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response) {
           this.todayGlance = response;
+          this.cd.detectChanges()
+        }
+      },
+    });
+  }
+
+  loadPendingApprovalsCount()
+  {
+    this.widgetFacade.dashboardPendingApprovalCardCount$.subscribe({
+      next: (response) => {
+        if (response) {
+          this.pendingApprovalCount = response;
           this.cd.detectChanges()
         }
       },
@@ -76,7 +90,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
   remindersNavigate(tab: any)
   {
     this.notificationFacade.loadNotificationsAndReminders(tab);
-  
+
   }
 
   notificationsNavigate(tab: any)
@@ -90,7 +104,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
         'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
     });
     this.isNotificationsAndRemindersOpened = true;
-  } 
+  }
   onCloseNotificationsAndReminders(event: any) {
     this.notificationReminderDialog.close();
   }

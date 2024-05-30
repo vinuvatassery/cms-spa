@@ -39,19 +39,20 @@ export class FormDocumentsListComponent implements OnInit {
   folderSortLovSubscription!: Subscription;
   folderSortLovList : any;
   ngOnInit(): void {
+    this.gridState$.subscribe((res:any)=>{
+      if(res){ 
+      this.sortOrder = this.folderSortLovList.filter((x :any)=> x.lovCode?.toLowerCase() == res.gridState?.toLowerCase())[0]
+      this.isShowDragEnabledText()
+      this.cdr.detectChanges();
+      }
+    })
     this.loadSortDropDown(); 
     this.loadFoldersTree();
     this.uploadNewVersionDocument$.subscribe((res:any) =>{
       this.uploadFileDialog?.close()
     })
     this.onShowActiveClickedEvent();
-    this.gridState$.subscribe((res:any)=>{
-      if(res){
-      this.sortOrder = this.folderSortLovList.filter((x :any)=> x.lovCode == res.gridState)[0]
-      this.isShowDragEnabledText()
-      this.cdr.detectChanges();
-      }
-    })
+
   }
   fileName =""
   file!:any
@@ -275,7 +276,7 @@ onShowActiveClickedEvent(){
 }
 
 isShowDragEnabledText(){
-  if(!this.isActiveChecked && this.sortOrder.lovCode.toLowerCase()=='cust'){
+  if(!this.isActiveChecked && this.sortOrder?.lovCode?.toLowerCase()=='cust'){
     this.showDragEnabledText = true
   }else{
     this.showDragEnabledText = false

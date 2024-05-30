@@ -8,8 +8,19 @@
   (deleteInsurancePlan)="deleteInsurancePolicy($event)"
   (getPoliciesEventEmitter)="getPolicies($event)"
   [closeDeleteModal]="closeDeleteModal"
+  (onProviderNameClickEvent)="onProviderNameClick($event)"
   (loadHistoricalPlan)="loadHistoricalData($event)"></case-management-medical-insurance-status-list>
 </div>
+
+<ng-template #providerDetailsTemplate>
+  <case-management-vendor-panel-details
+  [vendorId]="vendorId"
+  (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+  [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+  (getProviderPanelEvent)="getProviderPanel($event)"
+  ></case-management-vendor-panel-details>
+</ng-template>
+
 
 <div class="block-section " *ngIf="((tabId$ | async)===clientProfileTabs.HEALTH_INSURANCE_COPAY) || tabId === clientProfileTabs.HEALTH_INSURANCE_COPAY">
   <case-management-co-pays-and-deductibles-list
@@ -62,3 +73,5 @@
   [healthInsuranceProfilePhoto$]="healthInsuranceProfilePhoto$"
   ></case-management-medical-payment-list>
 </div>
+
+

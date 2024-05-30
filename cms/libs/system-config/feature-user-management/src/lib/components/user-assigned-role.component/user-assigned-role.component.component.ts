@@ -60,12 +60,16 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
-
+  defaultSort:any;
+  ngOnInit(): void {
+    this.defaultSort = this.sort;
+  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      filter : this.filter === undefined?null:this.filter
     };
     this.loadUserAssignedRolesGrid();
   }
@@ -113,9 +117,15 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'desc';
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    if (this.sort[0]?.dir === undefined) {
+      this.sortDir = '';
+      this.sortType = 'asc';
+    }
+    if (this.sort[0]?.dir !== undefined) {
+      this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    }
     this.sortColumn = this.columns[this.sortValue];
     this.filter = stateData?.filter?.filters;
     this.clearIndividualSelectionOnClear(stateData);
@@ -134,7 +144,7 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: this.defaultSort,
       filter: { logic: 'and', filters: [] },
     };
   }
