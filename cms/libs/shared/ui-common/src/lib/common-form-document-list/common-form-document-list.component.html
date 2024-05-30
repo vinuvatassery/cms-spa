@@ -71,7 +71,7 @@
                                                 </button>
                                           </div>
                                           <ng-template #reactiveButton>
-                                                <div  *ngIf="datalink.text !== 'Deactivate'">
+                                                <div  *ngIf="datalink.text !== 'Deactivate'  && datalink.text !== 'Rename' && datalink.text !== 'New Version'">
                                                       <button kendoButton look="flat" 
                                                       [attr.aria-label]="datalink.text"
                                                             [class]="datalink.buttonType"
@@ -105,7 +105,7 @@
                                           </button>
                                     </div>
                                     <ng-template #reactiveButton>
-                                          <div  *ngIf="datalink.text !== 'Deactivate'">
+                                          <div  *ngIf="datalink.text !== 'Deactivate' && datalink.text !== 'Rename' && datalink.text !== 'New Version'">
                                                 <button kendoButton look="flat" 
                                                 [attr.aria-label]="datalink.text"
                                                       [class]="datalink.buttonType"

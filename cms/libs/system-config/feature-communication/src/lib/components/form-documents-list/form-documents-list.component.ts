@@ -192,7 +192,9 @@ export class FormDocumentsListComponent implements OnInit {
     this.sortOrder = event;
     let filter={
       sort : this.sortOrder.lovCode.toLowerCase(),
-      active: ActiveInactiveFlag.Yes
+      active: this.isActiveChecked ? 'A' : 'Y',
+      isActiveChecked:this.isActiveChecked,
+      ischecked : this.isActiveChecked 
     }
     this.sortChangeEvent.emit(this.sortOrder.lovCode.toLowerCase())
     this.isShowDragEnabledText()
