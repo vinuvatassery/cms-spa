@@ -278,6 +278,23 @@
   }
 }
 
+.k-drop-hint-h {
+
+  .k-drop-hint-line{
+    width: 90px;
+  }
+
+  .k-drop-hint-start{
+    border-left-width: 10.928203px;
+  }
+  .k-drop-hint-start, .k-drop-hint-end{
+    border-width: 6px;
+  }
+}
+
+.k-drop-hint-container{
+  left: 130px !important;
+}
 }
 .k-treeview-toggle { 
   border-radius: 5px; 
