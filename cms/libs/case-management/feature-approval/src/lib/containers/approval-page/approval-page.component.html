@@ -21,7 +21,7 @@
   >
     <kendo-tabstrip-tab [selected]="true" title="General">
       <ng-template kendoTabTitle>
-        General <span class="tab-batch-notify">{{pendingApprovalGeneralCount}}</span></ng-template
+        General <span *ngIf="pendingApprovalGeneralCount > 0" class="tab-batch-notify">{{pendingApprovalGeneralCount}}</span></ng-template
       >
       <ng-template kendoTabContent>
         <div class="nm-20 approval_container">
@@ -58,7 +58,7 @@
     <kendo-tabstrip-tab title="Payments">
       <ng-template kendoTabTitle *ngIf="pendingApprovalPaymentCount > 0">
         Payments
-        <span class="tab-batch-notify">{{
+        <span *ngIf="pendingApprovalPaymentCount > 0" class="tab-batch-notify">{{
           pendingApprovalPaymentCount
         }}</span></ng-template
       >
@@ -94,7 +94,7 @@
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Imported Claims">
       <ng-template kendoTabTitle>
-        Imported Claims <span class="tab-batch-notify">{{pendingApprovalImportedClaimCount}}</span></ng-template
+        Imported Claims <span *ngIf="pendingApprovalImportedClaimCount > 0" class="tab-batch-notify">{{pendingApprovalImportedClaimCount}}</span></ng-template
       >
       <ng-template kendoTabContent>
         <div class="nm-20 approval_container">
@@ -122,7 +122,7 @@
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Imported Claims">
       <ng-template kendoTabTitle>
-        Other <span class="tab-batch-notify">{{hivVerificationCount}}</span></ng-template
+        Other <span *ngIf="hivVerificationCount > 0" class="tab-batch-notify">{{hivVerificationCount}}</span></ng-template
       >
       <ng-template kendoTabContent>
         <div class="nm-20 approval_container">
