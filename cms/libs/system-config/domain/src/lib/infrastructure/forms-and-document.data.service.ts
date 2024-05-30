@@ -23,7 +23,7 @@ export class FormsAndDocumentDataService
     }
 
     loadFolderFile(payload:any) {
-        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/${payload.sort}/${payload.active}`);
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/forms-documents-config/sort=${payload.sort}/status=${payload.active}`);
     }
 
     getFolderName()
@@ -39,7 +39,7 @@ export class FormsAndDocumentDataService
       }
     
     getFormsandDocumentsViewDownload(templateId: string) {
-        let url = `/case-management/forms-documents-config/${templateId}/content`;
+        let url = `/case-management/forms-documents-config/files/${templateId}/content`;
         return this.http.get(
           `${this.configurationProvider.appSettings.caseApiUrl}` +url,
           {
