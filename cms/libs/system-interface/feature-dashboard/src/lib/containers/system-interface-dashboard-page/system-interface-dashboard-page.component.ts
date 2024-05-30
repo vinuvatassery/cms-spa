@@ -304,54 +304,68 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     this.isReorderEnable = false;
     this.inputs = {
       isEditDashboard: this.isReorderEnable,
-      dashboardId : this.selectedDashBoard
+      dashboardId: this.selectedDashBoard,
     };
+  
     if (save === 'true' && SystemInterfaceDashboardPageComponent.dashBoardContentData) {
-      
-      let dashboardContentPostData =  SystemInterfaceDashboardPageComponent.dashBoardContentData;
+      let dashboardContentPostData = SystemInterfaceDashboardPageComponent.dashBoardContentData;
       let updatedWidgetsPostData = SystemInterfaceDashboardPageComponent.updatedWidgets;
-      dashboardContentPostData.forEach((widg: any) => {
-        if (widg?.widgetProperties) {
-          widg.updated = false;
-        }
-      });
-
-      if(updatedWidgetsPostData[0])
-      {
-      updatedWidgetsPostData[0].forEach((widg: any) => {
-        if (widg?.widgetProperties && widg?.newItem !== true) {
-          widg.widgetProperties.componentData.component = widg.widgetName;
-          widg.updated = true;
-          dashboardContentPostData.push(widg);
-        }
-      });
-    }
-
-      dashboardContentPostData.forEach((widg: any) => {
-        if (widg?.widgetProperties && widg?.stringified !== true) {
-          widg.widgetProperties.componentData.component = widg?.widgetName;
-          widg.stringified = true;
-          widg.widgetProperties = JSON.stringify(widg?.widgetProperties).trim();
-        }
-      });
-      const dashBoardWidgetsUpdated = {
-        dashBoardWidgetsUpdated: dashboardContentPostData,
-      };
-      
-      this.dashboardWrapperFacade.updateDashboardAllWidgets(
-        this.selectedDashBoard,
-        dashBoardWidgetsUpdated
-      );
-      SystemInterfaceDashboardPageComponent.dashBoardContentData = [];
-      SystemInterfaceDashboardPageComponent.updatedWidgets = [];
-      this.dashboardContentListDataSubject.next(null);
-      this.dashBoardUpdateSubscribe();
-    }
-    else
-    {
-    this.initializeDashboard();
+      this.resetWidgetUpdates(dashboardContentPostData);
+  
+      if (updatedWidgetsPostData[0]) {
+        this.updateWidgetsPostData(updatedWidgetsPostData[0], dashboardContentPostData);
+      }
+  
+      this.stringifyWidgetProperties(dashboardContentPostData);
+      this.updateDashboardWidgets(dashboardContentPostData);
+    } else {
+      this.initializeDashboard();
     }
   }
+  
+  private resetWidgetUpdates(dashboardContentPostData: any[]) {
+    dashboardContentPostData.forEach((widg: any) => {
+      if (widg?.widgetProperties) {
+        widg.updated = false;
+      }
+    });
+  }
+  
+  private updateWidgetsPostData(updatedWidgets: any[], dashboardContentPostData: any[]) {
+    updatedWidgets.forEach((widg: any) => {
+      if (widg?.widgetProperties && widg?.newItem !== true) {
+        widg.widgetProperties.componentData.component = widg.widgetName;
+        widg.updated = true;
+        dashboardContentPostData.push(widg);
+      }
+    });
+  }
+  
+  private stringifyWidgetProperties(dashboardContentPostData: any[]) {
+    dashboardContentPostData.forEach((widg: any) => {
+      if (widg?.widgetProperties && widg?.stringified !== true) {
+        widg.widgetProperties.componentData.component = widg?.widgetName;
+        widg.stringified = true;
+        widg.widgetProperties = JSON.stringify(widg?.widgetProperties).trim();
+      }
+    });
+  }
+  
+  private updateDashboardWidgets(dashboardContentPostData: any[]) {
+    const dashBoardWidgetsUpdated = {
+      dashBoardWidgetsUpdated: dashboardContentPostData,
+    };
+  
+    this.dashboardWrapperFacade.updateDashboardAllWidgets(
+      this.selectedDashBoard,
+      dashBoardWidgetsUpdated
+    );
+    SystemInterfaceDashboardPageComponent.dashBoardContentData = [];
+    SystemInterfaceDashboardPageComponent.updatedWidgets = [];
+    this.dashboardContentListDataSubject.next(null);
+    this.dashBoardUpdateSubscribe();
+  }
+  
 
   dashBoardUpdateSubscribe() {
  this.dashboardContentUpdate$.subscribe((response) => {
