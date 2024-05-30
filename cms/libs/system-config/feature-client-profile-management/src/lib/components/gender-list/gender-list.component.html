@@ -12,16 +12,12 @@
 </div>
 
 <!-- Gender List Section -->
-<section>
+<section *ngIf="!isReorderEnabled">
   <!-- Label info show only in list -->
-  <p class="pt-1">Add, edit, deactivate and re-order genders.</p>
-  <!-- Label info show only in reorder list -->
-  <p class="pt-1" hidden>
-    Select a sorting option or manually drag and drop the items in the list.
-    This is how the items will be displayed in the interface.
-  </p>
+  <p class="pt-1"  >Add, edit, deactivate and re-order genders.</p>
 
-  <div class="flex-row">
+
+  <div class="flex-row"  >
     <!-- Table header show only in list -->
     <div class="flex-col">
       <div class="table-filter-section mat-form-no-b-space">
@@ -54,19 +50,21 @@
   </div>
 
   <!-- Sorted Info show only in list -->
-  <div class="table-sorted-info">
+  <div class="table-sorted-info"  >
     Sorted by <span class="sort-items">Name</span>
     <span class="sort-items">No Filters</span>
     <span class="sort-items">All Columns</span>
   </div>
 
+
+
   <!-- Gender list -->
-  <div class="app-c-table">
+  <div class="app-c-table"  >
     <kendo-grid [data]="genderDataLists$ |async" [resizable]="true" [pageSize]="state.take"
     [pageable]="true" [loading]="isGenderListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
     [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"  [rowReorderable]="true"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
-      <kendo-grid-rowreorder-column [columnMenu]="false" [width]="40"></kendo-grid-rowreorder-column>
+       
       <kendo-grid-column field="order" title="Order" [width]="60">
       </kendo-grid-column>
       <kendo-grid-column field="gender" title="Gender" [width]="150">
@@ -140,7 +138,7 @@
       </ng-template>
     </kendo-grid>
   </div>
-
+ 
   <!-- Add Gender show only in list -->
   <div class="mt-2 block-section">
     <!-- Add Gender Button -->
@@ -149,19 +147,68 @@
     </button>
   </div>
 
-  <!-- Reorder button block show only in reorder list -->
-  <div class="mt-2 block-section" hidden>
+ 
+</section>
+
+
+<section *ngIf="isReorderEnabled">
+    <!-- Label info show only in reorder list -->
+    <p class="pt-1" >
+      Select a sorting option or manually drag and drop the items in the list.
+      This is how the items will be displayed in the interface.
+    </p>
+
+    <div class="flex-row" >
+      <!-- Table header show only in list -->
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Sort">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"   >
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div></div>
+
+      <div class="app-c-table mt-2" >
+        <kendo-grid [data]="genderDataLists$ |async" [resizable]="true" [pageSize]="state.take"
+        [pageable]="true" [loading]="isGenderListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
+        [resizable]="true" [columnMenu]="{ filter: false }" [sort]="state.sort"  [rowReorderable]="true"
+        (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
+          <kendo-grid-rowreorder-column [columnMenu]="false" [width]="30"></kendo-grid-rowreorder-column>
+          
+          <kendo-grid-column field="gender" title="Gender"  [width]="150">
+          </kendo-grid-column>
+        
+      
+          <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+          let-currentPage="currentPage">
+          <div class="grid-custom-paginationtemplates d-flex">
+                <div class="d-flex align-items-center mt-1 mb-1">
+                      <label>7 Items</label> 
+                </div>
+     
+          </div>
+    </ng-template>
+          <!-- grid Loader Template -->
+          <ng-template kendoGridLoadingTemplate>
+            <common-grid-loader-component></common-grid-loader-component>
+          </ng-template>
+          <!-- grid No data Template -->
+          <ng-template kendoGridNoRecordsTemplate>
+            <common-grid-no-records></common-grid-no-records>
+          </ng-template>
+        </kendo-grid>
+      </div>
+       <!-- Reorder button block show only in reorder list -->
+  <div class="bottom-fixed-wrapper text-right flex-gap">
     <div class="justify-content-end">
-      <button kendoButton aria-label="Cancel" [primary]="true" look="outline">
+      <button kendoButton aria-label="Cancel" (click)="isReorderClicked()" [primary]="true" look="outline">
         Cancel
       </button>
-      <button kendoButton aria-label="Update" [primary]="true" class="ml-1">
+      <button kendoButton aria-label="Update" (click)="isReorderClicked()" [primary]="true" class="ml-1">
         Update
       </button>
     </div>
   </div>
 </section>
-
 <!-- Add Gender Modal Html-->
 <kendo-dialog *ngIf="isGenderDetailPopup" (close)="onCloseGenderDetailClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">

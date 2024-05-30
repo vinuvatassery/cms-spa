@@ -7,7 +7,7 @@
   margin: 10px 0px;
   font-weight: normal;
   font-size: 1rem !important;
-  font-family: "Neue Helvetica Bold" !important;
+  font-family: $font-family-bold !important;
 }
 .dashboard-wrapper {
   .app-c-drag-row-table.recently-view .k-grid .k-grid-content {
@@ -132,7 +132,7 @@
 
         &::before {
           content: "\e945";
-          font-family: "Material Icons";
+          font-family: $font-family-Material-icon;
           display: inline-block;
           font-size: 20px;
           vertical-align: middle;
@@ -427,8 +427,8 @@
   transform: translate3d(0px, 142px, 0px) !important;
 }
 
-gridster .gridster-column,
-gridster .gridster-row {
+.gridster .gridster-column,
+.gridster .gridster-row {
   border: 2px solid $greyShade !important;
 }
 

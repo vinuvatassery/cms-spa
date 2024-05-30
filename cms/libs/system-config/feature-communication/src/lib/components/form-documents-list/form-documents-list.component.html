@@ -16,7 +16,7 @@
                   </div>
             <div class="flex-col" *ngIf="!isDragDropEnabled">
                   <div class="flex-row">
-                        <div class="flex-col flex-col-4 mb-3">
+                        <div class="flex-col flex-col-4">
                               <kendo-floatinglabel text="Sort">
                                     <kendo-dropdownlist aria-label="Folder Sort" *ngIf="folderSortLovList"
                                           [fillMode]="formUiStyle.dropDownFillMode" [data]="folderSortLovList"
@@ -25,7 +25,7 @@
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
                         </div>
-                        <div class="flex-col flex-col-6">
+                        <div class="flex-col flex-col-5">
 
                   <div style="margin-top: 24px;">
                         <button kendoButton fillMode="clear" themeColor="primary" aria-label="NEW FOLDER"
@@ -40,8 +40,9 @@
          
                         </div>
                      
-                        <div class="flex-col flex-col-2 text-right">
-                              <span class="mt-4" style="display: inline-block;">
+                        <div class="flex-col flex-col-3 text-right align-items-center justify-content-end">
+                              <span class="material-icons mr-1 mt-1" title="When checked reordering is disabled">info</span>
+                              <span  style="display: inline-block;" class="mt-1">
                                 <input type="checkbox" kendoCheckBox aria-labelledby="showactive"
                                        id="showactive" [(ngModel)]="isActiveChecked"
                                        (ngModelChange)="onShowActiveClickedEvent()" />
@@ -50,20 +51,27 @@
                             </div>
                   </div>
             </div>
-           <div class="flex-col mb-3" *ngIf="showDragEnabledText">         
-            <span class="material-icons" *ngIf="showDragEnabledText">info</span>
-             <span > Drag and drop for files and folders enabled.</span>      
-           </div>
+            <div class="flex-col mt-1">
+                  <div class="info-banners canyon-banner p-0" *ngIf="showDragEnabledText">
+                        <span class="material-icons">info</span>
+                        <span > Drag and drop for files and folders enabled.</span> 
+                      </div>
+            </div>
+           
+          
       </div>
     
 </section>
+<div class="mt-2">
 <system-config-common-form-document-list
+
  [foldersTree] ="folderFileList$ | async" 
  [treeViewSize]='"large"'
  [filter]="sortOrder?.lovCode?.toLowerCase()"
  [isShowInActiveChecked]="isActiveChecked"
 (newVersionFileUploadOpenEvent)="newVersionFileUploadClick($event, newVersionTemplate)"
 ></system-config-common-form-document-list>
+</div>
 <div class="bottom-fixed-wrapper text-right flex-gap" *ngIf="isDragDropEnabled"> 
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Update" class="">Update</button>

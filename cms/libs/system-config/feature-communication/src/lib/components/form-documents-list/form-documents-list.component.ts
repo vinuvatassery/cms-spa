@@ -10,7 +10,6 @@ import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActiveInactiveFlag } from '@cms/shared/ui-common';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -192,7 +191,9 @@ export class FormDocumentsListComponent implements OnInit {
     this.sortOrder = event;
     let filter={
       sort : this.sortOrder.lovCode.toLowerCase(),
-      active: ActiveInactiveFlag.Yes
+      active: this.isActiveChecked ? 'A' : 'Y',
+      isActiveChecked:this.isActiveChecked,
+      ischecked : this.isActiveChecked 
     }
     this.sortChangeEvent.emit(this.sortOrder.lovCode.toLowerCase())
     this.isShowDragEnabledText()

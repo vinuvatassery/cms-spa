@@ -51,55 +51,38 @@ export class BreadCrumbComponent {
   }
 
   onItemClick(item: BreadCrumbItem): void {
-
-
     this.menus$.subscribe((menus) => {
-      if (this.items.length > 0) {
-
-        let selectedMenu;
-        if (this.items[1].text === item.text) {
-          const menuIndex = menus.findIndex((i) => i.name === this.items[1].text);
-          if (menuIndex > -1) {
-            selectedMenu = menus[menuIndex];
-          }
-          else {
-            this.router.navigate(["/dashboard"], { queryParamsHandling: "preserve" });
-          }
+        if (this.items.length > 0) {
+            const selectedMenu = this.getSelectedMenu(menus, item);
+            const returnUrl = selectedMenu ? this.findFirstMenuItemUrl(selectedMenu.subMenus) : undefined;
+            this.navigateToUrl(returnUrl);
+        } else {
+            this.navigateToUrl(undefined);
         }
-        else {
-
-          const menuIndex = menus.findIndex((i) => i.name === this.items[1].text);
-          if (menuIndex > -1) {
-            const parentId = menus[menuIndex].menuId;
-            selectedMenu = this.findMenuUrlByName(menus[menuIndex].subMenus, item, parentId);
-          }
-          else {
-            this.router.navigate(["/dashboard"], { queryParamsHandling: "preserve" });
-          }
-
-        }
-
-
-        if (selectedMenu != undefined) {
-          const returnUrl = this.findFirstMenuItemUrl(selectedMenu.subMenus);
-          if (returnUrl != undefined) {
-            this.router.navigate([returnUrl]);
-          }
-          else {
-            this.router.navigate(["/dashboard"], { queryParamsHandling: "preserve" });
-          }
-
-        }
-        else {
-          this.router.navigate(["/dashboard"], { queryParamsHandling: "preserve" });
-        }
-      }
-      else {
-        this.router.navigate(["/dashboard"], { queryParamsHandling: "preserve" });
-      }
     });
+}
 
-  }
+private getSelectedMenu(menus: any[], item: BreadCrumbItem) {
+    const menuIndex = menus.findIndex((i) => i.name === this.items[1].text);
+    if (menuIndex > -1) {
+        if (this.items[1].text === item.text) {
+            return menus[menuIndex];
+        } else {
+            const parentId = menus[menuIndex].menuId;
+            return this.findMenuUrlByName(menus[menuIndex].subMenus, item, parentId);
+        }
+    }
+    return undefined;
+}
+
+private navigateToUrl(returnUrl?: string) {
+    if (returnUrl != undefined) {
+        this.router.navigate([returnUrl]);
+    } else {
+        this.router.navigate(["/dashboard"], { queryParamsHandling: "preserve" });
+    }
+}
+
 
   /**
   * Searches for a NavigationMenu item by selected breadCrumbItem name within a nested hierarchy.
