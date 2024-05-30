@@ -15,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BatchStatusCode, InsurancePremiumDetails, PaymentBatchName, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -93,9 +93,9 @@ export class FinancialPremiumsBatchesLogListsComponent
   totalGridRecordsCount: number = 0;
   currentPageRecords: any = [];
   selectedAllPaymentsList!: any;
-    @Output() updatePremiumEvent = new EventEmitter<any>();
-    @Output() loadPremiumEvent = new EventEmitter<string>();
-
+  @Output() updatePremiumEvent = new EventEmitter<any>();
+  @Output() loadPremiumEvent = new EventEmitter<string>();
+  permissionLevels:any[]=[];
 
   public batchLogGridActions(dataItem:any){
    return [
@@ -251,7 +251,9 @@ export class FinancialPremiumsBatchesLogListsComponent
     public activeRoute: ActivatedRoute, private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly configProvider: ConfigurationProvider,
-    private readonly intl: IntlService,) { }
+    private readonly intl: IntlService,
+    private readonly userManagementFacade : UserManagementFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade) { }
 
   ngOnInit(): void {
     this.loadBatchLogListGrid();
@@ -270,8 +272,8 @@ export class FinancialPremiumsBatchesLogListsComponent
             this.totalReconciled += 1;
           }
 
-        })   
-        this.initiateBulkMore()  
+        })
+        this.initiateBulkMore()
     })
   }
 
@@ -362,7 +364,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   }
 
   setDisablePropertyOfBulkMore(dataItem : any){
-  return dataItem.text=='Unbatch Entire Batch' 
+  return dataItem.text=='Unbatch Entire Batch'
   }
 
   loadFinancialPremiumBatchInvoiceList(data: any) {
@@ -664,6 +666,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
       .pipe(first((unbatchResponse: any) => unbatchResponse != null))
       .subscribe((unbatchResponse: any) => {
         if (unbatchResponse ?? false) {
+          this.loadPendingApprovalPaymentCount();
           this.loadBatchLogListGrid();
         }
       });
@@ -679,6 +682,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
       )
       .subscribe((unbatchEntireBatchResponse: any) => {
         if (unbatchEntireBatchResponse ?? false) {
+          this.loadPendingApprovalPaymentCount();
           this.loadBatchLogListGrid();
           this.backToBatch(null)
         }
@@ -792,6 +796,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   private addActionRespSubscription() {
     this.actionResponseSubscription = this.actionResponse$.subscribe((resp: boolean) => {
       if (resp) {
+        this.loadPendingApprovalPaymentCount();
         this.onModalRemovePremiumsModalClose(true);
         this.modalCloseEditPremiumsFormModal(true);
         this.loadBatchLogListGrid();
@@ -878,7 +883,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     }
     else{
       this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
-      this.noOfRecordToPrint = 0; 
+      this.noOfRecordToPrint = 0;
       this.selectedCount = this.noOfRecordToPrint
     }
     this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
@@ -1038,5 +1043,14 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
         }
       }
     }
+  }
+
+  loadPendingApprovalPaymentCount() {
+
+    this.permissionLevels = this.userManagementFacade.GetPermissionlevelsForPendingApprovalsCount();
+
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+    this.permissionLevels
+    );
   }
 }

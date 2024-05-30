@@ -12,17 +12,19 @@ import { User } from '../entities/user';
 import { UserDataService } from '../infrastructure/user.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { ZipCodeFacade } from './zip-code.facade';
+import { UserLevel } from '../enums/user-level.enum';
+import { ApprovalLimitPermissionCode } from '../enums/approval-limit-permission-code.enum';
+import { PendingApprovalPaymentTypeCode } from '../enums/pending-approval-payment-type-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class UserManagementFacade {
   /** Private properties **/
 
-
+  permissionLevels:any[]=[];
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
-
-  public sortValueUserListGrid = 'userName'; 
+  public sortValueUserListGrid = 'userName';
   public sortUserListGrid: SortDescriptor[] = [{
     field: this.sortValueUserListGrid,
   }];
@@ -62,7 +64,7 @@ export class UserManagementFacade {
     field: this.sortValueSexualOrientationListGrid,
   }];
 
-  public sortValueUserRolesListGrid = 'roleDesc'; 
+  public sortValueUserRolesListGrid = 'roleDesc';
   public sortUserRolesListGrid: SortDescriptor[] = [{
     field: this.sortValueUserRolesListGrid,
   }];
@@ -544,7 +546,7 @@ export class UserManagementFacade {
         },
       });
     }
-  }  
+  }
 
   onExportAllUser(params: any){
     const fileName = 'Users List'
@@ -563,7 +565,7 @@ export class UserManagementFacade {
         },
       });
     }
-  }  
+  }
 
   removeUserProfilePhoto(userId : any) {
     this.showLoader();
@@ -611,7 +613,7 @@ export class UserManagementFacade {
   getUserAssignedActiveClientCount(userId : any){
     this.showLoader();
     this.userDataService.checkUserStatus(userId).subscribe({
-      next: (success:any) => {        
+      next: (success:any) => {
         this.canUserbeDeactivatedSubject.next(success);
       },
       error: (err) => {
@@ -632,7 +634,7 @@ export class UserManagementFacade {
         if(response.status == 1){
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
           this.showOrHideUserDetailPopup(false);
-        }        
+        }
         this.addUserResponseSubject.next(response);
       },
       error: (err) => {
@@ -679,7 +681,7 @@ export class UserManagementFacade {
         if(response.status == 1){
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
           this.showOrHideUserDetailPopup(false);
-        }        
+        }
         this.addUserResponseSubject.next(response);
       },
       error: (err) => {
@@ -688,5 +690,49 @@ export class UserManagementFacade {
       },
     });
   }
+
+  GetPermissionlevelsForPendingApprovalsCount() {
+
+    this.permissionLevels=[];
+    let level = this.setPermissionLevel(ApprovalLimitPermissionCode.InsurancePremiumPermissionCode);
+    this.addItemToArray(PendingApprovalPaymentTypeCode.InsurancePremium,level);
+
+    level = this.setPermissionLevel(ApprovalLimitPermissionCode.MedicalClaimPermissionCode);
+    this.addItemToArray(PendingApprovalPaymentTypeCode.TpaClaim,level);
+
+    level = this.setPermissionLevel(ApprovalLimitPermissionCode.PharmacyPermissionCode);
+    this.addItemToArray(PendingApprovalPaymentTypeCode.PharmacyClaim,level);
+
+    return this.permissionLevels;
+  }
+
+  addItemToArray(serviceTypeCode:string,level:number)
+  {
+    let object = {
+      serviceTypeCode : serviceTypeCode,
+      level : level
+    };
+    this.permissionLevels.push(object);
+  }
+
+  setPermissionLevel(ifPermission : any)
+  {
+    let level = UserLevel.Level1Value;
+    if(this.hasPermission([ifPermission]))
+    {
+      const maxApprovalAmount = this.getUserMaxApprovalAmount(ifPermission);
+      if(maxApprovalAmount != null && maxApprovalAmount > 0)
+      {
+        level = UserLevel.Level1Value;
+      }
+      else
+      {
+        level = UserLevel.Level2Value;
+      }
+    }
+    return level;
+  }
+
+
 
 }

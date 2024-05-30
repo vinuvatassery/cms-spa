@@ -14,6 +14,7 @@ import {
 import { Router } from '@angular/router';
 import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage, FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {CompositeFilterDescriptor } from '@progress/kendo-data-query';
@@ -86,6 +87,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   selectedColumn = 'ALL';
   columnName: string = '';
   public selectedProcessClaims: any[] = [];
+  permissionLevels:any[]=[];
 
   columns: any = {
     ALL: 'All Columns',
@@ -249,6 +251,9 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     private dialogService: DialogService,
     private readonly route: Router,
     private readonly ref: ChangeDetectorRef,
+    private readonly userManagementFacade : UserManagementFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade
+
   ) {
 
     this.selectableSettings = {
@@ -966,6 +971,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
       PaymentRequestIds: this.selectedProcessClaims,
     };
     this.batchingPremium$.subscribe((_: any) => {
+      this.loadPendingApprovalPaymentCount();
       this.onModalBatchPremiumsModalClose()
       this.loadFinancialPremiumsProcessListGrid()
       this.onBatchPremiumsGridSelectedCancelClicked()
@@ -1048,5 +1054,14 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
         }
       });
     }
+  }
+
+  loadPendingApprovalPaymentCount() {
+
+    this.permissionLevels = this.userManagementFacade.GetPermissionlevelsForPendingApprovalsCount();
+
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+    this.permissionLevels
+    );
   }
 }

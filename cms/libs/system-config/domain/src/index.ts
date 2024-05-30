@@ -55,3 +55,6 @@ export * from './lib/enums/fab-entity-type-code.enum';
 export * from './lib/enums/add-folder.enum';
 export * from './lib/enums/user-device-type.enum';
 export * from './lib/enums/user-type.enum';
+export * from './lib/enums/approval-limit-permission-code.enum';
+export * from './lib/enums/pending-approval-payment-type-code.enum';
+

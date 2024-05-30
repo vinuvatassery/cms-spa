@@ -5,10 +5,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
 import { CaseFacade,ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-health-care-provider-list',
   templateUrl: './health-care-provider-list.component.html',
@@ -131,7 +131,8 @@ export class HealthCareProviderListComponent implements  OnChanges {
   clinicVendorList= this.financialVendorFacade.clinicVendorList$;
   clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;
   constructor(private caseFacade: CaseFacade,private financialVendorFacade: FinancialVendorFacade,private contactFacade:ContactFacade,
-    private userManagementFacade:UserManagementFacade, private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef,){
+    private userManagementFacade:UserManagementFacade, private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef,
+    private readonly navigationMenuFacade : NavigationMenuFacade){
     this.medicalProviderForm = this.formBuilder.group({});
     this.clinicForm = this.formBuilder.group({});
   }
@@ -455,6 +456,10 @@ pageselectionchange(data: any) {
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next:(response:any)=>{
+        if(vendorProfile.activeFlag === StatusFlag.No)
+          {
+            this.loadPendingApprovalGeneralCount();
+          }
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal(this.providerTypeCode);
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
@@ -485,4 +490,8 @@ pageselectionchange(data: any) {
 
   saveVendorEventSubject: Subject<any> = new Subject();
 
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
+  }
 }
