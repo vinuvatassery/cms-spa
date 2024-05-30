@@ -126,12 +126,13 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     this.todoFacade.deleteReminderSnackbar$.subscribe((alertId: any) => {     
       if(alertId)
         {
-          const deleteReference = this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === alertId) 
-          deleteReference.hide()
-          this.updateSnackBarCount(alertId,deleteReference)
+          this.notificationFacade.loadReminderSnackbars()
+          // const deleteReference = this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === alertId) 
+          // deleteReference.hide()
+          // this.updateSnackBarCount(alertId,deleteReference)
         }
     })
-    this.notificationFacade.loadReminderSnackbars()
+   
   }
   reminderSnackBarSubscribe() {
     this.reminderSnackBar$.subscribe((res: any) => {      
