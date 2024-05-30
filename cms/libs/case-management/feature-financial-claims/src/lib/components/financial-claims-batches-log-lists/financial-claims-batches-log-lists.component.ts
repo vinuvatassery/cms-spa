@@ -15,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   FinancialClaimsFacade,
   PaymentBatchName,
-  PaymentStatusCode
+  PaymentStatusCode,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
@@ -24,7 +24,7 @@ import {
   NotificationSource,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   ColumnVisibilityChangeEvent,
@@ -125,7 +125,7 @@ export class FinancialClaimsBatchesLogListsComponent
   unCheckedProcessRequest: any = [];
   batchLogGridLists!: any;
   isReconciled: boolean = false;
-
+  permissionLevels:any[]=[];
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     itemNbr: 'Item #',
@@ -268,6 +268,8 @@ export class FinancialClaimsBatchesLogListsComponent
     private readonly intl: IntlService,
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
+    private readonly userManagementFacade : UserManagementFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade
   ) { }
 
   ngOnInit(): void {
@@ -321,9 +323,9 @@ export class FinancialClaimsBatchesLogListsComponent
   batchLogListSubscription() {
     this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response: any) => {
       this.totalRecord = response.total;
-     
+
       let payments =  response && response.data
-      
+
       payments.forEach((item :any) =>{
         if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(item.paymentStatusCode)){
           this.batchStatus = item.paymentStatusCode
@@ -619,6 +621,7 @@ export class FinancialClaimsBatchesLogListsComponent
       .pipe(first((unbatchResponse: any) => unbatchResponse != null))
       .subscribe((unbatchResponse: any) => {
         if (unbatchResponse ?? false) {
+          this.loadPendingApprovalPaymentCount();
           this.loadBatchLogListGrid();
         }
       });
@@ -637,6 +640,7 @@ export class FinancialClaimsBatchesLogListsComponent
           this.route.navigateByUrl(
             `financial-management/claims/${this.claimsType}?tab=2`
           );
+          this.loadPendingApprovalPaymentCount();
           this.loadBatchLogListGrid();
         }
       });
@@ -788,6 +792,7 @@ export class FinancialClaimsBatchesLogListsComponent
   }
   modalCloseAddEditClaimsFormModal(result: any) {
     if (result === true) {
+      this.loadPendingApprovalPaymentCount();
       this.loadBatchLogListGrid();
     }
     this.addEditClaimsFormDialog.close();
@@ -909,7 +914,7 @@ export class FinancialClaimsBatchesLogListsComponent
       'PrintAdviceLetterSelected': this.selectedDataIfSelectAllUnchecked, 'print': true,
       'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print', 'isReconciled': this.isReconciled
     }
-    this.disablePreviewButton(this.selectedAllPaymentsList); 
+    this.disablePreviewButton(this.selectedAllPaymentsList);
   }
 
   markAsUnChecked(data: any) {
@@ -1030,25 +1035,25 @@ export class FinancialClaimsBatchesLogListsComponent
     }
   }
   //#endregion
-  
+
   //#region Grid Column Add-Remove Action in Header Text
   public columnChange(e: any) {
     let event = e as ColumnVisibilityChangeEvent;
     const columnsRemoved = event?.columns.filter(x=> x.hidden).length
-    const columnsAdded = event?.columns.filter(x=> x.hidden === false).length 
+    const columnsAdded = event?.columns.filter(x=> x.hidden === false).length
 
   if (columnsAdded > 0) {
     this.columnChangeDesc = 'Columns Added';
   }
   else {
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
-  } 
+  }
   event.columns.forEach(column => {
     if (column.hidden) {
       const field = (column as ColumnComponent)?.field;
-      const mainFilters = this.state.filter?.filters; 
+      const mainFilters = this.state.filter?.filters;
       mainFilters?.forEach((filter:any) => {
-          const filterList = filter.filters; 
+          const filterList = filter.filters;
           const foundFilter = filterList.find((x: any) => x.field === field);
 
           if (foundFilter) {
@@ -1064,6 +1069,15 @@ export class FinancialClaimsBatchesLogListsComponent
       }
 
     });
+  }
+
+  loadPendingApprovalPaymentCount() {
+
+    this.permissionLevels = this.userManagementFacade.GetPermissionlevelsForPendingApprovalsCount();
+
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+    this.permissionLevels
+    );
   }
   //endregion
 }

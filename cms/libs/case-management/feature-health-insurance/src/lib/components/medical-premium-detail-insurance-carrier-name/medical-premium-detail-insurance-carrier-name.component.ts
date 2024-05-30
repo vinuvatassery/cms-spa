@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade, InsuranceStatusType, FinancialVendorFacade} from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-carrier-name',
   templateUrl: './medical-premium-detail-insurance-carrier-name.component.html',
@@ -40,7 +40,9 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
     private readonly insurancePlanFacade: InsurancePlanFacade,
     private financialVendorFacade: FinancialVendorFacade,
     private readonly cdr: ChangeDetectorRef,
-    private userManagementFacade: UserManagementFacade
+    private userManagementFacade: UserManagementFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade,
+
   ) {
     this.healthInsuranceForm = this.formBuilder.group({
       insuranceProviderName: [''],
@@ -48,7 +50,7 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
     this.InsuranceCarrierForm = this.formBuilder.group({});
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
       this.loadInsuranceCarrierName(InsuranceStatusType.dentalInsurance);
     }
@@ -109,6 +111,10 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next: (response: any) => {
+        if(vendorProfile.activeFlag === StatusFlag.No)
+          {
+            this.loadPendingApprovalGeneralCount();
+          }
         this.financialVendorFacade.hideLoader();
         this.addNewInsuranceProviderClose();
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
@@ -152,5 +158,10 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
       ]),
       activeFlag: ['']
     });
+  }
+
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 }
