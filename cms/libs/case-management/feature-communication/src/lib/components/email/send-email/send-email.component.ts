@@ -779,7 +779,7 @@ saveForLaterHeadterText!: string;
         this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
         this.templateHeader = 'Send Disenrollment Email';
         this.emailSubject = "CAREAssist Disenrollment Notice";
-        this.confirmPopupHeader = 'Send Disenrollment Email?';
+        this.confirmPopupHeader = 'Send Disenrollment email?';
         this.saveForLaterHeadterText = "Send Disenrollment Email Later?";
         this.saveForLaterModelText = "You must send the  Disenrollment Email within 2 Days";
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
