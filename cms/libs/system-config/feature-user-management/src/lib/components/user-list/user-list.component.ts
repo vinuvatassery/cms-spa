@@ -40,6 +40,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   deactivateUserStatus$ = this.userManagementFacade.deactivateUser$;
   deactivatSubscription!: Subscription;
   userStatus$ = this.userManagementFacade.canUserBeDeactivated$;
+  reactivationFlag = false;
   userAssignedActiveClientStatusSubscription!: Subscription;
   public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
   public duration =
@@ -336,6 +337,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
           userId: data.loginUserId,
           activeFlag: this.active
         };
+        this.reactivationFlag = true;
         this.userManagementFacade.deactivateUser(userData);        
       }  
   }
@@ -527,9 +529,10 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
 
   notifyOnReactivatingUser(){
     this.deactivatSubscription = this.deactivateUserStatus$.subscribe((response: any) => {
-      if(response.status > 0 && response.message === this.reactivationMessage){
+      if(response.status > 0 && this.reactivationFlag){
       this.loadUserListGrid();
       this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+      this.reactivationFlag = false;
     }
     });
   }
