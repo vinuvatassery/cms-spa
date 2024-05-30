@@ -97,8 +97,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   ];
   selectedActiveFlag = "";
   isShowUserDetailPopup$ = this.userManagementFacade.isShowUserDetailPopup$;
-  reactivationMessage = "User reactivated successfully.";
-
+  
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly documentFacade: DocumentFacade,
