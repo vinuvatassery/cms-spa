@@ -4,34 +4,47 @@ import { Injectable } from '@angular/core';
 export class ScrollFocusValidationfacade {
   invalidControl: any = null;
   /** Public methods **/
-  findInvalidControl(form: any, nativeElement: any,controlFlag:any): any {
-    this.invalidControl=controlFlag;
-    const formControls = form.controls;
-    for (const controlName in formControls) {
-      if (formControls?.hasOwnProperty(controlName) && this.invalidControl == null) {
-        const control = formControls[controlName];
-        if (control.controls) {
-          if(Array.isArray(control.controls)){
-            this.findInvalidControl(control.controls[0], nativeElement,null);
-          }else{
-            this.findInvalidControl(control, nativeElement,null);
-          }
-        } else {
-          if (control.invalid) {
-            this.invalidControl = nativeElement.querySelector(`[formcontrolname="${controlName}"]`);
-            if (this.invalidControl == null) {
-              this.invalidControl = nativeElement.querySelector(`[id="${controlName}"]`);
-              if (this.invalidControl == null) {
-                continue;
-              }
-            }
-            return this.invalidControl;
-          }
-        }
-      }else{
-        return this.invalidControl;
-      }
-    }
+  findInvalidControl(form: any, nativeElement: any, controlFlag: any): any {
+    this.invalidControl = controlFlag;
+    this.traverseFormControls(form.controls, nativeElement);
     return this.invalidControl;
   }
+  
+  private traverseFormControls(formControls: any, nativeElement: any): void {
+    for (const controlName in formControls) {
+      if (formControls.hasOwnProperty(controlName) && this.invalidControl == null) {
+        const control = formControls[controlName];
+        if (control.controls) {
+          this.handleNestedControls(control, nativeElement);
+        } else {
+          this.checkControlValidity(control, controlName, nativeElement);
+        }
+      } else if (this.invalidControl != null) {
+        break;
+      }
+    }
+  }
+  
+  private handleNestedControls(control: any, nativeElement: any): void {
+    if (Array.isArray(control.controls)) {
+      this.traverseFormControls(control.controls[0], nativeElement);
+    } else {
+      this.traverseFormControls(control.controls, nativeElement);
+    }
+  }
+  
+  private checkControlValidity(control: any, controlName: string, nativeElement: any): void {
+    if (control.invalid) {
+      this.invalidControl = this.findInvalidElement(nativeElement, controlName);
+    }
+  }
+  
+  private findInvalidElement(nativeElement: any, controlName: string): any {
+    let invalidElement = nativeElement.querySelector(`[formcontrolname="${controlName}"]`);
+    if (invalidElement == null) {
+      invalidElement = nativeElement.querySelector(`[id="${controlName}"]`);
+    }
+    return invalidElement;
+  }
+  
 }
