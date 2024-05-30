@@ -375,10 +375,6 @@ public rowCallback(context: RowClassArgs) {
   isUnlimitedFlag(flag : string){
     return flag == "Y";
   }
-  close()
-  {
-
-  }
 
   onValidatePcaDates(event:any){
     this.validatePcaDates.emit({pcaAssignmentId : this.pcaAssignmentId,

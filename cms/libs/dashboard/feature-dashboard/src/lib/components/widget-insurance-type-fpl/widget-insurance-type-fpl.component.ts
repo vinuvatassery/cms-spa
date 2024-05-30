@@ -6,7 +6,6 @@ import { WidgetFacade } from '@cms/dashboard/domain';
 @Component({
   selector: 'dashboard-widget-insurance-type-fpl',
   templateUrl: './widget-insurance-type-fpl.component.html',
-  styleUrls: ['./widget-insurance-type-fpl.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WidgetInsuranceTypeFplComponent {

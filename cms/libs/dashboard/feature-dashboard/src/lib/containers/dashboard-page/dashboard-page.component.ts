@@ -317,8 +317,19 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       }
     );
   }
+
   editDashboardCancelClicked(save: any) {
+    this.resetEditMode();
   
+    if (save === 'true') {
+      this.updateWidgetsAndDashboard();
+      this.clearStaticData();
+    } else {
+      this.initializeDashboard();
+    }
+  }
+  
+  private resetEditMode() {
     this.configSubscriptionItems = {
       draggable: { enabled: false },
       resizable: { enabled: false },
@@ -328,48 +339,41 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       isEditDashboard: this.isReorderEnable,
       dashboardId: this.selectedDashBoard,
     };
-    if (save === 'true' && DashboardPageComponent.dashBoardContentData) {
-      let dashboardContentPostData =
-        DashboardPageComponent.dashBoardContentData;
-      let updatedWidgetsPostData = DashboardPageComponent.updatedWidgets;
-      dashboardContentPostData.forEach((widg: any) => {
-        if (widg?.widgetProperties) {
-          widg.updated = false;
-        }
-      });
-
-      if (updatedWidgetsPostData[0]) {
-        updatedWidgetsPostData.forEach((widg: any) => {
-          if (widg[0]?.widgetProperties && widg[0]?.newItem !== true) {
-            widg[0].widgetProperties.componentData.component = widg[0].widgetName;
-            widg[0].updated = true;
-            dashboardContentPostData.push(widg[0]);
-          }
-        });
+  }
+  
+  private updateWidgetsAndDashboard() {
+    const dashboardContent = this.processDashboardContent(DashboardPageComponent.dashBoardContentData);
+  
+    this.dashboardWrapperFacade.updateDashboardAllWidgets(this.selectedDashBoard, {
+      dashBoardWidgetsUpdated: dashboardContent,
+    });
+  }
+  
+  private clearStaticData() {
+    DashboardPageComponent.dashBoardContentData = [];
+    DashboardPageComponent.updatedWidgets = [];
+    this.dashboardContentListDataSubject.next(null);
+  }
+  
+  private processUpdatedWidgets(widgets: any[]): any[] {
+    return widgets.map(widget => {
+      if (widget[0]?.widgetProperties && widget[0]?.newItem !== true) {
+        widget[0].widgetProperties.componentData.component = widget[0].widgetName;
+        widget[0].updated = true;
       }
-
-      dashboardContentPostData.forEach((widg: any) => {
-        if (widg?.widgetProperties && widg?.stringified !== true) {
-          widg.widgetProperties.componentData.component = widg?.widgetName;
-          widg.stringified = true;
-          widg.widgetProperties = JSON.stringify(widg?.widgetProperties).trim();
-        }
-      });
-      const dashBoardWidgetsUpdated = {
-        dashBoardWidgetsUpdated: dashboardContentPostData,
-      };
-
-      this.dashboardWrapperFacade.updateDashboardAllWidgets(
-        this.selectedDashBoard,
-        dashBoardWidgetsUpdated
-      );
-      DashboardPageComponent.dashBoardContentData = [];
-      DashboardPageComponent.updatedWidgets = [];
-      this.dashboardContentListDataSubject.next(null);
-      this.dashBoardUpdateSubscribe();
-    } else {
-      this.initializeDashboard();
-    }
+      return widget;
+    });
+  }
+  
+  private processDashboardContent(widgets: any[]): any[] {
+    return widgets.map(widget => {
+      if (widget?.widgetProperties && widget?.stringified !== true) {
+        widget.widgetProperties.componentData.component = widget.widgetName;
+        widget.stringified = true;
+        widget.widgetProperties = JSON.stringify(widget.widgetProperties).trim();
+      }
+      return widget;
+    });
   }
 
   dashBoardUpdateSubscribe() {
@@ -419,7 +423,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  changedOptions() {}
 
   removeItem(item: any) {
     this.dashboard.splice(this.dashboard.indexOf(item), 1);
@@ -430,7 +433,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     DashboardPageComponent.dashBoardContentData.push(item);
 
     this.dashBoardAllWidgetsData = this.dashBoardAllWidgetsData.filter(
-      (x: any) => !(x.widgetId == item.widgetId)
+      (x: any) => x.widgetId != item.widgetId
     );
 
     this.dashboardContentListDataSubject.next(
@@ -445,7 +448,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     DashboardPageComponent.dashBoardContentData =
       DashboardPageComponent.dashBoardContentData.filter(
-        (x: any) => !(x.widgetId == item.widgetId)
+        (x: any) => x.widgetId != item.widgetId
       );
 
     this.dashboardContentListDataSubject.next(

@@ -168,6 +168,7 @@ import { ReactivateTemplateComponent } from './reactivate-template/reactivate-te
     EditTemplateNameComponent,
     DeactivateTemplateComponent,
     ReactivateTemplateComponent,
+    
   ],
 })
 export class SharedUiCommonModule {}

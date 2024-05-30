@@ -21,7 +21,6 @@ import { PaymentMethodCode } from '../enums/payment-method-code.enum';
 @Component({
   selector: 'common-cms-pharmacy-claims-detail',
   templateUrl: './cms-pharmacy-claims-detail.component.html',
-  styleUrls: ['./cms-pharmacy-claims-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
@@ -281,7 +280,6 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
        this.addClaimServicesForm.reset();
     }
     if(this.addClaimServicesForm.length > 1 ){
-    let form = this.addClaimServicesForm.value[i]
 
     this.addClaimServicesForm.removeAt(i);
 
@@ -502,11 +500,6 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
 
   restrictSpecialChar(event: any) {
     const status = (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8;
-
-    if (status) {
-      // this.claimForm.controls['invoiceId'].setErrors(null);
-      // this.specialCharAdded = false;
-    }
     return status;
   }
 }

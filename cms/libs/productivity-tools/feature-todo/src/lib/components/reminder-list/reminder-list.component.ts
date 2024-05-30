@@ -20,10 +20,9 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
-import { CaseFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { CaseFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorFacade, FinancialVendorRefundFacade} from '@cms/case-management/domain';
 import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
-import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { FormControl } from '@angular/forms';
 import { IntlService } from '@progress/kendo-angular-intl';
 
@@ -242,9 +241,9 @@ export class ReminderListComponent implements  OnInit{
   }
   todoItemCrossedDueDate(todoItem:any):boolean{
     let isCrossedDueDate = false;
-    var currentDate = new Date();
-    var numberOfDaysToAdd = 7;
-    var resultDate =new Date(currentDate.setDate(currentDate.getDate() + numberOfDaysToAdd));
+    let currentDate = new Date();
+    let numberOfDaysToAdd = 7;
+    let resultDate =new Date(currentDate.setDate(currentDate.getDate() + numberOfDaysToAdd));
     if(new Date(todoItem.alertDueDate) < resultDate){
       isCrossedDueDate = true;
     }
@@ -259,14 +258,14 @@ export class ReminderListComponent implements  OnInit{
             this.itemsLoader =false;
           }
           this.todoItemList = todoItemList?.data ? todoItemList?.data : [];
-          var currentDate = new Date();
-          var validDate = new Date(currentDate.setDate(currentDate.getDate() +30));
+          let currentDate = new Date();
+          let validDate = new Date(currentDate.setDate(currentDate.getDate() +30));
           this.todoItemList = this.todoItemList.filter(todoItem => new Date(todoItem.alertDueDate) <= validDate);
           this.todoItemList.forEach((todoItem:any)=>{
           
-            var todayDate = new Date();
+            let todayDate = new Date();
             todayDate.setHours(0,0,0);
-            var postDate = new Date();
+            let postDate = new Date();
             todoItem.isToday = false;
             todoItem.isTomorrow = false;
             let tomorrow = new Date(postDate.setDate(postDate.getDate() +1));

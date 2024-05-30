@@ -17,9 +17,10 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   @Input() userId!: string;
   @Input() pageSizes: any;
   @Input() sortValue: any;
+  @Input() sortType: any;
+  @Input() sort: any;
   @Input() userStatus: any;
-  @Input() assignedRoleCount: any;
-  sort: any = "roleDesc";
+  @Input() assignedRoleCount: any;  
   sortColumn = 'roleDesc';
   sortDir = 'Ascending';
   isUserAssignedRolesGridLoaderShow = false;
@@ -29,19 +30,16 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   rolesUserListProfilePhoto$ = this.userManagementFacade.rolesUserListProfilePhotoSubject;
 
   public state!: any;
-  sortType = "asc"
   gridDataResult!: GridDataResult;
   loader$ = new BehaviorSubject<boolean>(false);
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   active = "Active";
   inActive = "Inactive";
-  statusList: any = [{ code: this.active, name: this.active }, { code: this.inActive, name: this.inActive }];
 
   columns: any = {
     roleDesc: "Role Assigned",
     lastModificationTime: "Last Modified",
     lastModifierId: "Modified By",
-    activeFlag: "Status",
   };
 
 
@@ -62,16 +60,16 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
-  /* LifeCycle Events */
+  defaultSort:any;
   ngOnInit(): void {
-    //this.loadUserAssignedRolesGrid();
+    this.defaultSort = this.sort;
   }
-
   ngOnChanges(): void {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      filter : this.filter === undefined?null:this.filter
     };
     this.loadUserAssignedRolesGrid();
   }
@@ -83,10 +81,10 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
     sortTypeValue: string) {
       const gridDataRefinerValue = {        
         skipCount: skipCountValue,
-        pagesize: maxResultCountValue,
+        maxResultCount: maxResultCountValue,
         sortColumn: sortValue,
         sortType: sortTypeValue,
-        filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
+        filter: this.state?.['filter']?.['filters'] ?? [],
       };   
     this.loadUserRoles(gridDataRefinerValue);
     this.gridDataHandle();
@@ -119,9 +117,15 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'desc';
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    if (this.sort[0]?.dir === undefined) {
+      this.sortDir = '';
+      this.sortType = 'asc';
+    }
+    if (this.sort[0]?.dir !== undefined) {
+      this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    }
     this.sortColumn = this.columns[this.sortValue];
     this.filter = stateData?.filter?.filters;
     this.clearIndividualSelectionOnClear(stateData);
@@ -140,7 +144,7 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: this.defaultSort,
       filter: { logic: 'and', filters: [] },
     };
   }

@@ -186,8 +186,6 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
             {
               this.pcaAssignmentForm.controls['amount'].disable();  
             }
-            const openDate =   this.pcaAssignmentFormDataModel$?.openDate.split('T')[0]+'T00:00:00'
-            const closeDate =   this.pcaAssignmentFormDataModel$?.closeDate.split('T')[0]+'T00:00:00'
             this.pcaAssignmentForm.patchValue(
               {     
                 pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
@@ -336,7 +334,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
 
 
     if(!this.newForm){
-      this.pcaAssignmentDatesValidation$.subscribe((res:Boolean) =>{
+      this.pcaAssignmentDatesValidation$.subscribe((res:boolean) =>{
         if(res){
           this.pcaAssignmentForm.controls['openDate'].setErrors({ 'ispcaOpenDateDependency': true });
            this.ispcaOpenDateDependency = true
@@ -391,7 +389,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
 
 
     if(!this.newForm){
-      this.pcaAssignmentDatesValidation$.subscribe((res:Boolean) =>{
+      this.pcaAssignmentDatesValidation$.subscribe((res:boolean) =>{
         if(res){
           this.pcaAssignmentForm.controls['openDate'].setErrors({ 'ispcaOpenDateDependency': true });
            this.ispcaOpenDateDependency = true
@@ -459,7 +457,6 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     {
     this.pcaAssignmentForm?.controls["amount"].setErrors({'incorrect': true});
     this.remainingAmountValidate = true
-    return;
     }else{
       this.remainingAmountValidate = false
     }

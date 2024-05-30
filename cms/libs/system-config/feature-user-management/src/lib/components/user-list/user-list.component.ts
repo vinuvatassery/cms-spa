@@ -1,12 +1,14 @@
 /** Angular **/
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges , ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, OnDestroy, TemplateRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ColumnBase, ColumnComponent, ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription, debounceTime } from 'rxjs';
-import { DocumentFacade, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { ConfigurationProvider, DocumentFacade, NotificationSnackbarService, NotificationSource, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserDataService, UserManagementFacade } from '@cms/system-config/domain';
+import { Router } from '@angular/router';
+import { NotificationService } from '@progress/kendo-angular-notification';
 
 @Component({
   selector: 'system-config-user-list',
@@ -27,7 +29,9 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() usersDataLists$: any;
-  @Input() usersFilterColumn$: any;
+  @Input() usersFilterColumn$: any;  
+  @Input() sortValueUserRoles : any;
+  @Input() sortUserRoles : any;
   @Output() loadUserListEvent = new EventEmitter<any>();
   @Output() usersFilterColumnEvent = new EventEmitter<any>();
   @Input() userListProfilePhoto$!: any;
@@ -35,7 +39,14 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() exportButtonShow$ = this.documentFacade.exportButtonShow$;
   deactivateUserStatus$ = this.userManagementFacade.deactivateUser$;
   deactivatSubscription!: Subscription;
+  userStatus$ = this.userManagementFacade.canUserBeDeactivated$;
+  userAssignedActiveClientStatusSubscription!: Subscription;
+  public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
+  public duration =
+    this.configurationProvider.appSettings.snackbarAnimationDuration;
+  @ViewChild('notificationTemplate', { static: true }) notificationTemplate!: TemplateRef<any>;
 
+  defaultSort:any;
   public state!: any;
   sortColumn = 'User Name';
   sortDir = 'Ascending';
@@ -71,7 +82,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     lastModifierId: "Modified By",
     activeFlag: "Status",
   };
-
+  loggedInUserId!: any;
   dropDowncolumns: any = [
     { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
@@ -85,15 +96,22 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   ];
   selectedActiveFlag = "";
   isShowUserDetailPopup$ = this.userManagementFacade.isShowUserDetailPopup$;
-
+  reactivationMessage = "User reactivated successfully.";
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly documentFacade: DocumentFacade,
     private userManagementFacade: UserManagementFacade,
     private readonly notificationSnackbarService : NotificationSnackbarService,
+    private configurationProvider:ConfigurationProvider,
+    private readonly notificationService: NotificationService,
+    private router: Router,
+    private readonly loaderService: LoaderService,
+    private readonly userDataService: UserDataService,
+    
   ) {
     this.notifyOnReactivatingUser();
+    this.IsUserValidForDeactivation();
   }
   public moreactions = [
     {
@@ -108,8 +126,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
       }
         this.onUserDetailsClicked(true);
       },
-    },
-    {
+    },{
       buttonType: 'btn-h-danger',
       text: 'Deactivate',
       icon: 'block',
@@ -131,14 +148,17 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnInit(): void {
+    this.defaultSort = this.sort;
+    this.getLoggedInUserProfile();
     this.addSearchSubjectSubscription();
-    this.loadUserFilterColumn();
+    this.loadUserFilterColumn();    
   }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      filter : this.filter === undefined?null:this.filter
     };
 
     this.loadUserListGrid();
@@ -174,13 +194,13 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     this.usersFilterColumnEvent.emit();
 
   }
-
+  
   setToDefault() {
     this.defaultGridState();
     this.sortColumn = 'User Name';
     this.sortType = 'asc';
-    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "";
-    this.filter = '';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "Descending";
+    this.filter = [];
     this.selectedSearchColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
@@ -222,7 +242,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: this.defaultSort,
       filter: { logic: 'and', filters: [] },
     };
   }
@@ -234,13 +254,31 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'desc';
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+    if (this.sort[0]?.dir === undefined) {
+      this.sortDir = '';
+      this.sortType = 'asc';
+    }
+    if (this.sort[0]?.dir !== undefined) {
+      this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    }
     this.sortColumn = this.columns[this.sortValue];
-    this.filter = stateData?.filter?.filters;
+    if (stateData.filter?.filters.length > 0) {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.clearIndividualSelectionOnClear(stateData);
-    this.cdr.detectChanges();
     this.loadUserListGrid();
   }
 
@@ -286,8 +324,8 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     if(data.loginUserId)
     {
       this.loginUserId = data.loginUserId;
+      this.userManagementFacade.getUserAssignedActiveClientCount(data.loginUserId);
     }
-    this.isUserDeactivatePopup = true;
   }
 
   onUserReactivateClicked(data: any) {
@@ -489,7 +527,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
 
   notifyOnReactivatingUser(){
     this.deactivatSubscription = this.deactivateUserStatus$.subscribe((response: any) => {
-      if(response.status > 0){
+      if(response.status > 0 && response.message === this.reactivationMessage){
       this.loadUserListGrid();
       this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
     }
@@ -502,8 +540,46 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {     
-    if(this.deactivatSubscription){
-      this.deactivatSubscription.unsubscribe();
-  }
+      this.deactivatSubscription?.unsubscribe();
+      this.userAssignedActiveClientStatusSubscription?.unsubscribe();
 }
+
+  navigateToDetails() {
+    this.router.navigate(['/system-config/cases/case-assignment']);
+  }
+
+  IsUserValidForDeactivation(){
+    this.userAssignedActiveClientStatusSubscription = this.userStatus$.subscribe((response: any) => {
+      if(response.status > 0){
+        this.isUserDeactivatePopup = true;
+        this.cdr.detectChanges();
+        this.loaderService.hide();
+      }
+      else
+      {
+          this.notificationService.show({
+          content: this.notificationTemplate,        
+          position: { horizontal: 'center', vertical: 'top' },
+          animation: { type: 'fade', duration: this.duration },
+          closable: true,
+          type: { style: "error", icon: true },        
+          cssClass: 'reminder-notification-bar',
+          hideAfter:this.hideAfter
+        });
+        this.loaderService.hide();
+      }
+    });
+  }
+  getLoggedInUserProfile() {
+    this.userDataService.getProfile$.subscribe((profile: any) => {
+      if (profile?.length > 0) {
+        this.loggedInUserId = profile[0]?.loginUserId;
+      }
+    });
+  }
+
+  loggedInUserValidation(data:any)
+  {
+    return (this.loggedInUserId == data.loginUserId);
+  }
 }

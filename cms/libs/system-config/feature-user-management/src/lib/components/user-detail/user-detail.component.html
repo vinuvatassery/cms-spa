@@ -54,7 +54,7 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="First Name">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal || isEditValue"
           name="firstName"
           formControlName="firstName"> </kendo-textbox>          
         </kendo-floatinglabel>
@@ -65,7 +65,7 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Last Name">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal || isEditValue"
           formControlName="lastName"
           name="lastName"> </kendo-textbox>          
         </kendo-floatinglabel>
@@ -77,7 +77,7 @@
 
       <div class="flex-col">
         <kendo-floatinglabel text="Email Address">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal"
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal || isEditValue"
           formControlName="email"
           name="email"> </kendo-textbox>          
         </kendo-floatinglabel>
@@ -163,3 +163,9 @@
   <system-config-deactivate-user-confirmation 
     [userId]="userId" [status]="deactivate" (closeDeactivateUsers)="onUserDeactivateClosed()" (refreshGrid)="loadUserListGrid()" ></system-config-deactivate-user-confirmation>
 </kendo-dialog>
+
+<ng-template #notificationTemplate>
+  <span>User has assigned clients. </span>
+  <a class="notification-link" (click)="navigateToDetails()">Re-assign their clients</a>
+  <span> before deactivating.</span>
+</ng-template>

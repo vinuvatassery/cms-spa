@@ -36,22 +36,20 @@
 
 <!-- Send New Letter Popup -->
 <ng-template #sendLetterDialog>
-  <case-management-send-letter templateHeader="Send Letter" [mailingAddress$]="mailCodes$" [informationalText]="informationalText" [templateHeader]="templateHeader"
+  <case-management-send-letter templateHeader="Send Letter" [mailingAddress$]="mailCodes$" 
   [entityId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)" [templateLoadType] ="templateLoadType" [entityType]="entityType"
   [notificationGroup]="screenName" [notificationDraftId]="notificationDraftId" [triggerFrom]="triggerFrom"
   [communicationLetterTypeCode]="communicationLetterTypeCode" [isNewNotificationClicked]="isNewNotificationClicked"
   [isContinueDraftClicked]="isContinueDraftClicked" (loadInitialData)="loadMailingAddress()"
-  [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText"
   kendoTooltip></case-management-send-letter>
 </ng-template>
 
 <!-- Send New Email Popup -->
 <ng-template #sendNewEmailDialog>
   <case-management-send-email
-  templateHeader="Send Email" [templateLoadType] ="templateLoadType" [informationalText]="informationalText" [templateHeader]="templateHeader"
+  templateHeader="Send Email" [templateLoadType] ="templateLoadType"  
   [communicationEmailTypeCode]="communicationEmailTypeCode" [emailSubject]="emailSubject" [notificationGroup]="screenName" [entityType]="entityType"
   [entityId]="vendorId" [toEmail]="toEmail" [notificationDraftId]="notificationDraftId" [triggerFrom]="triggerFrom" [caseManagerEmail]="caseManagerEmail"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [loginUserEmail]="loginUserEmail"
-  [confirmPopupHeader]="confirmPopupHeader" [confirmationModelText]="confirmationModelText" [saveForLaterHeadterText]="saveForLaterHeadterText" [saveForLaterModelText]="saveForLaterModelText"
   (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>

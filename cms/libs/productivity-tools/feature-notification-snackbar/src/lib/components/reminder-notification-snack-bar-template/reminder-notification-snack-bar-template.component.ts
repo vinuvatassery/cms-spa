@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
@@ -268,7 +268,6 @@ isReminderExpand = false;
 
   onEntityNameClick(event:any,entityId :any, entityTypeCode:any,vendorTypeCode:any) {
     if (entityTypeCode == "CLIENT") {
-      //this.router.navigate([`/case-management/cases/case360/${entityId}`]);
       this.getEligibilityInfoByEligibilityId(entityId)
     }
     else if (entityTypeCode == "VENDOR") {
@@ -396,10 +395,10 @@ setDueDateText(res: any) {
       if (timeDifferenceMinutes <= 0) {
         this.dueDateText = 0-timeDifferenceMinutes + " Mins Over Due"
         if(0-timeDifferenceMinutes >60){
-          var timeInHours =  Math.floor(0-timeDifferenceMinutes/60);
+          let timeInHours =  Math.floor(0-timeDifferenceMinutes/60);
           this.dueDateText = timeInHours +" Hrs Over Due"
           if(timeInHours >24){
-           var timeInDays =  Math.floor(timeInHours/24);
+           let timeInDays =  Math.floor(timeInHours/24);
            this.dueDateText = timeInDays +" Days Over Due"
           }
         }

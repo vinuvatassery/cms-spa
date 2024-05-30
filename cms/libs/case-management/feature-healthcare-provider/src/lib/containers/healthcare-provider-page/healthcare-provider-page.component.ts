@@ -1,7 +1,7 @@
 /** Angular **/
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  CompletionChecklist, HealthcareProviderFacade, NavigationType, WorkflowFacade, WorkflowTypeCode } from '@cms/case-management/domain';
+import {  CompletionChecklist, HealthcareProviderFacade, NavigationType, WorkflowFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';

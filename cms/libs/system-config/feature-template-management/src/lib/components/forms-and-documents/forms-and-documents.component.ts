@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy , OnInit, TemplateRef,} from '@angular/core';
+import { Component, ChangeDetectionStrategy , TemplateRef,} from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
@@ -11,7 +11,7 @@ import { ActiveInactiveFlag } from '@cms/shared/ui-common';
   templateUrl: './forms-and-documents.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormsAndDocumentsComponent implements OnInit {
+export class FormsAndDocumentsComponent {
   /** Public properties **/
   isOpenAttachment = false;
   foldersList: any = [];
@@ -29,7 +29,6 @@ export class FormsAndDocumentsComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {}
   /** Internal event methods **/
   onCloseAttachmentClicked() {
     this.formsDocumentDialog.close()
@@ -100,7 +99,7 @@ export class FormsAndDocumentsComponent implements OnInit {
   }
 
   loadFolderFiles() {
-    var payload={
+    let payload={
       sort : true,
       active: ActiveInactiveFlag.Yes
     }

@@ -388,10 +388,6 @@ export class CaseFacade {
 
         this.clientProfileHeaderSubject.next(clientProfileResponse);
         if (clientProfileResponse) {
-          const activeSession = {
-            clientCaseId: clientProfileResponse?.clientCaseId,
-            clientId: clientProfileResponse?.clientId,
-          };
         this.clientProfileHeaderLoaderSubject.next(false)
 
         }

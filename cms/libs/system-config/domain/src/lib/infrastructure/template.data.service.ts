@@ -131,44 +131,7 @@ export class TemplateDataService {
       },
     ]);
   }
-  loadLetterTemplatesListsService() {
-    return of([
-      {
-        id: 1,
-        templateName: 'templateName',
-        program: 'CAREAssist',
-        description:
-          'Used when a client’s application is approved and they selected to go paperless',
-
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-        status: 'active',
-      },
-      {
-        id: 2,
-        templateName: 'templateName',
-        program: 'CAREAssist',
-        description:
-          'Used when a client’s application is approved and they selected to go paperless',
-
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-        status: 'active',
-      },
-      {
-        id: 3,
-        templateName: 'templateName',
-        program: 'CAREAssist',
-        description:
-          'Used when a client’s application is approved and they selected to go paperless',
-
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-        status: 'active',
-      },
-    ]);
-  }
-  loadSmsTemplatesListsService() {
+  loadTemplatesListsService() {
     return of([
       {
         id: 1,

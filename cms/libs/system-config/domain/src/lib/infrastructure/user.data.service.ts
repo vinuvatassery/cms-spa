@@ -2,10 +2,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
-import { User } from '../entities/user';
 import { LoginUser } from '../entities/login-user';
 
 /** Providers **/
@@ -142,7 +140,7 @@ export class UserDataService {
         MaxResultCount : data.maxResultCount,
         SortType : data.sortType,
         Sorting : data.sortColumn,
-        Filter : data.filter
+        Filter : JSON.stringify(data.filter)
       }
       return this.http.post(
         `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/${userId}/roles`,
@@ -649,6 +647,13 @@ export class UserDataService {
     return this.http.post(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
         `/system-config/users/deactivate`, user
+    );
+  }
+
+  checkUserStatus(userId : any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/get-user-active-client-count/${userId}` 
     );
   }
 

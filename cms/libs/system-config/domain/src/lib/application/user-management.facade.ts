@@ -62,6 +62,11 @@ export class UserManagementFacade {
     field: this.sortValueSexualOrientationListGrid,
   }];
 
+  public sortValueUserRolesListGrid = 'roleDesc'; 
+  public sortUserRolesListGrid: SortDescriptor[] = [{
+    field: this.sortValueUserRolesListGrid,
+  }];
+
   private userListSubject = new BehaviorSubject<User[]>([]);
   private usersDataSubject = new BehaviorSubject<any>([]);
   private userInfoDataSubject = new Subject<any>();
@@ -102,7 +107,7 @@ export class UserManagementFacade {
   private addUserResponseSubject = new Subject<any>();
   private deactivateUserSubject = new Subject<any>();
   private loginUserDetailSubject = new Subject<any>();
-
+  private canUserbeDeactivatedSubject = new Subject<any>();
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -142,7 +147,7 @@ export class UserManagementFacade {
   addUserResponse$ = this.addUserResponseSubject.asObservable();
   deactivateUser$ = this.deactivateUserSubject.asObservable();
   loginUserDetail$ = this.loginUserDetailSubject.asObservable();
-
+  canUserBeDeactivated$ = this.canUserbeDeactivatedSubject.asObservable();
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
@@ -601,6 +606,20 @@ export class UserManagementFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err.message);
       },
     })
+  }
+
+  getUserAssignedActiveClientCount(userId : any){
+    this.showLoader();
+    this.userDataService.checkUserStatus(userId).subscribe({
+      next: (success:any) => {        
+        this.canUserbeDeactivatedSubject.next(success);
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err.message);
+      },
+    })
+
   }
 
 

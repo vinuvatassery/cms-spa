@@ -50,48 +50,58 @@ export class CaseManagerEffectiveDatesComponent implements OnInit {
     this.buildEffectiveDatesForm();
   }
 
-  onUnAssignConfirm(confirm: boolean) {
-    if (confirm) {
-      this.validateModel();
-      if(this.effectiveDatesForm.valid){
-        if(this.startDate < this.min)
-        {
-           this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, "Start date must be a valid date.", NotificationSource.UI)
-           return
-        }
-
-        if(this.endDate &&  this.endDate < this.min)
-        {
-           this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, "End date must be a valid date.", NotificationSource.UI)
-           return
-        }
-
-        if (this.startDate && this.startDate > this.min) {
-          this.showstartDateError = false;
-          const existCaseManagerData = {
-            startDate: this.intl.formatDate(this.startDate, this.dateFormat),
-            endDate: this.endDate?this.intl.formatDate(this.endDate, this.dateFormat):this.endDate,
-            confirm: confirm,
-            assignedcaseManagerId: this.assignedcaseManagerId,
-            clientCaseManagerId: this.clientCaseManagerId,
-          };
-          this.changeDateConfimEvent.emit(existCaseManagerData);
-        } else {
-          if(!this.startDate)
-          {
-            this.showstartDateError =true;
-          }
-        }
-      }
-    } else {
-
-      const existCaseManagerData = {
-        confirm: confirm
-
-      };
-      this.changeDateConfimEvent.emit(existCaseManagerData);
-    }
+ onUnAssignConfirm(confirm: boolean) {
+  if (!confirm) {
+    const existCaseManagerData = {
+      confirm: confirm
+    };
+    this.changeDateConfimEvent.emit(existCaseManagerData);
+    return;
   }
+
+  this.validateModel();
+  if(this.effectiveDatesForm.valid){
+    const errors = this.checkDateValidity();
+    if (errors.length) {
+      this.showSnackbarErrors(errors);
+      return;
+    }
+
+    const data = this.prepareDataForEmission(confirm);
+    this.changeDateConfimEvent.emit(data);
+  }
+}
+
+private checkDateValidity(): string[] {
+  const errors = [];
+  if (this.startDate && this.startDate < this.min) {
+    errors.push("Start date must be a valid date.");
+  }
+  if (this.endDate && this.endDate < this.min) {
+    errors.push("End date must be a valid date.");
+  }
+  return errors;
+}
+
+private showSnackbarErrors(errors: string[]) {
+  for (const error of errors) {
+    this.notificationSnackbarService.manageSnackBar(
+      SnackBarNotificationType.ERROR,
+      error,
+      NotificationSource.UI
+    );
+  }
+}
+
+private prepareDataForEmission(confirm: boolean): any {
+  return {
+    startDate: this.startDate ? this.intl.formatDate(this.startDate, this.dateFormat) : null,
+    endDate: this.endDate ? this.intl.formatDate(this.endDate, this.dateFormat) : null,
+    confirm: confirm,
+    assignedcaseManagerId: this.assignedcaseManagerId,
+    clientCaseManagerId: this.clientCaseManagerId,
+  };
+}
 
   buildEffectiveDatesForm(){
     this.effectiveDatesForm = this.formBuilder.group({
@@ -101,7 +111,6 @@ export class CaseManagerEffectiveDatesComponent implements OnInit {
   }
 
   dateValidate(type: any) {
-    const todayDate = new Date();
     this.startDateIsGreaterThanEndDate = false;
     // eslint-disable-next-line no-case-declarations
     const startDate = this.effectiveDatesForm.controls['startDate'].value;

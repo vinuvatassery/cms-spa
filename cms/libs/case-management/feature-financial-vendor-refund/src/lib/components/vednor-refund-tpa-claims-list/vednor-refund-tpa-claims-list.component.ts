@@ -106,9 +106,6 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges, On
       this.tpaGridData = res.data
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.cliams=res.data;
-      if(this.cliams){
-        
-      }
   })
   }
 

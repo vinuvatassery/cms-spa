@@ -49,15 +49,7 @@
               [linkType]="'profileIcon'"
               [userPhotos$]="rolesUserListProfilePhoto$"></common-user-photo-icon>
         </ng-template>
-      </kendo-grid-column>
-      <kendo-grid-column field="activeFlag" title="Status" [width]="120">
-        <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
-          let-filterService="filterService">
-          <kendo-dropdownlist [data]="statusList" textField="name" valueField="code" [(ngModel)]="selectedActiveFlag"
-            [valuePrimitive]="true" (valueChange)="dropdownFilterChange('activeFlag',$event, filterService)">
-          </kendo-dropdownlist>
-        </ng-template>
-      </kendo-grid-column>
+      </kendo-grid-column>      
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
@@ -68,7 +60,6 @@
               [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
-
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>

@@ -300,17 +300,21 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.onChange(searchValue);
   }
 
+   getSelectedGroup(mySelection:any, gridDataResult:any) {
+    if (mySelection.length < 1 && gridDataResult?.data.length > 0) {
+      return gridDataResult?.data[0];
+    } else if (mySelection[0] === undefined || mySelection.length === 0) {
+      return gridDataResult?.data[0];
+    } else {
+      return gridDataResult.data.find((row :any) => row.notificationGroupId === mySelection[0]);
+    }
+  }
+
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
 
-      this.selectedGroup =
-        (this.mySelection.length < 1 && this.gridDataResult?.data.length > 0)
-          ? this.gridDataResult?.data[0]
-          : (this.mySelection[0] === undefined || this.mySelection.length === 0)
-            ? this.gridDataResult?.data[0]
-            : this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
-
+      this.selectedGroup = this.getSelectedGroup(this.mySelection,this.gridDataResult )
       this.selectedRowEvent.emit(this.selectedGroup);
       this.mySelection = [this.selectedGroup?.notificationGroupId];
 

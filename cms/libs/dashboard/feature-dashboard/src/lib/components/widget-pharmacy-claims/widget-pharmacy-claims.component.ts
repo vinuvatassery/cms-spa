@@ -20,7 +20,6 @@ import {
 @Component({
   selector: 'dashboard-widget-pharmacy-claims',
   templateUrl: './widget-pharmacy-claims.component.html',
-  styleUrls: ['./widget-pharmacy-claims.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WidgetPharmacyClaimsComponent implements OnInit {

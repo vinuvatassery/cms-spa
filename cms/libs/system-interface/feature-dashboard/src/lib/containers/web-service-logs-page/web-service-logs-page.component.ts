@@ -7,8 +7,7 @@ import { SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-system-interface-web-service-logs-page',
-  templateUrl: './web-service-logs-page.component.html',
-  styleUrls: ['./web-service-logs-page.component.scss'],
+  templateUrl: './web-service-logs-page.component.html'
 })
 
 
@@ -37,13 +36,9 @@ export class WebServiceLogsPageComponent implements OnInit {
       take: this.pageSizes[0]?.value,
       sort: this.sort
     };
-    this.loadActivityEventLog();
     this.lovFacade.getInterfaceWebLogLovs();
   }
 
-  loadActivityEventLog() {
-    this.systemInterfaceDashboardFacade.getEventLogLists();
-  }
 
   loadWebLogList(data: any) {
     this.interfaceTypeCode = data;

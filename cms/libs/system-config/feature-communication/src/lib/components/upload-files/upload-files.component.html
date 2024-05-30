@@ -25,7 +25,8 @@
     #upload
     [saveUrl]="fileUploadUrl"    
     [autoUpload]="false"
-    [concurrent]="false"    
+    [concurrent]="true"    
+    [withCredentials] = "false"
     (select)="select($event)"
     (complete)="complete($event)"
     (error)="onError($event)"

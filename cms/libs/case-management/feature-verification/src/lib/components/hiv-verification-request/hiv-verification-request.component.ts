@@ -349,19 +349,17 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
 
   loadHivVerificationEmail() {
     this.verificationFacade.showLoader();
-    this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
+    this.communicationFacade.loadTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail,  CommunicationEventTypeCode.HIVVerificationEmail ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {
-            if (data) {
               for (let template of data) {
                 this.emailSubject = template.description;
                 this.notificationTemplateId = template.documentTemplateId;
               }
-            }
-            this.loadEmailAttachment(data[0]?.documentTemplateId);
-            this.cdr.detectChanges();
-            this.verificationFacade.hideLoader();
+              this.loadEmailAttachment(data[0]?.documentTemplateId);
+              this.cdr.detectChanges();
+              this.verificationFacade.hideLoader();
           }
         },
         error: (err: any) => {

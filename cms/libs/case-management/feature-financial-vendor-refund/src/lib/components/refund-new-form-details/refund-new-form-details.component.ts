@@ -224,7 +224,6 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
           this.sortPrescriptions(
             this.selectedVendorRefundsList[index].prescriptionFillItems
           );
-        return;
       }
       this.rxRefundInfoFilter.forEach((element, ind) => {
         let rowNum = 0;
@@ -1056,7 +1055,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       } else {
         dataItem.daySpyRfdGtDaySpy = false;
         if (!isNaN(refundRatio) && isFinite(refundRatio) && refundRatio > 0) {
-          inValid = !(rxRatio >= refundRatio);
+          inValid = (rxRatio >= refundRatio);
           dataItem.daySupplyRefundedRatioValid = inValid;
         } else {
           dataItem.daySupplyRefundedRatioValid = false;
@@ -1147,13 +1146,11 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
 
         if (!x.daySupplyRefunded) {
           x.daySupplyRefundedValid = false;
-          return;
         } else {
           x.daySupplyRefundedValid = true;
         }
         if (!x.refundedAmount) {
           x.refundedAmountValid = false;
-          return;
         } else {
           x.refundedAmountValid = true;
         }
@@ -1165,10 +1162,9 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       []
     );
 
-    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
+    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> !x.qtyRefundedValid|| !x.daySupplyRefundedValid || !x.refundedAmountValid)
     if ((this.refundRXForm.invalid) || InValidSelectedRefundPharmacyClaimInput.length >0) {
       this.scrollToValidationError();
-      return;
     } else {
 
       let selectedpharmacyClaimsDto = selectedpharmacyClaims.map(
@@ -1213,7 +1209,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
         pharmacyRefundedItems: selectedpharmacyClaimsDto,
         vendorAddressId: this.vendorAddressId,
       };
-      if (this.isEdit == false) {
+      if (!this.isEdit) {
         this.financialVendorRefundFacade.showLoader();
         this.financialVendorRefundFacade
           .addNewRefundRx(refundRxData)

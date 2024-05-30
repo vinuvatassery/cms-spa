@@ -276,7 +276,6 @@ export class VendorRefundInsurancePremiumListComponent
     this.filterData = filter;
     if(this.selectedInsuranceClaims.length >0){
     this.openResetDialog(this.filterResetConfirmationDialogTemplate);
-    return;
     }else{
       this.state.filter =filter
     this.loadRefundClaimsListGrid();

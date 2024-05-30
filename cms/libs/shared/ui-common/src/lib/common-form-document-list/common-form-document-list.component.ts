@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges,Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { FormsAndDocumentFacade, TemplateManagementFacade } from '@cms/system-config/domain';
+import { FormsAndDocumentFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DropAction, DropPosition, TreeItemDropEvent, TreeItemLookup } from '@progress/kendo-angular-treeview';
 import { ActiveInactiveFlag } from '../enums/active-inactive-flag.enum';
-import { StatusFlag } from '../enums/status-flag.enum';
 const isOfType = (fileName: string, ext: string) =>
   new RegExp(`.${ext}\$`).test(fileName);
 const isFile = (name: string) => name.split('.').length > 1;
@@ -13,7 +12,7 @@ const isFile = (name: string) => name.split('.').length > 1;
   selector: 'system-config-common-form-document-list',
   templateUrl: './common-form-document-list.component.html',
 })
-export class CommonFormDocumentListComponent implements OnInit, OnChanges {
+export class CommonFormDocumentListComponent implements  OnChanges {
 
   /** Public properties **/
   isOpenAttachment = false;
@@ -24,6 +23,7 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   @Input() isPopUp:any;
   @Input() filter =""
   @Output() newVersionFileUploadOpenEvent = new EventEmitter()
+  @Input() isShowInActiveChecked = false;
   selectedfolder: string = "";
   isShowLoader: boolean = true;
   @ViewChild('renameTemplate', { read: TemplateRef })
@@ -55,6 +55,8 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   activeflag:any;
   isdeactivateOpen = false;
   reactivateOpen=false;
+  filterValue="";
+  activeFlag = false;
   public constructor(
     private readonly formsAndDocumentFacade: FormsAndDocumentFacade,
     private readonly loaderService: LoaderService,
@@ -65,17 +67,22 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['filter']){
-    if (!changes['filter'].firstChange) {
-      if(changes['filter'].currentValue == 'cust'){
-        this.isDragDropEnabled = true
-      }else{
-        this.isDragDropEnabled = false
-      }
-    } 
+    if (!changes['filter'].firstChange) { 
+        this.filterValue = changes['filter'].currentValue
+    }
   }
+    if(changes['isShowInActiveChecked']){
+    if (!changes['isShowInActiveChecked'].firstChange) {  
+        this.activeFlag = changes['isShowInActiveChecked'].currentValue
+    }
   }
-  ngOnInit(): void {
+    if(this.filterValue == 'cust' && !this.activeFlag){
+          this.isDragDropEnabled = true;
+    }else{
+      this.isDragDropEnabled = false;
+    }
   }
+
   public moreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -174,91 +181,7 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
       },
     },
   ];
-  public data: any[] = [
-    {
-      id: 2,
-      text: 'Kendo UI Project',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 3,
-          text: 'about.html',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 4,
-          text: 'index.html',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 5,
-          text: 'logo.png',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-    {
-      id: 6,
-      text: 'New Web Site',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 7,
-          text: 'mockup.jpg',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 8,
-          text: 'Research.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-    {
-      id: 9,
-      text: 'Reports',
-      isFolder: true,
-      lastModificationTime: new Date('2019-01-15'),
-      fileCount: 3,
-      items: [
-        {
-          id: 10,
-          text: 'February.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 11,
-          text: 'March.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-        {
-          id: 12,
-          text: 'April.pdf',
-          isFolder: false,
-          lastModificationTime: new Date('2019-01-15'),
-          fileSize: 23,
-        },
-      ],
-    },
-  ];
+
 
   public iconClass({ text }: any): any {
     return {
@@ -396,7 +319,6 @@ export class CommonFormDocumentListComponent implements OnInit, OnChanges {
        if(!this.isDragDropEnabled){
        event.preventDefault();
        }
-        return
     }
   /** Internal event methods **/
   onUploadFileVersionOpenClicked(data:any) {

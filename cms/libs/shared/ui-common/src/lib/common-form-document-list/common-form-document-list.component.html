@@ -35,7 +35,7 @@
                                     </span>
                                     <label *ngIf="dataItem.isFolder===false">{{dataItem.text}}
                                     <label class="file_label"> <span class="data_mb">{{dataItem.fileSize| number: '1.4-4'}} MB</span> 
-                                          <span class="fileversion">V{{dataItem.templateVersion}}</span>
+                                          <span class="fileversion">v{{dataItem.templateVersion}}</span>
                                            <span class="file_status" [ngClass]="dataItem.activeFlag=== 'Y' ? 'active_file' : 'inactive_file' ">{{getFlagValue(dataItem.activeFlag)}}</span>
                                           </label></label>
                                     <label class="folder_label" *ngIf="dataItem.isFolder===true">{{dataItem.text}} <span *ngIf="dataItem.isFolder===true" class="filecount">{{dataItem.fileCount}} Files</span> 
@@ -71,7 +71,7 @@
                                                 </button>
                                           </div>
                                           <ng-template #reactiveButton>
-                                                <div  *ngIf="datalink.text !== 'Deactivate'">
+                                                <div  *ngIf="datalink.text !== 'Deactivate'  && datalink.text !== 'Rename' && datalink.text !== 'New Version'">
                                                       <button kendoButton look="flat" 
                                                       [attr.aria-label]="datalink.text"
                                                             [class]="datalink.buttonType"
@@ -105,7 +105,7 @@
                                           </button>
                                     </div>
                                     <ng-template #reactiveButton>
-                                          <div  *ngIf="datalink.text !== 'Deactivate'">
+                                          <div  *ngIf="datalink.text !== 'Deactivate' && datalink.text !== 'Rename' && datalink.text !== 'New Version'">
                                                 <button kendoButton look="flat" 
                                                 [attr.aria-label]="datalink.text"
                                                       [class]="datalink.buttonType"
@@ -133,7 +133,7 @@
                   let-text="text">
                   <span class="k-drag-status k-font-icon k-icon"
                         [ngClass]="getDragStatus(action, destinationItem, sourceItem)"></span>
-                  <span>{{ text }}</span>
+                  <span>{{ sourceItem?.item?.dataItem?.text }}</span>
             </ng-template>
       </kendo-treeview>
 </div>

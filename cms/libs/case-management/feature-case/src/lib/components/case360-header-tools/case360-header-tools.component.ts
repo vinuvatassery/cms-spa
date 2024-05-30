@@ -99,12 +99,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.LetterTypeCode;
         this.notificationGroup = CommunicationEventTypeCode.LETTER;
-        this.informationalText = "Select an existing template or draft a custom letter."
-        this.templateHeader = 'Send New Letter';
-        this.saveForLaterHeadterText = "Letter Draft Saved";
-        this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the client's profile";
-        this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
         this.notificationDraftCheck(this.clientId,this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -123,12 +117,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
         this.currentCommunicationTypeCode = CommunicationEventTypeCode.EmailTypeCode;
         this.notificationGroup = CommunicationEventTypeCode.EMAIL;
-        this.informationalText = "Select an existing template or draft a custom email."
-        this.templateHeader = 'Send New Email';
-        this.saveForLaterHeadterText = "Email Draft Saved";
-        this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the client's profile";
-        this.confirmPopupHeader = 'Send Email';
-        this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
         this.notificationDraftCheck(this.clientId,this.templateLoadType , this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -220,26 +208,11 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
           if (this.paperlessFlag === StatusFlag.Yes) {
             this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
             this.emailCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
-            this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
-            this.templateHeader = 'Send Disenrollment Email';
-            this.emailSubject = "CAREAssist Disenrollment Notice";
-            this.confirmPopupHeader = 'Send Disenrollment email to print?';
-            this.saveForLaterHeadterText = "Send Disenrollment Email Later?";
-            this.saveForLaterModelText="You must send the Disenrollment Email within 2 Days";
-            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
-
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.emailCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
           }
           else {
             this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
             this.letterCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
-            this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
-            this.templateHeader = 'Send Disenrollment Letter';
-            this.emailSubject = '';
-            this.confirmPopupHeader = 'Send Disenrollment letter to print?';
-            this.saveForLaterHeadterText = "Send Disenrollment Letter Later?";
-            this.saveForLaterModelText="You must send the  Disenrollment Letter within 2 Days";
-            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
           }
           this.ref.detectChanges();
@@ -250,14 +223,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.notificationGroup = CommunicationEventTypeCode.EMAIL;
             this.emailCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeEmail;
             this.currentCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeEmail;
-            this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click "+'"Send Email"'+" once the email is complete."
-            this.templateHeader = 'Send Restricted Email';
-            this.emailSubject = "CAREAssist Restricted Notice";
-            this.confirmPopupHeader = 'Send Restricted email to print?';
-            this.saveForLaterHeadterText = "Send Restricted Email Later?";
-            this.saveForLaterModelText="To pick up where you left off, click New Emai from the client's profile";
-            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
-
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.emailCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendNewEmailDialog);
           }
           else {
@@ -265,13 +230,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
             this.notificationGroup = CommunicationEventTypeCode.LETTER;
             this.letterCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeLetter;
             this.currentCommunicationTypeCode = CommunicationEventTypeCode.RestrictedNoticeLetter;
-            this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click "+'"Send to Print"'+" once the letter is complete."
-            this.templateHeader = 'Send Restricted Letter';
-            this.emailSubject = '';
-            this.confirmPopupHeader = 'Send Restricted letter to print?';
-            this.saveForLaterHeadterText = "Send Restricted Letter Later?";
-            this.saveForLaterModelText="To pick up where you left off, click New Letter from the client's profile";
-            this.confirmationModelText="This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
             this.notificationDraftCheck(this.clientId, this.templateLoadType,this.letterCommunicationTypeCode, this.notificationDraftEmailDialog, this.sendLetterDialog);
           }
           this.ref.detectChanges();

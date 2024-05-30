@@ -141,9 +141,6 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
     this.pharmacyPurchaseProfileSubscription = this.clientclaimsData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.clientClaimsListDataSubject.next(this.gridDataResult);
-      if(this.gridDataResult?.data){
-        
-      }
     });
   }
 

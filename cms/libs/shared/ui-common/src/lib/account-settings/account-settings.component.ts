@@ -462,16 +462,15 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
 
   }
-  checkAddressControls()
-  {
-   for(let i = 0; i< this.addressControlsList.length; i++)
-    {
-      const control = this.addressControlsList[i]
-      if(this.userForm.controls[control].value)
+  checkAddressControls() {
+    for (const control of this.addressControlsList) {
+      if (this.userForm.controls[control].value) {
         return true;
+      }
     }
     return false;
   }
+  
   setPhoneValidations()
   {
     this.addPhoneForm.controls.forEach((element, index) => {
@@ -542,14 +541,15 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
           }
       }
 
-    if((deskPhoneCount > 0 && this.userInfo.userTypeCode === this.userType.Internal) && value === this.userDeviceType.DeskPhone)
-      {
+      if (
+        (value === this.userDeviceType.DeskPhone) && 
+        (
+          (deskPhoneCount > 0 && this.userInfo.userTypeCode === this.userType.Internal) || 
+          (deskPhoneCount > 1 && this.userInfo.userTypeCode === this.userType.External)
+        )
+      ) {
         form.controls['phoneType'].setErrors({ incorrect: true });
-      }
-    else if((deskPhoneCount > 1 && this.userInfo.userTypeCode === this.userType.External) && value === this.userDeviceType.DeskPhone)
-      {
-        form.controls['phoneType'].setErrors({ incorrect: true });
-      }
+      }      
   }
 
   isPhoneTypeControlValid(index:any)
