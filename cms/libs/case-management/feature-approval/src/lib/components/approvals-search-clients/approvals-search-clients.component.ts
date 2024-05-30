@@ -10,13 +10,15 @@ import { Router } from '@angular/router';
 import { ImportedClaimFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Subscription } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 @Component({
   selector: 'productivity-tools-approvals-search-clients',
   templateUrl: './approvals-search-clients.component.html',
 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalsSearchClientsComponent {
+export class ApprovalsSearchClientsComponent implements OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() closeSearchClientsDialogClickedEvent = new EventEmitter<any>();
   @Output() clientValueChangeEvent = new EventEmitter<any>();
@@ -26,7 +28,7 @@ export class ApprovalsSearchClientsComponent {
   clientSearchResult$ = this.importedClaimFacade.clients$;
   selectedClient: any;
   isButtonDisable = true;
-
+  clientPolicyUpdateSubscription! : Subscription;
   constructor(
     private readonly importedClaimFacade: ImportedClaimFacade,
     private readonly loggingService : LoggingService,
@@ -93,7 +95,7 @@ export class ApprovalsSearchClientsComponent {
 
   subscribeToPolicyUpdate(){
     this.showLoader();
-    this.importedClaimFacade.clientPolicyUpdate$.subscribe({
+    this.clientPolicyUpdateSubscription = this.importedClaimFacade.clientPolicyUpdate$.subscribe({
       next:(response: any) => {
         this.hideLoader();
         if(response.status){
@@ -114,4 +116,9 @@ export class ApprovalsSearchClientsComponent {
   onCancelClick(){
     this.closeSearchCase();
   }
+
+  ngOnDestroy(): void {
+    this.clientPolicyUpdateSubscription?.unsubscribe();
+  }
+
 }
