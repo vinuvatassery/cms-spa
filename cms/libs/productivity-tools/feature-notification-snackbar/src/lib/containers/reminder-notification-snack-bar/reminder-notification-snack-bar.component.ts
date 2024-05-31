@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { NotificationRef, NotificationService } from '@progress/kendo-angular-notification';
 
 /** Providers **/
-import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider,  ReminderSnackBarNotificationType } from '@cms/shared/util-core';
 import { SnackBar } from '@cms/shared/ui-common';
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
@@ -126,10 +126,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     this.todoFacade.deleteReminderSnackbar$.subscribe((alertId: any) => {     
       if(alertId)
         {
-          this.notificationFacade.loadReminderSnackbars()
-          // const deleteReference = this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === alertId) 
-          // deleteReference.hide()
-          // this.updateSnackBarCount(alertId,deleteReference)
+          this.notificationFacade.loadReminderSnackbars()         
         }
     })
    
