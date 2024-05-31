@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { WidgetFacade } from '@cms/dashboard/domain';
 import { NotificationDataFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subject, catchError, forkJoin, of, takeUntil } from 'rxjs';
+import { Subject, catchError, forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'dashboard-widget-today-at-a-glance',

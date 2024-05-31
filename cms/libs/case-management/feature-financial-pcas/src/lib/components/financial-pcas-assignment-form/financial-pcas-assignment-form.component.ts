@@ -229,10 +229,17 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     else
     {
       this.remainingAmountValidate = false
-      this.pcaAssignmentForm?.controls["amount"].removeValidators
+     
+      this.pcaAssignmentForm?.controls["amount"].clearValidators()
     }
+
+    this.pcasSubmitEmit()
+
+  }
+pcasSubmitEmit()
+{
    
-    if(this.pcaAssignmentForm?.controls["unlimited"].value === false && this.pcaAssignmentForm?.controls["amount"].value < 1)
+  if(this.pcaAssignmentForm?.controls["unlimited"].value === false && this.pcaAssignmentForm?.controls["amount"].value < 1)
     {
       this.pcaAssignmentForm?.controls["amount"].setValue('')
     }
@@ -263,8 +270,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
       }
       this.addPcaDataEvent.emit(pcaAssignmentData)
     }
-  }
-
+}
 
   dateValidate()
   {
@@ -279,8 +285,8 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
         else
         {
           this.openDateError = false
-          this.pcaAssignmentForm?.controls["openDate"].removeValidators
-          this.pcaAssignmentForm?.controls["closeDate"].removeValidators
+          this.pcaAssignmentForm?.controls["openDate"].clearValidators()
+          this.pcaAssignmentForm?.controls["closeDate"].clearValidators()
         }
     }
     if( this.ispcaOpenDateDependency ||

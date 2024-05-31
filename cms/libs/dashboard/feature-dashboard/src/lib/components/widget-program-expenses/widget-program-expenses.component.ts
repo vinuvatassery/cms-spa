@@ -95,7 +95,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
 
   public get isIndet() {
     return (
-      this.selectedType?.length !== 0 && this.selectedType?.length !== this.selectedType?.length
+      this.selectedType?.length !== 0 
     );
   }
 

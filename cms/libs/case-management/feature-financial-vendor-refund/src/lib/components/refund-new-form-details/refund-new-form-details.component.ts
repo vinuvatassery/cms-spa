@@ -210,6 +210,17 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     this.rxfilterData = filter;
   }
 
+  validaterxRefundInfoFilter(index : any)
+  {
+    if (this.rxRefundInfoFilter?.length == 0) {
+      this.selectedVendorRefundsList[index].prescriptionFillItems =
+        this.allSelectedVendorRefundsList[index].prescriptionFillItems;
+      this.selectedVendorRefundsList[index].prescriptionFillItems =
+        this.sortPrescriptions(
+          this.selectedVendorRefundsList[index].prescriptionFillItems
+        );
+    }
+  }
   rxRefundInfoDataStateChange(stateData: any, index: any): void {
     this.rxRefundInfoSort = stateData.sort;
     this.rxRefundInfoSortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -217,14 +228,9 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     this.rxstate = stateData;
     this.rxRefundInfoFilter = stateData?.filter?.filters;
     if (this.rxRefundInfoFilter) {
-      if (this.rxRefundInfoFilter?.length == 0) {
-        this.selectedVendorRefundsList[index].prescriptionFillItems =
-          this.allSelectedVendorRefundsList[index].prescriptionFillItems;
-        this.selectedVendorRefundsList[index].prescriptionFillItems =
-          this.sortPrescriptions(
-            this.selectedVendorRefundsList[index].prescriptionFillItems
-          );
-      }
+
+     this.validaterxRefundInfoFilter(index)
+
       this.rxRefundInfoFilter.forEach((element, ind) => {
         let rowNum = 0;
         element.filters.forEach((fil: any) => {
@@ -532,29 +538,34 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     this.vendorAddressId = null;
     this.selectedProvider = null;
   }
+
+  validatePremiumandTpa()
+  {
+    if (
+      this.selectedRefundType === ServiceTypeCode.insurancePremium &&
+      this.insClaims.selectedInsuranceClaims &&
+      this.insClaims.selectedInsuranceClaims.length > 0
+    ) {
+      this.refundForm.controls['insVendor'].disable();
+      this.insurancePremiumPaymentReqIds = [
+        ...this.insClaims.selectedInsuranceClaims,
+      ];
+    }
+
+    if (this.selectedRefundType === ServiceTypeCode.tpa) {
+      this.refundForm.controls['tpaVendor'].disable();
+      const param = {
+        paymentRequestIds: this.selectedTpaRequests,
+      };
+      this.financialVendorRefundFacade.getTpaRefundInformation(param);
+    }
+  }
   confirmationClicked() {
     this.isconfirmclicked = true;
     if (this.claimsCount != 0) {
       this.inputConfirmationClicked = true;
       this.disableFeildsOnConfirmSelection = true;
-      if (
-        this.selectedRefundType === ServiceTypeCode.insurancePremium &&
-        this.insClaims.selectedInsuranceClaims &&
-        this.insClaims.selectedInsuranceClaims.length > 0
-      ) {
-        this.refundForm.controls['insVendor'].disable();
-        this.insurancePremiumPaymentReqIds = [
-          ...this.insClaims.selectedInsuranceClaims,
-        ];
-      }
-
-      if (this.selectedRefundType === ServiceTypeCode.tpa) {
-        this.refundForm.controls['tpaVendor'].disable();
-        const param = {
-          paymentRequestIds: this.selectedTpaRequests,
-        };
-        this.financialVendorRefundFacade.getTpaRefundInformation(param);
-      }
+    this.validatePremiumandTpa()
       if (
         this.selectedRefundType === ServiceTypeCode.pharmacy ||
         this.selectedRefundType === 'RX' ||
@@ -630,6 +641,40 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
+  processtpaRefundGridLists(response : any,res : any)
+  {
+    if (this.tpaRefundGridLists && this.tpaRefundGridLists.length > 0) {
+      const tpaList = [...this.tpaRefundGridLists];
+      tpaList.forEach((element, ind) => {
+        let index = response.findIndex(
+          (x : any) => x.paymentRequestId == element.paymentRequestId
+        );
+        if (index <= 0) this.tpaRefundGridLists.splice(index);
+      });
+      this.tpaRefundGridLists = this.tpaRefundGridLists.concat(response);
+    } else {
+      this.tpaRefundGridLists = res.data;
+    }
+  }
+
+  updatetpaRefundGridLists()
+  {
+    this.tpaRefundGridLists.forEach((x) => {
+      x.serviceStartDate = x.serviceStartDate
+        ? new Date(x.serviceStartDate)
+        : null;
+      x.serviceEndDate = x.serviceEndDate
+        ? new Date(x.serviceEndDate)
+        : null;
+      x.reconciledDate = x.reconciledDate
+        ? new Date(x.reconciledDate)
+        : null;
+      x.totalAmount = x.tpaInvoice.reduce(
+        (accumulator: number, obj: any) => accumulator + obj.serviceCost,
+        0
+      );
+    });
+  }
   getTpaRefundInformation(data: any) {
     this.tpaRefundInformation$
       .pipe(takeUntil(this.ngUnsubscribe))
@@ -637,34 +682,13 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
         let data: any[] = [];
         let response: any[] = [];
         response = res.data;
-        if (this.tpaRefundGridLists && this.tpaRefundGridLists.length > 0) {
-          const tpaList = [...this.tpaRefundGridLists];
-          tpaList.forEach((element, ind) => {
-            let index = response.findIndex(
-              (x) => x.paymentRequestId == element.paymentRequestId
-            );
-            if (index <= 0) this.tpaRefundGridLists.splice(index);
-          });
-          this.tpaRefundGridLists = this.tpaRefundGridLists.concat(response);
-        } else {
-          this.tpaRefundGridLists = res.data;
-        }
+       
+        this.processtpaRefundGridLists(response, res)
+       
         this.tpaRefundGridLists = [...this.tpaRefundGridLists];
-        this.tpaRefundGridLists.forEach((x) => {
-          x.serviceStartDate = x.serviceStartDate
-            ? new Date(x.serviceStartDate)
-            : null;
-          x.serviceEndDate = x.serviceEndDate
-            ? new Date(x.serviceEndDate)
-            : null;
-          x.reconciledDate = x.reconciledDate
-            ? new Date(x.reconciledDate)
-            : null;
-          x.totalAmount = x.tpaInvoice.reduce(
-            (accumulator: number, obj: any) => accumulator + obj.serviceCost,
-            0
-          );
-        });
+
+        this.updatetpaRefundGridLists()
+  
         this.claimsCount = this.tpaRefundGridLists.length;
       });
     if (this.isEdit) {
@@ -1025,11 +1049,13 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     this.isConfirmationClicked = true;
   }
 
+
   ngDirtyInValid(dataItem: any, control: any, tblIndex: any, rowIndex: any) {
     let isTouched = document
       .getElementById(`${control}${tblIndex}-${rowIndex}`)
       ?.classList.contains('ng-touched');
     let inValid = false;
+    //here
     if (control === 'qtyRefunded') {
       inValid =
         isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0)

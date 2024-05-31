@@ -5,13 +5,14 @@ import {
   EventEmitter,
   Input,
   ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ImportedClaimFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subscription } from 'rxjs';
-import { OnDestroy } from '@angular/core';
+
 @Component({
   selector: 'productivity-tools-approvals-search-clients',
   templateUrl: './approvals-search-clients.component.html',

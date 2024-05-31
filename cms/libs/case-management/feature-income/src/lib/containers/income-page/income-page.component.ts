@@ -236,12 +236,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private save() {
-    this.removeValidations();
-    this.hasClientDependentsMinorAdditionalIncomeFlag = false
-    this.hasClientDependentsMinorEmployedFlag = false
 
-    let hasAdditionalIncometype = false;
+  processWorkValidation(hasAdditionalIncometype : any)
+  {
     if (this.incomeData.clientIncomes == null) {
       hasAdditionalIncometype = false;
     } else {
@@ -251,7 +248,10 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
     }
-    let hasMinorIncometypes = false;
+    return hasAdditionalIncometype
+  }
+
+  processMinorIncome(hasMinorIncometypes :  any){
     if (this.incomeData.clientIncomes == null) {
       hasMinorIncometypes = false;
     } else {
@@ -261,6 +261,21 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
     }
+    return hasMinorIncometypes
+  }
+
+  private save() {
+    this.removeValidations();
+    this.hasClientDependentsMinorAdditionalIncomeFlag = false
+    this.hasClientDependentsMinorEmployedFlag = false
+
+    let hasAdditionalIncometype = false;
+
+    hasAdditionalIncometype= this.processWorkValidation(hasAdditionalIncometype)
+  
+    let hasMinorIncometypes = false;
+    hasMinorIncometypes = this.processMinorIncome(hasMinorIncometypes)
+
     if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes && !hasAdditionalIncometype) {
       this.hasClientDependentsMinorAdditionalIncomeFlag = true
     }
@@ -276,40 +291,30 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       cerFormValid = this.validateEmployerIncome()
     }
     if (this.noIncomeDetailsForm.valid && cerFormValid) {
-
       if (this.isCerForm) {
         this.noIncomeData.employersIncome = this.employerIncome;
         this.noIncomeData.employersIncome.forEach((cerIncome: any) => {
           cerIncome.incomeEndDate = this.intl.formatDate(cerIncome.incomeEndDate, this.dateFormat);
         });
       }
-      if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.No
-        && this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.No) {
-        let isValid = true;
-        this.submitIncomeDetailsForm();
-        if (this.noIncomeDetailsForm.valid && isValid && this.isProofOfSchoolDocumentUploaded) {
-          this.noIncomeData.isCERRequest = this.isCerForm;
-          this.loaderService.show();
-          return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
-            catchError((err: any) => {
-              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-              this.loaderService.hide();
-              return of(false);
-            })
-          )
-        }
-      }
-      else if (this.incomeData.clientIncomes != null && this.isProofOfSchoolDocumentUploaded) {
-        this.loaderService.show();
-        this.incomeFacade.incomeValidSubject.next(true);
-        this.noIncomeData.clientDependentsMinorEmployedFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value;
-        this.noIncomeData.clientDependentsMinorAdditionalIncomeFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value;
-        this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
-        this.noIncomeData.clientId = this.clientId
-        this.noIncomeData.noIncomeClientSignedDate = null;
-        this.noIncomeData.noIncomeSignatureNotedDate = null;
-        this.noIncomeData.noIncomeNote = null;
+        this.processCerValidation()
+      
+    }
+    this.cdr.detectChanges();
+    return of(false)
+  }
+
+
+  processCerValidation()
+  {
+ 
+    if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.No
+      && this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.No) {
+      let isValid = true;
+      this.submitIncomeDetailsForm();
+      if (this.noIncomeDetailsForm.valid && isValid && this.isProofOfSchoolDocumentUploaded) {
         this.noIncomeData.isCERRequest = this.isCerForm;
+        this.loaderService.show();
         return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
           catchError((err: any) => {
             this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -318,15 +323,32 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
           })
         )
       }
-      else if (!this.incomeData.clientIncomes) {
-        this.incomeFacade.incomeValidSubject.next(false);
-        return of(false);
-      }
     }
-    this.cdr.detectChanges();
-    return of(false)
+    else if (this.incomeData.clientIncomes != null && this.isProofOfSchoolDocumentUploaded) {
+      this.loaderService.show();
+      this.incomeFacade.incomeValidSubject.next(true);
+      this.noIncomeData.clientDependentsMinorEmployedFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value;
+      this.noIncomeData.clientDependentsMinorAdditionalIncomeFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value;
+      this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      this.noIncomeData.clientId = this.clientId
+      this.noIncomeData.noIncomeClientSignedDate = null;
+      this.noIncomeData.noIncomeSignatureNotedDate = null;
+      this.noIncomeData.noIncomeNote = null;
+      this.noIncomeData.isCERRequest = this.isCerForm;
+      return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
+        catchError((err: any) => {
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loaderService.hide();
+          return of(false);
+        })
+      )
+    }
+    else if (!this.incomeData.clientIncomes) {
+      this.incomeFacade.incomeValidSubject.next(false);
+      return of(false);
+    }
+    return of(false);
   }
-
 
   /** Internal event methods **/
   onIncomeNoteValueChange(event: any): void {
