@@ -4,12 +4,12 @@ import {
   DrugsFacade,
   FinancialVendorFacade,
   GeneralApprovalApproveDeny,
-  InsurancePlan,
+  
   InsurancePlanFacade,
   PendingApprovalGeneralFacade,
   PendingApprovalGeneralTypeCode,
 } from '@cms/case-management/domain';
-import { Observable, Subscription } from 'rxjs';
+import {  Subscription } from 'rxjs';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({

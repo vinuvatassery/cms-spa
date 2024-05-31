@@ -135,11 +135,8 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
     }
   }
   
-  getLoggedInCaseWorker(){
-    let loggedInCaseOwner= this.caseOwnerList.filter((x:any)=>x.adUserId==this.userData.adUserId);
-    if(loggedInCaseOwner.length>0){
-      this.parentForm.controls['caseOwnerId'].setValue(loggedInCaseOwner[0].loginUserId);
-    }
+  getLoggedInCaseWorker(){   
+      this.parentForm.controls['caseOwnerId'].setValue(this.userData[0].loginUserId);    
   }
   getCaseOwners(){
     this.caseOwners.subscribe((element:any)=>{
