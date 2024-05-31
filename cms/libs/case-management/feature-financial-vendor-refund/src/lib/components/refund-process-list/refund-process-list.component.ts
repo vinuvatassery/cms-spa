@@ -473,10 +473,8 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   onModalBatchRefundsButtonClicked(event: any) {
     this.handleBatchRefunds();
 
-    this.state?.skip ?? 0;
-    this.state?.take ?? 0;
-    this.sortValue;
-    this.sortType;
+    this.state.skip= this.state?.skip ?? 0;
+    this.state.take =this.state?.take ?? 0;  
 
     const gridDataRefinerValue: any = {
       skipCount: this.state?.skip ?? 0,

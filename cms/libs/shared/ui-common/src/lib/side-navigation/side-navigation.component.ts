@@ -91,7 +91,10 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
 
   onMenuClick(menu: NavigationMenu, $event: any) {
     if (menu.subMenus.length > 0 && !menu.parentId) {
-      $event ? $event.stopPropagation() : null;
+      if($event)
+        {
+         $event.stopPropagation();
+        }
     } else {
       this.clearActiveMenu();
       if (menu?.url) {

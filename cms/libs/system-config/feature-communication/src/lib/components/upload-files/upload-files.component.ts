@@ -124,7 +124,7 @@ public select(e: SelectEvent): void {
 
 public complete(e: any){
   
-  this.uploadControl
+ 
 
   if(this.fileUploadError === false)
     {

@@ -605,10 +605,9 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   ): void {
     if (field === 'paymentStatusDesc') {
       this.paymentMethodFilter = value;
+      this.paymentStatusFilter = value;
     } else if (field === 'paymentTypeCode') {
       this.paymentTypeFilter = value;
-    } else if (field === 'paymentStatusDesc') {
-      this.paymentStatusFilter = value;
     }
     filterService.filter({
       filters: [

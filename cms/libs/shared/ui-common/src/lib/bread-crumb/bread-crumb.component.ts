@@ -57,7 +57,7 @@ export class BreadCrumbComponent {
             const returnUrl = selectedMenu ? this.findFirstMenuItemUrl(selectedMenu.subMenus) : undefined;
             this.navigateToUrl(returnUrl);
         } else {
-            this.navigateToUrl(undefined);
+          this.router.navigate(["/dashboard"], { queryParamsHandling: "preserve" });
         }
     });
 }
