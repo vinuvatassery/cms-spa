@@ -86,42 +86,43 @@ export class ReminderDetailComponent implements OnInit {
     if(this.isEdit ||  this.isDelete){
       this.onGetTodoItem.emit(this.alertId);
     }
-
-   if(!this.isFromNotificationPanel && !this.isFromReminderSnacks){
-    if(this.router.url.includes('vendors')){
-      const vid = this.route.snapshot.queryParamMap.get('v_id')
-      const tabcode = this.route.snapshot.queryParamMap.get('tab_code')
-      this.financialVendorFacade.vendorProfileForReminderPanel$.subscribe(vp =>{  
-        this.remainderFor.emit(vp?.vendorName)
-      })
-      this.entityTypeCode='VENDOR'
-      if(vid && tabcode){
-        this.entityId = vid
-      this.financialVendorFacade.getVendorProfileForReminderPanel(vid,tabcode)
-      }
-    }
-    if(this.router.url.includes('case360')){
-      this.entityTypeCode='CLIENT'
-      const id = this.route.snapshot.queryParamMap.get('id')
-      if(id){
-      this.caseFacade.clientProfileHeader$.subscribe(cp =>{      
-        this.remainderFor.emit(cp?.clientFullName)
-      })
-      this.entityId = id
-    
-     this.caseFacade.loadClientProfileHeaderWithOutLoader(+id);
-    }
-  }
-}
+     this.setReminderFor()
      if(!this.entityTypeCode){
       this.isShowEntityTypeCode = true
       this.getReminderDetailsLov.emit()
      }
-
     this.tareaVariablesIntialization();
     this.buildForm();
   }
 
+  setReminderFor(){
+    if(!this.isFromNotificationPanel && !this.isFromReminderSnacks){
+      if(this.router.url.includes('vendors')){
+        const vid = this.route.snapshot.queryParamMap.get('v_id')
+        const tabcode = this.route.snapshot.queryParamMap.get('tab_code')
+        this.financialVendorFacade.vendorProfileForReminderPanel$.subscribe(vp =>{  
+          this.remainderFor.emit(vp?.vendorName)
+        })
+        this.entityTypeCode='VENDOR'
+        if(vid && tabcode){
+          this.entityId = vid
+        this.financialVendorFacade.getVendorProfileForReminderPanel(vid,tabcode)
+        }
+      }
+      if(this.router.url.includes('case360')){
+        this.entityTypeCode='CLIENT'
+        const id = this.route.snapshot.queryParamMap.get('id')
+        if(id){
+        this.caseFacade.clientProfileHeader$.subscribe(cp =>{      
+          this.remainderFor.emit(cp?.clientFullName)
+        })
+        this.entityId = id
+      
+       this.caseFacade.loadClientProfileHeaderWithOutLoader(+id);
+      }
+    }
+  }
+  }
   /** Private methods **/
   private tareaVariablesIntialization() {
     this.tareaReminderCharachtersCount = this.tareaReminderDescription
@@ -158,24 +159,36 @@ export class ReminderDetailComponent implements OnInit {
         time : repeatTime? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), repeatTime[0], repeatTime[1]) : null
       })
     }
-      if(this.isDelete && res){
-        this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
-        this.clientReminderForm.controls['time'].disable()
-        this.clientReminderForm.controls['description'].disable()
-        this.clientReminderForm.controls['addToOutlookCalender'].disable()
-        this.clientReminderForm.controls['dueDate'].disable()
-        this.isShowEntityTypeCode = false;
-      }
+     this.EnableOrDisableControlsBasedOnEditDelete(res)
+  })
+}
+  }
 
-     if(this.isEdit && res){
+  EnableOrDisableControlsBasedOnEditDelete(res:any){
+    if(this.isDelete && res){
       this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
-      this.entityTypeCode= res.entityTypeCode
-      this.entityId = res.entityId
-      this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
-      if(res.entityTypeCode){
-        this.clientReminderForm.controls['linkTo'].disable()
-      
-     if(res.entityTypeCode !=='CLIENT'){
+      this.clientReminderForm.controls['time'].disable()
+      this.clientReminderForm.controls['description'].disable()
+      this.clientReminderForm.controls['addToOutlookCalender'].disable()
+      this.clientReminderForm.controls['dueDate'].disable()
+      this.isShowEntityTypeCode = false;
+    }
+
+   if(this.isEdit && res){
+    this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
+    this.entityTypeCode= res.entityTypeCode
+    this.entityId = res.entityId
+    this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
+    if(res.entityTypeCode){
+      this.clientReminderForm.controls['linkTo'].disable()
+    this.setClientAndProviderValues(res)
+  }
+ }
+  }
+ 
+  setClientAndProviderValues(res:any){
+       
+    if(res.entityTypeCode !=='CLIENT'){
       this.clientReminderForm.controls['vendorId'].disable()    
 
       this.showVendorSearch = true;
@@ -219,12 +232,7 @@ export class ReminderDetailComponent implements OnInit {
         clientId : res.entityId
       })
      }
-    }
-   }
-  })
-}
   }
- 
   onCloseReminderClicked() 
   {
     this.isModalNewReminderCloseClicked.emit();

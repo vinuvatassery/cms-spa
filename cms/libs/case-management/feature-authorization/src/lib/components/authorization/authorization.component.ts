@@ -126,7 +126,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.addSaveSubscription();
     this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
-    this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
   }
 
@@ -152,8 +151,8 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
-    this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
   /** Private methods **/
   private loadUserContactInfo(clientId: any, clientCaseEligibilityId: any) {
@@ -270,27 +269,12 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     });
   }
 
-  private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
-      if (this.validate()) {
-        this.save().subscribe((response: any) => {
-          if (response) {
-            this.workflowFacade.saveForLaterCompleted(true)  
-            this.loaderService.hide();  
-          }
-        })
-      }
-      else {
-        this.workflowFacade.saveForLaterCompleted(true)  
-      }
-    });
-  }
-
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        this.validate()
+        if(this.validate()){
         this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
       }
     });
   }
@@ -603,12 +587,7 @@ loadPendingEsignRequestInfo(){
       next: (data: any) =>{
         if (data != null && data?.esignRequestId != null) {
           if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.Started|| data?.esignRequestStatusCode == EsignStatusCode.InProgress){
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
-            this.isSendEmailClicked=true;
-            this.getLoggedInUserProfile();
-            if(this.signedApplication === null || this.signedApplication === undefined){
-              this.loadAuthorization();
-              }
+            this.loadPendingEsignRequest(data);
           }
           else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
@@ -634,6 +613,15 @@ loadPendingEsignRequestInfo(){
     },
   });
 }
+
+  loadPendingEsignRequest(data: any) {
+    this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
+    this.isSendEmailClicked=true;
+    this.getLoggedInUserProfile();
+    if(this.signedApplication === null || this.signedApplication === undefined){
+      this.loadAuthorization();
+      }
+  }
 
 loadCompletedEsignRequestInfo(){
   this.loaderService.show();

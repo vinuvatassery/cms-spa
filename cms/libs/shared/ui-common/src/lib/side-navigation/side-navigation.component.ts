@@ -214,6 +214,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   /** Private Methods */
 
   private getMenuCount() {
+   
     this.getPcaAssignmentMenuCount();
     this.getPendingApprovalMenuCount();
     this.getDirectMessageCount();
@@ -276,12 +277,12 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
     this.navigationMenuFacade.todoItemCount$.subscribe({
       next: (todoCount) => {
         if (todoCount) {
-          this.toDoItemsCount = todoCount;
+          this.toDoItemsCount = todoCount;      
           this.setProductivityToolsCount();
         }
       }
-
     });
+    this.navigationMenuFacade.getTodoItemCount()
   }
   private subscribeToPendingApprovalCount() {
     this.navigationMenuFacade.pendingApprovalPaymentCount$.subscribe({

@@ -572,7 +572,7 @@ saveForLaterHeadterText!: string;
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message);
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.snackBarMessage);
             this.onCloseSendEmailClicked();
             if(this.entityId && this.entityType == FabEntityTypeCode.Client){
               this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);

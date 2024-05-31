@@ -125,7 +125,7 @@ export class NavigationMenuFacade {
     .subscribe(
       {
         next: (count: any) => {
-            this.pendingApprovalGeneralCountSubject.next(count);
+            this.todoItemCountSubject.next(count);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
