@@ -216,6 +216,11 @@ export class FinancialVendorFacade {
     });
   }
 
+  getVendorDetailData(vendorId: string, isActive: boolean = true) {
+    this.showLoader();
+    return this.financialVendorDataService.getVendorDetails(vendorId, isActive);
+  }
+
   getProviderPanel(paymentRequestId: string) {
     this.showLoader();
     this.financialVendorDataService.getProviderPanel(paymentRequestId).subscribe({
