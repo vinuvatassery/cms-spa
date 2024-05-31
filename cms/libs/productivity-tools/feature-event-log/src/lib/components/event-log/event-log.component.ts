@@ -18,11 +18,12 @@ import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DocumentFacade } from '@cms/shared/util-core';
+import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subscription } from 'rxjs';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'productivity-tools-event-log',
@@ -83,6 +84,7 @@ eventListLoader = false;
   events$Subscription = new Subscription();
   eventsdata$Subscription = new Subscription();
   navigationSubjectSubscription = new Subscription();
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   public eventLogFilterForm: FormGroup = new FormGroup({
     caseworkerfilterbyoperator: new FormControl('', []),
@@ -101,9 +103,12 @@ eventListLoader = false;
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private documentFacade: DocumentFacade
+    private documentFacade: DocumentFacade,
+    public readonly intl: IntlService,
+    private configurationProvider: ConfigurationProvider,
+
   ) {}
-  
+
   /** Lifecycle hooks **/
   ngOnInit() {
     this.loadEventsData();
@@ -122,7 +127,7 @@ eventListLoader = false;
         this.entityType = data.EntityTypeCode;
         this.clientCaseEligibilityId = data.ClientCaseEligibilityId;
         this.loadEvents();
-      }   
+      }
     });
   }
 
@@ -146,7 +151,7 @@ eventListLoader = false;
     this.eventLogFacade.loadEventLogs(paginationData,this.entityId);
   }
   onShowHideFilterEvent(){
-   
+
     if(this.isShowFilter === true){
       this.isShowFilter = false;
     } else {
@@ -241,15 +246,15 @@ eventListLoader = false;
     this.isEventFilterPopoverOpen = false;
     this.isFilterApplied = false;
     this.cd.detectChanges();
-    this.filterData = { logic: 'and', filters: [] };  
+    this.filterData = { logic: 'and', filters: [] };
     this.loadEventLogs();
- 
+
   }
 
   onEventLogFilterFilterClicked()
   {
     this.setFilteredText();
-    this.loadEventLogs(); 
+    this.loadEventLogs();
     this.isEventFilterPopoverOpen = false;
     this.isFilterApplied = true;
     this.cd.detectChanges();
@@ -386,17 +391,19 @@ eventListLoader = false;
         {
           field: field,
           operator: "gte",
-          value: this.eventLogFilterForm.controls["afterdatefilter"].value
+          value: this.intl.formatDate(this.eventLogFilterForm.controls["afterdatefilter"].value, this.dateFormat)
         }
       )
     }
     if(this.eventLogFilterForm.controls["beforedatefilter"].value != "" && this.eventLogFilterForm.controls["beforedatefilter"].value != null)
     {
+      let beforeDate = new Date(this.eventLogFilterForm.controls["beforedatefilter"].value);
+      beforeDate.setDate(beforeDate.getDate() + 1);
       filterArray.push(
         {
           field: field,
-          operator: "lte",
-          value: this.eventLogFilterForm.controls["beforedatefilter"].value
+          operator: "lt",
+          value: this.intl.formatDate(beforeDate, this.dateFormat)
         }
       )
     }
