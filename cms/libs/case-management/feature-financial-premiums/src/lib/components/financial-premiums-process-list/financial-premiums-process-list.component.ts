@@ -325,27 +325,36 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
           // Check if the item is in the second list.
           const isItemInSecondList = this.unCheckedProcessRequest.find((item2: any) => item2.paymentRequestId === item.paymentRequestId);
           // If the item is in the second list, mark it as selected true.
-          if (isItemInSecondList) {
-            item.selected = false;
-          } else {
-            item.selected = true;
-          }
+          this.markItemToTrueConditionally(isItemInSecondList, item);
         }
-        if(this.selectAll){
-          this.selectedSendReportList = {
-            'selectAll': this.selectAll, 'UnSelectedSendReports': this.unCheckedProcessRequest,
-            'SelectedSendReports': this.financialPremiumsProcessGridLists, 'batchId': null, 'currentSendReportsGridFilter': JSON.stringify(this.state?.filter?.filters ?? [])
-          }
-        }else{
-          this.selectedSendReportList = {
-            'selectAll': this.selectAll, 'UnSelectedSendReports': this.unCheckedProcessRequest,
-            'SelectedSendReports': this.checkedAndUncheckedRecordsFromSelectAll, 'batchId': null, 'currentSendReportsGridFilter': JSON.stringify(this.state?.filter?.filters ?? [])
-          }
-        }
+        this.prepareSelectedRecordsList();
       }
       this.onCloseRemovePremiums();
     }
   }
+
+  prepareSelectedRecordsList() {
+        if(this.selectAll){
+        this.selectedSendReportList = {
+          'selectAll': this.selectAll, 'UnSelectedSendReports': this.unCheckedProcessRequest,
+          'SelectedSendReports': this.financialPremiumsProcessGridLists, 'batchId': null, 'currentSendReportsGridFilter': JSON.stringify(this.state?.filter?.filters ?? [])
+        }
+      }else{
+        this.selectedSendReportList = {
+          'selectAll': this.selectAll, 'UnSelectedSendReports': this.unCheckedProcessRequest,
+          'SelectedSendReports': this.checkedAndUncheckedRecordsFromSelectAll, 'batchId': null, 'currentSendReportsGridFilter': JSON.stringify(this.state?.filter?.filters ?? [])
+        }
+      }
+  }
+
+  markItemToTrueConditionally(isItemInSecondList: any, item: any) {
+    if (isItemInSecondList) {
+      item.selected = false;
+    } else {
+      item.selected = true;
+    }
+  }
+
   onSendReportClicked() {
     if (this.isSendReportOpened) {
       if (this.unCheckedProcessRequest?.length > 0) {
