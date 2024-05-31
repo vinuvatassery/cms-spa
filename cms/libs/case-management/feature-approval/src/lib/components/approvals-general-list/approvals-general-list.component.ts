@@ -306,7 +306,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges, OnDestr
   getTitle(approvalTypeCode: string, subTypeCode: string) {
     switch (approvalTypeCode) {
       case PendingApprovalGeneralTypeCode.ClaimException:
-        return 'Request to Exceed Max Benefits';
+        return 'Request to Exceed Client Max Benefits';
       case PendingApprovalGeneralTypeCode.CaseReassignment:
         return 'Request for Case Re-Assignment';
       case PendingApprovalGeneralTypeCode.MasterList:

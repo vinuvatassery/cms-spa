@@ -158,4 +158,10 @@ export class PendingApprovalGeneralFacade {
       }
     });
   }
+
+  getMasterDetailData(masterDetailId: string,subTypeCode: string) {
+    this.showLoader();
+    return this.pendingApprovalGeneralService.getMasterDetails(masterDetailId, subTypeCode);
+  }
+
 }
