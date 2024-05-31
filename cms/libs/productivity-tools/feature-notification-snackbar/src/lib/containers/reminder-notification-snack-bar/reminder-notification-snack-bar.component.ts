@@ -116,6 +116,8 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    
+    this.notificationFacade.loadReminderSnackbars()
     this.removePreviousMessage();
     this.reminderSnackBarSubscribe();
     this.deleteUpdateReminderSubscribe()
@@ -135,6 +137,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
    
   }
   reminderSnackBarSubscribe() {
+    
     this.reminderSnackBar$.subscribe((res: any) => {      
 
       const snackbarMessage: any = {
