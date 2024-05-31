@@ -587,12 +587,7 @@ loadPendingEsignRequestInfo(){
       next: (data: any) =>{
         if (data != null && data?.esignRequestId != null) {
           if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.Started|| data?.esignRequestStatusCode == EsignStatusCode.InProgress){
-            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
-            this.isSendEmailClicked=true;
-            this.getLoggedInUserProfile();
-            if(this.signedApplication === null || this.signedApplication === undefined){
-              this.loadAuthorization();
-              }
+            this.loadPendingEsignRequest(data);
           }
           else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
@@ -618,6 +613,15 @@ loadPendingEsignRequestInfo(){
     },
   });
 }
+
+  loadPendingEsignRequest(data: any) {
+    this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), "MM/dd/yyyy");
+    this.isSendEmailClicked=true;
+    this.getLoggedInUserProfile();
+    if(this.signedApplication === null || this.signedApplication === undefined){
+      this.loadAuthorization();
+      }
+  }
 
 loadCompletedEsignRequestInfo(){
   this.loaderService.show();
