@@ -126,7 +126,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     this.addSaveSubscription();
     this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
-    this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
   }
 
@@ -152,8 +151,8 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
-    this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
   /** Private methods **/
   private loadUserContactInfo(clientId: any, clientCaseEligibilityId: any) {
@@ -270,27 +269,12 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
     });
   }
 
-  private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
-      if (this.validate()) {
-        this.save().subscribe((response: any) => {
-          if (response) {
-            this.workflowFacade.saveForLaterCompleted(true)  
-            this.loaderService.hide();  
-          }
-        })
-      }
-      else {
-        this.workflowFacade.saveForLaterCompleted(true)  
-      }
-    });
-  }
-
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        this.validate()
+        if(this.validate()){
         this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
       }
     });
   }
