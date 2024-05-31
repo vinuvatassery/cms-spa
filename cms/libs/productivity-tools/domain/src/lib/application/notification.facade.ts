@@ -43,7 +43,7 @@ export class NotificationFacade {
     private loggingService: LoggingService,
     private readonly signalrEventHandlerService: SignalrEventHandlerService
   ) {
-    this.loadReminderSnackbars()
+    //this.loadReminderSnackbars()
     this.loadSignalrGeneralNotifications();
   }
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
