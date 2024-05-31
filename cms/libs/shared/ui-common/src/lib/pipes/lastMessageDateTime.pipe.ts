@@ -11,6 +11,8 @@ export class LastMessageDateTimePipe implements PipeTransform {
       let time = pstDate.split(',')[1].split('.')[0];
       return date + ' @' + time;
     }
-    else value;
+    else {
+      return value;
+    }
   }
 }
