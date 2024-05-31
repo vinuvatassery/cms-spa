@@ -126,12 +126,7 @@ export class ReminderNotificationSnackBarsTemplateComponent implements
   }
 
   ngOnInit(): void {
-    this.notificationFacade.snoozeReminder$.subscribe(res => {
-      if (res) {
-        this.snoozeReminder.emit(this.selectedAlertId)
-        this.removePreviousMessage()
-      }
-    })
+
     this.signalrEventHandlerService.remindersCount$.subscribe(res => {
       if (res > 0)
         this.unviewedCount = res;
@@ -191,6 +186,12 @@ export class ReminderNotificationSnackBarsTemplateComponent implements
         this.onNewReminderOpenClicked(this.NewReminderTemplate)
       }
     } else {
+      this.notificationFacade.snoozeReminder$.pipe(take(1)).subscribe(res =>{
+        if(res){
+          this.snoozeReminder.emit(this.selectedAlertId)
+          this.removePreviousMessage()
+        }
+      })
         if (event.id.includes('hour') || event.id.includes('Minutes')) {
           this.snoozeRemindersInMins(event.id)
         }
