@@ -91,10 +91,20 @@ export class FinancialClaimsPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+      
+    
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
-    this.activatedRoute.params.subscribe(
-      (data) => (this.claimsType = data['type'])
-    );
+    // this.activatedRoute.params.subscribe(
+    //   (data) => (this.claimsType = data['type'])
+     
+    // );
+    if(this.router.url.indexOf("/claims/dental")>-1){
+      this.claimsType="dental";
+    }
+    else if(this.router.url.indexOf("/claims/medical")>-1){
+      this.claimsType="medical";
+    }
     this.activatedRoute.queryParams.subscribe(
       (data) => (this.tab = +(data['tab'] ?? 1))
     );

@@ -18,7 +18,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialVendorModule
       ),
     data: {
-      title: '',
+      title: 'Vendors',
     },
   },
   {
@@ -31,26 +31,108 @@ const routes: Routes = [
       title: null,
     },
   },
+  // {
+  //   path: 'vendor-refund',
+  //   loadChildren: () =>
+  //     import('@cms/case-management/feature-financial-vendor-refund').then(
+  //       (m) => m.CaseManagementFeatureFinancialVendorRefundModule
+  //     ),
+  //   data: {
+  //     title: 'Vendor Refund(s)',
+  //   },
+  // },
   {
-    path: 'vendor-refund',
-    loadChildren: () =>
-      import('@cms/case-management/feature-financial-vendor-refund').then(
-        (m) => m.CaseManagementFeatureFinancialVendorRefundModule
-      ),
+    path: 'income',
     data: {
-      title: 'Vendor Refund(s)',
+      title: 'Income',
     },
+    children: [
+      {
+        path: '',
+        redirectTo: 'vendor-refund',
+        pathMatch: 'full',
+      },
+      {
+        path: 'vendor-refund',
+        loadChildren: () =>
+          import('@cms/case-management/feature-financial-vendor-refund').then(
+            (m) => m.CaseManagementFeatureFinancialVendorRefundModule
+          ),
+        data: {
+          title: 'Vendor Refund(s)',
+        },
+      },
+    ],
   },
+  // {
+  //   path: 'income',
+  //   loadChildren: () =>
+  //     import('@cms/case-management/feature-financial-vendor-refund').then(
+  //       (m) => m.CaseManagementFeatureFinancialVendorRefundModule
+  //     ),
+  //   data: {
+  //     title: 'Income',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'vendor-refund',
+  //       loadChildren: () =>
+  //         import('@cms/case-management/feature-financial-vendor-refund').then(
+  //           (m) => m.CaseManagementFeatureFinancialVendorRefundModule
+  //         ),
+  //       data: {
+  //         title: 'Vendor Refund(s)',
+  //       },
+  //     },
+  //   ],
+  // },
+  
+  // {
+  //   path: 'claims/:type',
+  //   loadChildren: () =>
+  //     import('@cms/case-management/feature-financial-claims').then(
+  //       (m) => m.CaseManagementFeatureFinancialClaimsModule
+  //     ),
+  //   data: {
+  //     title: null, 
+  //   },
+  // },
+
   {
-    path: 'claims/:type',
-    loadChildren: () =>
-      import('@cms/case-management/feature-financial-claims').then(
-        (m) => m.CaseManagementFeatureFinancialClaimsModule
-      ),
+    path: 'expenses',
+    // loadChildren: () =>
+    //   import('@cms/case-management/feature-financial-claims').then(
+    //     (m) => m.CaseManagementFeatureFinancialClaimsModule
+    //   ),
     data: {
-      title: null, 
+      title: "Expenses", 
     },
+    children: [
+      // {
+      //   path: '',
+      //   redirectTo: 'claims/:type',
+      //   pathMatch: 'full',
+      // },
+      {
+        path: 'claims/medical',
+        loadChildren: () =>
+          import('@cms/case-management/feature-financial-claims').then(
+            (m) => m.CaseManagementFeatureFinancialClaimsModule
+          ),
+          data: { title: 'Medical Claims' }
+      },
+      {
+        path: 'claims/dental',
+        loadChildren: () =>
+          import('@cms/case-management/feature-financial-claims').then(
+            (m) => m.CaseManagementFeatureFinancialClaimsModule
+          ),
+          data: { title: 'Dental Claims' }
+      }
+    ],
   },
+
+  
 
   {
     path: 'premiums/:type',
