@@ -440,13 +440,24 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit {
     return '';
   }
 
+  setSortDirection(){
+   return this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+  }
+
+  setSortValueBatch(stateData:any){
+    return stateData.sort[0]?.field ?? this.sortValueBatch
+  }
+
+  setSortType(stateData:any){
+   return stateData.sort[0]?.dir ?? 'desc'
+  }
   dataStateChange(stateData: any): void {
     this.sortBatch = stateData.sort;
-    this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
-    this.sortType = stateData.sort[0]?.dir ?? 'desc';
+    this.sortValueBatch = this.setSortValueBatch(stateData) ;
+    this.sortType = this.setSortType(stateData) ;
     this.state = stateData;
-    this.sortDir =
-      this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.setSortDirection()
+     
     this.filter = stateData?.filter?.filters;
 
     this.sortColumn = this.columns[stateData.sort[0]?.field];

@@ -533,7 +533,7 @@ loadContactInfo(){
     if (this.currentStatusCode != "") {
       this.loaderService.show();
     
-      this.clientCaseEligibilityId = this.clientCaseEligibilityId == null ? this.workflowFacade.clientCaseEligibilityId : this.clientCaseEligibilityId;
+      this.clientCaseEligibilityId = this.clientCaseEligibilityId ? this.clientCaseEligibilityId: this.workflowFacade.clientCaseEligibilityId;
 
      
    if (this.sendLetterFlag == StatusFlag.Yes) {
