@@ -473,7 +473,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public rowClass = (args: any) => ({
-    "table-row-disabled": (args.dataItem.activeFlag != this.active),
+    "table-row-disabled": (args.dataItem.activeFlag != this.active || args.dataItem.noOfActiveRoles == 0),
   });
   
   public columnChange(e: any) {
