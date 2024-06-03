@@ -93,7 +93,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   totalIncome:any = 0;
   totalIncomeCalculated:any;
   fplPercentage:any
-  paperlessFlag:string | null= null;
+  paperlessFlag:String | null= null;
   workflowTypeCode:any;
   isOpenClientsAttachment=false;
   clientDependentId: any;
@@ -163,6 +163,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveForLaterValidationsSubscription();
     this.addDiscardChangesSubscription();
     this.loadClientAttachments(this.clientId);
+    //this.loadAddress();
   }
 
   ngOnDestroy(): void {
@@ -359,7 +360,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.hasValidIncome = false;
       let todayDate = new Date();
       todayDate = new Date(`${todayDate.getFullYear()}-${todayDate.getMonth() + 1}-${todayDate.getDate()}`)
-      if (!this.isCerForm) {
+      if (this.isCerForm != true) {
         if (this.incomeData.clientIncomes?.filter((x: any) => (x.incomeEndDate != null && new Date(x.incomeEndDate.split('T')[0]) >= todayDate) || x.incomeEndDate === null).length > 0) {
           this.hasValidIncome = true;
         }
@@ -568,13 +569,13 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.incomeFacade.incomeValidSubject.next(false);
       return false;
     }
-    if(this.hasClientDependentsMinorAdditionalIncomeFlag && this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes){
+    if(this.hasClientDependentsMinorAdditionalIncomeFlag == true && this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes){
       this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setErrors({'incorrect':true});
     }
     else {
       this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setErrors(null);
     }
-    if(this.hasClientDependentsMinorEmployedFlag && this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes) {
+    if(this.hasClientDependentsMinorEmployedFlag == true && this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes) {
       this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setErrors({'incorrect':true});
     } else {
       this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setErrors(null);

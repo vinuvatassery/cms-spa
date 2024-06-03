@@ -149,10 +149,9 @@ loadReminders(){
    })
   }
 
-  setNoDataTempalate(ndays:any,type:any){
-   
-    if(ndays == "7"){
-      if(type=='todo'){
+  setSevenDays(type:any)
+  {
+    if(type=='todo'){
       this.noTodoFor7Days = true
       }
     if(type == 'reminder'){
@@ -160,8 +159,10 @@ loadReminders(){
     }
      
       this.showNoDataFor7Days = this.noTodoFor7Days && this.noReminderFor7Days;
-    }
-    if(ndays == "30"){
+  }
+
+    setThirtyDays(type:any)
+    {
       if(type == 'todo'){
         this.noTodoFor30Days = true
         }
@@ -170,14 +171,27 @@ loadReminders(){
         }
       this.showNoDataFor30Days = this.noTodoFor30Days && this.noReminderFor30Days;
     }
-    if(ndays == "31"){
+
+    setThirtyOneDays(type:any)
+    {
       if(type == 'todo'){
-      this.noTodoAfter30Days = true
-      }
-      if(type == 'reminder'){
-      this.noReminderAfter30Days = true
-      }
-      this.showNoDataAfter30Days = this.noTodoAfter30Days && this.noReminderAfter30Days;
+        this.noTodoAfter30Days = true
+        }
+        if(type == 'reminder'){
+        this.noReminderAfter30Days = true
+        }
+        this.showNoDataAfter30Days = this.noTodoAfter30Days && this.noReminderAfter30Days;
+    }
+  setNoDataTempalate(ndays:any,type:any){
+   
+    if(ndays == "7"){
+     this.setSevenDays(type)
+    }
+    if(ndays == "30"){
+      this.setThirtyDays(type)
+    }
+    if(ndays == "31"){
+         this.setThirtyOneDays(type)
     }
   }
 

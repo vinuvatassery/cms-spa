@@ -43,7 +43,7 @@ export class NavigationMenuService {
 
   getTodoItemCount() {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/alerts/todo-count`
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/todo-count`
     );
   }
 

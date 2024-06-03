@@ -318,7 +318,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     let searchValue = data;
     this.defaultGridState();
     let operator = 'contains';
-    this.selectedColumn ?? 'vendorName'
+    this.selectedColumn  =  this.selectedColumn ?? 'vendorName'
     if (data !== '') {
 
       if (

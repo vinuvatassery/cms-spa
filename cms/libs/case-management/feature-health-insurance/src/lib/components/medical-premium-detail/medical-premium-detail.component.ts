@@ -1648,23 +1648,25 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     }
   }
 
-  public handleFileRemoved(files: any, fileType: string, resetId?: boolean) {
-    if (files?.files?.length > 0 && !!files?.files[0]?.uid) {
-      this.insurancePolicyFacade.showLoader();
-      this.clientDocumentFacade.removeDocument(files?.files[0]?.uid ?? '').subscribe({
-        next: (response) => {
-          if (response === true) {
-            this.onFileRemove(fileType);
+          processFile(files: any,fileType :string)
+          {
+            this.insurancePolicyFacade.showLoader();
+            this.clientDocumentFacade.removeDocument(files?.files[0]?.uid ?? '').subscribe({
+              next: (response) => {
+                if (response === true) {
+                  this.onFileRemove(fileType);
+                }
+                this.insurancePolicyFacade.hideLoader();
+              },
+              error: (err) => {
+                this.loggingService.logException(err);
+                this.insurancePolicyFacade.hideLoader();
+              },
+            });
           }
-          this.insurancePolicyFacade.hideLoader();
-        },
-        error: (err) => {
-          this.loggingService.logException(err);
-          this.insurancePolicyFacade.hideLoader();
-        },
-      });
-    }
-    else {
+
+     processNonFile(fileType: string, resetId?: boolean)
+     {
       if (fileType == 'proof') {
         this.proofOfPremiumFiles = [];
         this.isProofFileUploaded = false;
@@ -1685,8 +1687,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
         this.copyOfMedicareCardFiles = [];
         this.isMedicareCardFileUploaded = false;
       }
-    }
-  }
+     }
+
+      public handleFileRemoved(files: any, fileType: string, resetId?: boolean) {
+        if (files?.files?.length > 0 && !!files?.files[0]?.uid) {
+            this.processFile(files,fileType)
+        }
+        else {
+              this.processNonFile(fileType,resetId)
+        }
+      }
+
+
+
   handleTypeCodeEvent(e: any) {
     this.cICTypeCode = e;
   }

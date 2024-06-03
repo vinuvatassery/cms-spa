@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
-import { LovFacade} from '@cms/system-config/domain';
+import { LovFacade, NavigationMenuFacade} from '@cms/system-config/domain';
 import { InsurancePlanFacade, HealthInsurancePolicyFacade, VendorFacade, InsuranceStatusType } from '@cms/case-management/domain';
 import { SnackBarNotificationType, LoggingService, NotificationSnackbarService, LoaderService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -55,7 +55,8 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     private readonly vendorFacade: VendorFacade,
     private readonly insuranceFacade: InsurancePlanFacade,
     private readonly cdr: ChangeDetectorRef,
-    private readonly snackbarService: NotificationSnackbarService, private insurancePolicyFacade: HealthInsurancePolicyFacade) {
+    private readonly snackbarService: NotificationSnackbarService, private insurancePolicyFacade: HealthInsurancePolicyFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade) {
     this.healthInsuranceForm = this.formBuilder.group({ insuranceProviderName: [''] });
 
     this.newhealthInsuranceForm = this.formBuilder.group({
@@ -163,6 +164,10 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
 
       this.insuranceFacade.addPlan(finalData).subscribe({
         next: (response: any) => {
+          if(finalData.activeFlag === StatusFlag.No)
+            {
+              this.loadPendingApprovalGeneralCount();
+            }
           let notificationMessage = response.message;
           this.InsurancePlanClose();
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
@@ -171,7 +176,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
           this.isValidateForm = false;
           //Reload Carrier List
           this.loadCarrierSubject.next(true);
-          this.cdr.detectChanges(); 
+          this.cdr.detectChanges();
         },
         error: (err: any) => {
           this.hideLoader();
@@ -219,5 +224,10 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
       checkValidator
     )
     this.cdr.detectChanges();
+  }
+
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 }

@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { WidgetFacade } from '@cms/dashboard/domain';
 import { NotificationDataFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subject, catchError, forkJoin, of, takeUntil } from 'rxjs';
+import { Subject, catchError, forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'dashboard-widget-today-at-a-glance',
@@ -55,8 +55,8 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
   loadTodayGlance() {
     
     const todayGlance = forkJoin({
-      todo:  this.loadTodayGlanceReminders(),
-      reminders: this.loadTodayGlanceTodo(),
+      todo:  this.loadTodayGlanceTodo(),
+      reminders: this.loadTodayGlanceReminders(),
       notifications: this.loadTodayGlanceNotifications(),
       assignedClients : this.loadTodayGlanceAssignedClients(),
       directMessageCount : this.loadTodayGlanceDirectMessageCount()
@@ -69,6 +69,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
          this.todayGlanceNotification = response.notifications
          this.todayGlance = response.assignedClients
          this.todayGlancedirectMessages = response.directMessageCount
+         this.cd.detectChanges()
       }
     })
 

@@ -7,7 +7,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserManagementFacade, UserDefaultRoles } from '@cms/system-config/domain';
+import { UserManagementFacade, UserDefaultRoles, NavigationMenuFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
@@ -32,7 +32,8 @@ export class UserProfileCardComponent implements OnInit {
   /** Constructor**/
   constructor(
     private userManagementFacade: UserManagementFacade,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly navigationMenuFacade : NavigationMenuFacade,
   ) {
   }
 
@@ -72,6 +73,10 @@ export class UserProfileCardComponent implements OnInit {
     this.userManagementFacade.showLoader();
     this.userManagementFacade.reassignCase(data).subscribe({
       next: (response: any) => {
+        if(!data.hasPermission)
+          {
+            this.loadPendingApprovalGeneralCount();
+          }
         this.userManagementFacade.hideLoader();
         this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response[1].message, response[0].message);
         this.businessLogicPopupClose();
@@ -94,5 +99,10 @@ export class UserProfileCardComponent implements OnInit {
   businessLogicPopupClose() {
     this.reassignCaseTemp.close();
     this.businessLogicPopupOpen = false;
+  }
+
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 }

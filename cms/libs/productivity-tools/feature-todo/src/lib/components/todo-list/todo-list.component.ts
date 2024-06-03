@@ -118,7 +118,7 @@ export class TodoListComponent implements OnInit {
     this.loadColumnsData();
    
     this.todoGrid$.subscribe((data: any) => {
-      if(data){
+      if(data=== true){
         this.loadTodoGrid();
       } 
     });

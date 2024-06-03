@@ -16,9 +16,9 @@ import { Observable } from 'rxjs/internal/Observable';
 import { NotificationRef, NotificationService } from '@progress/kendo-angular-notification';
 
 /** Providers **/
-import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider,  ReminderSnackBarNotificationType } from '@cms/shared/util-core';
 import { SnackBar } from '@cms/shared/ui-common';
-import { TodoFacade } from '@cms/productivity-tools/domain';
+import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 import { Router } from '@angular/router';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
@@ -77,6 +77,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   ];
 
   reminderSnackBar$ = this.signalrEventHandlerService.reminderSnackBar$
+  reminderSnackbarsData$ = this.notificationFacade.reminderSnackbarsData$
   alertText = ""
   entityId = ""
   vendorTypeCode = ""
@@ -110,11 +111,13 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     public financialRefundFacade: FinancialVendorRefundFacade,
     public financialVendorFacade: FinancialVendorFacade,
     public viewContainerRef: ViewContainerRef,
-    private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
+    private readonly notificationFacade: NotificationFacade,
   ) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    
+    this.notificationFacade.loadReminderSnackbars()
     this.removePreviousMessage();
     this.reminderSnackBarSubscribe();
     this.deleteUpdateReminderSubscribe()
@@ -125,13 +128,13 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     this.todoFacade.deleteReminderSnackbar$.subscribe((alertId: any) => {     
       if(alertId)
         {
-          const deleteReference = this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === alertId) 
-          deleteReference.hide()
-          this.updateSnackBarCount(alertId,deleteReference)
+          this.notificationFacade.loadReminderSnackbars()         
         }
     })
+   
   }
   reminderSnackBarSubscribe() {
+    
     this.reminderSnackBar$.subscribe((res: any) => {      
 
       const snackbarMessage: any = {
@@ -160,6 +163,40 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
         }
      }
 
+     
+    })
+
+    this.reminderSnackbarsData$.subscribe((res: any) => {      
+
+        res.forEach((data:any) => {
+          
+       
+                const snackbarMessage: any = {
+                  payload:data,
+                  type: ReminderSnackBarNotificationType.LIGHT
+                };
+                
+              if(snackbarMessage?.payload?.alertExtraProperties?.AlertId)
+                {
+
+                  if (!this.signalrEventHandlerService.snackBarAlertIds.includes(snackbarMessage.payload?.alertExtraProperties?.AlertId)) {
+                    this.signalrEventHandlerService.snackBarAlertIds.push(snackbarMessage.payload.alertExtraProperties?.AlertId)
+                    this.showNotifications(snackbarMessage)
+
+                  }   
+                  else
+                  {
+                    const updatedNotificationReference = 
+                    this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === snackbarMessage.payload?.alertExtraProperties?.AlertId)              
+                    const payload = {
+                      ...snackbarMessage.payload,
+                    }
+              
+                    updatedNotificationReference.content.instance.snackBarMessage = payload
+                  
+                  }
+              }
+      });
      
     })
 

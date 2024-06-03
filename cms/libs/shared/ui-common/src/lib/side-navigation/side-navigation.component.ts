@@ -91,7 +91,10 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
 
   onMenuClick(menu: NavigationMenu, $event: any) {
     if (menu.subMenus.length > 0 && !menu.parentId) {
-      $event ? $event.stopPropagation() : null;
+      if($event)
+        {
+         $event.stopPropagation();
+        }
     } else {
       this.clearActiveMenu();
       if (menu?.url) {
@@ -211,6 +214,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   /** Private Methods */
 
   private getMenuCount() {
+   
     this.getPcaAssignmentMenuCount();
     this.getPendingApprovalMenuCount();
     this.getDirectMessageCount();
@@ -273,12 +277,12 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
     this.navigationMenuFacade.todoItemCount$.subscribe({
       next: (todoCount) => {
         if (todoCount) {
-          this.toDoItemsCount = todoCount;
+          this.toDoItemsCount = todoCount;      
           this.setProductivityToolsCount();
         }
       }
-
     });
+    this.navigationMenuFacade.getTodoItemCount()
   }
   private subscribeToPendingApprovalCount() {
     this.navigationMenuFacade.pendingApprovalPaymentCount$.subscribe({

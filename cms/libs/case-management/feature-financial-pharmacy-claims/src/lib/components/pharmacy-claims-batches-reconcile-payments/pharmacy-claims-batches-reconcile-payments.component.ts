@@ -357,7 +357,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit {
   onSearchChange(data: any) {
     let operator = '';
     let searchValue = data;
-    this.selectedColumn ?? 'vendorName';
+    this.selectedColumn = this.selectedColumn ?? 'vendorName';
     if (data !== '') {
       searchValue = data;
       this.defaultGridState();
@@ -376,18 +376,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit {
       if (this.selectedColumn === 'checkNbr' || this.selectedColumn === 'ALL') {
         searchValue = searchValue.replace('-', '');
       }
+      searchValue =   this.searchFunction(searchValue)
 
-      if (this.selectedColumn === 'tin' || this.selectedColumn === 'ALL') {
-        let noOfhypen = searchValue.split('-').length - 1;
-        let index = searchValue.lastIndexOf('-');
-        if (noOfhypen >= 1 && index !== 2 && index !== 3) {
-          this.showTinSearchWarning = true;
-          return;
-        } else {
-          this.showTinSearchWarning = false;
-          searchValue = searchValue.replace('-', '');
-        }
-      }
     }
     this.filterData = {
       logic: 'and',
@@ -407,6 +397,24 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit {
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+  }
+
+
+  searchFunction(searchValue : any)
+  {
+    if (this.selectedColumn === 'tin' || this.selectedColumn === 'ALL') {
+      let noOfhypen = searchValue.split('-').length - 1;
+      let index = searchValue.lastIndexOf('-');
+      if (noOfhypen >= 1 && index !== 2 && index !== 3) {
+        this.showTinSearchWarning = true;
+        return;
+      } else {
+        this.showTinSearchWarning = false;
+        searchValue = searchValue.replace('-', '');
+      }
+    }
+
+    return searchValue;
   }
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     if (isDateSearch) {

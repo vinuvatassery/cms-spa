@@ -214,11 +214,9 @@ ngOnDestroy(): void {
   }
 
   private includeAddIncomeButtonAndFooterNote() {
-    if (this.data === ScreenType.Case360Page) {
+   
       this.isAddIncomeButtonAndFooterNoteDisplay = true;
-    } else {
-      this.isAddIncomeButtonAndFooterNoteDisplay = true;
-    }
+   
     this.cdr.detectChanges();
   }
   private updateWorkFlowStatus(isCompleted: boolean) {

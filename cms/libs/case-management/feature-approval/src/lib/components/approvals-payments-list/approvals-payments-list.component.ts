@@ -485,7 +485,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges, OnDest
   }
 
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any) {
-    this.resetApprovalPaymentListGrid();
     this.pageValidationMessage = null;
     this.selectedPaymentType = paymentSubTypeCode;
     this.approveBatchCount = 0;
@@ -516,6 +515,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges, OnDest
     this.selectedColumn = 'ALL';
     this.searchValue = '';
     this.setApprovalLevelAndMaxApprovalAmount();
+    this.resetApprovalPaymentListGrid();
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();
     this.gridDataHandle();
