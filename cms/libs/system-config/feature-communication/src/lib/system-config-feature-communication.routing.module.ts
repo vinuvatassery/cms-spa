@@ -16,9 +16,9 @@ import { TemplateLayoutNewFormPageComponent } from './containers/template-layout
 const routes: Routes = [
   {
     path: '',
-    component: ClientNotificationDefaultsPageComponent,
- 
-  }, 
+    redirectTo: 'email-template',
+    pathMatch: 'full',
+  },
   {
     path: 'client-notification-defaults',
     component: ClientNotificationDefaultsPageComponent,

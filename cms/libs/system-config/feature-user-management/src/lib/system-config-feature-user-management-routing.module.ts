@@ -8,6 +8,11 @@ import { RolesAndPermissionsDetailsPageComponent } from './containers/roles-and-
 
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'users',
+    pathMatch: 'full',
+  },
+  {
     path: 'users',
     component: UserManagementPageComponent,
     data: {

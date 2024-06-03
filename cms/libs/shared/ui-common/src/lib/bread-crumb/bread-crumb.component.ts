@@ -28,38 +28,30 @@ export class BreadCrumbComponent {
     this.routesData.unsubscribe();
   }
 
-  private initRoutes(): void {
+  public initRoutes(): void {
     this.routesData = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((d) => {
-        this.menus$.subscribe((menus) => {
-          const breadcrumbList = this.newCreateBreadcrumbs(menus, this.router.url);
-          if (breadcrumbList != null && breadcrumbList.length > 0) {
-            console.log("breadcrumbList", breadcrumbList);
-            this.items = [
-              {
-                text: 'Home',
-                title: 'dashboard',
-              },
-              ...breadcrumbList,
-            ];
-            this.breadcrumbsSubject.next(this.items);
-          }
-
-        });
+        this.items = this.createBreadcrumbs(this.activatedRoute.root);
+        this.items = [
+          {
+            text: 'Home',
+            title: 'dashboard',
+          },
+          ...this.items,
+        ];
+        this.breadcrumbsSubject.next(this.items);
       });
   }
 
-  onItemClick(item: BreadCrumbItem): void {
-    this.menus$.subscribe((menus) => {
-        if (this.items.length > 0) {
-            const selectedMenu = this.getSelectedMenu(menus, item);
-            const returnUrl = selectedMenu ? this.findFirstMenuItemUrl(selectedMenu.subMenus) : undefined;
-            this.navigateToUrl(returnUrl);
-        } else {
-          this.router.navigate(["/dashboard"], { queryParamsHandling: "preserve" });
-        }
-    });
+onItemClick(item: BreadCrumbItem): void {
+  const selectedItemIndex = this.items.findIndex((i) => i.text === item.text);
+  const url = this.items
+    .slice(selectedItemIndex, selectedItemIndex + 1)
+    .map((i: any) => i.title.toLowerCase());
+  console.log(url, selectedItemIndex);
+
+  this.router.navigate(url, { queryParamsHandling: "preserve" });
 }
 
 private getSelectedMenu(menus: any[], item: BreadCrumbItem) {
