@@ -448,9 +448,11 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit {
     this.sortDir =
       this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.filter = stateData?.filter?.filters;
+    this.checkDataState(stateData);
+    this.loadReconcileListGrid();
+  }
 
-    this.sortColumn = this.columns[stateData.sort[0]?.field];
-
+  checkDataState(stateData:any){
     if (stateData.filter?.filters.length > 0) {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       if (stateFilter.field === 'checkNbr') {
@@ -478,8 +480,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit {
       this.filter = null;
       this.isFiltered = false;
     }
-
-    this.loadReconcileListGrid();
   }
 
   setToDefault() {
