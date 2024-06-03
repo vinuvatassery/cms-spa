@@ -259,8 +259,10 @@ export class ReminderListComponent implements  OnInit{
           }
           this.todoItemList = todoItemList?.data ? todoItemList?.data : [];
           let currentDate = new Date();
-          let validDate = new Date(currentDate.setDate(currentDate.getDate() +30));
-          this.todoItemList = this.todoItemList.filter(todoItem => new Date(todoItem.alertDueDate) <= validDate);
+          currentDate.setHours(0,0,0,0);
+          let validDate = new Date(new Date().setDate(currentDate.getDate() +30));
+          validDate.setHours(0,0,0,0);
+          this.todoItemList = this.todoItemList.filter(todoItem => this.checkDates(todoItem));
           this.todoItemList.forEach((todoItem:any)=>{
           
             let todayDate = new Date();
@@ -280,6 +282,21 @@ export class ReminderListComponent implements  OnInit{
           this.cdr.detectChanges();
         });
   }
+  checkDates(todoItem : any)
+  {
+    let currentDate = new Date();
+    currentDate.setHours(0,0,0,0);
+    let validDate = new Date(new Date().setDate(currentDate.getDate() +30));
+    validDate.setHours(0,0,0,0);
+    let alertDueDate = new Date(todoItem.alertDueDate);
+    alertDueDate.setHours(0,0,0,0);
+    if(alertDueDate <= validDate && alertDueDate >= currentDate)
+      {
+        return true;
+      }
+      return false;
+  }
+
   private loadTodoGrid() {
     this.loadTodoGridData();
   }
