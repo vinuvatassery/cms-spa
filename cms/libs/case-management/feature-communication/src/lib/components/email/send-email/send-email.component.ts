@@ -23,7 +23,7 @@ import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSn
 import { Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-
+import { TodoFacade } from '@cms/productivity-tools/domain';
 @Component({
   selector: 'case-management-send-email',
   templateUrl: './send-email.component.html',
@@ -153,7 +153,8 @@ saveForLaterHeadterText!: string;
     private readonly router: Router,
     private readonly vendorContactFacade: VendorContactsFacade,
     private readonly fabBadgeFacade: FabBadgeFacade,
-    private readonly sanitizer: DomSanitizer) { }
+    private readonly sanitizer: DomSanitizer,
+    public todoFacade: TodoFacade,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -345,6 +346,7 @@ saveForLaterHeadterText!: string;
               this.cancelDisplay = false;
             }
             this.sortDropdownValues(defaultOption, otherOptions);
+            this.todoFacade.loadAlertsBanner(this.entityId);
             this.ref.detectChanges();
           }
           this.loaderService.hide();

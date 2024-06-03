@@ -22,6 +22,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
 import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { TodoFacade } from '@cms/productivity-tools/domain';
 
 @Component({
   selector: 'case-management-send-letter',
@@ -66,7 +67,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly userDataService: UserDataService,
     private readonly router: Router,
     private readonly fabBadgeFacade: FabBadgeFacade,
-    private readonly sanitizer: DomSanitizer) { }
+    private readonly sanitizer: DomSanitizer,
+    public todoFacade: TodoFacade,) { }
 
   /** Public properties **/
 
@@ -595,6 +597,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
                 this.cancelDisplay = false;
               }
             this.sortDropdownValues(defaultOption, otherOptions);
+            this.todoFacade.loadAlertsBanner(this.entityId);
             }
             this.loaderService.hide();
           },
