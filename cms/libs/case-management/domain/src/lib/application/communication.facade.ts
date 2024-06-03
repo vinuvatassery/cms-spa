@@ -376,8 +376,19 @@ export class CommunicationFacade {
   }
 
   loadClientAttachments(clientId: any, typeCode: any) {
+    const payload ={
+      clientId : clientId,
+      skipcount : 0,
+      maxResultCount: 1000,
+      sort : '',
+      sortType : 'asc',
+      filter :null,
+      columnName : null,
+      typeCode : typeCode
+    }
+
     return this.documentDataService.getDocumentsByClientCaseEligibilityId(
-      clientId, 0, 1000, '', 'asc', null, null, typeCode
+      payload
     );
   }
 

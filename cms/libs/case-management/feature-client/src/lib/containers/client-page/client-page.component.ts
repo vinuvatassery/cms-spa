@@ -1640,6 +1640,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.checkValidations()) {
             this.saveAndUpdate().subscribe((response: any) => {
               if (response) {
+                this.workFlowFacade.clientCaseEligibilityId = response.clientCaseEligibilityId
                 this.workFlowFacade.saveForLaterCompleted(true)
                 this.loaderService.hide();
 

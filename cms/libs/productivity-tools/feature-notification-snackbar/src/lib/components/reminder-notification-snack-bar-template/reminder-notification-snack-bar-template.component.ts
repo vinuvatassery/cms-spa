@@ -374,50 +374,5 @@ export class ReminderNotificationSnackBarsTemplateComponent implements
 
   }
 
-  setDueDateText(res: any) {
-    let timeDifferenceMinutes = 0;
-    this.dueDateText = ""
-    const repeatTime = res.repeatTime
-    const dueDate = this.intl.formatDate(res.alertDueDate, this.dateFormat);
-    const today = this.intl.formatDate(new Date(), this.dateFormat)
-    if (repeatTime && dueDate !== today) {
-      const times = repeatTime.split(':')
-      const duedateWithRepeatTime = new Date(new Date().getFullYear(), new Date().getMonth(),
-        new Date().getDate(), times[0], times[1])
-      const timeDifferenceMs = duedateWithRepeatTime.getTime() - new Date().getTime();
-      timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-
-
-      if (timeDifferenceMinutes >= 0 && timeDifferenceMinutes <= 15) {
-        this.dueDateText = "In " + timeDifferenceMinutes + " Mins"
-      }
-      if (timeDifferenceMinutes <= 0) {
-        this.dueDateText = 0 - timeDifferenceMinutes + " Mins Over Due"
-        if (0 - timeDifferenceMinutes > 60) {
-          let timeInHours = Math.floor(0 - timeDifferenceMinutes / 60);
-          this.dueDateText = timeInHours + " Hrs Over Due"
-          if (timeInHours > 24) {
-            let timeInDays = Math.floor(timeInHours / 24);
-            this.dueDateText = timeInDays + " Days Over Due"
-          }
-        }
-
-      }
-      if (timeDifferenceMinutes == 0) {
-        this.dueDateText = "Now"
-      }
-
-    }
-    if (dueDate == today && !repeatTime) {
-      this.dueDateText = "Today"
-    }
-
-    return {
-      timeDifferenceMinutes: timeDifferenceMinutes,
-      dueDate: dueDate,
-      today: today,
-      repeatTime: repeatTime
-    };
-  }
 
 }

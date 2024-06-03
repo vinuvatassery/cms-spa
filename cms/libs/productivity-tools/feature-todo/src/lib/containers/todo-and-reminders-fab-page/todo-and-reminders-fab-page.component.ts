@@ -9,7 +9,7 @@ import {
   } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { FabMenuFacade, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
+import { FabMenuFacade, NotificationFacade, NotificationStatsFacade, StatsTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { TodoListComponent } from '../../components/todo-list/todo-list.component';
 import { LovFacade } from '@cms/system-config/domain';
@@ -62,7 +62,8 @@ import { Subscription } from 'rxjs';
       private dialogService: DialogService, 
       private readonly financialVendorFacade : FinancialVendorFacade,
       public readonly fabMenuFacade: FabMenuFacade,
-      public readonly notificationFacade : NotificationFacade
+      public readonly notificationFacade : NotificationFacade,
+      public readonly notificationStatsFacade: NotificationStatsFacade,
     ) {}
     /** Lifecycle hooks **/
     ngOnInit(): void {        
@@ -89,6 +90,7 @@ import { Subscription } from 'rxjs';
       closeAction()
       {
         this.fabMenuFacade.isShownTodoReminders = !this.fabMenuFacade.isShownTodoReminders;
+        this.notificationStatsFacade.resetStats(this.clientId.toString(), StatsTypeCode.Alert);
       }
       onloadTodoGrid(){
         this.todoFacade.loadAlertsData();

@@ -187,12 +187,14 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           formControls["email"].setValue(data.emailAddress);  
           formControls["jobTitle"].setValue(data.jobTitle == null ? '' : data.jobTitle);
           formControls["adUserId"].setValue(data.userId == null ? '' : data.userId);  
+          this.changeFieldStateOfExternalUser(true);
         } else {
           formControls["firstName"].setValue('');
           formControls["lastName"].setValue('');
           formControls["email"].setValue('');  
           formControls["jobTitle"].setValue('');
           formControls["adUserId"].setValue('');
+          this.changeFieldStateOfExternalUser(false);
         }
         this.cd.detectChanges();         
       },
@@ -275,6 +277,19 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       this.userFormGroup.controls["pNumber"].disable();
       this.userFormGroup.controls["userAccessType"].disable();
     }
+  }
+
+  changeFieldStateOfExternalUser(isDisable: boolean){
+    if(isDisable){
+      this.userFormGroup.controls["firstName"].disable();
+      this.userFormGroup.controls["lastName"].disable();
+      this.userFormGroup.controls["email"].disable();
+    }else{
+      this.userFormGroup.controls["firstName"].enable();
+      this.userFormGroup.controls["lastName"].enable();
+      this.userFormGroup.controls["email"].enable();
+    }
+
   }
 
   navigateToDetails() {

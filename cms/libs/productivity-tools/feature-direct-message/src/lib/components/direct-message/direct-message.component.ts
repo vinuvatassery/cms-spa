@@ -304,34 +304,46 @@ message:  JSON.stringify(clientMessage)
 
   }
 
+  getParsedMessage(parsedContent :any){
+   return this.checkJson(parsedContent.message)? JSON.parse(parsedContent.message) : parsedContent.message
+  }
+
+  getImageFromParsedContent(parsedContent :any){
+    return parsedContent.attachments ? parsedContent.attachments[0].url.split('/').pop() : undefined
+  }
+
+  getAttachmentFromParsedContent(parsedContent:any){
+    return  (parsedContent && parsedContent?.attachments)? parsedContent?.attachments : undefined
+  }
   async prepareMessageList(messages :any){
     
     for await (const message of messages) {
       if (message.type == "text") {
         let messageObj = this.messages.find((x:any) => x.id == message.id);
+        if (!messageObj) {
         if(this.checkJson(message.content.message)) {
-          let parsed = JSON.parse(message.content.message);
-          let mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
-          if (!messageObj) {
+          let parsedContent = JSON.parse(message.content.message);
+          let mesg = this.getParsedMessage(parsedContent)
+    
             let msg = {
               id: message.id,
               sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
-              message: mesg.message ?? mesg.message,
+              message: mesg.message,
               isOwner: message.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
-              image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined,
-              attachments: (parsed && parsed?.attachments)? parsed?.attachments : undefined,
+              image: this.getImageFromParsedContent(parsedContent),
+              attachments: this.getAttachmentFromParsedContent(parsedContent),
               loginUserId : mesg.loginUserId,
               senderDisplayName : message.senderDisplayName
             };
             this.messages.push(msg);
-          }
+          
         }
         else {
-          if (!messageObj) {
+       
             let msg = {
               id: message.id,
               sequenceId :message.sequenceId,
@@ -347,9 +359,8 @@ message:  JSON.stringify(clientMessage)
           }
         }
       }
-
+      }
     }
-  }
 
    mySortingFunction = (a :any, b:any) => {
     return a.value?.sequenceId- b.value?.sequenceId;
