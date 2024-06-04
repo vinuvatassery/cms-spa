@@ -122,7 +122,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   snackBarMessage:any;
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.handleConfirmPopupHeader(this.communicationLetterTypeCode);
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
@@ -678,7 +678,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.templateHeader = 'Send Pending Letter';
         this.confirmPopupHeader = 'Send Pending Letter to print?';
         this.saveForLaterHeadterText = "Send Pending Letter Later?";
-        this.saveForLaterModelText = "You must send the Pending Email within 14 Days";
+        this.saveForLaterModelText = "You must send the Pending Letter within 14 Days";
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal";
         break;
 
@@ -694,7 +694,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
         this.snackBarMessage = 'Approval Letter generated! An event has been logged.';
-        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
+        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the notice is complete."
         this.templateHeader = 'Send Approval Letter';
         this.confirmPopupHeader = 'Send Approval Letter to Print?';
         this.saveForLaterHeadterText = "Send Approval Letter later?";
