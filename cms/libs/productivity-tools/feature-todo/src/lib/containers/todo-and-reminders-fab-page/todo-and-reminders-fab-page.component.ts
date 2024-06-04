@@ -68,7 +68,7 @@ import { Subscription } from 'rxjs';
     /** Lifecycle hooks **/
     ngOnInit(): void {        
 
-        this.clientId = this.route.snapshot.queryParams['id'];
+        this.clientId = this.route.snapshot.params['id'];
         if(this.clientId > 0 )
         {
             this.isShowTodoReminders = true
