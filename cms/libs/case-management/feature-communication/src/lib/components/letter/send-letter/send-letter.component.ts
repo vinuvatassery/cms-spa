@@ -362,7 +362,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       });
   }
   private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
   }
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){

@@ -507,21 +507,24 @@ deletePremiumPayment(paymentId: string) {
     this.updateGridFilterDateFormat(stateData, true);
   }
 
+  getDate(element:any, isDisplayFormat:boolean){
+    if ((element.field == "paymentRequestedDate" || element.field == "paymentSentDate")) {
+      if(isDisplayFormat){
+        element.value = new Date(element.value)
+      }else{
+        element.value = this.intl.formatDate(
+          new Date(element.value),
+          this.configProvider?.appSettings?.dateFormat
+        );
+      }
+    }
+  }
   updateGridFilterDateFormat(stateData: any,isDisplayFormat:boolean){
     const filterList = [];
     if((stateData.filter?.filters.length > 0) && (stateData.filter?.filters.slice(-1)[0].filters.length>1)){
       this.isFiltered = true;
       stateData.filter?.filters.slice(-1)[0].filters?.forEach((element: any) => {
-        if ((element.field == "paymentRequestedDate" || element.field == "paymentSentDate")) {
-          if(isDisplayFormat){
-            element.value = new Date(element.value)
-          }else{
-            element.value = this.intl.formatDate(
-              new Date(element.value),
-              this.configProvider?.appSettings?.dateFormat
-            );
-          }
-        }
+       element.value = this.getDate(element, isDisplayFormat);
       });
       for (const filter of stateData.filter.filters) {
         filterList.push(this.gridColumns[filter.filters[0].field]);
