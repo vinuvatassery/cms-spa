@@ -157,13 +157,17 @@ export class AlertBannerComponent implements OnInit {
           }
           if(data?.total > 0 ){
             this.topAlert=data.data[0]; 
-            this.moreItems = (data?.total-1) < 1 ? "" : (data?.total-1) + "+ More Items";
+            if(this.checkDates(this.topAlert)){
+              this.moreItems = (data?.total-1) < 1 ? "" : (data?.total-1) + "+ More Items";
             if ((data?.total-1) > 3) {
                 this.showMoreAlert = true;
             }else
               this.showMoreAlert = false;
             this.makePopoverAlertBanner(data);
             this.cdr.detectChanges();
+
+            };
+            
           }else{ 
             this.topAlert =undefined
             this.secondaryAlertList =[]
@@ -174,7 +178,6 @@ export class AlertBannerComponent implements OnInit {
 
 
   public DueOn(alertItem:any):any{
-   
     let dateNow = new Date();
     dateNow = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate())
     let dueDate = new Date(alertItem.alertDueDate); 
@@ -258,6 +261,20 @@ export class AlertBannerComponent implements OnInit {
       } 
     }
     }
+  }
+  checkDates(todoItem : any)
+  {
+    let currentDate = new Date();
+    currentDate.setHours(0,0,0,0);
+    let validDate = new Date(new Date().setDate(currentDate.getDate() +30));
+    validDate.setHours(0,0,0,0);
+    let alertDueDate = new Date(todoItem.alertDueDate);
+    alertDueDate.setHours(0,0,0,0);
+    if(alertDueDate <= validDate && alertDueDate >= currentDate)
+      {
+        return true;
+      }
+      return false;
   }
   
   onOpenTodoDetailsClicked() {
