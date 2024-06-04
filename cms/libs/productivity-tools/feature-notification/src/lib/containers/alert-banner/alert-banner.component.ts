@@ -157,13 +157,17 @@ export class AlertBannerComponent implements OnInit {
           }
           if(data?.total > 0 ){
             this.topAlert=data.data[0]; 
-            this.moreItems = (data?.total-1) < 1 ? "" : (data?.total-1) + "+ More Items";
+            if(this.checkDates(this.topAlert)){
+              this.moreItems = (data?.total-1) < 1 ? "" : (data?.total-1) + "+ More Items";
             if ((data?.total-1) > 3) {
                 this.showMoreAlert = true;
             }else
               this.showMoreAlert = false;
             this.makePopoverAlertBanner(data);
             this.cdr.detectChanges();
+
+            };
+            
           }else{ 
             this.topAlert =undefined
             this.secondaryAlertList =[]
@@ -174,7 +178,6 @@ export class AlertBannerComponent implements OnInit {
 
 
   public DueOn(alertItem:any):any{
-   
     let dateNow = new Date();
     dateNow = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate())
     let dueDate = new Date(alertItem.alertDueDate); 
