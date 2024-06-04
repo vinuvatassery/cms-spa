@@ -153,10 +153,13 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
     "table-row-disabled": (args.dataItem.activeFlag != this.active),
   });
 
-  getRolesClassByRoleCode(dataItem:any)
-  {
-    let roleClass = this.rolesClassList.find((x: any)=>x.roleCode==dataItem.roleCode);
-    return roleClass == null || roleClass ==undefined ? '' : roleClass.roleClass;
+  getAndSetBackgroundColorByRoleCode(dataItem:any)
+  {   
+    if(dataItem.colorCode != null)
+    {
+       return 'background: '+ dataItem.colorCode;
+    }
+    return  'background: #0058e9;';
   }
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
