@@ -59,7 +59,7 @@
           <kendo-floatinglabel text="Medicare Part A Start Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               aria-label="Medicare Part A Start Date" formControlName="medicarePartAStartDate"
-               formatPlaceholder="formatPattern" placeholder="">
+               formatPlaceholder="formatPattern" placeholder="" (valueChange)="medicareStartDateOnChange()">
             </kendo-datepicker>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartAStartDate'].valid && !healthInsuranceForm.controls['medicarePartAStartDate'].disabled">Medicare Part A Start
@@ -68,12 +68,21 @@
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Part B Start Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-              aria-label="Medicare Part B Start Date" formControlName="medicarePartBStartDate"
+              aria-label="Medicare Part B Start Date" formControlName="medicarePartBStartDate" (valueChange)="medicareStartDateOnChange()"
                formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartBStartDate'].valid && !healthInsuranceForm.controls['medicarePartBStartDate'].disabled">Medicare Part B Start
             Date is required.</kendo-formerror>
+        </div>
+        <div class="flex-col" *ngIf="isOpenDdl && !medicareInsuranceInfoCheck">
+          <kendo-floatinglabel text="End Date - Optional">
+            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" (focus)="changeMedicareMinDate()"
+              aria-label="End Date - Optional" formControlName="medicareEndDate" [min]="medicareEndDateMin"
+               formatPlaceholder="formatPattern" placeholder=""  (valueChange)="medicareEndDateOnChange()">
+            </kendo-datepicker>
+          </kendo-floatinglabel>    
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareEndDate'].valid && !healthInsuranceForm.controls['medicareEndDate'].disabled">End Date must be after Start Date.</kendo-formerror>     
         </div>
         <div class="flex-col">
 
