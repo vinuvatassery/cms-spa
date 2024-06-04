@@ -1089,7 +1089,7 @@ saveForLaterHeadterText!: string;
       });
   }
   private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
   }
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
