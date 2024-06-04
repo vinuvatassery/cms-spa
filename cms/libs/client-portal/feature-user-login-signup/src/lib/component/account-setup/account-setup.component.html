@@ -7,7 +7,7 @@
 
 
         <div class="layout-one-form-wrapper mt_vh25 flex-row" *ngIf="getStartFirst">
-            <div class="layout-one-inner-wrapper flex-col flex-col-7">
+            <div class="layout-one-inner-wrapper flex-col flex-col-8">
                 <h1 class="text-bold">Get Started</h1>
                 <div style="margin-top: 2rem;">
                     <p>Are you receive through service any of our programs?</p>
@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
+            <div class="layout-one-inner-wrapper-right  flex-col flex-col-4">
                 <div class="right_stckey_img" style="text-align: right;">
                     <h2 style="font-weight: 200;text-align: right;">Need Assistance?</h2>
                     <h5 class=""><strong>Call CAREAssist</strong></h5>
@@ -35,7 +35,7 @@
 
 
         <div class="layout-one-form-wrapper normal_top_gap flex-row" *ngIf="isNotReceivingServices">
-            <div class="layout-one-inner-wrapper flex-col flex-col-7">
+            <div class="layout-one-inner-wrapper flex-col flex-col-8">
                 <h1 class="text-bold">Get Started</h1>
                 <div style="margin-top: 2rem;">
                     <p>Fill your details below to create your user account</p>
@@ -255,7 +255,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
+            <div class="layout-one-inner-wrapper-right  flex-col flex-col-4">
                 <div class="right_stckey_img" style="text-align: right;">
                     <h2 style="font-weight: 200;text-align: right;">Need Assistance?</h2>
                     <h5 class=""><strong>Call CAREAssist</strong></h5>
@@ -267,7 +267,7 @@
             </div>
         </div>
         <div class="layout-one-form-wrapper normal_top_gap flex-row" *ngIf="isReceivedServices">
-            <div class="layout-one-inner-wrapper flex-col flex-col-7">
+            <div class="layout-one-inner-wrapper flex-col flex-col-8">
                 <h1 class="text-bold">Get Started</h1>
                 <div style="margin-top: 2rem;">
                     <p>The information you enter here must match the information you provided when completing your
@@ -536,7 +536,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
+            <div class="layout-one-inner-wrapper-right  flex-col flex-col-4">
                 <div class="right_stckey_img" style="text-align: right;">
                     <h2 style="font-weight: 200;text-align: right;">Need Assistance?</h2>
                     <h5 class=""><strong>Call CAREAssist</strong></h5>
@@ -549,8 +549,8 @@
         </div>
 
         <div class="layout-one-form-wrapper normal_top_gap flex-row" *ngIf="isCompleteYourProfileView">
-            <div class="layout-one-inner-wrapper flex-col flex-col-7">
-                <div>
+            <div class="layout-one-inner-wrapper flex-col flex-col-8">
+                <div class="complete_profile">
                     <h1>Complete Your Profile Information</h1>
                     <div class="steper_container">
                         <kendo-stepper class="" [steps]="steps" stepType="full" [(currentStep)]="current"
@@ -565,7 +565,7 @@
                             <div class="form-innercontainer">
                                 <h3 class="text-bold">Personal Information</h3>
                                 <div class=" ac-block">
-                                    <section>
+                                    <section class="mb-5">
                                         <h5 class="text-bold mb-1">Sexual Orientation and Gender Identity</h5>
                                         <h5>What pronouns do they use? (check all that apply)</h5>
                                         <div class="component-list-h">
@@ -583,8 +583,8 @@
                                             </span>
                                             <span class="app-checkboxwidtext-wrapper">
                                                 <input type="checkbox" kendoCheckBox
-                                                    aria-labelledby="pronounsTheyThemTheirs"
-                                                    id="pronounsTheyThemTheirs" />
+                                                    aria-labelledby="pronounsTheyThemyours"
+                                                    id="pronounsTheyThemyours" />
                                                 <label class="k-checkbox-label"
                                                     for="pronounsTheyThemTheirs">They/Them/Theirs</label>
                                             </span>
@@ -608,7 +608,7 @@
                                                     aria-labelledby="noPronounsUseTheirName"
                                                     id="noPronounsUseTheirName" />
                                                 <label class="k-checkbox-label" for="noPronounsUseTheirName">No
-                                                    pronouns, use their
+                                                    pronouns, use your
                                                     name</label>
                                             </span>
                                             <span class="app-checkboxwidtext-wrapper">
@@ -636,27 +636,19 @@
                                                     answer</label>
                                             </span>
                                         </div>
-                                        <div class="flex-row mb-4">
-                                            <div class="flex-col flex-col-8">
-                                                <kendo-floatinglabel text="How do they describe their gender? Optional">
-                                                    <kendo-textbox aria-label="how do they describe their gender"
+                                        <div class="flex-row">
+                                            <div class="flex-col">
+                                                <kendo-floatinglabel text="How do they describe your gender? Optional">
+                                                    <kendo-textbox aria-label="how do they describe your gender"
                                                         [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
                                                 </kendo-floatinglabel>
                                             </div>
-                                            <div class="flex-col flex-col-4 pt-3">
-                                                <span class="app-checkboxwidtext-wrapper">
-                                                    <input type="checkbox" kendoCheckBox
-                                                        aria-labelledby="describeGenderNotApplicable"
-                                                        id="genderNotApplicable" />
-                                                    <label class="k-checkbox-label" for="genderNotApplicable">Not
-                                                        Applicable</label>
-                                                </span>
-                                            </div>
+                                    
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5>What is their gender? Select all that apply</h5>
+                                    <section class="mb-5">
+                                        <h5>What is your gender? Select all that apply</h5>
                                         <div class="component-list-h">
                                             <span class="app-checkboxwidtext-wrapper">
                                                 <input type="checkbox" kendoCheckBox aria-labelledby="womanOrGirl"
@@ -731,8 +723,8 @@
                                         </div>
                                     </section>
 
-                                    <section>
-                                        <h5 class="mt-3">Are they transgender?</h5>
+                                    <section class="mb-5">
+                                        <h5>Are they transgender?</h5>
                                         <div class="component-list-h">
                                             <span>
                                                 <div class="flex-row">
@@ -796,29 +788,20 @@
                                                 </div>
                                             </span>
                                         </div>
-                                        <div class="flex-row mt-1">
-                                            <div class="flex-col flex-col-8">
+                                        <div class="flex-row">
+                                            <div class="flex-col">
                                                 <kendo-floatinglabel
-                                                    text="How do they describe their sexual orientation or sexual identity?">
-
+                                                    text="How do they describe your sexual orientation or sexual identity?">
                                                     <kendo-textbox
-                                                        aria-label="how do they describe their sexual orientation or sexual identity"
+                                                        aria-label="how do they describe your sexual orientation or sexual identity"
                                                         [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-
                                                 </kendo-floatinglabel>
                                             </div>
-                                            <div class="flex-col flex-col-4 mt-3">
-                                                <span class="app-checkboxwidtext-wrapper">
-                                                    <input type="checkbox"
-                                                        aria-labelledby="sexualOrientationNotApplicable"
-                                                        id="notApplicable" kendoCheckBox />
-                                                    <label class="k-checkbox-label" for="notApplicable">Not
-                                                        Applicable</label>
-                                                </span>
-                                            </div>
+                                        
+                                            
                                         </div>
                                     </section>
-                                    <section>
+                                    <section class="mb-5">
                                         <h5>
                                             What is their sexual orientation or sexual identity? (Select all that apply)
                                         </h5>
@@ -898,8 +881,8 @@
                                         </div>
                                     </section>
 
-                                    <section>
-                                        <h5 class="mt-3">What is their sex assigned at birth? Optional</h5>
+                                    <section class="mb-5">
+                                        <h5 class="mt-3">What is their sex assigned at birth?</h5>
                                         <div class="component-list-h">
                                             <span>
                                                 <div class="flex-row">
@@ -964,8 +947,11 @@
                                                 </div>
                                             </span>
                                         </div>
-                                        <div class="flex-row mt-1">
-                                            <div class="flex-col flex-col-10">
+                                      
+                                    </section>
+                                    <section class="mb-5">
+                                        <div class="flex-row">
+                                            <div class="flex-col">
                                                 <h5>Race, Ethnicity, Language and Disability</h5>
                                                 <kendo-floatinglabel
                                                     text="Race, ethnicity, tribal affiliation, country of origin, or ancestry">
@@ -981,8 +967,8 @@
                                             </div>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3 mb-0">
+                                    <section class="mb-5">
+                                        <h5>
                                             Which options describe their Racial or Ethnic Identity? (Select all that
                                             apply)
                                         </h5>
@@ -1025,13 +1011,13 @@
                                             </div>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mb-0">
+                                    <section class="mb-5">
+                                        <h5>
                                             If they selected multiple, is there one they think of as their primary
                                             racial or ethnic identity?
                                         </h5>
                                         <div class="flex-row">
-                                            <div class="flex-col flex-col-4">
+                                            <div class="flex-col">
                                                 <kendo-floatinglabel text="Primary identity">
                                                     <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode">
                                                     </kendo-dropdownlist>
@@ -1039,14 +1025,14 @@
                                             </div>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3">Do you need materials in alternate format (Braille, large
+                                    <section class="mb-5">
+                                        <h5>Do you need materials in alternate format (Braille, large
                                             print, audio
                                             recordings, etc.)?</h5>
                                         <div class="component-list-h">
                                             <span>
                                                 <div class="flex-row">
-                                                    <div class="flex-col flex-col-8">
+                                                    <div class="flex-col">
                                                         <div class="component-list-h">
                                                             <span class="app-radiobtnwidtext-wrapper">
                                                                 <input type="radio" kendoRadioButton
@@ -1070,12 +1056,26 @@
                                                                     text="No"></kendo-label>
                                                             </span>
 
-                                                            <span class="app-checkboxwidtext-wrapper">
-                                                                <input type="checkbox" kendoCheckBox
-                                                                    aria-labelledby="dontKnow3" id="dontKnow3" />
-                                                                <label class="k-checkbox-label" for="dontKnow3">Don't
-                                                                    know</label>
+                                                            <span class="app-radiobtnwidtext-wrapper">
+                                                                <input type="radio" kendoRadioButton
+                                                                    name="rdoEmotionalConditions"
+                                                                    aria-labelledby="dontKnow3"
+                                                                    id="dontKnow3" />
+                                                                    <label class="k-checkbox-label" for="dontKnow3">Don't
+                                                                        know</label>
                                                             </span>
+
+                                                    
+                                                            
+                                                            <span class="app-radiobtnwidtext-wrapper">
+                                                                <input type="radio" kendoRadioButton
+                                                                    name="rdoEmotionalConditions"
+                                                                    aria-labelledby="dontKnow3"
+                                                                    id="dontKnow3" />
+                                                                    <label class="k-checkbox-label" for="dontKnow3">Don't
+                                                                        want to answer</label>
+                                                            </span>
+
                                                             <span class="app-checkboxwidtext-wrapper">
                                                                 <input type="checkbox" kendoCheckBox
                                                                     aria-labelledby="dontKnowWhatTheQuestionIs"
@@ -1089,8 +1089,8 @@
                                                 </div>
                                             </span>
                                         </div>
-                                        <div class="flex-row mt-1">
-                                            <div class="flex-col flex-col-8">
+                                        <div class="flex-row">
+                                            <div class="flex-col">
                                                 <kendo-floatinglabel
                                                     text="How do they describe their sexual orientation or sexual identity?">
                                                     <kendo-textbox
@@ -1099,18 +1099,10 @@
 
                                                 </kendo-floatinglabel>
                                             </div>
-                                            <div class="flex-col flex-col-4 mt-3">
-                                                <span class="app-checkboxwidtext-wrapper">
-                                                    <input type="checkbox"
-                                                        aria-labelledby="sexualOrientationNotApplicable"
-                                                        id="notApplicable" kendoCheckBox />
-                                                    <label class="k-checkbox-label" for="notApplicable">Not
-                                                        Applicable</label>
-                                                </span>
-                                            </div>
+                                     
                                         </div>
                                         <div class="flex-row">
-                                            <div class="flex-col flex-col-4">
+                                            <div class="flex-col">
                                                 <kendo-floatinglabel text="Spoken language">
                                                     <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
                                                     </kendo-dropdownlist>
@@ -1118,7 +1110,7 @@
                                             </div>
                                         </div>
                                         <div class="flex-row">
-                                            <div class="flex-col flex-col-4">
+                                            <div class="flex-col">
                                                 <kendo-floatinglabel text="Written language">
                                                     <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
                                                     </kendo-dropdownlist>
@@ -1126,7 +1118,7 @@
                                             </div>
                                         </div>
                                         <div class="flex-row">
-                                            <div class="flex-col flex-col-4">
+                                            <div class="flex-col">
                                                 <kendo-floatinglabel text="English proficiency">
                                                     <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode">
                                                     </kendo-dropdownlist>
@@ -1134,8 +1126,8 @@
                                             </div>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3">Do you need an interpreter?</h5>
+                                    <section class="mb-5">
+                                        <h5>Do you need an interpreter?</h5>
                                         <div class="component-list-h">
                                             <span class="app-radiobtnwidtext-wrapper">
                                                 <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
@@ -1169,8 +1161,9 @@
                                             </span>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3">Are you deaf or do you have serious difficulty hearing?</h5>
+
+                                    <section class="mb-5">
+                                        <h5>Are you deaf or do you have serious difficulty hearing?</h5>
                                         <div class="component-list-h">
                                             <span class="app-radiobtnwidtext-wrapper">
                                                 <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
@@ -1203,8 +1196,8 @@
                                             </span>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3">Are you blind or do you have serious difficulty seeing, even
+                                    <section class="mb-5">
+                                        <h5>Are you blind or do you have serious difficulty seeing, even
                                             when wearing
                                             glasses?</h5>
                                         <div class="component-list-h">
@@ -1239,8 +1232,8 @@
                                             </span>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3">Do you have any limiting physical, mental, or emotional
+                                    <section class="mb-5">
+                                        <h5>Do you have any limiting physical, mental, or emotional
                                             conditions?</h5>
                                         <div class="component-list-h">
                                             <span class="app-radiobtnwidtext-wrapper">
@@ -1274,8 +1267,8 @@
                                             </span>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3">Do you have serious difficulty walking or climbing stairs?</h5>
+                                    <section class="mb-5">
+                                        <h5>Do you have serious difficulty walking or climbing stairs?</h5>
                                         <div class="component-list-h">
                                             <span class="app-radiobtnwidtext-wrapper">
                                                 <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
@@ -1308,8 +1301,8 @@
                                             </span>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3">Do you have difficulty dressing or bathing?</h5>
+                                    <section class="mb-5">
+                                        <h5>Do you have difficulty dressing or bathing?</h5>
                                         <div class="component-list-h">
                                             <span class="app-radiobtnwidtext-wrapper">
                                                 <input type="radio" kendoRadioButton name="rdoEmotionalConditions"
@@ -1342,9 +1335,8 @@
                                             </span>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3">Do you have serious difficulty concentrating, remembering, or
-                                            making
+                                    <section class="mb-5">
+                                        <h5>Do you have serious difficulty concentrating, remembering, or making
                                             decisions due to a physical, mental, or emotional condition?</h5>
                                         <div class="component-list-h">
                                             <span class="app-radiobtnwidtext-wrapper">
@@ -1378,8 +1370,8 @@
                                             </span>
                                         </div>
                                     </section>
-                                    <section>
-                                        <h5 class="mt-3">Do you have serious difficulty doing errands alone due to a
+                                    <section class="mb-5">
+                                        <h5>Do you have serious difficulty doing errands alone due to a
                                             physical,
                                             mental, or emotional condition?</h5>
                                         <div class="component-list-h">
@@ -1425,7 +1417,7 @@
                     <div *ngIf="current === 1">
                         <div class="accountsetting-form-wrapper">
                             <div class="form-innercontainer">
-                                <h3>Account</h3>
+                                <h3 class="text-bold">Account</h3>
                                 <div class=" ac-block">
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-12">
@@ -1473,7 +1465,7 @@
                                             </kendo-floatinglabel>
                                         </div>
                                         <div class="flex-col flex-col-3">
-                                            <kendo-floatinglabel text="zip">
+                                            <kendo-floatinglabel text="Zip">
                                                 <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
                                             </kendo-floatinglabel>
                                         </div>
@@ -1808,7 +1800,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layout-one-inner-wrapper-right  flex-col flex-col-5">
+            <div class="layout-one-inner-wrapper-right  flex-col flex-col-4">
                 <div class="right_stckey_img" style="text-align: right;">
                     <h2 style="font-weight: 200;text-align: right;">Need Assistance?</h2>
                     <h5 class=""><strong>Call CAREAssist</strong></h5>
