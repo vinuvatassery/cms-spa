@@ -54,7 +54,7 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="First Name">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal || isEditValue"
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal || isEditValue || this.isAdUser"
           name="firstName"
           formControlName="firstName"> </kendo-textbox>          
         </kendo-floatinglabel>
@@ -65,7 +65,7 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Last Name">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal || isEditValue"
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal || isEditValue || this.isAdUser"
           formControlName="lastName"
           name="lastName"> </kendo-textbox>          
         </kendo-floatinglabel>
@@ -77,7 +77,7 @@
 
       <div class="flex-col">
         <kendo-floatinglabel text="Email Address">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal || isEditValue"
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [disabled]="isAccessTypeInternal || isEditValue || this.isAdUser"
           formControlName="email"
           name="email"> </kendo-textbox>          
         </kendo-floatinglabel>
@@ -85,7 +85,12 @@
                               && userFormControls?.email.touched">
                               Email is required.
         </kendo-formerror>
-        <kendo-formerror *ngIf="userFormGroup?.get('email')?.invalid && userFormGroup?.get('email')?.errors?.['pattern'] && (userFormGroup?.get('email')?.touched)">Incorrect Email Format.</kendo-formerror>
+        <kendo-formerror *ngIf="userFormGroup?.get('email')?.invalid && userFormGroup?.get('email')?.errors?.['pattern'] && (userFormGroup?.get('email')?.touched)">
+          Incorrect Email Format.
+        </kendo-formerror>
+        <kendo-formerror *ngIf="isEmailAlreadyExists">
+          {{userFormGroup?.get('email')?.value}} already entered.
+        </kendo-formerror>
       </div>
 
 

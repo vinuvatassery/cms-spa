@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { first, forkJoin, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode, EligibilityRequestType, ClientNoteTypeCode, CaseStatusCode, WorkflowTypeCode, SmokingCessationFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode, EligibilityRequestType, ClientNoteTypeCode, CaseStatusCode, WorkflowTypeCode, SmokingCessationFacade, CompletionChecklist } from '@cms/case-management/domain';
 import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -299,7 +299,25 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
 
   isOpenAcceptanceClicked() {
     this.isOpenAcceptance = true;
-    this.saveAndUpdateCerNote(this.clientNote);
+    this.saveAndUpdateCerNote(this.clientNote).subscribe({
+      next: (data: any) => {
+        if (data?.length > 0) {
+          data.forEach((el: any) => {
+            let ques = this.questions.find(
+              (m: any) =>
+                m.reviewQuestionAnswerId === el.reviewQuestionAnswerId
+            );
+            if (ques)
+              ques.reviewQuestionResponseId = el.reviewQuestionResponseId;
+          });      
+          this.isSaveAndContinueAcceptance = !this.acceptedApplicationStatus;
+        }
+        this.loaderService.hide();
+      },
+      error: (error: any) => {
+        this.loaderService.hide();
+      },
+    });
   }
 
   isCloseDenyClicked() {
@@ -391,7 +409,13 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
         .createSmokingCessationNote(clientNote)
         .subscribe({
           next: (x: any) => {
-            this.loaderService.hide();            
+            this.loaderService.hide(); 
+            if (this.questions.some((m: any) => m.reviewQuestionResponseId !== undefined)) 
+              {
+                return this.reviewQuestionResponseFacade.updateReviewQuestionResponse(this.questions);
+              } else {
+                return this.reviewQuestionResponseFacade.saveReviewQuestionResponse(this.questions);
+              }           
           },
           error: (error: any) => {
             this.loaderService.hide();
@@ -399,6 +423,16 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
           },
         });
     }
+    if (this.questions.some((m: any) => m.reviewQuestionResponseId !== undefined)) 
+      {
+        return this.reviewQuestionResponseFacade.updateReviewQuestionResponse(
+          this.questions
+        );
+      } else {
+        return this.reviewQuestionResponseFacade.saveReviewQuestionResponse(
+          this.questions
+        );
+      }
   }
   
 }
