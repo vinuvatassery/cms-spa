@@ -262,6 +262,20 @@ export class AlertBannerComponent implements OnInit {
     }
     }
   }
+  checkDates(todoItem : any)
+  {
+    let currentDate = new Date();
+    currentDate.setHours(0,0,0,0);
+    let validDate = new Date(new Date().setDate(currentDate.getDate() +30));
+    validDate.setHours(0,0,0,0);
+    let alertDueDate = new Date(todoItem.alertDueDate);
+    alertDueDate.setHours(0,0,0,0);
+    if(alertDueDate <= validDate && alertDueDate >= currentDate)
+      {
+        return true;
+      }
+      return false;
+  }
   
   onOpenTodoDetailsClicked() {
     this.isModalTodoDetailsOpenClicked.emit(this.selectedAlertId);
