@@ -1,0 +1,40 @@
+.input-group-request {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.input-group-request .k-button {
+  height: 40px;
+  position: relative;
+  top: -2px;
+}
+
+.verificaton_email {
+  max-width: 600;
+  width: 100%;
+}
+
+.sendrequest-fieldwithbtn {
+  position: relative;
+}
+.sendrequest-fieldwithbtn .k-textbox {
+  padding-right: 10rem;
+}
+.sendrequest-fieldwithbtn .overlay-send-button {
+  position: absolute;
+  right: 18px;
+  top: 24px;
+  z-index: 2;
+}
+
+::ng-deep .k-upload .k-actions {
+  display: none;
+}
+
+.more_input {
+  position: relative;
+  right: 15px;
+}

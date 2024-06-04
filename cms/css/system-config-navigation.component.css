@@ -1,0 +1,17 @@
+.with-heading-label {
+  padding: 0 4px;
+}
+.with-heading-label .kendo-list-items {
+  padding-left: 30px !important;
+  border-radius: 4px !important;
+  margin-bottom: 1px !important;
+}
+.with-heading-label .with-search-header {
+  padding-left: 12px !important;
+}
+
+.kendo-list-base .input-search .material-icons {
+  position: absolute;
+  left: 10px;
+  top: 28px;
+}

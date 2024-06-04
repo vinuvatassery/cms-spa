@@ -1,0 +1,12 @@
+.recently-view .k-grid tr.dragging {
+  background-color: #f45c42;
+}
+.recently-view .k-grid tr {
+  height: 53px;
+}
+.recently-view .k-grid-header,
+.recently-view .k-grouping-header,
+.recently-view .k-grid-add-row,
+.recently-view .k-grid-footer {
+  display: none;
+}

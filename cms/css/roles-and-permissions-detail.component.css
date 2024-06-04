@@ -1,0 +1,39 @@
+.role-details-header {
+  padding: 14px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.role-details-header .app-l-breadcrumb {
+  padding: 0;
+  min-height: auto;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.k-input-prefix {
+  position: relative;
+  left: 10px;
+  top: auto;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.with-heading-label {
+  padding: 0 4px;
+}
+.with-heading-label .kendo-list-items {
+  padding-left: 30px !important;
+  border-radius: 4px !important;
+  margin-bottom: 1px !important;
+}
+
+.roles-navigation,
+.roles-navigation-right {
+  max-height: calc(100vh - 220px) !important;
+  min-height: calc(100vh - 220px) !important;
+}

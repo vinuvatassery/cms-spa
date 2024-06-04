@@ -1,0 +1,12 @@
+.table td {
+  border: 1px solid;
+  padding: 10px;
+}
+
+.mt-04 {
+  margin-top: 4px;
+}
+
+div.break {
+  word-wrap: break-word;
+}

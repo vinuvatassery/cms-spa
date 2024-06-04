@@ -1,0 +1,26 @@
+.case-360-tab .k-tabstrip-items {
+  max-width: calc(100% - 150px);
+}
+
+.tab-inner-details {
+  padding: 10px 20px;
+}
+
+.tab-header-block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.fmly-epdorpdown {
+  width: 100%;
+  max-width: 250px;
+}
+
+.block-section {
+  padding: 1rem;
+  padding-bottom: 2rem;
+}

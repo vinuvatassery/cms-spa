@@ -1,0 +1,18 @@
+.input-search .material-icons {
+  top: 27px;
+}
+.input-search .input-inline-loader {
+  top: 25px;
+  right: 34px;
+}
+
+.notifydate {
+  max-width: 80%;
+}
+
+.notifydate_dropdown {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  z-index: 1;
+}

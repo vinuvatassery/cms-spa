@@ -1,0 +1,15 @@
+.table td {
+  border: 1px solid;
+  padding: 10px;
+}
+
+.voterreg-info {
+  background: #0271c0;
+  padding: 1rem;
+  color: #fff;
+  border-radius: 6px;
+  max-width: 600px;
+}
+.voterreg-info span {
+  margin-right: 10px;
+}

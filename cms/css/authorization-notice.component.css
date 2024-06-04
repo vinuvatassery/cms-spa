@@ -1,0 +1,8 @@
+.number-list {
+  padding-left: 20px;
+  line-height: 22px;
+}
+.number-list li {
+  list-style: decimal;
+  padding-bottom: 6px;
+}

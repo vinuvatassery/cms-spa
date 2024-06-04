@@ -1,0 +1,122 @@
+.k-tilelayout {
+  grid-auto-rows: auto !important;
+}
+
+.small_tail_box .k-tilelayout-item-body {
+  padding: 0;
+  border: 0px;
+}
+
+.plain_Drop {
+  outline: 0px;
+  border: 0px;
+  width: auto;
+}
+.plain_Drop .k-input-md .k-input-inner,
+.plain_Drop .k-picker-md .k-input-inner {
+  padding: 0px;
+}
+
+.disabledEditDashboard {
+  background-color: transparent;
+}
+
+.enabledEditDashboard {
+  background-color: gray;
+}
+
+.box {
+  height: 100%;
+  background-color: #fff;
+}
+
+.box-header {
+  height: 50px;
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.box-header h5 {
+  padding-top: 10px;
+  padding-left: 10px;
+  width: 100%;
+  display: inline-block;
+}
+
+.box-content {
+  height: 100%;
+}
+
+.box-header-btns {
+  right: 25px;
+  cursor: pointer;
+  position: absolute;
+}
+
+.main-gridster {
+  background: #ffffff;
+  padding: 10px 0 0 0 !important;
+  height: 100%;
+  min-height: 100vh;
+  max-height: 100%;
+}
+.main-gridster gridster-item {
+  padding: 0;
+  border: 0px solid #ddd;
+  border-radius: 2px;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  margin-right: 0px !important;
+  overflow: visible;
+}
+
+.add-gridster {
+  background: transparent;
+  padding: 0 0 0 0 !important;
+  height: 100%;
+  width: 100%;
+}
+.add-gridster gridster-item {
+  padding: 0;
+  border: 0px solid transparent;
+  border-radius: 2px;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  margin-right: 0px !important;
+  overflow: visible;
+}
+
+.app-l-dashboard {
+  width: 100%;
+  height: calc(100vh - 175px);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.example-sidenav-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.example-sidenav {
+  background-color: #002538;
+  padding: 40px;
+  width: 250px;
+}
+
+.padWidgetContent {
+  margin-top: 40px;
+}

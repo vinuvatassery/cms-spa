@@ -1,0 +1,30 @@
+.delete-confirm-modal .k-actions-stretched > * {
+  -webkit-box-flex: initial;
+      -ms-flex: initial;
+          flex: initial;
+}
+.delete-confirm-modal .k-dialog-buttongroup {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.delete-confirm-modal .k-dialog-buttongroup .k-button {
+  color: #005994;
+  border: 1px solid;
+  border-width: 1px;
+  background: white;
+}
+.delete-confirm-modal .k-dialog-buttongroup .k-button.k-primary {
+  background: #a22c23;
+  background-color: #a22c23;
+  color: white;
+  border: 0px;
+}
+.delete-confirm-modal .k-dialog-buttongroup .k-button.k-primary:hover, .delete-confirm-modal .k-dialog-buttongroup .k-button.k-primary:focus {
+  background: #86211a !important;
+  background-color: #86211a !important;
+  color: white;
+}
+.delete-confirm-modal .k-dialog-buttongroup .k-button + .k-button {
+  margin-left: 5px !important;
+}

@@ -1,0 +1,30 @@
+.k-auto-complete-box {
+  position: relative;
+}
+.k-auto-complete-box .k-autocomplete {
+  position: relative;
+  padding-left: 20px;
+}
+.k-auto-complete-box .k-autocomplete .k-clear-value {
+  top: 10px;
+}
+.k-auto-complete-box .k-autocomplete .k-input {
+  padding-left: 40px;
+}
+.k-auto-complete-box .global-search-icon {
+  position: absolute;
+  top: 8px;
+  z-index: 1;
+  left: 10px;
+}
+
+.k-autocomplete-custom .k-list-scroller {
+  max-height: 40vh !important;
+  overflow: auto;
+}
+.k-autocomplete-custom .k-outer-group-header {
+  padding: 14px 10px 0;
+}
+.k-autocomplete-custom ul li.k-outer-group-header {
+  padding-top: 15px;
+}

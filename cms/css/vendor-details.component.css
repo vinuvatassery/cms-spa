@@ -1,0 +1,7 @@
+.inlineloaderwrapper {
+  position: relative;
+}
+.inlineloaderwrapper .input-inline-loader {
+  top: 48%;
+  right: 22px;
+}

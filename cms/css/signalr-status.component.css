@@ -1,0 +1,97 @@
+.authentication-icons {
+  width: 24px;
+  height: 24px;
+  display: block;
+  background-size: contain !important;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  background-repeat: no-repeat !important;
+  top: 3px;
+  right: 10px;
+}
+.authentication-icons.auth-connected {
+  background: url(../../../../util-theme/src/lib/themes/assets/images/auth-connected.svg);
+}
+.authentication-icons.auth-connecting {
+  background: url(../../../../util-theme/src/lib/themes/assets/images/auth-connecting.svg);
+}
+.authentication-icons.auth-reconnecting {
+  background: url(../../../../util-theme/src/lib/themes/assets/images/auth-reconnecting.svg);
+}
+.authentication-icons.auth-error {
+  background: url(../../../../util-theme/src/lib/themes/assets/images/auth-error.svg);
+}
+
+.notification-badge.auth-error {
+  background: #d90000 !important;
+  z-index: 4 !important;
+}
+
+.circle-status,
+.circle-status:after {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+}
+
+.circle-status {
+  position: absolute;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+  z-index: 1;
+  left: 1px;
+  top: 1px;
+}
+.circle-status.auth-connected {
+  border-top: 1px solid #0f9159;
+  border-right: 1px solid #0f9159;
+  border-bottom: 1px solid #0f9159;
+  border-left: 1px solid #0f9159;
+  border: 0px;
+}
+.circle-status.auth-connecting {
+  border-top: 2px solid #cff5e4;
+  border-right: 2px solid #cff5e4;
+  border-bottom: 2px solid #cff5e4;
+  border-left: 2px solid #0f9159;
+}
+.circle-status.auth-reconnecting {
+  border-top: 2px solid #fae7e2;
+  border-right: 2px solid #fae7e2;
+  border-bottom: 2px solid #fae7e2;
+  border-left: 2px solid #e85d3c;
+}
+.circle-status.auth-error {
+  border-top: 1px solid #e85d3c;
+  border-right: 1px solid #e85d3c;
+  border-bottom: 1px solid #e85d3c;
+  border-left: 1px solid #e85d3c;
+}
+
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

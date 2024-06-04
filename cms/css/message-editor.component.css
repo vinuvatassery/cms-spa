@@ -1,0 +1,24 @@
+.sms-variable-search-block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.sms-variable-search-block .input-search {
+  width: 100%;
+}
+.sms-variable-search-block .input-search .medium-input-form {
+  max-width: 100%;
+}
+.sms-variable-search-block .sms-variable-search_close {
+  color: #838383;
+  font-size: 0.929rem;
+  margin-left: 0;
+}
+.sms-variable-search-block .sms-variable-search_close .material-icons {
+  font-size: 1rem;
+}
+
+.sms-temp-scroll {
+  max-height: 43vh;
+  overflow-y: auto;
+}

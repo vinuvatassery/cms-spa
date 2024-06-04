@@ -1,0 +1,16 @@
+.duplicate-threecolumn-item {
+  display: grid;
+  grid-template-columns: 70px 0.9fr 1.1fr;
+}
+.duplicate-threecolumn-item h5, .duplicate-threecolumn-item p {
+  margin: 0px;
+  padding: 6px 6px 6px 0px;
+}
+.duplicate-threecolumn-item h5.text-bold, .duplicate-threecolumn-item p.text-bold {
+  padding: 6px 6px 6px 0px;
+}
+.duplicate-threecolumn-item h5:last-child, .duplicate-threecolumn-item p:last-child {
+  border-left: 1px solid #ccc;
+  margin: 0px;
+  padding: 6px 6px 6px 28px;
+}

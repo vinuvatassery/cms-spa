@@ -1,0 +1,11 @@
+.hide-fd-list {
+  display: none !important;
+}
+
+.loader-align {
+  position: absolute;
+  top: -21%;
+  left: -1%;
+  bottom: -76%;
+  right: 0;
+}

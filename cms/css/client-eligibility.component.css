@@ -1,0 +1,29 @@
+.card-buttons-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 5px;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.card-buttons-wrap .k-button {
+  opacity: 0.5;
+}
+.card-buttons-wrap .k-button:hover {
+  opacity: 1;
+}
+
+.toggle-wrap {
+  cursor: pointer;
+}
+
+.top-lg-space {
+  margin-top: 100px;
+}
+
+.case-reviewsection .card-buttons-wrap .k-button-flat {
+  padding: 6px;
+}

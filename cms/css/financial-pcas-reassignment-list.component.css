@@ -1,0 +1,8 @@
+.pca-multi-list {
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 0.5fr;
+}
+
+.lessAmount {
+  color: red;
+}
