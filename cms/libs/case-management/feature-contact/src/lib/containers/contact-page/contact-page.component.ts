@@ -770,7 +770,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isValid) {
       this.loaderService.show()
       return this.saveContactInfo();
-    }    
+    }
     const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.contactInfoForm, this.elementRef.nativeElement,null);
       if (invalidControl) {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1070,8 +1070,31 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       };
     }
 
-    if (this.isEdit) {
-      const homeAddress1 = this.contactInfo?.address?.filter((address: ClientAddress) => address.addressTypeCode === AddressTypeCode.Home
+    this.updateEditModeData(mailingAddress, homeAddress,homeAddressGroup, phoneAndEmail, friendsOrFamilyContact, addressProofDoc);
+
+    if (mailingAddress) {
+      contactInfoData.address?.push(mailingAddress)
+    }
+    if (homeAddress) {
+      contactInfoData.address?.push(homeAddress)
+    }
+    contactInfoData.phone = [phoneAndEmail.homePhone, phoneAndEmail.cellPhone, phoneAndEmail.workPhone, phoneAndEmail.otherPhone];
+    contactInfoData.email = phoneAndEmail.email;
+    contactInfoData.friendsOrFamilyContact = friendsOrFamilyContact;
+    contactInfoData.clientCaseEligibility = clientCaseEligibility;
+    contactInfoData.isCer = this.isCerForm;
+    if (addressProofDoc) {
+      contactInfoData.homeAddressProof = addressProofDoc;
+    }
+
+    return this.saveContact(this.workflowFacade.clientId, this.workflowFacade.clientCaseEligibilityId, contactInfoData);
+  }
+
+  private updateEditModeData(mailingAddress: ClientAddress, homeAddress: any, homeAddressGroup:any, phoneAndEmail: any, friendsOrFamilyContact: FriendsOrFamilyContact, addressProofDoc: HomeAddressProof | undefined)
+  {
+    if (!this.isEdit) return;
+
+    const homeAddress1 = this.contactInfo?.address?.filter((address: ClientAddress) => address.addressTypeCode === AddressTypeCode.Home
         || address.addressTypeCode === AddressTypeCode.UnHoused)[0];
       const mailingAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
       const homePhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.HomePhone)[0];
@@ -1112,24 +1135,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         addressProofDoc.concurrencyStamp = this.contactInfo?.homeAddressProof?.concurrencyStamp ?? '';
         addressProofDoc.documentId = this.contactInfo?.homeAddressProof?.documentId ?? '';
       }
-    }
-
-    if (mailingAddress) {
-      contactInfoData.address?.push(mailingAddress)
-    }
-    if (homeAddress) {
-      contactInfoData.address?.push(homeAddress)
-    }
-    contactInfoData.phone = [phoneAndEmail.homePhone, phoneAndEmail.cellPhone, phoneAndEmail.workPhone, phoneAndEmail.otherPhone];
-    contactInfoData.email = phoneAndEmail.email;
-    contactInfoData.friendsOrFamilyContact = friendsOrFamilyContact;
-    contactInfoData.clientCaseEligibility = clientCaseEligibility;
-    contactInfoData.isCer = this.isCerForm;
-    if (addressProofDoc) {
-      contactInfoData.homeAddressProof = addressProofDoc;
-    }
-
-    return this.saveContact(this.workflowFacade.clientId, this.workflowFacade.clientCaseEligibilityId, contactInfoData);
   }
 
   private saveContact(clientId: number | undefined, clientCaseEligibilityId: string | undefined, contactInfo: ContactInfo) {
@@ -1970,7 +1975,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.workflowFacade.saveForLaterCompleted(true)
-            this.loaderService.hide();   
+            this.loaderService.hide();
           }
         })
       }
@@ -1980,7 +1985,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private addSaveForLaterValidationsSubscription(): void {    
+  private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       this.workflowFacade.paperLessFlagContactInfoChangeSubject.next(this.getFlag(this.contactInfoForm?.get('email.paperlessFlag')?.value));
       if (this.checkValidations() && this.contactInfoForm.valid) {
@@ -1995,17 +2000,17 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   checkValidations() {
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
-    
+
     if (this.homeAddress['homeAddressChangedFlag'].value === StatusFlag.Yes) {
-      const isAddressProofRequired = 
+      const isAddressProofRequired =
         !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) &&
-        (this.uploadedHomeAddressProof == undefined && 
+        (this.uploadedHomeAddressProof == undefined &&
         (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name == undefined));
-      
+
       if (isAddressProofRequired) {
         this.showAddressProofRequiredValidation = true;
       }
-      
+
       if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation) {
         return true;
       }
@@ -2150,19 +2155,29 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const cellPhone = (this.contactInfoForm.get('cellPhone') as FormGroup).controls['phoneNbr'];
     const workPhone = (this.contactInfoForm.get('workPhone') as FormGroup).controls['phoneNbr'];
     const otherPhone = (this.contactInfoForm.get('otherPhone') as FormGroup).controls['phoneNbr'];
-    if(homePhone.value?.trim() !==''
-       && !((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false)
-       && ( !((this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && homePhone.value?.trim() == cellPhone.value?.trim()
-       || !((this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && homePhone.value?.trim() == workPhone.value?.trim()
-       || !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && homePhone.value?.trim() == otherPhone.value?.trim()) ){
-      this.homePhoneDuplicate=true;
+    this.ValidateDuplicateHomePhone(homePhone,cellPhone,workPhone,otherPhone);
+    this.ValidateDuplicateCellPhone(homePhone,cellPhone,workPhone,otherPhone);
+    this.ValidateDuplicateWorkPhone(homePhone,cellPhone,workPhone,otherPhone);
+    this.ValidateDuplicateOtherPhone(homePhone,cellPhone,workPhone,otherPhone);
+  }
+
+  ValidateDuplicateHomePhone(homePhone: any, cellPhone: any, workPhone: any, otherPhone: any) {
+    if (homePhone.value?.trim() !== ''
+      && !((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false)
+      && (!((this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && homePhone.value?.trim() == cellPhone.value?.trim()
+        || !((this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && homePhone.value?.trim() == workPhone.value?.trim()
+        || !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && homePhone.value?.trim() == otherPhone.value?.trim())) {
+      this.homePhoneDuplicate = true;
       homePhone.setErrors({ incorrect: true });
-    }else{
-      this.homePhoneDuplicate=false;
-        homePhone.setErrors(null);
-        homePhone.setValidators(null);
-        homePhone.updateValueAndValidity();
+    } else {
+      this.homePhoneDuplicate = false;
+      homePhone.setErrors(null);
+      homePhone.setValidators(null);
+      homePhone.updateValueAndValidity();
     }
+  }
+
+  ValidateDuplicateCellPhone(homePhone: any, cellPhone: any, workPhone: any, otherPhone: any) {
     if(cellPhone.value?.trim()!==''
        && !((this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false)
        && ( !((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && cellPhone.value?.trim() == homePhone.value?.trim()
@@ -2176,6 +2191,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         cellPhone.setValidators(null);
         cellPhone.updateValueAndValidity();
     }
+  }
+
+  ValidateDuplicateWorkPhone(homePhone: any, cellPhone: any, workPhone: any, otherPhone: any) {
     if(workPhone.value?.trim()!==''
        && !((this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false)
        && ( !((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && workPhone.value?.trim() == homePhone.value?.trim()
@@ -2189,6 +2207,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         workPhone.setValidators(null);
         workPhone.updateValueAndValidity();
     }
+  }
+
+  ValidateDuplicateOtherPhone(homePhone: any, cellPhone: any, workPhone: any, otherPhone: any) {
     if(otherPhone.value?.trim()!==''
        && !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false)
        && (!((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false) && otherPhone.value?.trim() == homePhone.value?.trim()
@@ -2202,7 +2223,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         otherPhone.setValidators(null);
         otherPhone.updateValueAndValidity();
     }
-
   }
 
 }

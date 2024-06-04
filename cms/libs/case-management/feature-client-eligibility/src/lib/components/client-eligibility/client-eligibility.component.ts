@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { first, forkJoin, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode, EligibilityRequestType, ClientNoteTypeCode, CaseStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode, EligibilityRequestType, ClientNoteTypeCode, CaseStatusCode, WorkflowTypeCode, SmokingCessationFacade } from '@cms/case-management/domain';
 import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -64,6 +64,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   acceptanceModalTitle: string = 'Application Accepted';
   isreviewQuestionAnswersFacadeSubscribed = false;
   workflowTypeCode:any;
+  clientNote: any;
 
   /** Constructor **/
   constructor(
@@ -80,6 +81,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
     private readonly reviewQuestionAnswerFacade: ReviewQuestionAnswerFacade,  
     public readonly documentFacade: DocumentFacade,
     private readonly router: Router,
+    private readonly smokingCessationFacade: SmokingCessationFacade
 
   ) {
     this.eligibilityForm = this.formBuilder.group({});
@@ -156,13 +158,13 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
 
   cerNotesChanged()
   {
-    const clientNote: any = {
+    this.clientNote = {
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       clientId: this.clientId,
       note: this.cerNote,
       NoteTypeCode:ClientNoteTypeCode.cerEligibility
     };  
-    this.cerNoteResponse.emit(clientNote);
+    this.cerNoteResponse.emit(this.clientNote);
   }
 
   getQuestionDocuments(questionCode: string) {
@@ -297,6 +299,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
 
   isOpenAcceptanceClicked() {
     this.isOpenAcceptance = true;
+    this.saveAndUpdateCerNote(this.clientNote);
   }
 
   isCloseDenyClicked() {
@@ -379,6 +382,23 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
       return true;
     }
     return false;
+  }
+
+  saveAndUpdateCerNote(clientNote: any) {    
+    if (clientNote) {
+      this.loaderService.show();
+      this.smokingCessationFacade
+        .createSmokingCessationNote(clientNote)
+        .subscribe({
+          next: (x: any) => {
+            this.loaderService.hide();            
+          },
+          error: (error: any) => {
+            this.loaderService.hide();
+            this.loggingService.logException(error);
+          },
+        });
+    }
   }
   
 }

@@ -22,6 +22,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
 import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { TodoFacade } from '@cms/productivity-tools/domain';
 
 @Component({
   selector: 'case-management-send-letter',
@@ -66,7 +67,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly userDataService: UserDataService,
     private readonly router: Router,
     private readonly fabBadgeFacade: FabBadgeFacade,
-    private readonly sanitizer: DomSanitizer) { }
+    private readonly sanitizer: DomSanitizer,
+    public todoFacade: TodoFacade,) { }
 
   /** Public properties **/
 
@@ -595,6 +597,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
                 this.cancelDisplay = false;
               }
             this.sortDropdownValues(defaultOption, otherOptions);
+            this.todoFacade.loadAlertsBanner(this.entityId);
             }
             this.loaderService.hide();
           },
@@ -634,12 +637,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   handleDdlLetterValueChange(event: any) {
     this.handleConfirmPopupHeader(event.templateTypeCode);
     this.isMailingAddressMissing = false;
-    if(this.notificationGroup === ScreenType.VendorProfile){
-      this.isMailCodeMissing = false;
-    }
-    if(this.communicationLetterTypeCode === undefined || this.communicationLetterTypeCode === ''){
-      this.communicationLetterTypeCode = event.templateTypeCode;
-    }
+    this.setVendorAndcommunicationType(event.templateTypeCode);
     if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
       || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
       || this.communicationLetterTypeCode === CommunicationEventTypeCode.ApprovalNoticeLetter
@@ -660,6 +658,15 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
     else{
       this.loadNewTemplate(event);
+    }
+  }
+
+  setVendorAndcommunicationType(templateTypeCode: any) {
+    if(this.notificationGroup === ScreenType.VendorProfile){
+      this.isMailCodeMissing = false;
+    }
+    if(this.communicationLetterTypeCode === undefined || this.communicationLetterTypeCode === ''){
+      this.communicationLetterTypeCode = templateTypeCode;
     }
   }
 
@@ -863,24 +870,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   let isFileExists = false;
   if (this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
   {
-    if(event.length > 0){
-      this.cerEmailAttachedFiles = event;
-    }else{
-      if(event.documentTemplateId){
-        isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.description);
-        if(!isFileExists || isFileExists === undefined){
-          this.cerEmailAttachedFiles?.push(event);
-        }
-      }
-      if(event.clientDocumentId){
-        isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.documentName);
-        if(!isFileExists || isFileExists === undefined){
-          this.cerEmailAttachedFiles?.push(event);
-        }
-      }
-    }
-    this.attachmentCount = this.cerEmailAttachedFiles?.length;
+    this.prepareEsignAttachment(isFileExists, event);
   }else{
+    this.prepareClientVendorAttachment(isFileExists, event);
+  }
+}
+
+  prepareClientVendorAttachment(isFileExists: boolean, event: any) {
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
@@ -899,7 +895,26 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
     this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
   }
-}
+
+  prepareEsignAttachment(isFileExists: boolean, event: any) {
+    if(event.length > 0){
+      this.cerEmailAttachedFiles = event;
+    }else{
+      if(event.documentTemplateId){
+        isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.description);
+        if(!isFileExists || isFileExists === undefined){
+          this.cerEmailAttachedFiles?.push(event);
+        }
+      }
+      if(event.clientDocumentId){
+        isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.documentName);
+        if(!isFileExists || isFileExists === undefined){
+          this.cerEmailAttachedFiles?.push(event);
+        }
+      }
+    }
+    this.attachmentCount = this.cerEmailAttachedFiles?.length;
+  }
 
 loadMailingAddress() {
   if (this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
