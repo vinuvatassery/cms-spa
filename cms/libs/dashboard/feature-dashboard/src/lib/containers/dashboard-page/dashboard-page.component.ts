@@ -284,7 +284,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       itemChangeCallback: DashboardPageComponent.itemChange,
       itemResizeCallback: this.itemResize,
       draggable: { enabled: true },
-      resizable: { enabled: true },
+      resizable: { enabled: false },
     };
     this.isReorderEnable = true;
     this.inputs = {
