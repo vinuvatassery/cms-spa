@@ -43,17 +43,7 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   };
 
 
-  public rolesClassList:any = [
-    {roleCode : UserDefaultRoles.CACaseWorker, roleClass : 'role-identifier role-case-worker'},
-    {roleCode : UserDefaultRoles.Admin, roleClass : 'role-identifier role-admin'},
-    {roleCode : UserDefaultRoles.Client, roleClass : 'role-identifier role-client'},
-    {roleCode : UserDefaultRoles.SuperAdmin, roleClass : 'role-identifier role-super-admins'},
-    {roleCode : UserDefaultRoles.FiscalSpecialist, roleClass : 'role-identifier role-fiscal-specialist'},
-    {roleCode : UserDefaultRoles.CACaseManager, roleClass : 'role-identifier role-case-manager'},
-    {roleCode : UserDefaultRoles.QaAnalyst, roleClass : 'role-identifier role-qa-analyst'},
-    {roleCode : UserDefaultRoles.OfficeSpecialist ,roleClass : 'role-identifier role-office-specialist'},
-    {roleCode : UserDefaultRoles.IntakeCoordinator,roleClass : 'role-identifier role-intake-coordinator'},
-  ];
+  
   /* Constructor */
   constructor(private readonly userManagementFacade: UserManagementFacade,
     private cdr: ChangeDetectorRef,
