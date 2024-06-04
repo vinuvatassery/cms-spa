@@ -9,10 +9,10 @@ import { PcaCodesPageComponent } from './containers/pca-codes-page/pca-codes-pag
 
 const routes: Routes = [
   {
-    path: ' ',
-    component: FundsPageComponent,
- 
-  }, 
+    path: '',
+    redirectTo: 'funds',
+    pathMatch: 'full',
+  },
   {
     path: 'expense-types',
     component: ExpenseTypePageComponent,

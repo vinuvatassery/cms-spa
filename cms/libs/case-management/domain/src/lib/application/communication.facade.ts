@@ -196,13 +196,7 @@ export class CommunicationFacade {
           formData.append('systemAttachments[' + i + '][fileSize]', file.size);
           formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
           formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
-          let typeCode = '';
-          if(file.typeCode == undefined){
-          typeCode =  file?.document?.documentTypeCode
-          }
-          else if (file.typeCode != undefined && file?.document?.documentTypeCode != undefined){
-           typeCode = file.typeCode
-          }
+          let typeCode = this.getTypeCode(file);
           formData.append('systemAttachments[' + i + '][typeCode]',typeCode);
           formData.append('systemAttachments[' + i + '][clientDocumentId]', file?.document?.clientDocumentId ?? '');
           formData.append('systemAttachments[' + i + '][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
@@ -212,6 +206,17 @@ export class CommunicationFacade {
         }
       });
     }
+  }
+
+  getTypeCode(file: any) {
+    let typeCode = '';
+    if(file.typeCode == undefined){
+    typeCode =  file?.document?.documentTypeCode
+    }
+    else if (file.typeCode != undefined && file?.document?.documentTypeCode != undefined){
+      typeCode = file.typeCode
+    }
+    return typeCode;
   }
 
   createFormDataForEmail(data: {templateTypeCode:string, eventGroupCode: string, subject: string, toEmail: string, ccEmail: any[], bccEmail: any[], eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[]}) {
@@ -376,8 +381,19 @@ export class CommunicationFacade {
   }
 
   loadClientAttachments(clientId: any, typeCode: any) {
+    const payload ={
+      clientId : clientId,
+      skipcount : 0,
+      maxResultCount: 1000,
+      sort : '',
+      sortType : 'asc',
+      filter :null,
+      columnName : null,
+      typeCode : typeCode
+    }
+
     return this.documentDataService.getDocumentsByClientCaseEligibilityId(
-      clientId, 0, 1000, '', 'asc', null, null, typeCode
+      payload
     );
   }
 

@@ -440,17 +440,30 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit {
     return '';
   }
 
+  setSortDirection(){
+   return this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+  }
+
+  setSortValueBatch(stateData:any){
+    return stateData.sort[0]?.field ?? this.sortValueBatch
+  }
+
+  setSortType(stateData:any){
+   return stateData.sort[0]?.dir ?? 'desc'
+  }
   dataStateChange(stateData: any): void {
     this.sortBatch = stateData.sort;
-    this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
-    this.sortType = stateData.sort[0]?.dir ?? 'desc';
+    this.sortValueBatch = this.setSortValueBatch(stateData) ;
+    this.sortType = this.setSortType(stateData) ;
     this.state = stateData;
-    this.sortDir =
-      this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.setSortDirection()
+     
     this.filter = stateData?.filter?.filters;
+    this.checkDataState(stateData);
+    this.loadReconcileListGrid();
+  }
 
-    this.sortColumn = this.columns[stateData.sort[0]?.field];
-
+  checkDataState(stateData:any){
     if (stateData.filter?.filters.length > 0) {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       if (stateFilter.field === 'checkNbr') {
@@ -478,8 +491,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit {
       this.filter = null;
       this.isFiltered = false;
     }
-
-    this.loadReconcileListGrid();
   }
 
   setToDefault() {

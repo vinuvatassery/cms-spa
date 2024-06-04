@@ -194,13 +194,13 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
-    public financialVendorFacade :FinancialVendorFacade,
+    public financialVendorFacade: FinancialVendorFacade,
     private dialogService: DialogService,
     private formBuilder: FormBuilder,
     private readonly elementRef: ElementRef,
     private scrollFocusValidationfacade: ScrollFocusValidationfacade,
     private readonly userManagementFacade: UserManagementFacade,
-    private readonly cdr: ChangeDetectorRef) {}
+    private readonly cdr: ChangeDetectorRef) { }
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
@@ -210,8 +210,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     this.rxfilterData = filter;
   }
 
-  validaterxRefundInfoFilter(index : any)
-  {
+  validaterxRefundInfoFilter(index: any) {
     if (this.rxRefundInfoFilter?.length == 0) {
       this.selectedVendorRefundsList[index].prescriptionFillItems =
         this.allSelectedVendorRefundsList[index].prescriptionFillItems;
@@ -229,7 +228,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     this.rxRefundInfoFilter = stateData?.filter?.filters;
     if (this.rxRefundInfoFilter) {
 
-     this.validaterxRefundInfoFilter(index)
+      this.validaterxRefundInfoFilter(index)
 
       this.rxRefundInfoFilter.forEach((element, ind) => {
         let rowNum = 0;
@@ -453,7 +452,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -539,8 +538,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     this.selectedProvider = null;
   }
 
-  validatePremiumandTpa()
-  {
+  validatePremiumandTpa() {
     if (
       this.selectedRefundType === ServiceTypeCode.insurancePremium &&
       this.insClaims.selectedInsuranceClaims &&
@@ -565,7 +563,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     if (this.claimsCount != 0) {
       this.inputConfirmationClicked = true;
       this.disableFeildsOnConfirmSelection = true;
-    this.validatePremiumandTpa()
+      this.validatePremiumandTpa()
       if (
         this.selectedRefundType === ServiceTypeCode.pharmacy ||
         this.selectedRefundType === 'RX' ||
@@ -641,13 +639,12 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  processtpaRefundGridLists(response : any,res : any)
-  {
+  processtpaRefundGridLists(response: any, res: any) {
     if (this.tpaRefundGridLists && this.tpaRefundGridLists.length > 0) {
       const tpaList = [...this.tpaRefundGridLists];
       tpaList.forEach((element, ind) => {
         let index = response.findIndex(
-          (x : any) => x.paymentRequestId == element.paymentRequestId
+          (x: any) => x.paymentRequestId == element.paymentRequestId
         );
         if (index <= 0) this.tpaRefundGridLists.splice(index);
       });
@@ -657,8 +654,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  updatetpaRefundGridLists()
-  {
+  updatetpaRefundGridLists() {
     this.tpaRefundGridLists.forEach((x) => {
       x.serviceStartDate = x.serviceStartDate
         ? new Date(x.serviceStartDate)
@@ -682,13 +678,13 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
         let data: any[] = [];
         let response: any[] = [];
         response = res.data;
-       
+
         this.processtpaRefundGridLists(response, res)
-       
+
         this.tpaRefundGridLists = [...this.tpaRefundGridLists];
 
         this.updatetpaRefundGridLists()
-  
+
         this.claimsCount = this.tpaRefundGridLists.length;
       });
     if (this.isEdit) {
@@ -762,17 +758,17 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
 
   onAddRefundClick() {
     this.isAddClicked = true;
-  if (this.selectedRefundType === 'PHARMACY') {
-    this.addNewRefundRx();
-  }
-  if (this.selectedRefundType === ServiceTypeCode.insurancePremium) {
-    this.insuraceAddRefundClickSubject.next(true);
-  }
-  if (this.selectedRefundType === ServiceTypeCode.tpa) {
-    this.tpaAddRefundClickSubject.next(true)
-  }
+    if (this.selectedRefundType === 'PHARMACY') {
+      this.addNewRefundRx();
+    }
+    if (this.selectedRefundType === ServiceTypeCode.insurancePremium) {
+      this.insuraceAddRefundClickSubject.next(true);
+    }
+    if (this.selectedRefundType === ServiceTypeCode.tpa) {
+      this.tpaAddRefundClickSubject.next(true)
+    }
 
-}
+  }
 
   addTpa(event: any) {
     this.financialVendorRefundFacade.addUpdateInsuranceRefundClaim$.subscribe(
@@ -1056,46 +1052,39 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       ?.classList.contains('ng-touched');
     let inValid = false;
     //here
-    if (control === 'qtyRefunded') {
-      inValid =
-        isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0)
-          ? true
-          : false;
-      dataItem.qtyRefundedValid = !inValid;
-      dataItem.qtyRefundedGtRxQty = inValid =
-        dataItem.qtyRefunded > dataItem.rxqty;
-    }
-    if (control === 'daySupplyRefunded') {
-      inValid =
-        isTouched &&
-        !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0)
-          ? true
-          : false;
-      dataItem.daySupplyRefundedValid = !inValid;
-      let rxRatio = dataItem.rxqty / dataItem.daySupply;
-      let refundRatio = dataItem.qtyRefunded / dataItem.daySupplyRefunded;
+    switch (control) {
+      case 'qtyRefunded':
+        inValid = this.IsDataValid('qtyRefunded', isTouched, dataItem);
+        dataItem.qtyRefundedValid = !inValid;
+        dataItem.qtyRefundedGtRxQty = inValid = dataItem.qtyRefunded > dataItem.rxqty;
+        break;
+      case 'daySupplyRefunded':
+        inValid = this.IsDataValid('daySupplyRefunded', isTouched, dataItem);
+        dataItem.daySupplyRefundedValid = !inValid;
+        let rxRatio = dataItem.rxqty / dataItem.daySupply;
+        let refundRatio = dataItem.qtyRefunded / dataItem.daySupplyRefunded;
 
-      if (dataItem.daySupplyRefunded > dataItem.daySupply) {
-        dataItem.daySpyRfdGtDaySpy = inValid = true;
-        dataItem.daySupplyRefundedRatioValid = false;
-      } else {
-        dataItem.daySpyRfdGtDaySpy = false;
-        if (!isNaN(refundRatio) && isFinite(refundRatio) && refundRatio > 0) {
-          inValid = (rxRatio >= refundRatio);
-          dataItem.daySupplyRefundedRatioValid = inValid;
-        } else {
+        if (dataItem.daySupplyRefunded > dataItem.daySupply) {
+          dataItem.daySpyRfdGtDaySpy = inValid = true;
           dataItem.daySupplyRefundedRatioValid = false;
+        } else {
+          dataItem.daySpyRfdGtDaySpy = false;
+          if (!isNaN(refundRatio) && isFinite(refundRatio) && refundRatio > 0) {
+            inValid = (rxRatio >= refundRatio);
+            dataItem.daySupplyRefundedRatioValid = inValid;
+          } else {
+            dataItem.daySupplyRefundedRatioValid = false;
+          }
         }
-      }
+        break;
+      case 'refundedAmount':
+        inValid = this.IsDataValid('refundedAmount', isTouched, dataItem);
+        dataItem.refundedAmountValid = !inValid;
     }
-    if (control === 'refundedAmount') {
-      inValid =
-        isTouched &&
-        !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0)
-          ? true
-          : false;
-      dataItem.refundedAmountValid = !inValid;
-    }
+    this.InValidControlClass(inValid, control, tblIndex, rowIndex);
+    return 'ng-dirty ng-invalid grid-input';
+  }
+  InValidControlClass(inValid: boolean, control: any, tblIndex: any, rowIndex: any) {
     if (inValid) {
       document
         .getElementById(`${control}${tblIndex}-${rowIndex}`)
@@ -1117,7 +1106,28 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
         .getElementById(`${control}${tblIndex}-${rowIndex}`)
         ?.classList.add('ng-valid');
     }
-    return 'ng-dirty ng-invalid grid-input';
+  }
+
+  IsDataValid(control: string, isTouched: any, dataItem: any) {
+    let result = false;
+    switch (control) {
+      case 'qtyRefunded':
+        result = isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0)
+          ? true
+          : false;
+        break;
+      case 'daySupplyRefunded':
+        result = isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0)
+          ? true
+          : false;
+        break
+      case 'refundedAmount':
+        result = isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0)
+          ? true
+          : false;
+        break;
+    }
+    return result;
   }
   getSumOfColumn(list: any, property: string): string {
     let sum = 0;
@@ -1148,7 +1158,7 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
     ) {
       document
         .getElementsByClassName(`grid-input`)
-        [index].classList.add('ng-touched');
+      [index].classList.add('ng-touched');
     }
   }
   addNewRefundRx() {
@@ -1188,105 +1198,107 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       []
     );
 
-    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> !x.qtyRefundedValid|| !x.daySupplyRefundedValid || !x.refundedAmountValid)
-    if ((this.refundRXForm.invalid) || InValidSelectedRefundPharmacyClaimInput.length >0) {
+    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x: any) => !x.qtyRefundedValid || !x.daySupplyRefundedValid || !x.refundedAmountValid)
+    if ((this.refundRXForm.invalid) || InValidSelectedRefundPharmacyClaimInput.length > 0) {
       this.scrollToValidationError();
     } else {
-
-      let selectedpharmacyClaimsDto = selectedpharmacyClaims.map(
-        (obj: any) => ({
-          paymentRequestId:
-            obj.paymentRequestId ??
-            this.selectedVendorRefundsList[0].paymentRequestId,
-          refundedPaymentRequestId:
-            this.selectedVendorRefundsList[0].refundedPaymentRequestId ??
-            obj.paymentRequestId ??
-            this.selectedVendorRefundsList[0].paymentRequestId,
-          prescriptionFillId: obj.perscriptionFillId ?? obj.prescriptionFillId,
-          refundedPrescriptionFillId:
-            obj.refundedPrescriptionFillId ??
-            obj.perscriptionFillId ??
-            obj.prescriptionFillId,
-          refundedQty: obj.qtyRefunded,
-          daySupplyRefunded: obj.daySupplyRefunded,
-          refundedAmount: obj.refundedAmount,
-          grantNo: obj.grantNo,
-          pcaCode: obj.pcaCode,
-          creditNumber: obj.creditNumber,
-          rxqtype: obj.rxqtype,
-          pharmacyNpi: obj.PharmacyNpi,
-          ndc: obj.ndc,
-          paymentTypeCode: obj.paymentTypeCode,
-          batchId: obj.batchId ?? this.selectedVendorRefundsList[0].batchId,
-        })
-      );
-      let refundRxData = {
-        ...this.refundRXForm.value,
-        vendorId: this.vendorId,
-        clientId: this.clientId,
-        clientCaseEligibilityId:
-          this.clientCaseEligibilityId ??
-          selectedpharmacyClaims[0].clientCaseEligibilityId,
-        refundType: this.selectedRefundType,
-        isSpotsPaymentCheck:
-          selectedpharmacyClaims[0].paymentMethodCode == PaymentMethodCode.SPOTS
-            ? true
-            : false,
-        pharmacyRefundedItems: selectedpharmacyClaimsDto,
-        vendorAddressId: this.vendorAddressId,
-      };
-      if (!this.isEdit) {
-        this.financialVendorRefundFacade.showLoader();
-        this.financialVendorRefundFacade
-          .addNewRefundRx(refundRxData)
-          .subscribe({
-            next: (data: any) => {
-              this.financialVendorRefundFacade.hideLoader();
-              this.closeAddEditRefundFormModalClicked(true);
-              this.financialVendorRefundFacade.showHideSnackBar(
-                SnackBarNotificationType.SUCCESS,
-                'Refund added! An event has been logged'
-              );
-            },
-            error: (error: any) => {
-              if (error) {
-                this.financialVendorRefundFacade.showHideSnackBar(
-                  SnackBarNotificationType.ERROR,
-                  error
-                );
-                this.financialVendorRefundFacade.hideLoader();
-              }
-            },
-          });
-      } else {
-        this.financialVendorRefundFacade.showLoader();
-        this.financialVendorRefundFacade
-          .editNewRefundRx(refundRxData)
-          .subscribe({
-            next: (data: any) => {
-              this.financialVendorRefundFacade.hideLoader();
-              this.closeAddEditRefundFormModalClicked(true);
-              this.financialVendorRefundFacade.showHideSnackBar(
-                SnackBarNotificationType.SUCCESS,
-                'Pharmacy Refund Updated Successfuly'
-              );
-            },
-            error: (error: any) => {
-              if (error) {
-                this.financialVendorRefundFacade.showHideSnackBar(
-                  SnackBarNotificationType.ERROR,
-                  error
-                );
-                this.financialVendorRefundFacade.hideLoader();
-              }
-            },
-          });
-      }
+      this.AddEditNewRefund(selectedpharmacyClaims)
     }
   }
 
-  scrollToValidationError(){
-    const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.refundRXForm, this.elementRef.nativeElement,null);
+  AddEditNewRefund(selectedpharmacyClaims: any) {
+    let selectedpharmacyClaimsDto = selectedpharmacyClaims.map(
+      (obj: any) => ({
+        paymentRequestId:
+          obj.paymentRequestId ??
+          this.selectedVendorRefundsList[0].paymentRequestId,
+        refundedPaymentRequestId:
+          this.selectedVendorRefundsList[0].refundedPaymentRequestId ??
+          obj.paymentRequestId ??
+          this.selectedVendorRefundsList[0].paymentRequestId,
+        prescriptionFillId: obj.perscriptionFillId ?? obj.prescriptionFillId,
+        refundedPrescriptionFillId:
+          obj.refundedPrescriptionFillId ??
+          obj.perscriptionFillId ??
+          obj.prescriptionFillId,
+        refundedQty: obj.qtyRefunded,
+        daySupplyRefunded: obj.daySupplyRefunded,
+        refundedAmount: obj.refundedAmount,
+        grantNo: obj.grantNo,
+        pcaCode: obj.pcaCode,
+        creditNumber: obj.creditNumber,
+        rxqtype: obj.rxqtype,
+        pharmacyNpi: obj.PharmacyNpi,
+        ndc: obj.ndc,
+        paymentTypeCode: obj.paymentTypeCode,
+        batchId: obj.batchId ?? this.selectedVendorRefundsList[0].batchId,
+      })
+    );
+    let refundRxData = {
+      ...this.refundRXForm.value,
+      vendorId: this.vendorId,
+      clientId: this.clientId,
+      clientCaseEligibilityId:
+        this.clientCaseEligibilityId ??
+        selectedpharmacyClaims[0].clientCaseEligibilityId,
+      refundType: this.selectedRefundType,
+      isSpotsPaymentCheck:
+        selectedpharmacyClaims[0].paymentMethodCode == PaymentMethodCode.SPOTS
+          ? true
+          : false,
+      pharmacyRefundedItems: selectedpharmacyClaimsDto,
+      vendorAddressId: this.vendorAddressId,
+    };
+    if (!this.isEdit) {
+      this.financialVendorRefundFacade.showLoader();
+      this.financialVendorRefundFacade
+        .addNewRefundRx(refundRxData)
+        .subscribe({
+          next: (data: any) => {
+            this.financialVendorRefundFacade.hideLoader();
+            this.closeAddEditRefundFormModalClicked(true);
+            this.financialVendorRefundFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Refund added! An event has been logged'
+            );
+          },
+          error: (error: any) => {
+            if (error) {
+              this.financialVendorRefundFacade.showHideSnackBar(
+                SnackBarNotificationType.ERROR,
+                error
+              );
+              this.financialVendorRefundFacade.hideLoader();
+            }
+          },
+        });
+    } else {
+      this.financialVendorRefundFacade.showLoader();
+      this.financialVendorRefundFacade
+        .editNewRefundRx(refundRxData)
+        .subscribe({
+          next: (data: any) => {
+            this.financialVendorRefundFacade.hideLoader();
+            this.closeAddEditRefundFormModalClicked(true);
+            this.financialVendorRefundFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Pharmacy Refund Updated Successfuly'
+            );
+          },
+          error: (error: any) => {
+            if (error) {
+              this.financialVendorRefundFacade.showHideSnackBar(
+                SnackBarNotificationType.ERROR,
+                error
+              );
+              this.financialVendorRefundFacade.hideLoader();
+            }
+          },
+        });
+    }
+  }
+  scrollToValidationError() {
+    const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.refundRXForm, this.elementRef.nativeElement, null);
     if (invalidControl) {
       invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       invalidControl.focus();
@@ -1367,11 +1379,11 @@ export class RefundNewFormDetailsComponent implements OnInit, OnDestroy {
       logic: 'or',
     });
   }
-    // updating the pagination infor based on dropdown selection
-    pageSelectionChange(data: any) {
-      this.state.take = data.value;
-      this.state.skip = 0;
-      this.subscribeLoadRefundClaimDataForRx()
-    }
-    
+  // updating the pagination infor based on dropdown selection
+  pageSelectionChange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.subscribeLoadRefundClaimDataForRx()
+  }
+
 }
