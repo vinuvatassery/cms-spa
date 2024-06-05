@@ -482,7 +482,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.loaderService.show();
       let vendorValues: any = {};
       vendorValues['vendorId'] = this.vendorDetails.vendorId;
-      vendorValues['vendorName'] = this.medicalProviderForm.controls['providerName'].value;
+      if(this.vendorDetails.parentVendorId){
+        vendorValues['vendorName'] = this.medicalProviderForm.controls['providerName'].value;
+      }      
       vendorValues['firstName'] = this.medicalProviderForm.controls['firstName'].value;
       vendorValues['lastName'] = this.medicalProviderForm.controls['lastName'].value;
       vendorValues['tin'] = this.medicalProviderForm.controls['tinNumber'].value;
