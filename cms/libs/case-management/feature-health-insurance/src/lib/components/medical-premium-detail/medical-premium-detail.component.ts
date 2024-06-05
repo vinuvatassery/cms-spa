@@ -1448,26 +1448,46 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
   }
 
   primaryExistCheck(policies: any): boolean {
+    let policyOverlap = false;
     if (this.isEdit) {
-      let endDate = 'insuranceEndDate';
-      if (this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "A" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value ==="B" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value ==="AB" ) {
-        endDate = 'medicareEndDate'
+      let endDateField = 'insuranceEndDate';
+      if (this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "A" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "B" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "AB") {
+        endDateField = 'medicareEndDate'
       }
-      if (this.healthInsuranceForm.controls[endDate].value == null) {
-        //policies.any(x=>x.)
-       let policyExist = policies.filter((x: any) => x.priorityCode == PriorityCode.Primary);
-        if(policyExist.length>0){
+      if (this.healthInsuranceForm.controls[endDateField].value == null) {
+        let policyExist = policies.filter((x: any) => x.priorityCode == PriorityCode.Primary);
+        if (policyExist.length > 0) {
           return true;
         }
-        else{
-          return false;
+        else {
+          policyExist = false;
         }
       }
+      else {
+        let startDateField = 'insuranceStartDate';
+        if (this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "A" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "AB") {
+          startDateField = 'medicarePartAStartDate'
+        }
+        if (this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "B") {
+          startDateField = 'medicarePartBStartDate'
+        }
+        let startDate = this.intl.formatDate(this.healthInsuranceForm.controls[startDateField].value, this.dateFormat);
+        let endDate = this.intl.formatDate(this.healthInsuranceForm.controls[endDateField].value, this.dateFormat);
+        policies.forEach((policy: any) => {
+
+          let policyStartDate = this.intl.formatDate(new Date(policy.startDate), this.dateFormat);
+          let policyEndDate = this.intl.formatDate(new Date(policy.endDate), this.dateFormat);
+          let policyOverlapped = this.dateRangeOverlaps(new Date(policyStartDate), new Date(policyEndDate), new Date(startDate), new Date(endDate));
+          if (policyOverlapped) {
+            policyOverlap = policyOverlapped;
+          }
+        });
+        return policyOverlap;
+      }
+      return policyOverlap;
     }
-    else{
-      return false;
-    }
-    return false;
+    return policyOverlap;
+
   }
 
   private SaveCopiedInsurancePolicy() {
