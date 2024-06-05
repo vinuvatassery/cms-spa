@@ -359,7 +359,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       .pipe(
         catchError((error: any) => {
           if (error) {
-            this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
             this.verificationFacade.healthcareInvalidSubject.next(true);
             return of(false);
           }

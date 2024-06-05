@@ -138,6 +138,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       medicareCoverageTypeCode: [''],
       medicarePartAStartDate: [''],
       medicarePartBStartDate: [''],
+      medicareEndDate:[''],
       onQmbFlag: [''],
       onLisFlag: [''],
       othersCoveredOnPlanFlag: [''],
