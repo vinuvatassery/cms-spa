@@ -1,14 +1,15 @@
 /** Angular **/
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit, AfterViewInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType, GridFilterParam } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType, GridFilterParam, FinancialVendorFacade, ContactFacade } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 
 @Component({
@@ -41,6 +42,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   priorityCodeType$ = this.lovFacade.priorityCodeType$;
   workflowTypeCode:any;
+  vendorId: any;
+  providerDetailsDialog: any;
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  updateProviderPanelSubject$ =
+  this.financialVendorFacade.updateProviderPanelSubject$;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -57,7 +64,11 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly router: Router,
-    private lovFacade: LovFacade
+    private lovFacade: LovFacade,   
+    private dialogService: DialogService, 
+    private readonly financialVendorFacade: FinancialVendorFacade, 
+    public contactFacade: ContactFacade,
+    
 
   ) { }
 
@@ -518,7 +529,35 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   getPolicies(event:any){
     this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.clientCaseEligibilityId, InsuranceStatusType.healthInsurance);
    }
-  
+   onProviderNameClick(event: any) {
+    this.vendorId = event;
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation: {
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
+
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
+  }
+
+  updateProviderProfile(event: any) {
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+
+  OnEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
 
 }
 
