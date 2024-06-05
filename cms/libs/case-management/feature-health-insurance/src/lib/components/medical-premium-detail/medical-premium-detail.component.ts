@@ -1633,7 +1633,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
   }
 
   medicareEndDateOnChange() {
-    let dateToConsider = 'medicarePartAStartDate';
+    let dateToConsider = '';
     if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("A") && this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("B")) {
       dateToConsider = 'medicarePartAStartDate'
     }
