@@ -368,34 +368,6 @@ $pagination-height : 48px;
     }
   }
   }
-
-  &.recently-view{
-    .k-grid-header{
-      display: none;
-    }
-  .k-grid{
-    
-    .k-grid-content {
-      background:transparent;
-      padding: 0;
-      border-top: 0;
-      tr{
-        box-shadow: none;
-        border: 0px ;
-        td{
-          border: 0px;
-          background: transparent;
-          border-color: $grey-f7;
-          border-width: 1px 0px 1px 0px;
-          border-style: solid;
-          &:last-child{
-            border-right-width: 1px;
-          }
-        }
-      }
-    }
-  }
-  }
 }
 
 /*Table Filter Section*/

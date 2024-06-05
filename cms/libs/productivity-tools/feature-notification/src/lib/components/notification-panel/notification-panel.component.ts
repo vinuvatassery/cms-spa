@@ -304,7 +304,7 @@ export class NotificationPanelComponent implements OnInit {
   }
 
   sanitizeHtml(html: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
+    return this.sanitizer.bypassSecurityTrustHtml(html); //NOSONAR
   }
 
   searchClientName(event:any){

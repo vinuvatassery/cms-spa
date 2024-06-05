@@ -703,7 +703,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         invalidControl.focus();
       }
-    
+
       return;
     }
     let formValues = this.claimForm.value;
@@ -869,6 +869,11 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         if (!response) {
           this.pcaExceptionDialogService?.close();
         } else {
+          let invoiceWithExceedMaxBenefitException = data.tpaInvoices.filter((item: any) => item.exceptionTypeCode === ExceptionTypeCode.ExceedMaxBenefits && item.exceptionReasonCode);
+          if(invoiceWithExceedMaxBenefitException)
+            {
+              this.loadPendingApprovalGeneralCount();
+            }
           this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService?.close();
           this.financialPcaFacade.pcaReassignmentCount();
@@ -896,6 +901,11 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       next: (response: any) => {
         this.loaderService.hide();
         if (response) {
+          let invoiceWithExceedMaxBenefitException = data.tpaInvoices.filter((item: any) => item.exceptionTypeCode === ExceptionTypeCode.ExceedMaxBenefits);
+          if(invoiceWithExceedMaxBenefitException)
+            {
+              this.loadPendingApprovalGeneralCount();
+            }
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             response.message
@@ -904,7 +914,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.navigationMenuFacade.pcaReassignmentCount();
-          
+
         } else {
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
@@ -1487,6 +1497,11 @@ duplicatePaymentObject:any = {};
       this.specialCharAdded = false;
     }
     return status;
+  }
+
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 
 }

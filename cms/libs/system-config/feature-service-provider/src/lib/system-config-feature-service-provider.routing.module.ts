@@ -48,12 +48,12 @@ const routes: Routes = [
   {
     path: 'drugs',
     component: DrugsPageComponent,
-  }, 
+  },
   {
     path: '',
-    redirectTo: 'drugs',
+    redirectTo: 'manufacturer',
     pathMatch: 'full',
-  },
+  }
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

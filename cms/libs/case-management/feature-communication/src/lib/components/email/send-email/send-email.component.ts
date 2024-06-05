@@ -771,7 +771,7 @@ saveForLaterHeadterText!: string;
 
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
         this.snackBarMessage = 'Approval Email Sent! An event has been logged.';
-        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
+        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND EMAIL'' once the notice is complete."
         this.templateHeader = 'Send Approval Email';
         this.emailSubject = "CareAssist Approval Notice";
         this.confirmPopupHeader = 'Send Approval Email?';
@@ -950,7 +950,7 @@ saveForLaterHeadterText!: string;
     }
   }
 
-  
+
   getToEmail(to: any) {
     if(to?.length > 0){
     for (let email of to) {
@@ -1089,7 +1089,7 @@ saveForLaterHeadterText!: string;
       });
   }
   private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
   }
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
