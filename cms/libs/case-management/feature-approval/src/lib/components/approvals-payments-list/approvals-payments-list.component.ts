@@ -26,7 +26,8 @@ import {
   LovFacade,
   UserManagementFacade,
   UserDataService,
-  UserLevel
+  UserLevel,
+  NavigationMenuFacade
 } from '@cms/system-config/domain';
 import {
   ApprovalTypeCode,
@@ -172,6 +173,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges, OnDest
   providerCountFieldTitle:any="Provider Count";
   constantMaxApprovalAmount:number=10000;
   maxApprovalAmount:number=this.constantMaxApprovalAmount;
+  permissionLevels:any[]=[];
+
   /** Constructor **/
   constructor(
     private route: Router,
@@ -181,7 +184,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges, OnDest
     private userManagementFacade: UserManagementFacade,
     private readonly userDataService: UserDataService,
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider
+    private readonly configProvider: ConfigurationProvider,
+    private readonly navigationMenuFacade : NavigationMenuFacade
+
   ) {}
 
   ngOnInit(): any {
@@ -661,6 +666,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges, OnDest
 
   gridDataHandle() {
     this.approvalsPaymentsListsSubscription = this.approvalsPaymentsLists$.subscribe((response: any) => {
+      this.loadPendingApprovalPaymentCount();
       let gridData = {
         data: response.data,
         total: response.total,
@@ -1197,6 +1203,15 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges, OnDest
     this.sendBackNotesChange(this.dataItem);
     this.approveAndSendbackCount();
     this.enableSubmitButtonMain();
+  }
+
+  loadPendingApprovalPaymentCount() {
+
+    this.permissionLevels = this.userManagementFacade.GetPermissionlevelsForPendingApprovalsCount();
+
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+    this.permissionLevels
+    );
   }
 
 }

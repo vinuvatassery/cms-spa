@@ -162,7 +162,7 @@ prepareHivVerificationdobeEsignFormData(clientHivVerification: ClientHivVerifica
     formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
     formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
     formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
-    formData.append('AttachmentDetails['+i+'][NotificationAttachmentId]', file.document.notificationAttachmentId == undefined ? file.document.notificationAttachmentId : file.document.notificationAttachmentId);
+    formData.append('AttachmentDetails['+i+'][NotificationAttachmentId]', file.document.notificationAttachmentId);
     i++;
   }
 

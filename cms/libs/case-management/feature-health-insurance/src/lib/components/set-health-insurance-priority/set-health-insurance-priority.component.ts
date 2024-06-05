@@ -108,14 +108,32 @@ export class SetHealthInsurancePriorityComponent implements OnInit,OnDestroy {
     const primarySelections = this.gridList.filter((m: any) => m.priorityCode === priorityCode
       && m.clientInsurancePolicyId != insurance.clientInsurancePolicyId);
     let overlapStatus = false;
-    primarySelections.forEach((element: any) => {
-      if (this.dateRangeOverlaps(element.startDate, element.endDate, insurance.startDate, insurance.endDate)) {
-        const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId == element.clientInsurancePolicyId);
-        this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING, errorMessage, NotificationSource.UI)
+    if (insurance.endDate === null) {
+      if(primarySelections.length>0){
+        primarySelections.forEach((element: any) => {
+          const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId == element.clientInsurancePolicyId);
+          this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
+        });
         overlapStatus = true;
-      }
-    });
+      }     
+    }
+    else {
+      primarySelections.forEach((element: any) => {
+        if (element.endDate === null) {
+          const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId == element.clientInsurancePolicyId);
+          this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
+          overlapStatus = true;
+        }
+        if (this.dateRangeOverlaps(element.startDate, element.endDate, insurance.startDate, insurance.endDate)) {
+          const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId == element.clientInsurancePolicyId);
+          this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);          
+          overlapStatus = true;
+        }
+      });
+    }
+    if(overlapStatus){
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING, errorMessage, NotificationSource.UI)
+    }
     return overlapStatus;
   }
   

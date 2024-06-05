@@ -60,6 +60,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   enteredPnumberValue: any;
   isRequestingPNumber: boolean = false;
   isPNumberAlreadyExists: boolean = false;
+  isEmailAlreadyExists: boolean = false;
+  isAdUser: boolean = false;
   userDetailData: any;  
   userDetailRoles: any = [];
   userStatus$ = this.userManagementFacade.canUserBeDeactivated$;
@@ -166,9 +168,11 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     
     this.addUserResponse$.subscribe({
       next: (data) => {
-        if(data.status == 0){
+        if(data.status == 0 && data.message.toLowerCase().includes('pnumber')){
           this.isPNumberAlreadyExists = true;
-        } else {
+          this.isEmailAlreadyExists = false;
+        } else if(data.status == 0 && data.message.toLowerCase().includes('email')) {
+          this.isEmailAlreadyExists = true;
           this.isPNumberAlreadyExists = false;
         }
         this.cd.detectChanges();
@@ -186,7 +190,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           formControls["lastName"].setValue(data.lastName == null ? '' : data.lastName);
           formControls["email"].setValue(data.emailAddress);  
           formControls["jobTitle"].setValue(data.jobTitle == null ? '' : data.jobTitle);
-          formControls["adUserId"].setValue(data.userId == null ? '' : data.userId);  
+          formControls["adUserId"].setValue(data.userId == null ? '' : data.userId);
+          this.isAdUser = true;
           this.changeFieldStateOfExternalUser(true);
         } else {
           formControls["firstName"].setValue('');
@@ -194,6 +199,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           formControls["email"].setValue('');  
           formControls["jobTitle"].setValue('');
           formControls["adUserId"].setValue('');
+          this.isAdUser = false;
           this.changeFieldStateOfExternalUser(false);
         }
         this.cd.detectChanges();         
@@ -264,7 +270,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       this.userFormGroup.controls["firstName"].disable();
       this.userFormGroup.controls["lastName"].disable();
       this.userFormGroup.controls["email"].disable();
-    }else{
+    }else if(!this.isAdUser){
       this.userFormGroup.controls["firstName"].enable();
       this.userFormGroup.controls["lastName"].enable();
       this.userFormGroup.controls["email"].enable();
@@ -280,6 +286,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   changeFieldStateOfExternalUser(isDisable: boolean){
+    if(this.userRoleType == UserAccessType.Internal){
+      return;
+    }
     if(isDisable){
       this.userFormGroup.controls["firstName"].disable();
       this.userFormGroup.controls["lastName"].disable();
@@ -356,6 +365,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.enteredPnumberValue = pNumber;
     this.isRequestingPNumber = true;
     this.isPNumberAlreadyExists = false;
+    this.isEmailAlreadyExists = false;
     this.adUserPNumberData = null;
     this.userManagementFacade.searchPNumber(pNumber);
   }

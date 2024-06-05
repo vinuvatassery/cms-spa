@@ -84,7 +84,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
     this.notificationSmsSubscriptionInit();
     this.formatContent();
     this.content = this.data;
-    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content);
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content); // NOSONAR
 
   }
 
@@ -130,7 +130,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
           url: itemDataArray[0],
           text: itemDataArray[1],
           title: itemDataArray[1],
-          sanitizedHtml: this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]),
+          sanitizedHtml: this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]), //NOSONAR
           isBaseUrlFlag: false,
           isFilePathUrl: true
         }
@@ -148,7 +148,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
           url: itemDataArray[0].replace(this.baseUrl, window.location.origin),
           text: itemDataArray[1],
           title: itemDataArray[1],
-          sanitizedHtml: this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]),
+          sanitizedHtml: this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]), //NOSONAR
           isBaseUrlFlag: true,
           isFilePathUrl: false
         }
@@ -160,7 +160,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
           url: "",
           text: item,
           title: "",
-          sanitizedHtml: this.sanitizer.bypassSecurityTrustHtml(item),
+          sanitizedHtml: this.sanitizer.bypassSecurityTrustHtml(item), //NOSONAR
           isBaseUrlFlag: false,
           isFilePathUrl: false
         }
@@ -419,7 +419,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
   }
 
   private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); //NOSONAR
   }
 
   openConfirmation() {

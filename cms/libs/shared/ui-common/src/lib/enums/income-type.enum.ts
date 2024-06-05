@@ -1,7 +1,7 @@
 export enum IncomeType{   
   work= "Work",
   otherIncome= "Other Income",
-  selfEmployed = "Slef-Employed",
+  selfEmployed = "Self-employment",
   Unemployment = "Unemployment Insurance",
   SSI = "Supplemental Security Income (SSI)",
   SSDI = "Social Security Disability Insurance (SSDI)",
