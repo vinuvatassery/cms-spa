@@ -766,7 +766,7 @@ saveForLaterHeadterText!: string;
         this.confirmPopupHeader = 'Send Denial Email?';
         this.saveForLaterHeadterText = "Send Denial Email Later?";
         this.saveForLaterModelText = "You must send the  Denial Email within 14 Days";
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via SMS text, and/or their online portal.";
         break;
 
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
