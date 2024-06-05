@@ -84,7 +84,7 @@
           </kendo-floatinglabel>    
           <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareEndDate'].valid && !healthInsuranceForm.controls['medicareEndDate'].disabled">End Date must be after Start Date.</kendo-formerror>     
         </div>
-        <div class="flex-col">
+        <div class="flex-col mt-3">
 
           <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
@@ -96,9 +96,9 @@
                   aria-labelledby="LowIncomeSusidyYes" formControlName="onQmbFlag" id="qmbYes" value="Y" />
                 <kendo-label class="k-radio-label" for="qmbYes" text="Yes"></kendo-label>
               </span>
-              <span class="app-radiobtnwidtext-wrapper">
+              <span class="app-radiobtnwidtext-wrapper ">
                 <input type="radio"  kendoRadioButton name="onQmbFlag"
-                  aria-labelledby="qmb" formControlName="onQmbFlag" id="qmbNo" value="N" />
+                  aria-labelledby="qmb" formControlName="onQmbFlag" id="qmbNo" value="N"  />
                 <kendo-label class="k-radio-label" for="qmbNo" text="No"></kendo-label>
               </span>
             </div>
