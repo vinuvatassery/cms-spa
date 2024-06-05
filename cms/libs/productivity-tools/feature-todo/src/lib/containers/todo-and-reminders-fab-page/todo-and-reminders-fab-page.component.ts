@@ -67,8 +67,8 @@ import { Subscription } from 'rxjs';
     ) {}
     /** Lifecycle hooks **/
     ngOnInit(): void {        
-
-        this.clientId = this.route.snapshot.queryParams['id'];
+      this.route.queryParamMap.subscribe((params :any) =>{
+        this.clientId = params.get('id')
         if(this.clientId > 0 )
         {
             this.isShowTodoReminders = true
@@ -84,9 +84,9 @@ import { Subscription } from 'rxjs';
           if(this.clientId){
           this.todoFacade.todoAndRemindersByClient(this.clientId)
           }
-
         })
-      }
+      })
+    }
       closeAction()
       {
         this.fabMenuFacade.isShownTodoReminders = !this.fabMenuFacade.isShownTodoReminders;

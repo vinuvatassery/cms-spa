@@ -25,7 +25,7 @@ import { filter, first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService } from '@cms/shared/util-core';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
-import { TodoFacade } from '@cms/productivity-tools/domain';
+import { FabMenuFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
@@ -123,7 +123,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     public todoFacade: TodoFacade,
     public lovFacade : LovFacade,
     public financialVendorFacade : FinancialVendorFacade,
-    public financialRefundFacade : FinancialVendorRefundFacade
+    public financialRefundFacade : FinancialVendorRefundFacade,
+    public readonly fabMenuFacade : FabMenuFacade,
   ) {}
 
   /** Lifecycle hooks **/
@@ -133,6 +134,13 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.clientProfileReloadSubscription$ = this.clientProfileReload$.subscribe((data)=>{
       this.loadClientProfileInfoEventHandler();
     });
+    this.reset();
+    
+  }
+  reset(){
+    this.fabMenuFacade.isShownTodoReminders = false;
+    this.fabMenuFacade.isShownDirectMessage = false;
+    this.fabMenuFacade.isShownEventLog = false;
   }
 
   ngOnDestroy(): void {
