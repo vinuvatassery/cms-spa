@@ -106,6 +106,13 @@
       field="vendorName"
       title="Vendor"
       [width]="250">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button [attr.aria-label]="dataItem.vendorName"
+         kendoButton look="flat" class="card-link-button"
+        (click)="onProviderNameClick(dataItem.vendorId)" *ngIf="dataItem.vendorName">
+          {{ dataItem.vendorName }}
+        </button>
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
         [extra]="false" operator="eq">
