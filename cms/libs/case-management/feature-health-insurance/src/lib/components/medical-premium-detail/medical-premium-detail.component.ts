@@ -1454,13 +1454,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       if (this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "A" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "B" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "AB") {
         endDateField = 'medicareEndDate'
       }
-      if (this.healthInsuranceForm.controls[endDateField].value == null) {
-        let policyExist = policies.filter((x: any) => x.priorityCode == PriorityCode.Primary);
+      let policyExist = policies.filter((x: any) => x.priorityCode == PriorityCode.Primary);
+      if (this.healthInsuranceForm.controls[endDateField].value == null) {        
         if (policyExist.length > 0) {
           return true;
         }
         else {
-          policyExist = false;
+          policyOverlap = false;
         }
       }
       else {
@@ -1473,12 +1473,17 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
         }
         let startDate = this.intl.formatDate(this.healthInsuranceForm.controls[startDateField].value, this.dateFormat);
         let endDate = this.intl.formatDate(this.healthInsuranceForm.controls[endDateField].value, this.dateFormat);
-        policies.forEach((policy: any) => {
+        policyExist.forEach((policy: any) => {
           let policyStartDate = this.intl.formatDate(new Date(policy.startDate), this.dateFormat);
           let policyEndDate = this.intl.formatDate(new Date(policy.endDate), this.dateFormat);
-          let policyOverlapped = this.dateRangeOverlaps(new Date(policyStartDate), new Date(policyEndDate), new Date(startDate), new Date(endDate));
-          if (policyOverlapped) {
-            policyOverlap = policyOverlapped;
+          if (policy.endDate == null) {
+            policyOverlap = true;
+          }
+          else {
+            let policyOverlapped = this.dateRangeOverlaps(new Date(policyStartDate), new Date(policyEndDate), new Date(startDate), new Date(endDate));
+            if (policyOverlapped) {
+              policyOverlap = policyOverlapped;
+            }
           }
         });
         return policyOverlap;
