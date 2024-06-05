@@ -140,7 +140,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.resetReadOnlyView();
     this.showSplitButtonSubscriptionInitializer();
     this.paperLessFlagContactInfoChangeSubscription();
-    this.workflowFacade.savedForLaterCompleted$
+    this.workflowFacade.savedForLaterCompleted$.pipe(first())
     .subscribe(res =>{
      if(res){
       this.isShowSaveLaterPopup = false;
