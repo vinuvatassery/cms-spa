@@ -241,9 +241,9 @@ export class HealthInsurancePolicyFacade {
     }
 }
   
-  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,typeParam:any, gridFilterParam: any): void {
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,typeParam:any,loadHistoricalData:any, gridFilterParam: any): void {
     this.showLoader();
-    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, typeParam, gridFilterParam).subscribe({
+    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, typeParam,loadHistoricalData, gridFilterParam).subscribe({
       next: (medicalHealthPlansResponse: any) => {
         this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
         if (medicalHealthPlansResponse) {

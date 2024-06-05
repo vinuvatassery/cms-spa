@@ -4,4 +4,5 @@ export enum MenuBadge {
     pendingApprovals = "PENDING_APPROVALS",
     productivityTools = "PRODUCTIVITY_TOOLS",
     directMessage = "DIRECT_MESSAGES",
+    todoItems = "TO_DO_ITEMS",
 }

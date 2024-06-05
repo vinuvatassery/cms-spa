@@ -1,4 +1,4 @@
- 
+
 <kendo-dialog-titlebar class ="template-header"  (close)="onCloseSendEmailClicked()"> {{templateHeader}} </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
@@ -29,6 +29,7 @@
               valueField="mailCode"
               [(ngModel)]="selectedMailCode"
               (valueChange)="handleDdlMailCodesChange($event)"
+              id = "mailCode"
             >
             </kendo-dropdownlist>
           </kendo-floatinglabel>
@@ -48,6 +49,7 @@
         [readonly]="communicationEmailTypeCode === 'APPLICATION_AUTHORIZATION_EMAIL' || communicationEmailTypeCode === 'CER_AUTHORIZATION_EMAIL'"
         (valueChange)="handleEmailsChanged($event)"
         aria-label="to address"
+        id="toEmailAddress"
         ></kendo-multiselect>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="isToEmailMissing">
@@ -60,7 +62,6 @@
           [fillMode]="formUiStyle.dropDownFillMode"
           [data]="ccEmail"
           [(ngModel)]="selectedCCEmail"
-          [filterable]="true"
           [allowCustom]="true"
           aria-label="cc of email"
           [clearButton]="false"
@@ -68,7 +69,7 @@
           ></kendo-multiselect>
           </kendo-floatinglabel>
           <kendo-floatinglabel text="CC" *ngIf="isCCDropdownVisible===false">
-            <kendo-textbox  placeholder="CC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" 
+            <kendo-textbox  placeholder="CC" [(ngModel)]="selectedCCEmail" aria-label="subject of email"
             [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
           <button [style]="{'height': 'fit-content','margin': 'auto','margin-top': '1.5rem','margin-left': '1rem'}"
@@ -90,7 +91,6 @@
           [fillMode]="formUiStyle.dropDownFillMode"
           [data]="bccEmail"
           [(ngModel)]="selectedBccEmail"
-          [filterable]="true"
           [allowCustom]="true"
           [clearButton]="false"
           aria-label="bcc of email"
@@ -104,8 +104,9 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Subject">
-            <kendo-textbox  placeholder="Subject" [(ngModel)]="emailSubject" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode" 
-            [maxlength]="subjectMax" (valueChange)="handleSubjectChanged($event)">   </kendo-textbox>
+            <kendo-textbox  placeholder="Subject" [(ngModel)]="emailSubject" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode"
+            [maxlength]="subjectMax" (valueChange)="handleSubjectChanged($event)"
+            id="subject">   </kendo-textbox>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="isEmailSubjectMissing">
             Subject is required.
@@ -117,14 +118,14 @@
           </p>
         </div>
         <div class="flex-col">
-          <case-management-email-editor  
-          [selectedTemplate]="selectedTemplate" 
-          [selectedTemplateContent]="selectedTemplateContent"           
+          <case-management-email-editor
+          [selectedTemplate]="selectedTemplate"
+          [selectedTemplateContent]="selectedTemplateContent"
           [clientCaseEligibilityId]="clientCaseEligibilityId"
           [clientId]="entityId"
           [communicationTypeCode]="communicationEmailTypeCode"
           (editorValueChangeEvent) ="editorValueChange($event)"
-          (cerEmailAttachments)="cerEmailAttachments($event)"     
+          (cerEmailAttachments)="cerEmailAttachments($event)"
           [isContentMissing]="isContentMissing"
           (contentValidateEvent)="contentValidateEvent($event)"
           [notificationGroup]="notificationGroup"

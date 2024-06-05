@@ -221,7 +221,7 @@
           <kendo-dropdownlist
             textField="lovDesc"
             valueField="lovDesc"
-            [data]="paymentStatus$ | async"
+            [data]="pharmacyPaymentStatusList"
             [value]="paymentStatusFilter"
             [valuePrimitive]="true"
             [(ngModel)]="selectedPaymentStatus"

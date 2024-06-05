@@ -582,14 +582,14 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   public setGridState(stateData: any): void {
     this.state = stateData;
 
-    const filters = stateData.filter?.filters ?? [];
+    const filters = this.nullCheck(stateData.filter?.filters);
 
     for (let val of filters) {
       if (val.field === 'eilgibilityStartDate' || val.field === 'eligibilityEndDate') {
         this.intl.formatDate(val.value, this.dateFormat);
       }
     }
-    const filterList = this.state?.filter?.filters ?? [];
+    const filterList = this.nullCheck(this.state?.filter?.filters);
     this.filter = JSON.stringify(filterList);
 
     if (filters.length > 0) {
@@ -603,10 +603,10 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.columnName = "";
       this.isFiltered = false;
     }
-    this.sortValue();
+    this.setSortValue();
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
+    this.sortValue =this.nullCheck(stateData.sort[0]?.field);
+    this.sortType = this.nullCheck(stateData.sort[0]?.dir);
     this.columnName = filterList.length > 0 ? filterList[0]?.filters[0]?.field : "";
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
@@ -653,4 +653,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.sortValue = "healthInsuranceType";
     }
   }
+  nullCheck(value:any){
+    if(value){
+      return value;
+    }
+    else{
+      return [];
+    }
+   }
 }

@@ -11,8 +11,10 @@
   </div>
 </div>
 
+<div *ngIf="this.pharmacyClaims?.chartData">
 <common-dashboard-loader-panel *ngIf="!((this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value ?? -1) >= 0)
  && !((this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value ?? -1) >= 0) && !isEditDashboard" ></common-dashboard-loader-panel>
+</div>
 <div class="dashboard-cards-container" *ngIf="this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value >= 0 || this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value >= 0">
 
   <kendo-chart class="dash_chart"    >

@@ -77,10 +77,6 @@ export class SystemInterfaceDashboardFacade {
     this.loaderService.hide();
   }
 
-  getEventLogLists(): void {
-
-  }
-
   prescriptionsFillsCard() {
     this.systemInterfaceDashboardService.getPrescriptionsFills().subscribe({
       next: (prescriptionsFills:any) => {

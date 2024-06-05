@@ -9,25 +9,28 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   TemplateRef,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import {
   BatchClaim,
-  FinancialClaimsFacade
+  FinancialClaimsFacade,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   FilterService,
+  GridComponent,
   GridDataResult,
   SelectableMode,
   SelectableSettings,
 } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Subject, Subscription, first } from 'rxjs';
+import { Subject, Subscription, first, take } from 'rxjs';
 import { Router } from '@angular/router';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, NavigationMenuFacade, UserLevel, UserManagementFacade} from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-process-list',
   templateUrl: './financial-claims-process-list.component.html',
@@ -63,7 +66,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   @Input() medicalClaimsProfilePhoto$!: any;
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
-
+  userLevel = UserLevel.Level1Value;
   paymentStatusCode =null
   public state!: any;
   sortColumn = 'Invoice ID';
@@ -84,6 +87,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   paymentStatuses$ = this.lovFacade.paymentStatus$
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
 
   @ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
@@ -100,7 +104,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public drag = false;
   isDeleteClaimClicked =false;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
-
+  permissionLevels:any[]=[];
   public selectedProcessClaims: any[] = [];
   columns: any = {
     ALL: 'All Columns',
@@ -192,6 +196,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade : LovFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade,
+    private readonly userManagementFacade : UserManagementFacade
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -337,7 +343,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-  searchColumnChangeHandler(data:any){    
+  searchColumnChangeHandler(data:any){
     this.searchValue = '';
     this.onChange(data)
   }
@@ -382,6 +388,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       .pipe(first((batchResponse: any) => batchResponse != null))
       .subscribe((batchResponse: any) => {
         if (batchResponse ?? false) {
+          this.loadPendingApprovalPaymentCount();
           this.loadFinancialClaimsProcessListGrid();
           this.onBatchClaimsGridSelectedCancelClicked();
         }
@@ -442,11 +449,18 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   }
   modalCloseAddEditClaimsFormModal(result: any) {
     if (result === true) {
+      this.collapseRowsInGrid();
       this.loadFinancialClaimsProcessListGrid();
     }
     this.addEditClaimsFormDialog.close();
   }
-
+  private collapseRowsInGrid() {
+    this.gridFinancialClaimsProcessData$.pipe(take(1)).subscribe(({ data }) => {
+      data.forEach((item: any, idx: number) => {
+        this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
+      });
+    });
+  }
   onBatchClaimsGridSelectedClicked() {
     this.isProcessGridExpand = false;
   }
@@ -571,4 +585,14 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
         return dateB.getTime() - dateA.getTime();
       });
   }
+
+  loadPendingApprovalPaymentCount() {
+
+    this.permissionLevels = this.userManagementFacade.GetPermissionlevelsForPendingApprovalsCount();
+
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+    this.permissionLevels
+    );
+  }
+
 }

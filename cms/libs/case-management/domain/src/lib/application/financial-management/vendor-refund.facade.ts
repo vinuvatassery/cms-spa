@@ -495,7 +495,7 @@ this.loaderService.show();
   }
 
   loadClientClaimsListGrid(){
-    this.financialVendorRefundDataService.loadClientClaimsListService().subscribe({
+    this.financialVendorRefundDataService.loadClaimListService().subscribe({
       next: (dataResponse: any) => {
         this.clientClaimsListDataSubject.next(dataResponse);
         this.loadClientClaimsDistinctUserIdsAndProfilePhoto(dataResponse?.data);
@@ -523,7 +523,7 @@ this.loaderService.show();
   } 
 
   loadPharmacyPaymentsListGrid(){
-    this.financialVendorRefundDataService.loadPharmacyPaymentsListService().subscribe({
+    this.financialVendorRefundDataService.loadClaimListService().subscribe({
       next: (dataResponse) => {
         this.pharmacyPaymentsListDataSubject.next(dataResponse);
         this.hideLoader();

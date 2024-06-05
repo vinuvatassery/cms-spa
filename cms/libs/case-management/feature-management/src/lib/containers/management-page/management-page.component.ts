@@ -4,7 +4,7 @@ import { ActivatedRoute,  Router } from '@angular/router';
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade,  NavigationType, CaseManagerFacade, CompletionChecklist, WorkflowTypeCode } from '@cms/case-management/domain';
+import { WorkflowFacade,  NavigationType, CaseManagerFacade, CompletionChecklist } from '@cms/case-management/domain';
 import { SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -306,33 +306,14 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
       if (this.checkValidations()) {
         this.save().subscribe((response: any) => {
           if (response) {
+            this.workflowFacade.saveForLaterCompleted(true) 
             this.loaderService.hide();
-            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-              else {
-                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-            }
+   
           }
         })
       }
       else {
-        if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
-        }
-        else {
-          this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-            queryParamsHandling: "preserve"
-          });
-        }
+        this.workflowFacade.saveForLaterCompleted(true) 
       }
     });
   }

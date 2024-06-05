@@ -142,7 +142,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     ];
 
     this.addWidgetConfiguration = {
-      gridType: GridType.VerticalFixed,
+      gridType: GridType.VerticalFixed, 
       resizable: { enabled: true },
       swap: true,
       pushItems: false,
@@ -284,7 +284,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       itemChangeCallback: DashboardPageComponent.itemChange,
       itemResizeCallback: this.itemResize,
       draggable: { enabled: true },
-      resizable: { enabled: true },
+      resizable: { enabled: false },
     };
     this.isReorderEnable = true;
     this.inputs = {
@@ -317,6 +317,23 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+
+  processUpdatedWidgetsPostData(updatedWidgetsPostData :  any ,dashboardContentPostData :  any)
+  {
+    
+    if (updatedWidgetsPostData[0]) {
+      updatedWidgetsPostData.forEach((widg: any) => {
+        if (widg[0]?.widgetProperties && widg[0]?.newItem !== true) {//NOSONAR
+          widg[0].widgetProperties.componentData.component = widg[0].widgetName;
+          widg[0].updated = true;
+          dashboardContentPostData.push(widg[0]);
+        }
+      });
+    }      
+
+      return dashboardContentPostData
+  }
   editDashboardCancelClicked(save: any) {
   
     this.configSubscriptionItems = {
@@ -338,15 +355,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         }
       });
 
-      if (updatedWidgetsPostData[0]) {
-        updatedWidgetsPostData.forEach((widg: any) => {
-          if (widg[0]?.widgetProperties && widg[0]?.newItem !== true) {
-            widg[0].widgetProperties.componentData.component = widg[0].widgetName;
-            widg[0].updated = true;
-            dashboardContentPostData.push(widg[0]);
-          }
-        });
-      }
+      dashboardContentPostData =  this.processUpdatedWidgetsPostData(updatedWidgetsPostData ,dashboardContentPostData)
+      
 
       dashboardContentPostData.forEach((widg: any) => {
         if (widg?.widgetProperties && widg?.stringified !== true) {
@@ -370,6 +380,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     } else {
       this.initializeDashboard();
     }
+
+   
   }
 
   dashBoardUpdateSubscribe() {
@@ -404,6 +416,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     item: GridsterItem,
     itemComponent: GridsterItemComponentInterface
   ) {
+    
     const dashBoardData = DashboardPageComponent.dashBoardContentData;
     let changedWidget = dashBoardData.filter(
       (x: any) => x.widgetProperties.componentData['id'] == item['id']
@@ -419,7 +432,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  changedOptions() {}
+
 
   removeItem(item: any) {
     this.dashboard.splice(this.dashboard.indexOf(item), 1);
@@ -430,7 +443,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     DashboardPageComponent.dashBoardContentData.push(item);
 
     this.dashBoardAllWidgetsData = this.dashBoardAllWidgetsData.filter(
-      (x: any) => !(x.widgetId == item.widgetId)
+      (x: any) => (x.widgetId !== item.widgetId)
     );
 
     this.dashboardContentListDataSubject.next(
@@ -445,7 +458,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     DashboardPageComponent.dashBoardContentData =
       DashboardPageComponent.dashBoardContentData.filter(
-        (x: any) => !(x.widgetId == item.widgetId)
+        (x: any) => (x.widgetId !== item.widgetId)
       );
 
     this.dashboardContentListDataSubject.next(

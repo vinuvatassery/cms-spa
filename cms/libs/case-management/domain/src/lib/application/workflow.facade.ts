@@ -63,7 +63,7 @@ export class WorkflowFacade {
   private isSaveButtonEnabledSubject = new Subject<boolean>();
   private discardChangesClickedSubject = new Subject<boolean>();
   private cancelApplicationClickedSubject = new Subject<boolean>();
-  
+  private savedForLaterCompletedSubject = new Subject<boolean>();
   /** Public properties **/
   showSplitButtonSubject = new Subject<boolean>();
   paperLessFlagContactInfoChangeSubject =new Subject<any>();
@@ -78,6 +78,7 @@ export class WorkflowFacade {
   isSaveButtonEnabled$ = this.isSaveButtonEnabledSubject.asObservable();
 
   saveForLaterClicked$ = this.saveForLaterClickedSubject.asObservable();
+  savedForLaterCompleted$ = this.savedForLaterCompletedSubject.asObservable();
   saveForLaterValidationClicked$ =
     this.saveForLaterValidationSubject.asObservable();
   saveForLaterConfirmationClicked$ =
@@ -99,6 +100,7 @@ export class WorkflowFacade {
   sessionData!: SessionData;
   sendLetterEmailFlag!:string;
   caseStatus!:string;
+  ApplicationDetailsValidationsSuccess = false;
   
   /**Constructor */
   constructor(
@@ -138,6 +140,9 @@ export class WorkflowFacade {
     this.saveForLaterClickedSubject.next(data);
   }
 
+  saveForLaterCompleted(data:boolean){
+    this.savedForLaterCompletedSubject.next(true);
+  }
   saveForLaterValidations(validation: boolean) {
     this.saveForLaterValidationSubject.next(validation);
   }

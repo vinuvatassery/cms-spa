@@ -44,6 +44,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   @Output() deleteInsurancePlan = new EventEmitter<any>();
   @Output() loadHistoricalPlan = new EventEmitter<boolean>();
   @Output() getPoliciesEventEmitter = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   priorityCodeType$ = this.lovFacade.priorityCodeType$;
@@ -82,6 +83,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   yesOrNoLovs: any = [];
   aptcLov:any;
   aptcDescValue:any;
+  paymentRequestId!: string;
   public gridOptionData = [
     {
       buttonType:"btn-h-primary",
@@ -155,9 +157,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     this.priorityPopupShowSubscription();
     this.dentalInsuranceListSubscription =  this.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
       this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
-      if(this.medicalHealthPlansCount > 0){
-        
-      }
     })
   }
   ngOnChanges(): void {
@@ -436,6 +435,10 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query )
+  }
+
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
   }
 
 }

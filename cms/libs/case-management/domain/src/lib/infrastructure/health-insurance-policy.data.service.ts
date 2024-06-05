@@ -279,14 +279,11 @@ export class HealthInsurancePolicyDataService {
       },
     ]);
   }
-  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,typeParam:any, gridFilterParam:any) {
+  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,typeParam:any,loadHistoricalData:any, gridFilterParam:any) {
     let type =typeParam['type'];
     let insuranceStatusType = typeParam['insuranceStatusType'];
-    let params = new HttpParams();
-    params = params.append('clientId',clientId);
-    params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);   
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy?type=${type}&insuranceStatusType=${insuranceStatusType}
-    &clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}`,gridFilterParam);
+    &clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&loadHistoricalData=${loadHistoricalData}`,gridFilterParam);
   }
 
   loadPaymentRequest(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {

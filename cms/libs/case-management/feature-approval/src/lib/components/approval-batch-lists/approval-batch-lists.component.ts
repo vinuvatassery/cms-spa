@@ -42,6 +42,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges, OnDestroy
   readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
   readonly UserLevel = UserLevel;
   public state!: State;
+  batchDetailPaymentsListSubscribe !: Subscription;
   isBatchDetailPaymentsGridLoaderShow = new BehaviorSubject<boolean>(true);
   sortColumn = 'itemNbr';
   sortDir = 'Ascending';
@@ -83,7 +84,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges, OnDestroy
   public width = '100%';
   public height = '100%';
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  approvalBatchListSubscription = new Subscription();
+  approvalBatchListSubscription!: Subscription;
+  gridBatchDetailPaymentsDataSubscription! : Subscription;
   approvalBatchListProfilePhotoSubject = new Subject();
 
   constructor(private readonly cd: ChangeDetectorRef,) {}
@@ -376,7 +378,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges, OnDestroy
   }
 
   gridDataHandle() {
-    this.batchDetailPaymentsList$
+    this.batchDetailPaymentsListSubscribe = this.batchDetailPaymentsList$
     .subscribe((response: any) => {
       let gridData = {
         data: response.data,
@@ -405,10 +407,12 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges, OnDestroy
 
   ngOnDestroy(): void {
     this.approvalBatchListSubscription?.unsubscribe();
+    this.batchDetailPaymentsListSubscribe?.unsubscribe();
+    this.gridBatchDetailPaymentsDataSubscription?.unsubscribe();
   }
 
   paymentSelectionDataHandle(){
-    this.gridBatchDetailPaymentsData$
+    this.gridBatchDetailPaymentsDataSubscription = this.gridBatchDetailPaymentsData$
     .pipe(first(response => response != null))
     .subscribe((response: any) => {
       if(this.batch.totalPayments == 1 && this.batch.batchStatus == this.sendbackStatus){

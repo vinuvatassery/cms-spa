@@ -5,8 +5,7 @@ import { Subject } from 'rxjs';
 
 @Component({
   selector: 'cms-exception-detail',
-  templateUrl: './exception-detail.component.html',
-  styleUrls: ['./exception-detail.component.scss'],
+  templateUrl: './exception-detail.component.html'
 })
 export class ExceptionDetailComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();

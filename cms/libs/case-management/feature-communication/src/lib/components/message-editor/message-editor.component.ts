@@ -11,7 +11,7 @@ import { LoaderService, LoggingService, NotificationSnackbarService } from '@cms
 export class MessageEditorComponent implements OnInit, OnChanges {
 
   formUiStyle: UIFormStyle = new UIFormStyle();
-  
+
     /** Input properties **/
   @Input() messageList!:any;
   @Input() templateContent!: any;
@@ -35,20 +35,20 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     private readonly ref: ChangeDetectorRef,
     private readonly loggingService: LoggingService,
     private readonly elementRef: ElementRef,) { }
-  
+
     /** events **/
     @HostListener("document:keydown", ["$event"])
     public keydown(event: KeyboardEvent): void {
-      this.clientVariables = this.allVariables;   
+      this.clientVariables = this.allVariables;
     }
-  
+
     @HostListener("document:click", ["$event"])
     public documentClick(event: any): void {
       this.clientVariables = this.allVariables;
       if (event.target?.children[0]?.id !== "insertVariable" && event.target.parentElement.id !== 'searchVariable') {
         this.messageList.forEach((x: any) => {
           x.showVariable = false;
-        });      
+        });
       }
       else{
         this.messageList.forEach((x: any) => {
@@ -89,18 +89,18 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     if(message != null){
       this.messageList.push({
         messageId: this.getMessageId(),
-        messageText: message, 
+        messageText: message,
         wordCount: message?.length,
         showVariables: false,
         isValid : true
       });
-    }   
+    }
   }
 
   addNewMessage() {
       this.messageList.push({
         messageId: this.getMessageId(),
-        messageText: this.templateContent ?? '', 
+        messageText: this.templateContent ?? '',
         wordCount: this.templateContent?.length,
         showVariables: false,
         isValid : true
@@ -115,7 +115,7 @@ export class MessageEditorComponent implements OnInit, OnChanges {
       })
     }
     else{
-    this.messageList = this.messageList.filter((x:any)=> x.messageId != id);  
+    this.messageList = this.messageList.filter((x:any)=> x.messageId != id);
     }
   }
 
@@ -152,7 +152,7 @@ export class MessageEditorComponent implements OnInit, OnChanges {
 
 
   bindVariableToEditor(variable: any,item:any) {
-    this.insertTextAtCursor(variable, item);    
+    this.insertTextAtCursor(variable, item);
   }
 
   insertTextAtCursor(variable: any, item:any): void {
@@ -160,18 +160,20 @@ export class MessageEditorComponent implements OnInit, OnChanges {
     const textarea = textareaParent.children[0] as HTMLTextAreaElement;
     const currentValue = textarea.value;
     const cursorPos = this.getCursorPos(textarea);
-  
-    // Insert the new text at the cursor position
+
+    // Insert the new text at the cursor position if length is less then MessageMaxLength
     const patchedValue = currentValue.slice(0, cursorPos) + '{{'+variable+'}}' + currentValue.slice(cursorPos);
-    textarea.value = patchedValue;
-    item.messageText = textarea.value
-    item.wordCount = textarea.value?.length ?? 0;
+    if(patchedValue.length < this.tAreaMessageMaxLength){
+      textarea.value = patchedValue;
+      item.messageText = textarea.value
+      item.wordCount = textarea.value?.length ?? 0;
+    }
   }
 
   getCursorPos(textarea: HTMLTextAreaElement): number {
     let cursorPosition = textarea.selectionStart;
     return cursorPosition;
-  }  
+  }
 
   ngDirtyInValid(item:any){
     if(this.isSubmitted){
@@ -203,7 +205,7 @@ export class MessageEditorComponent implements OnInit, OnChanges {
   }
 
   private getRandomInt(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min; //NOSONAR
   }
 
   private setInitialValueMessage() {

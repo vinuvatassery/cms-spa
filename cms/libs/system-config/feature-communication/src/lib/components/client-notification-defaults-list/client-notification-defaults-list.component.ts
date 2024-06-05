@@ -1,32 +1,33 @@
 import {
   Component,
-  OnInit, 
+  OnInit,
   ChangeDetectionStrategy,
   EventEmitter,
   Input,
   Output,
   OnChanges,
-} from '@angular/core'; 
+} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import {
-  CancelEvent,
-  EditEvent,
-  GridComponent,
   GridDataResult,
-  SaveEvent,
 } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
+import {
+  CompositeFilterDescriptor,
+  State,
+  filterBy,
+} from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'system-config-client-notification-defaults-list',
   templateUrl: './client-notification-defaults-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientNotificationDefaultsListComponent implements OnInit, OnChanges {
- 
+export class ClientNotificationDefaultsListComponent
+  implements OnInit, OnChanges
+{
   /** Public properties **/
-  UpdateDefaultNotificationPopupShow = false; 
+  UpdateDefaultNotificationPopupShow = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
@@ -42,12 +43,14 @@ export class ClientNotificationDefaultsListComponent implements OnInit, OnChange
   @Output() loadClientNotificationListsEvent = new EventEmitter<any>();
   @Output() clientNotificationFilterColumnEvent = new EventEmitter<any>();
   public state!: State;
+  isGridRowEdit = false;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
+  optionWidth = 50;
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
@@ -59,10 +62,9 @@ export class ClientNotificationDefaultsListComponent implements OnInit, OnChange
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   /** Internal event methods **/
-  
-  
+
   ngOnInit(): void {
-    this.loadClientNotificationList(); 
+    this.loadClientNotificationList();
   }
   ngOnChanges(): void {
     this.state = {
@@ -70,10 +72,10 @@ export class ClientNotificationDefaultsListComponent implements OnInit, OnChange
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-  
+
     this.loadClientNotificationList();
   }
-  
+
   private loadClientNotificationList(): void {
     this.loadClientNotificationLitData(
       this.state?.skip ?? 0,
@@ -98,13 +100,12 @@ export class ClientNotificationDefaultsListComponent implements OnInit, OnChange
     this.loadClientNotificationListsEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
-  loadClientNotificationFilterColumn(){
+  loadClientNotificationFilterColumn() {
     this.clientNotificationFilterColumnEvent.emit();
-  
   }
   onChange(data: any) {
     this.defaultGridState();
-  
+
     this.filterData = {
       logic: 'and',
       filters: [
@@ -124,7 +125,7 @@ export class ClientNotificationDefaultsListComponent implements OnInit, OnChange
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
-  
+
   defaultGridState() {
     this.state = {
       skip: 0,
@@ -133,11 +134,11 @@ export class ClientNotificationDefaultsListComponent implements OnInit, OnChange
       filter: { logic: 'and', filters: [] },
     };
   }
-  
+
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
-  
+
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -146,74 +147,55 @@ export class ClientNotificationDefaultsListComponent implements OnInit, OnChange
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.loadClientNotificationList();
   }
-  
+
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadClientNotificationList();
   }
-  
+
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-  
+
   gridDataHandle() {
-    this.clientNotificationDataLists$.subscribe(
-      (data: GridDataResult) => {
-        this.gridDataResult = data;
-        this.gridDataResult.data = filterBy(
-          this.gridDataResult.data,
-          this.filterData
-        );
-        this.gridClientNotificationDataSubject.next(this.gridDataResult);
-        if (data?.total >= 0 || data?.total === -1) {
-          this.isClientNotificationListGridLoaderShow = false;
-        }
+    this.clientNotificationDataLists$.subscribe((data: GridDataResult) => {
+      this.gridDataResult = data;
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
+      this.gridClientNotificationDataSubject.next(this.gridDataResult);
+      if (data?.total >= 0 || data?.total === -1) {
+        this.isClientNotificationListGridLoaderShow = false;
       }
-    );
+    });
     this.isClientNotificationListGridLoaderShow = false;
   }
 
+  public editHandler(data: any): void {
+    this.isGridRowEdit = true;
 
-
- 
-  public editHandler({ sender, rowIndex, dataItem }: EditEvent): void {
-    this.closeEditor(sender);
-
-    this.formGroup = this.createFormGroup(dataItem);
-    this.editedRowIndex = rowIndex;
-
-    sender.editRow(rowIndex, this.formGroup);
+    this.optionWidth = 120;
   }
 
-  public cancelHandler({ sender, rowIndex }: CancelEvent): void {
-    this.closeEditor(sender, rowIndex);
+  public cancelHandler(data: any): void {
+    this.isGridRowEdit = false;
+    this.optionWidth = 50;
+
+    
   }
-
-  public saveHandler({ sender, rowIndex, formGroup, isNew }: SaveEvent): void {
-    const product = formGroup.value;
-
-    sender.closeRow(rowIndex);
+  updateButton(){
+    this.isGridRowEdit = false;
+    this.optionWidth = 50;
+    this.UpdateDefaultNotificationPopupShow = false;
+  }
+  public saveHandler(data: any): void {
     this.UpdateDefaultNotificationPopupShow = true;
   }
-  private closeEditor(
-    grid: GridComponent,
-    rowIndex = this.editedRowIndex
-  ): void {
-    grid.closeRow(rowIndex);
-    this.editedRowIndex = undefined;
-    this.formGroup = undefined;
-  }
-  createFormGroup = (dataItem: any) =>
-    new FormGroup({
-      defaultMethod: new FormControl(
-        dataItem.defaultMethod,
-        Validators.required
-      ),
-    });
 
-    onCloseUpdateDefaultNotificationClicked(){
-this.UpdateDefaultNotificationPopupShow = false;
-    }
+  onCloseUpdateDefaultNotificationClicked() {
+    this.UpdateDefaultNotificationPopupShow = false;
+  }
 }

@@ -28,6 +28,7 @@ import {
   PaymentStatusCode,PaymentType, PaymentMethodCode, PaymentBatchName, DrugsFacade, FinancialVendorFacade, FinancialPharmacyClaimsFacade, VendorFacade
 } from '@cms/case-management/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
@@ -121,7 +122,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
   recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
   fromDrugPurchased:any = false;
-  
+  permissionLevels:any[]=[];
+
   public batchLogGridActions(dataItem:any){
    return  [
     {
@@ -274,10 +276,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   dropDowncolumns: any = [
     { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
-      columnCode: 'itemNbr',
-      columnDesc: 'Item #',
-    },
-    {
       columnCode: 'vendorName',
       columnDesc: 'Pharmacy Name',
     },
@@ -288,39 +286,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     {
       columnCode: 'clientId',
       columnDesc: 'Client ID',
-    },
-    {
-      columnCode: 'paymentMethodCode',
-      columnDesc: 'Payment Method',
-    },
-    {
-      columnCode: 'creationTime',
-      columnDesc: 'Entry Date',
-    },
-    {
-      columnCode: 'paymentStatusCode',
-      columnDesc: 'Payment Status',
-    },
-    {
-      columnCode: 'indexCode',
-      columnDesc: 'Index Code',
-    },
-    {
-      columnCode: 'pca',
-      columnDesc: 'PCA',
-    },
-    {
-      columnCode: 'objectCode',
-      columnDesc: 'Ojbect Code',
-    },
-    {
-      columnCode: 'checkNbr',
-      columnDesc: 'Warrant Number',
-    },
-    {
-      columnCode: 'amountPaid',
-      columnDesc: 'Amount Paid',
-    },
+    }
   ]
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService,  private readonly cdr: ChangeDetectorRef,
@@ -330,8 +296,10 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     private readonly drugsFacade: DrugsFacade,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
-    private readonly vendorFacade: VendorFacade) {}
-  
+    private readonly vendorFacade: VendorFacade,
+    private readonly userManagementFacade : UserManagementFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade) {}
+
   ngOnInit(): void {
     this.sortColumnName = 'Pharmacy Name';
     this.loadBatchLogListGrid();
@@ -344,7 +312,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
       next: (data: any) => {
         this.financialVendorFacade.manufacturerListSubject.next(data);
-      }      
+      }
     });
   }
 
@@ -372,12 +340,12 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           },
 
       },
-      
+
       {
         buttonType: 'btn-h-primary',
         text: 'Unbatch Entire Batch',
         icon: 'undo',
-      
+
         click: (data: any): void => {
           if (!this.isBulkUnBatchOpened) {
             this.isBulkUnBatchOpened = true;
@@ -411,7 +379,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
       next: (data: any) => {
         this.financialVendorFacade.manufacturerListSubject.next(data);
-      }      
+      }
     });
   }
 
@@ -741,6 +709,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       .pipe(first((unbatchResponse: any) => unbatchResponse != null))
       .subscribe((unbatchResponse: any) => {
         if (unbatchResponse ?? false) {
+          this.loadPendingApprovalPaymentCount();
           this.loadBatchLogListGrid();
         }
       });
@@ -756,6 +725,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       )
       .subscribe((unbatchEntireBatchResponse: any) => {
         if (unbatchEntireBatchResponse ?? false) {
+          this.loadPendingApprovalPaymentCount();
          this.backToBatch(null)
           this.loadBatchLogListGrid();
         }
@@ -1079,6 +1049,7 @@ updatePharmacyClaim(data: any) {
   {
     if(editResponse)
     {
+      this.loadPendingApprovalPaymentCount();
       this.loadBatchLogListGrid();
       this.modalCloseAddEditClaimsFormModal(true)
     }
@@ -1123,6 +1094,15 @@ searchPharmacyDataEventHandler(vendor:any){
 
 loadRecentClaimListEventHandler(data : any){
   this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+}
+
+loadPendingApprovalPaymentCount() {
+
+  this.permissionLevels = this.userManagementFacade.GetPermissionlevelsForPendingApprovalsCount();
+
+  this.navigationMenuFacade.getPendingApprovalPaymentCount(
+  this.permissionLevels
+  );
 }
 
 }

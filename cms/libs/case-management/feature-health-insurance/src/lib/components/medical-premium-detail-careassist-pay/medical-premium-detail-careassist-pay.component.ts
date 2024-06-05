@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, HealthInsurancePlan} from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade, NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-medical-premium-detail-careassist-pay',
@@ -77,6 +77,8 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
     private readonly contactFacade: ContactFacade,
     private userManagementFacade: UserManagementFacade,
     private readonly cdr: ChangeDetectorRef,
+    private readonly navigationMenuFacade : NavigationMenuFacade,
+
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
     this.medicalProviderForm = this.formBuilder.group({});
@@ -102,6 +104,10 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
     else {
       this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
         next: (response: any) => {
+          if(vendorProfile.activeFlag === StatusFlag.No)
+            {
+              this.loadPendingApprovalGeneralCount();
+            }
           this.financialVendorFacade.hideLoader();
           this.closeVendorDetailModal();
           this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
@@ -187,5 +193,10 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   }
   closeVendorDetailModal() {
     this.isShowInsuranceProvider = false;
+  }
+
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 }

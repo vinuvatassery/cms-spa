@@ -68,6 +68,7 @@ export class VendorHeaderToolsComponent {
   triggerFrom= ScreenType.VendorProfile;
   @Output() openAddReminderEvent = new EventEmitter()
   loginUserEmail: any;
+  caseManagerEmail: any = null;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -82,12 +83,6 @@ export class VendorHeaderToolsComponent {
           this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
           this.currentCommunicationTypeCode = CommunicationEventTypeCode.VendorLetter;
           this.notificationGroup = CommunicationEventTypeCode.LETTER;
-          this.informationalText = "Select an existing template or draft a custom letter."
-          this.templateHeader = 'Send New Letter';
-          this.saveForLaterHeadterText = "Letter Draft Saved";
-          this.saveForLaterModelText="To pick up where you left off, click \"New Letter\" from the vendor's profile";
-          this.confirmPopupHeader = 'Send Letter to Print?';
-          this.confirmationModelText="This action cannot be undone.";
           this.notificationDraftCheck(this.vendorId, this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
@@ -105,12 +100,6 @@ export class VendorHeaderToolsComponent {
           this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
           this.currentCommunicationTypeCode = CommunicationEventTypeCode.VendorEmail;
           this.notificationGroup = CommunicationEventTypeCode.EMAIL;
-          this.informationalText = "Select an existing template or draft a custom email."
-          this.templateHeader = 'Send New Email';
-          this.saveForLaterHeadterText = "Email Draft Saved";
-          this.saveForLaterModelText="To pick up where you left off, click \"New Email\" from the vendor's profile";
-          this.confirmPopupHeader = 'Send Email?';
-          this.confirmationModelText="This action cannot be undone.";
           this.notificationDraftCheck(this.vendorId, this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
@@ -132,7 +121,7 @@ export class VendorHeaderToolsComponent {
           this.templateHeader = 'Send New SMS Text';
           this.saveForLaterHeadterText = "Sms Draft Saved";
           this.saveForLaterModelText="To pick up where you left off, click \"New Sms\" from the vendor's profile";
-          this.confirmPopupHeader = 'Send Sms?';
+          this.confirmPopupHeader = 'Send SMS text Message(s)?';
           this.confirmationModelText="This action cannot be undone.";
           this.notificationDraftCheck(this.vendorId, this.templateLoadType, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
@@ -185,10 +174,7 @@ export class VendorHeaderToolsComponent {
         const preferredContact = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.preferredFlag === "Y" && contact.emailAddress?.trim());
         const contactWithValidEmail = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.emailAddress && contact.emailAddress.trim());
         this.toEmail = [];
-        if (preferredContact) {
-          this.toEmail = [];
-          this.sendActions[1].isVisible = true;
-        } else if (contactWithValidEmail) {
+        if (preferredContact || contactWithValidEmail ) {
           this.toEmail = [];
           this.sendActions[1].isVisible = true;
         }
@@ -271,7 +257,7 @@ export class VendorHeaderToolsComponent {
     }
   }
 
- 
+
     onSendNewLetterClicked(template: TemplateRef<unknown>): void {
       this.isSendNewLetterDialog = this.dialogService.open({
         content: template,
@@ -367,5 +353,5 @@ export class VendorHeaderToolsComponent {
       });
       this.loaderService.hide();
     }
-    
+
 }

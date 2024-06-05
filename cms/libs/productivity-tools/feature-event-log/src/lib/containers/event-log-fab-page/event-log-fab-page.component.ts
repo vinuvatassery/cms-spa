@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { AlertEntityTypeCode, FabMenuFacade } from '@cms/productivity-tools/domain';
+import { AlertEntityTypeCode, FabMenuFacade, NotificationStatsFacade, StatsTypeCode } from '@cms/productivity-tools/domain';
 import { FabBadgeFacade, LovFacade } from '@cms/system-config/domain';
 import { Subject, Subscription, filter } from 'rxjs';
 
@@ -34,6 +34,7 @@ export class EventLogComponentFabPageComponent implements OnInit, OnDestroy
     private readonly lovFacade: LovFacade,
     private readonly router: Router,
     private route: ActivatedRoute,
+    public readonly notificationStatsFacade: NotificationStatsFacade,
   ) {
   }
 
@@ -93,6 +94,7 @@ export class EventLogComponentFabPageComponent implements OnInit, OnDestroy
   closeAction() {
 
     this.fabMenuFacade.isShownEventLog = !this.fabMenuFacade.isShownEventLog;
+    this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.EventLog); 
   }
 
 }

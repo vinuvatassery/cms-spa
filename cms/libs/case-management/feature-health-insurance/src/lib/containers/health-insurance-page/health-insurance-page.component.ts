@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType, GridFilterParam, WorkflowTypeCode } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType, GridFilterParam } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LovFacade } from '@cms/system-config/domain';
@@ -410,6 +410,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       this.clientId,
       this.clientCaseEligibilityId,
       typeParam,
+      true,
       gridFilterParam      
     );
   }
@@ -474,35 +475,13 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       if (this.checkValidations()) {
         this.save().subscribe((response: any) => {
           if (response) {
-            this.loaderService.hide();
-            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-              if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-                this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-              else {
-                this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                  queryParamsHandling: "preserve"
-                });
-              }
-            }
+            this.workflowFacade.saveForLaterCompleted(true)  
+            this.loaderService.hide();  
           }
         })
       }
       else {
-        if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-          if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-          else {
-            this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-              queryParamsHandling: "preserve"
-            });
-          }
-        }
+        this.workflowFacade.saveForLaterCompleted(true)  
       }
     });
   }

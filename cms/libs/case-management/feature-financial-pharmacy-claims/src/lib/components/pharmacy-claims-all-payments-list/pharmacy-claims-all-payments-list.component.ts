@@ -171,6 +171,8 @@ export class PharmacyClaimsAllPaymentsListComponent
     this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
   addDrug$ = this.drugsFacade.addDrug$;
   fromDrugPurchased: any = false;
+  excludedPaymentStatus: string[] = ['Failed', 'On Hold', 'Pending', 'Submitted'];
+  pharmacyPaymentStatusList : any[]=[];
   selectedPaymentStatus: string | null = null;
   selectedPaymentMethod: string | null = null;
   gridColumns: any = {
@@ -309,6 +311,10 @@ export class PharmacyClaimsAllPaymentsListComponent
           this.financialVendorFacade.manufacturerListSubject.next(data);
         },
       });
+    this.paymentStatus$.subscribe(values => 
+      {
+        this.pharmacyPaymentStatusList = values.filter(value => !this.excludedPaymentStatus.includes(value.lovDesc))
+      })
   }
 
   pharmacyClaimsAllPaymentsSubscription() {
@@ -460,7 +466,7 @@ export class PharmacyClaimsAllPaymentsListComponent
 
   performSearch(data: any) {
     this.defaultGridState();
-    let operator = 'contains';
+    let operator = '';
     const isClientId = ['clientId'].includes(this.selectedSearchColumn);
     const isEntryDate = ['creationTime'].includes(this.selectedSearchColumn);
     if (isClientId) {

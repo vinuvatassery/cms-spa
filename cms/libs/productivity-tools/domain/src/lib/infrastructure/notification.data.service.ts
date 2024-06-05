@@ -30,7 +30,10 @@ export class NotificationDataService {
       },
     ]);
   }
-
+  loadReminderSnackbars() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/reminder-snackbars`);
+  }
   loadNotificationsAndReminders(isViewAll :boolean) {
     return this.http.get(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications/${isViewAll}`);

@@ -275,101 +275,112 @@ export class IncomeDetailComponent implements OnInit {
     this.incomeTypesOther =
       this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value;
   }
+
+              validateIncomeFormData()
+            {
+              const validGuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+              let incomeData = this.IncomeDetailsForm.value;
+              if(!validGuidRegex.test(this.IncomeDetailsForm.controls['employerId'].value)){
+                incomeData['employerName'] =this.IncomeDetailsForm.controls['employerId'].value;
+                incomeData['employerId'] = null;       
+              }
+              else{
+                incomeData['employerId'] = this.IncomeDetailsForm.controls['employerId'].value;
+              }
+              incomeData['clientCaseEligibilityId'] = this.clientCaseEligibilityId;
+              incomeData['clientId'] = this.clientId;
+              incomeData['clientCaseId'] = this.clientCaseId;
+              incomeData['incomeStartDate'] = this.intl.formatDate(this.IncomeDetailsForm.controls['incomeStartDate'].value, this.dateFormat);
+              incomeData['incomeEndDate'] = this.intl.formatDate(this.IncomeDetailsForm.controls['incomeEndDate'].value, this.dateFormat);
+
+              if (this.incomeTypesOther == 'O') {
+                incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value;
+              } else {
+                incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value == null;
+              }
+              this.btnDisabled =true;
+              if (!this.isEditValue) {
+
+                this.incomeFacade.showLoader();
+                this.incomeFacade
+                  .saveClientIncome(
+                    this.clientId,
+                    this.IncomeDetailsForm.value,
+                    this.proofOfIncomeFiles,
+                    this.documentTypeCode
+                  )
+                  .subscribe({
+                    next: (incomeResponse) => {
+                      this.incomeFacade.incomeValidSubject.next(true);
+                      this.incomeFacade.hideLoader();
+                      this.incomeFacade.showHideSnackBar(
+                        SnackBarNotificationType.SUCCESS,
+                        'Income created successfully.'
+                      );
+                      this.loadIncomeList.next(true);
+                      this.closeIncomeDetailPoup();
+                    },
+                    error: (err) => {
+                      this.btnDisabled =false;
+                      this.incomeFacade.hideLoader();
+                      this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+                    },
+                  });
+              }
+
+              if (this.isEditValue) {
+                this.validateEditValue(incomeData)
+              }
+            }
+
+
+                validateEditValue(incomeData : any)
+                {
+                  this.incomeFacade.showLoader();
+                  incomeData['clientIncomeId'] = this.selectedIncome.clientIncomeId;
+                  incomeData['concurrencyStamp'] = this.selectedIncome.concurrencyStamp;
+                  incomeData['monthlyIncome'] = this.selectedIncome.monthlyIncome;
+                  if (this.selectedIncome.clientDocumentId != null) {
+                    incomeData['clientDocumentId'] = this.selectedIncome.clientDocumentId;
+                    incomeData['documentConcurrencyStamp'] =
+                      this.selectedIncome.documentConcurrencyStamp;
+                  }
+
+                  incomeData['activeFlag'] = this.selectedIncome.activeFlag;
+
+                  this.incomeFacade
+                    .editClientIncome(
+                      this.clientId,
+                      this.selectedIncome.clientIncomeId,
+                      this.IncomeDetailsForm.value,
+                      this.proofOfIncomeFiles,
+                      this.documentTypeCode
+                    )
+                    .subscribe({
+                      next: (incomeResponse) => {
+                        this.closeIncomeDetailPoup();
+                        this.incomeFacade.hideLoader();
+                        this.incomeFacade.showHideSnackBar(
+                          SnackBarNotificationType.SUCCESS,
+                          'Income updated successfully.'
+                        );
+                        this.loadIncomeList.next(true);
+                        this.closeIncomeDetailPoup();
+                      },
+                      error: (err) => {
+                        this.btnDisabled = false;
+                        this.incomeFacade.hideLoader();
+                        this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+                      },
+                    });
+                }
   public submitIncomeDetailsForm(): void {
     this.setValidators();
     if (this.isEditValue) {
       this.onProofofIncomeValueChangedUpdated(this.hasNoProofOfIncome);
     }
     if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator && !this.proofOfIncomeValidatorSize) {
-      const validGuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-      let incomeData = this.IncomeDetailsForm.value;
-      if(!validGuidRegex.test(this.IncomeDetailsForm.controls['employerId'].value)){
-        incomeData['employerName'] =this.IncomeDetailsForm.controls['employerId'].value;
-        incomeData['employerId'] = null;       
-      }
-      else{
-        incomeData['employerId'] = this.IncomeDetailsForm.controls['employerId'].value;
-      }
-      incomeData['clientCaseEligibilityId'] = this.clientCaseEligibilityId;
-      incomeData['clientId'] = this.clientId;
-      incomeData['clientCaseId'] = this.clientCaseId;
-      incomeData['incomeStartDate'] = this.intl.formatDate(this.IncomeDetailsForm.controls['incomeStartDate'].value, this.dateFormat);
-      incomeData['incomeEndDate'] = this.intl.formatDate(this.IncomeDetailsForm.controls['incomeEndDate'].value, this.dateFormat);
-
-      if (this.incomeTypesOther == 'O') {
-        incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value;
-      } else {
-        incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value == null;
-      }
-      this.btnDisabled =true;
-      if (!this.isEditValue) {
-
-        this.incomeFacade.showLoader();
-        this.incomeFacade
-          .saveClientIncome(
-            this.clientId,
-            this.IncomeDetailsForm.value,
-            this.proofOfIncomeFiles,
-            this.documentTypeCode
-          )
-          .subscribe({
-            next: (incomeResponse) => {
-              this.incomeFacade.incomeValidSubject.next(true);
-              this.incomeFacade.hideLoader();
-              this.incomeFacade.showHideSnackBar(
-                SnackBarNotificationType.SUCCESS,
-                'Income created successfully.'
-              );
-              this.loadIncomeList.next(true);
-              this.closeIncomeDetailPoup();
-            },
-            error: (err) => {
-              this.btnDisabled =false;
-              this.incomeFacade.hideLoader();
-              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-            },
-          });
-      }
-
-      if (this.isEditValue) {
-        this.incomeFacade.showLoader();
-        incomeData['clientIncomeId'] = this.selectedIncome.clientIncomeId;
-        incomeData['concurrencyStamp'] = this.selectedIncome.concurrencyStamp;
-        incomeData['monthlyIncome'] = this.selectedIncome.monthlyIncome;
-        if (this.selectedIncome.clientDocumentId != null) {
-          incomeData['clientDocumentId'] = this.selectedIncome.clientDocumentId;
-          incomeData['documentConcurrencyStamp'] =
-            this.selectedIncome.documentConcurrencyStamp;
-        }
-
-        incomeData['activeFlag'] = this.selectedIncome.activeFlag;
-
-        this.incomeFacade
-          .editClientIncome(
-            this.clientId,
-            this.selectedIncome.clientIncomeId,
-            this.IncomeDetailsForm.value,
-            this.proofOfIncomeFiles,
-            this.documentTypeCode
-          )
-          .subscribe({
-            next: (incomeResponse) => {
-              this.closeIncomeDetailPoup();
-              this.incomeFacade.hideLoader();
-              this.incomeFacade.showHideSnackBar(
-                SnackBarNotificationType.SUCCESS,
-                'Income updated successfully.'
-              );
-              this.loadIncomeList.next(true);
-              this.closeIncomeDetailPoup();
-            },
-            error: (err) => {
-              this.btnDisabled = false;
-              this.incomeFacade.hideLoader();
-              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-            },
-          });
-      }
+     this.validateIncomeFormData()
     }else{
       const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.IncomeDetailsForm, this.elementRef.nativeElement,null);
       if (invalidControl) {

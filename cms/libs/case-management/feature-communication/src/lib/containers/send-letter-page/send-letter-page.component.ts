@@ -71,6 +71,7 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
   saveForLaterModelText:string='';
   confirmationModelText:string='';
   entityType = EntityTypeCode.Client;
+  caseManagerEmail: any = null;
   /** Constructor**/
   constructor(
     private route: ActivatedRoute,
@@ -235,25 +236,10 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
     if (this.paperlessFlag === StatusFlag.Yes) {
       this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
       this.emailCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeEmail;
-      this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
-      this.templateHeader = 'Send Disenrollment Email';
-      this.emailSubject = "CAREAssist Disenrollment Notice";
-      this.confirmPopupHeader = 'Send Disenrollment email to print?';
-      this.saveForLaterHeadterText = "Email Draft Saved";
-      this.saveForLaterModelText="You must send the  Disenrollment Email within 2 Days";
-      this.confirmationModelText="If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete.";
- 
     }
     else {
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
       this.letterCommunicationTypeCode = CommunicationEventTypeCode.DisenrollmentNoticeLetter;
-      this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
-      this.templateHeader = 'Send Disenrollment Letter';
-      this.emailSubject = '';
-      this.confirmPopupHeader = 'Send Disenrollment letter to print?';
-      this.saveForLaterHeadterText = "Letter Draft Saved";
-      this.saveForLaterModelText="You must send the  Disenrollment Letter within 2 Days";
-      this.confirmationModelText="If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete.";
     }
   }
 
@@ -261,26 +247,12 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
     if (this.paperlessFlag === StatusFlag.Yes) {
       this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
       this.emailCommunicationTypeCode = CommunicationEventTypeCode.ApprovalNoticeEmail;
-      this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
-      this.templateHeader = 'Send Approval Email';
-      this.emailSubject = "CareAssist Approval Notice";
-      this.confirmPopupHeader = 'Send Approval Email?';
-      this.saveForLaterHeadterText = "Email Draft Saved";
-      this.saveForLaterModelText="You must send the  Approval Email within 14 Days";
-      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via  SMS text, and/or their online portal.";
- 
+
     }
     else {
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
       this.letterCommunicationTypeCode = CommunicationEventTypeCode.ApprovalNoticeLetter;
-      this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
-      this.templateHeader = 'Send Approval Letter';
-      this.emailSubject = '';
-      this.confirmPopupHeader = 'Send Approval Letter to Print?';
-      this.saveForLaterHeadterText = "Letter Draft Saved";
-      this.saveForLaterModelText="You must send the  Approval Letter within 14 Days";
-      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
- 
+
     }
   }
 
@@ -288,26 +260,11 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
     if (this.paperlessFlag === StatusFlag.Yes) {
       this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
       this.emailCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeEmail;
-      this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
-      this.templateHeader = 'Send Denial Email';
-      this.emailSubject = "CAREAssist Denial Notice";
-      this.confirmPopupHeader = 'Send Denial Email?';
-      this.saveForLaterHeadterText = "Email Draft Saved";
-      this.saveForLaterModelText="You must send the  Denial Email within 14 Days";
-      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via SMS text, and/or their online portal.";
- 
+
     }
     else {
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
       this.letterCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeLetter;
-      this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
-      this.templateHeader = 'Send Denial Letter';
-      this.emailSubject = '';
-      this.confirmPopupHeader = 'Send Denial Letter to print?';
-      this.saveForLaterHeadterText = "Letter Draft Saved";
-      this.saveForLaterModelText="You must send the  Denial Letter within 14 Days";
-      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
-  
     }
   }
 
@@ -315,24 +272,10 @@ export class SendLetterPageComponent implements OnInit, OnDestroy, AfterViewInit
     if (this.paperlessFlag === StatusFlag.Yes) {
       this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
       this.emailCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeEmail;
-      this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''SEND EMAIL'' once the email is complete."
-      this.templateHeader = 'Send Pending Email';
-      this.emailSubject = '';
-      this.confirmPopupHeader = 'Send Pending Email to print';
-      this.saveForLaterHeadterText = "Email Draft Saved";
-      this.saveForLaterModelText="You must send the  Pending Email within 14 Days";
-      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal";
     }
     else {
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
       this.letterCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeLetter;
-      this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the letter is complete."
-      this.templateHeader = 'Send Pending Letter';
-      this.emailSubject = '';
-      this.confirmPopupHeader = 'Send Pending Letter to print?';
-      this.saveForLaterHeadterText = "Letter Draft Saved";
-      this.saveForLaterModelText="You must send the  Pending Email within 14 Days";
-      this.confirmationModelText="This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal";
     }
   }
 

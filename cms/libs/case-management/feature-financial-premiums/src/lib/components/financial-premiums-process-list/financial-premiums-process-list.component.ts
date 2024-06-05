@@ -14,6 +14,7 @@ import {
 import { Router } from '@angular/router';
 import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage, FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {CompositeFilterDescriptor } from '@progress/kendo-data-query';
@@ -86,6 +87,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   selectedColumn = 'ALL';
   columnName: string = '';
   public selectedProcessClaims: any[] = [];
+  permissionLevels:any[]=[];
 
   columns: any = {
     ALL: 'All Columns',
@@ -139,6 +141,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   medicalPremiumListSubject = new Subject<any>();
   medicalPremiumList$ = this.medicalPremiumListSubject.asObservable();
   sendReportCount: number = 0;
+  vendorReportCount : number =0;
   isAllSelected = false;
   processGridDataList: any = [];
   selectAll: boolean = false;
@@ -248,6 +251,9 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     private dialogService: DialogService,
     private readonly route: Router,
     private readonly ref: ChangeDetectorRef,
+    private readonly userManagementFacade : UserManagementFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade
+
   ) {
 
     this.selectableSettings = {
@@ -280,11 +286,13 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
       this.financialPremiumsProcessGridLists = this.gridDataResult?.data;
       if(this.isSendReportOpened === false){
         this.recordCountWhenSelectallClicked = 0;
-        this.totalGridRecordsCount = 0;
       }
+      if(this.isSendReportOpened && this.selectAll){
+        this.sendReportCount= this.financialPremiumsProcessGridLists.filter((item:any)=>item.acceptsReportsFlag == 'Y')?.length;
+      }
+
       if(this.recordCountWhenSelectallClicked == 0){
         this.recordCountWhenSelectallClicked = this.gridDataResult?.acceptsReportsQueryCount;
-        this.totalGridRecordsCount = this.gridDataResult?.acceptsReportsQueryCount;
       }
       if (!this.selectAll) {
         this.financialPremiumsProcessGridLists.forEach((item1: any) => {
@@ -317,24 +325,46 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
           // Check if the item is in the second list.
           const isItemInSecondList = this.unCheckedProcessRequest.find((item2: any) => item2.paymentRequestId === item.paymentRequestId);
           // If the item is in the second list, mark it as selected true.
-          if (isItemInSecondList) {
-            item.selected = false;
-          } else {
-            item.selected = true;
-          }
+          this.markItemToTrueConditionally(isItemInSecondList, item);
         }
+        this.prepareSelectedRecordsList();
       }
       this.onCloseRemovePremiums();
-      this.onSendReportClicked()
     }
   }
+
+  prepareSelectedRecordsList() {
+        if(this.selectAll){
+        this.selectedSendReportList = {
+          'selectAll': this.selectAll, 'UnSelectedSendReports': this.unCheckedProcessRequest,
+          'SelectedSendReports': this.financialPremiumsProcessGridLists, 'batchId': null, 'currentSendReportsGridFilter': JSON.stringify(this.state?.filter?.filters ?? [])
+        }
+      }else{
+        this.selectedSendReportList = {
+          'selectAll': this.selectAll, 'UnSelectedSendReports': this.unCheckedProcessRequest,
+          'SelectedSendReports': this.checkedAndUncheckedRecordsFromSelectAll, 'batchId': null, 'currentSendReportsGridFilter': JSON.stringify(this.state?.filter?.filters ?? [])
+        }
+      }
+  }
+
+  markItemToTrueConditionally(isItemInSecondList: any, item: any) {
+    if (isItemInSecondList) {
+      item.selected = false;
+    } else {
+      item.selected = true;
+    }
+  }
+
   onSendReportClicked() {
     if (this.isSendReportOpened) {
       if (this.unCheckedProcessRequest?.length > 0) {
-        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
         this.recordCountWhenSelectallClicked = this.sendReportCount;
       } else {
-        this.sendReportCount = this.recordCountWhenSelectallClicked;
+        if(this.isSendReportOpened && this.selectAll){
+          this.sendReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((x:any) => x.acceptsReportsFlag == 'Y').length;
+        }else{
+          this.sendReportCount = this.recordCountWhenSelectallClicked;
+        }
       }
     } else {
       this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports?.filter((item: any) => item.selected));
@@ -612,6 +642,8 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   }
 
   public onSendReportOpenClicked(template: TemplateRef<unknown>): void {
+    this.vendorReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((obj: any, index: any, self: any) =>
+      index === self.findIndex((t: any) => ( t.vendorId === obj.vendorId && t.acceptsReportsFlag === 'Y' ))).length;
     this.sendReportDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -741,15 +773,14 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   onSelectAllAndSendReportsOpened(selected: boolean) {
     if (this.selectAll && this.isSendReportOpened) {
       if (this.unCheckedProcessRequest?.length > 0) {
-        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.sendReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((x:any) => x.acceptsReportsFlag == 'Y').length;
         this.recordCountWhenSelectallClicked = this.sendReportCount;
       } else {
         this.recordCountWhenSelectallClicked = selected ? this.recordCountWhenSelectallClicked + 1 : this.recordCountWhenSelectallClicked - 1;
         this.sendReportCount = this.recordCountWhenSelectallClicked;
       }
     } else {
-      this.sendReportCount = this.selectedSendReportList?.SelectedSendReports.filter((obj: any, index: any, self: any) =>
-      index === self.findIndex((t: any) => ( t.vendorId === obj.vendorId ))).length;
+      this.sendReportCount = this.selectedSendReportList?.SelectedSendReports.length;
     }
   }
 
@@ -782,7 +813,8 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
             'selected': true,
             'vendorId': dataItem.vendorId,
             'clientId': dataItem.clientId,
-            'vendorName': dataItem.insuranceVendor });
+            'vendorName': dataItem.insuranceVendor,
+            'acceptsReportsFlag': dataItem.acceptsReportsFlag });
       } else {
         const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
         if (recordIndex !== -1) {
@@ -837,10 +869,9 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     }
     if (this.selectAll && this.isSendReportOpened) {
       if (this.unCheckedProcessRequest?.length > 0) {
-        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
         this.recordCountWhenSelectallClicked = this.sendReportCount;
       } else {
-        this.sendReportCount = this.totalGridRecordsCount;
+        this.sendReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((x:any) => x.acceptsReportsFlag == 'Y').length;
       }
     } else {
       this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
@@ -949,6 +980,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
       PaymentRequestIds: this.selectedProcessClaims,
     };
     this.batchingPremium$.subscribe((_: any) => {
+      this.loadPendingApprovalPaymentCount();
       this.onModalBatchPremiumsModalClose()
       this.loadFinancialPremiumsProcessListGrid()
       this.onBatchPremiumsGridSelectedCancelClicked()
@@ -1023,7 +1055,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   }
   SendInsuranceVendorReports(result: any){
     if(result){
-      this.financialPremiumsFacade.SendInsuranceVendorReports(this.selectedSendReportList?.SelectedSendReports);
+      this.financialPremiumsFacade.SendInsuranceVendorReports(this.selectedSendReportList?.SelectedSendReports?.filter((x:any) => x.acceptsReportsFlag == 'Y') );
       this.onSendReportCloseClicked(true);
       this.insuranceReportsResponse$.subscribe((response: any) => {
         if (response) {
@@ -1031,5 +1063,14 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
         }
       });
     }
+  }
+
+  loadPendingApprovalPaymentCount() {
+
+    this.permissionLevels = this.userManagementFacade.GetPermissionlevelsForPendingApprovalsCount();
+
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+    this.permissionLevels
+    );
   }
 }

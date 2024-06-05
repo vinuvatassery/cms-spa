@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { AddFolder } from '@cms/system-config/domain';
 
 @Component({
   selector: 'system-config-add-folder',
@@ -9,12 +10,16 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class AddFolderComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @Output() addFolder = new EventEmitter<any>();
+  @Output () onCloseAddNewEditFolderClicked = new EventEmitter<any>();
   Form:any
+  @Input() isActiveChecked:any;
   isValidateForm= false;
   CustomDescription = '';
   CustomCharactersCount!: number;
   CustomCounter!: string;
   CustomMaxLength = 50;
+  isAddNewEditFolderPopup = true;
   constructor(public formBuilder: FormBuilder,){
       this.Form = this.formBuilder.group({})
   }
@@ -23,11 +28,24 @@ export class AddFolderComponent implements OnInit {
       folderName: ['', Validators.required],
     });
   }
-addFormDocument(){
-  this.isValidateForm=true;
-}
+  addNewFolder() {
+    this.isValidateForm=true;
+      if (this.Form.valid) {
+        const payload = {
+          TemplateDesc: this.Form.controls['folderName'].value,
+          SubtypeCode: AddFolder.SubtypeCode,
+          active: this.isActiveChecked ? 'A' : 'Y',
+          isActiveChecked: this.isActiveChecked,
+        };
+        this.addFolder.emit(payload);
+        this.onCloseAddNewEditFolderClicked.emit(false);
+      }  
+  }
 onCustomValueChange(event: any): void {
   this.CustomCharactersCount = event.length;
   this.CustomCounter = `${this.CustomCharactersCount}/${this.CustomMaxLength}`;
  }
+ onCloseAddNewFolderClicked() {
+  this.onCloseAddNewEditFolderClicked.emit(false);
+}
 }

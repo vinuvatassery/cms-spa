@@ -104,7 +104,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         );
       }
       else{
-      this.loaderService.show();
+        this.loaderService.show();
         this.acceptedApplication.clientCaseId = this.clientCaseId;
         this.acceptedApplication.clientCaseEligibilityId = this.clientCaseEligibilityId;
         this.acceptedApplication.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
@@ -116,45 +116,50 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         this.acceptedApplication.caseStatusCode = this.currentEligibility.caseStatusCode;
         this.acceptedApplication.reasonCode = this.eligibilityPeriodForm.controls['reasonCode'].value;
         this.acceptedApplication.otherReasonDesc = this.eligibilityPeriodForm.controls['otherReasonDesc'].value
-        this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication, this.clientCaseId, this.clientCaseEligibilityId).subscribe({
-          next: (response) => {
-            if(response)
-            {
-              this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Status changed and new Eligibility Period started!.")
-              this.loaderService.hide();
-              this.isModalSavedClicked.emit(true);
-              if( this.eligibilityPeriodForm.controls['eligibilityStatus'].value.toLowerCase() ===  CaseStatusCode.disenrolled.toLowerCase()){
-                this.workflowFacade.caseStatus = CaseStatusCode.disenrolled;             
-                this.workflowFacade.handleSendNewsLetterpopup(
-                  true
-                );
-              }
-              if( this.eligibilityPeriodForm.controls['eligibilityStatus'].value.toLowerCase() ===  CaseStatusCode.restricted.toLowerCase()){
-                this.workflowFacade.caseStatus = CaseStatusCode.restricted;             
-                this.workflowFacade.handleSendNewsLetterpopup(
-                  true
-                );
-              }
-            }
-            else{
-              this.clientEligibilityFacade.showHideSnackBar(
-                SnackBarNotificationType.WARNING,
-                'There cannot be two eligibility periods with overlapping date ranges.'
-              );
-            }
-          },
-          error: (err) => {
-            this.loaderService.hide();
-            this.clientEligibilityFacade.showHideSnackBar(
-              SnackBarNotificationType.ERROR,
-              err
-            );
-            this.onModalCloseClicked();
-          },
-        });
+        this.saveNewStatusPeriod();        
       }
     }
   }
+
+  saveNewStatusPeriod(){
+    this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication, this.clientCaseId, this.clientCaseEligibilityId).subscribe({
+      next: (response) => {
+        if(response)
+        {
+          this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Status changed and new Eligibility Period started!.")
+          this.loaderService.hide();
+          this.isModalSavedClicked.emit(true);
+          if( this.eligibilityPeriodForm.controls['eligibilityStatus'].value.toLowerCase() ===  CaseStatusCode.disenrolled.toLowerCase()){
+            this.workflowFacade.caseStatus = CaseStatusCode.disenrolled;             
+            this.workflowFacade.handleSendNewsLetterpopup(
+              true
+            );
+          }
+          if( this.eligibilityPeriodForm.controls['eligibilityStatus'].value.toLowerCase() ===  CaseStatusCode.restricted.toLowerCase()){
+            this.workflowFacade.caseStatus = CaseStatusCode.restricted;             
+            this.workflowFacade.handleSendNewsLetterpopup(
+              true
+            );
+          }
+        }
+        else{
+          this.clientEligibilityFacade.showHideSnackBar(
+            SnackBarNotificationType.WARNING,
+            'There cannot be two eligibility periods with overlapping date ranges.'
+          );
+        }
+      },
+      error: (err) => {
+        this.loaderService.hide();
+        this.clientEligibilityFacade.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          err
+        );
+        this.onModalCloseClicked();
+      },
+    });
+  }
+
   updateCurrentEligibility() {
     this.setUpdateEligibilityValidations();
     if (this.eligibilityPeriodForm.valid && this.isStartDateChange && this.isEndDateChange) {

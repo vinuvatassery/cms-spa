@@ -14,12 +14,26 @@
 </div>
 <!-- Select file form client attachment -->
 <div *ngIf="showClientAttachmentUpload" class="mb-2 mt-2">
-  <common-clients-attachment
-  [clientAttachmentForm]="cerAuthorizationForm"
-  [clientDocumentList$]="clientAllDocumentList$"
-  (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
-  ></common-clients-attachment>
-</div>
+  <kendo-floatinglabel  text="Client Documents">
+      
+    <kendo-multicolumncombobox
+      (valueChange)="clientAttachmentChange($event)"
+      [data]="clientAllDocumentList$"
+      textField="documentName"
+      valueField="clientDocumentId"
+      autofocusfield
+      [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
+      [fillMode]="formUiStyle.dropDownFillMode"
+      [filterable]="true"
+   >
+      <kendo-combobox-column >
+        <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+          <span  >{{ dataItem.documentName }}</span>
+        </ng-template>
+      </kendo-combobox-column>
+    </kendo-multicolumncombobox>
+  </kendo-floatinglabel>
+  </div>
 <!-- Select file form forms and documents -->
 <div *ngIf="showFormsAndDocumentsUpload" class="mb-2 mt-2">
 <kendo-floatinglabel  text="Forms & Documents">
@@ -120,13 +134,15 @@
     </div>
   </kendo-popup>
   <!-- Editor -->
-  <kendo-editor #editor [(value)]="selectedTemplateContent" (valueChange)="editorValueChange($event)">
+  <kendo-editor #editor [(value)]="selectedTemplateContent" (valueChange)="editorValueChange($event)"
+  [iframeCss]="{ content: customStyleContent }">
   <case-management-send-email
   (editorValue)="emailEditorValueEvent($event)"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   [entityId]="clientId"
   (cerEmailAttachments)="cerEmailAttachmentEvent($event)"
   (contentValidateEvent)="contentValidateHandler($event)"
+  [caseManagerEmail]="caseManagerEmail"
 ></case-management-send-email>
     <kendo-toolbar>
       <kendo-toolbar-buttongroup>
@@ -201,9 +217,8 @@
           kendoEditorCreateLinkButton
         ></kendo-toolbar-button>
         <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
-       
       </kendo-toolbar-buttongroup>
-      <kendo-toolbar-dropdownbutton
+      <kendo-toolbar-dropdownbutton *ngIf="isAttachmentIconVisible"
       aria-label="attachment"
         icon="attachment"
         [data]="editorUploadOptions"

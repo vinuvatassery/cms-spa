@@ -3,8 +3,7 @@ import { WidgetFacade } from '@cms/dashboard/domain';
 
 @Component({
   selector: 'dashboard-widget-direct-messages',
-  templateUrl: './widget-direct-messages.component.html',
-  styleUrls: ['./widget-direct-messages.component.scss'],
+  templateUrl: './widget-direct-messages.component.html'
 })
 export class WidgetDirectMessagesComponent   {
   @Input() isEditDashboard!: any; 

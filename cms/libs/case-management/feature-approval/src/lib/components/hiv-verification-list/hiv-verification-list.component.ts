@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DocumentFacade, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-hiv-verification-list',
@@ -11,7 +12,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   styleUrls: ['./hiv-verification-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HivVerificationListComponent implements OnInit {
+export class HivVerificationListComponent implements OnInit, OnDestroy {
 
   @ViewChild('submitRequestModalDialog', { read: TemplateRef })
   submitRequestModalDialog!: TemplateRef<any>;
@@ -24,6 +25,7 @@ export class HivVerificationListComponent implements OnInit {
   /** Input Properties **/
   @Input() hivVerificationApproval$: any;
 
+  hivVerificationApprovalSubscription!: Subscription;
   hivVerificationApproval:any;
   tAreaCessationMaxLength: any = 250;
   acceptStatus: string = 'ACCEPT';
@@ -31,10 +33,11 @@ export class HivVerificationListComponent implements OnInit {
   hasDisabledSubmit = true;
   formValid = true;
   submit ="Submit";
-  saveToApplication="Saved To Application"
+  saveToApplication="Save To Application"
   submitButtonText:any ="Submit"
   confirmationBodyText!:any;
   confirmButtonText!:any;
+  confirmHeaderText!:any;
   toSave:
   {
     clientHivVerificationId: any,
@@ -68,7 +71,7 @@ export class HivVerificationListComponent implements OnInit {
     
   ngOnInit(): void {
     this.getHivVerification.emit(true);
-    this.hivVerificationApproval$.subscribe((response:any)=>{
+    this.hivVerificationApprovalSubscription = this.hivVerificationApproval$.subscribe((response:any)=>{
       this.hivVerificationApproval = response;
       this.tAreaVariablesInitiation(this.hivVerificationApproval );
       this.cd.detectChanges();
@@ -105,12 +108,13 @@ export class HivVerificationListComponent implements OnInit {
       item.reasonForRejection = '';
     } 
 
-    this.hivVerificationApproval.filter((x:any)=> {
+    this.hivVerificationApproval.forEach((x:any)=>{
       if(x.clientHivVerificationId != item.clientHivVerificationId){
         x.status = '';
         x.toSave = false;
       }
-    });
+    })
+
     this.hasDisabledSubmit = this.hivVerificationApproval.filter((x:any) => x.toSave).length === 0;
     
   }
@@ -150,10 +154,12 @@ export class HivVerificationListComponent implements OnInit {
     if(saveItems[0].status === this.acceptStatus){
       this.confirmationBodyText = "The HIV verification will be accepted and added to their application and attachments";
       this.confirmButtonText = "SAVE";
+      this.confirmHeaderText = "Save HIV verification?";
     }
     else if(saveItems[0].status === this.rejectStatus){
       this.confirmationBodyText = "The HIV verification will be rejected and added to their profile attachments.  This action cannot be undone";
       this.confirmButtonText = "REJECT" ;
+      this.confirmHeaderText = "Reject HIV verification?";
     }
     if(this.formValid){
       this.onSubmitConfirmClicked(this.submitRequestModalDialog);        
@@ -175,6 +181,7 @@ export class HivVerificationListComponent implements OnInit {
   }
 
   saveHivVerification() {
+    this.resetValue();
     let hivVerification = this.hivVerificationApproval.filter((x: any) => x.toSave);
     this.toSave.clientHivVerificationId = hivVerification[0].clientHivVerificationId;
     this.toSave.reasonForRejection = hivVerification[0].reasonForRejection;
@@ -185,8 +192,20 @@ export class HivVerificationListComponent implements OnInit {
     this.toSave.clientId =  hivVerification[0].clientId;
     this.toSave.eligibilityId = hivVerification[0].clientCaseEligibilityId;
     this.toSave.clientDocumentId = hivVerification[0].clientDocumentId;
-    this.saveHivVerificationApproval.emit({toSave:this.toSave, hivVerification:hivVerification});
+    this.saveHivVerificationApproval.emit({toSave:this.toSave, hivVerification:hivVerification[0]});
     this.onCloseSubmitConfirmClicked();
+  }
+
+  resetValue(){
+    this.toSave.clientHivVerificationId  = undefined;
+    this.toSave.status = undefined;
+    this.toSave.reasonForRejection = undefined;
+    this.toSave.assignedCwName = undefined;
+    this.toSave.templateTypeCode = undefined;
+    this.toSave.resentEmail = undefined;
+    this.toSave.clientId = undefined;
+    this.toSave.eligibilityId = undefined;
+    this.toSave.clientDocumentId = undefined;
   }
 
   getTemplateTypeCode(status: any): string {
@@ -241,5 +260,8 @@ export class HivVerificationListComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.hivVerificationApprovalSubscription?.unsubscribe();
+  }
 
 }

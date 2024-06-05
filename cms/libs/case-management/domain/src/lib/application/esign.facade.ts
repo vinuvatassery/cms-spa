@@ -42,39 +42,47 @@ export class EsignFacade {
   }
 
 prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: any[]) {
-    formData.append('notificationTemplateId', emailData?.documentTemplateId ?? '');
-    formData.append('esignRequestId', emailData?.esignRequestId ?? '');
-    formData.append('requestBody', emailData?.templateContent ?? '');
-    formData.append('typeCode', emailData?.typeCode ?? '');
-    if(cerEmailAttachedFiles?.length > 0){
-    let i = 0;
-    cerEmailAttachedFiles.forEach((file: any) => { 
-      if(file.rawFile == undefined || file.rawFile == null){
-        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
-        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
-        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
-        formData.append('AttachmentDetails['+i+'][clientDocumentId]', file?.document?.clientDocumentId ?? '');
-        formData.append('AttachmentDetails['+i+'][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
-        formData.append('AttachmentDetails['+i+'][notificationAttachmentId]', file?.notificationAttachmentId ?? '');
-      i++;
-      }else{
-        formData.append('attachments', file.rawFile); 
-      }
-    });
-  }
+    formData.append('notificationTemplateId', this.nullCheck(emailData?.documentTemplateId));
+    formData.append('esignRequestId', this.nullCheck(emailData?.esignRequestId));
+    formData.append('requestBody', this.nullCheck(emailData?.templateContent));
+    formData.append('typeCode', this.nullCheck(emailData?.typeCode));
+    this.prepareNotificationAttachment(cerEmailAttachedFiles, formData);
     return formData;
 }
 
+  prepareNotificationAttachment(cerEmailAttachedFiles: any[], formData: FormData) {
+    if(cerEmailAttachedFiles?.length > 0){
+      let i = 0;
+      cerEmailAttachedFiles.forEach((file: any) => { 
+        if(file.rawFile == undefined || file.rawFile == null){
+          this.prepareAttachmentDetails(i, file, formData);
+        }else{
+          formData.append('attachments', file.rawFile); 
+        }
+      });
+    }
+  }
+
+  prepareAttachmentDetails(i: number, file: any, formData: FormData) {
+    formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
+    formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
+    formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
+    formData.append('AttachmentDetails['+i+'][clientDocumentId]', this.nullCheck(file?.document?.clientDocumentId));
+    formData.append('AttachmentDetails['+i+'][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
+    formData.append('AttachmentDetails['+i+'][notificationAttachmentId]', this.nullCheck(file?.notificationAttachmentId));
+    i++;
+  }
+
 prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAttachedFiles: any[]) {
-      formData.append('notificationTemplateId', draftTemplate?.documentTemplateId ?? '');
-      formData.append('esignRequestId', draftTemplate?.esignRequestId ?? '');
-      formData.append('systemCode', draftTemplate?.systemCode ?? '');
-      formData.append('typeCode', draftTemplate?.typeCode ?? '');
-      formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
-      formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
-      formData.append('languageCode', draftTemplate?.languageCode ?? '');
-      formData.append('description', draftTemplate?.description ?? '');
-      formData.append('requestBody', draftTemplate?.templateContent ?? '');
+      formData.append('notificationTemplateId', this.nullCheck(draftTemplate?.documentTemplateId));
+      formData.append('esignRequestId', this.nullCheck(draftTemplate?.esignRequestId));
+      formData.append('systemCode', this.nullCheck(draftTemplate?.systemCode));
+      formData.append('typeCode',this.nullCheck(draftTemplate?.typeCode));
+      formData.append('subtypeCode', this.nullCheck(draftTemplate?.subtypeCode));
+      formData.append('channelTypeCode', this.nullCheck(draftTemplate?.channelTypeCode));
+      formData.append('languageCode', this.nullCheck(draftTemplate?.languageCode));
+      formData.append('description', this.nullCheck(draftTemplate?.description ));
+      formData.append('requestBody',this.nullCheck(draftTemplate?.templateContent));
       if(cerEmailAttachedFiles?.length > 0){
       let i = 0;
       cerEmailAttachedFiles.forEach((file: any) => { 
@@ -82,9 +90,9 @@ prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAtt
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath);
         formData.append('AttachmentDetails['+i+'][typeCode]', file.typeCode);
-        formData.append('AttachmentDetails['+i+'][clientDocumentId]', file?.document?.clientDocumentId ?? '');
+        formData.append('AttachmentDetails['+i+'][clientDocumentId]',this.nullCheck(file?.document?.clientDocumentId));
         formData.append('AttachmentDetails['+i+'][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
-        formData.append('AttachmentDetails['+i+'][notificationAttachmentId]', file?.notificationAttachmentId ?? '');
+        formData.append('AttachmentDetails['+i+'][notificationAttachmentId]',this.nullCheck(file?.notificationAttachmentId));
         i++;
         }else{
           formData.append('attachments', file.rawFile); 
@@ -94,22 +102,18 @@ prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAtt
       return formData;
 }
 
-prepareDraftAdobeEsignFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, selectedBccEmail: any, isSaveForLater: boolean) {
-  const formData = new FormData();
-    formData.append('to', selectedToEmail ?? '');
-    formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
-    formData.append('clientId', clientId ?? '');
-    formData.append('requestSubject', emailSubject ?? ''); 
-    formData.append('loginUserId', loginUserId ?? '');
+prepareDraftAdobeEsignFormData(selectedCCEmail: any, selectedBccEmail: any, isSaveForLater: boolean, templateTypeCode: string, eventGroupCode: string, formData: FormData) {
+    formData.append('templateTypeCode', this.nullCheck(templateTypeCode));
+    formData.append('eventGroupCode', this.nullCheck(eventGroupCode));
     if(isSaveForLater){
-      formData.append('esignRequestStatusCode', EsignStatusCode.Draft ?? '');
+      formData.append('esignRequestStatusCode', this.nullCheck(EsignStatusCode.Draft));
     }
-    formData.append('bcc',selectedBccEmail ?? ''); 
+    formData.append('bcc',this.nullCheck(selectedBccEmail)); 
     if(selectedCCEmail?.length > 0){
       let i = 0;
       selectedCCEmail.forEach((item: any) =>{
-        formData.append('cc[' + i + '][email]', item ?? '');
-        formData.append('cc[' + i + '][isDefault]', item.isDefault ?? '');
+        formData.append('cc[' + i + '][email]',this.nullCheck(item));
+        formData.append('cc[' + i + '][isDefault]',this.nullCheck(item.isDefault));
         i++;
       });
     } 
@@ -119,11 +123,11 @@ prepareDraftAdobeEsignFormData(selectedToEmail: any, clientCaseEligibilityId: an
 
 prepareEsignLetterDraftFormData(clientCaseEligibilityId: any, entityId: any, loginUserId: any, isSaveForLater: boolean) {
   const formData = new FormData();
-    formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
-    formData.append('clientId', entityId ?? '');
-    formData.append('loginUserId', loginUserId ?? '');
+    formData.append('clientCaseEligibilityId',this.nullCheck( clientCaseEligibilityId));
+    formData.append('clientId',this.nullCheck(entityId));
+    formData.append('loginUserId',this.nullCheck(loginUserId));
     if(isSaveForLater){
-      formData.append('esignRequestStatusCode', EsignStatusCode.Draft ?? '');
+      formData.append('esignRequestStatusCode',this.nullCheck(EsignStatusCode.Draft));
     }
     formData.append('isSaveForLater', Boolean(isSaveForLater).toString()); 
     return formData;
@@ -138,21 +142,47 @@ prepareHivVerificationdobeEsignFormData(clientHivVerification: ClientHivVerifica
     formData.append('requestSubject', emailSubject ?? '');
     formData.append('typeCode', CommunicationEventTypeCode.HIVVerificationEmail ?? '');
     formData.append('requestBody', "");
-    if(selectedAttachedFile?.length > 0){
+    this.prepareHivVerificationAttachment(selectedAttachedFile, formData);
+    return formData;
+}
 
-    let i = 0;
-    selectedAttachedFile.forEach((file: any) => { 
-    if(!selectedAttachedFile.includes(file?.document?.attachmentName) || !selectedAttachedFile.includes(file.document.description)){
-      if(file.rawFile == undefined || file.rawFile == null){
-        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
-        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
-        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
-        formData.append('AttachmentDetails['+i+'][NotificationAttachmentId]', file.document.notificationAttachmentId == undefined ? file.document.notificationAttachmentId : file.document.notificationAttachmentId);
-      i++;
+  prepareHivVerificationAttachment(selectedAttachedFile: any[], formData: FormData) {
+    if(selectedAttachedFile?.length > 0){
+      let i = 0;
+      selectedAttachedFile.forEach((file: any) => { 
+      if(!selectedAttachedFile.includes(file?.document?.attachmentName) || !selectedAttachedFile.includes(file.document.description)){
+        if(file.rawFile == undefined || file.rawFile == null){
+          this.prepareHivAttachment(i, file, formData);
+        }
       }
-   }
-    });
+      });
+    }
   }
+  prepareHivAttachment(i: number, file: any, formData: FormData) {
+    formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
+    formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
+    formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
+    formData.append('AttachmentDetails['+i+'][NotificationAttachmentId]', file.document.notificationAttachmentId);
+    i++;
+  }
+
+nullCheck(value:any){
+  if(value){
+    return value;
+  }
+  else{
+    return '';
+  }
+
+ }
+
+ prepareEsignData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, ) {
+    const formData = new FormData();
+    formData.append('to', this.nullCheck(selectedToEmail));
+    formData.append('clientCaseEligibilityId', this.nullCheck(clientCaseEligibilityId));
+    formData.append('clientId', this.nullCheck(clientId));
+    formData.append('requestSubject', this.nullCheck(emailSubject)); 
+    formData.append('loginUserId', this.nullCheck(loginUserId));
     return formData;
 }
 }

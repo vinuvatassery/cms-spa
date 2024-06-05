@@ -67,6 +67,10 @@ export enum CommunicationEventTypeCode {
     CerLetterSent = "CER_LETTER_SENT",
     RestrictedNoticeEmail = 'RESTRICTED_NOTICE_EMAIL',
     RestrictedNoticeLetter = 'RESTRICTED_NOTICE_LETTER',
-    RestrictedLetterSent="CER_RESTRICTED_LETTER_SENT",
-    RestrictedEmailSent="CER_RESTRICTED_EMAIL_SENT",
+    RestrictedLetterSent="RESTRICTED_LETTER_SENT",
+    RestrictedEmailSent="RESTRICTED_EMAIL_SENT",
+    ApplicationAuthorizationEmailSent = "APPLICATION_AUTHORIZATION_EMAIL_SENT",
+    CerAuthorizationEmailSent = "CER_AUTHORIZATION_EMAIL_SENT",
+    ApplicationAuthorizationLetterSent = "APPLICATION_AUTHORIZATION_LETTER_CREATED",
+    CerAuthorizationLetterSent = "CER_AUTHORIZATION_LETTER_CREATED",
   }

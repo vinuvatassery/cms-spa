@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoi
 /** Facades **/
 import {
   DrugPharmacyFacade, WorkflowFacade, PrescriptionDrugFacade, PrescriptionDrug,
-  CompletionChecklist, NavigationType, WorkflowTypeCode
+  CompletionChecklist, NavigationType,
 } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
@@ -152,33 +152,27 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private updateFormCompleteCount(prev: any, curr: any) {
-    let completedDataPoints: CompletionChecklist[] = [];
+    const completedDataPoints: CompletionChecklist[] = [];
+    
     Object.keys(this.prescriptionDrugForm.controls).forEach((key) => {
-      if (prev && curr) {
-        if (prev[key] !== curr[key]) {
-          let item: CompletionChecklist = {
-            dataPointName: key,
-            status: curr[key] ? StatusFlag.Yes : StatusFlag.No,
-          };
-          completedDataPoints.push(item);
-        }
+      if (prev && curr && prev[key] !== curr[key]) {
+        const status = curr[key] ? StatusFlag.Yes : StatusFlag.No;
+        completedDataPoints.push({ dataPointName: key, status });
       }
     });
-
-    if (completedDataPoints.length > 0) {
-      if(this.isPharmacyAdded){
-        completedDataPoints = completedDataPoints.map(dp => {
-          if(dp.dataPointName === 'isClientNotUsingAnyPharmacy'){
-            return { ...dp, status: StatusFlag.Yes };
-          }
-
-          return dp;
-        });
+  
+    if (this.isPharmacyAdded) {
+      const pharmacyChecklistItem = completedDataPoints.find(dp => dp.dataPointName === 'isClientNotUsingAnyPharmacy');
+      if (pharmacyChecklistItem) {
+        pharmacyChecklistItem.status = StatusFlag.Yes;
       }
+    }
+  
+    if (completedDataPoints.length > 0) {
       this.workflowFacade.updateChecklist(completedDataPoints);
     }
   }
-
+  
   private adjustAttributeChanged(isRequired: boolean) {
     const data: CompletionChecklist = {
       dataPointName: 'nonPreferredPharmacyCode_ adjusted',
@@ -414,35 +408,15 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.checkValidations()) {
           this.save().subscribe((response: any) => {
             if (response) {
+              this.workflowFacade.saveForLaterCompleted(true)
               this.loaderService.hide();
-              if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-                if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-                  this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                    queryParamsHandling: "preserve"
-                  });
-                }
-                else {
-                  this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                    queryParamsHandling: "preserve"
-                  });
-                }
-              }
+        
             }
           })
         }
         else {
-          if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-          }
+          this.workflowFacade.saveForLaterCompleted(true)
+        
         }
       });
   }

@@ -29,6 +29,9 @@ export class NavigationMenuFacade {
   private pendingApprovalGeneralCountSubject = new Subject<any>();
   pendingApprovalGeneralCount$ = this.pendingApprovalGeneralCountSubject.asObservable();
 
+  private todoItemCountSubject = new Subject<any>();
+  todoItemCount$ = this.todoItemCountSubject.asObservable();
+
   private pendingApprovalImportedClaimCountSubject = new Subject<any>();
   pendingApprovalImportedClaimCount$ = this.pendingApprovalImportedClaimCountSubject.asObservable();
 
@@ -97,7 +100,7 @@ export class NavigationMenuFacade {
             this.pendingApprovalPaymentCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
@@ -111,7 +114,21 @@ export class NavigationMenuFacade {
             this.pendingApprovalGeneralCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      }
+    );
+  }
+
+  getTodoItemCount() {
+    this.navigationMenuService.getTodoItemCount()
+    .subscribe(
+      {
+        next: (count: any) => {
+            this.todoItemCountSubject.next(count);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
@@ -125,7 +142,7 @@ export class NavigationMenuFacade {
             this.pendingApprovalImportedClaimCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
@@ -139,21 +156,21 @@ export class NavigationMenuFacade {
             this.hivVerificationCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
   }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
       if(type == SnackBarNotificationType.ERROR)
       {
-        const err= subtitle;    
+        const err= subtitle;
         this.loggingService.logException(err)
-      }  
+      }
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();   
+        this.hideLoader();
   }
 
   getDirectMessageCount() {
@@ -164,7 +181,7 @@ export class NavigationMenuFacade {
             this.directMessageCountSubject.next(count);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );

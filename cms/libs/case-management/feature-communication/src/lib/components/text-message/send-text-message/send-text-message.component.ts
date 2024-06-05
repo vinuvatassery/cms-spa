@@ -15,7 +15,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
-import { UserDataService } from '@cms/system-config/domain';
+import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-config/domain';
 import { MessageEditorComponent } from '../../message-editor/message-editor.component';
 @Component({
   selector: 'case-management-send-text-message',
@@ -87,6 +87,7 @@ export class SendTextMessageComponent implements OnInit {
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly userDataService: UserDataService,
+    private readonly fabBadgeFacade: FabBadgeFacade,
     private readonly ref: ChangeDetectorRef,) { }
 
   /** Lifecycle hooks **/
@@ -180,7 +181,7 @@ export class SendTextMessageComponent implements OnInit {
 
   private loadSmsTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadNotificationTemplates(this.notificationGroup, this.templateLoadType, this.communicationSmsTypeCode ?? '') // define an enum for category
+    this.communicationFacade.loadTemplates(this.notificationGroup, this.templateLoadType, this.communicationSmsTypeCode ?? '') // define an enum for category
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -338,6 +339,9 @@ export class SendTextMessageComponent implements OnInit {
         this.onCloseSendMessageClicked();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Sms sent.');
         this.loaderService.hide();
+        if(this.entityId && this.entityType == FabEntityTypeCode.Client){
+          this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
+        }
       },
       error: (err: any) => {
         this.loaderService.hide();
@@ -378,6 +382,9 @@ export class SendTextMessageComponent implements OnInit {
             this.onCloseSaveForLaterClicked();
             this.onCloseSendMessageClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Sms Saved As Draft');
+            if(this.entityId && this.entityType == FabEntityTypeCode.Client){
+              this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
+            }
           }
           this.loaderService.hide();
         },

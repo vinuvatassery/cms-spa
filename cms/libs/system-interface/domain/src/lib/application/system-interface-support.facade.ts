@@ -399,7 +399,6 @@ export class SystemInterfaceSupportFacade {
 
   editDistributionListUser(memberData: any) {
     this.loaderService.show();
-    const notificationGroupId = memberData.notificationGroupId;
     return this.systemInterfaceSupportService.editDistributionListUser(memberData).subscribe({
       next: (response) => {
         if (response === true) {

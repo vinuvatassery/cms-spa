@@ -1,9 +1,10 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input,Output, EventEmitter, OnInit} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input,Output, EventEmitter, OnInit, OnDestroy} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {CaseFacade,CaseStatusCode, ContactFacade, WorkflowFacade, WorkflowTypeCode} from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -11,13 +12,13 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
   templateUrl: './reject-application.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RejectApplicationComponent implements OnInit {
+export class RejectApplicationComponent implements OnInit, OnDestroy {
 
   @Input() clientCaseEligibilityId: string = '';
   @Input() clientCaseId: string = '';
   @Input() clientId: any;
   @Output() isCloseDenyModal: EventEmitter<boolean> = new EventEmitter();
-  
+  updateCaseStatusSubscription !: Subscription;
   paperless$ = this.contactFacade.paperless$;
   paperlessFlag: any;
   templateLoadType: any;
@@ -35,13 +36,17 @@ export class RejectApplicationComponent implements OnInit {
     this.loadSessionData();
   }
 
+  ngOnDestroy(): void {
+    this.updateCaseStatusSubscription.unsubscribe();
+  }
+
   private loadSessionData() {   
     this.workflowTypeCode = this.route.snapshot.queryParams['wtc'];
   }
   updateCaseStatus()
   {
     this.loaderService.show();
-    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.reject,this.clientCaseEligibilityId).subscribe({
+    this.updateCaseStatusSubscription = this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.reject,this.clientCaseEligibilityId).subscribe({
       next: (data) => {  
         this.workflowFacade.sendLetterEmailFlag = StatusFlag.Yes;
         this.workflowFacade.caseStatus = CaseStatusCode.reject;

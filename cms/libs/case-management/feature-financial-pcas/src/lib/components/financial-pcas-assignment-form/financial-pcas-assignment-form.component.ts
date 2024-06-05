@@ -186,8 +186,6 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
             {
               this.pcaAssignmentForm.controls['amount'].disable();  
             }
-            const openDate =   this.pcaAssignmentFormDataModel$?.openDate.split('T')[0]+'T00:00:00'
-            const closeDate =   this.pcaAssignmentFormDataModel$?.closeDate.split('T')[0]+'T00:00:00'
             this.pcaAssignmentForm.patchValue(
               {     
                 pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
@@ -231,10 +229,17 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     else
     {
       this.remainingAmountValidate = false
-      this.pcaAssignmentForm?.controls["amount"].removeValidators
+     
+      this.pcaAssignmentForm?.controls["amount"].clearValidators()
     }
+
+    this.pcasSubmitEmit()
+
+  }
+pcasSubmitEmit()
+{
    
-    if(this.pcaAssignmentForm?.controls["unlimited"].value === false && this.pcaAssignmentForm?.controls["amount"].value < 1)
+  if(this.pcaAssignmentForm?.controls["unlimited"].value === false && this.pcaAssignmentForm?.controls["amount"].value < 1)
     {
       this.pcaAssignmentForm?.controls["amount"].setValue('')
     }
@@ -265,8 +270,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
       }
       this.addPcaDataEvent.emit(pcaAssignmentData)
     }
-  }
-
+}
 
   dateValidate()
   {
@@ -281,8 +285,8 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
         else
         {
           this.openDateError = false
-          this.pcaAssignmentForm?.controls["openDate"].removeValidators
-          this.pcaAssignmentForm?.controls["closeDate"].removeValidators
+          this.pcaAssignmentForm?.controls["openDate"].clearValidators()
+          this.pcaAssignmentForm?.controls["closeDate"].clearValidators()
         }
     }
     if( this.ispcaOpenDateDependency ||
@@ -336,7 +340,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
 
 
     if(!this.newForm){
-      this.pcaAssignmentDatesValidation$.subscribe((res:Boolean) =>{
+      this.pcaAssignmentDatesValidation$.subscribe((res:boolean) =>{
         if(res){
           this.pcaAssignmentForm.controls['openDate'].setErrors({ 'ispcaOpenDateDependency': true });
            this.ispcaOpenDateDependency = true
@@ -391,7 +395,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
 
 
     if(!this.newForm){
-      this.pcaAssignmentDatesValidation$.subscribe((res:Boolean) =>{
+      this.pcaAssignmentDatesValidation$.subscribe((res:boolean) =>{
         if(res){
           this.pcaAssignmentForm.controls['openDate'].setErrors({ 'ispcaOpenDateDependency': true });
            this.ispcaOpenDateDependency = true
@@ -459,7 +463,6 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     {
     this.pcaAssignmentForm?.controls["amount"].setErrors({'incorrect': true});
     this.remainingAmountValidate = true
-    return;
     }else{
       this.remainingAmountValidate = false
     }

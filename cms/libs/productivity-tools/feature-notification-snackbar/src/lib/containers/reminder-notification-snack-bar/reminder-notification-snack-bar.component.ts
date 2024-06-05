@@ -5,7 +5,6 @@ import {
   Input,
   OnInit,
   TemplateRef,
-  Type,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
@@ -17,12 +16,12 @@ import { Observable } from 'rxjs/internal/Observable';
 import { NotificationRef, NotificationService } from '@progress/kendo-angular-notification';
 
 /** Providers **/
-import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider,  ReminderSnackBarNotificationType } from '@cms/shared/util-core';
 import { SnackBar } from '@cms/shared/ui-common';
-import { TodoFacade } from '@cms/productivity-tools/domain';
+import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 import { Router } from '@angular/router';
-import { FinancialVendorFacade, FinancialVendorProviderTab, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
@@ -78,6 +77,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   ];
 
   reminderSnackBar$ = this.signalrEventHandlerService.reminderSnackBar$
+  reminderSnackbarsData$ = this.notificationFacade.reminderSnackbarsData$
   alertText = ""
   entityId = ""
   vendorTypeCode = ""
@@ -111,11 +111,13 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     public financialRefundFacade: FinancialVendorRefundFacade,
     public financialVendorFacade: FinancialVendorFacade,
     public viewContainerRef: ViewContainerRef,
-    private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
+    private readonly notificationFacade: NotificationFacade,
   ) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    
+    this.notificationFacade.loadReminderSnackbars()
     this.removePreviousMessage();
     this.reminderSnackBarSubscribe();
     this.deleteUpdateReminderSubscribe()
@@ -126,13 +128,13 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     this.todoFacade.deleteReminderSnackbar$.subscribe((alertId: any) => {     
       if(alertId)
         {
-          const deleteReference = this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === alertId) 
-          deleteReference.hide()
-          this.updateSnackBarCount(alertId,deleteReference)
+          this.notificationFacade.loadReminderSnackbars()         
         }
     })
+   
   }
   reminderSnackBarSubscribe() {
+    
     this.reminderSnackBar$.subscribe((res: any) => {      
 
       const snackbarMessage: any = {
@@ -161,6 +163,40 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
         }
      }
 
+     
+    })
+
+    this.reminderSnackbarsData$.subscribe((res: any) => {      
+
+        res.forEach((data:any) => {
+          
+       
+                const snackbarMessage: any = {
+                  payload:data,
+                  type: ReminderSnackBarNotificationType.LIGHT
+                };
+                
+              if(snackbarMessage?.payload?.alertExtraProperties?.AlertId)
+                {
+
+                  if (!this.signalrEventHandlerService.snackBarAlertIds.includes(snackbarMessage.payload?.alertExtraProperties?.AlertId)) {
+                    this.signalrEventHandlerService.snackBarAlertIds.push(snackbarMessage.payload.alertExtraProperties?.AlertId)
+                    this.showNotifications(snackbarMessage)
+
+                  }   
+                  else
+                  {
+                    const updatedNotificationReference = 
+                    this.notificationReferences.find(x=>x.content.instance.snackBarMessage.alertExtraProperties.AlertId === snackbarMessage.payload?.alertExtraProperties?.AlertId)              
+                    const payload = {
+                      ...snackbarMessage.payload,
+                    }
+              
+                    updatedNotificationReference.content.instance.snackBarMessage = payload
+                  
+                  }
+              }
+      });
      
     })
 
@@ -225,51 +261,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
       this.signalrEventHandlerService.remindersCountSubject.next(this.signalrEventHandlerService.snackBarAlertIds.length)
     }
    }
-  setDueDateText(res: any) {
-    let timeDifferenceMinutes = 0;
-    this.dueDateText =""
-    const repeatTime = res.payload.alertExtraProperties.RepeatTime
-    const dueDate = this.intl.formatDate(res.payload.alertExtraProperties.AlertDueDate, this.dateFormat);
-    const today = this.intl.formatDate(new Date(), this.dateFormat)
-    if (repeatTime) {
-      const times = repeatTime.split(':')
-      const duedateWithRepeatTime = new Date(new Date().getFullYear(), new Date().getMonth(),
-        new Date().getDate(), times[0], times[1])
-      const timeDifferenceMs = duedateWithRepeatTime.getTime() - new Date().getTime();
-      timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
 
-
-      if (timeDifferenceMinutes >= 0 && timeDifferenceMinutes <= 15) {
-        this.dueDateText = "In " + timeDifferenceMinutes + " Mins"
-      }
-      if (timeDifferenceMinutes <= 0) {
-        this.dueDateText = 0-timeDifferenceMinutes + " Mins Over Due"
-        if(0-timeDifferenceMinutes >60){
-          var timeInHours =  Math.floor(0-timeDifferenceMinutes/60);
-          this.dueDateText = timeInHours +" Hrs Over Due"
-          if(timeInHours >24){
-           var timeInDays =  Math.floor(timeInHours/24);
-           this.dueDateText = timeInDays +" Days Over Due"
-          }
-        }
-
-      }
-      if (timeDifferenceMinutes == 0) {
-        this.dueDateText = "Now"
-      }
-
-    }
-    if (dueDate == today && !repeatTime) {
-      this.dueDateText = "Today"
-    }
-
-    return {
-      timeDifferenceMinutes: timeDifferenceMinutes,
-      dueDate : dueDate,
-      today : today, 
-      repeatTime : repeatTime
-    };
-  }
 
   public removePreviousMessage() {
     this.showSideReminderNotification();

@@ -38,14 +38,14 @@
       <div class="due-item-blocks " [ngClass]="todoItemCrossedDueDate(todoItem) ? 'red-item-block' : 'canyon-item-block'" (click)="onNavigationClicked(todoItem)">
         <p class="due-item-heading">{{todoItem?.entityName}} - {{todoItem?.alertName}}</p>
         <div class="due-item-details">
-          <span>{{todoItem.isToday ? 'Today' : todoItem.isTomorrow ? 'Tomorrow' : (todoItem?.alertDueDate | date : 'MM/dd/YYYY')}}</span>
-          <kendo-dropdownbutton  title="More option" [data]="reminderActions"
+          <span class="notifydate">{{todoItem.isToday ? 'Today' : todoItem.isTomorrow ? 'Tomorrow' : (todoItem?.alertDueDate | date : 'MM/dd/YYYY')}}</span>
+          <kendo-dropdownbutton  *ngIf="todoItem.customAlertFlag == 'Y'" title="More option" [data]="reminderActions"
            (itemClick)="onToDoActionClicked($event,todoItem)"  (click)="$event.stopPropagation()" look="bare" aria-label="More option"
-           class="small-i-btn app-dropdown-action more_action_wid" [popupSettings]="{
+           class="small-i-btn app-dropdown-action more_action_wid notifydate_dropdown" [popupSettings]="{
               popupClass: reminderActionPopupClass,
               animate: true
             }">
-        <span *ngIf="todoItem.customAlertFlag == 'Y'" class="material-icons" aria-label="More option"> more_vert    </span>
+        <span class="material-icons" aria-label="More option"> more_vert </span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
               <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
                 aria-hidden="false" (click)="dataItem.click">

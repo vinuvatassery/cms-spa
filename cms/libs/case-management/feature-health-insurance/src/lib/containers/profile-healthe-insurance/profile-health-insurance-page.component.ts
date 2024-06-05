@@ -1,10 +1,12 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef, ViewChild,  TemplateRef, } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ClientProfileTabs, HealthInsurancePolicyFacade, ClientFacade, GridFilterParam } from '@cms/case-management/domain';
+import { ClientProfileTabs, HealthInsurancePolicyFacade, ClientFacade, GridFilterParam, FinancialVendorFacade, ContactFacade } from '@cms/case-management/domain';
 import { filter, Subject, Subscription } from 'rxjs';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { LovFacade } from '@cms/system-config/domain';
 
 
 @Component({
@@ -21,7 +23,11 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly loaderService: LoaderService,
     private readonly ref: ChangeDetectorRef,
-    private readonly clientFacade: ClientFacade,    
+    private readonly clientFacade: ClientFacade,
+    private dialogService: DialogService,    
+    private readonly financialVendorFacade: FinancialVendorFacade,
+    public contactFacade: ContactFacade,
+    public lovFacade: LovFacade,
   ) { }
 
   tabChangeSubscription$ = new Subscription();
@@ -38,6 +44,15 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   closeDeleteModal: boolean = false;
   isHistoricalDataLoad:boolean = false;
   healthInsuranceProfilePhoto$ = this.insurancePolicyFacade.healthInsuranceProfilePhotoSubject;
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  updateProviderPanelSubject$ =
+  this.financialVendorFacade.updateProviderPanelSubject$;
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  vendorId: any;
+  providerDetailsDialog: any;
 
   ngOnInit(): void {
     this.routeChangeSubscription();
@@ -126,8 +141,9 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     }
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
-      this.isHistoricalDataLoad? null: this.clientCaseEligibilityId,
+      this.clientCaseEligibilityId,
       typeParam,
+      this.isHistoricalDataLoad,
       gridFilterParam
     );
   }
@@ -181,6 +197,35 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   getPolicies(event:any){
     this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.clientCaseEligibilityId,this.tabId);
    }
+   onProviderNameClick(event: any) {
+    this.vendorId = event;
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation: {
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
+
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
+  }
+
+  updateProviderProfile(event: any) {
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+
+  OnEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
 }
 
 

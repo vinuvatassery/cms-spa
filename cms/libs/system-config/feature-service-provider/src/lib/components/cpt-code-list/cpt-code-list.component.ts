@@ -1,90 +1,135 @@
 import {
   Component,
-  OnInit, 
+  OnInit,
   ChangeDetectionStrategy,
   Input,
   Output,
   EventEmitter,
   OnChanges,
-} from '@angular/core'; 
+  ChangeDetectorRef,
+} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
-import { GridDataResult } from '@progress/kendo-angular-grid';
-import { Subject } from 'rxjs';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { Subject, first } from 'rxjs';
+import { DocumentFacade } from '@cms/shared/util-core';
 
- 
+
 
 @Component({
   selector: 'system-config-cpt-code-list',
   templateUrl: './cpt-code-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CptCodeListComponent implements OnInit, OnChanges{
+export class CptCodeListComponent implements OnInit, OnChanges {
+
+
+  constructor(
+    private readonly documentFacade: DocumentFacade,
+    private readonly cdr: ChangeDetectorRef,
+  ) {
+
+  }
 
   /** Public properties **/
-  isCptCodeDetailPopup = false; 
+  isCptCodeDetailPopup = false;
   isCptCodeDeletePopupShow = false;
-  isCptCodeDeactivatePopupShow = false; 
+  isCptCodeDeactivatePopupShow = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() cptCodeDataLists$: any;
   @Input() cptCodeFilterColumn$: any;
+  @Input() addCptCode$: any;
+  @Input() editCptCode$: any;
+  @Input() cptCodeProfilePhoto$: any;
+  @Input() cptCodeListDataLoader$: any;
+  @Input() cptCodeChangeStatus$: any;
+  @Input() checkHasPendingClaimsStatus$: any;
+  @Input() exportButtonShow$: any;
   @Output() loadCptCodeListsEvent = new EventEmitter<any>();
   @Output() cptCodeFilterColumnEvent = new EventEmitter<any>();
+  @Output() addCptCodeEvent = new EventEmitter<string>();
+  @Output() editCptCodeEvent = new EventEmitter<string>();
+  @Output() deactivateConfimEvent = new EventEmitter<string>();
+  @Output() reactivateConfimEvent = new EventEmitter<string>();
+  @Output() exportGridEvent$ = new EventEmitter<any>();
+  @Output() checkHasPendingClaimsStatusEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'vendorName';
+  sortColumn = 'CPT Code';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
+  isEditCptCode = false;
   filter!: any;
-  selectedColumn!: any;
   gridDataResult!: GridDataResult;
   isCptCodeListGridLoaderShow = false;
   gridCptCodeDataSubject = new Subject<any>();
-  gridCptCodeData$ =
-    this.gridCptCodeDataSubject.asObservable();
+  gridCptCodeData$ = this.gridCptCodeDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  statusFilter: any;
+  cptCodeId!: any;
+  editButtonEmitted = false;
+  selectedCptCode!: any;
+  changeStatusButtonEmitted = false;
+  columnName: any = "";
+  selectedActiveFlag = "";
+  showExportLoader = false;
+  selectedSearchColumn = 'ALL';
+  columns: any = {
+    ALL: 'All Columns',
+    cptCode1: "CPT Code",
+    serviceDesc: "Service Description",
+    lastModificationTime: "Last Modified",
+    medicaidRate: "Medicaid Rate",
+    activeFlag: "Status",
+  };
+  dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
+    { columnCode: 'cptCode1', columnDesc: 'CPT Code' }
+  ];
 
-  public moreActions = [
+  public moreActions = (dataItem: any) => [
     {
-      buttonType:"btn-h-primary",
+      buttonType: "btn-h-primary",
       text: "Edit",
       icon: "edit",
-     
-    }, 
-  
-    {
-      buttonType:"btn-h-primary",
-      text: "Deactivate",
-      icon: "block",
       click: (data: any): void => {
-        this.onCptCodeDeactivateClicked();
+        if (!this.editButtonEmitted) {
+          this.editButtonEmitted = true;
+          this.onEditCptCodeDetailsClicked(data);
+        }
       },
-    }, 
+    },
     {
-      buttonType:"btn-h-danger",
-      text: "Delete",
-      icon: "delete", 
+      buttonType: "btn-h-primary",
+      text: dataItem.activeFlag === 'Active' ? 'Deactivate' : 'Reactivate',
+      icon: dataItem.activeFlag === 'Active' ? "block" : 'done',
       click: (data: any): void => {
-        this.onCptCodeDeleteClicked();
+        if (!this.changeStatusButtonEmitted && data.cptCodeId) {
+          this.changeStatusButtonEmitted = true;
+          if (dataItem.activeFlag === 'Active') {
+            this.onCptCodeDeactivateClicked(data.cptCodeId);
+          } else {
+            this.onCptCodeReactiveClicked(data.cptCodeId);
+          }
+        }
       },
-    }, 
- 
+    }
   ];
-   
 
-  
-  
+
+
+
   ngOnInit(): void {
-    this.loadCptCodeList(); 
+    this.loadCptCodeList();
   }
   ngOnChanges(): void {
     this.state = {
@@ -92,10 +137,10 @@ export class CptCodeListComponent implements OnInit, OnChanges{
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-  
+
     this.loadCptCodeList();
   }
-  
+
   private loadCptCodeList(): void {
     this.loadCptCodeLitData(
       this.state?.skip ?? 0,
@@ -104,6 +149,7 @@ export class CptCodeListComponent implements OnInit, OnChanges{
       this.sortType
     );
   }
+
   loadCptCodeLitData(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -113,28 +159,28 @@ export class CptCodeListComponent implements OnInit, OnChanges{
     this.isCptCodeListGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
+      maxResultCount: maxResultCountValue,
+      sorting: sortValue,
       sortType: sortTypeValue,
+      filter: this.filter !== null && this.filter !== '' ? JSON.stringify(this.filter) : null
     };
     this.loadCptCodeListsEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
   }
-  loadCptCodeFilterColumn(){
+  loadCptCodeFilterColumn() {
     this.cptCodeFilterColumnEvent.emit();
-  
+
   }
   onChange(data: any) {
     this.defaultGridState();
-  
+    let operator = 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedSearchColumn ?? 'cptCode1',
+              operator: operator,
               value: data,
             },
           ],
@@ -146,7 +192,38 @@ export class CptCodeListComponent implements OnInit, OnChanges{
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
-  
+
+  searchColumnChangeHandler(value: string) {
+    this.selectedSearchColumn = value;
+    this.filter = [];
+    if (this.searchValue) {
+      this.onSearch(this.searchValue);
+    }
+  }
+  onSearch(searchValue: any) {
+    this.onChange(searchValue);
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    this.statusFilter = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+
+ 
+  }
+
   defaultGridState() {
     this.state = {
       skip: 0,
@@ -155,53 +232,90 @@ export class CptCodeListComponent implements OnInit, OnChanges{
       filter: { logic: 'and', filters: [] },
     };
   }
-  
+
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
-  
+
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = this.columns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+
+    if (stateData.filter?.filters.length > 0) {
+      const filterList = [];
+      this.isFiltered = true;
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.isFiltered = false;
+    }
+
     this.loadCptCodeList();
   }
-  
+
+  setToDefault() {
+    this.defaultGridState();
+    this.sortColumn = 'CPT Code';
+    this.sortType = 'asc';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "";
+    this.filter = '';
+    this.selectedSearchColumn = 'ALL';
+    this.isFiltered = false;
+    this.sortValue = 'cptCode1';
+    this.sort = this.sortValue;
+    this.searchValue = '';
+    this.loadCptCodeList();
+  }
+
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadCptCodeList();
   }
-  
+
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-  
-  gridDataHandle() {
-    this.cptCodeDataLists$.subscribe(
-      (data: GridDataResult) => {
-        this.gridDataResult = data;
-        this.gridDataResult.data = filterBy(
-          this.gridDataResult.data,
-          this.filterData
-        );
-        this.gridCptCodeDataSubject.next(this.gridDataResult);
-        if (data?.total >= 0 || data?.total === -1) {
-          this.isCptCodeListGridLoaderShow = false;
-        }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.state?.filter?.filters ?? []),
+    };
+    this.exportGridEvent$.emit(params);
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false
+        this.cdr.detectChanges()
       }
-    );
-    this.isCptCodeListGridLoaderShow = false;
+    });
   }
 
+
+  onEditCptCodeDetailsClicked(cptCode: any) {
+    this.selectedCptCode = cptCode;
+    this.isEditCptCode = true;
+    this.cptCodeId = cptCode.cptCodeId;
+    this.isCptCodeDetailPopup = true;
+  }
   /** Internal event methods **/
   onCloseCptCodeDetailClicked() {
     this.isCptCodeDetailPopup = false;
+    this.editButtonEmitted = false;
+    this.isEditCptCode = false;
   }
   onCptCodeDetailClicked() {
+    this.isEditCptCode = false;
     this.isCptCodeDetailPopup = true;
   }
 
@@ -212,9 +326,84 @@ export class CptCodeListComponent implements OnInit, OnChanges{
     this.isCptCodeDeletePopupShow = true;
   }
   onCloseCptCodeDeactivateClicked() {
+    this.changeStatusButtonEmitted = false;
     this.isCptCodeDeactivatePopupShow = false;
   }
-  onCptCodeDeactivateClicked() {
-    this.isCptCodeDeactivatePopupShow = true;
+  onCptCodeDeactivateClicked(cptCodeId: any) {
+    this.cptCodeId = cptCodeId;
+    this.handleCheckHasPendingClaimsStatus();
   }
+
+  onDeactivateClicked() {
+    this.isCptCodeDeactivatePopupShow = true;
+    this.cdr.detectChanges(); // Add this line to manually trigger change detection
+  }
+
+  addCptCode(data: any): void {
+    this.addCptCodeEvent.emit(data);
+    this.addCptCode$.pipe(first((response: any) => response != null))
+      .subscribe((response: any) => {
+        if (response ?? false) {
+          this.loadCptCodeList()
+        }
+        this.onCloseCptCodeDetailClicked();
+      })
+  }
+  onCptCodeReactiveClicked(cptCodeId: string) {
+    this.cptCodeId = cptCodeId;
+    this.handleCptCodeReactive(true);
+  }
+  editCptCode(data: any): void {
+    data["cptCodeId"] = this.cptCodeId;
+    this.editCptCodeEvent.emit(data);
+    this.editCptCode$.pipe(first((response: any) => response != null))
+      .subscribe((response: any) => {
+        if (response ?? false) {
+          this.loadCptCodeList()
+        }
+        this.onCloseCptCodeDetailClicked();
+      })
+  }
+
+  handleCptCodeDeactive(isDeactivate: any) {
+    if (isDeactivate) {
+      this.changeStatusButtonEmitted = false;
+      this.deactivateConfimEvent.emit(this.cptCodeId);
+
+      this.cptCodeChangeStatus$.pipe(first((response: any) => response != null))
+        .subscribe((response: any) => {
+          if (response ?? false) {
+            this.loadCptCodeList()
+          }
+          this.onCloseCptCodeDeactivateClicked();
+        })
+    }
+  }
+
+  handleCptCodeReactive(isReactivate: any) {
+    if (isReactivate) {
+      this.changeStatusButtonEmitted = false;
+      this.reactivateConfimEvent.emit(this.cptCodeId);
+
+      this.cptCodeChangeStatus$.pipe(first((response: any) => response != null))
+        .subscribe((response: any) => {
+          if (response ?? false) {
+            this.loadCptCodeList()
+          }
+        })
+    }
+  }
+
+  handleCheckHasPendingClaimsStatus() {
+    this.changeStatusButtonEmitted = false;
+    this.checkHasPendingClaimsStatusEvent.emit(this.cptCodeId);
+    this.checkHasPendingClaimsStatus$.pipe(first((response: any) => response != null))
+      .subscribe((response: any) => {
+        if (response ?? false) {
+          this.onDeactivateClicked();
+        }
+      })
+  }
+
+
 }

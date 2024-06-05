@@ -121,7 +121,6 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
       this.pcaReassignmentForm.controls['closeDate'].setErrors({ 'incorrect': true });
       this.ispcaCloseDateGreater = false;
       this.ispcaOpenDateGreater = false;
-      return;
     }
     const endDateWithoutTime = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
     const pcaCloseDateWithoutTime = new Date(new Date(this.pcaCloseDate).getFullYear(),new Date(this.pcaCloseDate).getMonth(), new Date(this.pcaCloseDate).getDate());
@@ -136,7 +135,6 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
       this.pcaReassignmentForm.controls['openDate'].setErrors({ 'isAssignmentpcaOpenDateGreater': true });
       this.ispcaOpenDateGreater = true;
       this.ispcaCloseDateGreater = false;
-      return;
     }
   }
 
@@ -162,7 +160,6 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
       this.pcaReassignmentForm.controls['openDate'].setErrors({ 'isAssignmentpcaOpenDateGreater': true });
       this.isAssignmentpcaOpenDateGreater = true;
       this.isAssignmentpcaCloseDateGreater = false;
-      return;
     }
   }
 

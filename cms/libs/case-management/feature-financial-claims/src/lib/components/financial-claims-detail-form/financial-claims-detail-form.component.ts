@@ -133,6 +133,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   specialCharAdded!: boolean;
   informativeText!: string;
   minServiceDate: Date = new Date(2000, 1, 1);
+  todayDate: Date = new Date();
   dataLoaded = false;
 
 
@@ -631,6 +632,28 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     return false;
   }
 
+  isStartGreaterThanCurrentDate(index : any){
+    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+    let startDate = serviceFormData.controls['serviceStartDate'].value;
+    if (startDate > this.todayDate) {
+      serviceFormData.get('serviceStartDate')?.setErrors({invalid : true});
+      return true;
+    }
+    serviceFormData.get('serviceStartDate')?.setErrors(null);
+    return false;
+  }
+
+  isEndGreaterThanCurrentDate(index : any){
+    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+    let endDate = serviceFormData.controls['serviceEndDate'].value;
+    if (endDate > this.todayDate) {
+      serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
+      return true;
+    }
+    serviceFormData.get('serviceEndDate')?.setErrors(null);
+    return false;
+  }
+
   isStartEndDateValid(startDate: any, endDate: any): boolean {
     if (startDate == "" || endDate == "" || startDate < this.minServiceDate || endDate < this.minServiceDate || startDate > endDate) {
       return false;
@@ -680,7 +703,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         invalidControl.focus();
       }
-    
+
       return;
     }
     let formValues = this.claimForm.value;
@@ -846,6 +869,11 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         if (!response) {
           this.pcaExceptionDialogService?.close();
         } else {
+          let invoiceWithExceedMaxBenefitException = data.tpaInvoices.filter((item: any) => item.exceptionTypeCode === ExceptionTypeCode.ExceedMaxBenefits && item.exceptionReasonCode);
+          if(invoiceWithExceedMaxBenefitException)
+            {
+              this.loadPendingApprovalGeneralCount();
+            }
           this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService?.close();
           this.financialPcaFacade.pcaReassignmentCount();
@@ -873,14 +901,20 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       next: (response: any) => {
         this.loaderService.hide();
         if (response) {
+          let invoiceWithExceedMaxBenefitException = data.tpaInvoices.filter((item: any) => item.exceptionTypeCode === ExceptionTypeCode.ExceedMaxBenefits);
+          if(invoiceWithExceedMaxBenefitException)
+            {
+              this.loadPendingApprovalGeneralCount();
+            }
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             response.message
           );
-          this.navigationMenuFacade.pcaReassignmentCount();
-          this.closeAddEditClaimsFormModalClicked(true);
+         this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
+          this.navigationMenuFacade.pcaReassignmentCount();
+
         } else {
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
@@ -1463,6 +1497,11 @@ duplicatePaymentObject:any = {};
       this.specialCharAdded = false;
     }
     return status;
+  }
+
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 
 }

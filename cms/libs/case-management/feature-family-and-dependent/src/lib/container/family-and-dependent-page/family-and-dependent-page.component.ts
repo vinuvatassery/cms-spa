@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 
 /** Internal libraries **/
-import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, Dependent, CompletionChecklist, NavigationType, WorkflowTypeCode } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, Dependent, CompletionChecklist, NavigationType} from '@cms/case-management/domain';
 import {LovFacade } from '@cms/system-config/domain'
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -332,23 +332,17 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+     if(this.checkValidations()){
       this.save().subscribe((response: any) => {
         if (response) {
+          this.workflowFacade.saveForLaterCompleted(true)  
           this.loaderService.hide();
-          if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-          }
-        }
+     
+        } 
       })
+    } else {
+      this.workflowFacade.saveForLaterCompleted(true)
+    }
     });
   }
 

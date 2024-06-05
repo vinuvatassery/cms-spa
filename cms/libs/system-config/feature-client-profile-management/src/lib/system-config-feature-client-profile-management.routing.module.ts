@@ -9,6 +9,11 @@ import { SexualOrientationPageComponent } from './containers/sexual-orientation-
   
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'pronouns',
+    pathMatch: 'full',
+  },
+  {
     path: 'direct-messages',
     component: DirectMessagePageComponent,
     data: {
@@ -19,21 +24,21 @@ const routes: Routes = [
     path: 'languages',
     component: LanguagePageComponent,
     data: {
-      title: 'languages',
+      title: 'Languages',
     },
   },
   {
     path: 'racial-or-ethnic-identity',
     component: RacialOrEthnicIdentityPageComponent,
     data: {
-      title: 'racial or ethnic identity',
+      title: 'Racial or Ethnic Identity',
     },
   },
   {
     path: 'gender',
     component: GenderPageComponent,
     data: {
-      title: 'gender',
+      title: 'Gender',
     },
   },
   {
@@ -42,14 +47,7 @@ const routes: Routes = [
     data: {
       title: 'Pronouns',
     },
-  },
-  {
-    path: '',
-    component: PronounsPageComponent,
-    data: {
-      title: 'Case Assignment',
-    },
-  },
+  }, 
   {
     path: 'sexual-orientation',
     component: SexualOrientationPageComponent,

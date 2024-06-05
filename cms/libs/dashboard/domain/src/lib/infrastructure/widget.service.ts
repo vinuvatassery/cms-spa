@@ -157,7 +157,7 @@ export class WidgetService {
   }
  
 
-  getPharmacyClaims(dashboardId:String,payload:any): Observable<any> {
+  getPharmacyClaims(dashboardId:string,payload:any): Observable<any> {
     
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/fiscal-widgets/pharmacy-claims/${dashboardId}`,
@@ -234,6 +234,33 @@ export class WidgetService {
   getTodayGlance(): Observable<any> {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/today-at-glance`
+    ); 
+    
+  }
+
+  getTodayGlanceTodo(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/today-at-glance-todo`
+    ); 
+    
+  }
+
+  getTodayGlanceDirectMessageCount(){
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/direct-messages/today-glance-direct-messages`);
+    }
+
+
+  getTodayGlanceReminders(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/today-at-glance-reminders`
+    ); 
+    
+  }
+
+  getTodayGlanceNotifications(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/today-at-glance-notifications`
     ); 
     
   }

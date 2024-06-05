@@ -40,7 +40,6 @@ import {
   NavigationType,
   PronounCode,
   TransGenderCode,
-  WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 
@@ -83,6 +82,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   prevClientCaseEligibilityId!: string;
   nform!: FormGroup;
   workflowTypeCode:any;
+  clientCerNotes: any[] = [];
   /** Constructor **/
   constructor(
     private workFlowFacade: WorkflowFacade,
@@ -231,7 +231,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
             this.clientFacade.hideLoader()
             /**Populating Client */
             this.applicantInfo.client = response.client;
-
+            this.clientCerNotes = response.clientCerNotes;
             /* Populate Client Case Eligibility */
             if (
               this.applicantInfo.clientCaseEligibilityAndFlag
@@ -343,45 +343,57 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.clientCaseEligibilityId !== null &&
         this.clientCaseEligibilityId !== undefined
       ) {
-        this.message = 'Applicant Info updated Successfully';
-        return this.clientFacade.update(this.applicantInfo, this.clientId).pipe(
-          catchError((error: any) => {
-            if (error) {
-              this.clientFacade.showHideSnackBar(
-                SnackBarNotificationType.ERROR,
-                error
-              );
-              return of(false);
-            }
-            return of(false);
-          })
-        );
+
+        return this.updateClientInfo();
+
       } else {
-        this.message = 'Applicant info saved successfully';
-        return this.clientFacade.save(this.applicantInfo).pipe(
-          catchError((error: any) => {
-            if (error) {
-              this.clientFacade.showHideSnackBar(
-                SnackBarNotificationType.ERROR,
-                error
-              );
-              return of(false);
-            }
-            return of(false);
-          }),
-          tap(() => this.caseFacade.loadActiveSession())
-        );
+
+        return this.saveApplicantInfo();
+
       }
     } else {
       this.loaderService.hide();
       const frmControls = this.reorderControls(this.getFormOrder());
-      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(frmControls, this.elementRef.nativeElement,null);
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(frmControls, this.elementRef.nativeElement, null);
       if (invalidControl) {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         invalidControl.focus();
       }
       return of(false);
     }
+  }
+
+  private updateClientInfo(){
+    this.message = 'Applicant Info updated Successfully.';
+    return this.clientFacade.update(this.applicantInfo, this.clientId).pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.clientFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(false);
+        }
+        return of(false);
+      })
+    );
+  }
+
+  private saveApplicantInfo(){
+    this.message = 'Applicant info saved successfully.';
+    return this.clientFacade.save(this.applicantInfo).pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.clientFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(false);
+        }
+        return of(false);
+      }),
+      tap(() => this.caseFacade.loadActiveSession())
+    );
   }
 
   private populateApplicantInfoModel() {
@@ -413,7 +425,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.applicantInfo.client.firstName =
       this.appInfoForm.controls['firstName'].value.trim() === ''
         ? null
-        : this.appInfoForm.controls['firstName'].value;
+        : this.appInfoForm.controls['firstName'].value.trim();
     if (this.appInfoForm.controls['chkmiddleName'].value ?? false) {
       this.applicantInfo.client.middleName = null;
       this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.Yes;
@@ -427,7 +439,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.applicantInfo.client.lastName =
       this.appInfoForm.controls['lastName'].value.trim() === ''
         ? null
-        : this.appInfoForm.controls['lastName'].value;
+        : this.appInfoForm.controls['lastName'].value.trim();
     this.applicantInfo.client.dob = new Date(
       this.intl.formatDate(
         this.appInfoForm.controls['dateOfBirth'].value,
@@ -545,7 +557,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName =
         this.appInfoForm.controls['prmInsFirstName'].value.trim() === ''
           ? null
-          : this.appInfoForm.controls['prmInsFirstName'].value;
+          : this.appInfoForm.controls['prmInsFirstName'].value.trim();
 
       if(this.appInfoForm.controls['chkPrmInsMiddleName'].value ?? false) {
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceMiddleName = null;
@@ -554,13 +566,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceMiddleName =
             this.appInfoForm.controls['prmInsMiddleName'].value.trim() === ''
             ? null
-            : this.appInfoForm.controls['prmInsMiddleName'].value;
+            : this.appInfoForm.controls['prmInsMiddleName'].value.trim();
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceMiddleNameNotApplicableFlag = StatusFlag.No;
           }
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName =
         this.appInfoForm.controls['prmInsLastName'].value.trim() === ''
           ? null
-          : this.appInfoForm.controls['prmInsLastName'].value;
+          : this.appInfoForm.controls['prmInsLastName'].value.trim();
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag =
         StatusFlag.No;
     }
@@ -582,7 +594,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName =
         this.appInfoForm.controls['officialIdFirstName'].value.trim() === ''
           ? null
-          : this.appInfoForm.controls['officialIdFirstName'].value;
+          : this.appInfoForm.controls['officialIdFirstName'].value.trim();
 
          if(this.appInfoForm.controls['chkOfficialIdMiddleName'].value ?? false) {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdMiddleName = null;
@@ -591,13 +603,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdMiddleName =
                 this.appInfoForm.controls['officialIdMiddleName'].value.trim() === ''
                 ? null
-                : this.appInfoForm.controls['officialIdMiddleName'].value;
+                : this.appInfoForm.controls['officialIdMiddleName'].value.trim();
               this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdMiddleNameNotApplicableFlag  = StatusFlag.No;
               }
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName =
         this.appInfoForm.controls['officialIdLastName'].value.trim() === ''
           ? null
-          : this.appInfoForm.controls['officialIdLastName'].value;
+          : this.appInfoForm.controls['officialIdLastName'].value.trim();
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag =
         StatusFlag.No;
     }
@@ -1053,6 +1065,23 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }else{
       this.appInfoForm.controls['dateOfBirth'].updateValueAndValidity();
     }
+
+    this.validateName();    
+    
+    if (this.appInfoForm.controls['ssnNotApplicable'].value) {
+      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
+    } else {
+      let hasError = this.appInfoForm.controls['ssn'].errors;
+      this.appInfoForm.controls['ssn'].setValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
+      if (hasError) {
+        this.appInfoForm.controls['ssn'].setErrors(hasError);
+      }
+    }
+  }
+
+  private validateName(){
     if (this.appInfoForm.controls['chkmiddleName'].value) {
       this.appInfoForm.controls['middleName'].removeValidators(
         Validators.required
@@ -1140,19 +1169,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       );
       this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
     }
-    if (this.appInfoForm.controls['ssnNotApplicable'].value) {
-      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
-      this.appInfoForm.controls['ssn'].updateValueAndValidity();
-    } else {
-      let hasError = this.appInfoForm.controls['ssn'].errors;
-      this.appInfoForm.controls['ssn'].setValidators(Validators.required);
-      this.appInfoForm.controls['ssn'].updateValueAndValidity();
-      if (hasError) {
-        this.appInfoForm.controls['ssn'].setErrors(hasError);
-      }
-    }
   }
-
   private setRegisterToVoteValidation() {
     if (
       this.appInfoForm.controls['registerToVote'].value == null ||
@@ -1623,33 +1640,15 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.checkValidations()) {
             this.saveAndUpdate().subscribe((response: any) => {
               if (response) {
+                this.workFlowFacade.clientCaseEligibilityId = response.clientCaseEligibilityId
+                this.workFlowFacade.saveForLaterCompleted(true)
                 this.loaderService.hide();
-                if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-                  if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-                    this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                      queryParamsHandling: "preserve"
-                    });
-                  }
-                  else {
-                    this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                      queryParamsHandling: "preserve"
-                    });
-                  }
-                }
+
               }
             });
-          } 
-          else if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
+          }else{
+            this.workFlowFacade.ApplicationDetailsValidationsSuccess = true
+          this.workFlowFacade.saveForLaterCompleted(true)
           }
         }
       );
@@ -1662,6 +1661,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (!this.checkValidations()) {
             this.workFlowFacade.showCancelApplicationPopup(true);
           } else {
+            this.workFlowFacade.ApplicationDetailsValidationsSuccess = true
             this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
           }
         }

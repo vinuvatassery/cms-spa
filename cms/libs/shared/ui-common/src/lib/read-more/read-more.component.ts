@@ -23,7 +23,7 @@ export class ReadMoreComponent {
   ngOnInit() {
     this.nonEditedContent = this.content;
     this.setReadmoreDisplay();
-    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content); 
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content); //NOSONAR
   }
 
   setReadmoreDisplay() {
@@ -38,13 +38,13 @@ export class ReadMoreComponent {
     this.content = this.isContentToggled
       ? this.nonEditedContent
       : this.formatContent(this.content);
-    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content); 
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content);  //NOSONAR
   }
 
   formatContent(content: string) {
     if (this.completeWords) {
-      this.limit = content.substr(0, this.limit).lastIndexOf(' ');
+      this.limit = content.substring(0, this.limit).lastIndexOf(' ');
     }
-    return `${content.substr(0, this.limit)}...`;
+    return `${content.substring(0, this.limit)}...`;
   }  
 }

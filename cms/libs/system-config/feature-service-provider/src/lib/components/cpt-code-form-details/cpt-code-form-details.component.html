@@ -1,31 +1,54 @@
-<section class="k-dialog-body">
-
-      <p class="text-muted mb-2">
-            All fields are required unless otherwise stated.
-      </p>
+<section class="k-dialog-body" [formGroup]="cptCodeForm">
       <div class="flex-row">
             <div class="flex-col">
-                  <kendo-floatinglabel text="CPT Code">
-                        <kendo-textbox aria-label="CPT Code" [fillMode]="formUiStyle.inputFillMode">
-                        </kendo-textbox>
-                  </kendo-floatinglabel>
+                  <kendo-formfield>
+                        <kendo-floatinglabel text="CPT Code">
+                              <kendo-textbox aria-label="CPT Code" [fillMode]="formUiStyle.inputFillMode"
+                                    formControlName="cptCode1">
+                              </kendo-textbox>
+                        </kendo-floatinglabel>
+                        <kendo-formerror *ngIf="cptCodeFormControls?.cptCode1.errors?.required">
+                              CPT Code is required.
+                        </kendo-formerror>
+                        <kendo-formerror *ngIf="cptCodeFormControls?.cptCode1.errors?.pattern">
+                              Special characters are not allowed.
+                        </kendo-formerror>
+                  </kendo-formfield>
             </div>
 
             <div class="flex-col">
-                  <kendo-floatinglabel text="Service Description">
-                        <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto"
-                              id="ServiceDescription" aria-label="Service Description">
-                              <kendo-textarea-suffix class="justify-content-end">
-                                    <span class="specialhandlingCounter">0/100</span>
-                              </kendo-textarea-suffix>
-                        </kendo-textarea>
-                  </kendo-floatinglabel>
+                  <kendo-formfield>
+                        <kendo-floatinglabel text="Service Description">
+                              <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #tareaDescription resizable="auto"
+                                    [maxlength]="tareamaxLength" id="serviceDesc" aria-label="Service Description"
+                                    formControlName="serviceDesc" (valueChange)="onTareaValueChange($event)">
+                                    <kendo-textarea-suffix class="justify-content-end">
+                                          <span class="counter">{{ tareaCounter }}</span>
+                                    </kendo-textarea-suffix>
+                              </kendo-textarea>
+                        </kendo-floatinglabel>
+                        <kendo-formerror *ngIf="!cptCodeForm.controls['serviceDesc'].valid">
+                              Service Description is required.
+                        </kendo-formerror>
+                  </kendo-formfield>
             </div>
             <div class="flex-col">
-                  <kendo-floatinglabel text="Medicaid Rate (optional)">
-                        <kendo-textbox aria-label="Medicaid Rate (optional)" [fillMode]="formUiStyle.inputFillMode">
-                        </kendo-textbox>
-                  </kendo-floatinglabel>
+                  <kendo-formfield>
+                        <kendo-floatinglabel text="Medicaid Rate (optional)" class="amount-with-symbol">
+                              <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                              <kendo-numerictextbox aria-label="Medicaid Rate (optional)" format="n2" [maxlength]="15"
+                                    [fillMode]="formUiStyle.inputFillMode" formControlName="medicaidRate">
+                              </kendo-numerictextbox>
+                        </kendo-floatinglabel>
+                  </kendo-formfield>
+            </div>
+
+            <div class="flex-col mt-3 mb-2">
+                  <span class="app-checkboxwidtext-wrapper">
+                        <input type="checkbox" kendoCheckBox formControlName="brigeUppFlag"
+                              aria-labelledby="brigeUppFlag" id="brigeUppFlag" />
+                        <label> Bridge/UPP eligible</label>
+                  </span>
             </div>
       </div>
 </section>
@@ -33,9 +56,10 @@
 <kendo-dialog-actions>
       <div class="justify-content-between">
             <div class="justify-content-end">
-                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancelClick()">
+                        Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Add"> ADD </button>
+                  <button kendoButton [primary]="true" aria-label="Add" (click)="addAndEditCptCode()">  {{ isEditCptCode ? 'Update' : 'Add' }} </button>
             </div>
       </div>
 

@@ -1,5 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { DocumentFacade } from '@cms/shared/util-core';
 /** Facades **/
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { State } from '@progress/kendo-data-query';
@@ -22,15 +23,23 @@ export class UserManagementPageComponent {
   sortUserListGrid = this.userManagementFacade.sortUserListGrid;
   usersDataLists$ = this.userManagementFacade.usersData$;
   usersFilterColumn$ = this.userManagementFacade.usersFilterColumn$;
+  userListProfilePhoto$ = this.userManagementFacade.userListProfilePhotoSubject;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  sortValueUserRolesListGrid = this.userManagementFacade.sortValueUserRolesListGrid;
+  sortUserRolesListGrid = this.userManagementFacade.sortUserRolesListGrid;
   /** Constructor **/
-  constructor(private readonly userManagementFacade: UserManagementFacade) { }
+  constructor(private readonly userManagementFacade: UserManagementFacade, private readonly documentFacade: DocumentFacade ) { }
 
 
  
   loadUserLists(data: any){
-    this.userManagementFacade.loadUsersData();
+    this.userManagementFacade.loadUsersData(data);
   }
   loadUserGridFilterLists(data: any){
     this.userManagementFacade.loadUserFilterColumn();
+  }
+
+  onExportAllUser(event: any){
+    this.userManagementFacade.onExportAllUser(event);
   }
 }

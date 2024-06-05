@@ -1,7 +1,7 @@
 /** Angular **/
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  CompletionChecklist, HealthcareProviderFacade, NavigationType, WorkflowFacade, WorkflowTypeCode } from '@cms/case-management/domain';
+import {  CompletionChecklist, HealthcareProviderFacade, NavigationType, WorkflowFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
@@ -290,23 +290,16 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+     if(this.checkValidations()){
       this.save().subscribe((response: any) => {
         if (response) {
+          this.workFlowFacade.saveForLaterCompleted(true)  
           this.loaderService.hide();
-          if (this.workFlowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.workflowTypeCode === WorkflowTypeCode.NewCase) {
-              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-            else {
-              this.router.navigate(['/case-management/cer-case-detail/application-review/send-letter'], {
-                queryParamsHandling: "preserve"
-              });
-            }
-          }
         }
       })
+    }else{
+      this.workFlowFacade.saveForLaterCompleted(true)  
+    }
     });
   }
 

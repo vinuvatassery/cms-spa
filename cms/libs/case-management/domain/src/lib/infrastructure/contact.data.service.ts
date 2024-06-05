@@ -12,7 +12,6 @@ import { GridFilterParam } from '../entities/grid-filter-param';
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
 
-
   /** Constructor**/
   constructor(
     private readonly http: HttpClient,
@@ -358,5 +357,9 @@ export class ContactDataService {
 
   loadEmployerIncomes(clientId: string, eligibilityId: string){
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${eligibilityId}/employer-income`);
+  }
+
+  getAssignedCaseManager(clientId: any, clientCaseId: any) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers/${clientId}/case-manager/${clientCaseId}`);
   }
 }

@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-vendor-page',
@@ -33,7 +33,7 @@ export class FinancialVendorPageComponent implements OnInit {
   inputProviderTypeForClinic = '';
   selectedClinicType : string = this.financeVendorTypeCodes.MedicalClinic;
   hasinsuranceVendorCreateUpdatePermission:boolean = false;
-  hasPharmacyCreateUpdatePermission:boolean = false; 
+  hasPharmacyCreateUpdatePermission:boolean = false;
   data = [
     {
       text: 'Manufacturer',
@@ -105,7 +105,9 @@ export class FinancialVendorPageComponent implements OnInit {
     private reminderFacade: ReminderFacade,
     private documentFacade: DocumentFacade,
     private readonly contactFacade: ContactFacade,
-    private userManagementFacade: UserManagementFacade
+    private userManagementFacade: UserManagementFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade,
+
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
     this.clinicForm = this.formBuilder.group({});
@@ -227,6 +229,10 @@ export class FinancialVendorPageComponent implements OnInit {
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next: (response: any) => {
+        if(vendorProfile.activeFlag === StatusFlag.No)
+          {
+            this.loadPendingApprovalGeneralCount();
+          }
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal(this.providerTypeCode);
 
@@ -318,6 +324,11 @@ export class FinancialVendorPageComponent implements OnInit {
       }
       this.documentFacade.getExportFile(vendorPageAndSortedRequest, 'vendors', fileName)
     }
+  }
+
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 
 

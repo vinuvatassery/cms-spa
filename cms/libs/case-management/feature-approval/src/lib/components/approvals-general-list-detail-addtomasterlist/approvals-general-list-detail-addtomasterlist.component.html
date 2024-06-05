@@ -7,11 +7,11 @@
       title="Edit "
       aria-label="edit" 
       (click)="onEditListItemsDetailClicked()"
-      *ngIf="selectedMasterDetail$ | async as item"
+      *ngIf="vendorData as item"
     ></button>
     <table
       class="info-table-custom nobg-left"
-      *ngIf="selectedMasterDetail$ | async as item"
+      *ngIf="vendorData as item"
     >
       <caption hidden>
         Vendor Info

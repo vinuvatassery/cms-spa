@@ -2,6 +2,6 @@ import { Dashboard } from './dashboard';
 
 export interface DashboardMaster {
   id: string;
-  activeDashboardId: Number;
+  activeDashboardId: number;
   dashboards: Dashboard[];
 }
