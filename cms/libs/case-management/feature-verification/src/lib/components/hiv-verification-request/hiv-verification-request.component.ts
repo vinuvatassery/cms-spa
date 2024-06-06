@@ -159,6 +159,7 @@ export class HivVerificationRequestComponent implements OnInit, OnDestroy{
     });
     this.verificationFacade.showHideAttachment$.subscribe(response=>{
       this.showHideAttachment = response;
+      this.verificationFacade.isSaveandContinueSubject.next(response);
       this.cdr.detectChanges();
     });
     this.verificationFacade.clientHivDocumentsList$.subscribe(response=>{

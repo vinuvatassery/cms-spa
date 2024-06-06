@@ -189,10 +189,10 @@ export class EmailEditorComponent implements OnInit, OnChanges {
               typeCode: file.typeCode
             });
           }
-        this.ref.detectChanges();
-        this.cerEmailAttachments.emit(this.selectedAttachedFile);
         }
-      this.loaderService.hide();
+        this.ref.detectChanges();        
+        this.cerEmailAttachments.emit(this.selectedAttachedFile);
+        this.loaderService.hide();
     },
     error: (err: any) => {
       this.loaderService.hide();

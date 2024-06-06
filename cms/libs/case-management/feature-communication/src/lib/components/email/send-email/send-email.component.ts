@@ -1148,6 +1148,7 @@ saveForLaterHeadterText!: string;
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
+      this.clientAndVendorAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){
@@ -1168,6 +1169,7 @@ saveForLaterHeadterText!: string;
     if(event.length > 0){
       this.cerEmailAttachedFiles = event;
     }else{
+      this.cerEmailAttachedFiles=[];
       if(event.documentTemplateId){
         isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.description);
         if(!isFileExists || isFileExists === undefined){
