@@ -8,8 +8,10 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   TemplateRef,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { DrugsFacade, FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, GridFilterParam, VendorFacade } from '@cms/case-management/domain';
@@ -17,7 +19,7 @@ import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade, NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { ColumnVisibilityChangeEvent, FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, FilterService, GridComponent, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -220,6 +222,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   paymentStatusFilter = '';
   deletemodelbody =
   'This action cannot be undone, but you may add a claim at any time.';
+  @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -251,6 +255,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       {
         this.pharmacyPaymentStatusList = values.filter(value => !this.excludedPaymentStatus.includes(value.lovDesc))
       })
+    this.collapseRowsInGrid();
   }
 
   ngOnChanges(): void {
@@ -672,5 +677,13 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     this.navigationMenuFacade.getPendingApprovalPaymentCount(
     this.permissionLevels
     );
+  }
+
+  private collapseRowsInGrid() {
+    this.pharmacyClaimsProcessGridLists$.subscribe((data:any ) => {
+      data.data.forEach((item: any, idx: number) => {
+        this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
+      });
+    });
   }
 }
