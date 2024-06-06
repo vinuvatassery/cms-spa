@@ -16,7 +16,7 @@
     <kendo-grid-column field="roleDesc" title="Role Assigned" [width]="190">
         <ng-template kendoGridCellTemplate let-dataItem>
             <span class="d-flex align-items-center">
-                <span [ngClass]="getRolesClassByRoleCode(dataItem)"></span>{{ dataItem.roleDesc }}
+                <span class="role-identifier" [style]="getAndSetBackgroundColorByRoleCode(dataItem)"></span>{{ dataItem.roleDesc }}
             </span>
         </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
