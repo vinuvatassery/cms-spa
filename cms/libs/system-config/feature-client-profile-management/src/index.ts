@@ -22,3 +22,4 @@ export * from './lib/containers/racial-or-ethnic-identity-page/racial-or-ethnic-
 export * from './lib/containers/gender-page/gender-page.component';
 export * from './lib/containers/pronouns-page/pronouns-page.component';
 export * from './lib/containers/sexual-orientation-page/sexual-orientation-page.component';
+export * from './lib/components/reorder-detail/reorder-detail.component';   

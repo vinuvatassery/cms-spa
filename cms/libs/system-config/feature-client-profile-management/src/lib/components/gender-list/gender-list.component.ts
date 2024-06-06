@@ -45,6 +45,8 @@ export class GenderListComponent implements OnInit, OnChanges {
  columnDropListSubject = new Subject<any[]>();
  columnDropList$ = this.columnDropListSubject.asObservable();
  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+ reorderType: string = 'GENDER';
+ fromScreen: string = 'gender';
 
  public moreactions = [
    {
@@ -80,10 +82,7 @@ export class GenderListComponent implements OnInit, OnChanges {
    
 
  ];
- 
-
- 
-  
+   
  ngOnInit(): void {
   this.loadGenderList(); 
 }
@@ -220,5 +219,9 @@ onGenderReactivateClicked() {
 
  isReorderClicked(){
   this.isReorderEnabled = !this.isReorderEnabled;
+ }
+
+ reorderCancelClickedEvent(event: boolean){
+  this.isReorderEnabled = !event;
  }
 }

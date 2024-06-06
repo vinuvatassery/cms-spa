@@ -1,0 +1,50 @@
+<!-- Header Section -->
+<section>
+    <!-- Label info show only in reorder list -->
+    <p class="pt-1" >
+      Select a sorting option or manually drag and drop the items in the list.
+      This is how the items will be displayed in the interface.
+    </p>
+
+    <div class="flex-row">
+      <!-- Table header show only in list -->
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Sort">
+          <kendo-dropdownlist aria-label="Sort" [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="folderSort" valueField="lovCode" textField="lovDesc"
+          (valueChange)="onSortOptionChange($event)" >
+        </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div></div>
+
+      <div class="app-c-table mt-2" >
+        <kendo-grid [data]="reorderList" [resizable]="true"
+        [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: false }" [rowReorderable]="true">
+        <kendo-grid-rowreorder-column [columnMenu]="false" [width]="30"></kendo-grid-rowreorder-column>
+        <kendo-grid-column field="gender" title="Gender" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span [title]="dataItem.lovDesc" class="grid-line-clip"> {{dataItem?.lovDesc}}</span>
+          </ng-template>
+        </kendo-grid-column>
+          <!-- grid Loader Template -->
+          <ng-template kendoGridLoadingTemplate>
+            <common-grid-loader-component></common-grid-loader-component>
+          </ng-template>
+          <!-- grid No data Template -->
+          <ng-template kendoGridNoRecordsTemplate>
+            <common-grid-no-records></common-grid-no-records>
+          </ng-template>
+        </kendo-grid>
+      </div>
+       <!-- Reorder button block show only in reorder list -->
+  <div class="bottom-fixed-wrapper text-right flex-gap">
+    <div class="justify-content-end">
+      <button kendoButton aria-label="Cancel" (click)="onCancelClicked()" [primary]="true" look="outline">
+        Cancel
+      </button>
+      <button kendoButton aria-label="Update" (click)="onUpdateClicked()" [primary]="true" class="ml-1">
+        Update
+      </button>
+    </div>
+  </div>
+</section>

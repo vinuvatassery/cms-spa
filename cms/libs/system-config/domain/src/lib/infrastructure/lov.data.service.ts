@@ -45,4 +45,18 @@ export class LovDataService {
       `/system-config/lovs/lovtypes/${lovType}`
   );
   }
+
+  getReorderListByType(lovType : string) {
+    return this.http.get<Lov[]>(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+        `/system-config/lovs/${lovType}/config/order`
+    );
+  }
+
+  loadReorderList(orderTypeCode: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+      `/system-config/lovs/${orderTypeCode}`
+  );
+  }
 }

@@ -22,6 +22,7 @@ import { GenderPageComponent } from './containers/gender-page/gender-page.compon
 import { PronounsPageComponent } from './containers/pronouns-page/pronouns-page.component';
 import { SexualOrientationPageComponent } from './containers/sexual-orientation-page/sexual-orientation-page.component';
 import { SystemConfigFeatureClientProfileManagementRoutingModule } from './system-config-feature-client-profile-management.routing.module';
+import { ReorderDetailComponent } from './components/reorder-detail/reorder-detail.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureClientProfileManagementRoutingModule],
   declarations: [
@@ -43,8 +44,8 @@ import { SystemConfigFeatureClientProfileManagementRoutingModule } from './syste
     RacialOrEthnicIdentityPageComponent,
     GenderPageComponent,
     PronounsPageComponent,
-    SexualOrientationPageComponent
-    
+    SexualOrientationPageComponent,
+    ReorderDetailComponent,    
   ],
   exports: [
     GenderDetailComponent,
@@ -65,7 +66,8 @@ import { SystemConfigFeatureClientProfileManagementRoutingModule } from './syste
     RacialOrEthnicIdentityPageComponent,
     GenderPageComponent,
     PronounsPageComponent,
-    SexualOrientationPageComponent
+    SexualOrientationPageComponent,
+    ReorderDetailComponent,
   ],
 })
 export class SystemConfigFeatureClientProfileManagementModule {}

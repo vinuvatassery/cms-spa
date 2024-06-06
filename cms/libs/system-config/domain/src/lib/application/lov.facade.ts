@@ -18,7 +18,6 @@ import { LovDataService } from '../infrastructure/lov.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class LovFacade {
-
   constructor(
     private readonly lovDataService: LovDataService,
     private loggingService: LoggingService,
@@ -62,7 +61,7 @@ export class LovFacade {
   private lovVerificationMethodSubject = new BehaviorSubject<Lov[]>([]);
   private lovApplicantInfoSubject = new BehaviorSubject<Lov[]>([]);
   private lovColumnDroplistSubject = new BehaviorSubject<Lov[]>([]);
-
+  private reorderLovSubject = new BehaviorSubject<Lov[]>([]);
 
   private lovAddressTypeSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnAddressType = new BehaviorSubject<boolean>(false);
@@ -197,6 +196,7 @@ export class LovFacade {
   userDeviceTypeLov$ = this.userDeviceTypeLovSubject.asObservable();
   caseManagerAssistorGrp$ = this.caseManagerAssistorGrpSubject.asObservable();
   folderSortLov$ = this.folderSortSubject.asObservable()
+  reorderList$ = this.reorderLovSubject.asObservable();
 
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -1099,6 +1099,14 @@ export class LovFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       }
     });
+  }
+
+  getReorderLovs(lovType: string) {
+    return this.lovDataService.getReorderListByType(lovType);
+  }
+
+  loadReorderSortDropdown(orderTypeCode: string) {
+    return this.lovDataService.loadReorderList(orderTypeCode);
   }
 
 }
