@@ -18,6 +18,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 @Component({
   selector: 'system-config-client-notification-defaults-list',
   templateUrl: './client-notification-defaults-list.component.html',
@@ -62,6 +63,8 @@ export class ClientNotificationDefaultsListComponent
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   /** Internal event methods **/
+  constructor( private readonly router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.loadClientNotificationList();
@@ -197,5 +200,14 @@ export class ClientNotificationDefaultsListComponent
 
   onCloseUpdateDefaultNotificationClicked() {
     this.UpdateDefaultNotificationPopupShow = false;
+  }
+  emailTemplateNavigate()
+  {
+    this.router.navigate([`/system-config/communication/email-template`]);
+  }
+
+  letterTemplateNavigate()
+  {
+    this.router.navigate([`/system-config/communication/letter-template`]);
   }
 }
