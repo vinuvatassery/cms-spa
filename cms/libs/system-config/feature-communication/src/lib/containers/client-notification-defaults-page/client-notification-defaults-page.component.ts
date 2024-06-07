@@ -18,10 +18,18 @@ export class ClientNotificationDefaultsPageComponent {
   clientNotificationService$ = this.templateManagementFacade.clientNotificationDefaultsLists$; 
   /** Constructor **/
   constructor(private readonly templateManagementFacade: TemplateManagementFacade) { }
-
-
- 
-  loadClientNotificationLists(data: any){
-    this.templateManagementFacade.loadClientNotificationDefaultsLists();
+  loadClientNotificationLists(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+      filter: gridDataRefinerValue.filter
+    };
+    this.templateManagementFacade.loadClientNotificationDefaultsLists(
+      gridDataRefiner.skipcount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType,
+      gridDataRefiner.filter
+    );
   }
 }
