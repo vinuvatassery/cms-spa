@@ -61,6 +61,7 @@ import { DeleteProfilePhotoConfirmationComponent } from './delete-profile-photo-
 import { EditTemplateNameComponent } from './edit-template-name/edit-template-name.component';
 import { DeactivateTemplateComponent } from './deactivate-template/deactivate-template.component';
 import { ReactivateTemplateComponent } from './reactivate-template/reactivate-template.component';
+import { NdcCodeDirective } from './directives/ndc-code.directive';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -115,6 +116,7 @@ import { ReactivateTemplateComponent } from './reactivate-template/reactivate-te
     EditTemplateNameComponent,
     DeactivateTemplateComponent,
     ReactivateTemplateComponent,
+    NdcCodeDirective,
   ],
   exports: [
     LoginStatusComponent,
@@ -168,6 +170,7 @@ import { ReactivateTemplateComponent } from './reactivate-template/reactivate-te
     EditTemplateNameComponent,
     DeactivateTemplateComponent,
     ReactivateTemplateComponent,
+    NdcCodeDirective,
     
   ],
 })

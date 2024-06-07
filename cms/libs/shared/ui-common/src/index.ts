@@ -47,6 +47,7 @@ export * from './lib/directives/kendo-componentsforaccessibility.directive';
 export * from './lib/directives/kendo-file-upload-accessibility.directive';
 export * from './lib/directives/permission-manager.directive';
 export * from './lib/directives/after-value-changed.directive';
+export * from './lib/directives/ndc-code.directive';
 
 /** Enums **/
 export * from './lib/enums/yes-no-flag-enum';
