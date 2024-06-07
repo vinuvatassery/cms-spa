@@ -689,7 +689,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.confirmPopupHeader = 'Send Denial Letter to print?';
         this.saveForLaterHeadterText = "Send Denial Letter Later?";
         this.saveForLaterModelText = "You must send the  Denial Letter within 14 Days";
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
         break;
 
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
