@@ -23,7 +23,7 @@ export class ReadMoreComponent {
   ngOnInit() {
     this.nonEditedContent = this.content;
     this.setReadmoreDisplay();
-    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content); //NOSONAR
+    this.sanitizedHtml = this.content; //NOSONAR
   }
 
   setReadmoreDisplay() {
@@ -38,7 +38,7 @@ export class ReadMoreComponent {
     this.content = this.isContentToggled
       ? this.nonEditedContent
       : this.formatContent(this.content);
-    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content);  //NOSONAR
+    this.sanitizedHtml = this.content;  //NOSONAR
   }
 
   formatContent(content: string) {

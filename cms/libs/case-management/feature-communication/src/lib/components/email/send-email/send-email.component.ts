@@ -1093,7 +1093,7 @@ saveForLaterHeadterText!: string;
       });
   }
   private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
+    return currentEmailData; // NOSONAR
   }
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
