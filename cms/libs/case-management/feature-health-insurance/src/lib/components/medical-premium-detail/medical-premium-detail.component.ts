@@ -1458,13 +1458,21 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       if (this.healthInsuranceForm.controls[endDateField].value == null) {        
         if (policyExist.length > 0) {
           return true;
-        }
-        else {
-          policyOverlap = false;
-        }
+        }        
       }
-      else {
-        let startDateField = 'insuranceStartDate';
+      else {        
+        policyOverlap = this.checkDateOverlapForThePolicy(policyExist, endDateField);
+        return policyOverlap;
+      }
+      return policyOverlap;
+    }
+    return policyOverlap;
+
+  }
+
+  checkDateOverlapForThePolicy(policyExist:any, endDateField:any): boolean {
+    let policyOverlap = false;
+    let startDateField = 'insuranceStartDate';
         if (this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "A" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "AB") {
           startDateField = 'medicarePartAStartDate'
         }
@@ -1486,14 +1494,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
             }
           }
         });
+
         return policyOverlap;
-      }
-      return policyOverlap;
-    }
-    return policyOverlap;
-
   }
-
   private SaveCopiedInsurancePolicy() {
     this.healthInsurancePolicy.clientInsurancePolicyId = this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
     this.insurancePolicyFacade.copyHealthInsurancePolicy(this.healthInsurancePolicy.clientInsurancePolicyId, this.healthInsurancePolicy)
