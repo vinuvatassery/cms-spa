@@ -32,7 +32,7 @@ export class EventDataService {
   }
 
   loadNotificationEmail(eventLogId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/email?eventLogId=${eventLogId}`)
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/notifications/email?emailLogId=${eventLogId}`)
   }
 
   loadNotificationLetter(eventLogId:any){

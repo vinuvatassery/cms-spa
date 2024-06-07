@@ -472,7 +472,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     this.adjustAttributeInit();
   }
 
-  private updateApplicantBaseDetails(applicantInfo: ApplicantInfo) {
+  updateCerForm(applicantInfo: ApplicantInfo){
     if (this.isCerForm) {
       this.appInfoForm.controls['cerReceivedDate'].setValue(
         new Date(
@@ -489,9 +489,9 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       );
     }
 
-    this.appInfoForm.controls['firstName'].setValue(
-      applicantInfo.client?.firstName
-    );
+  }
+
+  updateMiddleInitials(applicantInfo: ApplicantInfo){
     if (applicantInfo.client?.noMiddleInitialFlag == 'Y') {
       this.appInfoForm.controls['chkmiddleName'].setValue(true);
       this.appInfoForm.controls['middleName'].setValue(null);
@@ -502,7 +502,16 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
         applicantInfo.client?.middleName
       );
       this.appInfoForm.controls['middleName'].enable();
-    }
+    } 
+  }
+
+  private updateApplicantBaseDetails(applicantInfo: ApplicantInfo) {
+
+    this.updateCerForm(applicantInfo)
+    this.appInfoForm.controls['firstName'].setValue(
+      applicantInfo.client?.firstName
+    );
+    this.updateMiddleInitials(applicantInfo)
     this.appInfoForm.controls['lastName'].setValue(
       applicantInfo.client?.lastName
     );
@@ -586,6 +595,11 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     this.appInfoForm.controls['dateOfBirth'].setValue(
       new Date(applicantInfo.client?.dob)
     );
+    this.updateSsnDetails(applicantInfo)
+    this.updateRegisterToVote(applicantInfo);
+  }
+
+  updateSsnDetails(applicantInfo : ApplicantInfo){
     if (applicantInfo.client?.ssnNotApplicableFlag === StatusFlag.Yes) {
       this.appInfoForm.controls['ssnNotApplicable'].setValue(true);
       this.appInfoForm.controls['ssn'].setValue(null);
@@ -595,6 +609,9 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       this.appInfoForm.controls['ssn'].setValue(applicantInfo.client?.ssn);
       this.appInfoForm.controls['ssn'].enable();
     }
+  }
+
+  updateRegisterToVote(applicantInfo : ApplicantInfo){
     if (
       applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibilityFlag?.registerToVoteFlag?.toUpperCase() ==
       StatusFlag.Yes

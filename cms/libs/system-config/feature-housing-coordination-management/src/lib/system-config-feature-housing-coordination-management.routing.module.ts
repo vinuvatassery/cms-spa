@@ -12,9 +12,9 @@ import { SlotPageComponent } from './containers/slot-page/slot-page.component';
 const routes: Routes = [
   {
     path: '',
-    component: SlotPageComponent,
- 
-  }, 
+    redirectTo: 'slots',
+    pathMatch: 'full',
+  },
   {
     path: 'slots',
     component: SlotPageComponent,

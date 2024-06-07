@@ -149,7 +149,7 @@
 
 <kendo-dialog *ngIf="isPremiumPaymentDetailsOpened" (close)="closePremiumPaymentDetailsOpened()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-prm-pym'"> Add Premium</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-prm-pym'">Add Medical Premium</kendo-dialog-titlebar>
   <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-prm-pym'"> Add Insurance Premium</kendo-dialog-titlebar>
   <case-management-medical-premium-payment-detail
   [caseEligibilityId]="caseEligibilityId"

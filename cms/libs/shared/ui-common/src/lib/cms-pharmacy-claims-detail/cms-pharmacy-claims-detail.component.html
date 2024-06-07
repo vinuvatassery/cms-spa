@@ -215,11 +215,14 @@
                                                     class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                                                 <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode"
                                                     [data]="searchDrugs$ | async" formControlName="ndc"
-                                                     [filterable]="true"
+                                                    [filterable]="true"
                                                       textField="displayNdcCode"
-                                                      valueField="ndcNbr"
+                                                      valueField="displayNdcCode"
                                                     (filterChange)="searchcptcode($event)"                                                  
-                                                    [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
+                                                    [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }"
+                                                    (blur)="onNdcBlur(i)"
+                                                    ndcCode
+                                                    >
                                                     <ng-template kendoAutoCompleteItemTemplate let-dataItem>
                                                         <span class="pr-1" (click)="onNdcCodeValueChange(dataItem,i)">{{
                                                             dataItem.displayNdcCode}}</span>
@@ -240,8 +243,15 @@
                                                         </div>
                                                       </ng-template>
                                                 </kendo-autocomplete>
-                                                <kendo-formerror *ngIf="(isControlValid('ndc', i) && isSubmitted)"
+                                                <kendo-formerror *ngIf="(isControlValid('ndc', i) && isSubmitted)
+                                                && addClaimServicesForm.at(i).get('ndc')?.errors?.['required']
+                                                "
                                                     class="d-flex align-items-center">NDC Code is required
+                                                </kendo-formerror>
+                                                <kendo-formerror *ngIf="(isControlValid('ndc', i) && isSubmitted
+                                            && addClaimServicesForm.at(i).get('ndc')?.errors?.['pattern']
+                                            )">
+                                                   NDC code is not valid.
                                                 </kendo-formerror>
                                             </kendo-floatinglabel>
                                         </div>

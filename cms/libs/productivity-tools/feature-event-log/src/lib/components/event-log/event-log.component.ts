@@ -433,26 +433,10 @@ eventListLoader = false;
     }
   }
 
-  @HostListener('document:click', ['$event'])
-  public documentClick(event: KeyboardEvent): void {
-    if (event) {
-      if (!this.contains(event.target)) {
-      }
-    }
-  }
-
   public toggleFilterPopoverOpen(show?: boolean): void {
     this.isEventFilterPopoverOpen = show ?? !this.isEventFilterPopoverOpen;
   }
 
-  private contains(target: any): boolean {
-    return (
-      this.eventFilterCardBtn.nativeElement.contains(target) ||
-      (this.eventtFilterPopover
-        ? this.eventtFilterPopover.nativeElement.contains(target)
-        : false)
-    );
-  }
   showHideSearch()
   {
     this.isShownSearch = this.searchText.length > 0 ? true:false;

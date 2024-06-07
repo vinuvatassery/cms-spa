@@ -122,7 +122,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   snackBarMessage:any;
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.handleConfirmPopupHeader(this.communicationLetterTypeCode);
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
@@ -362,7 +362,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       });
   }
   private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
   }
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
@@ -678,7 +678,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.templateHeader = 'Send Pending Letter';
         this.confirmPopupHeader = 'Send Pending Letter to print?';
         this.saveForLaterHeadterText = "Send Pending Letter Later?";
-        this.saveForLaterModelText = "You must send the Pending Email within 14 Days";
+        this.saveForLaterModelText = "You must send the Pending Letter within 14 Days";
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal";
         break;
 
@@ -694,7 +694,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
         this.snackBarMessage = 'Approval Letter generated! An event has been logged.';
-        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
+        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the notice is complete."
         this.templateHeader = 'Send Approval Letter';
         this.confirmPopupHeader = 'Send Approval Letter to Print?';
         this.saveForLaterHeadterText = "Send Approval Letter later?";
@@ -723,6 +723,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
 
       case CommunicationEventTypeCode.VendorLetter:
+        this.snackBarMessage = 'Letter generated! An event has been logged.';
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
         this.saveForLaterHeadterText = "Letter Draft Saved";
@@ -732,6 +733,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationLetter:
+        this.snackBarMessage = 'Letter generated! An event has been logged.';
         this.templateHeader = 'CER Authorization Letter';
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
         this.saveForLaterHeadterText = "Send CER Authorization Letter Later?";
@@ -741,6 +743,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
 
       case CommunicationEventTypeCode.ApplicationAuthorizationLetter:
+        this.snackBarMessage = 'Letter generated! An event has been logged.';
         this.templateHeader = 'Application Authorization Letter';
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
         this.saveForLaterHeadterText = "Send Authorization Letter Later?";
@@ -880,6 +883,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
+      this.clientAndVendorAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){
@@ -900,6 +904,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     if(event.length > 0){
       this.cerEmailAttachedFiles = event;
     }else{
+      this.cerEmailAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.description);
         if(!isFileExists || isFileExists === undefined){

@@ -84,11 +84,20 @@
             (removeInsurancePlan)="removeInsurancePolicy($event)"
             [insuranceTypeList$]="insuranceTypeList$"
             [premiumFrequencyList$]="premiumFrequencyList$"
-            [priorityCodeType$]="priorityCodeType$">
+            [priorityCodeType$]="priorityCodeType$"
+            (onProviderNameClickEvent)="onProviderNameClick($event)">
           </case-management-medical-premium-list>
         </div>
 
       </div>
     </div>
   </section>
+  <ng-template #providerDetailsTemplate>
+    <case-management-vendor-panel-details
+    [vendorId]="vendorId"
+    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+    [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+    (getProviderPanelEvent)="getProviderPanel($event)"
+    ></case-management-vendor-panel-details>
+  </ng-template>
 </div>

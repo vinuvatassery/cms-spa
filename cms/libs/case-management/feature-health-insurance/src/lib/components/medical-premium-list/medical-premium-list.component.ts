@@ -72,6 +72,7 @@ export class MedicalPremiumListComponent implements OnInit {
   @Output() deleteInsurancePlan = new EventEmitter<any>();
   @Output() removeInsurancePlan = new EventEmitter<any>();
   @Output() getPoliciesEventEmitter = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -421,5 +422,9 @@ export class MedicalPremiumListComponent implements OnInit {
     if (event) {
       this.getPoliciesEventEmitter.next(true);
     }
+  }
+
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
   }
 }

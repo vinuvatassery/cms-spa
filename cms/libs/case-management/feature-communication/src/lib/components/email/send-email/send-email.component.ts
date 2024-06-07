@@ -766,12 +766,12 @@ saveForLaterHeadterText!: string;
         this.confirmPopupHeader = 'Send Denial Email?';
         this.saveForLaterHeadterText = "Send Denial Email Later?";
         this.saveForLaterModelText = "You must send the  Denial Email within 14 Days";
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via SMS text, and/or their online portal.";
         break;
 
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
         this.snackBarMessage = 'Approval Email Sent! An event has been logged.';
-        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
+        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND EMAIL'' once the notice is complete."
         this.templateHeader = 'Send Approval Email';
         this.emailSubject = "CareAssist Approval Notice";
         this.confirmPopupHeader = 'Send Approval Email?';
@@ -803,6 +803,7 @@ saveForLaterHeadterText!: string;
         break;
 
       case CommunicationEventTypeCode.VendorEmail:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.saveForLaterHeadterText = "Email Draft Saved";
@@ -812,6 +813,7 @@ saveForLaterHeadterText!: string;
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationEmail:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.templateHeader = 'CER Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
@@ -821,6 +823,7 @@ saveForLaterHeadterText!: string;
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
         break;
       case CommunicationEventTypeCode.ApplicationAuthorizationEmail:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
@@ -831,6 +834,7 @@ saveForLaterHeadterText!: string;
         break;
 
       default:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.saveForLaterHeadterText = "Email Draft Saved";
@@ -950,7 +954,7 @@ saveForLaterHeadterText!: string;
     }
   }
 
-  
+
   getToEmail(to: any) {
     if(to?.length > 0){
     for (let email of to) {
@@ -1089,7 +1093,7 @@ saveForLaterHeadterText!: string;
       });
   }
   private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
   }
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
@@ -1148,6 +1152,7 @@ saveForLaterHeadterText!: string;
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
+      this.clientAndVendorAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){
@@ -1168,6 +1173,7 @@ saveForLaterHeadterText!: string;
     if(event.length > 0){
       this.cerEmailAttachedFiles = event;
     }else{
+      this.cerEmailAttachedFiles=[];
       if(event.documentTemplateId){
         isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.description);
         if(!isFileExists || isFileExists === undefined){

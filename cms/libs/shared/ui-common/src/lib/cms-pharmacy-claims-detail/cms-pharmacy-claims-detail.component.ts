@@ -97,7 +97,9 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
   IsEdit:boolean=false;
   manufacturers: any = [];
   searchClients: any;
-  searchClientSubscription!: Subscription
+  searchClientSubscription!: Subscription;
+  ndcRegex = /^\d{5}-\d{4}-\d{2}$/;
+  ndcRespectiveIsDoneWithSelection=false;
   constructor(
     private formBuilder: FormBuilder,private cd: ChangeDetectorRef,
     public readonly intl: IntlService,
@@ -198,7 +200,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
       claimNbr  : ['', Validators.required],
       prescriptionFillDate  :  [currentDate, Validators.required], 
       copayAmountPaid  : ['', Validators.required],
-      ndc  : ['', Validators.required],
+      ndc: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{4}-\d{2}$/)]],
       qntType  : ['', Validators.required],
       dispensingQty  : ['', Validators.required],
       daySupply  : ['', Validators.required],
@@ -329,6 +331,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
     if (!searchText || searchText.length == 0) {
       return;
     }
+    searchText =searchText.replaceAll("-","");
     const ndcCodeSearch ={
       isClientRestricted : this.isClientRestricted,
       searchText : searchText
@@ -347,7 +350,37 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
 
     this.addClaimServicesForm.at(index).get('brandName')?.disable()
     this.addClaimServicesForm.at(index).get('drugName')?.disable()
+    this.ndcRespectiveIsDoneWithSelection = true;
   }
+
+  onNdcBlur(index:any){  
+    if(!this.ndcRespectiveIsDoneWithSelection){
+      this.addClaimServicesForm.at(index).get('brandName')?.setValue("")
+      this.addClaimServicesForm.at(index).get('drugName')?.setValue("")
+      this.addClaimServicesForm.at(index).get('qntType')?.setValue("");
+
+      let ndcValue = this.addClaimServicesForm.at(index).get('ndc')?.value;
+      const isValidNdc = this.ndcRegex.test(ndcValue); // Example NDC string
+      if(isValidNdc){
+        ndcValue = ndcValue.replaceAll("-","");
+        const ndcCodeSearch ={
+          isClientRestricted : this.isClientRestricted,
+          searchText : ndcValue
+        }
+        this.searchDrugEvent.emit(ndcCodeSearch);
+        this.searchDrugs$.subscribe((data:[any]) => {
+          const item = data.find(x=>x.ndcNbr==ndcValue);
+          if(item){
+            this.onNdcCodeValueChange(item,index);
+          }// You can assign it to a variable or process it further as needed
+        });
+      }
+   }
+   else{
+     this.ndcRespectiveIsDoneWithSelection = false;
+   }
+  }
+
   pharmacySelectionChange(data : any)
   {
     this.pharmacyClaimForm.controls['prescriptionFillDto'].reset()

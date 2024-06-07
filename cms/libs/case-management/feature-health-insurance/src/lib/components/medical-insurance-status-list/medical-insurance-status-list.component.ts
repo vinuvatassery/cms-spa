@@ -48,7 +48,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   priorityCodeType$ = this.lovFacade.priorityCodeType$;
-  showHistoricalFlag:boolean = true;
+  showHistoricalFlag:boolean = false;
   carrierContactInfo:any;
   insurancePlanName:any;
   insuranceStatusType:any;
