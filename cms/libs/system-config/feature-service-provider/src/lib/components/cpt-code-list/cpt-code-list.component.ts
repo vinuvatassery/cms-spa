@@ -126,8 +126,6 @@ export class CptCodeListComponent implements OnInit, OnChanges {
   ];
 
 
-
-
   ngOnInit(): void {
     this.loadCptCodeList();
   }
@@ -220,8 +218,6 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       ],
       logic: 'or',
     });
-
- 
   }
 
   defaultGridState() {

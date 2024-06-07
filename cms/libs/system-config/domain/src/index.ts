@@ -26,6 +26,7 @@ export * from './lib/infrastructure/housing-coordination.service';
 export * from './lib/infrastructure/system_config_cases.data.service';
 export * from './lib/infrastructure/forms-and-document.data.service';
 export * from './lib/infrastructure/cpt-code.service';
+export * from './lib/infrastructure/pharmacies.service';
 
 /** Facades **/
 export * from './lib/application/lov.facade';
@@ -44,6 +45,7 @@ export * from './lib/application/system_config_cases.facade';
 export * from './lib/application/fab-badge.facade';
 export * from './lib/application/forms-and-document.facade';
 export * from './lib/application/cpt-code.facade';
+export * from './lib/application/pharmacies.facade';
 /** Enums **/
 export * from './lib/enums/lov-types.enum';
 export * from './lib/enums/accepted-case-status-code.enum';

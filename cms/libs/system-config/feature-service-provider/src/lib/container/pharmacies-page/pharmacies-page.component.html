@@ -1,6 +1,8 @@
  
       <system-config-pharmacies-list 
-      [pharmaciesDataLists$]="pharmaciesService$" 
+      [pharmaciesDataLists$]="pharmaciesDataLists$" 
+      [pharmaciesProfilePhoto$]="pharmaciesProfilePhoto$" 
+      [pharmaciesListDataLoader$]="pharmaciesListDataLoader$" 
       [pageSizes]="pageSizes" [sortValue]="sortValuePharmacies"
       [sortType]="sortType" [sort]="sortPharmaciesGrid" 
       (loadPharmaciesListsEvent)="loadPharmaciesLists($event)"  ></system-config-pharmacies-list>

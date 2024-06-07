@@ -10,8 +10,9 @@ import {
 } from '@angular/core'; 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
-import { GridDataResult } from '@progress/kendo-angular-grid';
-import { Subject } from 'rxjs';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { Subject, Subscription } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'system-config-pharmacies-list',
@@ -58,31 +59,49 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
   @Input() sortType: any;
   @Input() sort: any;
   @Input() pharmaciesDataLists$: any;
+  @Input() pharmaciesProfilePhoto$: any;
+  @Input() pharmaciesListDataLoader$: any;
   @Input() pharmaciesFilterColumn$: any;
   @Output() loadPharmaciesListsEvent = new EventEmitter<any>();
   @Output() pharmaciesFilterColumnEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
+  selectedSearchColumn = 'ALL';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
+  statusFilter: any;
   gridDataResult!: GridDataResult;
   isPharmaciesListGridLoaderShow = false;
-  gridPharmaciesDataSubject = new Subject<any>();
-  gridPharmaciesData$ =
-    this.gridPharmaciesDataSubject.asObservable();
+  paymentMethodLov$ = this.lovFacade.paymentMethodType$;
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  paymentMethodLovSubscription!: Subscription;
+  paymentMethodLovList: any;
+  paymentMethodFilter = '';
   /** Internal event methods **/
-  
+  columns: any = {
+    ALL: 'All Columns',
+    vendorName: "Vendor Name",
+    tin: "Tin",
+    npiNbr: "Npi Number",
+    accountingNbr: "Account Number",
+    paymentMethodCode: "Payment Method",
+    lastModificationTime: "Last Modified",
+    activeFlag: "Status",
+  };
+
+  /** Constructor **/
+  constructor(private lovFacade: LovFacade) {}
   
   ngOnInit(): void {
     this.loadPharmaciesList(); 
+    this.loadPaymentMethodLov();
   }
   ngOnChanges(): void {
     this.state = {
@@ -94,6 +113,17 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
     this.loadPharmaciesList();
   }
   
+  private loadPaymentMethodLov(){
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodLovSubscription = this.paymentMethodLov$.subscribe({
+      next:(response) => {
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
+        this.paymentMethodLovList = response;
+      }
+    });
+  }
+
+
   private loadPharmaciesList(): void {
     this.loadPharmaciesLitData(
       this.state?.skip ?? 0,
@@ -111,12 +141,12 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
     this.isPharmaciesListGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
+      maxResultCount: maxResultCountValue,
+      sorting: sortValue,
       sortType: sortTypeValue,
+      filter: this.filter !== null && this.filter !== '' ? JSON.stringify(this.filter) : null
     };
     this.loadPharmaciesListsEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
   }
   loadPharmaciesFilterColumn(){
     this.pharmaciesFilterColumnEvent.emit();
@@ -124,15 +154,15 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
   }
   onChange(data: any) {
     this.defaultGridState();
-  
+    let operator = 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedSearchColumn ?? 'vendorName',
+              operator: operator,
               value: data,
             },
           ],
@@ -153,6 +183,29 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
       filter: { logic: 'and', filters: [] },
     };
   }
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+
+    if (field === 'paymentMethodCode') {
+      this.paymentMethodFilter = value;
+    } else if (field === 'activeFlag') {
+      this.statusFilter = value;
+    }
+
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+  }
   
   onColumnReorder($event: any) {
     this.columnsReordered = true;
@@ -164,6 +217,20 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = this.columns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+
+    if (stateData.filter?.filters.length > 0) {
+      const filterList = [];
+      this.isFiltered = true;
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.isFiltered = false;
+    }
+
     this.loadPharmaciesList();
   }
   
@@ -178,24 +245,6 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
     this.filterData = filter;
   }
   
-  gridDataHandle() {
-    this.pharmaciesDataLists$.subscribe(
-      (data: GridDataResult) => {
-        this.gridDataResult = data;
-        this.gridDataResult.data = filterBy(
-          this.gridDataResult.data,
-          this.filterData
-        );
-        this.gridPharmaciesDataSubject.next(this.gridDataResult);
-        if (data?.total >= 0 || data?.total === -1) {
-          this.isPharmaciesListGridLoaderShow = false;
-        }
-      }
-    );
-    this.isPharmaciesListGridLoaderShow = false;
-  }
-
-
   /** Internal event methods **/
   onClosePharmaciesDetailClicked() {
     this.isPharmaciesDetailPopup = false;
