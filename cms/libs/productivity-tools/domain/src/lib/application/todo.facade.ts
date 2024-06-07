@@ -140,6 +140,7 @@ export class TodoFacade {
         this.curdAlertSubject.next(true);
         this.todoGridSubject.next(true);
         this.loadTodoListSubject.next(true); 
+        this.deleteReminderSnackbarSubject.next(payload)
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message);
         if(payload.entityId && payload.entityTypeCode)
           this.notificationStatsFacade.updateStats(payload.entityId, payload.entityTypeCode, StatsTypeCode.Alert);
