@@ -803,6 +803,7 @@ saveForLaterHeadterText!: string;
         break;
 
       case CommunicationEventTypeCode.VendorEmail:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.saveForLaterHeadterText = "Email Draft Saved";
@@ -812,6 +813,7 @@ saveForLaterHeadterText!: string;
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationEmail:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.templateHeader = 'CER Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
@@ -821,6 +823,7 @@ saveForLaterHeadterText!: string;
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
         break;
       case CommunicationEventTypeCode.ApplicationAuthorizationEmail:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
@@ -831,6 +834,7 @@ saveForLaterHeadterText!: string;
         break;
 
       default:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.saveForLaterHeadterText = "Email Draft Saved";

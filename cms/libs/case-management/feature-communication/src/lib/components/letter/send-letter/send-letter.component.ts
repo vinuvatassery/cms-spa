@@ -723,6 +723,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
 
       case CommunicationEventTypeCode.VendorLetter:
+        this.snackBarMessage = 'Letter generated! An event has been logged.';
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
         this.saveForLaterHeadterText = "Letter Draft Saved";
@@ -732,6 +733,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationLetter:
+        this.snackBarMessage = 'Letter generated! An event has been logged.';
         this.templateHeader = 'CER Authorization Letter';
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
         this.saveForLaterHeadterText = "Send CER Authorization Letter Later?";
@@ -741,6 +743,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         break;
 
       case CommunicationEventTypeCode.ApplicationAuthorizationLetter:
+        this.snackBarMessage = 'Letter generated! An event has been logged.';
         this.templateHeader = 'Application Authorization Letter';
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
         this.saveForLaterHeadterText = "Send Authorization Letter Later?";
