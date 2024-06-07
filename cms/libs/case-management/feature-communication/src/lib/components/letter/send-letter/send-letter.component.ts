@@ -832,6 +832,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     draftTemplate.entity = this.communicationLetterTypeCode;
     let formData = this.communicationFacade.prepareEsignLetterData(draftTemplate, this.entityId, this.loginUserId, this.cerEmailAttachedFiles, this.entityType);
+    let {templateTypeCode} = this.getApiTemplateTypeCode();
+    formData.append('templateTypeCode', templateTypeCode);
     this.communicationFacade.saveEsignLetterForLater(formData)
         .subscribe({
           next: (data: any) =>{
