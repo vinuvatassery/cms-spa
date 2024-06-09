@@ -83,7 +83,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
     this.notificationSmsSubscriptionInit();
     this.formatContent();
     this.content = this.data;
-    this.sanitizedHtml = this.content; // NOSONAR
+    this.sanitizedHtml = this.content;
 
   }
 
