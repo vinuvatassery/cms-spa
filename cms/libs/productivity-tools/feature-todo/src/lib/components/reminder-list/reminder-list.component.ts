@@ -90,6 +90,7 @@ export class ReminderListComponent implements  OnInit{
   selectedAlertId:string="";
   isEdit = false;
   isDelete = false;
+  isShowSection = false;
   searchTerm = new FormControl();
   reminderCrudText ="Create New"
   public toDoGridState!: State;
@@ -250,6 +251,7 @@ export class ReminderListComponent implements  OnInit{
      return isCrossedDueDate;
   }
   private loadTodoGridData(){
+      this.isShowSection = false;
       this.itemsLoader=true;
         this.isLoadTodoGridEvent.emit();
         this.loadTodoList$?.subscribe((todoItemList : any) =>{
@@ -263,6 +265,9 @@ export class ReminderListComponent implements  OnInit{
           let validDate = new Date(new Date().setDate(currentDate.getDate() +30));
           validDate.setHours(0,0,0,0);
           this.todoItemList = this.todoItemList.filter(todoItem => this.checkDates(todoItem));
+           if(this.todoItemList.length > 0){
+            this.isShowSection = true
+          }
           this.todoItemList.forEach((todoItem:any)=>{
           
             let todayDate = new Date();
@@ -334,6 +339,7 @@ export class ReminderListComponent implements  OnInit{
   }
   onDoneTodoItem(){
     this.onMarkAlertAsDoneGridClicked.emit(this.selectedAlertId);
+    this.loadTodoGrid();
   }
   onDeleteToDOClicked(result: any) 
   {
@@ -341,6 +347,7 @@ export class ReminderListComponent implements  OnInit{
       this.isToDODeleteActionOpen = false;
       this.deleteToDoDialog.close();
       this.onDeleteAlertGridClicked.emit(this.selectedAlertId);
+      this.loadTodoGrid();
     }
   }
   public get entityTypes(): typeof ToDoEntityTypeCode {
