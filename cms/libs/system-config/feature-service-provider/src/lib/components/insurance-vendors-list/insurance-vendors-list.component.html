@@ -17,7 +17,7 @@
 
             <!-- Table header show only in list -->
             <div class="flex-col">
-                  <p class="pt-1">Add, edit or deactivate Insurance Vendors.</p>
+                  <p class="pt-1">Add, edit, delete, deactivate, or reactivate Insurance Vendors.</p>
                   <div class="table-filter-section mat-form-no-b-space">
 
                         <span class="filter-section_items filter--search">
@@ -28,10 +28,17 @@
                               </kendo-floatinglabel>
                         </span>
                         
-                              <button kendoButton [primary]="true" look="flat" aria-label="Export" class="system-export">
+                              <!-- <button kendoButton [primary]="true" look="flat" aria-label="Export" class="system-export">
                                     <span class="material-icons" aria-label="Export"
                                           aria-invalid="true">exit_to_app</span>Export
-                              </button>
+                              </button> -->
+                              <span class="right-overlay-export">
+                                    <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+                                      <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
+                                
+                                      <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
+                                    </button>
+                                  </span>
                         
                   </div>
             </div>
@@ -49,19 +56,64 @@
             [pageable]="true" [loading]="isInsVendorsListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
             [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
             (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
-                  <kendo-grid-column field="insuranceVendorName" title="Insurance Vendors Name" [width]="200">
+                  <kendo-grid-column field="vendorName" title="Insurance Vendors Name" [width]="200">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button"
+                                (click)="onVendorClicked(dataItem.vendorId)" *ngIf="dataItem.vendorName">
+                                {{ dataItem.vendorName }}
+                              </button>
+                            </ng-template>
+                            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                              <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                [extra]="false" operator="eq">
+                                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                              </kendo-grid-string-filter-menu>
+                            </ng-template>
                   </kendo-grid-column>
                   <kendo-grid-column field="tin" title="TIN" [width]="180">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              {{ dataItem.tin | tin }}
+                            </ng-template>
+                            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                              <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                [extra]="false" operator="eq">
+                                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                              </kendo-grid-string-filter-menu>
+                            </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="pmtMethod" title="Pmt.. Method" [width]="130">
+                  <kendo-grid-column field="paymentMethod" title="Pmt.. Method" [width]="130">
                   </kendo-grid-column> 
                   <kendo-grid-column field="runDate" title="Run Date" [width]="130">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              {{ dataItem.runDate | date : 'MM/dd/yyyy' }}
+                            </ng-template>
+                        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                              <common-grid-cell-date-range-filter
+                                [field]="'runDate'"
+                                [filter]="filter"
+                                [filterService]="filterService"
+                              >
+                              </common-grid-cell-date-range-filter>
+                            </ng-template>
                   </kendo-grid-column>  
-                  <kendo-grid-column field="mailCode" title="Mail Code" [width]="130">
-                  </kendo-grid-column>
-               
-
-                  <kendo-grid-column field="lastModified" title="Last Modified" [width]="130">
+                  <kendo-grid-column field="lastUpdatedOn" title="Last Modified" [width]="130">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              {{ dataItem.lastUpdatedOn | date : 'MM/dd/yyyy' }}
+                            </ng-template>
+                            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                              <common-grid-cell-date-range-filter
+                                [field]="'lastUpdatedOn'"
+                                [filter]="filter"
+                                [filterService]="filterService"
+                              >
+                              </common-grid-cell-date-range-filter>
+                            </ng-template>
                   </kendo-grid-column>
                   <kendo-grid-column field="modifiedBy" title="Modified By" [width]="100" class="text-center">
                         <ng-template kendoGridCellTemplate let-dataItem>
@@ -80,6 +132,9 @@
                         </ng-template>
                   </kendo-grid-column>
                   <kendo-grid-column field="status" title="Status" [width]="130">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              {{ dataItem.activeFlag === 'Y' ? 'Active' : 'Inactive' }}
+                            </ng-template>
                   </kendo-grid-column>
                   <kendo-grid-column field="" title="" [width]="50" class="text-center" [sticky]="true"
                         [columnMenu]="false">

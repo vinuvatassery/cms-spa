@@ -158,44 +158,59 @@ export class SystemConfigServiceProvidersDataService {
       },
     ]);
   }
-  loadInsuranceVendorsListsService() {
-    return of([
-      {
-        id: 1,
-        insuranceVendorName: 'A insuranceVendorName 1',
-        tin: 'XXXXXXXX',
-        pmtMethod: 'Check',
-        runDate: 'MM/DD/YYYY',
-        mailCode: 'XXXXXXXX',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-        status: 'Active',
-      },
-      {
-        id: 2,
-        insuranceVendorName: 'A insuranceVendorName 1',
-        tin: 'XXXXXXXX',
-        pmtMethod: 'Check',
-        runDate: 'MM/DD/YYYY',
-        mailCode: 'XXX, XXX, XXXX',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-        status: 'Active',
+  loadInsuranceVendorsListsService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, vendorTypeCode: string,filter : string )
+  {
+    const VendorPageAndSortedRequest =
+    {
+      vendorTypeCode: vendorTypeCode,
+      SortType : sortType,
+      Sorting : sort,
+      SkipCount : skipcount,
+      MaxResultCount : maxResultCount,
+      Filter : filter
+    }
 
-      },
-      {
-        id: 3,
-        insuranceVendorName: 'A insuranceVendorName 1',
-        tin: 'XXXXXXXX',
-        pmtMethod: 'Check',
-        runDate: 'MM/DD/YYYY',
-        mailCode: 'XXXXXXXX',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-        status: 'Active',
-      },
-    ]);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`, VendorPageAndSortedRequest);
   }
+
+  // loadInsuranceVendorsListsService() {
+  //   return of([
+  //     {
+  //       id: 1,
+  //       insuranceVendorName: 'A insuranceVendorName 1',
+  //       tin: 'XXXXXXXX',
+  //       pmtMethod: 'Check',
+  //       runDate: 'MM/DD/YYYY',
+  //       mailCode: 'XXXXXXXX',
+  //       lastModified: 'MM/DD/YYYY',
+  //       modifiedBy: 'LS',
+  //       status: 'Active',
+  //     },
+  //     {
+  //       id: 2,
+  //       insuranceVendorName: 'A insuranceVendorName 1',
+  //       tin: 'XXXXXXXX',
+  //       pmtMethod: 'Check',
+  //       runDate: 'MM/DD/YYYY',
+  //       mailCode: 'XXX, XXX, XXXX',
+  //       lastModified: 'MM/DD/YYYY',
+  //       modifiedBy: 'LS',
+  //       status: 'Active',
+
+  //     },
+  //     {
+  //       id: 3,
+  //       insuranceVendorName: 'A insuranceVendorName 1',
+  //       tin: 'XXXXXXXX',
+  //       pmtMethod: 'Check',
+  //       runDate: 'MM/DD/YYYY',
+  //       mailCode: 'XXXXXXXX',
+  //       lastModified: 'MM/DD/YYYY',
+  //       modifiedBy: 'LS',
+  //       status: 'Active',
+  //     },
+  //   ]);
+  // }
   loadInsuranceProvidersListsService() {
     return of([
       {

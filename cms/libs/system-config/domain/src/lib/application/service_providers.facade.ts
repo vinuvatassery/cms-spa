@@ -165,13 +165,32 @@ export class SystemConfigServiceProviderFacade {
     });
   }
 
-  loadInsuranceVendorsLists() {
-    this.systemConfigServiceProvidersDataService.loadInsuranceVendorsListsService().subscribe({
-      next: (loadInsuranceVendorsListsService) => {
-        this.loadInsuranceVendorsListsServiceSubject.next(loadInsuranceVendorsListsService);
+  // loadInsuranceVendorsLists(skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorTypeCode: string, filter: string) {
+  //   this.systemConfigServiceProvidersDataService.loadInsuranceVendorsListsService(skipcount, maxResultCount, sort, sortType, vendorTypeCode, filter).subscribe({
+  //     next: (loadInsuranceVendorsListsService) => {
+  //       this.loadInsuranceVendorsListsServiceSubject.next(loadInsuranceVendorsListsService);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+  //     },
+  //   });
+  // }
+  loadInsuranceVendorsLists(skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorTypeCode: string, filter: string): void {
+    debugger
+    filter = JSON.stringify(filter);
+    this.systemConfigServiceProvidersDataService.loadInsuranceVendorsListsService(skipcount, maxResultCount, sort, sortType, vendorTypeCode, filter).subscribe({
+      next: (vendorsResponse: any) => {
+        if (vendorsResponse) {
+          const gridView = {
+            data: vendorsResponse["items"],
+            total: vendorsResponse["totalCount"]
+          };
+          this.loadInsuranceVendorsListsServiceSubject.next(gridView);
+        }
+
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }

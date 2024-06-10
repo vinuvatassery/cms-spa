@@ -3,5 +3,7 @@
       [insVendorsDataLists$]="insVendorsService$" 
       [pageSizes]="pageSizes" [sortValue]="sortValueInsVendors"
       [sortType]="sortType" [sort]="sortInsVendorsGrid" 
-      (loadInsVendorsListsEvent)="loadInsVendorsLists($event)" ></system-config-insurance-vendors-list>
+      [exportButtonShow$]="exportButtonShow$"
+      (loadInsVendorsListsEvent)="loadInsVendorsLists($event)"
+      (exportGridDataEvent)="exportGridData()" ></system-config-insurance-vendors-list>
  

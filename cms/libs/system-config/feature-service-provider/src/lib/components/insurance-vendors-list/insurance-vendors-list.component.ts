@@ -6,11 +6,13 @@ import {
   Input,
   Output,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
  
 
@@ -60,8 +62,10 @@ export class InsuranceVendorsListComponent implements OnInit, OnChanges{
   @Input() sort: any;
   @Input() insVendorsDataLists$: any;
   @Input() insVendorsFilterColumn$: any;
+  @Input() exportButtonShow$ : any
   @Output() loadInsVendorsListsEvent = new EventEmitter<any>();
   @Output() insVendorsFilterColumnEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -70,6 +74,8 @@ export class InsuranceVendorsListComponent implements OnInit, OnChanges{
   searchValue = '';
   isFiltered = false;
   filter!: any;
+  showExportLoader = false;
+  vendorTypeCode = 'INSURANCE_VENDOR';
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   isInsVendorsListGridLoaderShow = false;
@@ -78,9 +84,15 @@ export class InsuranceVendorsListComponent implements OnInit, OnChanges{
     this.gridInsVendorsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
+  vendorNameTitle ="Vendor Name"
+  vendorNameTitleDataSubject = new Subject<any>();
+vendornameTitleData$ = this.vendorNameTitleDataSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   /** Internal event methods **/
-  
+  constructor(private route: Router,
+    private readonly  cdr :ChangeDetectorRef,
+  ) {
+  }
   
   ngOnInit(): void {
     this.loadInsVendorsList(); 
@@ -99,15 +111,16 @@ export class InsuranceVendorsListComponent implements OnInit, OnChanges{
     this.loadInsVendorsLitData(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
+      this.sortColumn,
+      this.sortType,
+
     );
   }
   loadInsVendorsLitData(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
-    sortTypeValue: string
+    sortTypeValue: string,
   ) {
     this.isInsVendorsListGridLoaderShow = true;
     const gridDataRefinerValue = {
@@ -115,6 +128,8 @@ export class InsuranceVendorsListComponent implements OnInit, OnChanges{
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      vendorTypeCode:this.vendorTypeCode,
+      filter : this.state?.["filter"]?.["filters"] ?? []
     };
     this.loadInsVendorsListsEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -123,6 +138,8 @@ export class InsuranceVendorsListComponent implements OnInit, OnChanges{
     this.insVendorsFilterColumnEvent.emit();
   
   }
+  
+
   onChange(data: any) {
     this.defaultGridState();
   
@@ -188,6 +205,7 @@ export class InsuranceVendorsListComponent implements OnInit, OnChanges{
           this.filterData
         );
         this.gridInsVendorsDataSubject.next(this.gridDataResult);
+        this.vendorNameTitleDataSubject.next(this.vendorNameTitle)
         if (data?.total >= 0 || data?.total === -1) {
           this.isInsVendorsListGridLoaderShow = false;
         }
@@ -195,7 +213,16 @@ export class InsuranceVendorsListComponent implements OnInit, OnChanges{
     );
     this.isInsVendorsListGridLoaderShow = false;
   }
-
+  onVendorClicked(vendorId: any)
+  {
+    const query = {
+      queryParams: {
+        v_id: vendorId ,
+        tab_code :  this.vendorTypeCode
+      },
+    };
+    this.route.navigate(['/financial-management/vendors/profile'], query )
+  }
 
   /** Internal event methods **/
   onCloseInsuranceVendorsDetailClicked() {
@@ -216,5 +243,21 @@ export class InsuranceVendorsListComponent implements OnInit, OnChanges{
   }
   onInsuranceVendorsDeactivateClicked() {
     this.isInsuranceVendorsDeactivatePopupShow = true;
+  }
+  onClickedExport(){
+    debugger
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()
+
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+
+    })
   }
 }
