@@ -66,7 +66,7 @@ export class CasePageComponent implements OnInit {
     ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit() {
+  ngOnInit() {    
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.loadColumnDroplist();
     this.loadCases();
@@ -115,7 +115,7 @@ export class CasePageComponent implements OnInit {
   }
 
   /** Internal event methods **/
-  onTabSelected(e: any) {
+  onTabSelected(e: any) {    
     this.selectedTab = e.index;
     switch(this.selectedTab) {
       case CaseScreenTab.CER_TRACKING: {
@@ -173,7 +173,7 @@ export class CasePageComponent implements OnInit {
   }
 
   loadCasesListEventHandler(gridDataRefinerValue : any)
-  {
+  {    
       const gridDataRefiner =
       {
         caseScreenType: this.selectedTab,
