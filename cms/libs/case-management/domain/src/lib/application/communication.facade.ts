@@ -408,7 +408,7 @@ export class CommunicationFacade {
   prepareEsignLetterData(draftTemplate: any, entityId: any, loginUserId: string, cerEmailAttachedFiles: any[], entityType: string) {
     const formData = new FormData();
     let subTypeCode = draftTemplate?.subTypeCode ?? draftTemplate?.subtypeCode;
-    formData.append('documentTemplateId', this.nullCheck(draftTemplate?.documentTemplateId ));
+    formData.append('documentTemplateId', this.nullCheck(draftTemplate?.documentTemplateId ?? draftTemplate.notificationDraftId ));
     formData.append('typeCode',this.nullCheck(draftTemplate?.typeCode));
     formData.append('entityId',this.nullCheck(entityId));
     formData.append('entity', this.nullCheck(entityType));
@@ -416,7 +416,7 @@ export class CommunicationFacade {
     formData.append('loginUserId', this.nullCheck(loginUserId));
     formData.append('description', this.nullCheck(draftTemplate?.description));
     formData.append('requestBody', this.nullCheck(draftTemplate?.templateContent));
-    formData.append('notifcationDraftId',this.nullCheck(draftTemplate?.notifcationDraftId));
+    formData.append('notifcationDraftId',this.nullCheck(draftTemplate?.notificationDraftId));
     if (cerEmailAttachedFiles?.length > 0){
     let i = 0;
     cerEmailAttachedFiles.forEach((file: any) => {

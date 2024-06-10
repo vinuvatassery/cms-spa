@@ -24,7 +24,6 @@ import {
   NotificationDataFacade
 } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
@@ -150,7 +149,6 @@ export class NotificationPanelComponent implements OnInit {
     private loggingService: LoggingService,
     private dialogService: DialogService,
     private reminderFacade: ReminderFacade,
-    private sanitizer: DomSanitizer,
     private lovFacade: LovFacade,
     private financialVendorFacade: FinancialVendorFacade,
     private financialRefundFacade: FinancialVendorRefundFacade,
@@ -303,8 +301,8 @@ export class NotificationPanelComponent implements OnInit {
     );
   }
 
-  sanitizeHtml(html: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html); //NOSONAR
+  sanitizeHtml(html: string) {
+    return html;
   }
 
   searchClientName(event:any){

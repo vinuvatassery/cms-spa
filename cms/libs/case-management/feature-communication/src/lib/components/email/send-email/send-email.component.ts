@@ -21,8 +21,6 @@ import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { Router } from '@angular/router';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 @Component({
   selector: 'case-management-send-email',
@@ -149,11 +147,9 @@ saveForLaterHeadterText!: string;
     private readonly workflowFacade: WorkflowFacade,
     private readonly userDataService: UserDataService,
     private readonly esignFacade: EsignFacade,
-    private dialogService: DialogService,
     private readonly router: Router,
     private readonly vendorContactFacade: VendorContactsFacade,
     private readonly fabBadgeFacade: FabBadgeFacade,
-    private readonly sanitizer: DomSanitizer,
     public todoFacade: TodoFacade,) { }
 
   /** Lifecycle hooks **/
@@ -1092,8 +1088,8 @@ saveForLaterHeadterText!: string;
         },
       });
   }
-  private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
+  private getSanitizedHtml(currentEmailData: string) {
+    return currentEmailData;
   }
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
