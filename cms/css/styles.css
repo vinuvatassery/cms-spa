@@ -11452,7 +11452,12 @@ a {
         flex-wrap: wrap;
     gap: 10px;
   }
-  .complete_profile h5 {
-    margin-bottom: 0px;
+  .complete_profile {
+    h5 {
+      margin-bottom: 0px;
+    }
+    .app-checkboxwidtext-wrapper{
+      margin-left: 0px;
+    }
   }
 }

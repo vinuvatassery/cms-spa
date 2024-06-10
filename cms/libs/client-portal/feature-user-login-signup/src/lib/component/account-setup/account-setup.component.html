@@ -1421,7 +1421,7 @@
                                 <div class=" ac-block">
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-12">
-                                            <span class="app-checkboxwidtext-wrapper mt-4">
+                                            <span class="app-checkboxwidtext-wrapper">
                                                 <input type="checkbox" kendoCheckBox aria-labelledby="don’thaveaSSN"
                                                     id="don’thaveaSSN" />
                                                 <label class="k-checkbox-label" for="don’thaveaSSN">I am unhoused
@@ -1484,24 +1484,27 @@
                     <div *ngIf="current === 2">
 
                         <div class="client-data-block">
-                            <h3>Contact Info</h3>
+                            <h3 class="text-bold">Contact Information</h3>
                             <section>
                                 <div class="block-section">
 
 
-                                    <div class="flex-row">
-                                        <div class="flex-col mat-split-list mt-2">
-                                            <h5 class="text-capital">Mailing Address</h5>
-                                            <span class="app-checkboxwidtext-wrapper">
-
-                                                <input type="checkbox" id="check1" kendoCheckBox
-                                                    aria-labelledby="sameAsMailingAddress" id="check1" />
-                                                <label class="k-checkbox-label" for="check1">Same as Mailing
-                                                    Address</label>
-
-                                            </span>
+                                 
+                                    <div class="ac-block">
+                                        <div class="flex-row">
+                                            <div class="flex-col mat-split-list">
+                                                <h5 class="text-capital mt-0">Mailing Address</h5>
+                                                <span class="app-checkboxwidtext-wrapper">
+    
+                                                    <input type="checkbox" id="check1" kendoCheckBox
+                                                        aria-labelledby="sameAsMailingAddress" id="check1" />
+                                                    <label class="k-checkbox-label" for="check1">Same as Mailing
+                                                        Address</label>
+    
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
+                                  
                                     <div class="flex-row mt-1">
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Address Line 1">
@@ -1551,11 +1554,13 @@
                                         </div>
                                     </div>
 
-
+                                </div>
 
                                 </div>
                                 <div class="block-section">
-                                    <h5 class="text-capital mt-3 pt-2 mb-0">Phone & Email</h5>
+                                    <div class="ac-block">
+                                    <h5 class="text-capital mt-3 mb-0">Phone & Email</h5>
+
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Home Phone">
@@ -1751,11 +1756,13 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
                                 </div>
                                 <div class="block-section">
+                                    <div class="ac-block">
                                     <div class="flex-row">
-                                        <div class="flex-col mat-split-list mt-2">
-                                            <h5 class="text-capital">Friends or Family Contact</h5>
+                                        <div class="flex-col mat-split-list">
+                                            <h5 class="text-capital mt-0">Friends or Family Contact</h5>
                                             <span class="app-checkboxwidtext-wrapper">
                                                 <input type="checkbox" id="check19" kendoCheckBox
                                                     aria-labelledby="noFriendsOrFamily" />
@@ -1787,6 +1794,7 @@
                                                     [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
                                             </kendo-floatinglabel>
                                         </div>
+                                    </div>
                                     </div>
                                     <div class="stepper_btn_wrap">
                                         <button kendoButton [primary]="true" (click)="previousProcess()" look="outline">
