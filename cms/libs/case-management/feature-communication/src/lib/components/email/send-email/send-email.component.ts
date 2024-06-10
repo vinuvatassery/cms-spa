@@ -473,7 +473,7 @@ saveForLaterHeadterText!: string;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
-    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -672,7 +672,7 @@ saveForLaterHeadterText!: string;
       this.isFormValid = false;
       this.onSendEmailDailougeConfirmationClicked();
     }
-    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -1252,7 +1252,7 @@ saveForLaterHeadterText!: string;
 
   editorValueChange(event: any) {
     this.updatedTemplateContent = event;
-    if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<p></p>')){
+    if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<div style="width:100%;word-break: break-word;"><p></p></div>')){
       this.isContentMissing = false;
     }
     this.ref.detectChanges();
