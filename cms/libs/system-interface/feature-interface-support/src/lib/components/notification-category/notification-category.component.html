@@ -127,7 +127,7 @@
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isNotificationCategoryDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar (close)="onCloseNotificationCategoryDeleteClicked()"> Delete?</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar (close)="onCloseNotificationCategoryDeleteClicked()"> Error Confirmation</kendo-dialog-titlebar>
       <remove-notification-category (close)="onCloseNotificationCategoryDeleteClicked()"
             (deleteConfimEvent)="handleNotificationCategoryDelete($event)"></remove-notification-category>
 
