@@ -11,9 +11,9 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { WidgetFacade } from '@cms/dashboard/domain';
-import { NotificationDataFacade } from '@cms/shared/util-core';
+import { NotificationDataFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, catchError, forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'dashboard-widget-today-at-a-glance',
@@ -22,6 +22,10 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
   todayGlance: any;
+  todayGlanceTodo: any;
+  todayGlanceNotification: any;
+  todayGlanceReminder: any;
+  todayGlancedirectMessages: any;
   private notificationReminderDialog: any;
   private destroy$ = new Subject<void>();
   @Input() isEditDashboard!: any;
@@ -49,15 +53,100 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
   loadTodayGlance() {
-    this.widgetFacade.loadTodayGlance();
-    this.widgetFacade.todayGlance$.pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response) => {
-        if (response) {
-          this.todayGlance = response;
-          this.cd.detectChanges()
-        }
-      },
+    
+    const todayGlance = forkJoin({
+      todo:  this.loadTodayGlanceTodo(),
+      reminders: this.loadTodayGlanceReminders(),
+      notifications: this.loadTodayGlanceNotifications(),
+      assignedClients : this.loadTodayGlanceAssignedClients(),
+      directMessageCount : this.loadTodayGlanceDirectMessageCount()
     });
+
+    todayGlance.subscribe((response: any) => {
+      if (response) {
+         this.todayGlanceTodo = response.todo
+         this.todayGlanceReminder = response.reminders
+         this.todayGlanceNotification = response.notifications
+         this.todayGlance = response.assignedClients
+         this.todayGlancedirectMessages = response.directMessageCount
+         this.cd.detectChanges()
+      }
+    })
+
+  }
+
+  loadTodayGlanceDirectMessageCount(){
+    return this.widgetFacade.loadTodayGlanceDirectMessageCount().pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.widgetFacade.showSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(0);      
+        }
+        return of(0);      
+      })
+    );
+  }
+  loadTodayGlanceAssignedClients(){
+    return this.widgetFacade.loadTodayGlance().pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.widgetFacade.showSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(0);      
+        }
+        return of(0);      
+      })
+    );
+  }
+
+  loadTodayGlanceReminders(){
+    return this.widgetFacade.loadTodayGlanceReminders().pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.widgetFacade.showSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(0);      
+        }
+        return of(0);      
+      })
+    );
+  }
+
+  loadTodayGlanceNotifications(){
+    return this.widgetFacade.loadTodayGlanceNotification().pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.widgetFacade.showSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(0);      
+        }
+        return of(0);      
+      })
+    );
+  }
+
+  loadTodayGlanceTodo() {
+    return this.widgetFacade.loadTodayGlanceTodo().pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.widgetFacade.showSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(0);      
+        }
+        return of(0);      
+      })
+    );
   }
 
   loadPendingApprovalsCount()
@@ -84,7 +173,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
 
   directMessagesNavigate()
   {
-    this.router.navigate([`/productivity-tools/direct-message`]);
+    this.router.navigate([`/productivity-tools/direct-message/list`]);
   }
 
   remindersNavigate(tab: any)

@@ -108,6 +108,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       medicareCoverageTypeCode: [''],
       medicarePartAStartDate: [''],
       medicarePartBStartDate: [''],
+      medicareEndDate:[''],
       onQmbFlag: [''],
       onLisFlag: [''],
       othersCoveredOnPlanFlag: [''],

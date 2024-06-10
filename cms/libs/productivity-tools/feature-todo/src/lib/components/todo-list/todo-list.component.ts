@@ -118,7 +118,7 @@ export class TodoListComponent implements OnInit {
     this.loadColumnsData();
    
     this.todoGrid$.subscribe((data: any) => {
-      if(data){
+      if(data=== true){
         this.loadTodoGrid();
       } 
     });
@@ -231,7 +231,7 @@ export class TodoListComponent implements OnInit {
             [this.entityTypes.Pharmacy]: '/financial-management/pharmacy-claims/batch',
         } as const;
     
-        const entityType = gridItem.displayEntityTypeCode;
+        const entityType = gridItem.displayEntityTypeCode!.toUpperCase();
         const urlPath = urlPaths[entityType as keyof typeof urlPaths];
     
         if (urlPath) {

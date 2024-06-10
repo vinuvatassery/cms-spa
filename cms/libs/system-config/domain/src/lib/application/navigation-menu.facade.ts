@@ -29,6 +29,9 @@ export class NavigationMenuFacade {
   private pendingApprovalGeneralCountSubject = new Subject<any>();
   pendingApprovalGeneralCount$ = this.pendingApprovalGeneralCountSubject.asObservable();
 
+  private todoItemCountSubject = new Subject<any>();
+  todoItemCount$ = this.todoItemCountSubject.asObservable();
+
   private pendingApprovalImportedClaimCountSubject = new Subject<any>();
   pendingApprovalImportedClaimCount$ = this.pendingApprovalImportedClaimCountSubject.asObservable();
 
@@ -109,6 +112,20 @@ export class NavigationMenuFacade {
       {
         next: (count: any) => {
             this.pendingApprovalGeneralCountSubject.next(count);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      }
+    );
+  }
+
+  getTodoItemCount() {
+    this.navigationMenuService.getTodoItemCount()
+    .subscribe(
+      {
+        next: (count: any) => {
+            this.todoItemCountSubject.next(count);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)

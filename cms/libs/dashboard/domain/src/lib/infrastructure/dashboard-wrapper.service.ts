@@ -58,7 +58,7 @@ export class DashboardWrapperService {
       minItemArea: 1,
       setGridSize: true,
       useBodyForBreakpoint: false,
-      fixedRowHeight: 38,
+      fixedRowHeight: 33,
       disableWindowResize: false,
       disableWarnings: true,
       scrollSpeed: 10,

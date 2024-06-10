@@ -134,6 +134,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
   insuranceStartDateIslessthanEndDate: boolean = true;
   insuranceEndDateIsgreaterthanStartDate: boolean = false;
   endDateMin!: Date;
+  medicareEndDateMin!:Date;
   dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
   selectedClaimType = FinancialVendorTypeCode.MedicalProviders;
   insuranceTypeCode = InsuranceTypeCode.Medical;
@@ -390,6 +391,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       this.healthInsuranceForm.controls['medicarePartBStartDate'].setValue(
         healthInsurancePolicy.medicarePartBStartDate != null ? new Date(healthInsurancePolicy.medicarePartBStartDate) : null
       );
+
+      this.healthInsuranceForm.controls['medicareEndDate'].setValue(
+        healthInsurancePolicy.medicareEndDate != null ? new Date(healthInsurancePolicy.medicareEndDate) : null
+      );
+
       this.healthInsuranceForm.controls['onLisFlag'].setValue(
         healthInsurancePolicy.onLisFlag
       );
@@ -1147,6 +1153,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
     this.healthInsurancePolicy.medicareBeneficiaryIdNbr = this.healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].value;
     this.healthInsurancePolicy.medicareCoverageTypeCode = this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value;
+    if(!this.medicareInsuranceInfoCheck && this.healthInsuranceForm.controls['medicareEndDate'].value !== null){
+      this.healthInsurancePolicy.medicareEndDate = this.intl.formatDate(this.healthInsuranceForm.controls['medicareEndDate'].value, this.dateFormat);
+    }
+    else {
+      this.healthInsurancePolicy.medicareEndDate = null;
+    }
     if (this.healthInsuranceForm.controls['medicarePartAStartDate'].value !== null) {
 
       this.healthInsurancePolicy.medicarePartAStartDate = this.intl.formatDate(this.healthInsuranceForm.controls['medicarePartAStartDate'].value, this.dateFormat);
@@ -1287,6 +1299,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     else {
       this.medicareInsuranceInfoCheck = false;
     }
+    this.medicareEndDateOnChange();
   }
   save() {
     this.validateForm();
@@ -1297,17 +1310,25 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
   }
 
   getPolicySubscription() {
-    this.policySubscription = this.insurancePolicyFacade.currentEligibilityPolicies$.subscribe((policies: any)=> {
+    this.policySubscription = this.insurancePolicyFacade.currentEligibilityPolicies$.subscribe((policies: any) => {
       if (this.isEdit && !this.isCopyPopup) {
         policies = policies.filter((x: any) => x.clientInsurancePolicyId !== this.healthInsuranceForm.controls['clientInsurancePolicyId'].value);
-      } 
+      }
+      let policyAlreadyExist = this.policyExistCheck(policies);
 
-      let policyAlreadyExist =this.policyExistCheck(policies);
-      
+      let primaryAlreadyExist = this.primaryExistCheck(policies);
+
       if (policyAlreadyExist) {
         this.insurancePolicyFacade.showHideSnackBar(
           SnackBarNotificationType.ERROR,
           'This Plan already exists.', NotificationSource.UI
+        );
+        this.insurancePolicyFacade.hideLoader();
+      }
+      else if(primaryAlreadyExist){
+        this.insurancePolicyFacade.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          'Primary insurance already exists.', NotificationSource.UI
         );
         this.insurancePolicyFacade.hideLoader();
       }
@@ -1425,6 +1446,57 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     if (bStart < aStart && aEnd < bEnd) return true;
     return false;
   }
+
+  primaryExistCheck(policies: any): boolean {
+    let policyOverlap = false;
+    if (this.isEdit) {
+      let endDateField = 'insuranceEndDate';
+      if (this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "A" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "B" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "AB") {
+        endDateField = 'medicareEndDate'
+      }
+      let policyExist = policies.filter((x: any) => x.priorityCode == PriorityCode.Primary);
+      if (this.healthInsuranceForm.controls[endDateField].value == null) {        
+        if (policyExist.length > 0) {
+          return true;
+        }        
+      }
+      else {        
+        policyOverlap = this.checkDateOverlapForThePolicy(policyExist, endDateField);
+        return policyOverlap;
+      }
+      return policyOverlap;
+    }
+    return policyOverlap;
+
+  }
+
+  checkDateOverlapForThePolicy(policyExist:any, endDateField:any): boolean {
+    let policyOverlap = false;
+    let startDateField = 'insuranceStartDate';
+        if (this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "A" || this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "AB") {
+          startDateField = 'medicarePartAStartDate'
+        }
+        if (this.healthInsuranceForm.controls['medicareCoverageTypeCode']?.value === "B") {
+          startDateField = 'medicarePartBStartDate'
+        }
+        let startDate = this.intl.formatDate(this.healthInsuranceForm.controls[startDateField].value, this.dateFormat);
+        let endDate = this.intl.formatDate(this.healthInsuranceForm.controls[endDateField].value, this.dateFormat);
+        policyExist.forEach((policy: any) => {
+          let policyStartDate = this.intl.formatDate(new Date(policy.startDate), this.dateFormat);
+          let policyEndDate = this.intl.formatDate(new Date(policy.endDate), this.dateFormat);
+          if (policy.endDate == null) {
+            policyOverlap = true;
+          }
+          else {
+            let policyOverlapped = this.dateRangeOverlaps(new Date(policyStartDate), new Date(policyEndDate), new Date(startDate), new Date(endDate));
+            if (policyOverlapped) {
+              policyOverlap = policyOverlapped;
+            }
+          }
+        });
+
+        return policyOverlap;
+  }
   private SaveCopiedInsurancePolicy() {
     this.healthInsurancePolicy.clientInsurancePolicyId = this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
     this.insurancePolicyFacade.copyHealthInsurancePolicy(this.healthInsurancePolicy.clientInsurancePolicyId, this.healthInsurancePolicy)
@@ -1477,6 +1549,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       this.healthInsuranceForm.controls["medicareBeneficiaryIdNbr"].disable();
       this.healthInsuranceForm.controls["medicareCoverageTypeCode"].disable();
       this.healthInsuranceForm.controls["medicarePartAStartDate"].disable();
+      this.healthInsuranceForm.controls["medicareEndDate"].disable();
       this.healthInsuranceForm.controls["medicarePartBStartDate"].disable();
       this.healthInsuranceForm.controls["onQmbFlag"].disable();
       this.healthInsuranceForm.controls["premiumPaidThruDate"].disable();
@@ -1514,6 +1587,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       this.healthInsuranceForm.controls["medicareBeneficiaryIdNbr"].enable()
       this.healthInsuranceForm.controls["medicareCoverageTypeCode"].enable();
       this.healthInsuranceForm.controls["medicarePartAStartDate"].enable()
+      this.healthInsuranceForm.controls["medicareEndDate"].enable();
       this.healthInsuranceForm.controls["medicarePartBStartDate"].enable();
       this.healthInsuranceForm.controls["onQmbFlag"].enable();
       this.healthInsuranceForm.controls["premiumPaidThruDate"].enable();
@@ -1575,13 +1649,72 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
         this.endDateMin = this.healthInsuranceForm.controls['insuranceStartDate'].value;
       }
     }
-  }
+  } 
+
   endDateValueChange(date: Date) {
     this.insuranceEndDateIsgreaterthanStartDate = false;
 
   }
   public addNewInsurancePlanOpen(): void {
     this.isaddNewInsurancePlanOpen = true;
+  }
+
+  medicareEndDateOnChange() {
+    let dateToConsider = '';
+    if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("A") && this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("B")) {
+      dateToConsider = 'medicarePartAStartDate'
+    }
+    else if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("A")) {
+      dateToConsider = 'medicarePartAStartDate';
+
+    }
+    else if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("B")) {
+      dateToConsider = 'medicarePartBStartDate';
+    }
+
+    if (this.healthInsuranceForm.controls[dateToConsider].value != null && this.healthInsuranceForm.controls['medicareEndDate'].value != null) {
+      const startDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.healthInsuranceForm.controls[dateToConsider].value
+        )
+      );
+      const endDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.healthInsuranceForm.controls['medicareEndDate'].value
+        )
+      );
+
+      if (startDate > endDate) {
+        this.healthInsuranceForm.controls['medicareEndDate'].setErrors({ 'incorrect': true });
+      }
+      else {
+        this.healthInsuranceForm.controls['medicareEndDate'].setErrors(null);
+        this.changeMedicareMinDate();
+      }
+    }
+    else{
+      this.healthInsuranceForm.controls['medicareEndDate'].setErrors(null);
+    }
+    this.changeDetector.detectChanges();
+  }
+
+  medicareStartDateOnChange() {
+    if (this.healthInsuranceForm.controls['medicareEndDate'].value !== null) {
+      this.medicareEndDateOnChange();
+    }
+  }
+
+  changeMedicareMinDate() {
+    if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("A") && this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("B")) {
+      this.medicareEndDateMin = this.healthInsuranceForm.controls['medicarePartAStartDate'].value;
+    }
+    else if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("A")) {
+      this.medicareEndDateMin = this.healthInsuranceForm.controls['medicarePartAStartDate'].value;
+
+    }
+    else if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("B")) {
+      this.medicareEndDateMin = this.healthInsuranceForm.controls['medicarePartBStartDate'].value;
+    }
   }
 
   public handleFileSelected(event: any, fileType: string) {
@@ -1648,23 +1781,25 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     }
   }
 
-  public handleFileRemoved(files: any, fileType: string, resetId?: boolean) {
-    if (files?.files?.length > 0 && !!files?.files[0]?.uid) {
-      this.insurancePolicyFacade.showLoader();
-      this.clientDocumentFacade.removeDocument(files?.files[0]?.uid ?? '').subscribe({
-        next: (response) => {
-          if (response === true) {
-            this.onFileRemove(fileType);
+          processFile(files: any,fileType :string)
+          {
+            this.insurancePolicyFacade.showLoader();
+            this.clientDocumentFacade.removeDocument(files?.files[0]?.uid ?? '').subscribe({
+              next: (response) => {
+                if (response === true) {
+                  this.onFileRemove(fileType);
+                }
+                this.insurancePolicyFacade.hideLoader();
+              },
+              error: (err) => {
+                this.loggingService.logException(err);
+                this.insurancePolicyFacade.hideLoader();
+              },
+            });
           }
-          this.insurancePolicyFacade.hideLoader();
-        },
-        error: (err) => {
-          this.loggingService.logException(err);
-          this.insurancePolicyFacade.hideLoader();
-        },
-      });
-    }
-    else {
+
+     processNonFile(fileType: string, resetId?: boolean)
+     {
       if (fileType == 'proof') {
         this.proofOfPremiumFiles = [];
         this.isProofFileUploaded = false;
@@ -1685,8 +1820,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
         this.copyOfMedicareCardFiles = [];
         this.isMedicareCardFileUploaded = false;
       }
-    }
-  }
+     }
+
+      public handleFileRemoved(files: any, fileType: string, resetId?: boolean) {
+        if (files?.files?.length > 0 && !!files?.files[0]?.uid) {
+            this.processFile(files,fileType)
+        }
+        else {
+              this.processNonFile(fileType,resetId)
+        }
+      }
+
+
+
   handleTypeCodeEvent(e: any) {
     this.cICTypeCode = e;
   }

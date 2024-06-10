@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { EventLogFacade, EventTypeCode } from '@cms/productivity-tools/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -74,7 +73,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
   confirmationButtonText: string = 'Re-Send';
   isConfirmationDialogVisible:any;
 
-  constructor(private sanitizer: DomSanitizer, private dialogService: DialogService, private readonly eventLogFacade: EventLogFacade,
+  constructor(private dialogService: DialogService, private readonly eventLogFacade: EventLogFacade,
     private readonly cdr: ChangeDetectorRef,
   ) { }
 
@@ -84,7 +83,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
     this.notificationSmsSubscriptionInit();
     this.formatContent();
     this.content = this.data;
-    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.content);
+    this.sanitizedHtml = this.content;
 
   }
 
@@ -130,7 +129,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
           url: itemDataArray[0],
           text: itemDataArray[1],
           title: itemDataArray[1],
-          sanitizedHtml: this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]),
+          sanitizedHtml: itemDataArray[1],
           isBaseUrlFlag: false,
           isFilePathUrl: true
         }
@@ -148,7 +147,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
           url: itemDataArray[0].replace(this.baseUrl, window.location.origin),
           text: itemDataArray[1],
           title: itemDataArray[1],
-          sanitizedHtml: this.sanitizer.bypassSecurityTrustHtml(itemDataArray[1]),
+          sanitizedHtml: itemDataArray[1],
           isBaseUrlFlag: true,
           isFilePathUrl: false
         }
@@ -160,7 +159,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
           url: "",
           text: item,
           title: "",
-          sanitizedHtml: this.sanitizer.bypassSecurityTrustHtml(item),
+          sanitizedHtml: item,
           isBaseUrlFlag: false,
           isFilePathUrl: false
         }
@@ -418,8 +417,8 @@ export class EventLogDescriptionComponent implements OnDestroy {
     }
   }
 
-  private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+  private getSanitizedHtml(currentEmailData: string) {
+    return currentEmailData;
   }
 
   openConfirmation() {

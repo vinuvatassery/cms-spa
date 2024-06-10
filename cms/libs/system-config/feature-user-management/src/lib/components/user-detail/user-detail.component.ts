@@ -13,8 +13,7 @@ import {
 } from '@angular/core';
 import { LovFacade, UserAccessType, UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { group } from '@angular/animations';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
@@ -61,6 +60,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   enteredPnumberValue: any;
   isRequestingPNumber: boolean = false;
   isPNumberAlreadyExists: boolean = false;
+  isAdUser: boolean = false;
+  isUserAlreadyExists = false;
   userDetailData: any;  
   userDetailRoles: any = [];
   userStatus$ = this.userManagementFacade.canUserBeDeactivated$;
@@ -167,9 +168,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     
     this.addUserResponse$.subscribe({
       next: (data) => {
-        if(data.status == 0){
+        if(data.status == 0 && data.message.toLowerCase().includes('pnumber')){
           this.isPNumberAlreadyExists = true;
-        } else {
+        } else if(data.status == 0 && data.message.toLowerCase().includes('user')) {
+          this.isUserAlreadyExists = true;
           this.isPNumberAlreadyExists = false;
         }
         this.cd.detectChanges();
@@ -187,13 +189,17 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           formControls["lastName"].setValue(data.lastName == null ? '' : data.lastName);
           formControls["email"].setValue(data.emailAddress);  
           formControls["jobTitle"].setValue(data.jobTitle == null ? '' : data.jobTitle);
-          formControls["adUserId"].setValue(data.userId == null ? '' : data.userId);  
+          formControls["adUserId"].setValue(data.userId == null ? '' : data.userId);
+          this.isAdUser = true;
+          this.changeFieldStateOfExternalUser(true);
         } else {
           formControls["firstName"].setValue('');
           formControls["lastName"].setValue('');
           formControls["email"].setValue('');  
           formControls["jobTitle"].setValue('');
           formControls["adUserId"].setValue('');
+          this.isAdUser = false;
+          this.changeFieldStateOfExternalUser(false);
         }
         this.cd.detectChanges();         
       },
@@ -263,7 +269,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       this.userFormGroup.controls["firstName"].disable();
       this.userFormGroup.controls["lastName"].disable();
       this.userFormGroup.controls["email"].disable();
-    }else{
+    }else if(!this.isAdUser){
       this.userFormGroup.controls["firstName"].enable();
       this.userFormGroup.controls["lastName"].enable();
       this.userFormGroup.controls["email"].enable();
@@ -276,6 +282,22 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       this.userFormGroup.controls["pNumber"].disable();
       this.userFormGroup.controls["userAccessType"].disable();
     }
+  }
+
+  changeFieldStateOfExternalUser(isDisable: boolean){
+    if(this.userRoleType == UserAccessType.Internal){
+      return;
+    }
+    if(isDisable){
+      this.userFormGroup.controls["firstName"].disable();
+      this.userFormGroup.controls["lastName"].disable();
+      this.userFormGroup.controls["email"].disable();
+    }else{
+      this.userFormGroup.controls["firstName"].enable();
+      this.userFormGroup.controls["lastName"].enable();
+      this.userFormGroup.controls["email"].enable();
+    }
+
   }
 
   navigateToDetails() {
@@ -342,6 +364,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.enteredPnumberValue = pNumber;
     this.isRequestingPNumber = true;
     this.isPNumberAlreadyExists = false;
+    this.isUserAlreadyExists = false;
     this.adUserPNumberData = null;
     this.userManagementFacade.searchPNumber(pNumber);
   }

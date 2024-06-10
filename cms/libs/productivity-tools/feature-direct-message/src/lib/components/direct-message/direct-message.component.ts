@@ -289,63 +289,61 @@ message:  JSON.stringify(clientMessage)
    async getListMessages() {
       this.messages = [];
     this.chatThreadClient = this.chatClient.getChatThreadClient(this.threadId);
-   const messages = <any>this.chatThreadClient?.listMessages({});
+   const messages = this.chatThreadClient?.listMessages({});
     if (!messages) {
       return;
     }
+    await this.prepareMessageList(messages)
+    this.messages.sort((a: any, b: any) => a.sequenceId - b.sequenceId);
+    const sortedMessages = this.messages;
+    this.changeDetection.detectChanges();
+     this.groupedMessages = this.groupBy(sortedMessages, (pet:any) => pet.pipedCreatedOn)
+    this.keys =  Object.keys(this.groupedMessages).sort()
+    this.scrollToBottom()
+    this.changeDetection.detectChanges()
 
-     for await (const message of messages) {
-         if (message.type == "text") {
+  }
+
+  getParsedMessage(parsedContent :any){
+   return this.checkJson(parsedContent.message)? JSON.parse(parsedContent.message) : parsedContent.message
+  }
+
+  getImageFromParsedContent(parsedContent :any){
+    return parsedContent.attachments ? parsedContent.attachments[0].url.split('/').pop() : undefined
+  }
+
+  getAttachmentFromParsedContent(parsedContent:any){
+    return  (parsedContent && parsedContent?.attachments)? parsedContent?.attachments : undefined
+  }
+  async prepareMessageList(messages :any){
+    
+    for await (const message of messages) {
+      if (message.type == "text") {
         let messageObj = this.messages.find((x:any) => x.id == message.id);
+        if (!messageObj) {
         if(this.checkJson(message.content.message)) {
-          let parsed = JSON.parse(message.content.message);
-          let mesg =this.checkJson(parsed.message)? JSON.parse(parsed.message) : parsed.message
-          if (messageObj) {
-            messageObj  = {
-              id: message.id,
-              sequenceId :message.sequenceId,
-              sender: message.senderDisplayName,
-              message: mesg.message,
-              isOwner: message.sender?.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
-              createdOn: message.createdOn,
-              formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
-              pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
-              image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined
-            };
-          }
-          else {
-
+          let parsedContent = JSON.parse(message.content.message);
+          let mesg = this.getParsedMessage(parsedContent)
+    
             let msg = {
               id: message.id,
               sequenceId :message.sequenceId,
               sender: message.senderDisplayName,
-              message: mesg.message ?? mesg.message,
+              message: mesg.message,
               isOwner: message.sender.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
               createdOn: message.createdOn,
               formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
               pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
-              image: parsed.attachments ? parsed.attachments[0].url.split('/').pop() : undefined,
-              attachments: (parsed && parsed?.attachments)? parsed?.attachments : undefined,
+              image: this.getImageFromParsedContent(parsedContent),
+              attachments: this.getAttachmentFromParsedContent(parsedContent),
               loginUserId : mesg.loginUserId,
               senderDisplayName : message.senderDisplayName
             };
             this.messages.push(msg);
-          }
+          
         }
         else {
-          if (messageObj) {
-            messageObj = {
-              id: message.id,
-              sequenceId :message.sequenceId,
-              sender: message.senderDisplayName,
-              message: message.content?.message,
-              isOwner: message.sender?.communicationUserId == this.communicationDetails.loginUserCommunicationUserId,
-              createdOn: message.createdOn,
-              formattedCreatedOn :  this.intl.formatDate(message.createdOn,this.dateFormat),
-              pipedCreatedOn: this.datePipe.transform(message.createdOn,'EEEE, MMMM d, y'),
-            };
-          }
-          else {
+       
             let msg = {
               id: message.id,
               sequenceId :message.sequenceId,
@@ -361,25 +359,15 @@ message:  JSON.stringify(clientMessage)
           }
         }
       }
-
-
+      }
     }
-    this.messages.sort((a: any, b: any) => a.sequenceId - b.sequenceId);
-    const sortedMessages = this.messages;
-    this.changeDetection.detectChanges();
-     this.groupedMessages = this.groupBy(sortedMessages, (pet:any) => pet.pipedCreatedOn)
-    this.keys =  Object.keys(this.groupedMessages).sort()
-    this.scrollToBottom()
-    this.changeDetection.detectChanges()
-
-  }
 
    mySortingFunction = (a :any, b:any) => {
     return a.value?.sequenceId- b.value?.sequenceId;
   }
 
-  getVlauesWithKey(value :any[] | unknown){
-    return value as unknown as any[]
+  getVlauesWithKey(value :any[] | unknown) {
+    return value as unknown as any[] //NOSONAR
   }
 
    groupBy(list:any[], keyGetter:any) {

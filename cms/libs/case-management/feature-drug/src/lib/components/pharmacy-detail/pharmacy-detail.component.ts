@@ -11,10 +11,10 @@ import {
 import { FormGroup, FormBuilder } from '@angular/forms';
 /** Facades **/
 import { Pharmacy, DrugPharmacyFacade, FinancialVendorFacade, ContactFacade } from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { Observable } from 'rxjs';
 @Component({
   selector: 'case-management-pharmacy-detail',
@@ -49,9 +49,11 @@ export class PharmacyDetailComponent implements OnInit {
   medicalProviderForm: FormGroup;
   ddlStates = this.contactFacade.ddlStates$;
   hasPharmacyCreateUpdatePermission:boolean = false;
+  permissionLevels:any[]=[];
   constructor(private drugPharmacyFacade: DrugPharmacyFacade, private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef, private userManagementFacade: UserManagementFacade,
-    private financialVendorFacade: FinancialVendorFacade,private readonly contactFacade: ContactFacade,) {
+    private financialVendorFacade: FinancialVendorFacade,private readonly contactFacade: ContactFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade,) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
   /** Lifecycle hooks **/
@@ -156,8 +158,12 @@ export class PharmacyDetailComponent implements OnInit {
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next: (response: any) => {
+        if(vendorProfile.activeFlag === StatusFlag.No)
+          {
+            this.loadPendingApprovalGeneralCount();
+          }
         this.financialVendorFacade.hideLoader();
-        this.onCloseNewPharmacyClicked(); 
+        this.onCloseNewPharmacyClicked();
         let notificationMessage = response.message;
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
@@ -173,5 +179,11 @@ export class PharmacyDetailComponent implements OnInit {
   }
   public get vendorTypes(): typeof FinancialVendorTypeCode {
     return FinancialVendorTypeCode;
+  }
+
+
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 }

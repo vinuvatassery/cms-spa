@@ -164,6 +164,7 @@ export class AlertBannerComponent implements OnInit {
               this.showMoreAlert = false;
             this.makePopoverAlertBanner(data);
             this.cdr.detectChanges();
+            
           }else{ 
             this.topAlert =undefined
             this.secondaryAlertList =[]
@@ -174,7 +175,6 @@ export class AlertBannerComponent implements OnInit {
 
 
   public DueOn(alertItem:any):any{
-   
     let dateNow = new Date();
     dateNow = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate())
     let dueDate = new Date(alertItem.alertDueDate); 

@@ -112,16 +112,19 @@ export class DocumentFacade {
     columnName: any
   ): void {
     this.documentGridLoaderSubject.next(true);
+    const payload ={
+      clientId : clientId,
+      skipcount : skipcount,
+      maxResultCount: maxResultCount,
+      sort : sort,
+      sortType : sortType,
+      filter :filter,
+      columnName : columnName,
+      typeCode : null
+    }
     this.documentDataService
       .getDocumentsByClientCaseEligibilityId(
-        clientId,
-        skipcount,
-        maxResultCount,
-        sort,
-        sortType,
-        filter,
-        columnName,
-        null
+        payload
       )
       .subscribe({
         next: (documentsResponse: any) => {

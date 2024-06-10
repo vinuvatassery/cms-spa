@@ -33,6 +33,7 @@ export class HealthInsurancePolicy {
         medicareCoverageTypeCode: string | null = null;
         medicarePartAStartDate?: string | null;
         medicarePartBStartDate?: string | null;
+        medicareEndDate?: string | null;
         onQmbFlag: string | null = null;
         onLisFlag: string | null = null;
         paymentGroupNumber: number | null = null;

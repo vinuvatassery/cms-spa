@@ -105,9 +105,6 @@
                 <legend class="k-form-legend" *ngIf="isCerForm">
                   <h5> Does the Client, Spouse, Partner w/ Shared child or Parent of a minor child have additional employers? </h5>
                 </legend>
-                <kendo-formerror *ngIf="noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].valid">
-                  <span  *ngIf="hasClientDependentsMinorAdditionalIncomeFlag">The Income type (work, self employment or other) selected requires the "Yes" option to be selected for this question </span>
-                </kendo-formerror>
                 <div class="component-list-h comp-list-horizontal">
                   <span class="app-radiobtnwidtext-wrapper">
                     <input type="radio" kendoRadioButton name="clientDependentsMinorAdditionalIncomeFlag" aria-labelledby="additionalIncomeFlagYes"
@@ -122,9 +119,12 @@
                     <kendo-label class="k-radio-label" for="additionalIncomeFlagNo" text="No"></kendo-label>
                   </span>
                 </div>
-                <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].valid">
+                <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].valid && !hasClientDependentsMinorAdditionalIncomeFlag">
                   <span  *ngIf="!isCerForm">Are the Client, Spouse, Partner w/ Shared minor child or Parent of minor client employed is required. </span>
                   <span  *ngIf="isCerForm">Does the Client, Spouse, Partner w/ Shared child or Parent of a minor child have additional employers is required.</span>
+                </kendo-formerror>
+                <kendo-formerror *ngIf="noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].hasError('incorrect')">
+                  <span >The Income type (work, self employment or other) selected requires the "Yes" option to be selected for this question </span>
                 </kendo-formerror>
               </fieldset>
             </div>
@@ -134,9 +134,6 @@
                   <h5 *ngIf="!isCerForm"> Does the Client, Spouse, Partner w/ Shared child or Parent of minor client  have additional income? </h5>
                   <h5 *ngIf="isCerForm"> Does the Client, Spouse, Partner w/ Shared child  or Parent of a minor child have additional income? </h5>
                 </legend>
-                <kendo-formerror *ngIf="this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].hasError('incorrect')">
-                  <span>The Income type (Unemployment, SSI, Pension. etc.) selected requires the "Yes" option to be selected for this question</span>
-                </kendo-formerror>
                 <div class="component-list-h comp-list-horizontal">
                   <span class="app-radiobtnwidtext-wrapper">
                     <input type="radio" kendoRadioButton name="clientDependentsMinorEmployedFlag" aria-labelledby="employedFlagYes"
@@ -154,6 +151,9 @@
                 <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].valid && !hasClientDependentsMinorEmployedFlag" >
                   <span  *ngIf="!isCerForm">Does the Client, Spouse, Partner w/ Shared child or Parent of minor client  have additional income is required.</span>
                   <span  *ngIf="isCerForm">Does the Client, Spouse, Partner w/ Shared child  or Parent of a minor child have additional income is required.</span>
+                </kendo-formerror>
+                <kendo-formerror *ngIf="this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].hasError('incorrect')">
+                  <span>The Income type (Unemployment, SSI, Pension. etc.) selected requires the "Yes" option to be selected for this question</span>
                 </kendo-formerror>
               </fieldset>
             </div>

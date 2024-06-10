@@ -90,6 +90,11 @@ const routes: Routes = [
             (m) => m.SystemConfigFeatureUserManagementModule
           ),
       
+      }, 
+      {
+        path: '',
+        redirectTo: 'user-management',
+        pathMatch: 'full',
       },
     ],
   },

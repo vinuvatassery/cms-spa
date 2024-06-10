@@ -240,6 +240,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   private addEmailSubscription() {
     this.emailSubscription$ = this.emailAddress$.subscribe((email: any) => {
+    this.toEmail = [];
       const isEmailOk = email.filter((x:any)=>x.detailMsgFlag === StatusFlag.Yes)?.length > 0;
       this.sendActions[1].isVisible = isEmailOk;
       this.refreshButtonList();

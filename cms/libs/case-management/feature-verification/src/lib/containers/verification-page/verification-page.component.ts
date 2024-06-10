@@ -26,6 +26,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   userId!: any;
   clientCaseEligibilityId: any
   private loadSessionSubscription!: Subscription;
+  private caseManagerAndProviderSubscription !: Subscription;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   saveForLaterClickSubscription !: Subscription;
@@ -87,6 +88,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
+    this.caseManagerAndProviderSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -169,42 +171,49 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       healthCareProvider: this.HealthCareProviderExists()
     });
 
-    caseManagerAndProvider.subscribe((response: any) => {
+    this.caseManagerAndProviderSubscription = caseManagerAndProvider.subscribe((response: any) => {
       if (response) {
         //case manager check.
-        if (response.caseManager != null) {
-          this.isCaseManagerExists=true;
-          this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = false;
-        } else {
-          this.isCaseManagerExists=false;
-          this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
-        }
-
+        this.checkCaseManager(response)
+       
         //health care provider check.
-        if (response.healthCareProvider) {
-          const items = response.healthCareProvider["items"];
-          if (items.length > 0) {
-            this.healthCareProviderExists = true;
-            items.forEach((item: any) => {
-              this.providerEmail = item?.emailAddress;
-            });
-          } else {
-            this.healthCareProviderExists = false;
-          }
-          if (!this.healthCareProviderExists && this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null) {
-            this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = true;
-          } else {
-            if (this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null) {
-              this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = false;
-            }
-          }
-        }
+        this.checkHealthcareProvider(response);
+
         this.loaderService.hide();
         this.load();
 
       }
     })
 
+  }
+
+  checkCaseManager(response:any){
+    if (response.caseManager != null) {
+      this.isCaseManagerExists=true;
+      this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = false;
+    } else {
+      this.isCaseManagerExists=false;
+      this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
+    }
+  }
+
+  checkHealthcareProvider(response:any){
+      const items = response?.healthCareProvider["items"];
+      if (items?.length > 0) {
+        this.healthCareProviderExists = true;
+        items.forEach((item: any) => {
+          this.providerEmail = item?.emailAddress;
+        });
+      } else {
+        this.healthCareProviderExists = false;
+      }
+      if (!this.healthCareProviderExists && this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null) {
+        this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = true;
+      } else {
+        if (this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER') != null) {
+          this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = false;
+        }
+      }
   }
 
   caseManagerExists() {
@@ -248,21 +257,8 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           if (data?.verificationMethodCode === "HEALTHCARE_PROVIDER" && !this.healthCareProviderExists) {
             this.hivVerificationForm.controls["providerOption"].setValue("");
           }
-          if (data?.verificationMethodCode == "UPLOAD_ATTACHMENT") {
-            this.verificationFacade.showAttachmentOptions.next(false);
-            if (data?.hivVerification?.documentName) {
-              this.verificationFacade.hivVerificationUploadedDocument.next(data);
-              this.alreadyUploaded = true;
-            }
-            else {
-              this.verificationFacade.hivVerificationUploadedDocument.next(undefined);
-              this.alreadyUploaded = false;
-            }
-            if (data?.verificationStatusCode === VerificationStatusCode.Accept) {
-              this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
-              this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = true;
-            }
-            this.cdr.detectChanges();
+          if (data?.verificationMethodCode == "UPLOAD_ATTACHMENT") {           
+            this.checkUploadAttachmentCase(data);
           }
           else if (data?.verificationMethodCode === 'HEALTHCARE_PROVIDER') {
             this.currentHivUploadedDocument = data;
@@ -297,6 +293,23 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         }
       }
     });
+  }
+
+  checkUploadAttachmentCase(data:any){
+    this.verificationFacade.showAttachmentOptions.next(false);
+    if (data?.hivVerification?.documentName) {
+      this.verificationFacade.hivVerificationUploadedDocument.next(data);
+      this.alreadyUploaded = true;
+    }
+    else {
+      this.verificationFacade.hivVerificationUploadedDocument.next(undefined);
+      this.alreadyUploaded = false;
+    }
+    if (data?.verificationStatusCode === VerificationStatusCode.Accept) {
+      this.elementRef.nativeElement.querySelector('#CASE_MANAGER').disabled = true;
+      this.elementRef.nativeElement.querySelector('#HEALTHCARE_PROVIDER').disabled = true;
+    }
+    this.cdr.detectChanges();
   }
 
   private save() { 
@@ -346,7 +359,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       .pipe(
         catchError((error: any) => {
           if (error) {
-            this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
             this.verificationFacade.healthcareInvalidSubject.next(true);
             return of(false);
           }

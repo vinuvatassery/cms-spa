@@ -9,6 +9,7 @@ import {
   TemplateRef,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
+  OnDestroy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
@@ -25,7 +26,8 @@ import {
   LovFacade,
   UserManagementFacade,
   UserDataService,
-  UserLevel
+  UserLevel,
+  NavigationMenuFacade
 } from '@cms/system-config/domain';
 import {
   ApprovalTypeCode,
@@ -38,7 +40,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
   templateUrl: './approvals-payments-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
+export class ApprovalsPaymentsListComponent implements OnInit, OnChanges, OnDestroy {
   isSubmitApprovalPaymentItems = false;
   isViewPaymentsBatchDialog = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -100,7 +102,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   requestedDORHoldPayments: any = 0;
   gridApprovalPaymentsMainListDataSubject = new Subject<any>();
   gridApprovalPaymentsMainList$ =this.gridApprovalPaymentsMainListDataSubject.asObservable();
-
+  getProfileSubscription!: Subscription;
+  approvalsPaymentsMainListsSubscription! : Subscription;
+  pendingApprovalSubmittedSummarySubscription!:Subscription;
+  pendingApprovalSubmitSubscription!: Subscription;
+  exportButtonShowSubscription!: Subscription;
   approvalPaymentsSubmittedSummaryDataSubject = new Subject<any>();
   approvalPaymentsSubmittedSummaryData$ = this.approvalPaymentsSubmittedSummaryDataSubject.asObservable();
   selectedPaymentType: any;
@@ -108,6 +114,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   sendBackCount = 0;
   batchDetailModalSourceList: any;
   isSendbackMode:boolean=false;
+  approvalsPaymentsListsSubscription!: Subscription;
   gridApprovalPaymentsDataSubject = new Subject<any>();
   gridApprovalPaymentsBatchData$ = this.gridApprovalPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -156,6 +163,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   paymentMethodLovList: any;
 
   pendingApprovalPaymentType$ = this.lovFacade.pendingApprovalPaymentType$;
+  pendingApprovalPaymentTypeSubscription = new Subscription();
   paymentStatusLov$ = this.lovFacade.paymentStatus$;
   paymentMethodLov$ = this.lovFacade.paymentMethodType$;
   paymentStatusLovSubscription!: Subscription;
@@ -165,6 +173,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   providerCountFieldTitle:any="Provider Count";
   constantMaxApprovalAmount:number=10000;
   maxApprovalAmount:number=this.constantMaxApprovalAmount;
+  permissionLevels:any[]=[];
+
   /** Constructor **/
   constructor(
     private route: Router,
@@ -174,7 +184,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     private userManagementFacade: UserManagementFacade,
     private readonly userDataService: UserDataService,
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider
+    private readonly configProvider: ConfigurationProvider,
+    private readonly navigationMenuFacade : NavigationMenuFacade
+
   ) {}
 
   ngOnInit(): any {
@@ -188,7 +200,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   private getPaymentTypeCode() {
-    this.pendingApprovalPaymentType$.subscribe((data) => {
+    this.pendingApprovalPaymentTypeSubscription = this.pendingApprovalPaymentType$.subscribe((data) => {
       this.paymentType = data.sort((a: any, b: any) => a.sequenceNbr - b.sequenceNbr);
     });
   }
@@ -214,7 +226,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   private defaultPaymentType() {
-    this.pendingApprovalPaymentType$.subscribe({
+    this.pendingApprovalPaymentTypeSubscription = this.pendingApprovalPaymentType$.subscribe({
       next: (value) => {
         this.selectedPaymentType = value[0].lovCode;
         switch (this.selectedPaymentType) {
@@ -249,6 +261,13 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   ngOnDestroy(): void {
     this.paymentStatusLovSubscription.unsubscribe();
     this.paymentMethodLovSubscription.unsubscribe();
+    this.pendingApprovalPaymentTypeSubscription?.unsubscribe();
+    this. getProfileSubscription?.unsubscribe();
+    this.approvalsPaymentsListsSubscription?.unsubscribe();
+    this.approvalsPaymentsMainListsSubscription?.unsubscribe();
+    this.pendingApprovalSubmittedSummarySubscription?.unsubscribe();
+    this.pendingApprovalSubmitSubscription?.unsubscribe();
+    this.exportButtonShowSubscription?.unsubscribe();
   }
 
   setGridValueAndData() {
@@ -260,7 +279,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   getLoggedInUserProfile() {
-    this.userDataService.getProfile$.subscribe((profile: any) => {
+    this. getProfileSubscription = this.userDataService.getProfile$.subscribe((profile: any) => {
       if (profile?.length > 0) {
         this.loginUserId = profile[0]?.loginUserId;
       }
@@ -440,7 +459,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   getGridDataHandle() {
-    this.approvalsPaymentsLists$.subscribe((data: any) => {
+    this.approvalsPaymentsListsSubscription =this.approvalsPaymentsLists$.subscribe((data: any) => {
       this.approverCount = data.approverCount;
       this.sendBackCount = data.sendBackCount;
       this.gridDataResult = data;
@@ -471,7 +490,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any) {
-    this.resetApprovalPaymentListGrid();
     this.pageValidationMessage = null;
     this.selectedPaymentType = paymentSubTypeCode;
     this.approveBatchCount = 0;
@@ -502,6 +520,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.selectedColumn = 'ALL';
     this.searchValue = '';
     this.setApprovalLevelAndMaxApprovalAmount();
+    this.resetApprovalPaymentListGrid();
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();
     this.gridDataHandle();
@@ -646,7 +665,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.approvalsPaymentsLists$.subscribe((response: any) => {
+    this.approvalsPaymentsListsSubscription = this.approvalsPaymentsLists$.subscribe((response: any) => {
+      this.loadPendingApprovalPaymentCount();
       let gridData = {
         data: response.data,
         total: response.total,
@@ -937,7 +957,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       this.approvalsPaymentsGridUpdatedResult;
     this.approvalsPaymentsGridUpdatedResult = [];
     this.hasPaymentPendingApproval = false;
-    this.approvalsPaymentsMainLists$.subscribe((response: any) => {
+    this.approvalsPaymentsMainListsSubscription = this.approvalsPaymentsMainLists$.subscribe((response: any) => {
       if (response.data.length > 0) {
         this.approvalsPaymentsGridUpdatedResult = response.data.map(
           (item: any) => ({
@@ -1008,7 +1028,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         this.selectedBatchIds.push(currentPage.paymentRequestBatchId);
       });
     this.loadSubmittedSummaryEvent.emit(this.selectedBatchIds);
-    this.pendingApprovalSubmittedSummary$.subscribe((response: any) => {
+    this.pendingApprovalSubmittedSummarySubscription = this.pendingApprovalSubmittedSummary$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.requestedCheck = response?.checkCount;
         this.requestedACHPayments = response?.achCount;
@@ -1053,7 +1073,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
   submit(data: any) {
     this.submitEvent.emit(data);
-    this.pendingApprovalSubmit$.subscribe((response: any) => {
+    this.pendingApprovalSubmitSubscription = this.pendingApprovalSubmit$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.onPaymentTypeCodeValueChange(this.selectedPaymentType);
         this.isSubmitApprovalPaymentItems = false;
@@ -1084,7 +1104,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.showExportLoader = true;
     this.exportGridDataEvent.emit();
 
-    this.exportButtonShow$.subscribe((response: any) => {
+    this.exportButtonShowSubscription = this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;
         this.cd.detectChanges();
@@ -1184,4 +1204,14 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.approveAndSendbackCount();
     this.enableSubmitButtonMain();
   }
+
+  loadPendingApprovalPaymentCount() {
+
+    this.permissionLevels = this.userManagementFacade.GetPermissionlevelsForPendingApprovalsCount();
+
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+    this.permissionLevels
+    );
+  }
+
 }

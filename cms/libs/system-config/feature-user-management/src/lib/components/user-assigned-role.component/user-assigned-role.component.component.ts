@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDefaultRoles, UserManagementFacade } from '@cms/system-config/domain';
+import { NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -43,21 +43,10 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   };
 
 
-  public rolesClassList:any = [
-    {roleCode : UserDefaultRoles.CACaseWorker, roleClass : 'role-identifier role-case-worker'},
-    {roleCode : UserDefaultRoles.Admin, roleClass : 'role-identifier role-admin'},
-    {roleCode : UserDefaultRoles.Client, roleClass : 'role-identifier role-client'},
-    {roleCode : UserDefaultRoles.SuperAdmin, roleClass : 'role-identifier role-super-admins'},
-    {roleCode : UserDefaultRoles.FiscalSpecialist, roleClass : 'role-identifier role-fiscal-specialist'},
-    {roleCode : UserDefaultRoles.CACaseManager, roleClass : 'role-identifier role-case-manager'},
-    {roleCode : UserDefaultRoles.QaAnalyst, roleClass : 'role-identifier role-qa-analyst'},
-    {roleCode : UserDefaultRoles.OfficeSpecialist ,roleClass : 'role-identifier role-office-specialist'},
-    {roleCode : UserDefaultRoles.IntakeCoordinator,roleClass : 'role-identifier role-intake-coordinator'},
-  ];
+  
   /* Constructor */
   constructor(private readonly userManagementFacade: UserManagementFacade,
     private cdr: ChangeDetectorRef,
-    private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
   defaultSort:any;
@@ -153,10 +142,13 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
     "table-row-disabled": (args.dataItem.activeFlag != this.active),
   });
 
-  getRolesClassByRoleCode(dataItem:any)
-  {
-    let roleClass = this.rolesClassList.find((x: any)=>x.roleCode==dataItem.roleCode);
-    return roleClass == null || roleClass ==undefined ? '' : roleClass.roleClass;
+  getAndSetBackgroundColorByRoleCode(dataItem:any)
+  {   
+    if(dataItem.colorCode != null)
+    {
+       return 'background: '+ dataItem.colorCode;
+    }
+    return  'background: #0058e9;';
   }
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };

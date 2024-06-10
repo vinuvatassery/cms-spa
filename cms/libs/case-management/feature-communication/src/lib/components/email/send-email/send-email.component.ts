@@ -21,9 +21,7 @@ import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { Router } from '@angular/router';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-
+import { TodoFacade } from '@cms/productivity-tools/domain';
 @Component({
   selector: 'case-management-send-email',
   templateUrl: './send-email.component.html',
@@ -149,11 +147,10 @@ saveForLaterHeadterText!: string;
     private readonly workflowFacade: WorkflowFacade,
     private readonly userDataService: UserDataService,
     private readonly esignFacade: EsignFacade,
-    private dialogService: DialogService,
     private readonly router: Router,
     private readonly vendorContactFacade: VendorContactsFacade,
     private readonly fabBadgeFacade: FabBadgeFacade,
-    private readonly sanitizer: DomSanitizer) { }
+    public todoFacade: TodoFacade,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -345,6 +342,7 @@ saveForLaterHeadterText!: string;
               this.cancelDisplay = false;
             }
             this.sortDropdownValues(defaultOption, otherOptions);
+            this.todoFacade.loadAlertsBanner(this.entityId);
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -572,7 +570,7 @@ saveForLaterHeadterText!: string;
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message);
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.snackBarMessage);
             this.onCloseSendEmailClicked();
             if(this.entityId && this.entityType == FabEntityTypeCode.Client){
               this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
@@ -707,13 +705,7 @@ saveForLaterHeadterText!: string;
     this.isEmailSubjectMissing = false;
     this.isContentMissing = false;
     this.handleConfirmPopupHeader(event.templateTypeCode);
-    if (this.notificationGroup === ScreenType.VendorProfile)
-    {
-    this.isMailCodeMissing = false;
-    }
-    if (this.triggerFrom === ScreenType.ClientProfile || this.triggerFrom === ScreenType.VendorProfile) {
-      this.communicationEmailTypeCode = event.templateTypeCode;
-    }
+    this.setVendorAndCommunicationType(event.templateTypeCode);
     this.selectedTemplate = event;
     if ((this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
       || this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail
@@ -739,6 +731,16 @@ saveForLaterHeadterText!: string;
     this.ngDirtyInValid();
   }
 
+  setVendorAndCommunicationType(templateTypeCode: any) {
+    if (this.notificationGroup === ScreenType.VendorProfile)
+    {
+    this.isMailCodeMissing = false;
+    }
+    if (this.triggerFrom === ScreenType.ClientProfile || this.triggerFrom === ScreenType.VendorProfile) {
+      this.communicationEmailTypeCode = templateTypeCode;
+    }
+  }
+
   handleConfirmPopupHeader(event: any) {
     switch (event) {
       case CommunicationEventTypeCode.PendingNoticeEmail:
@@ -760,12 +762,12 @@ saveForLaterHeadterText!: string;
         this.confirmPopupHeader = 'Send Denial Email?';
         this.saveForLaterHeadterText = "Send Denial Email Later?";
         this.saveForLaterModelText = "You must send the  Denial Email within 14 Days";
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via SMS text, and/or their online portal.";
         break;
 
       case CommunicationEventTypeCode.ApprovalNoticeEmail:
         this.snackBarMessage = 'Approval Email Sent! An event has been logged.';
-        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT''/SEND EMAIL once the notice is complete."
+        this.informationalText = "If there is an issue with this template, please contact your Administrator. Make edits as needed, then click ''SEND EMAIL'' once the notice is complete."
         this.templateHeader = 'Send Approval Email';
         this.emailSubject = "CareAssist Approval Notice";
         this.confirmPopupHeader = 'Send Approval Email?';
@@ -779,7 +781,7 @@ saveForLaterHeadterText!: string;
         this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
         this.templateHeader = 'Send Disenrollment Email';
         this.emailSubject = "CAREAssist Disenrollment Notice";
-        this.confirmPopupHeader = 'Send Disenrollment Email?';
+        this.confirmPopupHeader = 'Send Disenrollment email?';
         this.saveForLaterHeadterText = "Send Disenrollment Email Later?";
         this.saveForLaterModelText = "You must send the  Disenrollment Email within 2 Days";
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via SMS text, and/or through their online portal.";
@@ -797,6 +799,7 @@ saveForLaterHeadterText!: string;
         break;
 
       case CommunicationEventTypeCode.VendorEmail:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.saveForLaterHeadterText = "Email Draft Saved";
@@ -806,6 +809,7 @@ saveForLaterHeadterText!: string;
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationEmail:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.templateHeader = 'CER Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
@@ -815,6 +819,7 @@ saveForLaterHeadterText!: string;
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
         break;
       case CommunicationEventTypeCode.ApplicationAuthorizationEmail:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
@@ -825,6 +830,7 @@ saveForLaterHeadterText!: string;
         break;
 
       default:
+        this.snackBarMessage = 'Email Sent! An event has been logged.';
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.saveForLaterHeadterText = "Email Draft Saved";
@@ -854,17 +860,7 @@ saveForLaterHeadterText!: string;
               this.selectedToEmails = [];
               this.getToEmail(this.toEmail);
               this.selectedToEmails = this.emails;
-              if (data.description === 'Draft Custom Email') {
-                this.emailSubject = '';
-              } else {
-                if (!this.emailSubject) {
-                  this.emailSubject = data.description;
-                }
-              }
-              if (data?.bccEmail?.length > 0) {
-                this.bccEmail.push(data.bcc?.map((item: any) => item.email));
-                this.isBCCDropdownVisible = false;
-              }
+              this.setEmailSubjectAndBcc(data);
               this.showToEmailLoader = false;
               this.getLoginUserCcEmail(this.loginUserEmail);
               if(this.communicationEmailTypeCode === CommunicationEventTypeCode.RestrictedNoticeEmail){
@@ -885,10 +881,22 @@ saveForLaterHeadterText!: string;
     }
   }
 
+  setEmailSubjectAndBcc(data: any) {
+    if (data.description === 'Draft Custom Email') {
+        this.emailSubject = '';
+      } else {
+        if (!this.emailSubject) {
+          this.emailSubject = data.description;
+        }
+      }
+      if (data?.bccEmail?.length > 0) {
+        this.bccEmail.push(data.bcc?.map((item: any) => item.email));
+        this.isBCCDropdownVisible = false;
+      }
+  }
+
   setDraftedTemplate(event: any) {
-    if (this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile) {
-      this.communicationEmailTypeCode = event.subTypeCode;
-    }
+    this.setClientVendorCommunicationType(event);
     if (event.subTypeCode === this.communicationEmailTypeCode || this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
       this.selectedTemplateId = event.notificationTemplateId;
       this.selectedTemplate = event;
@@ -901,18 +909,9 @@ saveForLaterHeadterText!: string;
       this.selectedToEmails = [];
       this.getToEmail(event.to);
       this.selectedToEmails = this.emails;
-
       this.emailSubject = event?.requestSubject ?? event.description;
       this.defaultBCCEmail = event.bcc;
-      if (event?.bcc?.length > 0) {
-        this.isBCCDropdownVisible = false;
-        event?.bcc?.forEach((email: any) => {
-           if (!this.selectedBccEmail?.includes(email?.email?.trim())) {
-             this.selectedBccEmail?.push(email?.email);
-             this.bccEmail?.push(email?.email);
-           }
-         });
-      }
+      this.prepareBccEmail(event);
       this.showToEmailLoader = false;
       this.documentTemplate = {
         'description': event.description ?? event?.requestSubject,
@@ -933,7 +932,25 @@ saveForLaterHeadterText!: string;
     }
   }
 
-  
+  setClientVendorCommunicationType(event: any) {
+    if (this.triggerFrom == ScreenType.VendorProfile || this.triggerFrom == ScreenType.ClientProfile) {
+      this.communicationEmailTypeCode = event.subTypeCode;
+    }
+  }
+
+  prepareBccEmail(event: any) {
+    if (event?.bcc?.length > 0) {
+      this.isBCCDropdownVisible = false;
+      event?.bcc?.forEach((email: any) => {
+         if (!this.selectedBccEmail?.includes(email?.email?.trim())) {
+           this.selectedBccEmail?.push(email?.email);
+           this.bccEmail?.push(email?.email);
+         }
+       });
+    }
+  }
+
+
   getToEmail(to: any) {
     if(to?.length > 0){
     for (let email of to) {
@@ -959,25 +976,33 @@ saveForLaterHeadterText!: string;
           this.ccEmail?.push(loginUserEmail?.email);
         }
       }
-      if (this.selectedCCEmail == undefined) {
-        const email = [];
-        email.push(loginUserEmail?.email);
-        this.selectedCCEmail = email;
-      } else {
-        let emailExists = this.selectedCCEmail?.includes(loginUserEmail?.email?.trim());
-        if (!emailExists) {
-          this.selectedCCEmail?.push(loginUserEmail?.email);
-        }
+      this.getSelectedCcEmail(loginUserEmail);
+      this.getDefaultCcEmail(loginUserEmail);
+    }
+  }
+
+  getSelectedCcEmail(loginUserEmail: any) {
+    if (this.selectedCCEmail == undefined) {
+      const email = [];
+      email.push(loginUserEmail?.email);
+      this.selectedCCEmail = email;
+    } else {
+      let emailExists = this.selectedCCEmail?.includes(loginUserEmail?.email?.trim());
+      if (!emailExists) {
+        this.selectedCCEmail?.push(loginUserEmail?.email);
       }
-      if (this.defaultCCEmail == undefined) {
-        const email = [];
-        email.push(loginUserEmail);
-        this.defaultCCEmail = email;
-      } else {
-        let emailExists = this.defaultCCEmail?.includes(loginUserEmail?.email?.trim());
-        if (!emailExists) {
-          this.defaultCCEmail.push(loginUserEmail);
-        }
+    }
+  }
+
+  getDefaultCcEmail(loginUserEmail: any) {
+    if (this.defaultCCEmail == undefined) {
+      const email = [];
+      email.push(loginUserEmail);
+      this.defaultCCEmail = email;
+    } else {
+      let emailExists = this.defaultCCEmail?.includes(loginUserEmail?.email?.trim());
+      if (!emailExists) {
+        this.defaultCCEmail.push(loginUserEmail);
       }
     }
   }
@@ -1011,7 +1036,8 @@ saveForLaterHeadterText!: string;
   private initiateAdobeEsignProcess(emailData: any) {
     this.loaderService.show();
     let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater, templateTypeCode, eventGroupCode);
+    let esignData = this.esignFacade.prepareEsignData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater, templateTypeCode, eventGroupCode, esignData);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
       .subscribe({
@@ -1062,14 +1088,15 @@ saveForLaterHeadterText!: string;
         },
       });
   }
-  private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData);
+  private getSanitizedHtml(currentEmailData: string) {
+    return currentEmailData;
   }
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
     this.isSaveForLater = true;
     let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater, templateTypeCode, eventGroupCode);
+    let esignData = this.esignFacade.prepareEsignData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater, templateTypeCode, eventGroupCode, esignData);
     let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(esignRequestFormdata, draftTemplate, this.cerEmailAttachedFiles);
     if (draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null) {
       this.esignFacade.saveDraftEsignRequest(draftEsignRequest)
@@ -1111,42 +1138,52 @@ saveForLaterHeadterText!: string;
   cerEmailAttachments(event: any) {
     let isFileExists = false;
     if (this.communicationEmailTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail) {
-      if (event.length > 0) {
-        this.cerEmailAttachedFiles = event;
-      } else {
-        if (event.documentTemplateId) {
-          isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.description);
-          if (!isFileExists || isFileExists === undefined) {
-            this.cerEmailAttachedFiles?.push(event);
-          }
-        }
-        if (event.clientDocumentId) {
-          isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.documentName);
-          if (!isFileExists || isFileExists === undefined) {
-            this.cerEmailAttachedFiles?.push(event);
-          }
-        }
-      }
-      this.attachmentCount = this.cerEmailAttachedFiles?.length;
+      this.prepareEsignAttachment(isFileExists, event);
     } else {
-      if (event.length > 0) {
-        this.clientAndVendorAttachedFiles = event;
-      } else {
-        if (event.documentTemplateId) {
-          isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
-          if (!isFileExists || isFileExists === undefined) {
-            this.clientAndVendorAttachedFiles?.push(event);
-          }
-        }
-        if (event.clientDocumentId) {
-          isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.documentName);
-          if (!isFileExists || isFileExists === undefined) {
-            this.clientAndVendorAttachedFiles?.push(event);
-          }
+        this.prepareClientVendorAttachment(isFileExists, event);
+      }
+  }
+
+  prepareClientVendorAttachment(isFileExists: boolean, event: any) {
+    if(event.length > 0){
+      this.clientAndVendorAttachedFiles = event;
+    }else{
+      this.clientAndVendorAttachedFiles = [];
+      if(event.documentTemplateId){
+        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
+        if(!isFileExists || isFileExists === undefined){
+          this.clientAndVendorAttachedFiles?.push(event);
         }
       }
-      this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
+      if(event.clientDocumentId){
+        isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.documentName);
+        if(!isFileExists || isFileExists === undefined){
+          this.clientAndVendorAttachedFiles?.push(event);
+        }
+      }
     }
+    this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
+  }
+
+  prepareEsignAttachment(isFileExists: boolean, event: any) {
+    if(event.length > 0){
+      this.cerEmailAttachedFiles = event;
+    }else{
+      this.cerEmailAttachedFiles=[];
+      if(event.documentTemplateId){
+        isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.description);
+        if(!isFileExists || isFileExists === undefined){
+          this.cerEmailAttachedFiles?.push(event);
+        }
+      }
+      if(event.clientDocumentId){
+        isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.documentName);
+        if(!isFileExists || isFileExists === undefined){
+          this.cerEmailAttachedFiles?.push(event);
+        }
+      }
+    }
+    this.attachmentCount = this.cerEmailAttachedFiles?.length;
   }
 
   getLoggedInUserProfile() {

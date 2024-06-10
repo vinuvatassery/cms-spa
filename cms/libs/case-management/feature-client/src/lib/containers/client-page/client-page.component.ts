@@ -343,45 +343,57 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.clientCaseEligibilityId !== null &&
         this.clientCaseEligibilityId !== undefined
       ) {
-        this.message = 'Applicant Info updated Successfully';
-        return this.clientFacade.update(this.applicantInfo, this.clientId).pipe(
-          catchError((error: any) => {
-            if (error) {
-              this.clientFacade.showHideSnackBar(
-                SnackBarNotificationType.ERROR,
-                error
-              );
-              return of(false);
-            }
-            return of(false);
-          })
-        );
+
+        return this.updateClientInfo();
+
       } else {
-        this.message = 'Applicant info saved successfully';
-        return this.clientFacade.save(this.applicantInfo).pipe(
-          catchError((error: any) => {
-            if (error) {
-              this.clientFacade.showHideSnackBar(
-                SnackBarNotificationType.ERROR,
-                error
-              );
-              return of(false);
-            }
-            return of(false);
-          }),
-          tap(() => this.caseFacade.loadActiveSession())
-        );
+
+        return this.saveApplicantInfo();
+
       }
     } else {
       this.loaderService.hide();
       const frmControls = this.reorderControls(this.getFormOrder());
-      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(frmControls, this.elementRef.nativeElement,null);
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(frmControls, this.elementRef.nativeElement, null);
       if (invalidControl) {
         invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         invalidControl.focus();
       }
       return of(false);
     }
+  }
+
+  private updateClientInfo(){
+    this.message = 'Applicant Info updated Successfully.';
+    return this.clientFacade.update(this.applicantInfo, this.clientId).pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.clientFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(false);
+        }
+        return of(false);
+      })
+    );
+  }
+
+  private saveApplicantInfo(){
+    this.message = 'Applicant info saved successfully.';
+    return this.clientFacade.save(this.applicantInfo).pipe(
+      catchError((error: any) => {
+        if (error) {
+          this.clientFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          return of(false);
+        }
+        return of(false);
+      }),
+      tap(() => this.caseFacade.loadActiveSession())
+    );
   }
 
   private populateApplicantInfoModel() {
@@ -1053,6 +1065,23 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }else{
       this.appInfoForm.controls['dateOfBirth'].updateValueAndValidity();
     }
+
+    this.validateName();    
+    
+    if (this.appInfoForm.controls['ssnNotApplicable'].value) {
+      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
+    } else {
+      let hasError = this.appInfoForm.controls['ssn'].errors;
+      this.appInfoForm.controls['ssn'].setValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
+      if (hasError) {
+        this.appInfoForm.controls['ssn'].setErrors(hasError);
+      }
+    }
+  }
+
+  private validateName(){
     if (this.appInfoForm.controls['chkmiddleName'].value) {
       this.appInfoForm.controls['middleName'].removeValidators(
         Validators.required
@@ -1140,19 +1169,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       );
       this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
     }
-    if (this.appInfoForm.controls['ssnNotApplicable'].value) {
-      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
-      this.appInfoForm.controls['ssn'].updateValueAndValidity();
-    } else {
-      let hasError = this.appInfoForm.controls['ssn'].errors;
-      this.appInfoForm.controls['ssn'].setValidators(Validators.required);
-      this.appInfoForm.controls['ssn'].updateValueAndValidity();
-      if (hasError) {
-        this.appInfoForm.controls['ssn'].setErrors(hasError);
-      }
-    }
   }
-
   private setRegisterToVoteValidation() {
     if (
       this.appInfoForm.controls['registerToVote'].value == null ||
@@ -1623,6 +1640,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.checkValidations()) {
             this.saveAndUpdate().subscribe((response: any) => {
               if (response) {
+                this.workFlowFacade.clientCaseEligibilityId = response.clientCaseEligibilityId
                 this.workFlowFacade.saveForLaterCompleted(true)
                 this.loaderService.hide();
 

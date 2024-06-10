@@ -2,7 +2,7 @@
   <p class="text-muted mb-2" *ngIf="dialogTitle === 'View' || dialogTitle === 'Add' || dialogTitle === 'Edit'">
     {{
     isEditViewPopup
-    ? 'Click "Edit" to make changes to the Insurance '
+    ? 'Click "Edit" to make changes to this Insurance '
     : 'All fields are required unless otherwise stated.'
     }}
   </p>
@@ -59,7 +59,7 @@
           <kendo-floatinglabel text="Medicare Part A Start Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               aria-label="Medicare Part A Start Date" formControlName="medicarePartAStartDate"
-               formatPlaceholder="formatPattern" placeholder="">
+               formatPlaceholder="formatPattern" placeholder="" (valueChange)="medicareStartDateOnChange()">
             </kendo-datepicker>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartAStartDate'].valid && !healthInsuranceForm.controls['medicarePartAStartDate'].disabled">Medicare Part A Start
@@ -68,14 +68,23 @@
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Part B Start Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-              aria-label="Medicare Part B Start Date" formControlName="medicarePartBStartDate"
+              aria-label="Medicare Part B Start Date" formControlName="medicarePartBStartDate" (valueChange)="medicareStartDateOnChange()"
                formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartBStartDate'].valid && !healthInsuranceForm.controls['medicarePartBStartDate'].disabled">Medicare Part B Start
             Date is required.</kendo-formerror>
         </div>
-        <div class="flex-col">
+        <div class="flex-col" *ngIf="isOpenDdl && !medicareInsuranceInfoCheck">
+          <kendo-floatinglabel text="End Date - Optional">
+            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" (focus)="changeMedicareMinDate()"
+              aria-label="End Date - Optional" formControlName="medicareEndDate" [min]="medicareEndDateMin"
+               formatPlaceholder="formatPattern" placeholder=""  (valueChange)="medicareEndDateOnChange()">
+            </kendo-datepicker>
+          </kendo-floatinglabel>    
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareEndDate'].valid && !healthInsuranceForm.controls['medicareEndDate'].disabled">End Date must be after Start Date.</kendo-formerror>     
+        </div>
+        <div class="flex-col mt-3">
 
           <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
@@ -87,9 +96,9 @@
                   aria-labelledby="LowIncomeSusidyYes" formControlName="onQmbFlag" id="qmbYes" value="Y" />
                 <kendo-label class="k-radio-label" for="qmbYes" text="Yes"></kendo-label>
               </span>
-              <span class="app-radiobtnwidtext-wrapper">
+              <span class="app-radiobtnwidtext-wrapper ">
                 <input type="radio"  kendoRadioButton name="onQmbFlag"
-                  aria-labelledby="qmb" formControlName="onQmbFlag" id="qmbNo" value="N" />
+                  aria-labelledby="qmb" formControlName="onQmbFlag" id="qmbNo" value="N"  />
                 <kendo-label class="k-radio-label" for="qmbNo" text="No"></kendo-label>
               </span>
             </div>

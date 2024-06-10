@@ -9,6 +9,11 @@ import { SexualOrientationPageComponent } from './containers/sexual-orientation-
   
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'pronouns',
+    pathMatch: 'full',
+  },
+  {
     path: 'direct-messages',
     component: DirectMessagePageComponent,
     data: {
@@ -42,14 +47,7 @@ const routes: Routes = [
     data: {
       title: 'Pronouns',
     },
-  },
-  {
-    path: '',
-    component: PronounsPageComponent,
-    data: {
-      title: 'Pronouns',
-    },
-  },
+  }, 
   {
     path: 'sexual-orientation',
     component: SexualOrientationPageComponent,

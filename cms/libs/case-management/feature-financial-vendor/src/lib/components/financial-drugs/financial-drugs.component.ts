@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DrugCategoryCode, DrugsFacade, VendorFacade, FinancialVendorFacade } from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, NavigationMenuFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-drugs',
@@ -25,7 +25,7 @@ export class FinancialDrugsComponent {
   @Input() sort: any;
   @Input() gridSkipCount: any;
   @Input() hasCreateUpdatePermission: boolean = false;
-  
+
 
   @Output() loadDrugListEvent = new EventEmitter<any>();
   @Output() addDrugEvent = new EventEmitter<any>();
@@ -134,6 +134,7 @@ export class FinancialDrugsComponent {
     private readonly vendorFacade: VendorFacade,
     private readonly drugsFacade: DrugsFacade,
     private readonly financialVendorFacade: FinancialVendorFacade,
+    private readonly navigationMenuFacade : NavigationMenuFacade
 
   ) { }
 
@@ -347,13 +348,22 @@ export class FinancialDrugsComponent {
 
   addDrug(data: any): void {
     this.drugsFacade.addDrugData(data).subscribe(() => {
+      if(data.activeFlag === StatusFlag.No)
+        {
+          this.loadPendingApprovalGeneralCount();
+        }
       // After adding the drug, refresh the grid data or perform any other action
       this.loadDrugsListGrid();
-      
+
       // Emit an event to notify other parts of the application that a drug has been added
       this.drugsFacade.drugAdded$().subscribe(() => {
         // Handle the drug added event here
       });
     });
+  }
+
+  loadPendingApprovalGeneralCount() {
+
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 }

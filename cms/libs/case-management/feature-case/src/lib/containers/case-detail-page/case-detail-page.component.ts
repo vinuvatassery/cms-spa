@@ -140,7 +140,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.resetReadOnlyView();
     this.showSplitButtonSubscriptionInitializer();
     this.paperLessFlagContactInfoChangeSubscription();
-    this.workflowFacade.savedForLaterCompleted$
+    this.workflowFacade.savedForLaterCompleted$.pipe(first())
     .subscribe(res =>{
      if(res){
       this.isShowSaveLaterPopup = false;
@@ -453,28 +453,30 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
           return;
         }
         this.loaderService.show()
-        this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '', this.prevClientCaseEligibilityId ?? '').subscribe({
-          next: (data: ContactInfo) => {
-            this.loaderService.hide()
-            console.log(data)
-            if( data.address?.length && data.address?.length >0 || data.email?.email){
-              this.ifClientHasAddress = true;
-            }      
-            else{
-              this.ifClientHasAddress = false;
-            }  
-            this.isShowSaveLaterPopup = true;
-            this.sendLetterFlag = '';
-            this.currentStatusCode = '';
-            this.isSubmitted = false;
-            this.cdr.detectChanges()
-          }
-      });
-     
+      
+     this.loadContactInfo();
       }
     });
   }
-
+loadContactInfo(){
+  this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '', this.prevClientCaseEligibilityId ?? '').subscribe({
+    next: (data: ContactInfo) => {
+      this.loaderService.hide()
+      console.log(data)
+      if( data.address?.length && data.address?.length >0 || data.email?.email){
+        this.ifClientHasAddress = true;
+      }      
+      else{
+        this.ifClientHasAddress = false;
+      }  
+      this.isShowSaveLaterPopup = true;
+      this.sendLetterFlag = '';
+      this.currentStatusCode = '';
+      this.isSubmitted = false;
+      this.cdr.detectChanges()
+    }
+});
+}
   loadSessionData() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
@@ -531,7 +533,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     if (this.currentStatusCode != "") {
       this.loaderService.show();
     
-      this.clientCaseEligibilityId = this.clientCaseEligibilityId == null ? this.workflowFacade.clientCaseEligibilityId : this.clientCaseEligibilityId;
+      this.clientCaseEligibilityId = this.clientCaseEligibilityId ? this.clientCaseEligibilityId: this.workflowFacade.clientCaseEligibilityId;
 
      
    if (this.sendLetterFlag == StatusFlag.Yes) {
