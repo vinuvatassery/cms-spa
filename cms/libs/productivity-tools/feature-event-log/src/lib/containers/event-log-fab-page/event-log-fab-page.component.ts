@@ -24,7 +24,7 @@ export class EventLogComponentFabPageComponent implements OnInit, OnDestroy
   eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$;
   navigationSubject: Subject<any> = new Subject<any>();
 
-  
+
   navigationSubscription = new Subscription();
   reloadFabBadgeSubscription = new Subscription();
 
@@ -39,7 +39,7 @@ export class EventLogComponentFabPageComponent implements OnInit, OnDestroy
   }
 
   ngOnInit() {
-      const clientId = this.route.snapshot.params['id'];
+      const clientId = this.route.snapshot.queryParams['id'];
       const vendorId = this.route.snapshot.queryParams['v_id'];
       if(clientId){
         this.entityId = clientId.toString();
@@ -53,7 +53,7 @@ export class EventLogComponentFabPageComponent implements OnInit, OnDestroy
       this.addSessionChangeSubscription();
       this.addReloadFabBadgeSubscription();
   }
-  
+
   ngOnDestroy(): void {
     this.navigationSubscription?.unsubscribe();
     this.reloadFabBadgeSubscription?.unsubscribe();
@@ -94,7 +94,7 @@ export class EventLogComponentFabPageComponent implements OnInit, OnDestroy
   closeAction() {
 
     this.fabMenuFacade.isShownEventLog = !this.fabMenuFacade.isShownEventLog;
-    this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.EventLog); 
+    this.notificationStatsFacade.resetStats(this.entityId, StatsTypeCode.EventLog);
   }
 
 }
