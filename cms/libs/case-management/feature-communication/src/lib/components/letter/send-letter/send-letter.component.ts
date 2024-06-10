@@ -278,7 +278,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   onSaveForLaterClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -363,7 +363,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     return currentEmailData;
   }
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>'){
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -518,7 +518,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   onSendLetterToPrintClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>'){
       this.isContentMissing = true;
       this.isFormValid = false;
     }
@@ -961,7 +961,7 @@ loadMailingAddress() {
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;
-  if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<p></p>')){
+  if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<div style="width:100%;word-break: break-word;"><p></p></div>')){
     this.isContentMissing = false;
   }
   this.ref.detectChanges();
