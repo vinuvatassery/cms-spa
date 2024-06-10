@@ -105,6 +105,8 @@ export class CaseNavigationComponent implements OnInit {
 
     const sessionId = this.actRoute.snapshot.queryParams['sid'];
     const entityId: string = this.actRoute.snapshot.queryParams['eid'];
+    const clientId = this.actRoute.snapshot.queryParams['id'];
+    const eligibilityId = this.actRoute.snapshot.queryParams['e_id'];
     if (this.navigationIndex > -1
       && this.navigationIndex < routes.length
       && sessionId
@@ -116,7 +118,9 @@ export class CaseNavigationComponent implements OnInit {
             sid: sessionId,
             pid: routes[this.navigationIndex].processId,
             eid: entityId,
-            wtc: this.workflowType
+            wtc: this.workflowType,
+            id: clientId,
+            e_id : eligibilityId
           }
         }
       );

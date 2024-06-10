@@ -101,7 +101,7 @@ export class WorkflowFacade {
   sendLetterEmailFlag!:string;
   caseStatus!:string;
   ApplicationDetailsValidationsSuccess = false;
-  
+
   /**Constructor */
   constructor(
     private readonly workflowService: WorkflowDataService,
@@ -751,6 +751,23 @@ export class WorkflowFacade {
           this.clientCaseId = sessionData?.ClientCaseId;
           this.clientCaseEligibilityId = sessionData?.clientCaseEligibilityId;
           this.sessionDataSubject.next(workflowResponseData);
+
+          const clientId = this.actRoute.snapshot.queryParams['id'];
+          const eligibilityId = this.actRoute.snapshot.queryParams['e_id'];
+
+          if(!sessionData.prevClientCaseEligibilityId)
+            {
+            if(!clientId && this.clientId)
+              {
+                this.updateQueryParams({id: this.clientId})
+              }
+            if(!eligibilityId && this.clientCaseEligibilityId)
+              {
+                this.updateQueryParams({e_id: this.clientCaseEligibilityId})
+              }
+          }
+
+
         }
 
         this.hideLoader();
@@ -758,6 +775,14 @@ export class WorkflowFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
+    });
+  }
+
+  updateQueryParams(newParams: { [key: string]: any }) {
+    this.router.navigate([], {
+      relativeTo: this.actRoute,
+      queryParams: newParams,
+      queryParamsHandling: 'merge' // Merge with existing query params
     });
   }
 

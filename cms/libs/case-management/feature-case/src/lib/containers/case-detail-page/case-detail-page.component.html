@@ -7,7 +7,7 @@
     <button class="createcase-mobile-menu-btn  createbtn-close"  aria-label="Open Menu" (click)="openInnerLeftMenu()" title="Open Menu"> <span class="material-icons" aria-hidden="true">
       menu_open
       </span>
-  </button> 
+  </button>
   </div>
   <div class="add-client_right">
     <!-- Breadcrumb Section -->
@@ -34,16 +34,17 @@
                  (click)="dataItem.click" *ngIf="hideButton(dataItem.text)" >
                 <span class="material-icons" [attr.aria-label]="dataItem.text" aria-hidden="true">{{dataItem.icon}}</span>
                 <label> {{ dataItem.text }} </label>
-              </button> 
+              </button>
             </ng-template>
           </kendo-splitbutton>
         </div>
+        <router-outlet name="commonActions"></router-outlet>
       </div>
     </section>
     <div class="casenav-details-wrapper" *ngIf="isWorkflowReady$ | async">
       <router-outlet></router-outlet>
     </div>
- 
+
   </div>
 </div>
 
@@ -57,9 +58,9 @@
       a letter or email, then click “Save & Exit.”
     </p>
     <p class="text-muted mb-2" *ngIf="isCerForm">
-    The application status will be set 
-    to Disenrolled if not completed by the eligibility 
-    period end date.  Select the case status below, 
+    The application status will be set
+    to Disenrolled if not completed by the eligibility
+    period end date.  Select the case status below,
     specify if you need to send the client a letter or email, then click “Save & Exit.
    </p>
     <div class="flex-row">

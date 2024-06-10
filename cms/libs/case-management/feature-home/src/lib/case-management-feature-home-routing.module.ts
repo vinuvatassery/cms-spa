@@ -17,17 +17,17 @@ const routes: Routes = [
   },
   {
     path: 'case-detail',
-    component: CaseDetailPageComponent,   
+    component: CaseDetailPageComponent,
     data: {
       title: '',
-    }, 
+    },
     children: [
       {
         path: 'case-summary',
         component:CaseSummaryComponent,
           data: {
             title: 'New Application',
-          }, 
+          },
       },
       {
         path: 'client',
@@ -149,6 +149,14 @@ const routes: Routes = [
           title: '',
         },
       },
+      {
+        outlet: 'commonActions',
+        path: '',
+        loadChildren: () =>
+          import('@cms/productivity-tools/feature-fabs-menu').then(
+            (m) => m.ProductivityToolsFeatureFabsMenuModule
+          )
+      },
       // {
       //   path: '',
       //   redirectTo: 'client',
@@ -158,17 +166,17 @@ const routes: Routes = [
   },
   {
     path: 'cer-case-detail',
-    component: CaseDetailPageComponent,   
+    component: CaseDetailPageComponent,
     data: {
       title: '',
-    }, 
+    },
     children: [
       {
         path: 'case-summary',
         component:CaseSummaryComponent,
           data: {
             title: 'Renew Eligibility',
-          }, 
+          },
       },
       {
         path: 'client',
