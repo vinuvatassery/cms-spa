@@ -124,7 +124,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.loader$.subscribe((res:Boolean) =>{
+    this.loader$.subscribe((res:boolean) =>{
       if(res){
         this.showLoading = true;
       }else{
