@@ -1310,13 +1310,20 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
   }
 
   getPolicySubscription() {
-    this.policySubscription = this.insurancePolicyFacade.currentEligibilityPolicies$.subscribe((policies: any) => {
+    this.policySubscription = this.insurancePolicyFacade.currentEligibilityPolicies$.subscribe((policies: any[]) => {
+      
+      let isCurrentPolicyIsNotPrimary =  policies.findIndex((x: any) => x.clientInsurancePolicyId === this.healthInsuranceForm.controls['clientInsurancePolicyId'].value && x.priorityCode === PriorityCode.Primary) == -1;
+      
       if (this.isEdit && !this.isCopyPopup) {
         policies = policies.filter((x: any) => x.clientInsurancePolicyId !== this.healthInsuranceForm.controls['clientInsurancePolicyId'].value);
       }
+
       let policyAlreadyExist = this.policyExistCheck(policies);
 
-      let primaryAlreadyExist = this.primaryExistCheck(policies);
+      let primaryAlreadyExist = false;
+      if(!isCurrentPolicyIsNotPrimary){
+        primaryAlreadyExist = this.primaryExistCheck(policies);
+      }
 
       if (policyAlreadyExist) {
         this.insurancePolicyFacade.showHideSnackBar(
