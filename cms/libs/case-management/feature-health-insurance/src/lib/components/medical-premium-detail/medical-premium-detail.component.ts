@@ -183,7 +183,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
 
     this.hasInsurancePlanCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Plan_Create_Update']);
   }
- 
+
   ngOnDestroy(): void {
     if (this.editViewSubscription !== undefined) {
       this.editViewSubscription.unsubscribe();
@@ -209,7 +209,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     this.lovFacade.getHealthInsuranceTypeLovsForPlan();
     this.lovFacade.getMedicareCoverageTypeLovs();
   }
- 
+
   private validateFormMode() {
 
     if (this.dialogTitle === 'Add' || this.dialogTitle === 'View') {
@@ -1304,8 +1304,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
   save() {
     this.validateForm();
      if (this.healthInsuranceForm.valid && this.isInsuranceFileUploaded && this.isProofFileUploaded && this.isSummaryFileUploaded && this.isMedicareCardFileUploaded) {
-      this.insurancePolicyFacade.showLoader(); 
-      this.getPoliciesEventEmitter.next(true);    
+      this.insurancePolicyFacade.showLoader();
+      this.getPoliciesEventEmitter.next(true);
+    }else{
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.healthInsuranceForm, this.elementRef.nativeElement,null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
     }
   }
 
@@ -1339,7 +1345,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
   }
 
   savePolicy() {
-    this.populateInsurancePolicy();    
+    this.populateInsurancePolicy();
     this.btnDisabled = true;
     if (this.isCopyPopup) {
       this.SaveCopiedInsurancePolicy();
@@ -1455,12 +1461,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
         endDateField = 'medicareEndDate'
       }
       let policyExist = policies.filter((x: any) => x.priorityCode == PriorityCode.Primary);
-      if (this.healthInsuranceForm.controls[endDateField].value == null) {        
+      if (this.healthInsuranceForm.controls[endDateField].value == null) {
         if (policyExist.length > 0) {
           return true;
-        }        
+        }
       }
-      else {        
+      else {
         policyOverlap = this.checkDateOverlapForThePolicy(policyExist, endDateField);
         return policyOverlap;
       }
@@ -1649,7 +1655,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
         this.endDateMin = this.healthInsuranceForm.controls['insuranceStartDate'].value;
       }
     }
-  } 
+  }
 
   endDateValueChange(date: Date) {
     this.insuranceEndDateIsgreaterthanStartDate = false;
