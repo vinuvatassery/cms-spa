@@ -6,10 +6,12 @@ import {
   Input,
   Output,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormGroup } from '@angular/forms';
 import {
+  ColumnVisibilityChangeEvent,
   GridDataResult,
 } from '@progress/kendo-angular-grid';
 import {
@@ -18,6 +20,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 @Component({
   selector: 'system-config-client-notification-defaults-list',
   templateUrl: './client-notification-defaults-list.component.html',
@@ -42,16 +45,19 @@ export class ClientNotificationDefaultsListComponent
   @Input() clientNotificationFilterColumn$: any;
   @Output() loadClientNotificationListsEvent = new EventEmitter<any>();
   @Output() clientNotificationFilterColumnEvent = new EventEmitter<any>();
+  private emailOptionRemovalDate = new Date('2024-07-05'); 
   public state!: State;
   isGridRowEdit = false;
-  sortColumn = 'vendorName';
+  sortColumn = 'Scenario';
   sortDir = 'Ascending';
   columnsReordered = false;
+  sortColumnDesc = 'Scenario';
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   optionWidth = 50;
   filter!: any;
+  columnChangeDesc = 'Default Columns'
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   isClientNotificationListGridLoaderShow = false;
@@ -61,7 +67,15 @@ export class ClientNotificationDefaultsListComponent
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  columns: any = {
+    scenario: 'Scenrio',
+    scenarioDesc: 'Scenario Description',
+    defaultMethod: 'Default Method',
+    lastModifiedTime: 'Last Modified'
+  };
   /** Internal event methods **/
+  constructor( private readonly router: Router, private readonly cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.loadClientNotificationList();
@@ -69,11 +83,8 @@ export class ClientNotificationDefaultsListComponent
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: [{ field: 'scenario', dir: 'asc' }]
     };
-
-    this.loadClientNotificationList();
   }
 
   private loadClientNotificationList(): void {
@@ -81,14 +92,14 @@ export class ClientNotificationDefaultsListComponent
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
-      this.sortType
+      this.sortType,
     );
   }
   loadClientNotificationLitData(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
-    sortTypeValue: string
+    sortTypeValue: string,
   ) {
     this.isClientNotificationListGridLoaderShow = true;
     const gridDataRefinerValue = {
@@ -96,6 +107,7 @@ export class ClientNotificationDefaultsListComponent
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter :  this.state?.['filter']?.['filters'] ?? []
     };
     this.loadClientNotificationListsEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -105,6 +117,7 @@ export class ClientNotificationDefaultsListComponent
   }
   onChange(data: any) {
     this.defaultGridState();
+    const operator = 'contains';
 
     this.filterData = {
       logic: 'and',
@@ -112,8 +125,8 @@ export class ClientNotificationDefaultsListComponent
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'Scenario',
+              operator: operator,
               value: data,
             },
           ],
@@ -124,15 +137,23 @@ export class ClientNotificationDefaultsListComponent
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+   this.loadClientNotificationList();
   }
-
   defaultGridState() {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
     };
+    this.sortColumn = 'Scenario';
+    this.sortDir = 'Ascending';
+    this.filter = [];
+    this.isFiltered = false;
+    this.columnsReordered = false;
+    this.sortValue = 'Scenario';
+    this.sortType = 'asc';
+    this.sort = this.sortColumn;
+    this.loadClientNotificationList();
   }
 
   onColumnReorder($event: any) {
@@ -142,16 +163,25 @@ export class ClientNotificationDefaultsListComponent
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
+    this.filter = stateData?.filter?.filters;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadClientNotificationList();
-  }
-
-  // updating the pagination infor based on dropdown selection
-  pageSelectionChange(data: any) {
-    this.state.take = data.value;
-    this.state.skip = 0;
+    this.sortColumn = stateData.sort[0]?.field;
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    }
+     else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.loadClientNotificationList();
   }
 
@@ -162,14 +192,10 @@ export class ClientNotificationDefaultsListComponent
   gridDataHandle() {
     this.clientNotificationDataLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridClientNotificationDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isClientNotificationListGridLoaderShow = false;
       }
+      this.cdr.detectChanges();
     });
     this.isClientNotificationListGridLoaderShow = false;
   }
@@ -197,5 +223,18 @@ export class ClientNotificationDefaultsListComponent
 
   onCloseUpdateDefaultNotificationClicked() {
     this.UpdateDefaultNotificationPopupShow = false;
+  }
+  emailTemplateNavigate()
+  {
+    this.router.navigate([`/system-config/communication/email-template`]);
+  }
+
+  letterTemplateNavigate()
+  {
+    this.router.navigate([`/system-config/communication/letter-template`]);
+  }
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Columns Added';
   }
 }

@@ -96,6 +96,20 @@ export class TemplateDataService {
       },
     ]);
   }
+  loadClientNotificationDefaultsLists(
+    skipcount: number,
+    sort: string,
+    sortType: string,
+    filter:string,
+  ) {
+    const filterRequestBody = {
+      skipcount:skipcount,
+      sorting:sort,
+      sortType:sortType,
+      filter:filter
+    }
+      return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-notifications/defaults`,filterRequestBody); 
+}
   loadEmailTemplatesListsService() {
     return of([
       {

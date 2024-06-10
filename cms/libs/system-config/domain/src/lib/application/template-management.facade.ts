@@ -15,7 +15,7 @@ export class TemplateManagementFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueClientNotification = 'creationTime'; 
+  public sortValueClientNotification = 'scenario'; 
   public sortClientNotificationGrid: SortDescriptor[] = [{
     field: this.sortValueClientNotification,
   }];
@@ -110,12 +110,28 @@ export class TemplateManagementFacade {
 
 
 
-  loadClientNotificationDefaultsLists() {
-    this.templateDataService
-      .loadClientNotificationDefaultsListsService()
+  loadClientNotificationDefaultsLists(
+    skipcount: number,
+    sort: string,
+    sortType: string,
+    filter:string,
+  ) {
+    this.showLoader();
+    filter = JSON.stringify(filter);
+    this.templateDataService.loadClientNotificationDefaultsLists(skipcount,
+      sort,
+      sortType,
+      filter)
       .subscribe({
-        next: (response) => {
-          this.clientNotificationDefaultsListsSubject.next(response);
+        next: (response:any) => {
+          if (response) {
+            this.hideLoader();
+            const gridView = {
+              data: response['items'],
+              total: response['totalCount'],
+            };
+          this.clientNotificationDefaultsListsSubject.next(gridView);
+        }
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
