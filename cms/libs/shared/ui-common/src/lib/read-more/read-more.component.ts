@@ -17,7 +17,6 @@ export class ReadMoreComponent {
   nonEditedContent: string = '';
   isShowReadMore: boolean = false;
   sanitizedHtml:any;
-  constructor() {}
 
   ngOnInit() {
     this.nonEditedContent = this.content;
