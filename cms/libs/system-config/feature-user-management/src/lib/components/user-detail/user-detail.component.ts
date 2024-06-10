@@ -60,8 +60,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   enteredPnumberValue: any;
   isRequestingPNumber: boolean = false;
   isPNumberAlreadyExists: boolean = false;
-  isEmailAlreadyExists: boolean = false;
   isAdUser: boolean = false;
+  isUserAlreadyExists = false;
   userDetailData: any;  
   userDetailRoles: any = [];
   userStatus$ = this.userManagementFacade.canUserBeDeactivated$;
@@ -170,9 +170,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       next: (data) => {
         if(data.status == 0 && data.message.toLowerCase().includes('pnumber')){
           this.isPNumberAlreadyExists = true;
-          this.isEmailAlreadyExists = false;
-        } else if(data.status == 0 && data.message.toLowerCase().includes('email')) {
-          this.isEmailAlreadyExists = true;
+        } else if(data.status == 0 && data.message.toLowerCase().includes('user')) {
+          this.isUserAlreadyExists = true;
           this.isPNumberAlreadyExists = false;
         }
         this.cd.detectChanges();
@@ -365,7 +364,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.enteredPnumberValue = pNumber;
     this.isRequestingPNumber = true;
     this.isPNumberAlreadyExists = false;
-    this.isEmailAlreadyExists = false;
+    this.isUserAlreadyExists = false;
     this.adUserPNumberData = null;
     this.userManagementFacade.searchPNumber(pNumber);
   }

@@ -51,6 +51,9 @@
                                 && !isRequestingPNumber">
                               {{enteredPnumberValue}} already entered.
         </kendo-formerror>
+        <kendo-formerror *ngIf="isUserAlreadyExists">
+          User already exists.
+        </kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="First Name">
@@ -87,9 +90,6 @@
         </kendo-formerror>
         <kendo-formerror *ngIf="userFormGroup?.get('email')?.invalid && userFormGroup?.get('email')?.errors?.['pattern'] && (userFormGroup?.get('email')?.touched)">
           Incorrect Email Format.
-        </kendo-formerror>
-        <kendo-formerror *ngIf="isEmailAlreadyExists">
-          {{userFormGroup?.get('email')?.value}} already entered.
         </kendo-formerror>
       </div>
 

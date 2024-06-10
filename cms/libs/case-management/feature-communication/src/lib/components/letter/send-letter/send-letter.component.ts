@@ -689,7 +689,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.confirmPopupHeader = 'Send Denial Letter to print?';
         this.saveForLaterHeadterText = "Send Denial Letter Later?";
         this.saveForLaterModelText = "You must send the  Denial Letter within 14 Days";
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
+        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
         break;
 
       case CommunicationEventTypeCode.ApprovalNoticeLetter:
@@ -832,6 +832,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     draftTemplate.entity = this.communicationLetterTypeCode;
     let formData = this.communicationFacade.prepareEsignLetterData(draftTemplate, this.entityId, this.loginUserId, this.cerEmailAttachedFiles, this.entityType);
+    let {templateTypeCode} = this.getApiTemplateTypeCode();
+    formData.append('templateTypeCode', templateTypeCode);
     this.communicationFacade.saveEsignLetterForLater(formData)
         .subscribe({
           next: (data: any) =>{
