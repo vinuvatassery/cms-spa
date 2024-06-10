@@ -63,7 +63,7 @@
     </section>
 
     <!-- second-screen -->
-    <section class="main-body" *ngIf="!showFirstDiv">
+    <section class="main-body" *ngIf="showSecondDiv">
         <div class="app-l-inner-rapper">
         <section class="app-l-breadcrumb" style="width: 100%">
             <div class="breadcrumb-left" style="width: 100%">
@@ -329,7 +329,7 @@
 
             <!--    Premium Payments -->
             <div id="premiumpayments" class="mb-4">
-                <div class="align-header"><h2 class="text-bold mb-2">Premium Payments</h2> <p> <a href="#" class="textstyle">View All Premium Payments</a></p></div>
+                <div class="align-header"><h2 class="text-bold mb-2">Premium Payments</h2> <p> <a id="viewallpremium" (click)="showPremiumPayments()" class="textstyle">View All Premium Payments</a></p></div>
                 <div class="flex-row">
                     <div class="flex-col flex-col-6 ">
                         <section class="submit-application-wrap normal">
@@ -504,6 +504,232 @@
                 
             </div>
             <!--  -->
+          
+        </div>
+    </section>
+
+       
+    </section>
+
+    <!-- third-screen / All premium payments -->
+    <section class="main-body" id="all-premium-payments" *ngIf="showThirdDiv">
+        <div class="app-l-inner-rapper">
+        <section class="app-l-breadcrumb" style="width: 100%">
+            <div class="breadcrumb-left" style="width: 100%">
+              <div class="w100 d-flex justify-content-between">
+                <kendo-breadcrumb
+                [items]="items"
+                  separatorIcon="line" 
+                  collapseMode="wrap"
+                ></kendo-breadcrumb>
+                <p class="member-id">
+                    <a href="#" class="textstyle"> <span class="material-icons" aria-hidden="true" aria-label="credit_card"
+                        >credit_card</span
+                      > View My Member Card</a>
+                </p>
+              </div>
+            </div>
+          </section>
+         
+         
+          <section class="app-l-mainTittle mb-3"><h1 class="maintitle_withicon "><span class="material-icons" aria-hidden="true" aria-label="arrow_back"
+            >arrow_back</span
+          > All Premium Payments </h1></section>
+          <p class="mb-3">View all medical and dental premium payments. Filter and sort using the options below.  </p>
+          
+           
+           <div class="count-list ">
+            <div class="count-list-box">
+                <h2>4 medical premiums</h2>
+            </div>
+            <div class="count-list-box">
+                <h2>3 dental premiums</h2>
+            </div>
+            <div class="count-list-box">
+                <h2>0 pending payments</h2>
+            </div>
+           </div>
+        </div>
+           
+           <section class="tab-panel">
+            <div class="tab-wrap pl-3 pr-3 bt-0 pt-1 pb-1">
+                
+                <p class="need-help">Need help?</p>
+            </div>
+            <div class="app-l-inner-rapper pt-0">
+           
+            <!--    Premium Payments -->
+            <div id="premiumpayments" class="mb-4">
+                <div class="premiumpayment-wrap">
+                <div class="filer-wrap pt-4">
+                    <h2 class="mb-4">Filter Payments</h2>
+                    <div class="filter-box mb-3">
+                        <h3 class="mb-2">By Coverage Type</h3>
+                        <ul>
+                            <li>
+                                Medical Insurance
+                            </li>
+                            <li>
+                                Dental Insurance
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="filter-box mb-3">
+                        <h3 class="mb-2">By Insurance Provider</h3>
+                        <ul>
+                            <li>
+                                <kendo-dropdownlist aria-label="All Columns" class="select-provider"
+                                [data]="selectProvider" textField="columnDesc" valueField="columnCode" [valuePrimitive]="true"
+                                 >
+                              </kendo-dropdownlist>
+                            </li>
+                           
+                        </ul>
+                    </div>
+                    <div class="filter-box mb-3">
+                        <h3 class="mb-2">By Payment Status</h3>
+                        <ul>
+                            <li>
+                                Medical Insurance
+                            </li>
+                            <li>
+                                Dental Insurance
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="filter-box mb-3">
+                        <h3 class="mb-2">By Date</h3>
+                        <ul>
+                            <li>
+                                <kendo-dropdownlist aria-label="All Columns" class="select-provider"
+                                [data]="selectProvider" textField="columnDesc" valueField="columnCode" [valuePrimitive]="true"
+                                 >
+                              </kendo-dropdownlist>
+                            </li>
+                           
+                        </ul>
+                    </div>
+
+                    <div class="filter-box mb-3 reset-filter">
+                        <span class="">By Insurance Provider</span>
+                        <button>Reset Filters</button>
+                        
+                    </div>
+                </div>
+                <div class="flex-row wid-align pt-4">
+                    <div class="flex-col flex-col-12 ">
+                        <section class="submit-application-wrap normal mb-3">
+                            <div class="payment-box-head d-flex justify-content-between mb-1">
+                                
+                            <div class="payment-detail">
+                                <div class="payment-icon">
+                                    <span class="material-icons" aria-hidden="true" aria-label="verified_user"
+                                    >verified_user</span
+                                  >
+                                </div>
+                                <div class="">
+                                    <h4>Aetna - Silver Plan 1000</h4>
+                                    <p>Qualified Health Plan (QHP)</p>
+                                </div>
+                                
+                            </div>
+                            <div class="status paid">
+                                <p class="text-bold">Paid XX/XX/XXXX</p>
+                            </div>
+                                
+                            </div>
+
+                            <div class="payment-box-foot d-flex justify-content-between">
+                                <div class="">
+                                    <h2>
+                                        $339.00
+                                    </h2>
+                                    <p>Premium Amount</p>
+                                </div>
+                                <div class="">
+                                    <h2>
+                                        XXXXXXXX
+                                    </h2>
+                                    <p>Policy ID</p>
+                                </div>
+                                <div class="">
+                                    <h2>
+                                        XXX/XX/XXX
+                                    </h2>
+                                    <p>Coverage Start Date</p>
+                                </div>
+                                <div class="">
+                                    <h2>
+                                        XX/XXX/XXX
+                                    </h2>
+                                    <p>Premium Amount</p>
+                                </div>
+                            </div>
+                            
+                            
+                           
+                        </section>
+                        <section class="submit-application-wrap normal">
+                            <div class="payment-box-head d-flex justify-content-between mb-1">
+                                
+                            <div class="payment-detail">
+                                <div class="payment-icon">
+                                    <span class="material-icons" aria-hidden="true" aria-label="verified_user"
+                                    >verified_user</span
+                                  >
+                                </div>
+                                <div class="">
+                                    <h4>Aetna - Silver Plan 1000</h4>
+                                    <p>Qualified Health Plan (QHP)</p>
+                                </div>
+                                
+                            </div>
+                            <div class="status paid">
+                                <p class="text-bold">Paid XX/XX/XXXX</p>
+                            </div>
+                                
+                            </div>
+
+                            <div class="payment-box-foot d-flex justify-content-between">
+                                <div class="">
+                                    <h2>
+                                        $339.00
+                                    </h2>
+                                    <p>Premium Amount</p>
+                                </div>
+                                <div class="">
+                                    <h2>
+                                        XXXXXXXX
+                                    </h2>
+                                    <p>Policy ID</p>
+                                </div>
+                                <div class="">
+                                    <h2>
+                                        XXX/XX/XXX
+                                    </h2>
+                                    <p>Coverage Start Date</p>
+                                </div>
+                                <div class="">
+                                    <h2>
+                                        XX/XXX/XXX
+                                    </h2>
+                                    <p>Premium Amount</p>
+                                </div>
+                            </div>
+                            
+                            
+                           
+                        </section>
+
+                    </div>
+                    </div>
+                </div>
+                
+            </div>
+
+             
+
+            
           
         </div>
     </section>

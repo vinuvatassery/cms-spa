@@ -27,10 +27,23 @@ export class CpLandingScreenComponent {
   dropDowncolumns: any = [
     'English', 'Arabic' 
   ];
+  selectProvider: any = [
+    'One', 'Two' 
+  ];
 
   showFirstDiv: boolean = true;
+  showSecondDiv: boolean = false;
+  showThirdDiv: boolean = false;
+
   toggleDivs() {
     this.showFirstDiv = !this.showFirstDiv;
+    this.showSecondDiv = !this.showSecondDiv;
+  }
+
+  showPremiumPayments() {
+    this.showFirstDiv = false;
+    this.showSecondDiv = false;
+    this.showThirdDiv = true;
   }
 
   

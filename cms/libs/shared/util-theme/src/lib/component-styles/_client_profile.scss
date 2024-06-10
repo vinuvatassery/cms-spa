@@ -478,6 +478,58 @@ a{
             
       }
 }
+// All Premium Payments
+.premiumpayment-wrap{
+      display: flex;
+      .filer-wrap{
+            width: 25%;
+            border-right: 1px solid #efe8e8;
+            margin-right: 30px;
+            padding-right: 3%;
+      }
+      .flex-row.wid-align{
+            width: 70%;
+      }
+      
+
+}
+.reset-filter{
+      display: flex;
+      flex-direction: column;
+      span{
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 10px;
+      }
+      button{
+            width: 100%;
+            height: 51px;
+            font-size: 14px;
+            text-transform: uppercase;
+            border-radius: 100px;
+            background-color: #0000001c;
+            color: #4b4b4b;
+            border: none;
+      }
+}
+.filter-box{
+      ul{
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            li{
+                  font-size: 16px;
+            }
+      }
+      .select-provider{
+            border: 1px solid #E0E0E0 !important;
+            border-top-color: #e0e0e0 !important;
+            border-radius: 4px;
+            background: transparent;
+      }
+}
+
+
 
 @media(max-width:768px){
       .count-list{
