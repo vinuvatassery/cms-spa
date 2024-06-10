@@ -21,7 +21,6 @@ import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSn
 import { StatusFlag } from '@cms/shared/ui-common';
 import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 
 @Component({
@@ -67,7 +66,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly userDataService: UserDataService,
     private readonly router: Router,
     private readonly fabBadgeFacade: FabBadgeFacade,
-    private readonly sanitizer: DomSanitizer,
     public todoFacade: TodoFacade,) { }
 
   /** Public properties **/
@@ -361,8 +359,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         },
       });
   }
-  private getSanitizedHtml(currentEmailData: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
+  private getSanitizedHtml(currentEmailData: string) {
+    return currentEmailData;
   }
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDefaultRoles, UserManagementFacade } from '@cms/system-config/domain';
+import { NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -47,7 +47,6 @@ export class UserAssignedRoleComponentComponent implements OnChanges {
   /* Constructor */
   constructor(private readonly userManagementFacade: UserManagementFacade,
     private cdr: ChangeDetectorRef,
-    private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
   defaultSort:any;
