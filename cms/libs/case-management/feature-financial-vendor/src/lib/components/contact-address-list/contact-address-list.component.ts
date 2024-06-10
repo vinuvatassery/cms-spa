@@ -43,6 +43,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   sortDir = "";
   columnsReordered = false;
   isEdit !: boolean;
+  showLoading = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
@@ -123,12 +124,19 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.initializeGrid();
-  }
+    this.loader$.subscribe((res:Boolean) =>{
+      if(res){
+        this.showLoading = true;
+      }else{
+        this.showLoading = false;
+      }  
+  })
+  this.initializeGrid();
+}
 
   initializeGrid() {
     this.contacts$.next({ data: [], total: 0 });
-    this.loader$.next(false);
+   this.loader$.next(true)
     this.vendocontactsFacade.loadcontacts(
       this.VendorAddressId,
       this.state?.skip ?? 0,
@@ -270,6 +278,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
+    this.loader$.next(true)
     this.vendocontactsFacade.loadcontacts(
       this.VendorAddressId,
       this.state?.skip ?? 0,
@@ -298,6 +307,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     this.filters = JSON.stringify(stateData.filter?.filters);
     this.state = stateData;
     this.setGridState(stateData);
+    this.loader$.next(true)
     this.vendocontactsFacade.loadcontacts(
       this.VendorAddressId,
       this.state?.skip ?? 0,
