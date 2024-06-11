@@ -114,7 +114,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   appInfoForm!: FormGroup;
   ageMinLimit = 1;
-  ageMaxLimit = 9999999999;
+  ageMaxLimit = 9999;
 
   textboxDisable!: boolean;
   optionButtonValid!: boolean;
@@ -502,7 +502,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
         applicantInfo.client?.middleName
       );
       this.appInfoForm.controls['middleName'].enable();
-    } 
+    }
   }
 
   private updateApplicantBaseDetails(applicantInfo: ApplicantInfo) {
@@ -794,7 +794,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       const data: CompletionChecklist = {
         dataPointName: control.name,
         status: control.checked ? StatusFlag.Yes : StatusFlag.No,
-      };     
+      };
 
       initialAdjustment.push(data);
     });
@@ -816,7 +816,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
 
     this.updateInitialWorkflowCheckList();
   }
-  
+
   private noMiddleNameDataPointAdjustment(initialAdjustment: CompletionChecklist[], parentNotApplicable: string, childNotApplicable:string){
     const offNotApplicable = initialAdjustment.find(adj => adj.dataPointName === parentNotApplicable && adj.status === StatusFlag.Yes);
     if(offNotApplicable){
@@ -828,7 +828,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
           initialAdjustment.push({
             dataPointName: childNotApplicable,
             status: StatusFlag.Yes,
-          });  
+          });
         }
     }
   }
