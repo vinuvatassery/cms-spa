@@ -415,6 +415,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             if(this.entityId && this.entityType == FabEntityTypeCode.Client){
               this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
             }
+            this.todoFacade.loadAlertsBanner(this.entityId);
           }
           this.loaderService.hide();
           this.navigateConditionally();
@@ -595,7 +596,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
                 this.cancelDisplay = false;
               }
             this.sortDropdownValues(defaultOption, otherOptions);
-            this.todoFacade.loadAlertsBanner(this.entityId);
             }
             this.loaderService.hide();
           },
@@ -735,7 +735,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.templateHeader = 'CER Authorization Letter';
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
         this.saveForLaterHeadterText = "Send CER Authorization Letter Later?";
-        this.saveForLaterModelText = "You must send the  CerAuthorization Letter within 45 Days";
+        this.saveForLaterModelText = "You must send the Cer Authorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send CER Authorization Letter to Print?';
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
         break;
@@ -744,8 +744,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.snackBarMessage = 'Letter generated! An event has been logged.';
         this.templateHeader = 'Application Authorization Letter';
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
-        this.saveForLaterHeadterText = "Send Authorization Letter Later?";
-        this.saveForLaterModelText = "You must send the  Authorization Letter within 45 Days";
+        this.saveForLaterHeadterText = "Send Application Authorization Letter Later?";
+        this.saveForLaterModelText = "You must send the Application Authorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Letter to Print?';
         this.confirmationModelText = "This action cannot be undone.";
         break;

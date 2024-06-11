@@ -35,6 +35,7 @@
               placeholder="Search Pharmacy Name/Number"
               (filterChange)="searchPharmacies($event)"
               [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }" 
+              id="pharmacyName"
               > 
               <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
                 <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.vendorFullName}}</span>          

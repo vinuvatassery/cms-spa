@@ -342,7 +342,6 @@ saveForLaterHeadterText!: string;
               this.cancelDisplay = false;
             }
             this.sortDropdownValues(defaultOption, otherOptions);
-            this.todoFacade.loadAlertsBanner(this.entityId);
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -575,6 +574,7 @@ saveForLaterHeadterText!: string;
             if(this.entityId && this.entityType == FabEntityTypeCode.Client){
               this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
             }
+            this.todoFacade.loadAlertsBanner(this.entityId);
           }
           this.ref.detectChanges();
           this.loaderService.hide();
@@ -814,7 +814,7 @@ saveForLaterHeadterText!: string;
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
         this.saveForLaterHeadterText = "Send CER Authorization Email Later?";
-        this.saveForLaterModelText = "You must send the  Cer Authorization Email within 45 Days";
+        this.saveForLaterModelText = "You must send the Cer Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
         break;
@@ -823,8 +823,8 @@ saveForLaterHeadterText!: string;
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
-        this.saveForLaterHeadterText = "Send Authorization Email Later?";
-        this.saveForLaterModelText = "You must send the  Authorization Email within 45 Days";
+        this.saveForLaterHeadterText = "Send Application Authorization Email Later?";
+        this.saveForLaterModelText = "You must send the Application Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
         break;
@@ -1046,6 +1046,7 @@ saveForLaterHeadterText!: string;
             this.isSendEmailSuccess.emit(true);
             this.closeSendEmailEvent.emit(CommunicationEvents.Print);
             this.onCloseSendEmailClicked();
+            this.todoFacade.loadAlertsBanner(this.entityId);
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Email Sent! An event has been logged.')
           }
           this.loaderService.hide();
