@@ -108,7 +108,8 @@
                 <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
                     <span class="k-input-prefix custom-currencysymbol"> $ </span>
                     <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right"
-                        placeholder="Premium Amount" placeholder="00.00" formControlName="premiumAmt" #premiumAmt
+                        placeholder="Premium Amount" placeholder="00.00" formControlName="premiumAmt" #premiumAmt   [decimals]="2"
+                        [maxlength]="15"
                         [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" >
 
                     </kendo-numerictextbox>
