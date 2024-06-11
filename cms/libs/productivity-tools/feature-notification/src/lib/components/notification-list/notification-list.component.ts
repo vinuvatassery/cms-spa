@@ -9,7 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 @Component({
   selector: 'productivity-tools-notification-list',
   templateUrl: './notification-list.component.html',
@@ -43,7 +43,10 @@ export class NotificationListComponent {
           return dateB - dateA}) : []; // Sorting by alertDueDate in descending order;
         this.cdr.detectChanges();
       });
-      this.searchTerm.valueChanges.subscribe((value) => {
+      this.searchTerm.valueChanges.pipe(   
+        debounceTime(500),
+        distinctUntilChanged()
+        ) .subscribe((value) => {
         if(!value){
           this.notificationFacade.alertSearchLoaderVisibilitySubject.next(false)
         }
