@@ -36,7 +36,10 @@
           [width]="200"
         >
         </kendo-grid-column>
-        <kendo-grid-column field="amountRequested" title="Amount" [width]="100">
+        <kendo-grid-column format="{0:c}" field="amountRequested" title="Amount" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRequested}}</span>
+          </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="reversalTypeDesc" title="Reversal" [width]="120">
         </kendo-grid-column>
@@ -90,8 +93,8 @@
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sortable]="false" [columnMenu]="false" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <common-user-photo-icon  
-            [userId]="dataItem.creatorId" 
+            <common-user-photo-icon
+            [userId]="dataItem.creatorId"
             [userFirstName]="dataItem.userFirstName"
             [userLastName]="dataItem.userLastName"
             [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
