@@ -97,6 +97,7 @@ export class PharmacyDetailComponent implements OnInit {
     }
     else {
       this.showSelectPharmacyRequired = true;
+      this.ngDirtyInValid();
     }
   }
 
@@ -119,6 +120,7 @@ export class PharmacyDetailComponent implements OnInit {
       this.selectedPharmacyId = pharmacy.vendorId;
       this.vendorAddressId = pharmacy?.vendorAddressId;
       this.showSelectPharmacyRequired = false;
+      this.ngDirtyInValid();
     }
     else {
       this.selectedPharmacyId = null;
@@ -185,5 +187,18 @@ export class PharmacyDetailComponent implements OnInit {
   loadPendingApprovalGeneralCount() {
 
     this.navigationMenuFacade.getPendingApprovalGeneralCount();
+  }
+
+  ngDirtyInValid() {
+    if (this.showSelectPharmacyRequired) {
+      document.getElementById('pharmacyName')?.classList.remove('ng-valid');
+      document.getElementById('pharmacyName')?.classList.add('ng-invalid');
+      document.getElementById('pharmacyName')?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById('pharmacyName')?.classList.remove('ng-invalid');
+      document.getElementById('pharmacyName')?.classList.remove('ng-dirty');
+      document.getElementById('pharmacyName')?.classList.add('ng-valid');
+    }
   }
 }

@@ -68,7 +68,7 @@
                           (selectionChange)="pharmacySelectionChange($event)" 
                           [(ngModel)]="selectedVendor" formControlName="pharmacy" 
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                            [filterable]="true" (blur)="showHideServiceList()">
+                            [filterable]="true" (blur)="showHideServiceList()" id="pharmacyName">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
