@@ -28,7 +28,8 @@
         position="left"
       >
         <ng-template kendoPopoverBodyTemplate>
-          <common-user-profile-card> </common-user-profile-card>
+          <common-user-profile-card [userId]="note.creatorId"
+          [reassign]="false"> </common-user-profile-card>
         </ng-template>
       </kendo-popover>
       <p>{{note.eventLogDesc}}</p>
