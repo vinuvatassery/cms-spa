@@ -1338,24 +1338,29 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       }
       let policyAlreadyExist = this.policyExistCheck(policies);     
      
-      if (policyAlreadyExist) {
-        this.insurancePolicyFacade.showHideSnackBar(
-          SnackBarNotificationType.ERROR,
-          'This Plan already exists.', NotificationSource.UI
-        );
-        this.insurancePolicyFacade.hideLoader();
-      }
-      else if(primaryAlreadyExist){
-        this.insurancePolicyFacade.showHideSnackBar(
-          SnackBarNotificationType.ERROR,
-          snackBarMessage, NotificationSource.UI
-        );
-        this.insurancePolicyFacade.hideLoader();
-      }
-      else {
-        this.savePolicy();
-      }
+      this.saveInsurancePolicy(policyAlreadyExist,primaryAlreadyExist,snackBarMessage);
+     
     });
+  }
+
+  saveInsurancePolicy(policyAlreadyExist: any,primaryAlreadyExist:any,snackBarMessage:any){
+    if (policyAlreadyExist) {
+      this.insurancePolicyFacade.showHideSnackBar(
+        SnackBarNotificationType.ERROR,
+        'This Plan already exists.', NotificationSource.UI
+      );
+      this.insurancePolicyFacade.hideLoader();
+    }
+    else if(primaryAlreadyExist){
+      this.insurancePolicyFacade.showHideSnackBar(
+        SnackBarNotificationType.ERROR,
+        snackBarMessage, NotificationSource.UI
+      );
+      this.insurancePolicyFacade.hideLoader();
+    }
+    else {
+      this.savePolicy();
+    }
   }
 
   savePolicy() {
@@ -1445,42 +1450,52 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
         this.healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].value === policy.medicareBeneficiaryIdNumber &&
         [MedicareCoverageType.A, MedicareCoverageType.B, MedicareCoverageType.AB]
           .includes(this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value)) {
-
-        let currentPolicyStartDate = this.intl.formatDate(this.healthInsuranceForm.controls[currentPolicyStartDateField].value, this.dateFormat);
-        let currentPolicyEndDate = this.intl.formatDate(this.healthInsuranceForm.controls[currentPolicyEndDateField].value, this.dateFormat);
-
-        let eachPolicyStartDate = this.intl.formatDate(new Date(policy.startDate), this.dateFormat);
-        let eachPolicyEndDate = policy.endDate === null ? "" :this.intl.formatDate(new Date(policy.endDate), this.dateFormat);
-
-        if(this.healthInsuranceForm.controls[currentPolicyEndDateField].value === null && policy.endDate === null){
-          if(currentPolicyStartDate === eachPolicyStartDate){
-            policyAlreadyExist = true;
-          }
-        }
-        if (this.dateRangeOverlaps(new Date(eachPolicyStartDate), new Date(eachPolicyEndDate), new Date(currentPolicyStartDate), new Date(currentPolicyEndDate))) {
-          policyAlreadyExist = true;
-        }
+        policyAlreadyExist = this.overlapCheckMedicareThreeTypes(policy, currentPolicyStartDateField, currentPolicyEndDateField, policyAlreadyExist);
       }
       else if (this.healthInsuranceForm.controls['insuranceType'].value == policy.healthInsuranceTypeCode
         && policy.insurancePlanId === this.healthInsuranceForm.controls['insurancePlanName'].value
         && policy.insuranceIdNumber === this.healthInsuranceForm.controls['insuranceIdNumber'].value) {
-        let startDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceStartDate'].value, this.dateFormat);
-        let endDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceEndDate'].value, this.dateFormat);
-        let policyStartDate = this.intl.formatDate(new Date(policy.startDate), this.dateFormat);
-        let policyEndDate =  policy.endDate === null ? "" : this.intl.formatDate(new Date(policy.endDate), this.dateFormat);
-
-        if(this.healthInsuranceForm.controls[currentPolicyEndDateField].value === null && policy.endDate === null){
-          if(startDate === policyStartDate){
-            policyAlreadyExist = true;
-          }
-        }
-
-        if (this.dateRangeOverlaps(new Date(policyStartDate), new Date(policyEndDate), new Date(startDate), new Date(endDate))) {
-          policyAlreadyExist = true;
-        }
+        policyAlreadyExist = this.overlapCheckOtherTypes(policy, currentPolicyEndDateField, policyAlreadyExist);
       }
     });
     return policyAlreadyExist
+  }
+
+  overlapCheckMedicareThreeTypes(policy:any,currentPolicyStartDateField:any,currentPolicyEndDateField:any, policyAlreadyExist:boolean): boolean{
+    let currentPolicyStartDate = this.intl.formatDate(this.healthInsuranceForm.controls[currentPolicyStartDateField].value, this.dateFormat);
+    let currentPolicyEndDate = this.intl.formatDate(this.healthInsuranceForm.controls[currentPolicyEndDateField].value, this.dateFormat);
+
+    let eachPolicyStartDate = this.intl.formatDate(new Date(policy.startDate), this.dateFormat);
+    let eachPolicyEndDate = policy.endDate === null ? "" :this.intl.formatDate(new Date(policy.endDate), this.dateFormat);
+
+    if(this.healthInsuranceForm.controls[currentPolicyEndDateField].value === null && policy.endDate === null){
+      if(currentPolicyStartDate === eachPolicyStartDate){
+        policyAlreadyExist = true;
+      }
+    }
+    if (this.dateRangeOverlaps(new Date(eachPolicyStartDate), new Date(eachPolicyEndDate), new Date(currentPolicyStartDate), new Date(currentPolicyEndDate))) {
+      policyAlreadyExist = true;
+    }
+    return policyAlreadyExist;
+
+  }
+
+  overlapCheckOtherTypes(policy:any,currentPolicyEndDateField:any, policyAlreadyExist:boolean): boolean{
+    let startDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceStartDate'].value, this.dateFormat);
+    let endDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceEndDate'].value, this.dateFormat);
+    let policyStartDate = this.intl.formatDate(new Date(policy.startDate), this.dateFormat);
+    let policyEndDate =  policy.endDate === null ? "" : this.intl.formatDate(new Date(policy.endDate), this.dateFormat);
+
+    if(this.healthInsuranceForm.controls[currentPolicyEndDateField].value === null && policy.endDate === null){
+      if(startDate === policyStartDate){
+        policyAlreadyExist = true;
+      }
+    }
+
+    if (this.dateRangeOverlaps(new Date(policyStartDate), new Date(policyEndDate), new Date(startDate), new Date(endDate))) {
+      policyAlreadyExist = true;
+    }
+    return policyAlreadyExist;
   }
 
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
