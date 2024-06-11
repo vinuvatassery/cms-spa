@@ -7,6 +7,7 @@ import {
   EventEmitter,
   Output,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core'; 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
@@ -27,6 +28,7 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
   isPharmaciesDeactivatePopupShow = false; 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
+
   public moreactions = [
     {
       buttonType:"btn-h-primary",
@@ -62,10 +64,12 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
   @Input() pharmaciesProfilePhoto$: any;
   @Input() pharmaciesListDataLoader$: any;
   @Input() pharmaciesFilterColumn$: any;
+  @Input() exportButtonShow$: any;
   @Output() loadPharmaciesListsEvent = new EventEmitter<any>();
   @Output() pharmaciesFilterColumnEvent = new EventEmitter<any>();
+  @Output() exportGridEvent$ = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'vendorName';
+  sortColumn = 'Pharmacy Name';
   sortDir = 'Ascending';
   selectedSearchColumn = 'ALL';
   columnsReordered = false;
@@ -84,10 +88,11 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
   paymentMethodLovSubscription!: Subscription;
   paymentMethodLovList: any;
   paymentMethodFilter = '';
+  showExportLoader = false;
   /** Internal event methods **/
   columns: any = {
     ALL: 'All Columns',
-    vendorName: "Vendor Name",
+    vendorName: "Pharmacy Name",
     tin: "Tin",
     npiNbr: "Npi Number",
     accountingNbr: "Account Number",
@@ -95,9 +100,12 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
     lastModificationTime: "Last Modified",
     activeFlag: "Status",
   };
-
+ dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
+    { columnCode: 'vendorName', columnDesc: 'Pharmacy Name' }
+  ];
   /** Constructor **/
-  constructor(private lovFacade: LovFacade) {}
+  constructor(private lovFacade: LovFacade, private readonly cdr: ChangeDetectorRef) {}
   
   ngOnInit(): void {
     this.loadPharmaciesList(); 
@@ -206,7 +214,18 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
       logic: 'or',
     });
   }
-  
+  searchColumnChangeHandler(value: string) {
+    this.selectedSearchColumn = value;
+    this.filter = [];
+    if (this.searchValue) {
+      this.onSearch(this.searchValue);
+    }
+  }
+
+    onSearch(searchValue: any) {
+    this.onChange(searchValue);
+  }
+
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
@@ -234,6 +253,19 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
     this.loadPharmaciesList();
   }
   
+  setToDefault() {
+    this.defaultGridState();
+    this.sortColumn = 'Pharmacy Name';
+    this.sortType = 'asc';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "";
+    this.filter = '';
+    this.selectedSearchColumn = 'ALL';
+    this.isFiltered = false;
+    this.sortValue = 'vendorName';
+    this.sort = this.sortValue;
+    this.searchValue = '';
+    this.loadPharmaciesList();
+  }
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
@@ -244,7 +276,24 @@ export class PharmaciesListComponent implements OnInit, OnChanges{
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-  
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.state?.filter?.filters ?? []),
+    };
+    this.exportGridEvent$.emit(params);
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+    });
+  }
+
+
   /** Internal event methods **/
   onClosePharmaciesDetailClicked() {
     this.isPharmaciesDetailPopup = false;

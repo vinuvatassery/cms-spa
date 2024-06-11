@@ -16,18 +16,36 @@
                   <p class="pt-1">Add, edit or deactivate Pharmacies. Preferred Pharmacies are indicated with a yellow
                         border.</p>
                   <div class="table-filter-section mat-form-no-b-space">
+                        <span class="filter-section_items filter--select">
+                              <kendo-floatinglabel>
+                                    <kendo-dropdownlist aria-label="All Columns"
+                                          [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
+                                          textField="columnDesc" valueField="columnCode" [valuePrimitive]="true"
+                                          [(ngModel)]="selectedSearchColumn"
+                                          (valueChange)="searchColumnChangeHandler($event)">
+                                    </kendo-dropdownlist>
+                              </kendo-floatinglabel>
+                        </span>
                         <span class="filter-section_items filter--search">
                               <span class="material-icons">search</span>
                               <kendo-floatinglabel text="Search">
-                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-                                    </kendo-textbox>
+                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="searchValue"
+                                    (afterValueChanged)="onChange($event)" [clearButton]="true" rounded="medium">
+                              </kendo-textbox>
                               </kendo-floatinglabel>
                         </span>
 
-                        <button kendoButton [primary]="true" look="flat" aria-label="Export" class="system-export">
-                              <span class="material-icons" aria-label="Export"
-                                    aria-invalid="true">exit_to_app</span>Export
-                        </button>
+                        <span class="right-overlay-export">
+                              <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export"
+                                    (click)="onClickedExport()" [disabled]="showExportLoader">
+                                    <span *ngIf="!showExportLoader" class="material-icons"
+                                          aria-hidden="true">exit_to_app</span>
+
+                                    <span *ngIf="showExportLoader"
+                                          class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i
+                                          class="exp_button-text">Export</i>
+                              </button>
+                        </span>
 
                   </div>
             </div>
@@ -35,9 +53,13 @@
 
       <!-- Sorted Info show only in list -->
       <div class="table-sorted-info">
-            Sorted by <span class="sort-items">Name</span>
-            <span class="sort-items">No Filters</span>
+            Sorted {{sortDir}} by <span class="sort-items">{{sortColumn}}</span>
+            <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+            <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
             <span class="sort-items">All Columns</span>
+            <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+                  <a>Set to Default</a>
+            </button>
       </div>
 
       <div class="app-c-table">

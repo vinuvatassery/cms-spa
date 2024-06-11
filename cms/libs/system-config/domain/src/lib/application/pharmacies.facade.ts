@@ -101,4 +101,9 @@ export class PharmaciesFacade {
     }
   }
 
+  onExportAllUser(params: any){
+    const fileName = 'Pharmacies List'
+    this.documentFacade.getExportFile(params,`pharmacies`, fileName,ApiType.SystemConfig);
+  }
+
 }

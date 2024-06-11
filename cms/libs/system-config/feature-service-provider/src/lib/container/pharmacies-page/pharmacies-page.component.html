@@ -5,5 +5,8 @@
       [pharmaciesListDataLoader$]="pharmaciesListDataLoader$" 
       [pageSizes]="pageSizes" [sortValue]="sortValuePharmacies"
       [sortType]="sortType" [sort]="sortPharmaciesGrid" 
-      (loadPharmaciesListsEvent)="loadPharmaciesLists($event)"  ></system-config-pharmacies-list>
+      [exportButtonShow$]="exportButtonShow$" 
+      (loadPharmaciesListsEvent)="loadPharmaciesLists($event)"
+      (exportGridEvent$)="onExportAllCPTCode($event)"
+        ></system-config-pharmacies-list>
  
