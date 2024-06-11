@@ -13,6 +13,8 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { SystemConfigServiceProvidersDataService } from '../infrastructure/service_providers.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { UserManagementFacade } from './user-management.facade';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SystemConfigServiceProviderFacade {
@@ -93,6 +95,7 @@ export class SystemConfigServiceProviderFacade {
 
   private loadHealthcareProvidersListsServiceSubject = new BehaviorSubject<any>([]);
   loadHealthcareProvidersListsService$ = this.loadHealthcareProvidersListsServiceSubject.asObservable();
+  systemConfigProfilePhotoSubject = new Subject();
 
   /** Constructor **/
   constructor(
@@ -100,7 +103,8 @@ export class SystemConfigServiceProviderFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private readonly configurationProvider: ConfigurationProvider
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly userManagementFacade: UserManagementFacade
   ) {}
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -120,16 +124,37 @@ export class SystemConfigServiceProviderFacade {
     this.loaderService.hide();
   }
 
-  loadManufacturerLists() {
-    this.systemConfigServiceProvidersDataService.loadManufacturerListsService().subscribe({
-      next: (loadPcaCodeListsService) => {
-        this.loadManufacturerListsServiceSubject.next(loadPcaCodeListsService);
+  loadManufacturerLists(request:any) {
+    this.systemConfigServiceProvidersDataService.loadManufacturerListsService(request).subscribe({
+      next: (vendorsResponse:any) => {
+        if (vendorsResponse) {
+          const gridView = {
+            data: vendorsResponse["items"],
+            total: vendorsResponse["totalCount"]
+          };
+          this.loadManufacturerListsServiceSubject.next(gridView);
+          this.loadManufacturersProfilePhoto(vendorsResponse['items']);
+        }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
+
+  loadManufacturersProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifiedBy))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.systemConfigProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadDrugsLists() {
     this.systemConfigServiceProvidersDataService.loadDrugsListsService().subscribe({

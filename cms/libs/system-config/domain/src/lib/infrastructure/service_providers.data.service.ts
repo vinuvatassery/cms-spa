@@ -25,34 +25,19 @@ export class SystemConfigServiceProvidersDataService {
     this.loaderService.hide();
   }
 
-  loadManufacturerListsService() {
-    return of([
-      {
-        id: 1,
-        manufacturerName: 'A Manufacturer',
-        tin: 'XXX-XX-XXXX',
-        mailCode: 'XXX, XXX, XXXX',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-      },
-      {
-        id: 2,
-        manufacturerName: 'A Manufacturer',
-        tin: 'XXX-XX-XXXX',
-        mailCode: 'XXX, XXX, XXXX',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-      },
-      {
-        id: 3,
-        manufacturerName: 'A Manufacturer',
-        tin: 'XXX-XX-XXXX',
-        mailCode: 'XXX, XXX, XXXX',
-        lastModified: 'MM/DD/YYYY',
-        modifiedBy: 'LS',
-      },
-    ]);
-  }
+  loadManufacturerListsService(request:any) {
+    request.filter = JSON.stringify(request.filter);
+    const ManufacturerPageRequest =
+    {
+      SortType : "asc",
+      Sorting : "vendorName",
+      SkipCount : 0,
+      MaxResultCount : 5,
+      Filter : "[]"
+    }
+    return this.http.post<any>( `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/config/manufacturers`,ManufacturerPageRequest);
+   }
+
   loadDrugsListsService() {
     return of([
       {

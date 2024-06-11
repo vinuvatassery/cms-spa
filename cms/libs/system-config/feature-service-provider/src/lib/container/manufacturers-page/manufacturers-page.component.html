@@ -1,7 +1,8 @@
  
       <system-config-manufacturers-list 
-       [manufacturerDataLists$]="manufacturerService$" 
+       [manufacturerDataLists$]="manufacturersList$" 
       [pageSizes]="pageSizes" [sortValue]="sortValueManufacturer"
       [sortType]="sortType" [sort]="sortManufacturerGrid" 
-      (loadManufacturerListsEvent)="loadManufacturerLists($event)" ></system-config-manufacturers-list>
+      (loadManufacturerListsEvent)="loadManufacturerLists($event)"
+      [paymentAddressProfilePhoto$]="paymentAddressProfilePhoto$" ></system-config-manufacturers-list>
  

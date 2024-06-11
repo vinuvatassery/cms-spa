@@ -14,13 +14,14 @@ export class ManufacturersPageComponent {
   gridSkipCount = this.systemConfigServiceProviderFacade.skipCount;
   sortValueManufacturer = this.systemConfigServiceProviderFacade.sortValueManufacturer;
   sortManufacturerGrid = this.systemConfigServiceProviderFacade.sortManufacturerGrid;
-  manufacturerService$ = this.systemConfigServiceProviderFacade.loadManufacturerListsService$; 
+  manufacturersList$ = this.systemConfigServiceProviderFacade.loadManufacturerListsService$; 
+  paymentAddressProfilePhoto$ = this.systemConfigServiceProviderFacade.systemConfigProfilePhotoSubject;
   /** Constructor **/
   constructor(private readonly systemConfigServiceProviderFacade: SystemConfigServiceProviderFacade) { }
 
 
  
   loadManufacturerLists(data: any){
-    this.systemConfigServiceProviderFacade.loadManufacturerLists();
+    this.systemConfigServiceProviderFacade.loadManufacturerLists(data);
   }
 }

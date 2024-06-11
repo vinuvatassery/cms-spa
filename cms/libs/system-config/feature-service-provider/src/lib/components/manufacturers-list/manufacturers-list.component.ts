@@ -61,6 +61,7 @@ export class ManufacturersListComponent implements OnInit, OnChanges{
   @Input() sort: any;
   @Input() manufacturerDataLists$: any;
   @Input() manufacturerFilterColumn$: any;
+  @Input() paymentAddressProfilePhoto$:any;
   @Output() loadManufacturerListsEvent = new EventEmitter<any>();
   @Output() manufacturerFilterColumnEvent = new EventEmitter<any>();
   public state!: State;
