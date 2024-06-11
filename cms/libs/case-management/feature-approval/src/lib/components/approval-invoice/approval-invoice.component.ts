@@ -13,7 +13,7 @@ import {
 /** External libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription, Subject, BehaviorSubject } from 'rxjs';
 /** Facade **/
 import {
   ColumnComponent,
@@ -23,6 +23,7 @@ import {
 } from '@progress/kendo-angular-grid';
 import { LovFacade } from '@cms/system-config/domain';
 import { PendingApprovalGeneralFacade } from '@cms/case-management/domain';
+import { LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'productivity-tools-approval-invoice',
   templateUrl: './approval-invoice.component.html',
@@ -51,15 +52,14 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
-  invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
   invoiceDataSubscription! : Subscription;
   invoiceGridViewDataSubject = new Subject<any>();
   invoiceGridView$ =  this.invoiceGridViewDataSubject.asObservable();
-  isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
-  isInvoiceLoadingSubject = new Subject<boolean>();
-  isInvoiceLoadingData$ = this.isInvoiceLoadingSubject.asObservable();
+  loader$ = new BehaviorSubject<boolean>(false);
+  generalTabExceptionGridLists$ = new Subject<any>();
   providerId: any;
   isInvoiceLoadingSubscription!: Subscription;
+
 
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
@@ -77,7 +77,9 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade
+    private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
+    private readonly loaderService: LoaderService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
   ) {}
 
   ngOnInit(): void {
@@ -178,11 +180,11 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy {
 
   gridDataHandle() {
     this.isInvoiceGridLoaderShow = true;
-    this.invoiceDataSubscription = this.invoiceData$.subscribe((data: GridDataResult) => {
+    this.generalTabExceptionGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.invoiceGridViewDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
-        this.isInvoiceGridLoaderShow = false;
+       this.isInvoiceGridLoaderShow = false;
       } 
       this.isInvoiceGridLoaderShow = false;
     });
@@ -278,7 +280,23 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy {
   }
 
   loadInvoiceListGrid(data: any) {
-    this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
+    this.loader$.next(true);
+    this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data).subscribe({
+      next: (dataResponse: any) => {
+        
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.generalTabExceptionGridLists$.next(gridView);
+        this.loader$.next(false);
+
+      },
+      error: (err:any) => {
+        this.loader$.next(false);
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
   }
 
   dropdownFilterChange(
@@ -325,5 +343,12 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.paymentRequestTypesSubscription?.unsubscribe();
     this.invoiceDataSubscription?.unsubscribe();
+  }
+
+  showLoader() {
+    this.loaderService.show();
+  }
+  hideLoader() {
+    this.loaderService.hide();
   }
 }

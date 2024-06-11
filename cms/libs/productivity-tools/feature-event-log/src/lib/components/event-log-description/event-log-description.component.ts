@@ -39,7 +39,6 @@ export class EventLogDescriptionComponent implements OnDestroy {
   ViewLetter: string = "{View Letter}";
   ViewEmail: string = "{View Email}";
   ViewSmsText: string = "{View Text}";
-  sanitizedHtml: any;
   bodyText: any;
   notificationEmail$ = this.eventLogFacade.notificationEmail$;
   notificationLetter$ = this.eventLogFacade.notificationLetter$;
@@ -83,7 +82,6 @@ export class EventLogDescriptionComponent implements OnDestroy {
     this.notificationSmsSubscriptionInit();
     this.formatContent();
     this.content = this.data;
-    this.sanitizedHtml = this.content;
 
   }
 
@@ -129,7 +127,6 @@ export class EventLogDescriptionComponent implements OnDestroy {
           url: itemDataArray[0],
           text: itemDataArray[1],
           title: itemDataArray[1],
-          sanitizedHtml: itemDataArray[1],
           isBaseUrlFlag: false,
           isFilePathUrl: true
         }
@@ -147,7 +144,6 @@ export class EventLogDescriptionComponent implements OnDestroy {
           url: itemDataArray[0].replace(this.baseUrl, window.location.origin),
           text: itemDataArray[1],
           title: itemDataArray[1],
-          sanitizedHtml: itemDataArray[1],
           isBaseUrlFlag: true,
           isFilePathUrl: false
         }
@@ -159,7 +155,6 @@ export class EventLogDescriptionComponent implements OnDestroy {
           url: "",
           text: item,
           title: "",
-          sanitizedHtml: item,
           isBaseUrlFlag: false,
           isFilePathUrl: false
         }

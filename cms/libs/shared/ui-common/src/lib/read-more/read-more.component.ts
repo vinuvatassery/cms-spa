@@ -16,12 +16,10 @@ export class ReadMoreComponent {
   isContentToggled: boolean = false;
   nonEditedContent: string = '';
   isShowReadMore: boolean = false;
-  sanitizedHtml:any;
 
   ngOnInit() {
     this.nonEditedContent = this.content;
     this.setReadmoreDisplay();
-    this.sanitizedHtml = this.content;
   }
 
   setReadmoreDisplay() {
@@ -36,7 +34,6 @@ export class ReadMoreComponent {
     this.content = this.isContentToggled
       ? this.nonEditedContent
       : this.formatContent(this.content);
-    this.sanitizedHtml = this.content;
   }
 
   formatContent(content: string) {
