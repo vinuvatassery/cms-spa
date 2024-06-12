@@ -7,7 +7,7 @@
         <div class="flex-row">
             <div class="flex-col mb-1">
                 <kendo-floatinglabel text="Manufacturer">
-                    <kendo-dropdownlist [data]="manufacturers" [fillMode]="formUiStyle.dropDownFillMode"
+                    <kendo-dropdownlist [data]="manufacturersObs$ | async" [fillMode]="formUiStyle.dropDownFillMode"
                         [valuePrimitive]="true" textField="vendorName" valueField="vendorId" aria-label="Manufacturer"
                         formControlName="manufacturer" [disabled]="false">
                     </kendo-dropdownlist>
