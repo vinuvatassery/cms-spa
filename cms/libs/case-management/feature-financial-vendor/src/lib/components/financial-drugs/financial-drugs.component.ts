@@ -141,7 +141,10 @@ export class FinancialDrugsComponent {
   private loadManufacturer() {
     this.vendorDetails$ = this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers)
   }
-
+  public loadManufacturersList(){
+    this.financialVendorFacade.loadManufacturersList();
+    this.ref.detectChanges();
+  }
   ngOnInit(): void {
     this.lovFacade.getYesOrNoLovs();
     this.lovFacade.getDeliveryMethodLovs();

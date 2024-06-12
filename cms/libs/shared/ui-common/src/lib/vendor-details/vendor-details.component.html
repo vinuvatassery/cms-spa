@@ -176,6 +176,9 @@
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.InsuranceProviders">
         <kendo-floatinglabel text="TIN">
+          <span *ngIf="isLoading"
+          class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+        </span>
           <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
             placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber($event)">
           </kendo-maskedtextbox>
@@ -522,7 +525,7 @@
       <div *ngFor="let contact of AddContactForm.controls; let i=index">
         <div [formGroupName]="i" class="flex-row mt-2">
 
-          <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i">
+          <div class="flex-col d-flex align-iems-center justify-content-between">
             <h4 class="mb-0">CONTACT {{i+1}} (OPTIONAL)</h4>
             <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="Delete Contact"
               (click)="removeContact(i)">

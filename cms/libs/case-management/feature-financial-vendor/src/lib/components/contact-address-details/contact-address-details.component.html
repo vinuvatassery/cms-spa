@@ -20,7 +20,7 @@
       <ng-container formArrayName="vendorContacts">
         <ng-container *ngFor="let contact of AddContactForm.controls; let i=index">
           <ng-container [formGroupName]="i">
-            <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i"*ngIf="this.contactAddress.vendorContactId==null">
+            <div class="flex-col d-flex align-iems-center justify-content-between" *ngIf="this.contactAddress.vendorContactId==null">
               <h4 class="mb-0">CONTACT {{i+1}}  <span *ngIf="i>0"> (OPTIONAL)</span></h4>
               <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="Delete Contact" *ngIf="i>0"
                 (click)="removeContact(i)">
