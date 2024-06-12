@@ -174,7 +174,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   }
 
   onToggleAddNewContactClick() {
-    debugger;
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl(
         this.contactAddress.contactName,
