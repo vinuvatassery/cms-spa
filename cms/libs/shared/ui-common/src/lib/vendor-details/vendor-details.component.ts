@@ -53,6 +53,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
   isViewContentEditable!: boolean;
   isValidateForm: boolean = false;
+  isLoading = false;
   paymentMethodList: any[] = [];
   clinicTypes: any[] = [
     { lovCode: FinancialVendorTypeCode.MedicalClinic, lovDesc: 'Medical' },
@@ -740,8 +741,10 @@ private getValidNumber(value: any): number | null {
     }
     if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
       this.accountingNumberValidated = true;
+      this.isLoading = false;
       if(this.medicalProviderForm.controls['tinNumber'].value.trim().length>=9){
         this.validateTin(this.medicalProviderForm.controls['tinNumber'].value);
+        this.isLoading = true;
       }
     } else {
       this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
@@ -765,11 +768,13 @@ private getValidNumber(value: any): number | null {
       next: (response: any) => {
         if(response){
           this.isDuplicateTin = false;
+          this.isLoading = false;
         }
         this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.isDuplicateTin = true;
+        this.isLoading = false;
         this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
         this.duplicateTinMessage = err.error?.error?.message ?? "";
         this.cdr.detectChanges();
