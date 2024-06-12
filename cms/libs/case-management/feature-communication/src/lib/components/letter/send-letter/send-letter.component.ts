@@ -633,6 +633,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
+    this.clientAndVendorAttachedFiles = [];
     this.handleConfirmPopupHeader(event.templateTypeCode);
     this.isMailingAddressMissing = false;
     this.setVendorAndcommunicationType(event.templateTypeCode);
@@ -727,7 +728,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.saveForLaterHeadterText = "Letter Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Letter\" from the vendor's profile";
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationLetter:
@@ -757,7 +758,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.saveForLaterHeadterText = "Letter Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Letter\" from the client's profile";
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
     }
   }
@@ -883,7 +884,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
-      this.clientAndVendorAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){

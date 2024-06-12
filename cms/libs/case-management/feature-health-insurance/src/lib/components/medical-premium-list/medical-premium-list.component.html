@@ -31,7 +31,7 @@
           </div>
         </ng-template>
       </kendo-grid-column>
-        <kendo-grid-column field="FullDetail" title="Full Details" [width]="160" [sortable]="false"  [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled">
+        <kendo-grid-column field="FullDetail" title="Full Detail" [width]="160" [sortable]="false"  [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
               (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem)"
               aria-label="View">
@@ -90,7 +90,7 @@
         </kendo-grid-column>       
         <kendo-grid-column
         field="insuranceGroupId"
-        title="Group Ins ID"
+        title="Group Ins. ID"
         [width]="150">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"

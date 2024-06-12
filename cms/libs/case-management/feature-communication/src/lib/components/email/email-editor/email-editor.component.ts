@@ -393,9 +393,9 @@ export class EmailEditorComponent implements OnInit, OnChanges {
       for (let file of this.uploadedAttachedFile){
         this.selectedAttachedFile.push(file);
        }
-      }
+      }   
+    this.cerEmailAttachments.emit(this.uploadedAttachedFile[0]);
     this.uploadedAttachedFile = [];
-    this.cerEmailAttachments.emit(this.selectedAttachedFile[0]);
     }
     this.showFormsAndDocumentsUpload = false;
    }
