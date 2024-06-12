@@ -276,7 +276,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
     this.isSendNewLetterDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
+      cssClass: 'app-c-modal app-c-modal-xls just_start app-c-modal-np'
     });
   }
   handleSendNewLetterClosed(value: CommunicationEvents) {
@@ -289,7 +289,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onSendNewEmailClicked(template: TemplateRef<unknown>): void {
     this.isSendNewEmailOpenedDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-xls just_start app-c-modal-np',
     });
   }
 
@@ -318,7 +318,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onNewSMSTextClicked(template: TemplateRef<unknown>): void {
     this.isNewSMSTextOpenedDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-xls just_start app-c-modal-np',
     });
   }
 
