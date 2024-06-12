@@ -8,5 +8,10 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorizationNoticeComponent {
-  @Input() templateNotice$ : any
+  @Input() templateNotice$: any 
+  ngOnInit() {
+    if (!this.templateNotice$) {
+      this.templateNotice$ = { templateContent: '' };
+    }
+  }
 }
