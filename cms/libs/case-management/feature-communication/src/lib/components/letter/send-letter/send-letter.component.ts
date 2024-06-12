@@ -633,8 +633,14 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
-    this.handleConfirmPopupHeader(event.templateTypeCode);
+    if(this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter){
+      event.templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetter
+    }
+    if(this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
+      event.templateTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter
+    }
     this.isMailingAddressMissing = false;
+    this.handleConfirmPopupHeader(event.templateTypeCode);
     this.setVendorAndcommunicationType(event.templateTypeCode);
     if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
       || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
@@ -727,7 +733,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.saveForLaterHeadterText = "Letter Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Letter\" from the vendor's profile";
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationLetter:
@@ -735,7 +741,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.templateHeader = 'CER Authorization Letter';
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
         this.saveForLaterHeadterText = "Send CER Authorization Letter Later?";
-        this.saveForLaterModelText = "You must send the Cer Authorization Letter within 45 Days";
+        this.saveForLaterModelText = "You must send the CER Authorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send CER Authorization Letter to Print?';
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
         break;
@@ -757,7 +763,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.saveForLaterHeadterText = "Letter Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Letter\" from the client's profile";
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
     }
   }
