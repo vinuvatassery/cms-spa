@@ -62,6 +62,7 @@ import { EditTemplateNameComponent } from './edit-template-name/edit-template-na
 import { DeactivateTemplateComponent } from './deactivate-template/deactivate-template.component';
 import { ReactivateTemplateComponent } from './reactivate-template/reactivate-template.component';
 import { NdcCodeDirective } from './directives/ndc-code.directive';
+import { ComboboxMaxLengthDirective } from './directives/combobox-maxlength.directive';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -117,6 +118,7 @@ import { NdcCodeDirective } from './directives/ndc-code.directive';
     DeactivateTemplateComponent,
     ReactivateTemplateComponent,
     NdcCodeDirective,
+    ComboboxMaxLengthDirective,
   ],
   exports: [
     LoginStatusComponent,
@@ -171,6 +173,7 @@ import { NdcCodeDirective } from './directives/ndc-code.directive';
     DeactivateTemplateComponent,
     ReactivateTemplateComponent,
     NdcCodeDirective,
+    ComboboxMaxLengthDirective,
     
   ],
 })

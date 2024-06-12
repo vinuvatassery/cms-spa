@@ -16,7 +16,9 @@
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
-                            (valueChange)="onProviderValueChange($event)">
+                            (valueChange)="onProviderValueChange($event)"
+                            [comboboxMaxLength]="500"
+                            >
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -191,6 +193,7 @@
                                             <span *ngIf="CPTCodeSearchLoaderVisibility$ | async"
                                                 class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                                             <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode"
+                                                [comboboxMaxLength]="100"
                                                 [data]="searchCTPCode$ | async" formControlName="cptCode"
                                                 valueField="cptCode1" [filterable]="true" [value]="selectedCPTCode"
                                                 (filterChange)="searchcptcode($event)"
@@ -248,7 +251,9 @@
                                             <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                             <kendo-numerictextbox aria-label="Service Cost" [spinners]="false"
                                                 [fillMode]="formUiStyle.inputFillMode" format="#.00"
-                                                formControlName="serviceCost">
+                                                formControlName="serviceCost"
+                                                [maxlength]="15"
+                                                >
 
                                             </kendo-numerictextbox>
                                         </kendo-floatinglabel>
@@ -261,7 +266,9 @@
                                             <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                             <kendo-numerictextbox aria-label="Amount Due" [spinners]="false"
                                                 [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue"
-                                                format="#.00"  (blur)="onAmountDueChange(i)">
+                                                format="#.00"  (blur)="onAmountDueChange(i)"
+                                                [maxlength]="15"
+                                                >
                                             </kendo-numerictextbox>
                                         </kendo-floatinglabel>
                                         <kendo-formerror *ngIf="(isControlValid('amountDue',i) && isSubmitted)"

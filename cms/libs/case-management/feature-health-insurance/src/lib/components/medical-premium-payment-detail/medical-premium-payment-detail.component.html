@@ -6,6 +6,7 @@
         <div class="flex-col">
             <kendo-floatinglabel text="Service Provider Name" >   
                 <kendo-combobox   
+                [comboboxMaxLength]="500"
                 aria-label="Service Provider Name"
                 [fillMode]="formUiStyle.dropDownFillMode"  
                 [loading] = "isVendorLoading$ | async"
@@ -27,6 +28,7 @@
         <div class="flex-col">
                 <kendo-floatinglabel text="Policy" >   
                     <kendo-combobox   
+                    [comboboxMaxLength]="600"
                     aria-label="Policy"
                     [fillMode]="formUiStyle.dropDownFillMode" 
                     [loading] = "isInsurancePoliciesLoading" 
@@ -56,6 +58,7 @@
                     <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right"
+                        [maxlength]="15"
                         placeholder="Premium Amount" placeholder="00.00" formControlName="amountRequested" 
                         [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" >
                         </kendo-numerictextbox>
@@ -95,20 +98,27 @@
                         <kendo-datepicker formControlName="serviceStartDate"
                             [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                             aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder=""
-                            (valueChange)="startDateOnChange()">
+                            (valueChange)="startDateOnChange()"
+                            (select)="dateValidate('serviceStartDate')" (keyup)="dateValidate('serviceStartDate')">
+                            >
                         </kendo-datepicker>
                     </kendo-floatinglabel>
+                        <kendo-formerror
+                            *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !serviceStartDateValidator">Coverage Start Date must be valid date
+                          </kendo-formerror>
                         <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && startDateIsFutureDate"> Future Date not allowed.</kendo-formerror>
-                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && !startDateIsFutureDate"> Coverage Start Date is
+                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && !startDateIsFutureDate && serviceStartDateValidator"> Coverage Start Date is
                             required.</kendo-formerror>
-
+                        
                 </div>
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Coverage End Date">
                         <kendo-datepicker formControlName="serviceEndDate"
                             [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                             aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder=""
-                            (valueChange)="endDateValueChange($event)" (blur)="endDateOnChange()">
+                            (valueChange)="endDateValueChange($event)" (blur)="endDateOnChange()"
+                            (select)="dateValidate('coverageEndDate')" (keyup)="dateValidate('coverageEndDate')">
+                            >
                         </kendo-datepicker>
                     </kendo-floatinglabel>
                       <kendo-formerror
@@ -116,8 +126,12 @@
                         Coverage End Date is required.
                       </kendo-formerror>
                       <kendo-formerror
-                        *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !premiumPaymentForm.controls['serviceEndDate'].disabled">Service End Date must be after Start Date.
+                        *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !premiumPaymentForm.controls['serviceEndDate'].disabled && coverageEndDateValidator">Service End Date must be after Start Date.
                       </kendo-formerror>
+                      <kendo-formerror
+                      *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && !coverageEndDateValidator">Coverage End Date must be valid date
+                    </kendo-formerror>
+                      
 
                 </div>
             </div>
