@@ -158,7 +158,8 @@
                                 <div class="flex-row">
                                     <div class="flex-col-6 flex-col">
                                         <kendo-floatinglabel class="k-form" text="Date of Birth">
-                                            <kendo-datepicker [fillMode]="formUiStyle.inputFillMode"></kendo-datepicker>
+                                            <kendo-datepicker [fillMode]="formUiStyle.inputFillMode"   formatPlaceholder="formatPattern" placeholder=""
+                                            ></kendo-datepicker>
                                         </kendo-floatinglabel>
                                     </div>
                                 </div>
@@ -952,7 +953,7 @@
                                     <section class="mb-5">
                                         <div class="flex-row">
                                             <div class="flex-col">
-                                                <h5>Race, Ethnicity, Language and Disability</h5>
+                                                <h5 class="mb-0">Race, Ethnicity, Language and Disability</h5>
                                                 <kendo-floatinglabel
                                                     text="Race, ethnicity, tribal affiliation, country of origin, or ancestry">
                                                     <kendo-textarea [fillMode]="formUiStyle.inputFillMode"
@@ -968,7 +969,7 @@
                                         </div>
                                     </section>
                                     <section class="mb-5">
-                                        <h5>
+                                        <h5 class="mb-0">
                                             Which options describe their Racial or Ethnic Identity? (Select all that
                                             apply)
                                         </h5>
@@ -1012,7 +1013,7 @@
                                         </div>
                                     </section>
                                     <section class="mb-5">
-                                        <h5>
+                                        <h5 class="mb-0">
                                             If they selected multiple, is there one they think of as their primary
                                             racial or ethnic identity?
                                         </h5>
@@ -1494,7 +1495,7 @@
                                         <div class="flex-row">
                                             <div class="flex-col mat-split-list">
                                                 <h5 class="text-capital mt-0">Mailing Address</h5>
-                                                <span class="app-checkboxwidtext-wrapper">
+                                                <span class="app-checkboxwidtext-wrapper mt-1">
     
                                                     <input type="checkbox" id="check1" kendoCheckBox
                                                         aria-labelledby="sameAsMailingAddress" id="check1" />
@@ -1505,7 +1506,7 @@
                                             </div>
                                         </div>
                                   
-                                    <div class="flex-row mt-1">
+                                    <div class="flex-row">
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Address Line 1">
                                                 <kendo-textbox aria-label="address line 1"
@@ -1832,7 +1833,7 @@
         <div class="flex-row align-items-center">
             <div class="flex-col flex-col-6">
                 <h1 class="text-bold mb-3"> Activation Email Sent!</h1>
-                <p>Didn’t get the email? <button kendoButton look="flat" class="card-link-button mt-1"
+                <p>Didn’t get the email? <button kendoButton look="flat" class="card-link-button"
                         style="display:inline-block"> CLICK HERE TO RESEND IT in 60 </button></p>
                 <div class="mt-2">
                     <button kendoButton [primary]="true" look="outline"> <span

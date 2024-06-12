@@ -74,6 +74,14 @@
             height: 50px;
             font-size: 18px;
       }
+      .k-stepper .k-step-label .k-step-text {
+            flex-grow: 1;
+            white-space: normal;
+            /* text-overflow: ellipsis; */
+            overflow: hidden;
+            word-break: break-word;
+            word-wrap: break-word;
+        }
 
       .k-step-list-horizontal~.k-progressbar {
             top: calc(((50px + 2* 2px) / 2) + 2px / 2);
