@@ -27,8 +27,12 @@ export class ReminderNotificationSnackBarsTemplateComponent implements
   @Output() snoozeReminder = new EventEmitter();
   @Output() dismissReminder = new EventEmitter();
   @Output() editReminder = new EventEmitter();
+  @Output() reloadReminderSnackBars = new EventEmitter()
   @Input() snackBarMessage!: any
   @Input() dueDate!: any
+  skeletonCounts = [
+    1
+  ]
   unviewedCount = 9
   tabCode = ""
   selectedAlertId = ""
@@ -41,7 +45,7 @@ export class ReminderNotificationSnackBarsTemplateComponent implements
   isReminderOpenClicked = false
   newReminderDetailsDialog!: any
   getTodo$ = this.todoFacade.getTodo$
-
+  showDataLoader = false;
   public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
   public duration =
     this.configurationProvider.appSettings.snackbarAnimationDuration;
@@ -120,7 +124,7 @@ export class ReminderNotificationSnackBarsTemplateComponent implements
     , public notificationFacade: NotificationFacade
     , public signalrEventHandlerService: SignalrEventHandlerService,
     private loaderService: LoaderService,
-    private caseFacade: CaseFacade,
+    private caseFacade: CaseFacade
   ) {
 
   }
@@ -130,6 +134,13 @@ export class ReminderNotificationSnackBarsTemplateComponent implements
     this.signalrEventHandlerService.remindersCount$.subscribe(res => {
       if (res > 0)
         this.unviewedCount = res;
+    })
+    this.todoFacade.deleteReminderSnackbar$.subscribe((alertId: any) => {     
+      if(alertId)
+        {
+          this.reloadReminderSnackBars.emit(this.selectedAlertId)
+          this.removePreviousMessage()      
+        }
     })
   }
 
@@ -205,10 +216,12 @@ export class ReminderNotificationSnackBarsTemplateComponent implements
 
 
   snoozeRemindersInDays(timePeriod: string) {
+    this.showDataLoader = true 
     let days = parseInt(timePeriod.split(' ')[0]);
-    this.notificationFacade.SnoozeReminder(this.selectedAlertId, days)
+    this.notificationFacade.SnoozeReminder(this.selectedAlertId, days, true, true,false)
   }
   snoozeRemindersInMins(timePeriod: string) {
+    this.showDataLoader = true
     let mins = 0;
     let time = parseInt(timePeriod.split(' ')[0]);
 
@@ -218,7 +231,7 @@ export class ReminderNotificationSnackBarsTemplateComponent implements
     if (timePeriod.includes('Minutes')) {
       mins = time
     }
-    this.notificationFacade.SnoozeReminder(this.selectedAlertId, mins, false, false)
+    this.notificationFacade.SnoozeReminder(this.selectedAlertId, mins, false, true,false)
   }
 
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {

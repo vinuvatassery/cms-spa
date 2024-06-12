@@ -128,7 +128,8 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     this.todoFacade.deleteReminderSnackbar$.subscribe((alertId: any) => {     
       if(alertId)
         {
-          this.notificationFacade.loadReminderSnackbars()         
+          this.signalrEventHandlerService.snackBarAlertIds=[]
+          this.notificationFacade.loadReminderSnackbars()
         }
     })
    
@@ -220,7 +221,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     if (notificationRef && notificationRef.content && notificationRef.content.instance) {
 
       const payload = {
-        ...res.payload,
+        ...res.payload
       }
 
       notificationRef.content.instance.snackBarMessage = payload
@@ -228,6 +229,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
       this.snoozeReminderHandler(notificationRef);
       this.dismissReminderHandler(notificationRef);
       this.editReminderHandler(notificationRef);
+      this.reloadAllRemindersHandler(notificationRef);
       notificationRef.content.instance.hideSnackBar.subscribe((event:any) =>
         this.updateSnackBarCount(event, notificationRef)
       );
@@ -250,8 +252,14 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
       this.updateSnackBarCount(event,notificationRef)
     }
     );
-
   }
+    reloadAllRemindersHandler(notificationRef:any){
+      notificationRef.content.instance.reloadReminderSnackBars.subscribe((event: any) => {
+        this.updateSnackBarCount(event,notificationRef)
+      }
+      );
+    }
+  
 
 
    updateSnackBarCount(alertId:any, notificationRef:any){
