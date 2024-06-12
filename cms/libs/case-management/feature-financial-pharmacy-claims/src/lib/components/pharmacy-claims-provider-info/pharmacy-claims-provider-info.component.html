@@ -143,7 +143,7 @@
                                 <kendo-textbox aria-label="Address 1" placeholder="Address 1" 
                                 [fillMode]="formUiStyle.inputFillMode" formControlName="address1"   [maxlength]="100">
                                 </kendo-textbox>
-                                <kendo-formerror *ngIf="addressForm?.hasError('required','address1') && isSubmitted">Address Line 1 is Required
+                                <kendo-formerror *ngIf="addressForm?.hasError('required','address1') && isSubmitted">Address Line 1 is required
                                 </kendo-formerror>
                               
                             </div>
@@ -156,7 +156,7 @@
                                 <kendo-textbox aria-label="City" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
                                  formControlName="cityCode" [maxlength]="20">
                                 </kendo-textbox>
-                                <kendo-formerror *ngIf="addressForm?.hasError('required','cityCode') && isSubmitted">City is Required
+                                <kendo-formerror *ngIf="addressForm?.hasError('required','cityCode') && isSubmitted">City is required
                                 </kendo-formerror>
                               
                             </div>
@@ -173,14 +173,14 @@
                               
                                 >
                                 </kendo-dropdownlist>
-                                <kendo-formerror *ngIf="addressForm?.hasError('required','stateCode') && isSubmitted">State is Required
+                                <kendo-formerror *ngIf="addressForm?.hasError('required','stateCode') && isSubmitted">State is required
                                 </kendo-formerror>
                             </div>
                             <div class="flex-col  mt-1">
                                 <kendo-textbox aria-label="Zip" placeholder="Zip"  [fillMode]="formUiStyle.inputFillMode"
                                  formControlName="zip" [maxlength]="10">
                                 </kendo-textbox>
-                                <kendo-formerror *ngIf="addressForm?.hasError('required','zip') && isSubmitted">Zip is Required
+                                <kendo-formerror *ngIf="addressForm?.hasError('required','zip') && isSubmitted">Zip is required
                                 </kendo-formerror>
                                 <kendo-formerror *ngIf="isSubmitted && addressForm?.hasError('pattern','zip')">
                                     Invalid Zip Code format. 
