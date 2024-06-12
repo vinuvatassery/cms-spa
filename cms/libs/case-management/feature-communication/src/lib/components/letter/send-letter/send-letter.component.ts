@@ -633,6 +633,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
+    this.clientAndVendorAttachedFiles = [];
     if(this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter){
       event.templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetter
     }
@@ -889,7 +890,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
-      this.clientAndVendorAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){

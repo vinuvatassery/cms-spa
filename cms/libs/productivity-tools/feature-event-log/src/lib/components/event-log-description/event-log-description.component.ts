@@ -231,8 +231,8 @@ export class EventLogDescriptionComponent implements OnDestroy {
     });
   }
   onCloseLetterEmailSmsTextClicked() {
-    this.isViewLetterEmailTextDialog.close();
-    this.isConfirmationDialogVisible.close();
+    this.isViewLetterEmailTextDialog?.close();
+    this.isConfirmationDialogVisible?.close();
     this.cdr.detectChanges();
   }
   downloadOldAttachment(path: any) {

@@ -701,6 +701,7 @@ saveForLaterHeadterText!: string;
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    this.clientAndVendorAttachedFiles = [];
     this.isToEmailMissing = false;
     this.isEmailSubjectMissing = false;
     this.isContentMissing = false;
@@ -1155,7 +1156,6 @@ saveForLaterHeadterText!: string;
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
-      this.clientAndVendorAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){
