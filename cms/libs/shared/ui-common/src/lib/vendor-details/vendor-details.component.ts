@@ -761,17 +761,14 @@ private getValidNumber(value: any): number | null {
   }
 
   validateTin(tinNbr: any) {
-    this.tinValidationFacade.showLoader();
     this.tinValidationFacade.validateTinNbr(tinNbr).subscribe({
       next: (response: any) => {
         if(response){
           this.isDuplicateTin = false;
         }
-        this.tinValidationFacade.hideLoader();
         this.cdr.detectChanges();
       },
       error: (err: any) => {
-        this.tinValidationFacade.hideLoader();
         this.isDuplicateTin = true;
         this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
         this.duplicateTinMessage = err.error?.error?.message ?? "";
