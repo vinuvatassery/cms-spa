@@ -357,7 +357,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
     if(!this.ndcRespectiveIsDoneWithSelection){
       this.addClaimServicesForm.at(index).get('brandName')?.setValue("")
       this.addClaimServicesForm.at(index).get('drugName')?.setValue("")
-      this.addClaimServicesForm.at(index).get('qntType')?.setValue("");
+      this.addClaimServicesForm.at(index).get('qntType')?.setValue(null);
 
       let ndcValue = this.addClaimServicesForm.at(index).get('ndc')?.value;
       const isValidNdc = this.ndcRegex.test(ndcValue); // Example NDC string
