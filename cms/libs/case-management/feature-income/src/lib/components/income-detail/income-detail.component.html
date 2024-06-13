@@ -30,7 +30,8 @@
             placeholder="Name of Employer" [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
             [filterable]="true" (filterChange)="loadEmployers($event)" [data]="employers$ | async"
             formControlName="employerId" [valuePrimitive]="true" 
-            valueField="employerId">
+            valueField="employerId"
+            >
             <button kendoButton fillMode="clear" icon="image"></button>        
             <kendo-combobox-column>
               <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
@@ -55,7 +56,7 @@
           <kendo-floatinglabel text="Gross Amount" class="amount-with-symbol">
             <span class="k-input-prefix custom-currencysymbol"> $ </span>
             <kendo-numerictextbox placeholder="Gross Amount" aria-label="amount" [spinners]="false" class="input-icon-right" placeholder="00.00"
-              formControlName="incomeAmt" #incomeAmount [fillMode]="formUiStyle.inputFillMode" name="amount">
+              [maxlength]="15" formControlName="incomeAmt" #incomeAmount [fillMode]="formUiStyle.inputFillMode" name="amount">
 
             </kendo-numerictextbox>
           </kendo-floatinglabel>
@@ -78,15 +79,22 @@
           <kendo-floatinglabel [text]="incomeTypeDateLabel">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               formatPlaceholder="formatPattern" aria-label="income start" name="income start"
-              formControlName="incomeStartDate" (valueChange)="startDateOnChange()" placeholder="" #incomeStartDate>
+              formControlName="incomeStartDate" (valueChange)="startDateOnChange()" placeholder="" 
+              (select)="dateValidate('incomeStartDate')" (keyup)="dateValidate('incomeStartDate')"
+              #incomeStartDate>
+              
             </kendo-datepicker>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid 
-          && !IncomeDetailsForm.controls['incomeStartDate'].disabled && insuranceStartDateIsLessThanEndDate">Income Start Date is required.
+          && !IncomeDetailsForm.controls['incomeStartDate'].disabled && insuranceStartDateIsLessThanEndDate && incomeStartDateValidator">Income Start Date is required.
           </kendo-formerror>
           <kendo-formerror
           *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !insuranceStartDateIsLessThanEndDate  && 
           !IncomeDetailsForm.controls['incomeStartDate'].disabled">Start Date must be before End Date.</kendo-formerror>
+           
+           <kendo-formerror
+           *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !incomeStartDateValidator">Income Start Date must be valid date
+          </kendo-formerror>
 
         </div>
         <div class="flex-col flex-col-6">
@@ -95,12 +103,18 @@
               formatPlaceholder="formatPattern" [min]="startDate" (focus)="changeMinDate()" (blur)="endDateOnChange()"
               (valueChange)="endDateValueChange($event)"
                placeholder="" aria-label="income end" name="income end" formControlName="incomeEndDate"
-              #incomeEndDate>
+              #incomeEndDate
+              (select)="dateValidate('incomeEndDate')" (keyup)="dateValidate('incomeEndDate')"
+              >
             </kendo-datepicker>
             <kendo-formerror
             *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid && !insuranceStartDateIsLessThanEndDate && 
             !IncomeDetailsForm.controls['incomeEndDate'].disabled">End date must be after Start date.</kendo-formerror>
-          </kendo-floatinglabel>
+            <kendo-formerror
+            *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid && !IncomeEndDateValidator">Income End Date must be valid date
+          </kendo-formerror> 
+        
+        </kendo-floatinglabel>
 
         </div>
         <div class="flex-col justify-content-between align-items-center ">

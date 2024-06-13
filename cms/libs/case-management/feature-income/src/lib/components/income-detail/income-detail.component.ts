@@ -89,6 +89,11 @@ export class IncomeDetailComponent implements OnInit {
     employerId : new FormControl(''),
   });
 
+  public min: Date = new Date(1917, 0, 1);
+  public maxDate = new Date(9999,12,31);
+  public incomeStartDateValidator =true;
+  public IncomeEndDateValidator =true;
+
   /** Constructor **/
   constructor(
     private readonly elementRef: ElementRef,
@@ -634,5 +639,35 @@ export class IncomeDetailComponent implements OnInit {
         this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     })
+  }
+  dateValidate(type: any) {
+    
+    const incomeStartDate = this.IncomeDetailsForm.controls['incomeStartDate'].value;
+    const incomeEndDate = this.IncomeDetailsForm.controls['incomeEndDate'].value;
+    switch (type.toUpperCase()) {
+      case "INCOMESTARTDATE":
+        this.IncomeDetailsForm.controls['incomeStartDate'].setErrors(null);
+        this.incomeStartDateValidator = true;
+        if(incomeStartDate < this.min || incomeStartDate > this.maxDate){
+          this.incomeStartDateValidator = false;
+          this.IncomeDetailsForm.controls['incomeStartDate'].setErrors({ 'incorrect': true });
+          return;
+         
+        }
+        
+        break;
+      case "INCOMEENDDATE":
+        this.IncomeDetailsForm.controls['incomeEndDate'].setErrors(null);
+        this.IncomeEndDateValidator = true;
+        if(incomeEndDate < this.min || incomeEndDate > this.maxDate){
+          this.IncomeEndDateValidator = false;
+          this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({ 'incorrect': true });
+          return;
+         
+        }
+        break
+    }
+
+    
   }
 }

@@ -66,7 +66,10 @@ export class MedicalPremiumPaymentDetailComponent {
   statusEndDateIsGreaterThanStartDate: boolean = true;
   startDateIsFutureDate: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-
+  public min: Date = new Date(1917, 0, 1);
+  public maxDate = new Date(9999,12,31);
+  public serviceStartDateValidator =true;
+  public coverageEndDateValidator =true;
   /** Constructor **/
   constructor(
     private formBuilder: FormBuilder,
@@ -256,6 +259,7 @@ export class MedicalPremiumPaymentDetailComponent {
 
   }
   startDateOnChange() {
+    this.startDateIsFutureDate = false;
     if(this.premiumPaymentForm.controls['serviceStartDate'].value > new Date()){
       this.startDateIsFutureDate = true;
       this.premiumPaymentForm.controls['serviceStartDate'].setErrors({ 'incorrect': true });
@@ -294,5 +298,36 @@ export class MedicalPremiumPaymentDetailComponent {
         this.premiumPaymentForm.controls['serviceEndDate'].setErrors(null);
       }
     }
+  }
+  
+  dateValidate(type: any) {
+    
+    const serviceStartDate = this.premiumPaymentForm.controls['serviceStartDate'].value;
+    const coverageEndDate = this.premiumPaymentForm.controls['serviceEndDate'].value;
+    switch (type.toUpperCase()) {
+      case "SERVICESTARTDATE":
+        this.premiumPaymentForm.controls['serviceStartDate'].setErrors(null);
+        this.serviceStartDateValidator = true;
+        if(serviceStartDate < this.min || serviceStartDate > this.maxDate){
+          this.serviceStartDateValidator = false;
+          this.premiumPaymentForm.controls['serviceStartDate'].setErrors({ 'incorrect': true });
+          return;
+         
+        }
+        
+        break;
+      case "COVERAGEENDDATE":
+        this.premiumPaymentForm.controls['serviceEndDate'].setErrors(null);
+        this.coverageEndDateValidator = true;
+        if(coverageEndDate < this.min || coverageEndDate > this.maxDate){
+          this.coverageEndDateValidator = false;
+          this.premiumPaymentForm.controls['serviceEndDate'].setErrors({ 'incorrect': true });
+          return;
+         
+        }
+        break
+    }
+
+    
   }
 }
