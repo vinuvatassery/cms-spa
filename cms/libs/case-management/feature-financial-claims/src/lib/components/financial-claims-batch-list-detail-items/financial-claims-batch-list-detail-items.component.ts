@@ -88,7 +88,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   UnBatchDialog: any;
   deleteClaimsDialog:any
   public options:any[] =[]
-
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
   @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
   unBatchClaimsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })

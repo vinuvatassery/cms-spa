@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
-import { PendingApprovalGeneralFacade, PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, PendingApprovalGeneralFacade, PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Router } from '@angular/router';
@@ -19,10 +19,12 @@ export class ApprovalsGeneralListDetailExceptionsComponent implements OnInit {
   clientId: any;
   clientName: any;
   claimsType: any="";
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
   constructor(
     private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
     private dialogService: DialogService,
     private readonly route: Router,
+    private readonly financialClaimsFacade: FinancialClaimsFacade
   ) {}
   
   ngOnInit(): any {

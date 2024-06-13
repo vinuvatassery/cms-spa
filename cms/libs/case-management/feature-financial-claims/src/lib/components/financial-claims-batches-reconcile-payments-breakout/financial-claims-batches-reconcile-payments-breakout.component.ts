@@ -42,7 +42,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
-
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };

@@ -153,10 +153,10 @@
 <ng-template #clientRecentClaimsDialog>
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
     <h4 class="text-upper">Recent Claims for {{clientName}}</h4>
-    <div *ngIf="(recentClaimsGridLists$ | async) as recentClaims" class="k-flex-grow justify-content-end">
+    <div *ngIf="(clientBalance$ | async) as recentClaims" class="k-flex-grow justify-content-end">
       <span class="d-flex k-wizard-horizontal align-items-fstart">
-        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
-        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims[0]?.amountSpent | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims[0]?.balanceAmount | kendoNumber: 'n2'}}</span></div>
       </span>
     </div>
   </kendo-dialog-titlebar>

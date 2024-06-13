@@ -71,7 +71,7 @@ export class FinancialClaimsBatchesLogListsComponent
     PaymentStatusCode.PaymentRequested,
     PaymentStatusCode.ManagerApproved,
   ];
-
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
   public bulkMore !:any
 
 
