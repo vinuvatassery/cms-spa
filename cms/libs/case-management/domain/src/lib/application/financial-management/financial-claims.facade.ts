@@ -189,6 +189,9 @@ export class FinancialClaimsFacade {
   private recentClaimListDataSubject =  new Subject<any>();
   recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
 
+  private clientBalanceSubject =  new Subject<any>();
+  clientBalance$ = this.clientBalanceSubject.asObservable();
+
   private unbatchEntireBatchSubject =  new Subject<any>();
   unbatchEntireBatch$ = this.unbatchEntireBatchSubject.asObservable();
 
@@ -597,13 +600,28 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     this.financialClaimsDataService.loadRecentClaimListService(recentClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
         this.recentClaimListDataSubject.next(dataResponse);
-        if (dataResponse) {
+        this.loadClientBalance(recentClaimsPageAndSortedRequestDto.clientId);
+        if (dataResponse) {        
           const gridView = {
             data: dataResponse['items'],
             total: dataResponse['totalCount'],
           };
           this.recentClaimListDataSubject.next(gridView);
           this.loadRecentClaimsDistinctUserIdsAndProfilePhoto(dataResponse['items']);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
+    });
+  }
+
+  loadClientBalance(clientId : any){
+    this.financialClaimsDataService.loadClientBalance(clientId).subscribe({
+      next: (dataResponse) => {
+        this.clientBalanceSubject.next(dataResponse);
+        if (dataResponse) {
+         
         }
       },
       error: (err) => {

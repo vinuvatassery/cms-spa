@@ -11,7 +11,7 @@ import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { StatusFlag,IncomeType } from '@cms/shared/ui-common';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
 @Component({
   selector: 'case-management-income-page',
@@ -98,6 +98,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   isOpenClientsAttachment=false;
   clientDependentId: any;
   clientAllDocumentList$:any;
+  existIncomeTypes:any;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -236,56 +237,10 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-processWorkValidation(hasAdditionalIncometype : any)
-{
-  if (this.incomeData.clientIncomes == null) {
-    hasAdditionalIncometype = false;
-  } else {
-    this.incomeData.clientIncomes.forEach((element: any) => {
-      if (element.incomeTypeCodeDesc == IncomeType.work || element.incomeTypeCodeDesc == IncomeType.otherIncome || element.incomeTypeCodeDesc == IncomeType.selfEmployed) {
-        hasAdditionalIncometype = true;
-      }
-    });
-  }
-  return hasAdditionalIncometype
-}
-
-processMinorIncome(hasMinorIncometypes :  any){
-  if (this.incomeData.clientIncomes == null) {
-    hasMinorIncometypes = false;
-  } else {
-    this.incomeData.clientIncomes.forEach((element: any) => {
-      if (element.incomeTypeCodeDesc == IncomeType.Unemployment || element.incomeTypeCodeDesc == IncomeType.SSI || element.incomeTypeCodeDesc == IncomeType.SSDI || element.incomeTypeCodeDesc == IncomeType.SLD || element.incomeTypeCodeDesc == IncomeType.RI || element.incomeTypeCodeDesc == IncomeType.PRVB) {
-        hasMinorIncometypes = true;
-      }
-    });
-  }
-  return hasMinorIncometypes
-}
- 
-processIncomeValidation(){
-  this.hasClientDependentsMinorAdditionalIncomeFlag = false
-  this.hasClientDependentsMinorEmployedFlag = false
-
-  let hasAdditionalIncometype = false;
-
-  hasAdditionalIncometype= this.processWorkValidation(hasAdditionalIncometype)
-
-  let hasMinorIncometypes = false;
-  hasMinorIncometypes = this.processMinorIncome(hasMinorIncometypes)
-
-  if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes && !hasAdditionalIncometype) {
-    this.hasClientDependentsMinorAdditionalIncomeFlag = true
-  }
-  if (this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes && !hasMinorIncometypes) {
-    this.hasClientDependentsMinorEmployedFlag = true
-  } 
-
-}
   private save() {
     this.removeValidations();
 
-this.processIncomeValidation();
+    this.validateMinorAndAdditionalIncomeForEmployer()
 
     this.checkValidations();
     this.UploadDocumentValidation();
@@ -346,6 +301,30 @@ this.processIncomeValidation();
     return of(false)
   }
 
+ validateMinorAndAdditionalIncomeForEmployer(){
+
+  this.hasClientDependentsMinorAdditionalIncomeFlag = false
+  this.hasClientDependentsMinorEmployedFlag = false
+
+  let hasAdditionalIncometype = false;
+  let hasMinorIncometypes = false;
+
+  const additionalInComeType =  this.existIncomeTypes.filter((x:any) => ['W', 'SE', 'OI'].includes(x));
+  if (additionalInComeType.length>0) {
+    hasAdditionalIncometype = true;
+  }
+  const minorInComeType =  this.existIncomeTypes.filter((x:any) => !['W', 'SE', 'OI'].includes(x));
+  if(minorInComeType.length>0){
+    hasMinorIncometypes = true;
+  }
+
+  if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes && !hasAdditionalIncometype) {
+    this.hasClientDependentsMinorAdditionalIncomeFlag = true
+  }
+  if (this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes && !hasMinorIncometypes) {
+    this.hasClientDependentsMinorEmployedFlag = true
+  }  
+ }
 
   /** Internal event methods **/
   onIncomeNoteValueChange(event: any): void {
@@ -366,6 +345,7 @@ this.processIncomeValidation();
 
   private loadIncomeSubscription() {
     this.incomeResponseSubscription = this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
+      this.existIncomeTypes = incomeresponse?.existIncomeTypes;
       this.totalIncome = incomeresponse.totalCount;
       this.incomeData = incomeresponse;
       this.totalIncomeCalculated = incomeresponse.totalIncome;
@@ -517,6 +497,19 @@ this.processIncomeValidation();
       false
     );
     
+  }
+
+  AddedIncomeTypeGet(event: any) {
+    if (['W', 'SE', 'OI'].includes(event)) {
+      if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].hasError('incorrect')) {
+        this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setErrors(null);
+      }
+    }
+    else {
+      if (this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].hasError('incorrect')) {
+        this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setErrors(null);
+      }
+    }
   }
 
   loadIncomeListHandle(gridDataRefinerValue: any): void {

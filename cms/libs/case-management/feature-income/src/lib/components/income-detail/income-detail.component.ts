@@ -37,6 +37,7 @@ export class IncomeDetailComponent implements OnInit {
   @Output() public loadIncomeList = new EventEmitter<any>();
   @Output() public closePopup = new EventEmitter<any>();
   @Output() public closeModal: EventEmitter<boolean> = new EventEmitter();
+  @Output() public AddedIncomeType: EventEmitter<string> = new EventEmitter();
 
     /** Public properties **/
   isIncomeDetailsPopupOpen = false;
@@ -318,6 +319,7 @@ export class IncomeDetailComponent implements OnInit {
                         'Income created successfully.'
                       );
                       this.loadIncomeList.next(true);
+                      this.AddedIncomeType.emit(this.IncomeDetailsForm.controls['incomeTypeCode'].value);
                       this.closeIncomeDetailPoup();
                     },
                     error: (err) => {
