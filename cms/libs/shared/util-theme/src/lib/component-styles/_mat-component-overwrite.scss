@@ -213,6 +213,8 @@ max-width: 250px;
   word-break: break-word;
   .k-tooltip-content {
     font-size: $font-size-s;
+    white-space:nowrap;
+    word-break: break-word;
   }
   .k-callout {
     color: var(--hive-neutral-palette-900);

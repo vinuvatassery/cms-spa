@@ -97,6 +97,7 @@ h5 {
 .mat-body-1 p,
 .mat-typography p {
   line-height: 1.5;
+  word-break: break-word;
 }
 .auto-group-heading {
   margin: $size-xl $size-xlg !important;
