@@ -14,11 +14,7 @@ export class EsignFacade {
 
   /** Public methods **/
   initiateAdobeesignRequest(adobeEsignData: any, emailData: any) {
-    if(emailData?.esignRequestId == undefined || emailData?.esignRequestId === null){
       return this.esignDataService.initiateAdobeEsignRequest(adobeEsignData);
-    }else{
-      return this.esignDataService.updateEsignRequestTemplate(adobeEsignData);
-    }
   }
 
   saveDraftEsignRequest(formData: any) {
@@ -41,11 +37,11 @@ export class EsignFacade {
     return this.esignDataService.getEsignRequest(clientCaseEligibilityId, flowName);
   }
 
-prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: any[]) {
+prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: any[], typeCode: string) {
     formData.append('notificationTemplateId', this.nullCheck(emailData?.documentTemplateId));
     formData.append('esignRequestId', this.nullCheck(emailData?.esignRequestId));
     formData.append('requestBody', this.nullCheck(emailData?.templateContent));
-    formData.append('typeCode', this.nullCheck(emailData?.typeCode));
+    formData.append('typeCode', emailData?.typeCode ?? typeCode);
     this.prepareNotificationAttachment(cerEmailAttachedFiles, formData);
     return formData;
 }
@@ -176,7 +172,7 @@ nullCheck(value:any){
 
  }
 
- prepareEsignData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, ) {
+ prepareEsignData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any) {
     const formData = new FormData();
     formData.append('to', this.nullCheck(selectedToEmail));
     formData.append('clientCaseEligibilityId', this.nullCheck(clientCaseEligibilityId));

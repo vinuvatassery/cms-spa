@@ -135,7 +135,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   minServiceDate: Date = new Date(2000, 1, 1);
   todayDate: Date = new Date();
   dataLoaded = false;
-
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly elementRef: ElementRef,

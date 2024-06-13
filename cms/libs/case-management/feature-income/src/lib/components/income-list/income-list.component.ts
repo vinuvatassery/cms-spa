@@ -44,6 +44,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   @Output() public sendDetailToIncomeList = new EventEmitter<any>();
   @Output() loadIncomeListEvent = new EventEmitter<any>();
   @Output() public loadIncomeList = new EventEmitter<any>();
+  @Output() public AddedIncomeType = new EventEmitter<any>();
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -315,6 +316,10 @@ ngOnDestroy(): void {
   loadIncomeListGrid(event: any) {
     this.loadIncomeData(true);
 
+  }
+
+  AddedIncomeTypeGet(event:any){
+    this.AddedIncomeType.emit(event);
   }
 
   handleFileSelected(event: any, dataItem: any) {

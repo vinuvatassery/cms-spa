@@ -37,6 +37,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   smsScreenName = ScreenType.Case360PageSMS;
   smsNotificationGroup = ScreenType.Case360PageSMS;
   isIdCardOpened = false;
+  isshow = false;
   isSendNewLetterOpened = false;
   isSendNewEmailOpened = false;
   isNewSMSTextOpened = false;
@@ -152,7 +153,11 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       id:'new_id_card',
       isVisible: true,
       click: (templatename: any): void => {
-        this.onIdCardClicked(templatename);
+        if(!this.isshow)
+          {
+            this.isshow = true;
+           this.onIdCardClicked(templatename);
+        }
       },
     },
   ];
@@ -339,6 +344,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   handleIdCardClosed(result: any) {
+    this.isshow = false;
     if(result){
       this.isIdCardOpened = false;
       this.isIdCardOpenedDialog.close();

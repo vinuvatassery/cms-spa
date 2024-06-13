@@ -91,6 +91,11 @@ export class CptCodeListComponent implements OnInit, OnChanges {
     medicaidRate: "Medicaid Rate",
     activeFlag: "Status",
   };
+  
+  activeFlagStatus: any = [
+    { columnCode: 'Active', columnDesc: 'Active' },
+    { columnCode: 'Inactive', columnDesc: 'Inactive' }
+  ];
   dropDowncolumns: any = [
     { columnCode: 'ALL', columnDesc: 'All Columns' },
     { columnCode: 'cptCode1', columnDesc: 'CPT Code' }
@@ -218,7 +223,7 @@ export class CptCodeListComponent implements OnInit, OnChanges {
           value: value,
         },
       ],
-      logic: 'or',
+      logic: 'and',
     });
 
  
@@ -254,8 +259,12 @@ export class CptCodeListComponent implements OnInit, OnChanges {
       }
       this.filteredBy = filterList.toString();
     } else {
+      this.filter = '';
       this.isFiltered = false;
+      this.filteredBy = '';
     }
+    if (!this.filteredBy.includes('Status'))
+      this.statusFilter = null;
 
     this.loadCptCodeList();
   }
