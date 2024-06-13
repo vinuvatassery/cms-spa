@@ -278,7 +278,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   onSaveForLaterClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -363,7 +363,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     return currentEmailData;
   }
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>'){
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -415,6 +415,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
             if(this.entityId && this.entityType == FabEntityTypeCode.Client){
               this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
             }
+            this.todoFacade.loadAlertsBanner(this.entityId);
           }
           this.loaderService.hide();
           this.navigateConditionally();
@@ -518,7 +519,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   onSendLetterToPrintClicked() {
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>'){
+    if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>'){
       this.isContentMissing = true;
       this.isFormValid = false;
     }
@@ -595,7 +596,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
                 this.cancelDisplay = false;
               }
             this.sortDropdownValues(defaultOption, otherOptions);
-            this.todoFacade.loadAlertsBanner(this.entityId);
             }
             this.loaderService.hide();
           },
@@ -633,8 +633,15 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
 
   handleDdlLetterValueChange(event: any) {
-    this.handleConfirmPopupHeader(event.templateTypeCode);
+    this.clientAndVendorAttachedFiles = [];
+    if(this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter){
+      event.templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationLetter
+    }
+    if(this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
+      event.templateTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter
+    }
     this.isMailingAddressMissing = false;
+    this.handleConfirmPopupHeader(event.templateTypeCode);
     this.setVendorAndcommunicationType(event.templateTypeCode);
     if ((this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
       || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter
@@ -727,7 +734,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.saveForLaterHeadterText = "Letter Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Letter\" from the vendor's profile";
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationLetter:
@@ -735,7 +742,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.templateHeader = 'CER Authorization Letter';
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
         this.saveForLaterHeadterText = "Send CER Authorization Letter Later?";
-        this.saveForLaterModelText = "You must send the  CerAuthorization Letter within 45 Days";
+        this.saveForLaterModelText = "You must send the CER Authorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send CER Authorization Letter to Print?';
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also receive a notification via email, SMS text, and/or through their online portal.";
         break;
@@ -744,8 +751,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.snackBarMessage = 'Letter generated! An event has been logged.';
         this.templateHeader = 'Application Authorization Letter';
         this.informationalText = "Type the body of the letter. Click Preview Letter to see what the client will receive. Attachments will not appear in the preview, but will be printed with the letter.";
-        this.saveForLaterHeadterText = "Send Authorization Letter Later?";
-        this.saveForLaterModelText = "You must send the  Authorization Letter within 45 Days";
+        this.saveForLaterHeadterText = "Send Application Authorization Letter Later?";
+        this.saveForLaterModelText = "You must send the Application Authorization Letter within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Letter to Print?';
         this.confirmationModelText = "This action cannot be undone.";
         break;
@@ -757,7 +764,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         this.saveForLaterHeadterText = "Letter Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Letter\" from the client's profile";
         this.confirmPopupHeader = 'Send Letter to Print?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
     }
   }
@@ -883,7 +890,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
-      this.clientAndVendorAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){
@@ -961,7 +967,7 @@ loadMailingAddress() {
 
 editorValueChange(event: any){
   this.updatedTemplateContent = event;
-  if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<p></p>')){
+  if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<div style="width:100%;word-break: break-word;"><p></p></div>')){
     this.isContentMissing = false;
   }
   this.ref.detectChanges();

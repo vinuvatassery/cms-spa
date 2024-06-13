@@ -1,3 +1,3 @@
-<div [innerHtml]="sanitizedHtml"></div>
+<div [innerHtml]="content"></div>
 <a *ngIf="!isContentToggled && isShowReadMore" (click)="toggleContent()">Read More</a>
 <a *ngIf="isContentToggled" (click)="toggleContent()">Read Less</a>

@@ -342,7 +342,6 @@ saveForLaterHeadterText!: string;
               this.cancelDisplay = false;
             }
             this.sortDropdownValues(defaultOption, otherOptions);
-            this.todoFacade.loadAlertsBanner(this.entityId);
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -473,7 +472,7 @@ saveForLaterHeadterText!: string;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
     }
-    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -575,6 +574,7 @@ saveForLaterHeadterText!: string;
             if(this.entityId && this.entityType == FabEntityTypeCode.Client){
               this.fabBadgeFacade.reloadFabMenu(this.entityId, FabEntityTypeCode.Client);
             }
+            this.todoFacade.loadAlertsBanner(this.entityId);
           }
           this.ref.detectChanges();
           this.loaderService.hide();
@@ -672,7 +672,7 @@ saveForLaterHeadterText!: string;
       this.isFormValid = false;
       this.onSendEmailDailougeConfirmationClicked();
     }
-    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<p></p>') {
+    if (this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>') {
       this.isContentMissing = true;
       this.isFormValid = false;
       this.onCloseSaveForLaterClicked();
@@ -701,9 +701,16 @@ saveForLaterHeadterText!: string;
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    this.clientAndVendorAttachedFiles = [];
     this.isToEmailMissing = false;
     this.isEmailSubjectMissing = false;
     this.isContentMissing = false;
+    if(this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail){
+      event.templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail
+    }
+    if(this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail){
+      event.templateTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail
+    }
     this.handleConfirmPopupHeader(event.templateTypeCode);
     this.setVendorAndCommunicationType(event.templateTypeCode);
     this.selectedTemplate = event;
@@ -805,7 +812,7 @@ saveForLaterHeadterText!: string;
         this.saveForLaterHeadterText = "Email Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Email\" from the vendor's profile";
         this.confirmPopupHeader = 'Send Email?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationEmail:
@@ -814,7 +821,7 @@ saveForLaterHeadterText!: string;
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
         this.saveForLaterHeadterText = "Send CER Authorization Email Later?";
-        this.saveForLaterModelText = "You must send the  Cer Authorization Email within 45 Days";
+        this.saveForLaterModelText = "You must send the CER Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
         break;
@@ -823,8 +830,8 @@ saveForLaterHeadterText!: string;
         this.templateHeader = 'Application Authorization Email';
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
-        this.saveForLaterHeadterText = "Send Authorization Email Later?";
-        this.saveForLaterModelText = "You must send the  Authorization Email within 45 Days";
+        this.saveForLaterHeadterText = "Send Application Authorization Email Later?";
+        this.saveForLaterModelText = "You must send the Application Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
         break;
@@ -836,7 +843,7 @@ saveForLaterHeadterText!: string;
         this.saveForLaterHeadterText = "Email Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Email\" from the client's profile";
         this.confirmPopupHeader = 'Send Email?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
     }
   }
@@ -1046,6 +1053,7 @@ saveForLaterHeadterText!: string;
             this.isSendEmailSuccess.emit(true);
             this.closeSendEmailEvent.emit(CommunicationEvents.Print);
             this.onCloseSendEmailClicked();
+            this.todoFacade.loadAlertsBanner(this.entityId);
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Email Sent! An event has been logged.')
           }
           this.loaderService.hide();
@@ -1148,7 +1156,6 @@ saveForLaterHeadterText!: string;
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
-      this.clientAndVendorAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){
@@ -1252,7 +1259,7 @@ saveForLaterHeadterText!: string;
 
   editorValueChange(event: any) {
     this.updatedTemplateContent = event;
-    if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<p></p>')){
+    if((this.updatedTemplateContent  !== undefined) || (this.updatedTemplateContent !== '') || (this.updatedTemplateContent !== "") || (this.updatedTemplateContent.trim() !== '<div style="width:100%;word-break: break-word;"><p></p></div>')){
       this.isContentMissing = false;
     }
     this.ref.detectChanges();

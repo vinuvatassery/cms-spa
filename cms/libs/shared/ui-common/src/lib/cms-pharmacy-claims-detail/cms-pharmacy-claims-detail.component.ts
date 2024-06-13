@@ -273,7 +273,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
      {
         this.addPharmacyClaimEvent.emit(pharmacyClaimData)
      }
-
+     this.ngDirtyInValid();
   }
 
   removeService(i: number) {
@@ -388,7 +388,6 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
     this.pharmacyClaimForm.controls['vendorId'].setValue(data?.vendorId);
     this.objectCode = data?.objectCode;
     this.cd.detectChanges();
-
   }
 
 
@@ -534,5 +533,18 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
   restrictSpecialChar(event: any) {
     const status = (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8;
     return status;
+  }
+
+  ngDirtyInValid() {
+    if (!this.pharmacyClaimForm.controls['pharmacy']) {
+      document.getElementById('pharmacyName')?.classList.remove('ng-valid');
+      document.getElementById('pharmacyName')?.classList.add('ng-invalid');
+      document.getElementById('pharmacyName')?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById('pharmacyName')?.classList.remove('ng-invalid');
+      document.getElementById('pharmacyName')?.classList.remove('ng-dirty');
+      document.getElementById('pharmacyName')?.classList.add('ng-valid');
+    }
   }
 }

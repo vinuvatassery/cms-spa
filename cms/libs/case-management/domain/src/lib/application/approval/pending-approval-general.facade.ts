@@ -94,23 +94,8 @@ export class PendingApprovalGeneralFacade {
   }
 
   /** Public methods **/
-  loadInvoiceListGrid(invoiceDto:any){
-    this.isInvoiceLoadingSubject.next(true);
-    this.pendingApprovalGeneralService.loadInvoiceListService(invoiceDto).subscribe({
-      next: (dataResponse: any) => {
-        const gridView = {
-          data: dataResponse['items'],
-          total: dataResponse['totalCount'],
-        };
-        this.invoiceDataSubject.next(gridView);
-        this.isInvoiceLoadingSubject.next(false);
-
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-        this.isInvoiceLoadingSubject.next(false);
-      },
-    });
+  loadInvoiceListGrid(invoiceDto:any):any{
+    return this.pendingApprovalGeneralService.loadInvoiceListService(invoiceDto);
   }
 
   loadCasereassignmentExpandedInfo(approvalId : any) {

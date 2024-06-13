@@ -210,7 +210,7 @@
   <common-financial-drugs-details [hasCreateUpdatePermission]="hasCreateUpdatePermission" [vendorId]="vendorId"
     [dialogTitle]="dialogTitle" [vendorDetails$]="vendorDetails$" [deliveryMethodCodes]="deliveryMethodLovs"
     [addDrug$]="addDrug$" (addDrugEvent)="addDrug($event)"
-    [manufacturers]="manufacturers"
+    [manufacturersObs$]="manufacturersLov$" (loadManufacturerEvent)="loadManufacturersList()"
     (close)="clickCloseAddEditFinancialDrugsDetails()"> </common-financial-drugs-details>
 </kendo-dialog>
 

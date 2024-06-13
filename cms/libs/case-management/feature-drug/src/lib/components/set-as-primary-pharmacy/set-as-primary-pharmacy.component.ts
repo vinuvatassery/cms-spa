@@ -79,6 +79,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
     this.selectedSearchedPharmacy = null;
     this.selectedPharmacyForEdit = '';
     this.autocomplete?.reset();
+    this.ngDirtyInValid();
     this.ref.detectChanges();
   }
   onSearchTemplateClick(pharmacy: any) {
@@ -87,12 +88,14 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
     if (pharmacy.vendorId) {
       this.selectedSearchedPharmacy = pharmacy;
       this.selectedPharmacy = null;
+      this.ngDirtyInValid();
       this.ref.detectChanges();
     }
   }
   onAddNewPharmacy() {
     if (!this.validate()) {
       this.isPharmacyError = true;
+      this.ngDirtyInValid();
       return;
     }
     if (this.IsDeactivateSelectPrimaryPharmacies) {
@@ -105,6 +108,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
         isNewAdded: isNewAdded,
         newPharmacy: newPharmacy,
       });
+      this.ngDirtyInValid();
     } else {
       this.addNewPharmacyClick.emit(null);
     }
@@ -112,6 +116,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
   onRemovePharmacy() {
     if (!this.validate()) {
       this.isPharmacyError = true;
+      this.ngDirtyInValid();
       return;
     }
     if (this.IsDeactivateSelectPrimaryPharmacies) {
@@ -124,6 +129,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
         isNewAdded: isNewAdded,
         newPharmacy: newPharmacy,
       });
+      this.ngDirtyInValid();
     } else {
       this.removePharmacyClick.emit(null);
     }
@@ -133,5 +139,18 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  ngDirtyInValid() {
+    if (this.isPharmacyError) {
+      document.getElementById('removePharmacy')?.classList.remove('ng-valid');
+      document.getElementById('removePharmacy')?.classList.add('ng-invalid');
+      document.getElementById('removePharmacy')?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById('removePharmacy')?.classList.remove('ng-invalid');
+      document.getElementById('removePharmacy')?.classList.remove('ng-dirty');
+      document.getElementById('removePharmacy')?.classList.add('ng-valid');
+    }
   }
 }

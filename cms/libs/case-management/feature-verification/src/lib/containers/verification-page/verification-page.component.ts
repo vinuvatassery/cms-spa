@@ -6,7 +6,7 @@ import { forkJoin, mergeMap, of, Subscription, first, catchError, tap } from 'rx
 /** Internal Libraries **/
 import { VerificationFacade, NavigationType, WorkflowFacade, EsignFacade, VerificationStatusCode } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { UserDataService } from '@cms/system-config/domain';
 
@@ -359,10 +359,13 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       .pipe(
         catchError((error: any) => {
           if (error) {
-            this.verificationFacade.healthcareInvalidSubject.next(true);
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'HIV Verification is required.', NotificationSource.UI);
+            this.verificationFacade.healthcareInvalidSubject.next(true);            
+            this.loaderService.hide()
             return of(false);
           }
           this.verificationFacade.healthcareInvalidSubject.next(true);
+          this.loaderService.hide()
           return of(false);
         }),
 

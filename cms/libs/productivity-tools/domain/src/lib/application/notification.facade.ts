@@ -143,9 +143,12 @@ export class NotificationFacade {
     reminderId: any,
     duration: any,
     isViewAll = true,
-    isFullDay = true
+    isFullDay = true,
+    showLoader = true,
   ) {
+    if(showLoader){
     this.loaderService.show();
+    }
     this.notificationDataService
       .SnoozeReminder(reminderId, duration, isFullDay)
       .subscribe({
@@ -163,7 +166,9 @@ export class NotificationFacade {
           }
         },
         error: (err) => {
+          if(showLoader){
           this.loaderService.hide();
+          }
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });

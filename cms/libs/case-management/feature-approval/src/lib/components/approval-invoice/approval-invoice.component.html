@@ -2,7 +2,7 @@
   <div class="app-c-table">
     <kendo-grid
       [resizable]="true"
-      [loading]="isInvoiceGridLoaderShow"
+      [loading]="(loader$ | async) === true"
       [pageSize]="state.take"
       [pageable]="true"
       [sortable]="true"
@@ -13,7 +13,7 @@
       [columnMenu]="{ filter: true }"
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)" 
-      [data]="invoiceData$ | async"
+      [data]="generalTabExceptionGridLists$ | async"
       (filterChange)="filterChange($event)"
       [filter]="state.filter"
     >

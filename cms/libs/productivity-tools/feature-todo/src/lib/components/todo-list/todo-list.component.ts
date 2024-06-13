@@ -305,9 +305,11 @@ export class TodoListComponent implements OnInit {
     this.filter = stateData?.filter?.filters;
     this.loadTodoGrid();
     const filterList = []
-    for(const filter of stateData.filter.filters)
-    {
-      filterList.push(this.columns[filter.filters[0].field]);
+    if(this.filter){
+      for(const filter of stateData.filter?.filters)
+        {
+          filterList.push(this.columns[filter.filters[0].field]);
+        }
     }
     this.filteredBy =  filterList.toString();
     if (!this.filteredBy.includes('Type')) this.selectedEntityType = '';

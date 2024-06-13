@@ -145,7 +145,7 @@ public state!: any;
     ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.defaultGridState();
     this.loadDdlGridColumns();
     this.lovFacade.getGroupLovs();
@@ -605,8 +605,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     }
     this.setSortValue();
     this.sort = stateData.sort;
-    this.sortValue =this.nullCheck(stateData.sort[0]?.field);
-    this.sortType = this.nullCheck(stateData.sort[0]?.dir);
+    this.sortValue =this.emptyCheck(stateData.sort[0]?.field);
+    this.sortType = this.emptyCheck(stateData.sort[0]?.dir);
     this.columnName = filterList.length > 0 ? filterList[0]?.filters[0]?.field : "";
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
@@ -659,6 +659,15 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     }
     else{
       return [];
+    }
+   }
+
+   emptyCheck(value:any){
+    if(value){
+      return value;
+    }
+    else{
+      return "";
     }
    }
 }

@@ -669,7 +669,11 @@ loadAuthorization() {
     next: (data: any) => {
       if(data){
         this.signedApplication = data;
-        data?.applicantSignedDate == null ? null : this.authorizationForm?.get('applicantSignedDate')?.patchValue(new Date(data?.applicantSignedDate));
+        if(data?.applicantSignedDate){
+          data.applicantSignedDate = this.authorizationForm?.get('applicantSignedDate')?.patchValue(new Date(data?.applicantSignedDate));
+        }else{
+          data.applicantSignedDate = null;
+        }
         const signatureNotedDate = data?.signatureNotedDate == null ? null : formatDate(new Date(data?.signatureNotedDate), 'MM-dd-yyyy');
         if(signatureNotedDate != null){
           this.authorizationForm?.get('signatureNotedDate')?.patchValue(signatureNotedDate);
