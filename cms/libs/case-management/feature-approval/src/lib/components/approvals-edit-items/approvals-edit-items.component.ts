@@ -884,4 +884,14 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   capitalizeFirstLetter(string:any) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
+
+  accountingNumberValidated: boolean = true;
+  restrictTinNumber(event: any){
+    this.healthCareForm?.controls['tinNumber'].value;
+    if (this.healthCareForm?.controls['tinNumber'].value && (parseInt(this.healthCareForm?.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.healthCareForm?.controls['tinNumber'].value.charAt(0)) == 3)) {
+      this.accountingNumberValidated = true;
+      }else{
+      this.accountingNumberValidated = false;
+    }
+  }
 }

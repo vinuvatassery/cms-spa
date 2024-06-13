@@ -66,8 +66,12 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Tin">
         <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
-          placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
+          placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat"
+          (keyup)="restrictTinNumber($event)">
         </kendo-maskedtextbox>
+        <kendo-formerror *ngIf="!accountingNumberValidated">
+          A 1 or a 3 is required
+        </kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
