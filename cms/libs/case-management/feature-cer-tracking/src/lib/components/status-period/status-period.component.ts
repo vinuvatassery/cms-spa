@@ -212,7 +212,7 @@ export class StatusPeriodComponent implements OnInit {
 
   fetchStatusPeriodDetails() {
     this.StatusPeriod$.subscribe((res: any) => {
-      if(res['data'].length > 0) {
+      if(res['data']?.length > 0) {
         res['data'].forEach((x:any, index: number) => {
           this.statusGrid?.collapseRow(index);
         });

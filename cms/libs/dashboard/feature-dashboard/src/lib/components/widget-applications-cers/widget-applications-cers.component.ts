@@ -39,7 +39,7 @@ export class WidgetApplicationsCersComponent {
   }
   todoitemsNavigate()
   {
-    this.router.navigate([`/productivity-tools/todo-items`]);
+    this.router.navigate([`/productivity-tools/todo-items/list`]);
   } 
   myClientsNavigate()
   {
