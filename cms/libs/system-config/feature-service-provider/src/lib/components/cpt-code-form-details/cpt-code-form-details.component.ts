@@ -61,6 +61,10 @@ export class CptCodeFormDetailsComponent {
     this.cptCodeForm.controls["brigeUppFlag"].setValue(this.setBridgeUppEligibleFlagValue());
     this.cptCodeForm.markAllAsTouched();
     this.cd.detectChanges();
+
+     // Update tareaDescription before initializing variables
+     this.tareaDescription = this.cptCode.serviceDesc ?? '';
+     this.tareaVariablesIntialization();
   }
 
 
