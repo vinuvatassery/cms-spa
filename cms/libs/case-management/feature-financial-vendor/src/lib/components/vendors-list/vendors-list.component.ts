@@ -133,6 +133,7 @@ ngOnChanges(): void {
           this.vendorNameTitle = "Provider Name"
           break;
     }
+   this.sortColumn = this.vendorNameTitle;
    this.loadFinancialVendorsList()
   }
 }
@@ -324,7 +325,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
 
 
     this.showTinSearchWarning = false;
-    this.sortColumn = 'Vendor Name';
+    this.sortColumn = this.vendorNameTitle;
     this.sortDir = 'Ascending';
     this.filter = "";
     this.searchValue = "";
