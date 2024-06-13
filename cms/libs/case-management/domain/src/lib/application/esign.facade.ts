@@ -14,11 +14,7 @@ export class EsignFacade {
 
   /** Public methods **/
   initiateAdobeesignRequest(adobeEsignData: any, emailData: any) {
-    //if(emailData?.esignRequestId == undefined || emailData?.esignRequestId === null){
       return this.esignDataService.initiateAdobeEsignRequest(adobeEsignData);
-    // }else{
-    //   return this.esignDataService.updateEsignRequestTemplate(adobeEsignData);
-    // }
   }
 
   saveDraftEsignRequest(formData: any) {
