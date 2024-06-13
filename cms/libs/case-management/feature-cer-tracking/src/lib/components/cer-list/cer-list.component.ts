@@ -15,7 +15,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
-import { StatusFlag } from '@cms/shared/ui-common';
+import { CaseStatusCode, StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
@@ -138,8 +138,39 @@ export class CerListComponent implements OnInit, OnChanges {
    if(this.gridState$)
    {
     this.state = this.gridState$
+    if (this.caseStatus == CaseStatusCode.restricted){ 
+      if(this.state.filter == undefined){
+        this.state = {
+          skip: 0,
+          take: this.pageSizes[0]?.value,
+          sort: this.sort,
+          filter:{logic:'and',filters:[]},
+        }; 
+      }
+      this.state.filter.filters.push(
+        {filters:[{
+          field: "eligibilityStatus",
+          operator: "eq",
+          value:this.caseStatus
+      }]});
+    }
     this.dataStateChange(this.state);
-   }
+   } else if (this.caseStatus == CaseStatusCode.restricted){ 
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter:{logic:'and',filters:[]},
+    }; 
+    this.state.filter.filters.push(
+      {filters:[{
+        field: "eligibilityStatus",
+        operator: "eq",
+        value:this.caseStatus
+    }]});
+    this.loadcerTrackingDates();
+    this.dataStateChange(this.state);
+  }
    else
    {
     this.state = {
@@ -151,6 +182,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loadcerTrackingDates();
    }
   }
+
   /** Private methods **/
   private loadcerTrackingDates() {
     this.loadCerTrackingDateListEvent.emit();
