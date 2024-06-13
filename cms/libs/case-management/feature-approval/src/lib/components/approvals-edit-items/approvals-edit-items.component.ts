@@ -50,6 +50,9 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   paymentRunDateList: any[] = [];
   tempVendorName: any;
   ndcMaskFormat: string = "00000-0000-00"
+  startDateValidationError: boolean = false;
+  termDateValidationError: boolean = false;
+
   constructor(private insurancePlanFacade : InsurancePlanFacade,
               private drugFacade : DrugsFacade,
               private financialVendorFacade : FinancialVendorFacade,
@@ -460,6 +463,17 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
 
       this.insurancePlanForm.controls['startDate'].setValidators(Validators.required);
       this.insurancePlanForm.controls['startDate'].updateValueAndValidity();
+
+      if(this.selectedMasterData?.startDate > this.selectedMasterData?.termDate) {
+        this.startDateValidationError = true;
+        this.termDateValidationError = false;
+      }
+
+      if(this.selectedMasterData?.startDate < this.selectedMasterData?.termDate) {
+        this.termDateValidationError = true;
+        this.startDateValidationError = false;
+      }
+
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.Pharmacy) {
       this.pharmacyForm.controls['pharmacyName'].setValidators(Validators.required)
       this.pharmacyForm.controls['pharmacyName'].updateValueAndValidity();
@@ -528,7 +542,9 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         !this.drugForm.valid ||
         !this.pharmacyForm.valid ||
         !this.insuranceVendorForm.valid ||
-        !this.insuranceProviderForm.valid ) {
+        !this.insuranceProviderForm.valid ||
+        this.startDateValidationError ||
+        this.termDateValidationError) {
       return false;
     }
     return true;
@@ -894,4 +910,29 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       this.accountingNumberValidated = false;
     }
   }
+
+  onStartDateChange(event: any){
+    var startDate = new Date(this.insurancePlanForm.controls['startDate'].value);
+    var termDate = new Date(this.insurancePlanForm.controls['termDate'].value);
+
+    if(startDate > termDate) {
+      this.startDateValidationError = true;
+      this.termDateValidationError = false;
+    }else{
+      this.startDateValidationError = false;
+    }
+  }
+
+  onTermDateChange(event: any){
+    var startDate = new Date(this.insurancePlanForm.controls['startDate'].value);
+    var termDate = new Date(this.insurancePlanForm.controls['termDate'].value);
+
+    if(termDate < startDate) {
+      this.startDateValidationError = false;
+      this.termDateValidationError = true;
+    }else {
+      this.termDateValidationError = false;
+    }
+  }
+  
 }

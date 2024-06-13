@@ -62,7 +62,15 @@
         </ng-container>
         <tr>
           <td>Address</td>
-          <td>{{ vendorData.address1 }}</td>
+          <td>
+            <div>{{ vendorData.address1 }}</div>
+            <div>{{ vendorData.address2 }}</div>
+            <div><span *ngIf="vendorData.cityCode">{{ vendorData.cityCode }}</span>
+              <span *ngIf="vendorData.stateCode">, {{ getStateText(vendorData.stateCode) }}</span>
+              <span *ngIf="vendorData.zip"> , {{ vendorData.zip }}</span>
+            </div>
+
+          </td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode.toUpperCase() === subTypeConst.Drug">

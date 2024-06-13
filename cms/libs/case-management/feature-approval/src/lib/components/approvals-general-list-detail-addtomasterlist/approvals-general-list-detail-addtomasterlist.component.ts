@@ -24,6 +24,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   @Output() openEditModal = new EventEmitter<any>();
   @Input() subTypeCode: any;
   @Input() approvalEntityId: any;
+  @Input() ddlStates$!: any;
   ifApproveOrDeny: any;
   isPanelExpanded = false;
   selectedMasterDetailSubscription!: Subscription;
@@ -33,6 +34,8 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
   readonly approveOrDenyConst = GeneralApprovalApproveDeny;
   vendorData: any;
+  statesData: any;
+  statesSubscriber: any;
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -71,6 +74,12 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
     } else if (this.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
       this.updateProviderPanelSubject$ = this.insurancePlanFacade.updateProviderPanelSubject$;
     }
+
+    this.statesSubscriber = this.ddlStates$.subscribe({
+      next: (data: any) => {
+        this.statesData = data;
+      }
+    });
   }
 
   private getMasterDetailData() {
@@ -147,6 +156,12 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
 
   ngOnDestroy(): void {
     this.selectedMasterDetailSubscription?.unsubscribe();
+    this.statesSubscriber?.unsubscribe();
   }
   onCloseEditListItemsDetailClicked() {}
+
+  getStateText(stateCode: any){
+     var state = this.statesData.filter((x: any) => x.stateCode == stateCode).map((m: any) => m.stateName);
+     return state;
+  }
 }
