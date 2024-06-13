@@ -101,6 +101,7 @@
           </button>
 
           <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span>
+          <span *ngIf="dataItem.status === 'PENDING'">Pending </span>
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column *ngIf="interfaceType !='USPS'" field="uploadStatus" title="File Download" [width]="180"
