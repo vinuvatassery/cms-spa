@@ -1045,7 +1045,7 @@ saveForLaterHeadterText!: string;
     let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
     let esignData = this.esignFacade.prepareEsignData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId);
     let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater, templateTypeCode, eventGroupCode, esignData);
-    let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
+    let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles, this.communicationEmailTypeCode);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
       .subscribe({
         next: (data: any) => {
