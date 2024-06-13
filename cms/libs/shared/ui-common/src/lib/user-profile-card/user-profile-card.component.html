@@ -79,18 +79,18 @@
         <span class="material-icons" aria-label="fax" aria-hidden="true"
           >print</span
         >
-        {{userById?.faxNbr | phone}}
+        {{userById?.faxNbr?.trim() | phone}}
       </p>
       <div class="app-card-details align-items-fstart">
         <span class="material-icons" aria-label="address" aria-hidden="true">location_pin</span >
         <div> 
-          <p> <span *ngIf="userById?.address1"> {{userById?.address1}}, </span> 
-              <span *ngIf="userById?.address2"> {{userById?.address2}}, </span> 
+          <p> <span *ngIf="userById?.address1?.trim()"> {{userById?.address1}}, </span> 
+              <span *ngIf="userById?.address2?.trim()"> {{userById?.address2}}, </span> 
               </p>
               <p>
-              <span *ngIf="userById?.city">  {{userById?.city}},</span> 
-              <span *ngIf="userById?.state">  {{userById?.state}} </span> 
-              <span *ngIf="userById?.zip"> - {{userById?.zip}}</span>.</p>
+              <span *ngIf="userById?.city?.trim()">  {{userById?.city}},</span> 
+              <span *ngIf="userById?.state?.trim()">  {{userById?.state}} </span> 
+              <span *ngIf="userById?.zip?.trim()"> - {{userById?.zip}}</span><span *ngIf="userById?.zip?.trim()">.</span></p>
         </div>  
       </div>    
     <div class="app-card-bottom-buttons" *ngIf="sendEmail"> 
