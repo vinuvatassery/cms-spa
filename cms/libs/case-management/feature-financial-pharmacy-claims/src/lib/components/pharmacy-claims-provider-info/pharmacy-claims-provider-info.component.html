@@ -222,15 +222,15 @@
           
          </div>
              <div class="flex-col mt-1"  >
-                 <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode"  formControlName="contactName"  id="{{'contactName'+i}}">
+                 <kendo-textbox [readonly]="isEditProvider" #contactName aria-label="Name" [fillMode]="formUiStyle.inputFillMode"  formControlName="contactName"  id="{{'contactName'+i}}">
                  </kendo-textbox>
                  <kendo-formerror *ngIf="contact.hasError('required','contactName') && isSubmitted">Contact name is Required
                  </kendo-formerror>
              </div>
     
-             <div  formArrayName="phones"  class="flex-col mt-1" *ngFor="let phone of  getPhonesArray(contact).controls; let j=index">
+             <div formArrayName="phones"  class="flex-col mt-1" *ngFor="let phone of  getPhonesArray(contact).controls; let j=index">
                  <div [formGroupName]="j">                       
-                     <kendo-maskedtextbox  aria-label="Phone"  [maskOnFocus]="true"  mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode" formControlName="phoneNbr" id="{{'phoneNbr'+i}}">
+                     <kendo-maskedtextbox  [readonly]="isEditProvider" #contactPhones aria-label="Phone"  [maskOnFocus]="true"  mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode" formControlName="phoneNbr" id="{{'phoneNbr'+i}}">
                      </kendo-maskedtextbox> 
                      <kendo-formerror *ngIf="phone.hasError('required','phoneNbr') && isSubmitted">phoneNbr is Required
                      </kendo-formerror>
@@ -239,7 +239,7 @@
 
                  <div formArrayName="emails" class="flex-col mt-1" *ngFor="let email of  getEmailsArray(contact).controls; let k=index">
                      <div [formGroupName]="k">
-                 <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress" id="{{'emailAddress'+i}}">
+                 <kendo-textbox aria-label="Email"  [readonly]="isEditProvider" #contactEmails [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress" id="{{'emailAddress'+i}}">
                  </kendo-textbox>
              </div>
 
