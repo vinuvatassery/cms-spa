@@ -6,7 +6,6 @@
         <div class="flex-col">
             <kendo-floatinglabel text="Service Provider Name" >   
                 <kendo-combobox   
-                [comboboxMaxLength]="500"
                 aria-label="Service Provider Name"
                 [fillMode]="formUiStyle.dropDownFillMode"  
                 [loading] = "isVendorLoading$ | async"
@@ -28,7 +27,6 @@
         <div class="flex-col">
                 <kendo-floatinglabel text="Policy" >   
                     <kendo-combobox   
-                    [comboboxMaxLength]="600"
                     aria-label="Policy"
                     [fillMode]="formUiStyle.dropDownFillMode" 
                     [loading] = "isInsurancePoliciesLoading" 

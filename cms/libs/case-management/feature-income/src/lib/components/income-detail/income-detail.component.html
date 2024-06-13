@@ -31,7 +31,6 @@
             [filterable]="true" (filterChange)="loadEmployers($event)" [data]="employers$ | async"
             formControlName="employerId" [valuePrimitive]="true" 
             valueField="employerId"
-            [comboboxMaxLength]="200"
             >
             <button kendoButton fillMode="clear" icon="image"></button>        
             <kendo-combobox-column>

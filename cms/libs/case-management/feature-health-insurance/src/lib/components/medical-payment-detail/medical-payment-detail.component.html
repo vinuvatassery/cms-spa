@@ -17,7 +17,6 @@
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
                             (valueChange)="onProviderValueChange($event)"
-                            [comboboxMaxLength]="500"
                             >
                             <button kendoButton fillMode="clear" icon="image"></button>
 
@@ -193,7 +192,6 @@
                                             <span *ngIf="CPTCodeSearchLoaderVisibility$ | async"
                                                 class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                                             <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode"
-                                                [comboboxMaxLength]="100"
                                                 [data]="searchCTPCode$ | async" formControlName="cptCode"
                                                 valueField="cptCode1" [filterable]="true" [value]="selectedCPTCode"
                                                 (filterChange)="searchcptcode($event)"

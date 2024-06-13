@@ -48,7 +48,6 @@ export * from './lib/directives/kendo-file-upload-accessibility.directive';
 export * from './lib/directives/permission-manager.directive';
 export * from './lib/directives/after-value-changed.directive';
 export * from './lib/directives/ndc-code.directive';
-export * from './lib/directives/combobox-maxlength.directive';
 /** Enums **/
 export * from './lib/enums/yes-no-flag-enum';
 export * from './lib/enums/address-type.enum';
