@@ -63,9 +63,9 @@
         <tr>
           <td>Address</td>
           <td>
-            <div>{{ vendorData.address1 }}</div>
-            <div>{{ vendorData.address2 }}</div>
-            <div><span *ngIf="vendorData.cityCode">{{ vendorData.cityCode }}</span>
+            <div>{{ vendorData.address1 }}<span *ngIf="vendorData.address2">{{ vendorData.address2 }}</span></div>
+            <div>
+              <span *ngIf="vendorData.cityCode">{{ vendorData.cityCode }}</span>
               <span *ngIf="vendorData.stateCode">, {{ getStateText(vendorData.stateCode) }}</span>
               <span *ngIf="vendorData.zip"> , {{ vendorData.zip }}</span>
             </div>

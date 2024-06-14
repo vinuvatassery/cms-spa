@@ -39,7 +39,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   clinicVendorListLocal!: any;
   selectedClinicVendorId!: null;
   isValidateForm!: boolean;
-  tinMaskFormat: string = '0 00-000000';
+  tinMaskFormat: string = '0 00-0000000';
   selectedVendor!: any;
   selectedParentVendor!: any;
   drugTypesList : any;

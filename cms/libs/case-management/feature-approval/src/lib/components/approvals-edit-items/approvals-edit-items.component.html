@@ -65,7 +65,7 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Tin">
-        <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
+        <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
           placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat"
           (keyup)="restrictTinNumber($event)">
         </kendo-maskedtextbox>
