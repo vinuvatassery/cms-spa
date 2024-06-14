@@ -619,10 +619,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
   loadClientBalance(clientId : any){
     this.financialClaimsDataService.loadClientBalance(clientId).subscribe({
       next: (dataResponse) => {
-        this.clientBalanceSubject.next(dataResponse);
-        if (dataResponse) {
-         
-        }
+        this.clientBalanceSubject.next(dataResponse);       
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
