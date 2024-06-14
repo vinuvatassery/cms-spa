@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
+import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, HealthInsurancePlan, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
 import { FinancialVendorTypeCode, StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 
 
@@ -470,7 +470,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       var termDateValue = this.insurancePlanForm.controls['termDate'].value;
       var startDateValue = this.insurancePlanForm.controls['startDate'].value;
 
-      if(healthInsuranceValue == "QUALIFIED_HEALTH_PLAN" && !termDateValue){
+      if(healthInsuranceValue == HealthInsurancePlan.QualifiedHealthPlan && !termDateValue){
         this.termDateRequiredValidationError = true;
       }else{
         this.termDateRequiredValidationError = false;
