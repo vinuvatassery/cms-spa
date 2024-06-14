@@ -170,7 +170,6 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
       this.savePremiums(selectedPlans);
       return;
     }
-
     this.checkValidPcaAndSave(selectedPlans);
   }
 
@@ -204,17 +203,19 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
       exceptionReason: '',
       exceptionReasonCount: '0/150',
       premiumAmount: plan?.premiumAmt ?? 0,
-      premiumCoverageDateList: this.getPremiumCoverageDates(plan.startDate, plan.endDate, plan.eligibilityEndDate)
+      premiumCoverageDateList: this.getPremiumCoverageDates(plan.startDate, plan.endDate, plan.eligibilityEndDate, plan.eligibilityStartDate)
     };
-
     plan.coverages.push(newCoverage);
     this.showPremiumRequiredValidation = false;
     this.makeAutoPlanSelection(plan);
   }
 
-  private getPremiumCoverageDates(startDate: Date, endDate: Date, eligibilityEndDate: Date) {
+  private getPremiumCoverageDates(startDate: Date, endDate: Date, eligibilityEndDate: Date, eligibilityStartDate: Date) {
     let coverageDate: PremiumCoverageDates[] = [];
     let firstDayOfMonth = new Date(startDate);
+    if(eligibilityStartDate > startDate){
+      firstDayOfMonth =  new Date(eligibilityStartDate)
+    }
     endDate =  new Date(endDate ? endDate : eligibilityEndDate);
     do {
       const lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
@@ -355,9 +356,9 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
 
   private createPcaPayload(plan: ClientInsurancePlans): any[] {
     return plan.coverages.map((coverage: InsurancePremiumCoverage) => {
-      const firstDayOfMonth = coverage?.coverageDates ? new Date(coverage.coverageDates) : new Date();
-      const lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
-
+      const firstDayOfMonth =  coverage?.coverageDates ?  this.intl.formatDate(new Date(coverage?.coverageDates) , this.configProvider?.appSettings?.dateFormat) : new Date();
+      const notFormattedDate = coverage?.coverageDates ? new Date(coverage.coverageDates) : new Date();
+      const lastDayOfMonth = this.intl.formatDate(new Date(notFormattedDate.getFullYear(), notFormattedDate.getMonth() + 1, 0), this.configProvider?.appSettings?.dateFormat);
       return {
         clientId: this.selectedClient.clientId,
         claimAmount: coverage.premiumAmount,

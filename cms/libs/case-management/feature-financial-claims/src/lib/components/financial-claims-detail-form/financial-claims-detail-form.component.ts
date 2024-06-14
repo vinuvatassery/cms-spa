@@ -802,12 +802,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
   getMinServiceStartDate(arr: any) {
     const timestamps = arr.map((a: any) => new Date(a.serviceStartDate));
-    return this.intl.formatDate(new Date(Math.min(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+    const minDate: Date = timestamps.reduce((min: number, current: number) => {
+      return current < min ? current : min;
+    }, timestamps[0]);
+    return this.intl.formatDate(minDate, this.configProvider?.appSettings?.dateFormat);
   };
 
   getMinServiceEndDate(arr: any) {
     const timestamps = arr.map((a: any) => new Date(a.serviceEndDate));
-    return this.intl.formatDate(new Date(Math.max(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+    const maxDate = timestamps.reduce((max: number, current: number) => {
+      return current > max ? current : max;
+    }, timestamps[0]);
+    return this.intl.formatDate(maxDate, this.configProvider?.appSettings?.dateFormat);
   };
 
   private getPcaCode(claim: any) {
