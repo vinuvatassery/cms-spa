@@ -18,10 +18,10 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { InsurancePremiumDetails, PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
+import { InsurancePremiumDetails, PaymentDetail, PaymentPanel, PaymentStatusCode, FinancialPremiumsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-premiums-batch-list-detail-items',
   templateUrl: './financial-premiums-batch-list-detail-items.component.html',
@@ -67,6 +67,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
   @Output() updatePremiumEvent = new EventEmitter<any>();
+  @Output() unBatchPremiumEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -97,6 +98,10 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   private addClientRecentPremiumsDialog: any;
   clientName:any;
   clientId:any;
+  sendReportCount = 1;
+  selectedSendReportList:any;
+  unbatchPremiums$ = this.financialPremiumsFacade.unbatchPremiums$;
+  selectedPayment:any;
   gridColumns : {[key: string]: string} = {
     ALL: 'All Columns',
     clientFullName: 'Client Name',
@@ -145,44 +150,49 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     }
   ];
 
-  public batchItemGridActions = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Edit Premium',
-      icon: 'edit',
-      click: (data: any): void => {
-
+  public batchLogGridActions(dataItem:any){
+    return [
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Edit Premium',
+        icon: 'edit',
+        disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+        click: (data: any): void => {
         if (!this.isEditPremiumsOpened) {
           this.isEditPremiumsOpened = true;
           this.insurancePremiumId = data.insurancePremiumId;
           this.clientId=data.clientId;
           this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
-        }
+          }
+        },
       },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Unbatch Premium',
-      icon: 'undo',
-      click: (data: any): void => {
-        if (!this.unBatchPremiumsOpened) {
-          this.unBatchPremiumsOpened = true;
-          this.onClickOpenUnbatchPremiumModal(this.unbatchPremiumFromTemplate);
-        }
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Unbatch Premium',
+        icon: 'undo',
+        disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+        click: (data: any): void => {
+          if (!this.unBatchPremiumsOpened) {
+            this.unBatchPremiumsOpened = true;
+            this.onClickOpenUnbatchPremiumModal(this.unbatchPremiumFromTemplate, data);
+          }
+        },
       },
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Remove Premium',
-      icon: 'delete',
-      click: (data: any): void => {
-        if (!this.removePremiumsOpened) {
-          this.removePremiumsOpened = true;
-          this.onClickOpenRemovePremiumModal(this.removePremiumFromTemplate);
-        }
+      {
+        buttonType: 'btn-h-danger',
+        text: 'Remove Premium',
+        icon: 'delete',
+        disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+        click: (data: any): void => {
+          if (!this.removePremiumsOpened) {
+            this.removePremiumsOpened = true;
+            this.onClickOpenRemovePremiumModal(this.removePremiumFromTemplate, data);
+          }
+        },
       },
-    },
-  ];
+    ]
+
+  }
 
   paymentStatusFilter = '';
   insurancePremiumId:any = '';
@@ -191,14 +201,15 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   constructor(private route: Router,
     private dialogService: DialogService,
     public activeRoute: ActivatedRoute,
-    private readonly cd: ChangeDetectorRef) {}
+    private readonly cd: ChangeDetectorRef,
+    private readonly financialPremiumsFacade: FinancialPremiumsFacade) {}
 
   ngOnInit(): void {
     this.serviceGridColumnName = this.premiumsType.charAt(0).toUpperCase() + this.premiumsType.slice(1);
     this.gridColumns['serviceDesc'] = `${this.serviceGridColumnName} Service`;
     this.initializeGridState();
     this.loadBatchLogItemsListGrid();
-    
+
   }
   ngOnChanges(): void {
     this.paymentPanelData$.subscribe((data: any)=>{
@@ -413,21 +424,23 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   }
 
 
-  onClickOpenUnbatchPremiumModal(template: TemplateRef<unknown>): void {
+  onClickOpenUnbatchPremiumModal(template: TemplateRef<unknown>, data:any): void {
+    this.selectedPayment = data.paymentRequestId;
     this.unBatchPremiumDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  modalCloseUnbatchPremiumModal(result: any) {
-    if (result) {
-      this.unBatchPremiumsOpened = false;
-      this.unBatchPremiumDialog.close();
-    }
-  }
+  // modalCloseUnbatchPremiumModal(result: any) {
+  //   if (result) {
+  //     this.unBatchPremiumsOpened = false;
+  //     this.unBatchPremiumDialog.close();
+  //   }
+  // }
 
 
-  onClickOpenRemovePremiumModal(template: TemplateRef<unknown>): void {
+  onClickOpenRemovePremiumModal(template: TemplateRef<unknown>, data:any): void {
+    this.selectedSendReportList = { 'SelectedSendReports': [data] };
     this.removePremiumDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -437,6 +450,17 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     if (result) {
       this.removePremiumsOpened = false;
       this.removePremiumDialog.close();
+    }
+  }
+
+  onRemovingPremiums(result: boolean) {
+    if (result) {
+      this.state = {
+        skip: 0,
+        take: this.pageSizes[0]?.value,
+        sort: this.sort,
+      };
+      this.loadBatchLogItemsListGrid();
     }
   }
 
@@ -485,7 +509,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event);
   }
-  
+
   loadPremium(premiumId: string) {
     this.loadPremiumEvent.emit(premiumId);
   }
@@ -494,4 +518,24 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     this.updatePremiumEvent.emit(data);
   }
 
+  onUnBatchPaymentCloseClicked(result: any) {
+    if (result) {
+        this.handleUnbatchClaims();
+        this.unBatchPremiumEvent.emit({
+          paymentId : [this.selectedPayment],
+          premiumsType: this.premiumsType
+        })
+    }
+    this.unBatchPremiumsOpened = false;
+    this.unBatchPremiumDialog.close();
+  }
+  handleUnbatchClaims() {
+    this.unbatchPremiums$
+      .pipe(first((unbatchResponse: any) => unbatchResponse != null))
+      .subscribe((unbatchResponse: any) => {
+        if (unbatchResponse ?? false) {
+          this.loadBatchLogItemsListGrid();
+        }
+      });
+  }
 }

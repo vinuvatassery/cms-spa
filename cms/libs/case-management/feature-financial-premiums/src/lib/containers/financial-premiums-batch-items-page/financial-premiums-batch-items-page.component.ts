@@ -1,7 +1,7 @@
 import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, TemplateRef, ViewChild, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, PaymentPanel, PaymentType, PaymentsFacade } from '@cms/case-management/domain'; 
+import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, PaymentPanel, PaymentType, PaymentsFacade } from '@cms/case-management/domain';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
 import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
@@ -10,13 +10,13 @@ import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-premiums-batch-items-page',
-  templateUrl: './financial-premiums-batch-items-page.component.html', 
+  templateUrl: './financial-premiums-batch-items-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
-  
+
    insurancePremium$ = this.financialPremiumsFacade.insurancePremium$;
    sortValue = this.financialPremiumsFacade.sortValueBatchItem;
    sortType = this.financialPremiumsFacade.sortType;
@@ -42,7 +42,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
    providerDetailsDialog:any;
    constructor(
      private readonly financialPremiumsFacade: FinancialPremiumsFacade,
-     private readonly router: Router,   
+     private readonly router: Router,
      private readonly cdr: ChangeDetectorRef,
      private loggingService: LoggingService,
      private paymentFacade: PaymentsFacade,
@@ -69,7 +69,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
           this.premiumType =this.financialPremiumsFacade.getPremiumType(this.router)
            this.cdr.detectChanges();
          },
- 
+
          error: (err: any) => {
            this.loggingService.logException(err);
          },
@@ -83,7 +83,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
     this.paymentRequestId = this.route.snapshot.queryParams['pid'];
   }
 
-  loadBatchItemListGrid(event: any) { 
+  loadBatchItemListGrid(event: any) {
     const itemId = this.route.snapshot.queryParams['pid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
     this.financialPremiumsFacade.loadBatchItemsListGrid(this.batchId, itemId, this.premiumType, params);
@@ -91,7 +91,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
 
 
   loadPaymentPanel(event:any=null){
-    this.paymentFacade.loadPaymentPanel(this.paymentRequestId,this.batchId);    
+    this.paymentFacade.loadPaymentPanel(this.paymentRequestId,this.batchId);
   }
 
   updatePaymentPanel(paymentPanel:PaymentPanel){
@@ -114,11 +114,11 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
       content: this.providerDetailsTemplate,
       animation:{
         direction: 'left',
-        type: 'slide',  
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-    
+
   }
 
   onCloseViewProviderDetailClicked(result: any){
@@ -126,8 +126,8 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
       this.providerDetailsDialog.close();
     }
   }
-  
-  
+
+
   getProviderPanel(event:any){
     this.financialVendorFacade.getProviderPanel(event)
   }
@@ -144,8 +144,13 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
   loadPremium(premiumId: any) {
     this.financialPremiumsFacade.loadPremium(this.premiumType, premiumId);
   }
-  
+
   updatePremium(premium:any){
     this.financialPremiumsFacade.updatePremium(this.premiumType, premium.premiumId, premium);
   }
+
+  unBatchPremiumClick(event: any) {
+    this.financialPremiumsFacade.unbatchPremiums(event.paymentId, event.premiumsType)
+  }
+
 }

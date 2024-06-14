@@ -18,7 +18,7 @@
                               (click)="onViewProviderDetailClicked()" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               {{payment.vendorName}}
-                        </button> 
+                        </button>
                         <span class="mr-3">Pmt. Requested {{payment.paymentStatusDate | kendoDate}}</span> <span class="mr-3">{{payment.amountDue | kendoNumber : "c"}}</span>
                         <span class="mr-3">{{payment.paymentStatusCode}}</span>
                   </p>
@@ -47,7 +47,7 @@
                               <p>{{premiumPaymentDetails?.checkNbr}}</p>
                         </div>
                         <div class="flex-col flex-col-4">
-                              <small>Note</small> 
+                              <small>Note</small>
                               <p>{{premiumPaymentDetails?.notes}}</p>
                         </div>
                   </div>
@@ -92,9 +92,9 @@
                         <kendo-grid [resizable]="true" [loading]="(itemsListGridLoader$ | async) ?? false" [pageSize]="state.take"
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
+                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
                               [data]="batchItemsGridLists$ | async" (filterChange)="filterChange($event)" filterable="menu" [filter]="state.filter">
-                                    <kendo-grid-column field="clientFullName" title="Client Name" [width]="250"> 
+                                    <kendo-grid-column field="clientFullName" title="Client Name" [width]="250">
                                           <ng-template kendoGridCellTemplate let-dataItem>
                                                 <button *ngIf="dataItem.clientFullName" [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
                                                   (click)="clientRecentClaimsModalClicked(clientRecentPremiumsDialogTemplate, dataItem)">
@@ -119,8 +119,8 @@
                                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
                                                  </kendo-grid-string-filter-menu>
                                              </ng-template>
-                                    </kendo-grid-column> 
-                                    <kendo-grid-column field="clientId" title="Client ID" [width]="160"> 
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="clientId" title="Client ID" [width]="160">
                                           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                                                 <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
                                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -147,7 +147,7 @@
                                                  </kendo-grid-string-filter-menu>
                                           </ng-template>
                                     </kendo-grid-column>
-                                    <kendo-grid-column field="coverageStartDate" title="Coverage Dates" [width]="160" > 
+                                    <kendo-grid-column field="coverageStartDate" title="Coverage Dates" [width]="160" >
                                           <ng-template kendoGridCellTemplate let-dataItem>
                                           {{dataItem.coverageStartDate | date:'MM/dd'}} - {{dataItem.coverageEndDate | date:'MM/dd'}}
                                           </ng-template>
@@ -159,18 +159,18 @@
                                                 >
                                                 </common-grid-cell-date-range-filter>
                                           </ng-template>
-                                    </kendo-grid-column>  
-                                    <kendo-grid-column field="premiumAmt" title="Premium Amount" [width]="180" > 
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="premiumAmt" title="Premium Amount" [width]="180" >
                                           <ng-template kendoGridCellTemplate let-dataItem>
                                               <p><span class="tableamountview"><strong>$</strong> {{dataItem.premiumAmt}}</span></p>
-                                          </ng-template> 
-                                    </kendo-grid-column>  
-                            
+                                          </ng-template>
+                                    </kendo-grid-column>
+
 
                               <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50"
                               class="text-center">
                               <ng-template kendoGridCellTemplate let-dataItem>
-                                <kendo-dropdownbutton [data]="batchItemGridActions" 
+                                <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)"
                                   class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                                   aria-label="more actions" title="More option"
                                   [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -236,7 +236,7 @@
 <div class="bottom-fixed-wrapper align-items-center content-start flex-gap">
       <span class="">Report Sent XX/XX/XXXX by <button aria-label="provider FName LName" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered" showOn="hover">FName LName</button></span>
-      
+
     </div>
     <kendo-popover #onUserProfileDetailsHovered width="330" position="top">
       <ng-template kendoPopoverBodyTemplate>
@@ -245,7 +245,7 @@
     </kendo-popover>
 <ng-template #providerDetailsTemplate>
       <cms-financial-premiums-provider-info [vendorProfile$]="vendorProfile$" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
-            [ddlStates$]="ddlStates$" [paymentMethodCode$]="paymentMethodCode$" (updateProviderProfileEvent)="updateProviderProfile($event)" (getProviderPanelEvent)="getProviderPanel($event)" 
+            [ddlStates$]="ddlStates$" [paymentMethodCode$]="paymentMethodCode$" (updateProviderProfileEvent)="updateProviderProfile($event)" (getProviderPanelEvent)="getProviderPanel($event)"
             (onEditProviderProfileEvent)="OnEditProviderProfileClick()" (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)">
       </cms-financial-premiums-provider-info>
 </ng-template>
@@ -270,12 +270,21 @@
         ></cms-financial-premiums-edit-detail-form>
     </ng-template>
 <ng-template #unbatchPremiumFromTemplate>
-      <cms-financial-premiums-unbatch (modalCloseUnbatchPremiumModal)="modalCloseUnbatchPremiumModal($event)"></cms-financial-premiums-unbatch>
+      <!-- <cms-financial-premiums-unbatch (modalCloseUnbatchPremiumModal)="modalCloseUnbatchPremiumModal($event)"></cms-financial-premiums-unbatch> -->
+      <cms-financial-premiums-unbatch-payment
+      (unBatchPaymentCloseClickedEvent)="onUnBatchPaymentCloseClicked($event)"
+      [isBulkUnBatchOpened]="false"></cms-financial-premiums-unbatch-payment>
  </ng-template>
  <ng-template #removePremiumFromTemplate>
-      <cms-financial-premiums-remove-premiums (modalCloseRemovePremiumModal)="modalCloseRemovePremiumModal($event)"></cms-financial-premiums-remove-premiums>
+      <cms-financial-premiums-remove-premiums
+      (modalCloseRemovePremiumModal)="modalCloseRemovePremiumModal($event)"
+      [removePremiumsCount]="sendReportCount"
+      [premiumsType]="premiumsType"
+      (deletedEvent)="onRemovingPremiums($event)"
+      [selectedRemovePremiumsList]="selectedSendReportList">
+  </cms-financial-premiums-remove-premiums>
  </ng-template>
- 
+
  <ng-template #clientRecentPremiumsDialogTemplate>
       <kendo-dialog-titlebar (close)="closeRecentPremiumsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
       <section class="k-dialog-body">
@@ -290,7 +299,7 @@
                 chevron_right
               </span>
             </button>
-    
+
           </div>
         </div>
       </kendo-dialog-actions>
