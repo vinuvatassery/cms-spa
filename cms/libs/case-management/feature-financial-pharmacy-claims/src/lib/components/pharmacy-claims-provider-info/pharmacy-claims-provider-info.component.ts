@@ -104,8 +104,21 @@ export class PharmacyClaimsProviderInfoComponent {
   });
   this.specialHandling = this.vendorProfile.address.specialHandlingDesc;
   this.specialHandlingWordCount();
-  this.createContactsFormArray() 
+  this.createContactsFormArray();
+  this.disableContactForm(); 
 }
+
+  disableContactForm() {
+    if (this.isEditProvider) {
+      const contactsForm = this.profileForm.get('contacts') as FormArray;
+      const contactLength = contactsForm.length;
+      for (let i = 0; i < contactLength; i++) {
+        contactsForm.at(i).disable();
+      }
+    }
+  }
+
+
 createContactsFormArray() {
   let contacts =  this.profileForm.get('contacts') as FormArray
   while (contacts.length !== 0) {
@@ -129,13 +142,15 @@ createEmailsFormArray(contact: any): FormArray {
   if(contact.emails && contact.emails.length===0){
      emails.push(this.formBuilder.group({
       vendorContactEmailId: null,
+      emailAddress: null,
       vendorContactId: contact.vendorContactId
     }));
   }
   else{
   contact.emails.forEach((email: any) => {
     return emails.push(this.formBuilder.group({
-      vendorContactEmailId: email.vendorContactEmailId
+      vendorContactEmailId: email.vendorContactEmailId,
+      emailAddress: email.emailAddress,
     }));
   })
 }
