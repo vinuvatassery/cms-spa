@@ -61,7 +61,7 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
     if(this.hasInsuranceCarrierCreateUpdatePermission){
       this.loadCarrier$.subscribe({
         next: (data: any) => {
-          this.loadInsuranceCarrierName(this.insuranceStatus);
+          this.loadInsuranceCarrierName(InsuranceStatusType.insurancePlanRequest);
         }
       });
     }
