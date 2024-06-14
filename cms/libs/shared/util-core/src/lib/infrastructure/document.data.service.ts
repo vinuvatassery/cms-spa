@@ -70,7 +70,6 @@ export class DocumentDataService {
         break;
       }
     }
-
     if (!selectedAllPaymentsList) {
       return this.http.post(
         `${apiUrl}/data-management/export/${path}`, pageAndSortedRequest,
@@ -78,7 +77,7 @@ export class DocumentDataService {
       )
     } else {
 
-      const selectedIds: string[] = selectedAllPaymentsList.paymentsSelected?.map((item: any) => item.paymentRequestId) ?? [];
+      const selectedIds: string[] = selectedAllPaymentsList.data;
       const unselectedIds: string[] = selectedAllPaymentsList.paymentsUnSelected?.map((item: any) => item.paymentRequestId) ?? [];
       const exportData = {
         'selectedIds': selectedIds,

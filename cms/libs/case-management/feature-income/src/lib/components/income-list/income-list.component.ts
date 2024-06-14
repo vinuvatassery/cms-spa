@@ -491,7 +491,6 @@ ngOnDestroy(): void {
 
   loadClientAttachments(clientId: any) {
     if(clientId!=null && clientId != undefined && clientId !=''){
-      this.loaderService.show();
       this.communicationFacade.loadClientAttachments(clientId, "DEPENDENT_PROOF_OF_SCHOOL")
         .subscribe({
           next: (attachments: any) => {
@@ -499,10 +498,8 @@ ngOnDestroy(): void {
               this.clientAllDocumentList$ = attachments?.items;
               this.cdr.detectChanges();
             }
-            this.loaderService.hide();
           },
           error: (err: any) => {
-            this.loaderService.hide();
             this.loggingService.logException(err)
           },
         });

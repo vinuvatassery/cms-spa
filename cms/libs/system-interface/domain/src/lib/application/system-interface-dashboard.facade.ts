@@ -131,9 +131,9 @@ export class SystemInterfaceDashboardFacade {
     });
   }
 
-  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string, params: any) {
+  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string,interfaceActivityId : string ,params: any) {
 
-    return this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode, params);
+    return this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode,interfaceActivityId, params);
 
   }
 
@@ -213,7 +213,7 @@ export class SystemInterfaceDashboardFacade {
     return this.service.getDocumentDownload(clientDocumentId);
   }
   viewOrDownloadFile(documentId: string, documentName: string) {
-    if (documentId === undefined || documentId === '') {
+    if (documentId === undefined || documentId === '' || documentId ===null|| documentId ==='null') {
       return;
     }
     this.loaderService.show()

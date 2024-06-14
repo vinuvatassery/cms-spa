@@ -13,6 +13,7 @@ export class ExceptionDetailComponent implements OnInit, OnChanges {
   @Input() fileId: any;
   @Input() interfaceTypeCode: any;
   @Input() processTypeCode: any;
+  @Input() interfaceActivityId : any
 
   batchLogExceptionListsSubject = new Subject<any>();
   batchLogExceptionLists$ = this.batchLogExceptionListsSubject.asObservable();
@@ -73,7 +74,7 @@ export class ExceptionDetailComponent implements OnInit, OnChanges {
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       JSON.stringify({ logic: 'and', filters: [] }));
-    this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(this.fileId, this.interfaceTypeCode, this.processTypeCode, param).subscribe({
+    this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(this.fileId, this.interfaceTypeCode, this.processTypeCode,this.interfaceActivityId, param).subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse["items"],

@@ -1,4 +1,4 @@
-<cms-financial-premiums-batch-list-detail-items [premiumsType]="premiumType" 
+<cms-financial-premiums-batch-list-detail-items [premiumsType]="premiumType"
 [batchItemsGridLists$]="batchItemsGridLists$"
 [itemsListGridLoader$]="batchItemsLoader$"
 [paymentPanelData$]="paymentPanelData$"
@@ -6,8 +6,9 @@
 [vendorAddressId]="vendorAddressId"
 [batchId]="batchId"
 [pageSizes]="pageSizes" [sortValue]="sortValue"
-[sortType]="sortType" [sort]="sort" 
+[sortType]="sortType" [sort]="sort"
 (loadBatchItemsListEvent)="loadBatchItemListGrid($event)"
+(unBatchPremiumEvent)="unBatchPremiumClick($event)"
 (loadPaymentPanel)="loadPaymentPanel($event)"
 (updatePaymentPanel)="updatePaymentPanel($event)"
 (getProviderPanelEvent)="getProviderPanel($event)"
@@ -19,7 +20,10 @@
 [paymentMethodCode$]=" paymentMethodCode$"
 (onProviderNameClickEvent)="onProviderNameClick($event)"
 [vendorId]="vendorId"
-[paymentRequestId]="paymentRequestId">
+[paymentRequestId]="paymentRequestId"
+[insurancePremium$]="insurancePremium$"
+(loadPremiumEvent)="loadPremium($event)"
+>
 </cms-financial-premiums-batch-list-detail-items>
 
 
@@ -27,7 +31,7 @@
     <cms-financial-premiums-provider-info
     [paymentRequestId]="paymentRequestId"
     (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
     (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
     [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
     [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
