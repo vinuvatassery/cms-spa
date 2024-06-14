@@ -258,7 +258,14 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
     this.state=stateData;
 
-    this.sortColumn = this.columns[stateData.sort[0]?.field];
+    if(this.sortValue  == 'vendorName')
+    {
+      this.sortColumn = this.vendorNameTitle;
+    }
+    else
+    {
+      this.sortColumn = this.columns[stateData.sort[0]?.field];
+    }
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': 'Descending';
 
     if(stateData.filter?.filters.length > 0)
