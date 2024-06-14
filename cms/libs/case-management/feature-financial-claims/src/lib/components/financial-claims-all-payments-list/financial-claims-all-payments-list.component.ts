@@ -58,7 +58,7 @@ export class FinancialClaimsAllPaymentsListComponent
   deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
   @ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
-
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
   isEdit!: boolean;
   paymentRequestId!: string;
   private addEditClaimsFormDialog: any;

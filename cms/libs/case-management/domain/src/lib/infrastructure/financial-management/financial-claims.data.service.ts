@@ -429,6 +429,13 @@ export class FinancialClaimsDataService {
     );
   }
 
+  loadClientBalance(clientId:any){
+    return this.http.get<ClientCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/medical/client/${clientId}/balance`
+    );
+  }
+
   getPrintAdviceLetterData(isReconciled: boolean, batchId:any,selectedProviders: any, claimsType:any) {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/print-advice-letter-summary?isReconciled=${isReconciled}`,selectedProviders);
   }

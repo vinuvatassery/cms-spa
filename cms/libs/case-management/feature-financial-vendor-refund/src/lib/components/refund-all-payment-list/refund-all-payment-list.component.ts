@@ -56,7 +56,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   deleteRefundsConfirmationDialogTemplate!: TemplateRef<any>; 
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   private addEditRefundFormDialog: any;
-
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
   public state!: State;
   sortColumn = 'Batch #';
   sortDir = 'Descending';

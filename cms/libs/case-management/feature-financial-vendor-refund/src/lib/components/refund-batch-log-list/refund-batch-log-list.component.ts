@@ -165,7 +165,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn = 'ALL'
   gridDataResult!: GridDataResult;
-
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
   gridVendorsBatchLogDataSubject = new Subject<any>();
   gridVendorsBatchLogData$ = this.gridVendorsBatchLogDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();

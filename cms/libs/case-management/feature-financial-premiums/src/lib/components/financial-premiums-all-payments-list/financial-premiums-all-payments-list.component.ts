@@ -248,6 +248,7 @@ export class FinancialPremiumsAllPaymentsListComponent
        buttonType: 'btn-h-danger',
        text: 'Delete Payment',
        icon: 'delete',
+       disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
        click: (data: any): void => {
          if (data && !this.showDeleteConfirmation) {
            this.showDeleteConfirmation = true;
@@ -259,6 +260,7 @@ export class FinancialPremiumsAllPaymentsListComponent
       buttonType: 'btn-h-primary',
       text: 'Edit Premium',
       icon: 'edit',
+      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
           this.isEditBatchClosed = true;
