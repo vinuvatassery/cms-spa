@@ -213,7 +213,7 @@ export class SystemInterfaceDashboardFacade {
     return this.service.getDocumentDownload(clientDocumentId);
   }
   viewOrDownloadFile(documentId: string, documentName: string) {
-    if (documentId === undefined || documentId === '') {
+    if (documentId === undefined || documentId === '' || documentId ===null|| documentId ==='null') {
       return;
     }
     this.loaderService.show()
