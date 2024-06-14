@@ -163,7 +163,8 @@
 
         
         <div *kendoGridDetailTemplate="let dataItem">
-          <cms-exception-detail [fileId]="dataItem.fileId" [interfaceTypeCode]="interfaceTypeCode" [processTypeCode]="processTypeCode" ></cms-exception-detail>
+          <cms-exception-detail [fileId]="dataItem.fileId" [interfaceTypeCode]="interfaceTypeCode" [processTypeCode]="processTypeCode"
+          [interfaceActivityId]="interfaceActivityId" ></cms-exception-detail>
          
           </div>
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"

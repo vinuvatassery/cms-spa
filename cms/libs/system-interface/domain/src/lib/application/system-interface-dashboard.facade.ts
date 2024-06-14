@@ -131,9 +131,9 @@ export class SystemInterfaceDashboardFacade {
     });
   }
 
-  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string, params: any) {
+  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string,interfaceActivityId : string ,params: any) {
 
-    return this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode, params);
+    return this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode,interfaceActivityId, params);
 
   }
 
