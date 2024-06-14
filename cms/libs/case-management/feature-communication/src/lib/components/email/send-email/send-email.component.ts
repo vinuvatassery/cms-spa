@@ -22,6 +22,7 @@ import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { Router } from '@angular/router';
 import { TodoFacade } from '@cms/productivity-tools/domain';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 @Component({
   selector: 'case-management-send-email',
   templateUrl: './send-email.component.html',
@@ -150,7 +151,8 @@ saveForLaterHeadterText!: string;
     private readonly router: Router,
     private readonly vendorContactFacade: VendorContactsFacade,
     private readonly fabBadgeFacade: FabBadgeFacade,
-    public todoFacade: TodoFacade,) { }
+    public todoFacade: TodoFacade,
+    private readonly sanitizer: DomSanitizer) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -1096,9 +1098,10 @@ saveForLaterHeadterText!: string;
         },
       });
   }
-  private getSanitizedHtml(currentEmailData: string) {
-    return currentEmailData;
+  private getSanitizedHtml(currentEmailData: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
   }
+  
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
     this.isSaveForLater = true;

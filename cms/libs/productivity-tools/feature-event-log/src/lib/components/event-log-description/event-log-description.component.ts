@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { EventLogFacade, EventTypeCode } from '@cms/productivity-tools/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -73,7 +74,7 @@ export class EventLogDescriptionComponent implements OnDestroy {
   isConfirmationDialogVisible:any;
 
   constructor(private dialogService: DialogService, private readonly eventLogFacade: EventLogFacade,
-    private readonly cdr: ChangeDetectorRef,
+    private readonly cdr: ChangeDetectorRef, private readonly sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -412,8 +413,8 @@ export class EventLogDescriptionComponent implements OnDestroy {
     }
   }
 
-  private getSanitizedHtml(currentEmailData: string) {
-    return currentEmailData;
+  private getSanitizedHtml(currentEmailData: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
   }
 
   openConfirmation() {

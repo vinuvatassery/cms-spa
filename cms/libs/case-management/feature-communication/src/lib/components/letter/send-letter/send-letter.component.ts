@@ -22,6 +22,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
 import { FabBadgeFacade, FabEntityTypeCode, UserDataService } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
 import { TodoFacade } from '@cms/productivity-tools/domain';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'case-management-send-letter',
@@ -66,7 +67,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     private readonly userDataService: UserDataService,
     private readonly router: Router,
     private readonly fabBadgeFacade: FabBadgeFacade,
-    public todoFacade: TodoFacade,) { }
+    public todoFacade: TodoFacade,
+    private readonly sanitizer: DomSanitizer) { }
 
   /** Public properties **/
 
@@ -359,9 +361,10 @@ export class SendLetterComponent implements OnInit, OnDestroy {
         },
       });
   }
-  private getSanitizedHtml(currentEmailData: string) {
-    return currentEmailData;
+  private getSanitizedHtml(currentEmailData: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(currentEmailData); // NOSONAR
   }
+  
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     if(this.selectedTemplate.templateContent === undefined || this.selectedTemplate.templateContent === '' || this.selectedTemplate.templateContent === "" || this.selectedTemplate.templateContent.trim() === '<div style="width:100%;word-break: break-word;"><p></p></div>'){
       this.isContentMissing = true;

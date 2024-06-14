@@ -14,6 +14,7 @@ export interface ClientInsurancePlans {
     endDate: Date
     premiumAmt: number
     eligibilityEndDate: Date
+    eligibilityStartDate: Date
     coverages: InsurancePremiumCoverage[]
 }
 
