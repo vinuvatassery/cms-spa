@@ -1158,8 +1158,8 @@ color: $app-primary-font-color;
     overflow-y: auto;
   }
   .k-scrollview {
-    min-height: 340px;
-    max-height: 500px;
+    min-height: 60vh;
+    max-height: 70vh;
   }
   .k-scrollview-wrap > li{
     overflow-y: auto;
