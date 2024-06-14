@@ -346,6 +346,9 @@
             >
         </kendo-datepicker>
     </kendo-floatinglabel>
+    <kendo-formerror *ngIf="termDateRequiredValidationError">
+      Term Date is required.
+    </kendo-formerror>
     <kendo-formerror *ngIf="termDateValidationError">
       Term Date cannot be prior to Start Date.
     </kendo-formerror>

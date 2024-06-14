@@ -52,6 +52,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   ndcMaskFormat: string = "00000-0000-00"
   startDateValidationError: boolean = false;
   termDateValidationError: boolean = false;
+  termDateRequiredValidationError: boolean = false;
 
   constructor(private insurancePlanFacade : InsurancePlanFacade,
               private drugFacade : DrugsFacade,
@@ -464,15 +465,37 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       this.insurancePlanForm.controls['startDate'].setValidators(Validators.required);
       this.insurancePlanForm.controls['startDate'].updateValueAndValidity();
 
-      if(this.selectedMasterData?.startDate > this.selectedMasterData?.termDate) {
-        this.startDateValidationError = true;
+      var healthInsuranceValue = this.insurancePlanForm.controls['healthInsuranceTypeCode'].value;
+
+      var termDateValue = this.insurancePlanForm.controls['termDate'].value;
+      var startDateValue = this.insurancePlanForm.controls['startDate'].value;
+
+      if(healthInsuranceValue == "QUALIFIED_HEALTH_PLAN" && !termDateValue){
+        this.termDateRequiredValidationError = true;
+      }else{
+        this.termDateRequiredValidationError = false;
+      }
+      
+      var startDate = new Date(this.insurancePlanForm.controls['startDate'].value);
+      var termDate = new Date(termDateValue);
+
+      if(termDateValue != null && startDateValue != null &&termDate < startDate) {
+        this.startDateValidationError = false;
+        this.termDateValidationError = true;
+        this.termDateRequiredValidationError = false;
+      }else {
         this.termDateValidationError = false;
       }
-
-      if(this.selectedMasterData?.startDate < this.selectedMasterData?.termDate) {
-        this.termDateValidationError = true;
+      
+      if(termDateValue != null && startDateValue != null && startDate > termDate) {
+        this.startDateValidationError = true;
+        this.termDateValidationError = false;
+        this.termDateRequiredValidationError = false;
+      }else{
         this.startDateValidationError = false;
       }
+
+      this.cd.detectChanges();
 
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.Pharmacy) {
       this.pharmacyForm.controls['pharmacyName'].setValidators(Validators.required)
@@ -544,7 +567,8 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         !this.insuranceVendorForm.valid ||
         !this.insuranceProviderForm.valid ||
         this.startDateValidationError ||
-        this.termDateValidationError) {
+        this.termDateValidationError ||
+        this.termDateRequiredValidationError) {
       return false;
     }
     return true;
@@ -918,6 +942,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
     if(startDate > termDate) {
       this.startDateValidationError = true;
       this.termDateValidationError = false;
+      this.termDateRequiredValidationError = false;
     }else{
       this.startDateValidationError = false;
     }
@@ -930,6 +955,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
     if(termDate < startDate) {
       this.startDateValidationError = false;
       this.termDateValidationError = true;
+      this.termDateRequiredValidationError = false;
     }else {
       this.termDateValidationError = false;
     }
