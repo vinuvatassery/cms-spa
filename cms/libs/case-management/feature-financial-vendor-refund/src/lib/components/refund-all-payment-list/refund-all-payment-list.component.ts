@@ -467,11 +467,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
+   
     this.selectedAllPaymentsList =
     {
-      'selectAll': this.selectAll,
-      'paymentsUnSelected': this.unCheckedProcessRequest,
-      'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
+      'data': this.selectedPayments 
     };
 
     this.showExportLoader = true;
@@ -479,6 +478,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;
+        this.selectedPayments = [];
+        this.receiptLogMode = false;
         this.cdr.detectChanges();
       }
     });
