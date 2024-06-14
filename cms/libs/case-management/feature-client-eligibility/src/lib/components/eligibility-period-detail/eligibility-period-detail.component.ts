@@ -270,7 +270,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId, eligibilityRequestType)
       .subscribe(data=>{
       this.currentEligibility = data;
-      this.clientCaseEligibilityId = this.currentEligibility.clientCaseEligibilityId;
+      this.clientCaseEligibilityId = this.currentEligibility?.clientCaseEligibilityId;
       if(this.isEdit || this.isStatusPeriodEdit || this.isCopyPeriod){
         this.bindEligibilityToForm(this.currentEligibility);
       }
@@ -495,11 +495,11 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
 
   private bindEligibilityToForm(currentEligibility:any){
-    if(currentEligibility.eligibilityStartDate){
+    if(currentEligibility?.eligibilityStartDate){
       this.eligibilityPeriodForm.controls['statusStartDate'].setValue(new Date(currentEligibility.eligibilityStartDate));
       this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
     }
-    if(currentEligibility.eligibilityEndDate){
+    if(currentEligibility?.eligibilityEndDate){
       this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(currentEligibility.eligibilityEndDate));
       this.eligibilityPeriodForm.controls['statusEndDate'].updateValueAndValidity();
     }
@@ -572,7 +572,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   onStartDateChange()
   {
-    if((this.isEdit || this.isStatusPeriodEdit) && this.currentEligibility.previousEligibilityEndDate)
+    if((this.isEdit || this.isStatusPeriodEdit) && this.currentEligibility?.previousEligibilityEndDate)
     {
       let currentEligibilityStartDate =new Date(this.eligibilityPeriodForm.controls['statusStartDate'].value);
       let previousEndDate =new Date(this.currentEligibility.previousEligibilityEndDate);
@@ -596,7 +596,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   canChangeEndDate()
   {
-    if((this.isEdit || this.isStatusPeriodEdit) && this.currentEligibility.nextEligibilityStartDate )
+    if((this.isEdit || this.isStatusPeriodEdit) && this.currentEligibility?.nextEligibilityStartDate )
     {
       let currentEligibilityEndDate =new Date(this.eligibilityPeriodForm.controls['statusEndDate'].value);
       let nextStartDate =new Date(this.currentEligibility.nextEligibilityStartDate);

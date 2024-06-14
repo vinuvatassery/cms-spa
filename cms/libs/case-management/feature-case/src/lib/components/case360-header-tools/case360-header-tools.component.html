@@ -67,6 +67,7 @@
 
 <!-- New ID Card Modal Html-->
 <ng-template #sendNewIDcardDialog>
+  <kendo-dialog-titlebar (close)="handleIdCardClosed($event)">Send New ID Card</kendo-dialog-titlebar>
   <case-management-send-id-card [mailingAddress$]="mailingAddress$" (closeSendIdEvent)="handleIdCardClosed($event)"
   (loadInitialData)="loadMailingAddress()" kendoTooltip></case-management-send-id-card>
 </ng-template>
