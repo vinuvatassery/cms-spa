@@ -8,15 +8,15 @@
               showOn="hover"
               attr.aria-label="{{userFirstName?.charAt(0)}}{{userLastName?.charAt(0)}}"
             >
-            <div class="app-popover-header use-profile-card-wrapper">    
-              <div  [hidden]="imageLoaderVisible$ | async" class="app-c-avatar avatar-img-sm avatar-sm">   
-                  <img [hidden]="imageLoaderVisible$ | async" [src]="userImageSubject | async" [alt]="userFullName" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/> 
+            <div class="app-popover-header use-profile-card-wrapper">
+              <div  [hidden]="imageLoaderVisible$ | async" class="app-c-avatar avatar-img-sm avatar-sm">
+                  <img [hidden]="imageLoaderVisible$ | async" [src]="userImageSubject | async" [alt]="userFullName" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/>
               </div>
-              <div *ngIf="imageLoaderVisible$ | async">    
+              <div *ngIf="imageLoaderVisible$ | async">
                 <div mat-card-avatar class="app-c-avatar avatar-sm" *ngIf="userByIdSubject;">
-                  <span class="profile-text-avatar">{{userFirstName?.charAt(0)}}{{userLastName?.charAt(0)}}</span>          
+                  <span class="profile-text-avatar">{{userFirstName?.charAt(0)}}{{userLastName?.charAt(0)}}</span>
                 </div>
-              </div> 
+              </div>
               </div>
             </button>
             <button
@@ -37,8 +37,8 @@
               [position]="position"
               [callout]="callout"
             >
-              <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card [userId]="userId" 
+              <ng-template *ngIf="userFullName.trim().toLowerCase() !== 'system'" kendoPopoverBodyTemplate>
+                <common-user-profile-card [userId]="userId"
                 [userProfilePhotoExists]="userProfilePhotoExists"
                 [reassign]="reassign"
                 [clientName]="clientName"
