@@ -306,7 +306,7 @@
   <case-management-income-detail (closePopup)="closeIncomePopup($event)" [isEditValue]="isEdit"
     [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId"
     [selectedIncome]="selectedIncome" (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"
-    (loadIncomeList)="loadIncomeListGrid($event)"> </case-management-income-detail>
+    (loadIncomeList)="loadIncomeListGrid($event)"(AddedIncomeType)="AddedIncomeTypeGet($event)"> </case-management-income-detail>
 </kendo-dialog>
 
 

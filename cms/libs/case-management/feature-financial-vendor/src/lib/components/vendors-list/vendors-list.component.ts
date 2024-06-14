@@ -133,6 +133,7 @@ ngOnChanges(): void {
           this.vendorNameTitle = "Provider Name"
           break;
     }
+   this.sortColumn = this.vendorNameTitle;
    this.loadFinancialVendorsList()
   }
 }
@@ -257,7 +258,14 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
     this.state=stateData;
 
-    this.sortColumn = this.columns[stateData.sort[0]?.field];
+    if(this.sortValue  == 'vendorName')
+    {
+      this.sortColumn = this.vendorNameTitle;
+    }
+    else
+    {
+      this.sortColumn = this.columns[stateData.sort[0]?.field];
+    }
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': 'Descending';
 
     if(stateData.filter?.filters.length > 0)
@@ -324,7 +332,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
 
 
     this.showTinSearchWarning = false;
-    this.sortColumn = 'Vendor Name';
+    this.sortColumn = this.vendorNameTitle;
     this.sortDir = 'Ascending';
     this.filter = "";
     this.searchValue = "";

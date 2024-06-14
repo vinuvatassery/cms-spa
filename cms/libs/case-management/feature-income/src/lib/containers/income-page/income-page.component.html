@@ -302,7 +302,7 @@
             (loadIncomeListEvent)="loadIncomeListHandle($event)"  (loadIncomeList)="loadIncomeListGrid($event)"
             [lovProofOfIncomeByType$]="lovProofOfIncomeByType$" [incomeSourcelov$] = "incomeSourcelov$ " [incomeTypelov$]="incomeTypelov$"
             [incomeFrequencylov$]="incomeFrequencylov$" [incomesLoader$] ="incomesLoader$"[totalIncomeCalculated]="totalIncomeCalculated"
-            [fplPercentage]="fplPercentage"></case-management-income-list>
+            [fplPercentage]="fplPercentage"(AddedIncomeType) = "AddedIncomeTypeGet($event)"></case-management-income-list>
           </div>
           <kendo-formerror *ngIf="!isProofOfSchoolDocumentUploaded"> Proof of School is required
           </kendo-formerror>

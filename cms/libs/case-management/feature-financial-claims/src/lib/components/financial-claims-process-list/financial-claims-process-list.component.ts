@@ -104,6 +104,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public drag = false;
   isDeleteClaimClicked =false;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
   permissionLevels:any[]=[];
   public selectedProcessClaims: any[] = [];
   columns: any = {

@@ -139,6 +139,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   maxDate = new Date('9999/12/31');
   serviceStartDateValidator: boolean[] = [];
   serviceEndDateValidator: boolean[] = [];
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly elementRef: ElementRef,

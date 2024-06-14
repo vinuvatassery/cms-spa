@@ -20,12 +20,13 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   @Input() vendorDetails$!: Observable<any>;
   @Input() deliveryMethodCodes: any;
   @Input() manufacturers: any;
+  @Input() manufacturersObs$!: Observable<any>;
   @Input() hasCreateUpdatePermission = false;
   @Input() addDrug$: any;
 
   @Output() close = new EventEmitter<any>();
   @Output() addDrugEvent = new EventEmitter<any>();
-
+  @Output() loadManufacturerEvent = new EventEmitter<any>();
   drug: any;
   drugForm!: FormGroup;
   isSubmitted: boolean = false;
@@ -33,9 +34,9 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   isLoading = false;
   tAreaCessationMaxLength = 200;
   drugNameCounter!: string;
-  brandNameCounter!:string;
+  brandNameCounter!: string;
   drugNameCharactersCount!: number;
-  brandNameCharactersCount!:number;
+  brandNameCharactersCount!: number;
   deliveryMethodCodesLocal: any;
   showLoader() {
     this.loaderService.show();
@@ -55,6 +56,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadManufacturer();
     this.hideLoader()
     this.drugForm.get('manufacturer')?.patchValue(this.vendorId);
     if (this.dialogTitle === "Add New" || this.dialogTitle === "Request New") {
@@ -96,13 +98,13 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     });
   }
 
-  onDrugNameValueChange(event: any= null): void {
-    this.drugNameCharactersCount = event== null?0:event.length;
+  onDrugNameValueChange(event: any = null): void {
+    this.drugNameCharactersCount = event == null ? 0 : event.length;
     this.drugNameCounter = `${this.drugNameCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
 
-  onBrandNameValueChange(event: any= null): void {
-    this.brandNameCharactersCount = event== null?0:event.length;
+  onBrandNameValueChange(event: any = null): void {
+    this.brandNameCharactersCount = event == null ? 0 : event.length;
     this.brandNameCounter = `${this.brandNameCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
 
@@ -188,5 +190,16 @@ export class FinancialDrugsDetailsComponent implements OnInit {
 
   onCancelClick() {
     this.close.emit();
+  }
+  loadManufacturer() {
+    this.showLoader();
+    this.loadManufacturerEvent.emit();
+    this.manufacturersObs$.subscribe({
+      next:(data: any) => {
+        this.manufacturers = data;
+        this.cd.detectChanges();
+        this.hideLoader();
+      }
+    });
   }
 }

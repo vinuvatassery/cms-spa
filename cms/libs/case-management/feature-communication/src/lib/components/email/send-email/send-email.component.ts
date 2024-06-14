@@ -701,9 +701,16 @@ saveForLaterHeadterText!: string;
   }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    this.clientAndVendorAttachedFiles = [];
     this.isToEmailMissing = false;
     this.isEmailSubjectMissing = false;
     this.isContentMissing = false;
+    if(this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail){
+      event.templateTypeCode = CommunicationEventTypeCode.ApplicationAuthorizationEmail
+    }
+    if(this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail){
+      event.templateTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail
+    }
     this.handleConfirmPopupHeader(event.templateTypeCode);
     this.setVendorAndCommunicationType(event.templateTypeCode);
     this.selectedTemplate = event;
@@ -805,7 +812,7 @@ saveForLaterHeadterText!: string;
         this.saveForLaterHeadterText = "Email Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Email\" from the vendor's profile";
         this.confirmPopupHeader = 'Send Email?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
 
       case CommunicationEventTypeCode.CerAuthorizationEmail:
@@ -814,7 +821,7 @@ saveForLaterHeadterText!: string;
         this.emailSubject = this.templateHeader;
         this.informationalText = "Type the body of the email. Click Preview Email to see what the client will receive. Attachments will not appear in the preview, but will be printed with the email.";
         this.saveForLaterHeadterText = "Send CER Authorization Email Later?";
-        this.saveForLaterModelText = "You must send the Cer Authorization Email within 45 Days";
+        this.saveForLaterModelText = "You must send the CER Authorization Email within 45 Days";
         this.confirmPopupHeader = 'Send Authorization Email?';
         this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and /or their online portal";
         break;
@@ -836,7 +843,7 @@ saveForLaterHeadterText!: string;
         this.saveForLaterHeadterText = "Email Draft Saved";
         this.saveForLaterModelText = "To pick up where you left off, click \"New Email\" from the client's profile";
         this.confirmPopupHeader = 'Send Email?';
-        this.confirmationModelText = "This action cannot be undone. If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal.";
+        this.confirmationModelText = "This action cannot be undone.";
         break;
     }
   }
@@ -1038,7 +1045,7 @@ saveForLaterHeadterText!: string;
     let {templateTypeCode, eventGroupCode } = this.getApiTemplateTypeCode();
     let esignData = this.esignFacade.prepareEsignData(this.selectedToEmails, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId);
     let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater, templateTypeCode, eventGroupCode, esignData);
-    let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
+    let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles, this.communicationEmailTypeCode);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
       .subscribe({
         next: (data: any) => {
@@ -1149,7 +1156,6 @@ saveForLaterHeadterText!: string;
     if(event.length > 0){
       this.clientAndVendorAttachedFiles = event;
     }else{
-      this.clientAndVendorAttachedFiles = [];
       if(event.documentTemplateId){
         isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.name);
         if(!isFileExists || isFileExists === undefined){

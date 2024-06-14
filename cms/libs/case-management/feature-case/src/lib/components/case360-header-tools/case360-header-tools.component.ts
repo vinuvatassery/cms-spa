@@ -37,6 +37,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   smsScreenName = ScreenType.Case360PageSMS;
   smsNotificationGroup = ScreenType.Case360PageSMS;
   isIdCardOpened = false;
+  isshow = false;
   isSendNewLetterOpened = false;
   isSendNewEmailOpened = false;
   isNewSMSTextOpened = false;
@@ -152,7 +153,11 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       id:'new_id_card',
       isVisible: true,
       click: (templatename: any): void => {
-        this.onIdCardClicked(templatename);
+        if(!this.isshow)
+          {
+            this.isshow = true;
+           this.onIdCardClicked(templatename);
+        }
       },
     },
   ];
@@ -276,7 +281,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
     this.isSendNewLetterDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
+      cssClass: 'app-c-modal app-c-modal-xls just_start app-c-modal-np'
     });
   }
   handleSendNewLetterClosed(value: CommunicationEvents) {
@@ -289,7 +294,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onSendNewEmailClicked(template: TemplateRef<unknown>): void {
     this.isSendNewEmailOpenedDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-xls just_start app-c-modal-np',
     });
   }
 
@@ -318,7 +323,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onNewSMSTextClicked(template: TemplateRef<unknown>): void {
     this.isNewSMSTextOpenedDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-xls just_start app-c-modal-np',
     });
   }
 
@@ -339,6 +344,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   handleIdCardClosed(result: any) {
+    this.isshow = false;
     if(result){
       this.isIdCardOpened = false;
       this.isIdCardOpenedDialog.close();

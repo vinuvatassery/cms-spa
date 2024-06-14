@@ -159,7 +159,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   refundEditVendorName: any;
   inspaymentRequestId: any;
   refundEditVendorId: any;
-
+  clientBalance$ = this.financialClaimsFacade.clientBalance$;
   public processGridActions(dataItem: any) {
     return [
       {

@@ -171,7 +171,6 @@ import { NdcCodeDirective } from './directives/ndc-code.directive';
     DeactivateTemplateComponent,
     ReactivateTemplateComponent,
     NdcCodeDirective,
-    
   ],
 })
 export class SharedUiCommonModule {}
