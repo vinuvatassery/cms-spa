@@ -167,7 +167,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   private loadIncomes() {
     this.incomes$.subscribe({
       next: (income: any) => {
-        this.cerStarted = income.data.filter((x:any)=>x.cerStarted).length > 0;
+        this.cerStarted = income?.data?.filter((x:any)=>x.cerStarted).length > 0;
         this.updateWorkFlowStatus(income?.total > 0);
       },
       error: () => {
