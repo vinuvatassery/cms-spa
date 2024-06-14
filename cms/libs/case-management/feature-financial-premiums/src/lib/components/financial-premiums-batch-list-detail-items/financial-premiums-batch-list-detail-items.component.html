@@ -260,7 +260,14 @@
 
 <ng-template #editPremiumsDialogTemplate>
       <cms-financial-premiums-edit-detail-form
-        (modalCloseEditPremiumsFormModal)="modalCloseEditPremiumsFormModal($event)"></cms-financial-premiums-edit-detail-form>
+        (modalCloseEditPremiumsFormModal)="modalCloseEditPremiumsFormModal($event)"  [insurancePremium$]="insurancePremium$"
+        [paymentRequestId]="paymentRequestId"
+        [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"
+        [premiumId]= "insurancePremiumId"
+        (loadPremiumEvent)="loadPremium($event)"
+        (updatePremiumEvent)="updatePremium($event)"
+        (onProviderNameClickEvent)="onProviderNameClick($event)"
+        ></cms-financial-premiums-edit-detail-form>
     </ng-template>
 <ng-template #unbatchPremiumFromTemplate>
       <cms-financial-premiums-unbatch (modalCloseUnbatchPremiumModal)="modalCloseUnbatchPremiumModal($event)"></cms-financial-premiums-unbatch>

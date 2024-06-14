@@ -44,7 +44,9 @@
           <span class="k-input-prefix custom-currencysymbol"> $ </span>
           <kendo-numerictextbox placeholder="Payment Amount" aria-label="Payment Amount" [spinners]="false"
             class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="paymentAmount">
+            formControlName="paymentAmount"
+            [maxlength]="15"
+            >
           </kendo-numerictextbox>
           <kendo-formerror *ngIf="!premiumPaymentForm.controls['paymentAmount'].valid ">Payment amount is
             required.</kendo-formerror>
@@ -52,9 +54,11 @@
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Warrant Number">
-          <kendo-textbox placeholder="Warrant Number" [fillMode]="formUiStyle.dropDownFillMode"
-            aria-label="Warrant Number" formControlName="warrantNumber">
-          </kendo-textbox>
+          <kendo-numerictextbox placeholder="Warrant Number" [fillMode]="formUiStyle.dropDownFillMode"
+            aria-label="Warrant Number" formControlName="warrantNumber"
+            [maxlength]="15"
+            >
+          </kendo-numerictextbox>
           <kendo-formerror *ngIf="!premiumPaymentForm.controls['warrantNumber'].valid ">Warrant number is
             required.</kendo-formerror>
         </kendo-floatinglabel>

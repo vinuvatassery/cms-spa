@@ -16,7 +16,8 @@ import { LovFacade } from '@cms/system-config/domain';
 export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
-
+  
+   insurancePremium$ = this.financialPremiumsFacade.insurancePremium$;
    sortValue = this.financialPremiumsFacade.sortValueBatchItem;
    sortType = this.financialPremiumsFacade.sortType;
    pageSizes = this.financialPremiumsFacade.gridPageSizes;
@@ -140,5 +141,11 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
     this.lovFacade.getPaymentMethodLov()
   }
 
+  loadPremium(premiumId: any) {
+    this.financialPremiumsFacade.loadPremium(this.premiumType, premiumId);
+  }
   
+  updatePremium(premium:any){
+    this.financialPremiumsFacade.updatePremium(this.premiumType, premium.premiumId, premium);
+  }
 }
