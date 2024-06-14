@@ -20,6 +20,7 @@
                             (filterChange)="loadClients($event)"
                             (valueChange)="clientChanged($event)"
                             [(ngModel)]="selectedClient"
+                            [ngClass]="{'error-outline': showClientRequiredValidation}">
                         >
                         <button kendoButton fillMode="clear" icon="image"></button>
                         <kendo-combobox-column >

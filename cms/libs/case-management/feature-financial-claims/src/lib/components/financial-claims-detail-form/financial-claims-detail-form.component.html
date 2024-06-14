@@ -188,7 +188,9 @@
                                                         formControlName="serviceStartDate" placeholder=""
                                                         [min]="minServiceDate"
                                                         [max]="todayDate"
-                                                        (valueChange)="onDateChange(i)">
+                                                        (valueChange)="onDateChange(i)"
+                                                        (select)="dateValidate(i,'serviceStartDate')" (keyup)="dateValidate(i,'serviceStartDate')"
+                                                        >
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
@@ -197,6 +199,9 @@
                                                 </kendo-formerror>
                                                 <kendo-formerror *ngIf="(isStartGreaterThanCurrentDate(i))" >
                                                     Service Start date must be equal to or less than current date
+                                                </kendo-formerror>
+                                                <kendo-formerror
+                                                *ngIf="!serviceStartDateValidator[i]">Service Start Date is not valid.
                                                 </kendo-formerror>
                                             </div>
                                             <div class="flex-col flex-col-6">
@@ -207,7 +212,8 @@
                                                         formControlName="serviceEndDate"
                                                         [min]="minServiceDate"
                                                         [max]="todayDate"
-                                                        (valueChange)="onDateChange(i)">
+                                                        (valueChange)="onDateChange(i)"
+                                                        (select)="dateValidate(i,'serviceEndDate')" (keyup)="dateValidate(i,'serviceEndDate')">
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
@@ -218,6 +224,9 @@
                                                 </kendo-formerror>
                                                 <kendo-formerror *ngIf="(isEndGreaterThanCurrentDate(i))">
                                                     Service End date must be equal to or less than current date
+                                                </kendo-formerror>
+                                                <kendo-formerror
+                                                    *ngIf="!serviceEndDateValidator[i]">Service End Date is not valid.
                                                 </kendo-formerror>
                                             </div>
                                             <div class="ml-2">
