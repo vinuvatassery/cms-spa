@@ -231,9 +231,7 @@
              <div formArrayName="phones"  class="flex-col mt-1" *ngFor="let phone of  getPhonesArray(contact).controls; let j=index">
                  <div [formGroupName]="j">                       
                      <kendo-maskedtextbox  [readonly]="isEditProvider" #contactPhones aria-label="Phone"  [maskOnFocus]="true"  mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode" formControlName="phoneNbr" id="{{'phoneNbr'+i}}">
-                     </kendo-maskedtextbox> 
-                     <kendo-formerror *ngIf="phone.hasError('required','phoneNbr') && isSubmitted">phoneNbr is Required
-                     </kendo-formerror>
+                     </kendo-maskedtextbox>                      
                  </div>
              </div>
 
