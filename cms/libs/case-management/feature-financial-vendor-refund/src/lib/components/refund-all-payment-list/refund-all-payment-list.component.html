@@ -60,16 +60,10 @@
     [filter]="state.filter" kendoGridSelectBy="paymentRequestId" (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedPayments">
 
-    <kendo-grid-column *ngIf="receiptLogMode" [sortable]="false" field="add" [width]="40" class="text-center"
-      [sticky]="true" [sortable]="false" [columnMenu]="false">
-      <ng-template kendoGridHeaderTemplate let-dataItem>
-        <input kendoCheckBox type="checkbox" name="selectAll" [(ngModel)]="selectAll" (change)="selectionAllChange()" />
-      </ng-template>
-      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
-        <input kendoCheckBox type="checkbox" [(ngModel)]="dataItem.selected"
-          (change)="selectionChange(dataItem,dataItem.selected)" />
-      </ng-template>
-    </kendo-grid-column>
+    <kendo-grid-checkbox-column *ngIf="receiptLogMode" [headerClass]="{ 'text-center': true }"
+      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
+      [width]="40"
+      [sticky]="true"></kendo-grid-checkbox-column>
 
     <kendo-grid-column *ngIf="receiptLogMode" field="entryDate" title="Date Received" [width]="150">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -397,11 +391,11 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span *ngIf="receiptLogMode" class="">{{selectionCount}} refund(s) selected</span>
+  <span *ngIf="receiptLogMode" class="">{{selectedPayments.length}} refund(s) selected</span>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" look="outline" aria-label="Cancel"
     (click)="cancelActions()">Cancel</button>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Download" icon="download"
-    [disabled]="selectionCount < 1" (click)="onClickedDownload()">Download</button>
+    [disabled]="selectedPayments.length < 1" (click)="onClickedDownload()">Download</button>
   <button *ngIf="!hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
     (click)="receiptingLogClicked()">Receipting Log</button>
 </div>
