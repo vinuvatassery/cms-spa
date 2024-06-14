@@ -130,6 +130,7 @@ closeallexpensions:any;
     private readonly configProvider: ConfigurationProvider, private readonly lovFacade: LovFacade,
   ) { }
   processTypeCode: string = '';
+  interfaceActivityId: string = ''
   ngOnInit(): void {
     this.sortType = 'desc';
     this.state = {
@@ -341,7 +342,8 @@ closeallexpensions:any;
 
     this.fileId = e.dataItem.fileId;
     this.interfaceTypeCode = e.dataItem.interfaceTypeCode;
-    this.processTypeCode = e.dataItem.processTypeCode;
+    this.processTypeCode = e.dataItem.processTypeCode;    
+    this.interfaceActivityId = e.dataItem?.interfaceActivityId
       this.closeallexpensions.forEach((item: any, idx: number) => {
         this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
       });

@@ -154,7 +154,7 @@
           <ng-template kendoGridCellTemplate let-dataItem>
           
 
-            <button kendoButton   [disabled]="dataItem.uploadStatus==='N'" [attr.aria-label]="dataItem.uploadStatus" title="Download" [attr.aria-label]="dataItem.status" [primary]="true" look="flat"  (click)="downloadFile(dataItem.fileId,dataItem.processTypeDesc)"> <span aria-hidden="true" class="material-icons">
+            <button kendoButton   [disabled]="dataItem.uploadStatus==='N' || dataItem.fileId===null" [attr.aria-label]="dataItem.uploadStatus" title="Download" [attr.aria-label]="dataItem.status" [primary]="true" look="flat"  (click)="downloadFile(dataItem.fileId,dataItem.processTypeDesc)"> <span aria-hidden="true" class="material-icons">
               file_download
               </span>
             </button>
@@ -163,7 +163,8 @@
 
         
         <div *kendoGridDetailTemplate="let dataItem">
-          <cms-exception-detail [fileId]="dataItem.fileId" [interfaceTypeCode]="interfaceTypeCode" [processTypeCode]="processTypeCode" ></cms-exception-detail>
+          <cms-exception-detail [fileId]="dataItem.fileId" [interfaceTypeCode]="interfaceTypeCode" [processTypeCode]="processTypeCode"
+          [interfaceActivityId]="interfaceActivityId" ></cms-exception-detail>
          
           </div>
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"

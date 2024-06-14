@@ -232,9 +232,9 @@ export class SystemInterfaceDashboardService {
 
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/batch-logs/${interfaceTypeCode}`+'?displayAll='+`${displayAll}`,paginationParameters);
   }
-  getBatchlogsExceptions(fileId: any,interfaceTypeCode:string,processTypeCode:string, params:any ){
+  getBatchlogsExceptions(fileId: any,interfaceTypeCode:string,processTypeCode:string,interfaceActivityId : string, params:any ){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/interface-exceptions/${fileId}/${interfaceTypeCode}/${processTypeCode}`, params);
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/interface-exceptions/${fileId}/${interfaceTypeCode}/${processTypeCode}/${interfaceActivityId}`, params);
   }
 
   getRamsellInterfaceActivity(interfaceTypeCode: string, displayAll: boolean, params:any) {
