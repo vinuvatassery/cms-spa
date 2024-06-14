@@ -413,7 +413,7 @@ export class FinancialPcasReassignmentListComponent
   ): void {
     this.pcaReassignmentAddEditDialogService = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
     this.editPcaReassignmentItem = data;
   }
