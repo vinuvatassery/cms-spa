@@ -13,10 +13,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { LovFacade, Lov } from '@cms/system-config/domain';
 import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {  ColumnVisibilityChangeEvent, GridDataResult, SelectAllCheckboxState, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, FilterService, GridDataResult, SelectAllCheckboxState, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -38,7 +39,9 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   private addEditRefundFormDialog: any;
   @ViewChild('addEditRefundDialog', { read: TemplateRef })
   addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
-
+  serviceTypes$ = this.lovFacade.serviceType$;
+  paymentTypeData: any[] = [];
+  selectedPaymentStatus: string | null = null;
   isDeleteBatchClosed = false;
   isDataAvailable = true;
   isProcessBatchClosed = false;
@@ -160,6 +163,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   inspaymentRequestId: any;
   refundEditVendorId: any;
   clientBalance$ = this.financialClaimsFacade.clientBalance$;
+  dataField = '';
   public processGridActions(dataItem: any) {
     return [
       {
@@ -230,6 +234,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     private dialogService: DialogService,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly lovFacade: LovFacade,    
     private readonly route: Router,
     private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade,
   ) {
@@ -245,6 +250,8 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.vendorRefundProcessGridListsSub = this.vendorRefundProcessGridLists$.subscribe((res: any) => {
       this.vendorRefundProcessGridLists = res;
     })
+    this.lovFacade.getServiceTypeLov();
+    this.getPaymentTypeLov();
   }
 
   ngOnDestroy(){
@@ -272,6 +279,30 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   loadRecentClaimListEventHandler(data : any){
     this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
   }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    this.dataField = field;
+    if (field === 'serviceTypeDescription')
+      { 
+        this.selectedPaymentStatus = value;
+        this.dataField = 'Type';
+      }
+    filterService.filter({
+      filters: [
+        {
+          field: this.dataField,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
 
 
   loadRefundProcess(
@@ -388,7 +419,6 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
-    this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.sortColumn = this.columns[stateData.sort[0]?.field];
@@ -405,6 +435,8 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
       this.filter = '';
       this.isFiltered = false;
     }
+    this.state = stateData;
+    this.setGridState(this.state);
     this.loadVendorRefundProcessListGrid();
   }
 
@@ -417,6 +449,25 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
+  }
+
+  public setGridState(stateData: any): void {
+    this.state = stateData;
+    const filters = stateData.filter?.filters ?? [];
+
+    const filterList = this.state?.filter?.filters ?? [];
+    this.filter = JSON.stringify(filterList);
+
+    if (filters.length > 0) {
+      const filterListData = filters.map((filter: any) => this.columns[filter?.filters[0]?.field]);
+      this.isFiltered = true;
+      this.filteredBy = filterListData.toString();
+      this.cdr.detectChanges();
+    }
+    else {
+      this.filter = "";
+      this.isFiltered = false;
+    }
   }
 
   gridDataHandle() {
@@ -433,6 +484,14 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
       {
         this.isDataAvailable=true;
       }
+    });
+  }
+
+  getPaymentTypeLov() {
+    this.serviceTypes$.subscribe({
+      next: (data: Lov[]) => {
+        this.paymentTypeData = data.filter( item  => item.parentCode == 'EXPENSE');
+      },
     });
   }
 
