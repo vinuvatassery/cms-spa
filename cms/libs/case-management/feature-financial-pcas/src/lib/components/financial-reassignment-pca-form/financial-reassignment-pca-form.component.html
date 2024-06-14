@@ -124,8 +124,8 @@
             <div class="flex-col ">
                   <kendo-floatinglabel text="Amount" class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                        <kendo-numerictextbox placeholder="Amount" aria-label="Amount" [spinners]="false" formControlName="amount"
-                        (valueChange)="amountChange($event)" class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
+                        <kendo-numerictextbox placeholder="Amount" aria-label="Amount" [spinners]="false" formControlName="amount" [decimals]="2"
+                        [maxlength]="15" (valueChange)="amountChange($event)" class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
                   <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount.errors?.required && formSubmitted">
