@@ -11,6 +11,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-add-details-form',
   templateUrl: './financial-premiums-add-details-form.component.html',
+  styleUrls: ['./financial-premiums-add-details-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe]
 })

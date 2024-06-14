@@ -21,7 +21,7 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
+import { InsurancePremiumDetails, PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-premiums-batch-list-detail-items',
   templateUrl: './financial-premiums-batch-list-detail-items.component.html',
@@ -65,6 +65,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
+  @Output() updatePremiumEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -152,6 +154,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
 
         if (!this.isEditPremiumsOpened) {
           this.isEditPremiumsOpened = true;
+          this.insurancePremiumId = data.insurancePremiumId;
+          this.clientId=data.clientId;
           this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
         }
       },
@@ -181,7 +185,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   ];
 
   paymentStatusFilter = '';
-
+  insurancePremiumId:any = '';
+  @Output() loadPremiumEvent = new EventEmitter<string>();
   /** Constructor **/
   constructor(private route: Router,
     private dialogService: DialogService,
@@ -193,6 +198,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     this.gridColumns['serviceDesc'] = `${this.serviceGridColumnName} Service`;
     this.initializeGridState();
     this.loadBatchLogItemsListGrid();
+    
   }
   ngOnChanges(): void {
     this.paymentPanelData$.subscribe((data: any)=>{
@@ -478,6 +484,14 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   }
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event);
+  }
+  
+  loadPremium(premiumId: string) {
+    this.loadPremiumEvent.emit(premiumId);
+  }
+
+  updatePremium(data: any) {
+    this.updatePremiumEvent.emit(data);
   }
 
 }

@@ -135,6 +135,10 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   minServiceDate: Date = new Date(2000, 1, 1);
   todayDate: Date = new Date();
   dataLoaded = false;
+  min: Date = new Date('1917/1/1');
+  maxDate = new Date('9999/12/31');
+  serviceStartDateValidator: boolean[] = [];
+  serviceEndDateValidator: boolean[] = [];
   clientBalance$ = this.financialClaimsFacade.clientBalance$;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -511,7 +515,10 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       exceedMaxBenefitExceptionFlag: new FormControl(false),
     });
     this.addClaimServicesForm.push(claimForm);
+    this.serviceStartDateValidator.push(true);
+    this.serviceEndDateValidator.push(true);
     this.addExceptionClaimForm();
+    
   }
   addExceptionClaimForm()
   {
@@ -874,6 +881,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             {
               this.loadPendingApprovalGeneralCount();
             }
+          this.financialClaimsFacade.loadClientBySearchText("");  
           this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService?.close();
           this.financialPcaFacade.pcaReassignmentCount();
@@ -910,6 +918,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             SnackBarNotificationType.SUCCESS,
             response.message
           );
+          this.financialClaimsFacade.loadClientBySearchText("");  
          this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
@@ -1504,5 +1513,49 @@ duplicatePaymentObject:any = {};
     this.navigationMenuFacade.getPendingApprovalGeneralCount();
   }
 
+
+  dateValidate(index: any, type: any) {
+  
+    if (index >= 0) {
+      const fg = this.addClaimServicesForm.controls[index];
+      
+      switch (type.toUpperCase()) {
+        case "SERVICESTARTDATE":
+          const serviceStartDateControl = fg.get('serviceStartDate');
+          serviceStartDateControl?.setErrors(null);
+          
+          this.serviceStartDateValidator[index] = true;
+          if (!this.isValidDateFormat(serviceStartDateControl?.value) || serviceStartDateControl?.value < this.min || serviceStartDateControl?.value > this.maxDate) {
+            this.serviceStartDateValidator[index] = false;
+            serviceStartDateControl?.setErrors({ 'incorrect': true });
+            return;
+          }
+          
+          break;
+    
+        case "SERVICEENDDATE":
+          const serviceEndDateControl = fg.get('serviceEndDate');
+          serviceEndDateControl?.setErrors(null);
+          
+          this.serviceEndDateValidator[index] = true;
+          if (!this.isValidDateFormat(serviceEndDateControl?.value) || serviceEndDateControl?.value < this.min || serviceEndDateControl?.value > this.maxDate) {
+            this.serviceEndDateValidator[index] = false;
+            serviceEndDateControl?.setErrors({ 'incorrect': true });
+            return;
+          }
+          break;
+      }
+    }
+    
+  }
+  isValidDateFormat(dateString: string): boolean {
+    if(dateString){
+      const regex = /^[A-Z][a-z]{2}\s[A-Z][a-z]{2}\s\d{2}\s\d{4}\s\d{2}:\d{2}:\d{2}\sGMT[-+]\d{4}\s\((\w+)\sStandard\sTime\)$/;
+      return regex.test(dateString);
+    }
+    else{
+      return false
+    }
+  }
 }
 
