@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
+import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, HealthInsurancePlan, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
 import { FinancialVendorTypeCode, StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 
 
@@ -39,7 +39,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   clinicVendorListLocal!: any;
   selectedClinicVendorId!: null;
   isValidateForm!: boolean;
-  tinMaskFormat: string = '0 00-000000';
+  tinMaskFormat: string = '0 00-0000000';
   selectedVendor!: any;
   selectedParentVendor!: any;
   drugTypesList : any;
@@ -50,6 +50,10 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   paymentRunDateList: any[] = [];
   tempVendorName: any;
   ndcMaskFormat: string = "00000-0000-00"
+  startDateValidationError: boolean = false;
+  termDateValidationError: boolean = false;
+  termDateRequiredValidationError: boolean = false;
+
   constructor(private insurancePlanFacade : InsurancePlanFacade,
               private drugFacade : DrugsFacade,
               private financialVendorFacade : FinancialVendorFacade,
@@ -460,6 +464,39 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
 
       this.insurancePlanForm.controls['startDate'].setValidators(Validators.required);
       this.insurancePlanForm.controls['startDate'].updateValueAndValidity();
+
+      var healthInsuranceValue = this.insurancePlanForm.controls['healthInsuranceTypeCode'].value;
+
+      var termDateValue = this.insurancePlanForm.controls['termDate'].value;
+      var startDateValue = this.insurancePlanForm.controls['startDate'].value;
+
+      if(healthInsuranceValue == HealthInsurancePlan.QualifiedHealthPlan && !termDateValue){
+        this.termDateRequiredValidationError = true;
+      }else{
+        this.termDateRequiredValidationError = false;
+      }
+      
+      var startDate = new Date(this.insurancePlanForm.controls['startDate'].value);
+      var termDate = new Date(termDateValue);
+
+      if(termDateValue != null && startDateValue != null &&termDate < startDate) {
+        this.startDateValidationError = false;
+        this.termDateValidationError = true;
+        this.termDateRequiredValidationError = false;
+      }else {
+        this.termDateValidationError = false;
+      }
+      
+      if(termDateValue != null && startDateValue != null && startDate > termDate) {
+        this.startDateValidationError = true;
+        this.termDateValidationError = false;
+        this.termDateRequiredValidationError = false;
+      }else{
+        this.startDateValidationError = false;
+      }
+
+      this.cd.detectChanges();
+
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.Pharmacy) {
       this.pharmacyForm.controls['pharmacyName'].setValidators(Validators.required)
       this.pharmacyForm.controls['pharmacyName'].updateValueAndValidity();
@@ -528,7 +565,10 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         !this.drugForm.valid ||
         !this.pharmacyForm.valid ||
         !this.insuranceVendorForm.valid ||
-        !this.insuranceProviderForm.valid ) {
+        !this.insuranceProviderForm.valid ||
+        this.startDateValidationError ||
+        this.termDateValidationError ||
+        this.termDateRequiredValidationError) {
       return false;
     }
     return true;
@@ -884,4 +924,41 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   capitalizeFirstLetter(string:any) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
+
+  accountingNumberValidated: boolean = true;
+  restrictTinNumber(event: any){
+    this.healthCareForm?.controls['tinNumber'].value;
+    if (this.healthCareForm?.controls['tinNumber'].value && (parseInt(this.healthCareForm?.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.healthCareForm?.controls['tinNumber'].value.charAt(0)) == 3)) {
+      this.accountingNumberValidated = true;
+      }else{
+      this.accountingNumberValidated = false;
+    }
+  }
+
+  onStartDateChange(event: any){
+    var startDate = new Date(this.insurancePlanForm.controls['startDate'].value);
+    var termDate = new Date(this.insurancePlanForm.controls['termDate'].value);
+
+    if(startDate > termDate) {
+      this.startDateValidationError = true;
+      this.termDateValidationError = false;
+      this.termDateRequiredValidationError = false;
+    }else{
+      this.startDateValidationError = false;
+    }
+  }
+
+  onTermDateChange(event: any){
+    var startDate = new Date(this.insurancePlanForm.controls['startDate'].value);
+    var termDate = new Date(this.insurancePlanForm.controls['termDate'].value);
+
+    if(termDate < startDate) {
+      this.startDateValidationError = false;
+      this.termDateValidationError = true;
+      this.termDateRequiredValidationError = false;
+    }else {
+      this.termDateValidationError = false;
+    }
+  }
+  
 }

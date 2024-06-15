@@ -65,9 +65,13 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Tin">
-        <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
-          placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
+        <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
+          placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat"
+          (keyup)="restrictTinNumber($event)">
         </kendo-maskedtextbox>
+        <kendo-formerror *ngIf="!accountingNumberValidated">
+          A 1 or a 3 is required
+        </kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
@@ -321,11 +325,15 @@
             aria-label="Start Date" format="MM/dd/yyyy"
             formatPlaceholder="formatPattern"
             formControlName="startDate" placeholder=""
+            (valueChange)="onStartDateChange($event)"
             >
         </kendo-datepicker>
     </kendo-floatinglabel>
     <kendo-formerror *ngIf="insurancePlanFormControls?.startDate.errors?.required && isValidateForm">
       Start Date is required.
+    </kendo-formerror>
+    <kendo-formerror *ngIf="startDateValidationError">
+      Cannot be after Term Date.
     </kendo-formerror>
     </div>
     <div class="flex-col ">
@@ -334,9 +342,16 @@
             aria-label="Term Date (optional)" format="MM/dd/yyyy"
             formatPlaceholder="formatPattern"
             formControlName="termDate" placeholder=""
+            (valueChange)="onTermDateChange($event)"
             >
         </kendo-datepicker>
     </kendo-floatinglabel>
+    <kendo-formerror *ngIf="termDateRequiredValidationError">
+      Term Date is required.
+    </kendo-formerror>
+    <kendo-formerror *ngIf="termDateValidationError">
+      Term Date cannot be prior to Start Date.
+    </kendo-formerror>
     </div>
   </div>
   <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsuranceProvider" [formGroup]="insuranceProviderForm">
