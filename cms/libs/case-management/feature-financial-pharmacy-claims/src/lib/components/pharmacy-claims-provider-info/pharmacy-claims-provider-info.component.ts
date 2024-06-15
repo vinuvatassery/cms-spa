@@ -147,7 +147,6 @@ createPhonesFormArray(contact: any): FormArray {
 
   if(contact.phones && contact.phones.length===0){
     phones.push(this.formBuilder.group({
-      phoneNbr: ['',Validators.required],
       vendorContactPhoneId: null,
       vendorContactId: contact.vendorContactId,
    }));
@@ -155,7 +154,6 @@ createPhonesFormArray(contact: any): FormArray {
  else{
   contact.phones.forEach((phone: any) => {
     return phones.push(this.formBuilder.group({
-      phoneNbr: [phone.phoneNbr,Validators.required],
       vendorContactPhoneId: phone.vendorContactPhoneId
     }));
   })
