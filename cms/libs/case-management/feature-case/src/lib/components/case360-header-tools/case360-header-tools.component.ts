@@ -337,7 +337,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   onIdCardClicked(template: TemplateRef<unknown>): void {
     this.isIdCardOpenedDialog = this.dialogService.open({
-      title: 'Send New ID Card',
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
