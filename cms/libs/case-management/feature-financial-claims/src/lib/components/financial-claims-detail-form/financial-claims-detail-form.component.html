@@ -188,9 +188,7 @@
                                                         formControlName="serviceStartDate" placeholder=""
                                                         [min]="minServiceDate"
                                                         [max]="todayDate"
-                                                        (valueChange)="onDateChange(i)"
-                                                        (select)="dateValidate(i,'serviceStartDate')" (keyup)="dateValidate(i,'serviceStartDate')"
-                                                        >
+                                                        (valueChange)="onDateChange(i)">
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
@@ -212,8 +210,7 @@
                                                         formControlName="serviceEndDate"
                                                         [min]="minServiceDate"
                                                         [max]="todayDate"
-                                                        (valueChange)="onDateChange(i)"
-                                                        (select)="dateValidate(i,'serviceEndDate')" (keyup)="dateValidate(i,'serviceEndDate')">
+                                                        (valueChange)="onDateChange(i)">
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
