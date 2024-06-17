@@ -178,8 +178,8 @@
 
   &-xlg {
     .k-dialog {
-      width: 1000px;
-      max-width: 1000px;
+      width: 100%;
+      max-width: 85vw;
       height: auto !important;
 
       @media (max-width: $breakpoint-lg) {
@@ -190,8 +190,8 @@
 
   &-xls {
     .k-dialog {
-      width: 1000px;
-      max-width: 1000px;
+      width: 100%;
+      max-width: 85vw;
       height: auto !important;
       top: 50px;
 
@@ -206,8 +206,8 @@
   }
   &-xl {
     .k-dialog {
-      width: 900px;
-      max-width: 900px;
+      width: 100%;
+      max-width: 77vw;
       height: auto !important;
 
       @media (max-width: $breakpoint-lg) {
@@ -229,8 +229,8 @@
   }
   &-lg {
     .k-dialog {
-      width: 700px;
-      max-width: 700px;
+      width: 100%;
+      max-width: 62vw;
       height: auto !important;
       top: 50px;
 

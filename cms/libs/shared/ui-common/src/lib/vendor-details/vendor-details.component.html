@@ -176,8 +176,8 @@
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.InsuranceProviders">
         <kendo-floatinglabel text="TIN">
-          <span *ngIf="isLoading"
-          class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+          <span *ngIf="!isLoading"
+          class="mt-3 k-icon k-i-loading k-input-loading-icon input-inline-loader">
         </span>
           <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
             placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber($event)">

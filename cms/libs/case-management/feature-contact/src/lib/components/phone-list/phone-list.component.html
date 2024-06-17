@@ -38,7 +38,7 @@
                   >star</span
                 >
               </span>
-              <span class="pl-3">{{ dataItem.deviceTypeCode }}</span>
+              <span [ngClass]="dataItem.preferredFlag==='Y'? 'pl-3' : ''">{{ dataItem.deviceTypeCode }}</span>
             </div>
           </ng-template>
         </kendo-grid-column>

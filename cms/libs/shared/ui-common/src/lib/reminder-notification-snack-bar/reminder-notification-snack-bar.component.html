@@ -4,7 +4,7 @@
 
  
 <ng-template #reminderNotificationTemplate>
-  <button class="reminder_list_show_btn" title="Reminder Notification List" kendoButton *ngIf="isReminderExpands"> <span class="material-icons" aria-hidden="true"> alarm </span> <span class="app-c-badge badge-round-right badge-warn">{{messageCount.length}}</span></button>
+  <button class="reminder_list_show_btn" title="Reminder Notification List" kendoButton *ngIf="!isReminderExpands"> <span class="material-icons" aria-hidden="true"> alarm </span> <span class="app-c-badge badge-round-right badge-warn">{{messageCount.length}}</span></button>
   <div class="reminder-snack-bar-wrapper">
     <div class="reminder-col-one">
       <span class="material-icons" aria-hidden="true"> alarm </span>

@@ -300,7 +300,7 @@ public rowCallback(context: RowClassArgs) {
           this.newForm = true
         this.pcaAssignmentAddEditDialogService = this.dialogService.open({
           content: this.addEditPcaAssignmentDialogTemplate,
-          cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+          cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
         });
       }
     }

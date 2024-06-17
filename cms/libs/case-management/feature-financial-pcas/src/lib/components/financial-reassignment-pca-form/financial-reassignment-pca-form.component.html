@@ -66,14 +66,14 @@
       <div class="flex-row mt-3" *ngIf="pcaCodeInfo !=null">
             <div class="flex-col flex-col-4">
                   <label> PCA Amount </label>
-                  <p><span class="tableamountview"> <strong>$</strong> {{pcaCodeInfo?.totalAmount|kendoNumber: 'n2'}}</span>
+                  <p><span class="pcaamount"> <strong>$</strong> {{pcaCodeInfo?.totalAmount|kendoNumber: 'n2'}}</span>
                   </p>
 
             </div>
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
-                  <p class="green-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount <= pcaCodeInfo?.remainingAmount" ><span class="tableamountview"> <strong>$</strong> {{pcaCodeInfo?.remainingAmount|kendoNumber: 'n2'}}</span></p>
-                  <p class="red-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount"><span class="tableamountview"> <strong>$ <span  *ngIf="pcaCodeInfo?.remainingAmount>=0"> -</span></strong> {{pcaCodeInfo?.remainingAmount|kendoNumber: 'n2'}}</span></p>
+                  <p class="green-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount <= pcaCodeInfo?.remainingAmount" ><span class="pcaamount"> <strong>$</strong> {{pcaCodeInfo?.remainingAmount|kendoNumber: 'n2'}}</span></p>
+                  <p class="red-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount"><span class="pcaamount"> <strong>$ <span  *ngIf="pcaCodeInfo?.remainingAmount>=0"> -</span></strong> {{pcaCodeInfo?.remainingAmount|kendoNumber: 'n2'}}</span></p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Close Date</label>
